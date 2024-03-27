@@ -1,4 +1,4 @@
-package net.myriantics.tutorialmod.mixin;
+package net.myriantics.klaxon.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

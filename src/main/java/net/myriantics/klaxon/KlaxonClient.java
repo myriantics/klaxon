@@ -1,8 +1,8 @@
-package net.myriantics.tutorialmod;
+package net.myriantics.klaxon;
 
 import net.fabricmc.api.ClientModInitializer;
 
-public class TutorialModClient implements ClientModInitializer {
+public class KlaxonClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
