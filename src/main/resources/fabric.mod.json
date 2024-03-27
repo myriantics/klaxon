@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "tutorialmod",
+	"id": "klaxon",
 	"version": "${version}",
-	"name": "tutorialmod",
+	"name": "klaxon",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
 		"ThatSmartGuy21"
@@ -16,17 +16,17 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "net.smartguy.tutorialmod.TutorialMod"
+          "net.myriantics.klaxon.KlaxonMain"
 		],
 		"client": [
-			"net.smartguy.tutorialmod.TutorialModClient"
+			"net.myriantics.klaxon.KlaxonClient"
 		],
 		"fabric-datagen": [
-			"net.smartguy.tutorialmod.TutorialModDataGenerator"
+			"net.myriantics.klaxon.KlaxonDataGenerator"
 		]
 	},
 	"mixins": [
-		"tutorialmod.mixins.json"
+		"klaxon.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.6",
