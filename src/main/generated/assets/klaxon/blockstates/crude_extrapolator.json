@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "klaxon:block/crude_extrapolator"
+    }
+  }
+}
