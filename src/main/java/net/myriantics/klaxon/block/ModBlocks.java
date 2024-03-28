@@ -15,7 +15,7 @@ import net.myriantics.klaxon.block.customblocks.CrudeExtrapolatorBlock;
 public class ModBlocks {
 
     public static final Block CRUDE_EXTRAPOLATOR = registerBlock("crude_extrapolator",
-            new Block(FabricBlockSettings.copyOf(Blocks.DISPENSER)));
+            new CrudeExtrapolatorBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(20.0f, 50.0f)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

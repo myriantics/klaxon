@@ -2,6 +2,7 @@ package net.myriantics.klaxon;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.myriantics.klaxon.block.ModBlockEntities;
 import net.myriantics.klaxon.block.ModBlocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ public class KlaxonMain implements ModInitializer {
 	public void onInitialize() {
 
 		ModBlocks.registerModBlocks();
+		ModBlockEntities.registerBlockEntities();
 
 		LOGGER.info("Klaxon is loading ... or has loaded ... i dont know when this is run exactly and i will prolly forget to change this");
 	}

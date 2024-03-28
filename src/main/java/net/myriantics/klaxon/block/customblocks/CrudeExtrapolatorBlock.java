@@ -1,23 +1,22 @@
 package net.myriantics.klaxon.block.customblocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.FacingBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.myriantics.klaxon.block.blockentities.CrudeExtrapolatorBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class CrudeExtrapolatorBlock extends BlockWithEntity {
 
     enum FuelState implements StringIdentifiable {
-        RIGGED, FUELED, EMPTY;
+        HYPER, SUPER, REGULAR, EMPTY;
 
         @Override
         public String asString() {
@@ -31,6 +30,11 @@ public class CrudeExtrapolatorBlock extends BlockWithEntity {
 
     public CrudeExtrapolatorBlock(Settings settings) {
         super(settings);
+
+        setDefaultState(getStateManager().getDefaultState()
+                .with(FACING, Direction.NORTH)
+                .with(POWERED, false)
+                .with(FUEL_STATE, FuelState.EMPTY));
     }
 
     @Nullable
@@ -42,5 +46,15 @@ public class CrudeExtrapolatorBlock extends BlockWithEntity {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(POWERED, FUEL_STATE, FACING);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        return this.getDefaultState().with(FACING, context.getPlayerLookDirection().getOpposite());
     }
 }
