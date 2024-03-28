@@ -1,0 +1,189 @@
+{
+  "variants": {
+    "facing=north,powered=false,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty"
+    },
+    "facing=south,powered=false,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "y": 180
+    },
+    "facing=east,powered=false,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "y": 90
+    },
+    "facing=west,powered=false,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "y": -90
+    },
+    "facing=up,powered=false,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "x": -90
+    },
+    "facing=down,powered=false,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "x": 90
+    },
+    "facing=north,powered=true,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty"
+    },
+    "facing=south,powered=true,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "y": 180
+    },
+    "facing=east,powered=true,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "y": 90
+    },
+    "facing=west,powered=true,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "y": -90
+    },
+    "facing=up,powered=true,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "x": -90
+    },
+    "facing=down,powered=true,fuel_state=empty": {
+      "model": "klaxon:block/crude_extrapolator_empty",
+      "x": 90
+    },
+    "facing=north,powered=false,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular"
+    },
+    "facing=south,powered=false,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "y": 180
+    },
+    "facing=east,powered=false,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "y": 90
+    },
+    "facing=west,powered=false,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "y": -90
+    },
+    "facing=up,powered=false,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "x": -90
+    },
+    "facing=down,powered=false,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "x": 90
+    },
+    "facing=north,powered=true,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular"
+    },
+    "facing=south,powered=true,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "y": 180
+    },
+    "facing=east,powered=true,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "y": 90
+    },
+    "facing=west,powered=true,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "y": -90
+    },
+    "facing=up,powered=true,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "x": -90
+    },
+    "facing=down,powered=true,fuel_state=regular": {
+      "model": "klaxon:block/crude_extrapolator_regular",
+      "x": 90
+    },
+
+    "facing=north,powered=false,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super"
+    },
+    "facing=south,powered=false,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "y": 180
+    },
+    "facing=east,powered=false,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "y": 90
+    },
+    "facing=west,powered=false,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "y": -90
+    },
+    "facing=up,powered=false,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "x": -90
+    },
+    "facing=down,powered=false,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "x": 90
+    },
+    "facing=north,powered=true,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super"
+    },
+    "facing=south,powered=true,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "y": 180
+    },
+    "facing=east,powered=true,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "y": 90
+    },
+    "facing=west,powered=true,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "y": -90
+    },
+    "facing=up,powered=true,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "x": -90
+    },
+    "facing=down,powered=true,fuel_state=super": {
+      "model": "klaxon:block/crude_extrapolator_super",
+      "x": 90
+    },
+    "facing=north,powered=false,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper"
+    },
+    "facing=south,powered=false,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "y": 180
+    },
+    "facing=east,powered=false,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "y": 90
+    },
+    "facing=west,powered=false,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "y": -90
+    },
+    "facing=up,powered=false,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "x": -90
+    },
+    "facing=down,powered=false,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "x": 90
+    },
+    "facing=north,powered=true,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper"
+    },
+    "facing=south,powered=true,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "y": 180
+    },
+    "facing=east,powered=true,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "y": 90
+    },
+    "facing=west,powered=true,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "y": -90
+    },
+    "facing=up,powered=true,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "x": -90
+    },
+    "facing=down,powered=true,fuel_state=hyper": {
+      "model": "klaxon:block/crude_extrapolator_hyper",
+      "x": 90
+    }
+  }
+}
