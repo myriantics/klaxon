@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
 import net.myriantics.klaxon.block.customblocks.CrudeExtrapolatorBlock;
 
-public class ModBlocks {
+public class KlaxonBlocks {
 
     public static final Block CRUDE_EXTRAPOLATOR = registerBlock("crude_extrapolator",
             new CrudeExtrapolatorBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(20.0f, 50.0f)));

@@ -11,7 +11,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.block.ModBlockEntities;
+import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +24,7 @@ public class CrudeExtrapolatorBlockEntity extends BlockEntity implements Extrapo
     private static final int MaxItemStackCount = 1;
 
     public CrudeExtrapolatorBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.CRUDE_EXTRAPOLATOR_BLOCK_ENTITY, pos, state);
+        super(KlaxonBlockEntities.CRUDE_EXTRAPOLATOR_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     }
 
