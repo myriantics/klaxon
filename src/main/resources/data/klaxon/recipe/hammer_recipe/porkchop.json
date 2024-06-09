@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammer_recipe",
+  "inputA" : {
+    "item": "minecraft:pig_spawn_egg"
+  },
+  "outputItem": "minecraft:porkchop",
+  "outputAmount": "20"
+}

@@ -10,9 +10,10 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
+import net.myriantics.klaxon.item.customitems.HammerItem;
 
 public class KlaxonItems {
-    public static final Item HAMMER = registerItem("hammer", new Item(new FabricItemSettings()));
+    public static final Item HAMMER = registerItem("hammer", new HammerItem(new FabricItemSettings()));
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
         entries.add(HAMMER);

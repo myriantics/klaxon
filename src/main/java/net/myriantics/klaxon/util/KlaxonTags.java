@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.util;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -17,6 +18,15 @@ public class KlaxonTags {
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, new Identifier(KlaxonMain.MOD_ID, name));
+        }
+    }
+
+    public static class Blocks {
+        public static final TagKey<Block> HAMMER_INTERACTION_POINT =
+                createTag("hammer_interaction_base");
+
+        private static TagKey<Block> createTag(String name) {
+            return TagKey.of(RegistryKeys.BLOCK, new Identifier(KlaxonMain.MOD_ID, name));
         }
     }
 }
