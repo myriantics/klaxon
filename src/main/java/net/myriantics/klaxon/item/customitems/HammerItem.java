@@ -6,11 +6,14 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipes.HammerRecipe;
 import net.myriantics.klaxon.util.KlaxonTags;
@@ -29,24 +32,31 @@ public class HammerItem extends Item {
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
 
-        if(player.isSneaking() && context.getSide() == Direction.UP && interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
-            player.playSound(BlockSoundGroup.NETHERITE.getBreakSound(), 2f, 2f);
-            interactionState.updateNeighbors(context.getWorld(), interactionPos, 1);
+        if(interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
+            player.sendMessage(Text.literal("balls"));
 
-            CraftingInventory inventory = new CraftingInventory(ScreenHandler(null, 0)
-            }, 1, 1);
-            inventory.setStack(0, player.getOffHandStack());
+            RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
+            CraftingInventory dummyInventory = new CraftingInventory(player.currentScreenHandler, 1, 1);
+            // player.currentScreenHandler my savior holy frick :|
+            dummyInventory.setStack(0, player.getOffHandStack());
+            player.sendMessage(dummyInventory.getStack(0).getName());
 
             Optional<HammerRecipe> match = world.getRecipeManager()
-                    .getFirstMatch(HammerRecipe.Type.INSTANCE, inventory, world);
-            if(match.isPresent()) {
-                player.getInventory().offerOrDrop(match.get().getOutput(DynamicRegistryManager.EMPTY).copy());
-                player.getOffHandStack().decrement(1);
-                return ActionResult.SUCCESS;
-            } else {
+                    .getFirstMatch(type, dummyInventory, world);
+
+            if(match.isEmpty()) {
+                player.sendMessage(Text.literal("sadge"));
                 return ActionResult.PASS;
             }
-        }
+
+            if(world.isClient) {
+                return ActionResult.SUCCESS;
+            }
+            world.playSound(player, interactionPos, SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, SoundCategory.PLAYERS, 2, 2f);
+            player.getInventory().offerOrDrop(match.get().getOutput(world.getRegistryManager()).copy());
+            player.getOffHandStack().decrement(1);
+                player.sendMessage(Text.literal("greg is goodge"));
+            }
         return ActionResult.PASS;
     }
 
