@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammer_recipe",
+  "inputA" : {
+    "item": "minecraft:iron_block"
+  },
+  "outputItem": "minecraft:iron_ingot",
+  "outputAmount": "9"
+}
