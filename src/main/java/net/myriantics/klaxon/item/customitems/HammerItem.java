@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.item.customitems;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
@@ -13,6 +14,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipes.HammerRecipe;
@@ -33,19 +35,16 @@ public class HammerItem extends Item {
         PlayerEntity player = context.getPlayer();
 
         if(interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
-            player.sendMessage(Text.literal("balls"));
 
             RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
             CraftingInventory dummyInventory = new CraftingInventory(player.currentScreenHandler, 1, 1);
             // player.currentScreenHandler my savior holy frick :|
             dummyInventory.setStack(0, player.getOffHandStack());
-            player.sendMessage(dummyInventory.getStack(0).getName());
 
             Optional<HammerRecipe> match = world.getRecipeManager()
                     .getFirstMatch(type, dummyInventory, world);
 
             if(match.isEmpty()) {
-                player.sendMessage(Text.literal("sadge"));
                 return ActionResult.PASS;
             }
 
@@ -53,9 +52,13 @@ public class HammerItem extends Item {
                 return ActionResult.SUCCESS;
             }
             world.playSound(player, interactionPos, SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, SoundCategory.PLAYERS, 2, 2f);
-            player.getInventory().offerOrDrop(match.get().getOutput(world.getRegistryManager()).copy());
+            world.spawnEntity(new ItemEntity(world,
+                    interactionPos.getX() + 0.5,
+                    interactionPos.getY() + 1,
+                    interactionPos.getZ() + 0.5,
+                    match.get().getOutput(world.getRegistryManager()).copy(),
+                    0,0.2,0));
             player.getOffHandStack().decrement(1);
-                player.sendMessage(Text.literal("greg is goodge"));
             }
         return ActionResult.PASS;
     }

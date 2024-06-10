@@ -45,10 +45,10 @@ public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
     @Override
     public void write(PacketByteBuf packetData, HammerRecipe recipe) {
         recipe.getInputA().write(packetData);
-        packetData.writeItemStack(recipe.getOutput(MinecraftClient.getInstance().getServer().getRegistryManager()));
+        packetData.writeItemStack(recipe.getOutput(DynamicRegistryManager.of(Registries.REGISTRIES)));
     }
 
-    //MinecraftClient.getInstance().world.getRegistryManager()
+    //MinecraftClient.getInstance().getServer().getRegistryManager()
     @Override
     public HammerRecipe read(Identifier id, PacketByteBuf packetData) {
         Ingredient inputA = Ingredient.fromPacket(packetData);
