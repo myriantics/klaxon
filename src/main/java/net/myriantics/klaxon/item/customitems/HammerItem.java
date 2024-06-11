@@ -45,7 +45,7 @@ public class HammerItem extends Item {
                     .getFirstMatch(type, dummyInventory, world);
 
             if(match.isEmpty()) {
-                return ActionResult.PASS;
+                return ActionResult.FAIL;
             }
 
             if(world.isClient) {
