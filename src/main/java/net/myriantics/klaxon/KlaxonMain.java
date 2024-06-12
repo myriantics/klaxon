@@ -7,6 +7,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.HammerRecipe;
 import net.myriantics.klaxon.recipes.HammerRecipeSerializer;
@@ -23,6 +24,7 @@ public class KlaxonMain implements ModInitializer {
 		KlaxonBlocks.registerModBlocks();
 		KlaxonBlockEntities.registerBlockEntities();
 		KlaxonItems.registerModItems();
+		KlaxonEntities.registerModEntities();
 		Registry.register(Registries.RECIPE_SERIALIZER, HammerRecipeSerializer.ID,
 				HammerRecipeSerializer.INSTANCE);
 		Registry.register(Registries.RECIPE_TYPE, new Identifier("hammer_recipe", HammerRecipe.Type.ID), HammerRecipe.Type.INSTANCE);

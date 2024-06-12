@@ -16,4 +16,8 @@ public class KlaxonEntities {
             new Identifier(KlaxonMain.MOD_ID, "ender_pearl_plate"),
             FabricEntityTypeBuilder.<EnderPearlPlateEntity>create(SpawnGroup.MISC)
                     .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
+
+    public static void registerModEntities() {
+        KlaxonMain.LOGGER.info("Registered Klaxon's Entities");
+    }
 }
