@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.item.customitems;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.thrown.EnderPearlEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -21,6 +22,7 @@ public class EnderPearlPlateItem extends Item {
             EnderPearlPlateEntity enderPlateEntity = new EnderPearlPlateEntity(world, user);
             enderPlateEntity.setItem(handStack);
             enderPlateEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 3.0F, 0.2F);
+            world.spawnEntity(enderPlateEntity);
         }
 
         if (!user.getAbilities().creativeMode) {
