@@ -2,11 +2,16 @@ package net.myriantics.klaxon;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.entity.EnderPlateEntity;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.HammerRecipe;
