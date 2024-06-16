@@ -1,4 +1,6 @@
 {
   "block.klaxon.crude_extrapolator": "Crude Extrapolator",
-  "item.klaxon.hammer": "Hammer"
+  "item.klaxon.hammer": "Hammer",
+  "item.klaxon.ender_plate": "Ender Pearl Plate",
+  "entity.klaxon.ender_plate": "Ender Pearl Plate"
 }

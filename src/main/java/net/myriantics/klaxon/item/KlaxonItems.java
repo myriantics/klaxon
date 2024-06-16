@@ -9,12 +9,12 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
-import net.myriantics.klaxon.item.customitems.EnderPearlPlateItem;
+import net.myriantics.klaxon.item.customitems.EnderPlateItem;
 import net.myriantics.klaxon.item.customitems.HammerItem;
 
 public class KlaxonItems {
     public static final Item HAMMER = registerItem("hammer", new HammerItem(new FabricItemSettings()));
-    public static final Item ENDER_PEARL_PLATE = registerItem("ender_pearl_plate", new EnderPearlPlateItem(new FabricItemSettings()));
+    public static final Item ENDER_PEARL_PLATE_ITEM = registerItem("ender_plate", new EnderPlateItem(new FabricItemSettings()));
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
         entries.add(HAMMER);
