@@ -9,8 +9,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
-import net.myriantics.klaxon.item.customitems.EnderPlateItem;
-import net.myriantics.klaxon.item.customitems.HammerItem;
+import net.myriantics.klaxon.item.consumables.EnderPlateItem;
+import net.myriantics.klaxon.item.tools.HammerItem;
 
 public class KlaxonItems {
     public static final Item HAMMER = registerItem("hammer", new HammerItem(new FabricItemSettings()));
