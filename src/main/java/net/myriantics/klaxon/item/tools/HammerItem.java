@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.item.customitems;
+package net.myriantics.klaxon.item.tools;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ItemEntity;
@@ -8,13 +8,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipes.HammerRecipe;
