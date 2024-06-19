@@ -59,6 +59,8 @@ public class HammerItem extends Item {
         return ActionResult.PASS;
     }
 
+
+
     @Override
     public boolean isEnchantable(ItemStack stack) {
         return false;

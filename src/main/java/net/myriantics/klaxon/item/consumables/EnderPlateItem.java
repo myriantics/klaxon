@@ -1,13 +1,11 @@
 package net.myriantics.klaxon.item.consumables;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -20,19 +18,25 @@ public class EnderPlateItem extends Item {
 
     private float initialPlayerYaw;
     private int usageTicks;
+    boolean throwing;
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        throwing = true;
+        if(!world.isClient) {
+            user.sendMessage(Text.literal("Test commence" + user.getYaw()));
+        }
         this.initialPlayerYaw = user.headYaw;
+        user.setCurrentHand(hand);
         return TypedActionResult.consume(user.getMainHandStack());
     }
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if(this.usageTicks >= 40) {
-            this.
+        if (throwing && user instanceof PlayerEntity player && !world.isClient) {
+            //if(this.usageTicks >= 40) {}
+            player.sendMessage(Text.literal("Test ticked"));
         }
-
         this.usageTicks++;
     }
 
@@ -43,25 +47,35 @@ public class EnderPlateItem extends Item {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        // this method was proccing twice for some reason. this should fix that
+        if(!throwing) {
+            return;
+        }
+        throwing = false;
+
         if(user instanceof PlayerEntity player) {
 
-            float headVelocity =
-
-            ItemStack handStack = user.getStackInHand(player.getActiveHand());
+            ItemStack handStack = player.getStackInHand(player.getActiveHand());
             player.getItemCooldownManager().set(this, 10);
 
+            float shittyVeloRootCalc = ((this.initialPlayerYaw - player.getYaw()) / ((float) this.usageTicks / 20));
+            double jankVeloCalc = (0.5)*(Math.pow(2.72f, 0.0064 * shittyVeloRootCalc));
+
+            if(world.isClient) {
+                player.sendMessage(Text.literal("testVal = " + jankVeloCalc));
+            }
+
             if(!world.isClient) {
-                user.sendMessage(Text.literal("greg = " + Math.abs(user.getYaw())));
                 EnderPlateEntity enderPlateEntity = new EnderPlateEntity(world, user);
                 enderPlateEntity.setItem(handStack);
-                enderPlateEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 3.0F, 0.2F);
+                enderPlateEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, (float)jankVeloCalc, 0.2F);
                 world.spawnEntity(enderPlateEntity);
             }
 
             player.incrementStat(Stats.USED.getOrCreateStat(this));
-            if (player.getAbilities().creativeMode) {
+            if (!player.getAbilities().creativeMode) {
                 handStack.decrement(1);
-            }
+        }
         }
     }
 }

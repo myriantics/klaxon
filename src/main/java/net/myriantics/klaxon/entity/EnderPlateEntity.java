@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
+import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonMain;
 import net.myriantics.klaxon.item.KlaxonItems;
@@ -15,11 +16,11 @@ public class EnderPlateEntity extends ThrownItemEntity {
     }
 
     public EnderPlateEntity(World world, LivingEntity owner) {
-        super(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, owner, world); // null will be changed later
+        super(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, owner, world);
     }
 
     public EnderPlateEntity(World world, double x, double y, double z) {
-        super(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, x, y, z, world); // null will be changed later
+        super(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, x, y, z, world);
     }
 
     @Override

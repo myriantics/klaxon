@@ -13,7 +13,7 @@ import net.myriantics.klaxon.item.consumables.EnderPlateItem;
 import net.myriantics.klaxon.item.tools.HammerItem;
 
 public class KlaxonItems {
-    public static final Item HAMMER = registerItem("hammer", new HammerItem(new FabricItemSettings()));
+    public static final Item HAMMER = registerItem("hammer", new HammerItem(new FabricItemSettings().maxCount(1)));
     public static final Item ENDER_PEARL_PLATE_ITEM = registerItem("ender_plate", new EnderPlateItem(new FabricItemSettings()));
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
