@@ -26,6 +26,7 @@ public class EnderPlateItem extends Item {
         if(!world.isClient) {
             user.sendMessage(Text.literal("Test commence" + user.getYaw()));
         }
+        this.usageTicks = 0;
         this.initialPlayerYaw = user.headYaw;
         user.setCurrentHand(hand);
         return TypedActionResult.consume(user.getMainHandStack());
