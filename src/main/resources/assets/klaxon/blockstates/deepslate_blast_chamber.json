@@ -1,188 +1,188 @@
 {
   "variants": {
     "facing=north,powered=false,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty"
+      "model": "klaxon:block/deepslate_blast_chamber_empty"
     },
     "facing=south,powered=false,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "y": 180
     },
     "facing=east,powered=false,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "y": 90
     },
     "facing=west,powered=false,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "y": -90
     },
     "facing=up,powered=false,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "x": -90
     },
     "facing=down,powered=false,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "x": 90
     },
     "facing=north,powered=true,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty"
+      "model": "klaxon:block/deepslate_blast_chamber_empty"
     },
     "facing=south,powered=true,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "y": 180
     },
     "facing=east,powered=true,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "y": 90
     },
     "facing=west,powered=true,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "y": -90
     },
     "facing=up,powered=true,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "x": -90
     },
     "facing=down,powered=true,fuel_state=empty": {
-      "model": "klaxon:block/crude_extrapolator_empty",
+      "model": "klaxon:block/deepslate_blast_chamber_empty",
       "x": 90
     },
     "facing=north,powered=false,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular"
+      "model": "klaxon:block/deepslate_blast_chamber_regular"
     },
     "facing=south,powered=false,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "y": 180
     },
     "facing=east,powered=false,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "y": 90
     },
     "facing=west,powered=false,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "y": -90
     },
     "facing=up,powered=false,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "x": -90
     },
     "facing=down,powered=false,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "x": 90
     },
     "facing=north,powered=true,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular"
+      "model": "klaxon:block/deepslate_blast_chamber_regular"
     },
     "facing=south,powered=true,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "y": 180
     },
     "facing=east,powered=true,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "y": 90
     },
     "facing=west,powered=true,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "y": -90
     },
     "facing=up,powered=true,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "x": -90
     },
     "facing=down,powered=true,fuel_state=regular": {
-      "model": "klaxon:block/crude_extrapolator_regular",
+      "model": "klaxon:block/deepslate_blast_chamber_regular",
       "x": 90
     },
 
     "facing=north,powered=false,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super"
+      "model": "klaxon:block/deepslate_blast_chamber_super"
     },
     "facing=south,powered=false,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "y": 180
     },
     "facing=east,powered=false,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "y": 90
     },
     "facing=west,powered=false,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "y": -90
     },
     "facing=up,powered=false,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "x": -90
     },
     "facing=down,powered=false,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "x": 90
     },
     "facing=north,powered=true,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super"
+      "model": "klaxon:block/deepslate_blast_chamber_super"
     },
     "facing=south,powered=true,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "y": 180
     },
     "facing=east,powered=true,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "y": 90
     },
     "facing=west,powered=true,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "y": -90
     },
     "facing=up,powered=true,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "x": -90
     },
     "facing=down,powered=true,fuel_state=super": {
-      "model": "klaxon:block/crude_extrapolator_super",
+      "model": "klaxon:block/deepslate_blast_chamber_super",
       "x": 90
     },
     "facing=north,powered=false,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper"
+      "model": "klaxon:block/deepslate_blast_chamber_hyper"
     },
     "facing=south,powered=false,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "y": 180
     },
     "facing=east,powered=false,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "y": 90
     },
     "facing=west,powered=false,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "y": -90
     },
     "facing=up,powered=false,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "x": -90
     },
     "facing=down,powered=false,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "x": 90
     },
     "facing=north,powered=true,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper"
+      "model": "klaxon:block/deepslate_blast_chamber_hyper"
     },
     "facing=south,powered=true,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "y": 180
     },
     "facing=east,powered=true,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "y": 90
     },
     "facing=west,powered=true,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "y": -90
     },
     "facing=up,powered=true,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "x": -90
     },
     "facing=down,powered=true,fuel_state=hyper": {
-      "model": "klaxon:block/crude_extrapolator_hyper",
+      "model": "klaxon:block/deepslate_blast_chamber_hyper",
       "x": 90
     }
   }
