@@ -10,12 +10,12 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
-import net.myriantics.klaxon.block.customblocks.CrudeExtrapolatorBlock;
+import net.myriantics.klaxon.block.customblocks.BlastChamberBlock;
 
 public class KlaxonBlocks {
 
-    public static final Block CRUDE_EXTRAPOLATOR = registerBlock("crude_extrapolator",
-            new CrudeExtrapolatorBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(20.0f, 50.0f)));
+    public static final Block DEEPSLATE_BLAST_CHAMBER = registerBlock("deepslate_blast_chamber",
+            new BlastChamberBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(20.0f, 50.0f)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

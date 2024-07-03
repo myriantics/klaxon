@@ -16,10 +16,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.block.blockentities.CrudeExtrapolatorBlockEntity;
+import net.myriantics.klaxon.block.blockentities.BlastChamberBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-public class CrudeExtrapolatorBlock extends BlockWithEntity {
+public class BlastChamberBlock extends BlockWithEntity {
 
     enum FuelState implements StringIdentifiable {
         HYPER, SUPER, REGULAR, EMPTY;
@@ -34,7 +34,7 @@ public class CrudeExtrapolatorBlock extends BlockWithEntity {
     static final EnumProperty<FuelState> FUEL_STATE = EnumProperty.of("fuel_state", FuelState.class);
     static final DirectionProperty FACING = FacingBlock.FACING;
 
-    public CrudeExtrapolatorBlock(Settings settings) {
+    public BlastChamberBlock(Settings settings) {
         super(settings);
 
         setDefaultState(getStateManager().getDefaultState()
@@ -55,7 +55,7 @@ public class CrudeExtrapolatorBlock extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CrudeExtrapolatorBlockEntity) {
+            if (blockEntity instanceof BlastChamberBlockEntity) {
                 ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
                 world.updateComparators(pos, this);
             }
@@ -67,8 +67,8 @@ public class CrudeExtrapolatorBlock extends BlockWithEntity {
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CrudeExtrapolatorBlockEntity) {
-            ((CrudeExtrapolatorBlockEntity) blockEntity).tick(world, pos, state);
+        if (blockEntity instanceof BlastChamberBlockEntity) {
+            ((BlastChamberBlockEntity) blockEntity).tick(world, pos, state);
         }
 
     }
@@ -76,7 +76,7 @@ public class CrudeExtrapolatorBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new CrudeExtrapolatorBlockEntity(pos, state);
+        return new BlastChamberBlockEntity(pos, state);
     }
 
     @Override

@@ -15,7 +15,7 @@ import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
-public class CrudeExtrapolatorBlockEntity extends BlockEntity implements ExtrapolatorInventory, SidedInventory {
+public class BlastChamberBlockEntity extends BlockEntity implements BlastChamberInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory;
     protected static final int PROCESS_ITEM_INDEX = 0;
     protected static final int CATALYST_INDEX = 1;
@@ -23,8 +23,8 @@ public class CrudeExtrapolatorBlockEntity extends BlockEntity implements Extrapo
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     private static final int MaxItemStackCount = 1;
 
-    public CrudeExtrapolatorBlockEntity(BlockPos pos, BlockState state) {
-        super(KlaxonBlockEntities.CRUDE_EXTRAPOLATOR_BLOCK_ENTITY, pos, state);
+    public BlastChamberBlockEntity(BlockPos pos, BlockState state) {
+        super(KlaxonBlockEntities.BLAST_CHAMBER_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     }
 
@@ -84,8 +84,8 @@ public class CrudeExtrapolatorBlockEntity extends BlockEntity implements Extrapo
 
     // hi are u a fuel
     private boolean isValidCatalyst(ItemStack stack) {
-        return stack.isIn(KlaxonTags.Items.EXTRAPOLATOR_FUEL_REGULAR) ||
-                stack.isIn(KlaxonTags.Items.EXTRAPOLATOR_FUEL_SUPER) ||
-                stack.isIn(KlaxonTags.Items.EXTRAPOLATOR_FUEL_HYPER);
+        return stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_REGULAR) ||
+                stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_SUPER) ||
+                stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_HYPER);
     }
 }

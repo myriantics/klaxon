@@ -9,12 +9,12 @@ import net.myriantics.klaxon.KlaxonMain;
 
 public class KlaxonTags {
     public static class Items {
-        public static final TagKey<Item> EXTRAPOLATOR_FUEL_REGULAR =
-                createTag("extrapolator_fuel_regular");
-        public static final TagKey<Item> EXTRAPOLATOR_FUEL_SUPER =
-                createTag("extrapolator_fuel_super");
-        public static final TagKey<Item> EXTRAPOLATOR_FUEL_HYPER =
-                createTag("extrapolator_fuel_hyper");
+        public static final TagKey<Item> BLAST_CHAMBER_FUEL_REGULAR =
+                createTag("blast_chamber_fuel_regular");
+        public static final TagKey<Item> BLAST_CHAMBER_FUEL_SUPER =
+                createTag("blast_chamber_fuel_super");
+        public static final TagKey<Item> BLAST_CHAMBER_FUEL_HYPER =
+                createTag("blast_chamber_fuel_hyper");
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, new Identifier(KlaxonMain.MOD_ID, name));
