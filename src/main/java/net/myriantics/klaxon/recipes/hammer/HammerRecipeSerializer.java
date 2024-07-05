@@ -1,9 +1,8 @@
-package net.myriantics.klaxon.recipes;
+package net.myriantics.klaxon.recipes.hammer;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -11,9 +10,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
-import org.apache.http.config.Registry;
 
 public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
     private HammerRecipeSerializer() {

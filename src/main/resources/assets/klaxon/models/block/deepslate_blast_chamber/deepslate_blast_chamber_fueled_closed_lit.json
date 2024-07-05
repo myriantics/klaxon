@@ -2,9 +2,9 @@
   "credit": "Made with Blockbench. Some JSON stuff also yonked from Spelunkery",
   "ambientocclusion": false,
   "textures": {
-    "front": "block/blast_furnace_front",
-    "side": "block/bee_nest_front",
-    "top": "block/barrel_top_open",
+    "front": "block/blast_furnace_front_on",
+    "side": "block/bee_nest_front_honey",
+    "top": "block/barrel_top",
     "bottom": "block/furnace_top",
     "back": "block/furnace_side",
     "particle": "klaxon:block/crude_extrapolator_topbottom"
