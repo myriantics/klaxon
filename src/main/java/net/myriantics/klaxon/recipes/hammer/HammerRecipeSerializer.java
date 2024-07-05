@@ -18,7 +18,7 @@ public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
 
     public static final HammerRecipeSerializer INSTANCE = new HammerRecipeSerializer();
 
-    public static final Identifier ID = new Identifier("klaxon:hammer_recipe");
+    public static final Identifier ID = new Identifier("klaxon:hammering");
 
     @Override
     public HammerRecipe read(Identifier id, JsonObject json) {

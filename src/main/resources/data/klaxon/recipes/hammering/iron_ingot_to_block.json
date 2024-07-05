@@ -1,5 +1,5 @@
 {
-  "type": "klaxon:hammer_recipe",
+  "type": "klaxon:hammering",
   "inputA" : {
     "item": "minecraft:iron_block"
   },
