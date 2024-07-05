@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.blockentities;
+package net.myriantics.klaxon.util;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
