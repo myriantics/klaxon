@@ -19,20 +19,15 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.BlastChamberBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class BlastChamberBlock extends BlockWithEntity {
 
-    enum FuelState implements StringIdentifiable {
-        HYPER, SUPER, REGULAR, EMPTY;
-
-        @Override
-        public String asString() {
-            return this.toString().toLowerCase();
-        }
-    }
-
-    static final BooleanProperty POWERED = BooleanProperty.of("powered");
-    static final EnumProperty<FuelState> FUEL_STATE = EnumProperty.of("fuel_state", FuelState.class);
-    static final DirectionProperty FACING = FacingBlock.FACING;
+    public static final BooleanProperty LIT = BooleanProperty.of("lit");
+    public static final BooleanProperty FUELED = BooleanProperty.of("fueled");
+    public static final BooleanProperty HATCH_OPEN = BooleanProperty.of("hatch_open");
+    public static final BooleanProperty POWERED = BooleanProperty.of("powered");
+    public static final DirectionProperty FACING = FacingBlock.FACING;
 
     public BlastChamberBlock(Settings settings) {
         super(settings);
@@ -40,7 +35,9 @@ public class BlastChamberBlock extends BlockWithEntity {
         setDefaultState(getStateManager().getDefaultState()
                 .with(FACING, Direction.NORTH)
                 .with(POWERED, false)
-                .with(FUEL_STATE, FuelState.EMPTY));
+                .with(LIT, false)
+                .with(FUELED, false)
+                .with(HATCH_OPEN, true));
     }
 
     /*@Override
@@ -97,12 +94,16 @@ public class BlastChamberBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(POWERED, FUEL_STATE, FACING);
+        builder.add(POWERED, FACING, LIT, FUELED, HATCH_OPEN);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
+        if (Objects.requireNonNull(context.getPlayer()).isSneaking()) {
+            return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing());
+        } else {
+            return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
+        }
     }
 
     @Nullable
