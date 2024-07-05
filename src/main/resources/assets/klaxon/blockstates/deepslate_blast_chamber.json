@@ -242,6 +242,137 @@
     "facing=west,powered=true,fueled=true,hatch_open=true,lit=true": {
       "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_lit",
       "y": -90
+    },
+
+
+    "facing=up,powered=false,fueled=false,hatch_open=false,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_closed_unlit",
+      "x": -90
+    },
+    "facing=up,powered=true,fueled=false,hatch_open=false,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_closed_unlit",
+      "x": -90
+    },
+    "facing=up,powered=false,fueled=true,hatch_open=false,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_closed_unlit",
+      "x": -90
+    },
+    "facing=up,powered=true,fueled=true,hatch_open=false,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_closed_unlit",
+      "x": -90
+    },
+    "facing=up,powered=false,fueled=false,hatch_open=true,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_open_unlit",
+      "x": -90
+    },
+    "facing=up,powered=true,fueled=false,hatch_open=true,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_open_unlit",
+      "x": -90
+    },
+    "facing=up,powered=false,fueled=true,hatch_open=true,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_unlit",
+      "x": -90
+    },
+    "facing=up,powered=true,fueled=true,hatch_open=true,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_unlit",
+      "x": -90
+    },
+    "facing=up,powered=false,fueled=false,hatch_open=false,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_closed_lit",
+      "x": -90
+    },
+    "facing=up,powered=true,fueled=false,hatch_open=false,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_closed_lit",
+      "x": -90
+    },
+    "facing=up,powered=false,fueled=true,hatch_open=false,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_closed_lit",
+      "x": -90
+    },
+    "facing=up,powered=true,fueled=true,hatch_open=false,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_closed_lit",
+      "x": -90
+    },
+    "facing=up,powered=false,fueled=false,hatch_open=true,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_open_lit",
+      "x": -90
+    },
+    "facing=up,powered=true,fueled=false,hatch_open=true,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_open_lit",
+      "x": -90
+    },
+    "facing=up,powered=false,fueled=true,hatch_open=true,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_lit",
+      "x": -90
+    },
+    "facing=up,powered=true,fueled=true,hatch_open=true,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_lit",
+      "x": -90
+    },
+
+    "facing=down,powered=false,fueled=false,hatch_open=false,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_closed_unlit",
+      "x": 90
+    },
+    "facing=down,powered=true,fueled=false,hatch_open=false,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_closed_unlit",
+      "x": 90
+    },
+    "facing=down,powered=false,fueled=true,hatch_open=false,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_closed_unlit",
+      "x": 90
+    },
+    "facing=down,powered=true,fueled=true,hatch_open=false,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_closed_unlit",
+      "x": 90
+    },
+    "facing=down,powered=false,fueled=false,hatch_open=true,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_open_unlit",
+      "x": 90
+    },
+    "facing=down,powered=true,fueled=false,hatch_open=true,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_open_unlit",
+      "x": 90
+    },
+    "facing=down,powered=false,fueled=true,hatch_open=true,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_unlit",
+      "x": 90
+    },
+    "facing=down,powered=true,fueled=true,hatch_open=true,lit=false": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_unlit",
+      "x": 90
+    },
+    "facing=down,powered=false,fueled=false,hatch_open=false,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_closed_lit",
+      "x": 90
+    },
+    "facing=down,powered=true,fueled=false,hatch_open=false,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_closed_lit",
+      "x": 90
+    },
+    "facing=down,powered=false,fueled=true,hatch_open=false,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_closed_lit",
+      "x": 90
+    },
+    "facing=down,powered=true,fueled=true,hatch_open=false,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_closed_lit",
+      "x": 90
+    },
+    "facing=down,powered=false,fueled=false,hatch_open=true,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_open_lit",
+      "x": 90
+    },
+    "facing=down,powered=true,fueled=false,hatch_open=true,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_empty_open_lit",
+      "x": 90
+    },
+    "facing=down,powered=false,fueled=true,hatch_open=true,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_lit",
+      "x": 90
+    },
+    "facing=down,powered=true,fueled=true,hatch_open=true,lit=true": {
+      "model": "klaxon:block/deepslate_blast_chamber/deepslate_blast_chamber_fueled_open_lit",
+      "x": 90
     }
   }
 }
