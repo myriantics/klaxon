@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipes;
+package net.myriantics.klaxon.recipes.hammer;
 
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;

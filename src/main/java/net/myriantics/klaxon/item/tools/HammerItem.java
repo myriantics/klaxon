@@ -13,7 +13,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.recipes.HammerRecipe;
+import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.Optional;

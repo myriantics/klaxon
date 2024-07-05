@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipes;
+package net.myriantics.klaxon.recipes.hammer;
 
 import com.google.gson.JsonObject;
 
