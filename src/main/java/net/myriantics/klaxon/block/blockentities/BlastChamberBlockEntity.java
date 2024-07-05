@@ -15,7 +15,7 @@ import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
-public class BlastChamberBlockEntity extends BlockEntity implements BlastChamberInventory, SidedInventory {
+public class BlastChamberBlockEntity extends BlockEntity implements ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory;
     protected static final int PROCESS_ITEM_INDEX = 0;
     protected static final int CATALYST_INDEX = 1;
