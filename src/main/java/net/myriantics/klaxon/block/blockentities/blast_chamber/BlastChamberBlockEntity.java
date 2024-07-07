@@ -88,10 +88,11 @@ public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenH
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return (slot == PROCESS_ITEM_INDEX || (slot == CATALYST_INDEX && isValidCatalyst(stack)))
+        /*return (slot == PROCESS_ITEM_INDEX || (slot == CATALYST_INDEX && isValidCatalyst(stack)))
                 && this.getStack(slot).isEmpty()
-                && stack.getCount() == 1;
+                && stack.getCount() == 1;*/
         // gotta love hacky fixes (maxcountperstack wasnt working)
+        return this.isValid(slot, stack);
     }
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
@@ -104,5 +105,10 @@ public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenH
         return stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_REGULAR) ||
                 stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_SUPER) ||
                 stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_HYPER);
+    }
+
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        return stack.getCount() < this.getMaxCountPerStack();
     }
 }
