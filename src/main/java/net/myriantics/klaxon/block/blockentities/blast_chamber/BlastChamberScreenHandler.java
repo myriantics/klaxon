@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
@@ -62,16 +63,17 @@ public class BlastChamberScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack quickMove(PlayerEntity player, int sourceSlotIndex) {
-        MinecraftClient.getInstance().player.sendMessage(Text.literal("client: " + player.getWorld().isClient));
+        //MinecraftClient.getInstance().player.sendMessage(Text.literal("client: " + player.getWorld().isClient));
         ItemStack newStack = ItemStack.EMPTY;
-        MinecraftClient.getInstance().player.sendMessage(Text.literal("index: " + sourceSlotIndex));
+        //MinecraftClient.getInstance().player.sendMessage(Text.literal("index: " + sourceSlotIndex));
+        MinecraftClient.getInstance().player.sendMessage(Text.literal("looped"));
         Slot slot = this.slots.get(sourceSlotIndex);
 
-        MinecraftClient.getInstance().player.sendMessage(Text.literal("start_index: " + 0));
-        MinecraftClient.getInstance().player.sendMessage(Text.literal("end_index: " + this.inventory.size()));
+        //MinecraftClient.getInstance().player.sendMessage(Text.literal("start_index: " + 0));
+        //MinecraftClient.getInstance().player.sendMessage(Text.literal("end_index: " + this.inventory.size()));
         if (slot != null && slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
-            newStack = originalStack.copy();
+            newStack = originalStack;
             if (sourceSlotIndex < this.inventory.size()) {
                 // machine inventory to player inventory
                 if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
@@ -87,7 +89,7 @@ public class BlastChamberScreenHandler extends ScreenHandler {
                     ItemStack filteredStack = newStack.copyWithCount(BlastChamberBlockEntity.MaxItemStackCount);
                     newStack.decrement(BlastChamberBlockEntity.MaxItemStackCount);
                     this.slots.get(i).setStack(filteredStack);
-
+                    break;
                 }
             }
 
@@ -99,6 +101,6 @@ public class BlastChamberScreenHandler extends ScreenHandler {
         }
 
         // If above fails, return original stack as new stack, so nothing changes.
-        return newStack;
+        return ItemStack.EMPTY;
     }
 }
