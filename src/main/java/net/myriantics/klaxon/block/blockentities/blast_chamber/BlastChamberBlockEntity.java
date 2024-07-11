@@ -5,6 +5,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -27,7 +28,7 @@ public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenH
     protected static final int CATALYST_INDEX = 1;
     private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
-    private static final int MaxItemStackCount = 1;
+    public static final int MaxItemStackCount = 1;
 
     public BlastChamberBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.BLAST_CHAMBER_BLOCK_ENTITY, pos, state);
@@ -42,6 +43,8 @@ public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenH
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        player.sendMessage(Text.literal("is_client: " + player.getWorld().isClient));
+        player.sendMessage(Text.literal("bc_maxcountperstack: " + this.getMaxCountPerStack()));
         return new BlastChamberScreenHandler(syncId, playerInventory, this);
     }
 
@@ -77,6 +80,10 @@ public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenH
         return MaxItemStackCount;
     }
 
+    @Override
+    public boolean canTransferTo(Inventory hopperInventory, int slot, ItemStack stack) {
+        return ImplementedInventory.super.canTransferTo(hopperInventory, slot, stack);
+    }
 
     @Override
     public int[] getAvailableSlots(Direction side) {
@@ -107,8 +114,11 @@ public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenH
                 stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_HYPER);
     }
 
+    // you can still put invalid items in the slots, but they won't do anything
+    // could be changed
+
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        return stack.getCount() < this.getMaxCountPerStack();
+        return this.getStack(slot).isEmpty();
     }
 }
