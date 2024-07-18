@@ -28,6 +28,7 @@ public class HammerItem extends Item {
 
     public HammerItem(Settings settings) {
         super(settings);
+
     }
 
     @Override
@@ -36,7 +37,7 @@ public class HammerItem extends Item {
             int damageAmount;
             if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
                 // steel tools have innate unbreaking to compensate for unenchantability
-                damageAmount = Math.random() < 0.3 ? 1 : 0;
+                damageAmount = Math.random() < 0.2 ? 1 : 0;
             } else {
                 damageAmount = 1;
             }
@@ -55,9 +56,9 @@ public class HammerItem extends Item {
     @Override
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
-            if (state.isIn(KlaxonTags.Blocks.GLASS_BLOCKS)) {
+            if (state.isIn(KlaxonTags.Blocks.GLASS_BLOCKS) || state.isIn(KlaxonTags.Blocks.GLASS_PANES)) {
                 // haha glass go smash
-                // may just make it have ludicrous mining speed for any hammer minable blocks but we'll see how this goes
+                // may just make it have ludicrous mining speed for any hammer mineable blocks but we'll see how this goes
                 return 20.0F;
             } else {
                 return 6.0F;
