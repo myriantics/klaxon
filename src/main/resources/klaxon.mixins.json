@@ -3,7 +3,8 @@
 	"package": "net.myriantics.klaxon.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"HammerShieldPunctureMixin"
+		"HammerShieldPunctureMixin",
+		"PlayerAttackDamageTypeMixin"
 	],
 	"client": [
 		"ItemRendererAccessor",

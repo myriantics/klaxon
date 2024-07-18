@@ -3,9 +3,12 @@ package net.myriantics.klaxon.item.tools;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.*;
@@ -20,11 +23,14 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
+import net.myriantics.klaxon.util.KlaxonDamageTypes;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.Optional;
 
 public class HammerItem extends Item {
+    public static final float ATTACK_DAMAGE = 12.0F;
+    public static final float ATTACK_SPEED = 3F;
 
     public HammerItem(Settings settings) {
         super(settings);
@@ -46,6 +52,11 @@ public class HammerItem extends Item {
             });
         }
         return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE) || super.postMine(stack, world, state, pos, miner);
+    }
+
+    @Override
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        return super.postHit(stack, target, attacker);
     }
 
     @Override

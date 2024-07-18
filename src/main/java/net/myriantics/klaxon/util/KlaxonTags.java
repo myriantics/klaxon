@@ -1,6 +1,9 @@
 package net.myriantics.klaxon.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -38,6 +41,14 @@ public class KlaxonTags {
 
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, new Identifier(KlaxonMain.MOD_ID, name));
+        }
+    }
+
+    public static class DamageTypeTags {
+
+
+        private static TagKey<DamageType> createTag(String name) {
+            return TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(KlaxonMain.MOD_ID, name));
         }
     }
 }

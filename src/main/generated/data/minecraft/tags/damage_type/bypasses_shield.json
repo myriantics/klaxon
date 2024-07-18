@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "klaxon:hammer_walloping",
+      "required": false
+    }
+  ]
+}
