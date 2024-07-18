@@ -1,15 +1,21 @@
 package net.myriantics.klaxon.item.tools;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.*;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,8 +25,46 @@ import net.myriantics.klaxon.util.KlaxonTags;
 import java.util.Optional;
 
 public class HammerItem extends Item {
+
     public HammerItem(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
+        if (!world.isClient && !state.isIn(BlockTags.FIRE)) {
+            int damageAmount;
+            if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
+                // steel tools have innate unbreaking to compensate for unenchantability
+                damageAmount = Math.random() < 0.3 ? 1 : 0;
+            } else {
+                damageAmount = 1;
+            }
+            stack.damage(damageAmount, miner, (e) -> {
+                e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
+            });
+        }
+        return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE) || super.postMine(stack, world, state, pos, miner);
+    }
+
+    @Override
+    public boolean isSuitableFor(BlockState state) {
+        return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE);
+    }
+
+    @Override
+    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
+        if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
+            if (state.isIn(KlaxonTags.Blocks.GLASS_BLOCKS)) {
+                // haha glass go smash
+                // may just make it have ludicrous mining speed for any hammer minable blocks but we'll see how this goes
+                return 20.0F;
+            } else {
+                return 6.0F;
+            }
+        } else {
+            return super.getMiningSpeedMultiplier(stack, state);
+        }
     }
 
     @Override
@@ -59,7 +103,10 @@ public class HammerItem extends Item {
         return ActionResult.PASS;
     }
 
-
+    @Override
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
+        return ingredient.isIn(KlaxonTags.Items.STEEL_INGOTS);
+    }
 
     @Override
     public boolean isEnchantable(ItemStack stack) {

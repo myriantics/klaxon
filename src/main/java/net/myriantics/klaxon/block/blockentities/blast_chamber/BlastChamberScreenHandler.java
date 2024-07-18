@@ -73,7 +73,7 @@ public class BlastChamberScreenHandler extends ScreenHandler {
         //MinecraftClient.getInstance().player.sendMessage(Text.literal("end_index: " + this.inventory.size()));
         if (slot != null && slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
-            newStack = originalStack;
+            newStack = originalStack.copy();
             if (sourceSlotIndex < this.inventory.size()) {
                 // machine inventory to player inventory
                 if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {

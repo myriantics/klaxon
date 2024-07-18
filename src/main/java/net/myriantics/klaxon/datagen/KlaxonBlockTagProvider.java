@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.myriantics.klaxon.util.KlaxonTags;
 
@@ -22,5 +23,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.ANVIL)
                 .add(Blocks.CHIPPED_ANVIL)
                 .add(Blocks.DAMAGED_ANVIL);
+
+        getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_MINEABLE)
+                .addOptionalTag(KlaxonTags.Blocks.GLASS_BLOCKS);
+                
     }
 }
