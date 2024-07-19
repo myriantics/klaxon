@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin;
+package net.myriantics.klaxon.mixin.hammer;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.LivingEntity;

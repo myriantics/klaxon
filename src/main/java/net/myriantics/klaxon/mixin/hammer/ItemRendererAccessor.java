@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin;
+package net.myriantics.klaxon.mixin.hammer;
 
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.item.ItemRenderer;
