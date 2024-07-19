@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin;
+package net.myriantics.klaxon.mixin.hammer;
 
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -7,7 +7,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
 import net.myriantics.klaxon.item.KlaxonItems;
 import org.spongepowered.asm.mixin.Mixin;

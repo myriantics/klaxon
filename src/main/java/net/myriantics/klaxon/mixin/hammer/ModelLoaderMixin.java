@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin;
+package net.myriantics.klaxon.mixin.hammer;
 
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.model.ModelLoader;

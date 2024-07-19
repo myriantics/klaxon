@@ -45,6 +45,8 @@ public class KlaxonTags {
     }
 
     public static class DamageTypeTags {
+        public static final TagKey<DamageType> SHIELD_PUNCTURE_DAMAGE_TYPES =
+                createTag("shield_puncture_damage_types");
 
 
         private static TagKey<DamageType> createTag(String name) {
