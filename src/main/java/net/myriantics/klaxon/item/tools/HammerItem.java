@@ -51,7 +51,7 @@ public class HammerItem extends Item {
                 e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
             });
         }
-        return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE) || super.postMine(stack, world, state, pos, miner);
+        return stack.isSuitableFor(state) || super.postMine(stack, world, state, pos, miner);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class HammerItem extends Item {
 
     @Override
     public boolean isSuitableFor(BlockState state) {
-        return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE);
+        return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE) && !state.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT);
     }
 
     @Override
@@ -78,6 +78,8 @@ public class HammerItem extends Item {
                 // haha glass go smash
                 // may just make it have ludicrous mining speed for any hammer mineable blocks but we'll see how this goes
                 return 20.0F;
+            } else if (state.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)){
+                return 0.0F;
             } else {
                 return 6.0F;
             }
