@@ -1,9 +1,14 @@
 package net.myriantics.klaxon.item.tools;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.*;
@@ -20,12 +25,16 @@ import net.myriantics.klaxon.util.KlaxonTags;
 import java.util.Optional;
 
 public class HammerItem extends Item {
-    public static final float ATTACK_DAMAGE = 12.0F;
-    public static final float ATTACK_SPEED = 3F;
+    public static final float ATTACK_DAMAGE = 13.0F;
+    public static final float ATTACK_SPEED = -3.6F;
+    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
     public HammerItem(Settings settings) {
         super(settings);
-
+        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", ATTACK_DAMAGE, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", ATTACK_SPEED, EntityAttributeModifier.Operation.ADDITION));
+        this.attributeModifiers = builder.build();
     }
 
     @Override
@@ -77,6 +86,10 @@ public class HammerItem extends Item {
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
 
+        if (player == null) {
+            return ActionResult.PASS;
+        }
+
         if(interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
 
             RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
@@ -114,5 +127,10 @@ public class HammerItem extends Item {
     @Override
     public boolean isEnchantable(ItemStack stack) {
         return false;
+    }
+
+    @Override
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
     }
 }
