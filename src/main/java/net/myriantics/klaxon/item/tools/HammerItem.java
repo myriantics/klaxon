@@ -56,6 +56,13 @@ public class HammerItem extends Item {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        World world = attacker.getWorld();
+        if (!world.isClient) {
+            int damageAmount = Math.random() < 0.5 ? 1 : 0;
+            stack.damage(damageAmount, attacker, (e) -> {
+                e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
+            });
+        }
         return super.postHit(stack, target, attacker);
     }
 
