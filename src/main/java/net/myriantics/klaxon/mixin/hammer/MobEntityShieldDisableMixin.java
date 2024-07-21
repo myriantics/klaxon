@@ -12,6 +12,7 @@ import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.item.tools.HammerItem;
+import net.myriantics.klaxon.util.KlaxonTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,32 +20,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MobEntity.class)
 public abstract class MobEntityShieldDisableMixin {
-    // this ensures player's shield is still broken while attack is carried out
-    // this is not very elegant but ehh ill clean it up later
-    @ModifyExpressionValue(
-            method = "disablePlayerShield",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;")
-    )
-    private Item checkForHammer(Item original, @Local(argsOnly = true) PlayerEntity player) {
-        if (original instanceof HammerItem) {
-            player.sendMessage(Text.literal("test 1"));
-            return Items.NETHERITE_AXE;
-        }
-        return original;
-    }
-
     @WrapOperation(
             method = "tryAttack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;disablePlayerShield(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)V")
     )
-    private void hammerShieldCondition(MobEntity instance, PlayerEntity player, ItemStack mobStack, ItemStack playerStack, Operation<Void> original) {
-        if (mobStack.isOf(KlaxonItems.HAMMER)) {
+    private void shieldDisableWrapper(MobEntity instance, PlayerEntity player, ItemStack mobStack, ItemStack playerStack, Operation<Void> original) {
+        if (!mobStack.isEmpty() && !playerStack.isEmpty() && mobStack.isIn(KlaxonTags.Items.SHEILD_DISABLING_MELEE) && playerStack.isOf(Items.SHIELD)) {
+            player.getItemCooldownManager().set(playerStack.getItem(), 100);
+            player.stopUsingItem();
+            instance.getWorld().sendEntityStatus(player, (byte) 30);
 
+        } else {
+            original.call(instance, player, mobStack, playerStack);
         }
-
-        player.sendMessage(Text.literal("test 2"));
-        player.disableShield(player.isSprinting());
     }
-
-    //private void hammerShieldDisable
 }
