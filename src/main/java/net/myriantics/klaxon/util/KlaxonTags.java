@@ -1,12 +1,12 @@
 package net.myriantics.klaxon.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
@@ -22,6 +22,9 @@ public class KlaxonTags {
 
         public static final TagKey<Item> STEEL_INGOTS =
                 TagKey.of(RegistryKeys.ITEM, new Identifier("c", "ingots/steel"));
+
+        public static final TagKey<Item> SHEILD_DISABLING_MELEE =
+                createTag("shield_disabling_melee");
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, new Identifier(KlaxonMain.MOD_ID, name));
@@ -51,6 +54,16 @@ public class KlaxonTags {
 
         private static TagKey<DamageType> createTag(String name) {
             return TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(KlaxonMain.MOD_ID, name));
+        }
+    }
+
+    public static class Entities {
+        public static final TagKey<EntityType<?>> HEAVY_HITTERS =
+                createTag("heavy_hitter_entities");
+
+
+        private static TagKey<EntityType<?>> createTag(String name) {
+            return TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(KlaxonMain.MOD_ID, name));
         }
     }
 }

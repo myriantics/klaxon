@@ -7,6 +7,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
+import net.myriantics.klaxon.util.KlaxonTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -19,8 +20,11 @@ public abstract class MobEntityAttackDamageTypeMixin {
             ordinal = 0))
     private DamageSource checkCustomAttackType(DamageSource original, @Local(ordinal = 0, argsOnly = true) Entity target) {
         if(original.getAttacker() instanceof MobEntity attacker && attacker.getMainHandStack().isOf(KlaxonItems.HAMMER)) {
+            if (attacker.getType().isIn(KlaxonTags.Entities.HEAVY_HITTERS)) {
+                return KlaxonDamageTypes.hammerWalloping(attacker);
+            }
 
-            return KlaxonDamageTypes.hammerWalloping(attacker);
+            return KlaxonDamageTypes.hammerBonking(attacker);
         }
 
         return original;

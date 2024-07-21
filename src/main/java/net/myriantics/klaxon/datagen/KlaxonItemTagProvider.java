@@ -29,5 +29,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.TNT_MINECART);
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_INGOTS)
                 .add(KlaxonItems.STEEL_INGOT);
+
+        getOrCreateTagBuilder(KlaxonTags.Items.SHEILD_DISABLING_MELEE)
+                .add(KlaxonItems.HAMMER);
     }
 }
