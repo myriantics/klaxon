@@ -6,23 +6,22 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.myriantics.klaxon.KlaxonMain;
 
-public class BlastChamberScreenHandler extends ScreenHandler {
+public class BlastProcessorScreenHandler extends ScreenHandler {
     private final Inventory inventory;
 
     // client constructor
-    public BlastChamberScreenHandler(int syncId, PlayerInventory playerInventory) {
+    public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new SimpleInventory(2));
     }
 
     // server constructor
-    public BlastChamberScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
-        super(KlaxonMain.BLAST_CHAMBER_SCREEN_HANDLER, syncId);
+    public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+        super(KlaxonMain.BLAST_PROCESSOR_SCREEN_HANDLER, syncId);
         checkSize(inventory, 2);
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);
@@ -36,7 +35,7 @@ public class BlastChamberScreenHandler extends ScreenHandler {
                     // Prevents visual stutter on client
                     @Override
                     public int getMaxItemCount() {
-                        return BlastChamberBlockEntity.MaxItemStackCount;
+                        return BlastProcessorBlockEntity.MaxItemStackCount;
                     }
                 });
             }
@@ -86,8 +85,8 @@ public class BlastChamberScreenHandler extends ScreenHandler {
                     if (this.slots.get(i).hasStack() || !this.slots.get(i).canInsert(newStack)) {
                         continue;
                     }
-                    ItemStack filteredStack = newStack.copyWithCount(BlastChamberBlockEntity.MaxItemStackCount);
-                    newStack.decrement(BlastChamberBlockEntity.MaxItemStackCount);
+                    ItemStack filteredStack = newStack.copyWithCount(BlastProcessorBlockEntity.MaxItemStackCount);
+                    newStack.decrement(BlastProcessorBlockEntity.MaxItemStackCount);
                     this.slots.get(i).setStack(filteredStack);
                     break;
                 }

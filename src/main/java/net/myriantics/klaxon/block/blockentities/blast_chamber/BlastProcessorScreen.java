@@ -8,12 +8,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class BlastChamberScreen extends HandledScreen<BlastChamberScreenHandler> {
+public class BlastProcessorScreen extends HandledScreen<BlastProcessorScreenHandler> {
     private static final Identifier TEXTURE = new Identifier("minecraft", "textures/gui/container/dispenser.png");
 
     // completely yonked from fabric wiki
 
-    public BlastChamberScreen(BlastChamberScreenHandler handler, PlayerInventory inventory, Text title) {
+    public BlastProcessorScreen(BlastProcessorScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
 
