@@ -6,6 +6,7 @@ import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.item.KlaxonItems;
 
 public class HammerRecipe implements Recipe<CraftingInventory>{
     private final Ingredient inputA;
@@ -45,6 +46,11 @@ public class HammerRecipe implements Recipe<CraftingInventory>{
     @Override
     public Identifier getId() {
         return this.id;
+    }
+
+    @Override
+    public ItemStack createIcon() {
+        return new ItemStack(KlaxonItems.HAMMER);
     }
 
     @Override
