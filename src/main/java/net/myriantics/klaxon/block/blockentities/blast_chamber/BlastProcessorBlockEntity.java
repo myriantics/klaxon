@@ -22,7 +22,7 @@ import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
-public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
+public class BlastProcessorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     protected static final int PROCESS_ITEM_INDEX = 0;
     protected static final int CATALYST_INDEX = 1;
@@ -30,7 +30,7 @@ public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenH
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
 
-    public BlastChamberBlockEntity(BlockPos pos, BlockState state) {
+    public BlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.BLAST_CHAMBER_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     }
@@ -45,7 +45,7 @@ public class BlastChamberBlockEntity extends BlockEntity implements NamedScreenH
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         player.sendMessage(Text.literal("is_client: " + player.getWorld().isClient));
         player.sendMessage(Text.literal("bc_maxcountperstack: " + this.getMaxCountPerStack()));
-        return new BlastChamberScreenHandler(syncId, playerInventory, this);
+        return new BlastProcessorScreenHandler(syncId, playerInventory, this);
     }
 
     @Override

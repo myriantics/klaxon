@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastChamberBlockEntity;
+import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastProcessorBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -47,7 +47,7 @@ public class BlastChamberBlock extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof BlastChamberBlockEntity) {
+            if (blockEntity instanceof BlastProcessorBlockEntity) {
                 ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
                 world.updateComparators(pos, this);
             }
@@ -59,8 +59,8 @@ public class BlastChamberBlock extends BlockWithEntity {
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof BlastChamberBlockEntity) {
-            ((BlastChamberBlockEntity) blockEntity).tick(world, pos, state);
+        if (blockEntity instanceof BlastProcessorBlockEntity) {
+            ((BlastProcessorBlockEntity) blockEntity).tick(world, pos, state);
         }
 
     }
@@ -68,7 +68,7 @@ public class BlastChamberBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new BlastChamberBlockEntity(pos, state);
+        return new BlastProcessorBlockEntity(pos, state);
     }
 
     @Override
