@@ -15,12 +15,17 @@ import java.util.Map;
 public class ItemExplosionPowerDefinitions {
     public static Map<Item, Double> createItemExplosionPowerMap() {
         Map<Item, Double> map = Maps.newLinkedHashMap();
-        defineItemExplosionPower(map, Blocks.TNT, 4.0);
-        defineItemExplosionPower(map, Items.GUNPOWDER, 0.3);
-        defineItemExplosionPower(map, Items.FIREWORK_STAR, 0.2);
-        defineItemExplosionPower(map, Items.FIREWORK_ROCKET, 0.1);
+        defineItemExplosionPower(map, Items.ENDER_DRAGON_SPAWN_EGG, 20.0);
+        defineItemExplosionPower(map, Items.WITHER_SPAWN_EGG, 10.0);
         defineItemExplosionPower(map, Items.END_CRYSTAL, 6.0);
+        defineItemExplosionPower(map, Items.TNT_MINECART, 5.0);
+        defineItemExplosionPower(map, Items.TNT, 4.0);
+        defineItemExplosionPower(map, Items.GHAST_SPAWN_EGG, 3.5);
+        defineItemExplosionPower(map, Items.CREEPER_SPAWN_EGG, 3.0);
         defineItemExplosionPower(map, Items.FIRE_CHARGE, 0.5);
+        defineItemExplosionPower(map, Items.FIREWORK_STAR, 0.4);
+        defineItemExplosionPower(map, Items.GUNPOWDER, 0.3);
+        defineItemExplosionPower(map, Items.FIREWORK_ROCKET, 0.1);
 
         return map;
     }
