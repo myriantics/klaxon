@@ -2,6 +2,7 @@ package net.myriantics.klaxon.item.tools;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
@@ -20,16 +21,19 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.Optional;
 
-public class HammerItem extends Item {
+public class HammerItem extends Item implements AttackBlockCallback {
     public static final float ATTACK_DAMAGE = 9.0F;
     public static final float ATTACK_SPEED = -2.8F;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
@@ -40,6 +44,7 @@ public class HammerItem extends Item {
         builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", ATTACK_DAMAGE, EntityAttributeModifier.Operation.ADDITION));
         builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", ATTACK_SPEED, EntityAttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
+        AttackBlockCallback.EVENT.register(this);
     }
 
     @Override
@@ -81,7 +86,7 @@ public class HammerItem extends Item {
         if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
             if (state.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK)) {
                 // haha glass go smash
-                return 30.0F;
+                return 50.0F;
             } else {
                 return 6.0F;
             }
@@ -103,37 +108,7 @@ public class HammerItem extends Item {
 
         // walljump (TOTALLY NOT YOINKED FROM TRIDENT CODE WITH TWEAKS)
         if (!player.isOnGround()) {
-            float playerYaw = player.getYaw();
-            float playerPitch = player.getPitch();
-            float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
-            float k = MathHelper.sin(playerPitch * 0.017453292F);
-            float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
-            float m = MathHelper.sqrt(h * h + k * k + l * l);
-            float n = 0.8F * player.getAttackCooldownProgress(0.5f);
-            h *= n / m;
-            k *= n / m;
-            l *= n / m;
-            // may remove, idk thought itd be a good tradeoff for the power of the hammer
-            // keeps wind charges relevant and encourages going up
-            // may need to decrease attack cooldown or at least its impact on walljump power scaling
-            player.handleFallDamage(player.fallDistance, 1, player.getDamageSources().fall());
 
-            // could get quirky and make this setVelocity instead - would add funky ass parkour potential
-            player.addVelocity(h, k, l);
-
-            player.resetLastAttackedTicks();
-
-            if (world.isClient) {
-                return ActionResult.SUCCESS;
-            }
-
-            // damage it wheee
-            // damage is based off of attack cooldown progress because thats cool ig
-            if (!player.isCreative()) {
-                context.getStack().damage((Math.random() < player.getAttackCooldownProgress(0.5f) ? 1 : 0), player, (e) -> {
-                    e.sendEquipmentBreakStatus(EquipmentSlotHelper.convert(context.getHand()));
-                });
-            }
 
             // hammering recipe
         } else if(interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
@@ -159,11 +134,53 @@ public class HammerItem extends Item {
                     0,0.2,0));
             player.getOffHandStack().decrement(1);
         }
+        return ActionResult.PASS;
+    }
 
-        // dummy usage, just like hitting something in lethal and it makes the fail sound
-        // need to add some kind of sound to signify that the jump or recipe didnt work
-        // may need to remove because it messes with shielding and other stuff in combat
-        return ActionResult.SUCCESS;
+    @Override
+    public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
+
+        BlockState targetBlockState = world.getBlockState(pos);
+
+        if (player == null) {
+            return ActionResult.PASS;
+        }
+
+        if (!player.isOnGround() && player.getMainHandStack().isOf(KlaxonItems.HAMMER)) {
+            float playerYaw = player.getYaw();
+            float playerPitch = player.getPitch();
+            float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
+            float k = MathHelper.sin(playerPitch * 0.017453292F);
+            float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
+            float m = MathHelper.sqrt(h * h + k * k + l * l);
+            float n = 0.8F * player.getAttackCooldownProgress(0.5f);
+            h *= n / m;
+            k *= n / m;
+            l *= n / m;
+            // may remove, idk thought itd be a good tradeoff for the power of the hammer
+            // keeps wind charges relevant and encourages going up
+            // may need to decrease attack cooldown or at least its impact on walljump power scaling
+            // made it dynamic based on whether its an instabreak or not to account for dream shear leaf clutch edge case
+            if (!targetBlockState.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK)) {
+                player.handleFallDamage(player.fallDistance, 1, player.getDamageSources().fall());
+            }
+            player.onLanding();
+
+            // could get quirky and make this setVelocity instead - would add funky ass parkour potential
+            player.addVelocity(h, k, l);
+
+            player.resetLastAttackedTicks();
+
+            // damage it wheee
+            // damage is based off of attack cooldown progress because thats cool ig
+            if (!player.isCreative()) {
+                player.getMainHandStack().damage((Math.random() < player.getAttackCooldownProgress(0.5f) ? 1 : 0), player, (e) -> {
+                    e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
+                });
+            }
+        }
+
+        return ActionResult.PASS;
     }
 
     @Override
@@ -176,9 +193,14 @@ public class HammerItem extends Item {
         return false;
     }
 
-    // could change this to edit walljump behavior when hammer is in offhand - i think its fine for now but we'll see
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
         return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
+    }
+
+    // so you can walljump in creative without demolishing your world
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return !miner.isCreative();
     }
 }
