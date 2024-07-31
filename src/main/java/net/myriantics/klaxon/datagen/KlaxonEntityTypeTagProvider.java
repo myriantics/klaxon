@@ -25,6 +25,7 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
                 .add(EntityType.PIGLIN_BRUTE)
                 // haha funny fox bonk
                 .add(EntityType.FOX)
-                .add(EntityType.WITHER_SKELETON);
+                .add(EntityType.WITHER_SKELETON)
+                .add(EntityType.ZOMBIFIED_PIGLIN);
     }
 }

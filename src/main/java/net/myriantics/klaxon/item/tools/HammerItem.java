@@ -9,6 +9,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.*;
@@ -18,15 +21,17 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
+import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.Optional;
 
 public class HammerItem extends Item {
-    public static final float ATTACK_DAMAGE = 13.0F;
-    public static final float ATTACK_SPEED = -3.6F;
+    public static final float ATTACK_DAMAGE = 9.0F;
+    public static final float ATTACK_SPEED = -2.8F;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
     public HammerItem(Settings settings) {
@@ -99,15 +104,44 @@ public class HammerItem extends Item {
             return ActionResult.PASS;
         }
 
-        if(interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
+        // walljump (TOTALLY NOT YOINKED FROM TRIDENT CODE WITH TWEAKS)
+        if (!player.isOnGround()) {
+            float playerYaw = player.getYaw();
+            float playerPitch = player.getPitch();
+            float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
+            float k = MathHelper.sin(playerPitch * 0.017453292F);
+            float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
+            float m = MathHelper.sqrt(h * h + k * k + l * l);
+            float n = 0.8F * player.getAttackCooldownProgress(0.5f);
+            h *= n / m;
+            k *= n / m;
+            l *= n / m;
+            // may remove, idk thought itd be a good tradeoff for the power of the hammer
+            player.handleFallDamage(player.fallDistance, 1, player.getDamageSources().fall());
 
+            player.addVelocity(h, k, l);
+
+            player.resetLastAttackedTicks();
+
+            if (world.isClient) {
+                return ActionResult.SUCCESS;
+            }
+
+            // damage it wheee
+            // damage is based off of attack cooldown progress because thats cool ig
+            if (!player.isCreative()) {
+                context.getStack().damage((Math.random() < player.getAttackCooldownProgress(0.5f) ? 1 : 0), player, (e) -> {
+                    e.sendEquipmentBreakStatus(EquipmentSlotHelper.convert(context.getHand()));
+                });
+            }
+
+            // hammering recipe
+        } else if(interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
             RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
             CraftingInventory dummyInventory = new CraftingInventory(player.currentScreenHandler, 1, 1);
-            // player.currentScreenHandler my savior holy frick :|
             dummyInventory.setStack(0, player.getOffHandStack());
 
-            Optional<HammerRecipe> match = world.getRecipeManager()
-                    .getFirstMatch(type, dummyInventory, world);
+            Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
 
             if(match.isEmpty()) {
                 return ActionResult.FAIL;
@@ -124,8 +158,11 @@ public class HammerItem extends Item {
                     match.get().getOutput(world.getRegistryManager()).copy(),
                     0,0.2,0));
             player.getOffHandStack().decrement(1);
-            }
-        return ActionResult.PASS;
+        }
+
+        // dummy usage, just like hitting something in lethal and it makes the fail sound
+        // need to add some kind of sound to signify that the jump or recipe didnt work
+        return ActionResult.SUCCESS;
     }
 
     @Override
