@@ -36,11 +36,8 @@ public class KlaxonTags {
                 createTag("hammer_interaction_base");
         public static final TagKey<Block> HAMMER_MINEABLE =
                 createTag("hammer_mineable");
-
-        public static final TagKey<Block> GLASS_BLOCKS =
-                TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_blocks"));
-        public static final TagKey<Block> GLASS_PANES =
-                TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_panes"));
+        public static final TagKey<Block> HAMMER_INSTABREAK =
+                createTag("hammer_instabreak");
 
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, new Identifier(KlaxonMain.MOD_ID, name));

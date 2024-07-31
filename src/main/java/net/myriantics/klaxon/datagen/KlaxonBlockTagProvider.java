@@ -4,8 +4,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.AnvilScreenHandler;
+import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -26,8 +29,11 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.DAMAGED_ANVIL);
 
         getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_MINEABLE)
-                .addOptionalTag(KlaxonTags.Blocks.GLASS_BLOCKS)
-                .addOptionalTag(KlaxonTags.Blocks.GLASS_PANES);
-                
+                .addOptionalTag(KlaxonTags.Blocks.HAMMER_INSTABREAK);
+
+        getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_INSTABREAK)
+                .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_blocks")))
+                .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_panes")));
+
     }
 }
