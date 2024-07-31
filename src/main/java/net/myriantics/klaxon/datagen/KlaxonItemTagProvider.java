@@ -17,16 +17,6 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
-        getOrCreateTagBuilder(KlaxonTags.Items.BLAST_CHAMBER_FUEL_REGULAR)
-                .add(Items.GUNPOWDER)
-                .add(Items.FIREWORK_ROCKET)
-                .add(Items.FIRE_CHARGE);
-        getOrCreateTagBuilder(KlaxonTags.Items.BLAST_CHAMBER_FUEL_SUPER)
-                .add(Items.TNT)
-                .add(Items.FIRE_CHARGE);
-        getOrCreateTagBuilder(KlaxonTags.Items.BLAST_CHAMBER_FUEL_HYPER)
-                .add(Items.END_CRYSTAL)
-                .add(Items.TNT_MINECART);
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_INGOTS)
                 .add(KlaxonItems.STEEL_INGOT);
 

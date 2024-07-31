@@ -2,11 +2,7 @@
   "replace": false,
   "values": [
     {
-      "id": "#c:glass_blocks",
-      "required": false
-    },
-    {
-      "id": "#c:glass_panes",
+      "id": "#klaxon:hammer_instabreak",
       "required": false
     }
   ]

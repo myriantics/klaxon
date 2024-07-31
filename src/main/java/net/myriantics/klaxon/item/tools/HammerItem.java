@@ -79,12 +79,9 @@ public class HammerItem extends Item {
     @Override
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
-            if (state.isIn(KlaxonTags.Blocks.GLASS_BLOCKS) || state.isIn(KlaxonTags.Blocks.GLASS_PANES)) {
+            if (state.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK)) {
                 // haha glass go smash
-                // may just make it have ludicrous mining speed for any hammer mineable blocks but we'll see how this goes
-                return 20.0F;
-            } else if (state.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)){
-                return 0.0F;
+                return 30.0F;
             } else {
                 return 6.0F;
             }
@@ -117,8 +114,11 @@ public class HammerItem extends Item {
             k *= n / m;
             l *= n / m;
             // may remove, idk thought itd be a good tradeoff for the power of the hammer
+            // keeps wind charges relevant and encourages going up
+            // may need to decrease attack cooldown or at least its impact on walljump power scaling
             player.handleFallDamage(player.fallDistance, 1, player.getDamageSources().fall());
 
+            // could get quirky and make this setVelocity instead - would add funky ass parkour potential
             player.addVelocity(h, k, l);
 
             player.resetLastAttackedTicks();
@@ -162,6 +162,7 @@ public class HammerItem extends Item {
 
         // dummy usage, just like hitting something in lethal and it makes the fail sound
         // need to add some kind of sound to signify that the jump or recipe didnt work
+        // may need to remove because it messes with shielding and other stuff in combat
         return ActionResult.SUCCESS;
     }
 
@@ -175,6 +176,7 @@ public class HammerItem extends Item {
         return false;
     }
 
+    // could change this to edit walljump behavior when hammer is in offhand - i think its fine for now but we'll see
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
         return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
