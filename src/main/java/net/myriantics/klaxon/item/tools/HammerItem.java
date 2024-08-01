@@ -3,8 +3,10 @@ package net.myriantics.klaxon.item.tools;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -24,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -32,6 +35,7 @@ import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -87,8 +91,8 @@ public class HammerItem extends Item implements AttackBlockCallback {
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
             if (state.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK)) {
-                // haha glass go smash
-                return 50.0F;
+                // idk why you need the world and pos parameters for this the method doesnt even use them lmao
+                return state.getHardness(null, null) * 30 * 25;
             } else {
                 return 6.0F;
             }
@@ -144,8 +148,8 @@ public class HammerItem extends Item implements AttackBlockCallback {
             return ActionResult.PASS;
         }
 
-        // walljump (TOTALLY NOT YOINKED FROM TRIDENT CODE WITH TWEAKS)
         if (!player.isOnGround() && player.getMainHandStack().isOf(KlaxonItems.HAMMER)) {
+
             float playerYaw = player.getYaw();
             float playerPitch = player.getPitch();
             float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
@@ -156,6 +160,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
             h *= n / m;
             k *= n / m;
             l *= n / m;
+
             // may remove, idk thought itd be a good tradeoff for the power of the hammer
             // keeps wind charges relevant and encourages going up
             // may need to decrease attack cooldown or at least its impact on walljump power scaling
@@ -170,6 +175,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
 
             player.resetLastAttackedTicks();
 
+
             // damage it wheee
             // damage is based off of attack cooldown progress because thats cool ig
             if (!player.isCreative()) {
@@ -181,7 +187,6 @@ public class HammerItem extends Item implements AttackBlockCallback {
 
         return ActionResult.PASS;
     }
-
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
         return ingredient.isIn(KlaxonTags.Items.STEEL_INGOTS);
