@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -20,6 +21,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -106,12 +108,8 @@ public class HammerItem extends Item implements AttackBlockCallback {
             return ActionResult.PASS;
         }
 
-        // walljump (TOTALLY NOT YOINKED FROM TRIDENT CODE WITH TWEAKS)
-        if (!player.isOnGround()) {
-
-
-            // hammering recipe
-        } else if(interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
+        // hammering recipe
+        if(player.isOnGround() && interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
             RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
             CraftingInventory dummyInventory = new CraftingInventory(player.currentScreenHandler, 1, 1);
             dummyInventory.setStack(0, player.getOffHandStack());
@@ -119,7 +117,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
             Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
 
             if(match.isEmpty()) {
-                return ActionResult.FAIL;
+                return ActionResult.PASS;
             }
 
             if(world.isClient) {
@@ -146,6 +144,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
             return ActionResult.PASS;
         }
 
+        // walljump (TOTALLY NOT YOINKED FROM TRIDENT CODE WITH TWEAKS)
         if (!player.isOnGround() && player.getMainHandStack().isOf(KlaxonItems.HAMMER)) {
             float playerYaw = player.getYaw();
             float playerPitch = player.getPitch();

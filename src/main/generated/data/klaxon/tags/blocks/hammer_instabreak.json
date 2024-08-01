@@ -8,6 +8,10 @@
     {
       "id": "#c:glass_panes",
       "required": false
+    },
+    {
+      "id": "#minecraft:ice",
+      "required": false
     }
   ]
 }
