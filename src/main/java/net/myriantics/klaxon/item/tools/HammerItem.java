@@ -33,6 +33,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
+import net.myriantics.klaxon.util.AbilityModifierHelper;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
@@ -156,7 +157,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
             float k = MathHelper.sin(playerPitch * 0.017453292F);
             float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
             float m = MathHelper.sqrt(h * h + k * k + l * l);
-            float n = 0.8F * player.getAttackCooldownProgress(0.5f);
+            float n = 0.8F * player.getAttackCooldownProgress(0.5f) * AbilityModifierHelper.calculate(player);
             h *= n / m;
             k *= n / m;
             l *= n / m;
