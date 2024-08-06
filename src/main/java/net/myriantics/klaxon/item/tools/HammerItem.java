@@ -93,7 +93,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
         if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
             if (state.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK)) {
                 // idk why you need the world and pos parameters for this the method doesnt even use them lmao
-                return state.getHardness(null, null) * 30 * 25;
+                return state.getHardness(null, null) * 30 * 5;
             } else {
                 return 6.0F;
             }
