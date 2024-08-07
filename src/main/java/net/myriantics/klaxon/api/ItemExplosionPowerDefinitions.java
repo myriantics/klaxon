@@ -27,6 +27,7 @@ public class ItemExplosionPowerDefinitions {
         defineItemExplosionPower(map, Items.GUNPOWDER, 0.3);
         defineItemExplosionPower(map, Items.FIREWORK_ROCKET, 0.1);
 
+        ((ItemExplosionPowerRegistryImpl) ItemExplosionPowerRegistry.INSTANCE).apply(map);
         return map;
     }
 

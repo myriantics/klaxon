@@ -59,9 +59,7 @@ public class BlastChamberBlock extends BlockWithEntity {
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof BlastProcessorBlockEntity) {
-            ((BlastProcessorBlockEntity) blockEntity).tick(world, pos, state);
-        }
+        world.setBlockState(pos, state.with(LIT, false));
 
     }
 
@@ -112,6 +110,24 @@ public class BlastChamberBlock extends BlockWithEntity {
             return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
         }
     }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        BlockEntity blockEntity = (BlastProcessorBlockEntity) world.getBlockEntity(pos);
+        boolean isPowered = world.isReceivingRedstonePower(pos);
+        boolean isActivated = state.get(POWERED);
+        if (isPowered && !isActivated) {
+            //world.scheduleBlockTick(pos, this, 200);
+
+            ((BlastProcessorBlockEntity) blockEntity).onRedstoneImpulse(world, pos, state);
+            world.setBlockState(pos, state.with(LIT, true));
+            world.setBlockState(pos, state.with(POWERED, true));
+        } else if(!isPowered && isActivated) {
+            world.setBlockState(pos, state.with(POWERED, false));
+        }
+    }
+
+
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {

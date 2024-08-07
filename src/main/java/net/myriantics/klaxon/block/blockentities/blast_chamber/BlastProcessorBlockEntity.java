@@ -4,12 +4,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -17,15 +16,20 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.ItemExplosionPowerRegistryImpl;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
+import net.myriantics.klaxon.block.customblocks.BlastChamberBlock;
+import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public class BlastProcessorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-    protected static final int PROCESS_ITEM_INDEX = 0;
-    protected static final int CATALYST_INDEX = 1;
+    public static final int PROCESS_ITEM_INDEX = 0;
+    public static final int CATALYST_INDEX = 1;
     private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
@@ -72,7 +76,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         return 2;
     }
 
-    public void tick(World world1, BlockPos pos, BlockState state1) {
+    public void tick(World world, BlockPos pos, BlockState state1) {
+
+    }
+
+    public void onRedstoneImpulse(World world, BlockPos pos, BlockState state) {
+        //world.setBlockState(pos, state.with(BlastChamberBlock.LIT, true));
     }
 
     @Override
@@ -120,5 +129,48 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     @Override
     public boolean isValid(int slot, ItemStack stack) {
         return this.getStack(slot).isEmpty();
+    }
+
+    private void craft(World world, BlockPos pos) {
+        RecipeType<BlastProcessorRecipe> type = BlastProcessorRecipe.Type.INSTANCE;
+        double explosionPower = ItemExplosionPowerRegistryImpl.INSTANCE.get(inventory.get(BlastProcessorBlockEntity.CATALYST_INDEX).getItem());
+        SimpleInventory simpleInventory = new SimpleInventory(inventory.get(PROCESS_ITEM_INDEX), inventory.get(CATALYST_INDEX));
+
+        Optional<BlastProcessorRecipe> match = world.getRecipeManager().getFirstMatch(type, simpleInventory, world);
+
+        if (match.isEmpty() || explosionPower < match.get().getExplosionPowerMin()) {
+            eject(inventory.get(PROCESS_ITEM_INDEX));
+        }
+
+        if (explosionPower >= match.get().getExplosionPowerMax()) {
+
+        }
+    }
+
+
+    @Override
+    public void markDirty() {
+        if (world != null) {
+            if (inventory.get(PROCESS_ITEM_INDEX).isEmpty()) {
+                world.setBlockState(pos, world.getBlockState(pos).with(BlastChamberBlock.HATCH_OPEN, true));
+            } else {
+                world.setBlockState(pos, world.getBlockState(pos).with(BlastChamberBlock.HATCH_OPEN, false));
+            }
+
+            if (inventory.get(CATALYST_INDEX).isEmpty()) {
+                world.setBlockState(pos, world.getBlockState(pos).with(BlastChamberBlock.FUELED, false));
+            } else {
+                world.setBlockState(pos, world.getBlockState(pos).with(BlastChamberBlock.FUELED, true));
+            }
+        }
+        super.markDirty();
+    }
+
+    private void detonate() {
+
+    }
+
+    private void eject(ItemStack itemStack) {
+
     }
 }

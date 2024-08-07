@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.recipes.blast_processor;
 
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
@@ -9,29 +10,38 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.ItemExplosionPowerRegistryImpl;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastProcessorBlockEntity;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
 
-public class BlastProcessorRecipe implements Recipe<CraftingInventory> {
-    private final Ingredient inputA;
+public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
+    private final Ingredient processingItem;
+    private final double explosionPowerMin;
+    private final double explosionPowerMax;
     private final ItemStack result;
     private final Identifier id;
 
-    public BlastProcessorRecipe(Ingredient inputA, ItemStack result, Identifier id) {
-        this.inputA = inputA;
+    public BlastProcessorRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result, Identifier id) {
+        this.processingItem = inputA;
+        this.explosionPowerMin = explosionPowerMin;
+        this.explosionPowerMax = explosionPowerMax;
         this.result = result;
         this.id = id;
     }
 
     @Override
-    public boolean matches(CraftingInventory inventory, World world) {
-        return inputA.test(inventory.getStack(0));
+    public boolean matches(SimpleInventory inventory, World world) {
+        if (processingItem.test(inventory.getStack(0))) {
+            double explosionPower = ItemExplosionPowerRegistryImpl.INSTANCE.get(inventory.getStack(BlastProcessorBlockEntity.CATALYST_INDEX).getItem());
+            return explosionPower <= explosionPowerMax && explosionPower >= explosionPowerMin;
+        }
+        return false;
     }
 
     @Override
-    public ItemStack craft(CraftingInventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack craft(SimpleInventory inventory, DynamicRegistryManager registryManager) {
         return this.result.copy();
     }
 
@@ -40,8 +50,16 @@ public class BlastProcessorRecipe implements Recipe<CraftingInventory> {
         return true;
     }
 
-    public Ingredient getInputA() {
-        return inputA;
+    public Ingredient getProcessingItem() {
+        return processingItem;
+    }
+
+    public double getExplosionPowerMin() {
+        return explosionPowerMin;
+    }
+
+    public double getExplosionPowerMax() {
+        return explosionPowerMax;
     }
 
     @Override
@@ -56,7 +74,7 @@ public class BlastProcessorRecipe implements Recipe<CraftingInventory> {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(KlaxonBlocks.DEEPSLATE_BLAST_CHAMBER);
+        return new ItemStack(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
     }
 
     @Override
@@ -66,10 +84,10 @@ public class BlastProcessorRecipe implements Recipe<CraftingInventory> {
 
     @Override
     public RecipeType<?> getType() {
-        return HammerRecipe.Type.INSTANCE;
+        return BlastProcessorRecipe.Type.INSTANCE;
     }
 
-    public static class Type implements RecipeType<HammerRecipe> {
+    public static class Type implements RecipeType<BlastProcessorRecipe> {
         private Type() {}
         public static final BlastProcessorRecipe.Type INSTANCE = new Type();
         public static final String ID = "blast_processor_recipe";

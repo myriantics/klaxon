@@ -12,6 +12,8 @@ import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastProcessorScreenHandler;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
+import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipeSerializer;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
 import org.slf4j.Logger;
@@ -36,7 +38,10 @@ public class KlaxonMain implements ModInitializer {
 		KlaxonEntities.registerModEntities();
 		Registry.register(Registries.RECIPE_SERIALIZER, HammerRecipeSerializer.ID,
 				HammerRecipeSerializer.INSTANCE);
-		Registry.register(Registries.RECIPE_TYPE, new Identifier("hammer_recipe", HammerRecipe.Type.ID), HammerRecipe.Type.INSTANCE);
+		Registry.register(Registries.RECIPE_SERIALIZER, BlastProcessorRecipeSerializer.ID,
+				BlastProcessorRecipeSerializer.INSTANCE);
+		Registry.register(Registries.RECIPE_TYPE, new Identifier("hammering", HammerRecipe.Type.ID), HammerRecipe.Type.INSTANCE);
+		Registry.register(Registries.RECIPE_TYPE, new Identifier("blast_processing", BlastProcessorRecipe.Type.ID), BlastProcessorRecipe.Type.INSTANCE);
 
 		LOGGER.info("Klaxon has loaded - i remembered to change this :)");
 	}
