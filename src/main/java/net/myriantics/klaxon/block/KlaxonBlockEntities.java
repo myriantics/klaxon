@@ -12,7 +12,7 @@ public class KlaxonBlockEntities {
     public static final BlockEntityType<BlastProcessorBlockEntity> BLAST_CHAMBER_BLOCK_ENTITY =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(KlaxonMain.MOD_ID, "crude_extrapolator_be"),
                     FabricBlockEntityTypeBuilder.create(BlastProcessorBlockEntity::new,
-                            KlaxonBlocks.DEEPSLATE_BLAST_CHAMBER).build());
+                            KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR).build());
 
     public static void registerBlockEntities() {
         KlaxonMain.LOGGER.info("Registering Klaxon's Block Entities");

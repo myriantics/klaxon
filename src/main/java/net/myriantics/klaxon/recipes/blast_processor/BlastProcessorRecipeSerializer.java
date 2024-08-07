@@ -11,9 +11,6 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipeJsonFormat;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
 
 public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastProcessorRecipe> {
     private BlastProcessorRecipeSerializer() {
@@ -34,25 +31,29 @@ public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastPro
         if (blastProcessorRecipeJson.outputAmount == 0) blastProcessorRecipeJson.outputAmount = 1;
 
 
-        Ingredient inputA = Ingredient.fromJson(blastProcessorRecipeJson.inputA);
+        Ingredient processingItem = Ingredient.fromJson(blastProcessorRecipeJson.inputA);
+        double explosionPowerMin = blastProcessorRecipeJson.explosionPowerMin;
+        double explosionPowerMax = blastProcessorRecipeJson.explosionPowerMax;
         Item outputItem = Registries.ITEM.getOrEmpty(new Identifier(blastProcessorRecipeJson.outputItem))
                 .orElseThrow(() -> new JsonSyntaxException("No such item " + blastProcessorRecipeJson.outputItem));
         ItemStack output = new ItemStack(outputItem, blastProcessorRecipeJson.outputAmount);
 
-        return new BlastProcessorRecipe(inputA, output, id);
+        return new BlastProcessorRecipe(processingItem, explosionPowerMin, explosionPowerMax, output, id);
     }
 
     @Override
     public void write(PacketByteBuf packetData, BlastProcessorRecipe recipe) {
-        recipe.getInputA().write(packetData);
+        recipe.getProcessingItem().write(packetData);
         packetData.writeItemStack(recipe.getOutput(DynamicRegistryManager.of(Registries.REGISTRIES)));
     }
 
-    //MinecraftClient.getInstance().getServer().getRegistryManager()
+
     @Override
     public BlastProcessorRecipe read(Identifier id, PacketByteBuf packetData) {
         Ingredient inputA = Ingredient.fromPacket(packetData);
+        double explosionPowerMin = packetData.readDouble();
+        double explosionPowerMax = packetData.readDouble();
         ItemStack output = packetData.readItemStack();
-        return new BlastProcessorRecipe(inputA, output, id);
+        return new BlastProcessorRecipe(inputA, explosionPowerMin, explosionPowerMax, output, id);
     }
 }
