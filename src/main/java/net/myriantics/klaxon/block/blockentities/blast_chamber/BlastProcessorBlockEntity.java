@@ -5,6 +5,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
@@ -16,10 +17,12 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.ItemExplosionPowerDefinitions;
 import net.myriantics.klaxon.api.ItemExplosionPowerRegistryImpl;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
-import net.myriantics.klaxon.block.customblocks.BlastChamberBlock;
+import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
+import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +52,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         player.sendMessage(Text.literal("is_client: " + player.getWorld().isClient));
         player.sendMessage(Text.literal("bc_maxcountperstack: " + this.getMaxCountPerStack()));
+        player.sendMessage(Text.literal("blast_power: " + getItemExplosionPower()));
         return new BlastProcessorScreenHandler(syncId, playerInventory, this);
     }
 
@@ -80,7 +84,27 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     }
 
-    public void onRedstoneImpulse(World world, BlockPos pos, BlockState state) {
+    private Optional<ItemExplosionPowerRecipe> getExplosionPowerData() {
+        RecipeType<ItemExplosionPowerRecipe> type = ItemExplosionPowerRecipe.Type.INSTANCE;
+        SimpleInventory simpleInventory = new SimpleInventory(1);
+        simpleInventory.addStack(inventory.get(CATALYST_INDEX));
+
+        Optional<ItemExplosionPowerRecipe> match = world.getRecipeManager().getFirstMatch(type, simpleInventory, world);
+
+        return match;
+    }
+
+    private float getItemExplosionPower() {
+        Optional<ItemExplosionPowerRecipe> match = getExplosionPowerData();
+        if (match.isEmpty()) {
+            return 0.0F;
+        }
+        return match.get().getExplosionPower();
+    }
+
+    public void onRedstoneImpulse() {
+        this.detonate();
+
         //world.setBlockState(pos, state.with(BlastChamberBlock.LIT, true));
     }
 
@@ -152,22 +176,25 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     public void markDirty() {
         if (world != null) {
             if (inventory.get(PROCESS_ITEM_INDEX).isEmpty()) {
-                world.setBlockState(pos, world.getBlockState(pos).with(BlastChamberBlock.HATCH_OPEN, true));
+                world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.HATCH_OPEN, true));
             } else {
-                world.setBlockState(pos, world.getBlockState(pos).with(BlastChamberBlock.HATCH_OPEN, false));
+                world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.HATCH_OPEN, false));
             }
 
             if (inventory.get(CATALYST_INDEX).isEmpty()) {
-                world.setBlockState(pos, world.getBlockState(pos).with(BlastChamberBlock.FUELED, false));
+                world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.FUELED, false));
             } else {
-                world.setBlockState(pos, world.getBlockState(pos).with(BlastChamberBlock.FUELED, true));
+                world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.FUELED, true));
             }
         }
         super.markDirty();
     }
 
     private void detonate() {
-
+        if (this.getItemExplosionPower() > 0 && world != null) {
+            world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), this.getItemExplosionPower(), World.ExplosionSourceType.BLOCK);
+            this.setStack(CATALYST_INDEX, ItemStack.EMPTY);
+        }
     }
 
     private void eject(ItemStack itemStack) {

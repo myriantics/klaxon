@@ -10,12 +10,12 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
-import net.myriantics.klaxon.block.customblocks.BlastChamberBlock;
+import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 
 public class KlaxonBlocks {
 
     public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
-            new BlastChamberBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(20.0f, 50.0f)));
+            new BlastProcessorBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(20.0f, 50.0f)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
