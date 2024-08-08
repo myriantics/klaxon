@@ -90,6 +90,6 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
     public static class Type implements RecipeType<BlastProcessorRecipe> {
         private Type() {}
         public static final BlastProcessorRecipe.Type INSTANCE = new Type();
-        public static final String ID = "blast_processor_recipe";
+        public static final String ID = "blast_processing";
     }
 }

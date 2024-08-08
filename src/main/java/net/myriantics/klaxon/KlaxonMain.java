@@ -7,6 +7,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
+import net.myriantics.klaxon.api.ItemExplosionPowerDefinitions;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastProcessorScreenHandler;
@@ -16,6 +17,7 @@ import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipeSerializer;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
+import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,8 @@ public class KlaxonMain implements ModInitializer {
 				BlastProcessorRecipeSerializer.INSTANCE);
 		Registry.register(Registries.RECIPE_TYPE, new Identifier("hammering", HammerRecipe.Type.ID), HammerRecipe.Type.INSTANCE);
 		Registry.register(Registries.RECIPE_TYPE, new Identifier("blast_processing", BlastProcessorRecipe.Type.ID), BlastProcessorRecipe.Type.INSTANCE);
+		Registry.register(Registries.RECIPE_TYPE, new Identifier("item_explosion_power", ItemExplosionPowerRecipe.Type.ID), ItemExplosionPowerRecipe.Type.INSTANCE);
+		ItemExplosionPowerDefinitions.createItemExplosionPowerMap();
 
 		LOGGER.info("Klaxon has loaded - i remembered to change this :)");
 	}

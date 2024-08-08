@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class BlastChamberBlock extends BlockWithEntity {
+public class BlastProcessorBlock extends BlockWithEntity {
 
     public static final BooleanProperty LIT = BooleanProperty.of("lit");
     public static final BooleanProperty FUELED = BooleanProperty.of("fueled");
@@ -32,7 +32,7 @@ public class BlastChamberBlock extends BlockWithEntity {
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
     public static final DirectionProperty FACING = FacingBlock.FACING;
 
-    public BlastChamberBlock(Settings settings) {
+    public BlastProcessorBlock(Settings settings) {
         super(settings);
 
         setDefaultState(getStateManager().getDefaultState()
@@ -113,13 +113,14 @@ public class BlastChamberBlock extends BlockWithEntity {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        BlockEntity blockEntity = (BlastProcessorBlockEntity) world.getBlockEntity(pos);
+
         boolean isPowered = world.isReceivingRedstonePower(pos);
         boolean isActivated = state.get(POWERED);
         if (isPowered && !isActivated) {
             //world.scheduleBlockTick(pos, this, 200);
-
-            ((BlastProcessorBlockEntity) blockEntity).onRedstoneImpulse(world, pos, state);
+            if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+                blastProcessor.onRedstoneImpulse();
+            }
             world.setBlockState(pos, state.with(LIT, true));
             world.setBlockState(pos, state.with(POWERED, true));
         } else if(!isPowered && isActivated) {
