@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:item_explosion_power",
+  "input" : {
+    "item": "minecraft:ghast_spawn_egg"
+  },
+  "explosion_power": "3.5",
+  "produces_fire": "false"
+}

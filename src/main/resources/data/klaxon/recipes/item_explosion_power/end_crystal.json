@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:item_explosion_power",
+  "input" : {
+    "item": "minecraft:end_crystal"
+  },
+  "explosion_power": "6.0",
+  "produces_fire": "false"
+}

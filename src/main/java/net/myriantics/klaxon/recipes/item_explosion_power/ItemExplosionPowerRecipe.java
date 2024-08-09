@@ -8,8 +8,12 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypes;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 
 public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
@@ -40,6 +44,15 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
     @Override
     public boolean fits(int width, int height) {
         return true;
+    }
+
+    // TODO: actually implement dimension support with this for beds and other stuff
+    public DimensionType getValidDimensions() {
+        return null;
+    }
+
+    public boolean validInDimension(DimensionType dimensionType) {
+        return false;
     }
 
     @Override
