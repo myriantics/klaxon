@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:item_explosion_power",
+  "input" : {
+    "item": "minecraft:firework_rocket"
+  },
+  "explosion_power": "0.1",
+  "produces_fire": "false"
+}

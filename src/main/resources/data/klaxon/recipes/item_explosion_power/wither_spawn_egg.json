@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:item_explosion_power",
+  "input" : {
+    "item": "minecraft:wither_spawn_egg"
+  },
+  "explosion_power": "10.0",
+  "produces_fire": "false"
+}
