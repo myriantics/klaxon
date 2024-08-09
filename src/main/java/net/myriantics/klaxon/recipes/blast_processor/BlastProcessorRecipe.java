@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.recipes.blast_processor;
 
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -10,10 +9,8 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.ItemExplosionPowerRegistryImpl;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastProcessorBlockEntity;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
+import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
 
 public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
@@ -33,11 +30,7 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public boolean matches(SimpleInventory inventory, World world) {
-        if (processingItem.test(inventory.getStack(0))) {
-            double explosionPower = ItemExplosionPowerRegistryImpl.INSTANCE.get(inventory.getStack(BlastProcessorBlockEntity.CATALYST_INDEX).getItem());
-            return explosionPower <= explosionPowerMax && explosionPower >= explosionPowerMin;
-        }
-        return false;
+        return processingItem.test(inventory.getStack(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX));
     }
 
     @Override

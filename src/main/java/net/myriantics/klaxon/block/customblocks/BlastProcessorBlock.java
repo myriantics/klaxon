@@ -19,12 +19,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class BlastProcessorBlock extends BlockWithEntity {
+public class BlastProcessorBlock extends BlockWithEntity{
 
     public static final BooleanProperty LIT = BooleanProperty.of("lit");
     public static final BooleanProperty FUELED = BooleanProperty.of("fueled");

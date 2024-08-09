@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.blockentities.blast_chamber;
+package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;

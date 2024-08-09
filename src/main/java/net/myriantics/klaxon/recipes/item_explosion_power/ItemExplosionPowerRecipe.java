@@ -10,8 +10,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
+import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 
 public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
     private final Ingredient item;
@@ -19,13 +18,15 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
     private final boolean producesFire;
     private final Identifier id;
 
-    public ItemExplosionPowerRecipe(Ingredient inputA, double explosionPower, boolean producesFire, Identifier id) {
-        this.item = inputA;
+    public ItemExplosionPowerRecipe(Ingredient input, double explosionPower, boolean producesFire, Identifier id) {
+        this.item = input;
         this.explosionPower = explosionPower;
         this.producesFire = producesFire;
         this.id = id;
     }
 
+    // to whom it may concern: CHECK WHAT INDEX YOU'RE TRYING TO PULL FROM
+    // GAH
     @Override
     public boolean matches(SimpleInventory inventory, World world) {
         return item.test(inventory.getStack(0));
@@ -33,7 +34,7 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public ItemStack craft(SimpleInventory inventory, DynamicRegistryManager registryManager) {
-        return null;
+        return explosionPower > 0 ? ItemStack.EMPTY : inventory.getStack(0);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public ItemStack getOutput(DynamicRegistryManager registryManager) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     public Ingredient getItem() {

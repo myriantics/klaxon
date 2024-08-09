@@ -1,6 +1,6 @@
 {
   "type": "klaxon:item_explosion_power",
-  "inputA" : {
+  "input" : {
     "item": "minecraft:tnt"
   },
   "explosion_power": "4.0",
