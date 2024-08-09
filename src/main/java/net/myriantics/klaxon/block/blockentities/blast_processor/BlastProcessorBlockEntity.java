@@ -1,11 +1,10 @@
-package net.myriantics.klaxon.block.blockentities.blast_chamber;
+package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
@@ -17,8 +16,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.ItemExplosionPowerDefinitions;
-import net.myriantics.klaxon.api.ItemExplosionPowerRegistryImpl;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
@@ -51,7 +48,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         player.sendMessage(Text.literal("is_client: " + player.getWorld().isClient));
-        player.sendMessage(Text.literal("bc_maxcountperstack: " + this.getMaxCountPerStack()));
+        player.sendMessage(Text.literal("bp_maxcountperstack: " + this.getMaxCountPerStack()));
         player.sendMessage(Text.literal("blast_power: " + getItemExplosionPower()));
         return new BlastProcessorScreenHandler(syncId, playerInventory, this);
     }
@@ -103,7 +100,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     public void onRedstoneImpulse() {
-        this.detonate();
+        world.getServer().sendMessage(Text.literal("shit"));
+        detonate();
 
         //world.setBlockState(pos, state.with(BlastChamberBlock.LIT, true));
     }
@@ -157,7 +155,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     private void craft(World world, BlockPos pos) {
         RecipeType<BlastProcessorRecipe> type = BlastProcessorRecipe.Type.INSTANCE;
-        double explosionPower = ItemExplosionPowerRegistryImpl.INSTANCE.get(inventory.get(BlastProcessorBlockEntity.CATALYST_INDEX).getItem());
+        double explosionPower = getItemExplosionPower();
         SimpleInventory simpleInventory = new SimpleInventory(inventory.get(PROCESS_ITEM_INDEX), inventory.get(CATALYST_INDEX));
 
         Optional<BlastProcessorRecipe> match = world.getRecipeManager().getFirstMatch(type, simpleInventory, world);
@@ -191,9 +189,24 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     private void detonate() {
-        if (this.getItemExplosionPower() > 0 && world != null) {
-            world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), this.getItemExplosionPower(), World.ExplosionSourceType.BLOCK);
+        RecipeType<ItemExplosionPowerRecipe> type = ItemExplosionPowerRecipe.Type.INSTANCE;
+        SimpleInventory simpleInventory = new SimpleInventory(1);
+        simpleInventory.addStack(inventory.get(CATALYST_INDEX).copy());
+
+        Optional<ItemExplosionPowerRecipe> match = world.getRecipeManager().getFirstMatch(type, simpleInventory, world);
+
+        float explosionPower;
+
+        if (match.isEmpty()) {
+             explosionPower = 20.0F;
+        } else {
+            explosionPower = match.get().getExplosionPower();
+        }
+
+        if (true) {
+            world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), explosionPower, World.ExplosionSourceType.BLOCK);
             this.setStack(CATALYST_INDEX, ItemStack.EMPTY);
+            this.markDirty();
         }
     }
 

@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.blockentities.blast_chamber;
+package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;

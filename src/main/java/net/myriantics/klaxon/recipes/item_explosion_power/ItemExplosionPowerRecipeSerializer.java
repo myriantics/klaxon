@@ -22,13 +22,11 @@ public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<Item
     public ItemExplosionPowerRecipe read(Identifier id, JsonObject json) {
         ItemExplosionPowerRecipeJsonFormat itemExplosionPowerRecipeJson = new Gson().fromJson(json, ItemExplosionPowerRecipeJsonFormat.class);
 
-        if(itemExplosionPowerRecipeJson.item == null) {
+        if(itemExplosionPowerRecipeJson.input == null) {
             throw new JsonSyntaxException("A required attribute is missing!");
         }
 
-        if (itemExplosionPowerRecipeJson.explosion_power == 0) itemExplosionPowerRecipeJson.explosion_power = 1;
-
-        Ingredient item = Ingredient.fromJson(itemExplosionPowerRecipeJson.item);
+        Ingredient item = Ingredient.fromJson(itemExplosionPowerRecipeJson.input);
         double explosionPower = itemExplosionPowerRecipeJson.explosion_power;
         boolean producesFire = itemExplosionPowerRecipeJson.produces_fire;
 

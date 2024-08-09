@@ -6,7 +6,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
-import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 
 public class KlaxonBlockEntities {
     public static final BlockEntityType<BlastProcessorBlockEntity> BLAST_CHAMBER_BLOCK_ENTITY =

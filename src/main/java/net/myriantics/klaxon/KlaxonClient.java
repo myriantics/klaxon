@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.myriantics.klaxon.block.blockentities.blast_chamber.BlastProcessorScreen;
+import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorScreen;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 
 public class KlaxonClient implements ClientModInitializer {
