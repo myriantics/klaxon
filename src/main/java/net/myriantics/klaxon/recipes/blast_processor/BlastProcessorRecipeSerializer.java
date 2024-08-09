@@ -24,7 +24,8 @@ public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastPro
     public BlastProcessorRecipe read(Identifier id, JsonObject json) {
         BlastProcessorRecipeJsonFormat blastProcessorRecipeJson = new Gson().fromJson(json, BlastProcessorRecipeJsonFormat.class);
 
-        if(blastProcessorRecipeJson.inputA == null || blastProcessorRecipeJson.outputItem == null) {
+        if(blastProcessorRecipeJson.inputA == null ||
+                blastProcessorRecipeJson.outputItem == null) {
             throw new JsonSyntaxException("A required attribute is missing!");
         }
 

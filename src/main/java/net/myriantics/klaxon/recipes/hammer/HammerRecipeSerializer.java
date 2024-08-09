@@ -30,7 +30,6 @@ public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
 
         if (hammerRecipeJson.outputAmount == 0) hammerRecipeJson.outputAmount = 1;
 
-
         Ingredient inputA = Ingredient.fromJson(hammerRecipeJson.inputA);
         Item outputItem = Registries.ITEM.getOrEmpty(new Identifier(hammerRecipeJson.outputItem))
                 .orElseThrow(() -> new JsonSyntaxException("No such item " + hammerRecipeJson.outputItem));

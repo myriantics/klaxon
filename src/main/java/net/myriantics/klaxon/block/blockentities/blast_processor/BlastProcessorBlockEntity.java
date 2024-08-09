@@ -1,22 +1,25 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
+import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
+import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
@@ -33,6 +36,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
+    public static final double MAXIMUM_CONTAINED_EXPLOSION_POWER = 1.0;
 
     public BlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.BLAST_CHAMBER_BLOCK_ENTITY, pos, state);
@@ -101,9 +105,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     public void onRedstoneImpulse() {
         world.getServer().sendMessage(Text.literal("shit"));
-        detonate();
-
-        //world.setBlockState(pos, state.with(BlastChamberBlock.LIT, true));
+        craft(world, pos);
     }
 
     @Override
@@ -154,18 +156,77 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     private void craft(World world, BlockPos pos) {
-        RecipeType<BlastProcessorRecipe> type = BlastProcessorRecipe.Type.INSTANCE;
-        double explosionPower = getItemExplosionPower();
-        SimpleInventory simpleInventory = new SimpleInventory(inventory.get(PROCESS_ITEM_INDEX), inventory.get(CATALYST_INDEX));
+        if (world != null) {
+            ItemStack processItem = inventory.get(PROCESS_ITEM_INDEX);
+            ItemStack catalystItem = inventory.get(CATALYST_INDEX);
 
-        Optional<BlastProcessorRecipe> match = world.getRecipeManager().getFirstMatch(type, simpleInventory, world);
+            RecipeManager recipeManager = world.getRecipeManager();
 
-        if (match.isEmpty() || explosionPower < match.get().getExplosionPowerMin()) {
-            eject(inventory.get(PROCESS_ITEM_INDEX));
-        }
+            RecipeType<ItemExplosionPowerRecipe> explPowType = ItemExplosionPowerRecipe.Type.INSTANCE;
+            SimpleInventory explPowInventory = new SimpleInventory(catalystItem.copy());
 
-        if (explosionPower >= match.get().getExplosionPowerMax()) {
+            Optional<ItemExplosionPowerRecipe> explPowMatch = recipeManager.getFirstMatch(explPowType, explPowInventory, world);
 
+
+            // is there fuel present
+            if (explPowMatch.isPresent() && explPowMatch.get().getExplosionPower() > 0) {
+
+                RecipeType<BlastProcessorRecipe> blstProcType = BlastProcessorRecipe.Type.INSTANCE;
+                SimpleInventory blstProcInventory = new SimpleInventory(processItem.copy());
+
+                Optional<BlastProcessorRecipe> blstProcMatch = recipeManager.getFirstMatch(blstProcType, blstProcInventory, world);
+
+                double explosionPower = explPowMatch.get().getExplosionPower();
+                boolean producesFire = explPowMatch.get().producesFire();
+
+
+                // is there a recipe (EDGE CASE WILL PRODUCE RECIPE CONFLICTS BETWEEN BLAST PROCESSING RECIPES OF THE SAME ITEM)
+                // WILL NEED TO FIX LATER
+                if (blstProcMatch.isPresent()) {
+
+                    double explosionPowerMin = blstProcMatch.get().getExplosionPowerMin();
+                    double explosionPowerMax = blstProcMatch.get().getExplosionPowerMax();
+
+                    if (explosionPower < explosionPowerMin) {
+                        detonate(explosionPower, producesFire);
+                        ejectItem(processItem);
+                        sendDebugMessage("LOW_POWERED");
+                        // PRESENT RECIPE BUT LOW-POWERED FUEL
+                        // EXPLODE - CONSUME FUEL
+                        // DISPENSE ITEM WITH VELOCITY BASED OFF OF FUEL EXPL. POWER
+                    } else if(explosionPower > explosionPowerMax) {
+                        detonate(explosionPower, producesFire);
+                        destroyItem(PROCESS_ITEM_INDEX);
+                        sendDebugMessage("OVERPOWERED");
+                        // PRESENT RECIPE BUT OVERPOWERED FUEL
+                        // EXPLODE - CONSUME FUEL
+                        // DESTROY ITEM
+                    } else {
+                        sendDebugMessage("RECIPE_SUCCESS");
+                        // PRESENT RECIPE AND VALID FUEL
+                        // EXPLODE - CONSUME FUEL
+                        // EJECT RECIPE OUTPUT
+                    }
+
+                } else {
+                    detonate(explosionPower, producesFire);
+                    ejectItem(processItem);
+                    sendDebugMessage("MISSING_RECIPE");
+                    // VALID FUEL BUT MISSING RECIPE
+                    // CONSUME FUEL AND DISPENSE ITEM
+                    // dispense item with velocity correspondent to explosion power
+                }
+            } else {
+                sendDebugMessage("MISSING_FUEL");
+                if (!processItem.isEmpty()) {
+                    ejectItem(processItem);
+                } else if (!catalystItem.isEmpty()) {
+                    ejectItem(catalystItem);
+                }
+                // NO FUEL / INVALID FUEL
+                // NEEDS TO CHECK FOR PROCESSING ITEM AND FUEL AND EJECT EITHER
+                // dispense item normally - NO FUEL
+            }
         }
     }
 
@@ -188,29 +249,52 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         super.markDirty();
     }
 
-    private void detonate() {
-        RecipeType<ItemExplosionPowerRecipe> type = ItemExplosionPowerRecipe.Type.INSTANCE;
-        SimpleInventory simpleInventory = new SimpleInventory(1);
-        simpleInventory.addStack(inventory.get(CATALYST_INDEX).copy());
-
-        Optional<ItemExplosionPowerRecipe> match = world.getRecipeManager().getFirstMatch(type, simpleInventory, world);
-
-        float explosionPower;
-
-        if (match.isEmpty()) {
-             explosionPower = 20.0F;
-        } else {
-            explosionPower = match.get().getExplosionPower();
+    private void detonate(double explosionPower, boolean producesFire) {
+        if (world == null || explosionPower <= MAXIMUM_CONTAINED_EXPLOSION_POWER) {
+            return;
         }
 
-        if (true) {
-            world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), explosionPower, World.ExplosionSourceType.BLOCK);
-            this.setStack(CATALYST_INDEX, ItemStack.EMPTY);
-            this.markDirty();
-        }
+        Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
+
+        Position position = this.getOutputLocation(direction);
+
+        world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
+        world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.LIT, true));
+        // noticed pressure plate hanging around midair in some cases after an explosion - this should fix that
+        world.updateNeighbor(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, pos);
+        setStack(CATALYST_INDEX, ItemStack.EMPTY);
+        markDirty();
     }
 
-    private void eject(ItemStack itemStack) {
+    private void destroyItem(int index) {
+        setStack(index, ItemStack.EMPTY);
+        markDirty();
+    }
 
+    // yoinked from dispenser code
+    private void ejectItem(ItemStack itemStack) {
+        if (world == null) {
+            return;
+        }
+        Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
+        ItemStack ejectedItem = itemStack.split(1);
+        ItemDispenserBehavior.spawnItem(world, ejectedItem, 0, direction, getOutputLocation(direction));
+        markDirty();
+    }
+
+    private Position getOutputLocation(Direction direction) {
+        if (world != null ) {
+            double d = pos.getX() + 0.7 * (double)direction.getOffsetX();
+            double e = pos.getY() + 0.7 * (double)direction.getOffsetY();
+            double f = pos.getZ() + 0.7 * (double)direction.getOffsetZ();
+            return new PositionImpl(d, e, f);
+        }
+        return null;
+    }
+
+    private void sendDebugMessage(String message) {
+        if (!world.isClient) {
+            world.getServer().sendMessage(Text.literal(message));
+        }
     }
 }

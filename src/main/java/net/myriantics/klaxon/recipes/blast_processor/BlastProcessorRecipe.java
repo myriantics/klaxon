@@ -30,7 +30,7 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public boolean matches(SimpleInventory inventory, World world) {
-        return processingItem.test(inventory.getStack(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX));
+        return processingItem.test(inventory.getStack(0));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return HammerRecipeSerializer.INSTANCE;
+        return BlastProcessorRecipeSerializer.INSTANCE;
     }
 
     @Override
