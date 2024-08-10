@@ -5,6 +5,7 @@ import net.minecraft.block.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
@@ -14,6 +15,7 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -71,6 +73,29 @@ public class BlastProcessorBlock extends BlockWithEntity{
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        BlastProcessorBlockEntity blastProcessor = (BlastProcessorBlockEntity) world.getBlockEntity(pos);
+
+        // crappy quick insert logic - blast processor pvp incoming
+        // trying to make this viable alongside crystal and cart
+        // kit would include tnt, blast processors, and redstone blocks or smthn
+        if (blastProcessor != null && !player.isSneaking() && hit.getSide() != Direction.DOWN) {
+            DefaultedList<ItemStack> processorInventory = blastProcessor.getItems();
+            if (hit.getSide() == Direction.UP && processorInventory.get(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX).isEmpty()) {
+                ItemStack transferStack = player.getStackInHand(hand).split(1);
+                blastProcessor.setStack(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX, transferStack);
+                blastProcessor.markDirty();
+            } else if (hit.getSide() != Direction.UP && processorInventory.get(BlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
+                ItemStack handStack = player.getStackInHand(hand);
+                if (blastProcessor.isValidCatalyst(handStack)) {
+                    ItemStack transferStack = player.getStackInHand(hand).split(1);
+                    blastProcessor.setStack(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX, transferStack);
+                    blastProcessor.markDirty();
+                }
+            }
+
+        }
+
+
         if (!world.isClient) {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
