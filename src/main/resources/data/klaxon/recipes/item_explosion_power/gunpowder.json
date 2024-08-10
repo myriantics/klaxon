@@ -1,7 +1,7 @@
 {
   "type": "klaxon:item_explosion_power",
   "input" : {
-    "item": "minecraft:firework_star"
+    "item": "minecraft:gunpowder"
   },
   "explosion_power": "0.3",
   "produces_fire": "false"

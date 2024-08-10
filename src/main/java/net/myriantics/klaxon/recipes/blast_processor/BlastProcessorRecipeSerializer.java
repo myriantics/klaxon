@@ -35,11 +35,12 @@ public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastPro
         Ingredient processingItem = Ingredient.fromJson(blastProcessorRecipeJson.inputA);
         double explosionPowerMin = blastProcessorRecipeJson.explosionPowerMin;
         double explosionPowerMax = blastProcessorRecipeJson.explosionPowerMax;
+        boolean requiresFire = blastProcessorRecipeJson.requiresFire;
         Item outputItem = Registries.ITEM.getOrEmpty(new Identifier(blastProcessorRecipeJson.outputItem))
                 .orElseThrow(() -> new JsonSyntaxException("No such item " + blastProcessorRecipeJson.outputItem));
         ItemStack output = new ItemStack(outputItem, blastProcessorRecipeJson.outputAmount);
 
-        return new BlastProcessorRecipe(processingItem, explosionPowerMin, explosionPowerMax, output, id);
+        return new BlastProcessorRecipe(processingItem, explosionPowerMin, explosionPowerMax, requiresFire, output, id);
     }
 
     @Override
@@ -52,9 +53,10 @@ public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastPro
     @Override
     public BlastProcessorRecipe read(Identifier id, PacketByteBuf packetData) {
         Ingredient inputA = Ingredient.fromPacket(packetData);
+        ItemStack output = packetData.readItemStack();
         double explosionPowerMin = packetData.readDouble();
         double explosionPowerMax = packetData.readDouble();
-        ItemStack output = packetData.readItemStack();
-        return new BlastProcessorRecipe(inputA, explosionPowerMin, explosionPowerMax, output, id);
+        boolean requiresFire = packetData.readBoolean();
+        return new BlastProcessorRecipe(inputA, explosionPowerMin, explosionPowerMax, requiresFire, output, id);
     }
 }

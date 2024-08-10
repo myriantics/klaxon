@@ -3,8 +3,9 @@
   "inputA" : {
     "item": "minecraft:raw_iron"
   },
+  "outputItem": "minecraft:iron_nugget",
+  "outputAmount": "5",
   "explosionPowerMin": "0.3",
   "explosionPowerMax": "0.5",
-  "outputItem": "minecraft:iron_nugget",
-  "outputAmount": "5"
+  "requiresFire": "true"
 }

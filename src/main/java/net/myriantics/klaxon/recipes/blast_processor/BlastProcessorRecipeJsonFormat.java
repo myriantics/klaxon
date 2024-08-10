@@ -4,8 +4,9 @@ import com.google.gson.JsonObject;
 
 public class BlastProcessorRecipeJsonFormat {
     JsonObject inputA;
-    double explosionPowerMin;
-    double explosionPowerMax;
     String outputItem;
     int outputAmount;
+    double explosionPowerMin;
+    double explosionPowerMax;
+    boolean requiresFire;
 }

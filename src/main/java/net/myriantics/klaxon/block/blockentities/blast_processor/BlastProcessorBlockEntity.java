@@ -151,6 +151,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
                     double explosionPowerMin = blstProcMatch.get().getExplosionPowerMin();
                     double explosionPowerMax = blstProcMatch.get().getExplosionPowerMax();
+                    boolean requiresFire = blstProcMatch.get().requiresFire();
 
                     if (explosionPower < explosionPowerMin) {
                         detonate(explosionPower, producesFire);
@@ -167,12 +168,21 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                         // EXPLODE - CONSUME FUEL
                         // DESTROY ITEM
                     } else {
-                        detonate(explosionPower, producesFire);
-                        ejectItem(blstProcMatch.get().getOutput(world.getRegistryManager()));
-                        sendDebugMessage("RECIPE_SUCCESS");
-                        // PRESENT RECIPE AND VALID FUEL
-                        // EXPLODE - CONSUME FUEL
-                        // EJECT RECIPE OUTPUT
+                        if (requiresFire == producesFire || producesFire) {
+                            detonate(explosionPower, producesFire);
+                            ejectItem(blstProcMatch.get().getOutput(world.getRegistryManager()));
+                            sendDebugMessage("RECIPE_SUCCESS");
+                            // PRESENT RECIPE AND VALID FUEL
+                            // EXPLODE - CONSUME FUEL
+                            // EJECT RECIPE OUTPUT
+                        } else {
+                            detonate(explosionPower, producesFire);
+                            ejectItem(processItem.split(1));
+                            sendDebugMessage("INVALID_MISSING_FIRE");
+                            // INVALID RECIPE
+                            // REQUIRES FIRE
+                            // CONSUME FUEL AND EJECT PROCESS ITEM
+                        }
                     }
 
                 } else {
