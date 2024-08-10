@@ -22,6 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
+import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -86,7 +87,7 @@ public class BlastProcessorBlock extends BlockWithEntity{
                 blastProcessor.markDirty();
             } else if (hit.getSide() != Direction.UP && processorInventory.get(BlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
                 ItemStack handStack = player.getStackInHand(hand);
-                if (blastProcessor.isValidCatalyst(handStack)) {
+                if (ItemExplosionPowerHelper.isValidCatalyst(world, handStack)) {
                     ItemStack transferStack = player.getStackInHand(hand).split(1);
                     blastProcessor.setStack(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX, transferStack);
                     blastProcessor.markDirty();

@@ -23,6 +23,7 @@ import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.ImplementedInventory;
+import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -51,7 +52,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         player.sendMessage(Text.literal("is_client: " + player.getWorld().isClient));
         player.sendMessage(Text.literal("bp_maxcountperstack: " + this.getMaxCountPerStack()));
-        player.sendMessage(Text.literal("blast_power: " + getItemExplosionPower(inventory.get(CATALYST_INDEX))));
+        player.sendMessage(Text.literal("blast_power: " + ItemExplosionPowerHelper.getItemExplosionPower(world, inventory.get(CATALYST_INDEX))));
         return new BlastProcessorScreenHandler(syncId, playerInventory, this);
     }
 
@@ -79,33 +80,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         return 2;
     }
 
-    public void tick(World world, BlockPos pos, BlockState state1) {
-
-    }
-
-    private Optional<ItemExplosionPowerRecipe> getExplosionPowerData(ItemStack itemStack) {
-        if (world == null) {
-            return Optional.empty();
-        }
-
-        RecipeManager recipeManager = world.getRecipeManager();
-
-        RecipeType<ItemExplosionPowerRecipe> type = ItemExplosionPowerRecipe.Type.INSTANCE;
-        SimpleInventory simpleInventory = new SimpleInventory(itemStack.copy());
-
-        return recipeManager.getFirstMatch(type, simpleInventory, world);
-    }
-
-    public float getItemExplosionPower(ItemStack itemStack) {
-        Optional<ItemExplosionPowerRecipe> match = getExplosionPowerData(itemStack);
-        if (match.isEmpty()) {
-            return 0.0F;
-        }
-        return match.get().getExplosionPower();
-    }
-
     public void onRedstoneImpulse() {
-        craft(world, pos);
+        craft(world);
     }
 
     @Override
@@ -128,10 +104,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        /*return (slot == PROCESS_ITEM_INDEX || (slot == CATALYST_INDEX && isValidCatalyst(stack)))
-                && this.getStack(slot).isEmpty()
-                && stack.getCount() == 1;*/
-        // gotta love hacky fixes (maxcountperstack wasnt working)
         return this.isValid(slot, stack);
     }
     @Override
@@ -141,15 +113,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     // hi are u a fuel
 
-    public boolean isValidCatalyst(ItemStack stack) {
-        if (world == null) {
-            return false;
-        }
-        Optional<ItemExplosionPowerRecipe> match = getExplosionPowerData(stack);
-
-        return match.isPresent() && match.get().getExplosionPower() > 0;
-    }
-
     // you can still put invalid items in the slots, but they won't do anything
     // could be changed
 
@@ -158,7 +121,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         return this.getStack(slot).isEmpty();
     }
 
-    private void craft(World world, BlockPos pos) {
+    private void craft(World world) {
         if (world != null) {
             ItemStack processItem = inventory.get(PROCESS_ITEM_INDEX);
             ItemStack catalystItem = inventory.get(CATALYST_INDEX);
@@ -166,7 +129,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
             RecipeManager recipeManager = world.getRecipeManager();
 
 
-            Optional<ItemExplosionPowerRecipe> explPowMatch = getExplosionPowerData(catalystItem);
+            Optional<ItemExplosionPowerRecipe> explPowMatch = ItemExplosionPowerHelper.getExplosionPowerData(world, catalystItem);
 
 
             // is there fuel present
@@ -259,6 +222,10 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
         Position position = this.getOutputLocation(direction);
 
+        if (position == null) {
+            position = new PositionImpl(pos.getX(), pos.getY(), pos.getZ());
+        }
+
         world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
         world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.LIT, true));
         // noticed pressure plate hanging around midair in some cases after an explosion - this should fix that
@@ -294,7 +261,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     private void sendDebugMessage(String message) {
-        if (!world.isClient) {
+        if (world != null && !world.isClient) {
             world.getServer().sendMessage(Text.literal(message));
         }
     }
