@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class HammerItem extends Item implements AttackBlockCallback {
+public class HammerItem extends Item implements AttackBlockCallback, AttackEntityCallback {
     public static final float ATTACK_DAMAGE = 9.0F;
     public static final float ATTACK_SPEED = -2.8F;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
@@ -52,6 +52,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
         builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", ATTACK_SPEED, EntityAttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
         AttackBlockCallback.EVENT.register(this);
+        AttackEntityCallback.EVENT.register(this);
     }
 
     @Override
@@ -140,6 +141,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
         return ActionResult.PASS;
     }
 
+    // block hit
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
 
@@ -149,33 +151,19 @@ public class HammerItem extends Item implements AttackBlockCallback {
             return ActionResult.PASS;
         }
 
-        if (!player.isOnGround() && player.getMainHandStack().isOf(KlaxonItems.HAMMER)) {
-
-            float playerYaw = player.getYaw();
-            float playerPitch = player.getPitch();
-            float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
-            float k = MathHelper.sin(playerPitch * 0.017453292F);
-            float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
-            float m = MathHelper.sqrt(h * h + k * k + l * l);
-            float n = 0.8F * player.getAttackCooldownProgress(0.5f) * AbilityModifierHelper.calculate(player);
-            h *= n / m;
-            k *= n / m;
-            l *= n / m;
+        if (canWallJump(player)) {
 
             // may remove, idk thought itd be a good tradeoff for the power of the hammer
             // keeps wind charges relevant and encourages going up
             // may need to decrease attack cooldown or at least its impact on walljump power scaling
             // made it dynamic based on whether its an instabreak or not to account for dream shear leaf clutch edge case
-            if (!targetBlockState.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK)) {
-                player.handleFallDamage(player.fallDistance, 1, player.getDamageSources().fall());
-            }
+            boolean processFallDamage = !targetBlockState.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK);
+
+            processWallJumpPhysics(player, processFallDamage, 1.0f);
+
             player.onLanding();
 
-            // could get quirky and make this setVelocity instead - would add funky ass parkour potential
-            player.addVelocity(h, k, l);
-
             player.resetLastAttackedTicks();
-
 
             // damage it wheee
             // damage is based off of attack cooldown progress because thats cool ig
@@ -188,24 +176,69 @@ public class HammerItem extends Item implements AttackBlockCallback {
 
         return ActionResult.PASS;
     }
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.isIn(KlaxonTags.Items.STEEL_INGOTS);
-    }
 
+    // entity hit
+    @Override
+    public ActionResult interact(PlayerEntity player, World world, Hand hand, Entity targetEntity, @Nullable EntityHitResult hitResult) {
+        if (player == null) {
+            return ActionResult.PASS;
+        }
+
+        if (canWallJump(player)) {
+            boolean wallJumpFallDamage = true;
+            float wallJumpMultiplier = 1.0f;
+
+            if (targetEntity.getType().isIn(KlaxonTags.Entities.BOUNCY_ENTITIES)) {
+                wallJumpFallDamage = false;
+                wallJumpMultiplier = 1.3f;
+            }
+
+            processWallJumpPhysics(player, wallJumpFallDamage, wallJumpMultiplier);
+
+        }
+        return ActionResult.PASS;
+    }
     @Override
     public boolean isEnchantable(ItemStack stack) {
         return false;
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
+        return ingredient.isIn(KlaxonTags.Items.STEEL_INGOTS);
+    }
+    private boolean canWallJump(PlayerEntity player) {
+        return !player.isOnGround() && player.getMainHandStack().getItem() instanceof HammerItem;
     }
 
     // so you can walljump in creative without demolishing your world
     @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
         return !miner.isCreative();
+    }
+
+    // yoinked from trident riptide physics - edited to suit my needs
+    private void processWallJumpPhysics(PlayerEntity player, boolean fallDamage, float multiplier) {
+        float playerYaw = player.getYaw();
+        float playerPitch = player.getPitch();
+        float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
+        float k = MathHelper.sin(playerPitch * 0.017453292F);
+        float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
+        float m = MathHelper.sqrt(h * h + k * k + l * l);
+        float n = 0.8F * player.getAttackCooldownProgress(0.5f) * AbilityModifierHelper.calculate(player) * multiplier;
+        h *= n / m;
+        k *= n / m;
+        l *= n / m;
+
+        if (fallDamage) {
+            player.handleFallDamage(player.fallDistance, 1, player.getDamageSources().fall());
+        }
+
+        player.addVelocity(h, k, l);
+    }
+
+    @Override
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
     }
 }

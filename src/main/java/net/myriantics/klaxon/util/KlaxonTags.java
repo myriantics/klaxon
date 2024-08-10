@@ -50,6 +50,8 @@ public class KlaxonTags {
     public static class Entities {
         public static final TagKey<EntityType<?>> HEAVY_HITTERS =
                 createTag("heavy_hitter_entities");
+        public static final TagKey<EntityType<?>> BOUNCY_ENTITIES =
+                createTag("bouncy_entities");
 
 
         private static TagKey<EntityType<?>> createTag(String name) {
