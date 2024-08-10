@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:blast_processing",
+  "inputA" : {
+    "item": "minecraft:raw_iron"
+  },
+  "explosionPowerMin": "0.3",
+  "explosionPowerMax": "0.5",
+  "outputItem": "minecraft:iron_nugget",
+  "outputAmount": "5"
+}

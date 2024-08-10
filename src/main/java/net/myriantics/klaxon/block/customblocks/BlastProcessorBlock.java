@@ -85,12 +85,16 @@ public class BlastProcessorBlock extends BlockWithEntity{
                 ItemStack transferStack = player.getStackInHand(hand).split(1);
                 blastProcessor.setStack(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX, transferStack);
                 blastProcessor.markDirty();
+
+                return ActionResult.SUCCESS;
             } else if (hit.getSide() != Direction.UP && processorInventory.get(BlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
                 ItemStack handStack = player.getStackInHand(hand);
                 if (ItemExplosionPowerHelper.isValidCatalyst(world, handStack)) {
                     ItemStack transferStack = player.getStackInHand(hand).split(1);
-                    blastProcessor.setStack(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX, transferStack);
+                    blastProcessor.setStack(BlastProcessorBlockEntity.CATALYST_INDEX, transferStack);
                     blastProcessor.markDirty();
+
+                    return ActionResult.SUCCESS;
                 }
             }
 

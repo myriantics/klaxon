@@ -9,8 +9,10 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -82,6 +84,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     public void onRedstoneImpulse() {
         craft(world);
+        markDirty();
     }
 
     @Override
@@ -166,6 +169,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                         // EXPLODE - CONSUME FUEL
                         // DESTROY ITEM
                     } else {
+                        detonate(explosionPower, producesFire);
+                        ejectCraftingResult(blstProcMatch.get().getOutput(world.getRegistryManager()));
                         sendDebugMessage("RECIPE_SUCCESS");
                         // PRESENT RECIPE AND VALID FUEL
                         // EXPLODE - CONSUME FUEL
@@ -214,6 +219,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     private void detonate(double explosionPower, boolean producesFire) {
+        setStack(CATALYST_INDEX, ItemStack.EMPTY);
+        markDirty();
         if (world == null || explosionPower <= MAXIMUM_CONTAINED_EXPLOSION_POWER) {
             return;
         }
@@ -228,10 +235,10 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
         world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
         world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.LIT, true));
+        sendDebugMessage("explosionPower: " + explosionPower + ", " + producesFire);
+        sendDebugMessage("x: " + position.getX() + ", y: " + position.getY() + ", z: " + position.getZ());
         // noticed pressure plate hanging around midair in some cases after an explosion - this should fix that
         world.updateNeighbor(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, pos);
-        setStack(CATALYST_INDEX, ItemStack.EMPTY);
-        markDirty();
     }
 
     private void destroyItem(int index) {
@@ -250,14 +257,23 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         markDirty();
     }
 
-    private Position getOutputLocation(Direction direction) {
-        if (world != null ) {
-            double d = pos.getX() + 0.7 * (double)direction.getOffsetX();
-            double e = pos.getY() + 0.7 * (double)direction.getOffsetY();
-            double f = pos.getZ() + 0.7 * (double)direction.getOffsetZ();
-            return new PositionImpl(d, e, f);
+    private void ejectCraftingResult(ItemStack craftingResult) {
+        if (world == null) {
+            return;
         }
-        return null;
+        Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
+        ItemDispenserBehavior.spawnItem(world, craftingResult, 0, direction, getOutputLocation(direction));
+        markDirty();
+    }
+
+    private Position getOutputLocation(Direction direction) {
+        if (world == null ) {
+            return pos.toCenterPos();
+        }
+        double d = pos.getX() + 0.7 * (double)direction.getOffsetX();
+        double e = pos.getY() + 0.7 * (double)direction.getOffsetY();
+        double f = pos.getZ() + 0.7 * (double)direction.getOffsetZ();
+        return new PositionImpl(d, e, f);
     }
 
     private void sendDebugMessage(String message) {
