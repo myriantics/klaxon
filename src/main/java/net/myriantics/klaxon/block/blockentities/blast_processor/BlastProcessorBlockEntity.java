@@ -3,7 +3,6 @@ package net.myriantics.klaxon.block.blockentities.blast_processor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
@@ -24,7 +23,6 @@ import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.ImplementedInventory;
-import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -53,7 +51,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         player.sendMessage(Text.literal("is_client: " + player.getWorld().isClient));
         player.sendMessage(Text.literal("bp_maxcountperstack: " + this.getMaxCountPerStack()));
-        player.sendMessage(Text.literal("blast_power: " + getItemExplosionPower()));
+        player.sendMessage(Text.literal("blast_power: " + getItemExplosionPower(inventory.get(CATALYST_INDEX))));
         return new BlastProcessorScreenHandler(syncId, playerInventory, this);
     }
 
@@ -85,18 +83,21 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     }
 
-    private Optional<ItemExplosionPowerRecipe> getExplosionPowerData() {
+    private Optional<ItemExplosionPowerRecipe> getExplosionPowerData(ItemStack itemStack) {
+        if (world == null) {
+            return Optional.empty();
+        }
+
+        RecipeManager recipeManager = world.getRecipeManager();
+
         RecipeType<ItemExplosionPowerRecipe> type = ItemExplosionPowerRecipe.Type.INSTANCE;
-        SimpleInventory simpleInventory = new SimpleInventory(1);
-        simpleInventory.addStack(inventory.get(CATALYST_INDEX));
+        SimpleInventory simpleInventory = new SimpleInventory(itemStack.copy());
 
-        Optional<ItemExplosionPowerRecipe> match = world.getRecipeManager().getFirstMatch(type, simpleInventory, world);
-
-        return match;
+        return recipeManager.getFirstMatch(type, simpleInventory, world);
     }
 
-    private float getItemExplosionPower() {
-        Optional<ItemExplosionPowerRecipe> match = getExplosionPowerData();
+    public float getItemExplosionPower(ItemStack itemStack) {
+        Optional<ItemExplosionPowerRecipe> match = getExplosionPowerData(itemStack);
         if (match.isEmpty()) {
             return 0.0F;
         }
@@ -104,7 +105,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     public void onRedstoneImpulse() {
-        world.getServer().sendMessage(Text.literal("shit"));
         craft(world, pos);
     }
 
@@ -141,10 +141,13 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     // hi are u a fuel
 
-    private boolean isValidCatalyst(ItemStack stack) {
-        return stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_REGULAR) ||
-                stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_SUPER) ||
-                stack.isIn(KlaxonTags.Items.BLAST_CHAMBER_FUEL_HYPER);
+    public boolean isValidCatalyst(ItemStack stack) {
+        if (world == null) {
+            return false;
+        }
+        Optional<ItemExplosionPowerRecipe> match = getExplosionPowerData(stack);
+
+        return match.isPresent() && match.get().getExplosionPower() > 0;
     }
 
     // you can still put invalid items in the slots, but they won't do anything
@@ -162,10 +165,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
             RecipeManager recipeManager = world.getRecipeManager();
 
-            RecipeType<ItemExplosionPowerRecipe> explPowType = ItemExplosionPowerRecipe.Type.INSTANCE;
-            SimpleInventory explPowInventory = new SimpleInventory(catalystItem.copy());
 
-            Optional<ItemExplosionPowerRecipe> explPowMatch = recipeManager.getFirstMatch(explPowType, explPowInventory, world);
+            Optional<ItemExplosionPowerRecipe> explPowMatch = getExplosionPowerData(catalystItem);
 
 
             // is there fuel present

@@ -10,8 +10,6 @@ import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
 
 public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
     private final Ingredient processingItem;

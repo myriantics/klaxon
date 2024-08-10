@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class BlastProcessorScreen extends HandledScreen<BlastProcessorScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier("minecraft", "textures/gui/container/dispenser.png");
+    private static final Identifier TEXTURE = new Identifier("klaxon", "textures/gui/container/deepslate_blast_processor.png");
 
     // completely yonked from fabric wiki
 
@@ -25,6 +25,12 @@ public class BlastProcessorScreen extends HandledScreen<BlastProcessorScreenHand
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
+    }
+
+    // gotta add text somehow
+    @Override
+    protected void insertText(String text, boolean override) {
+        super.insertText(text, override);
     }
 
     @Override
