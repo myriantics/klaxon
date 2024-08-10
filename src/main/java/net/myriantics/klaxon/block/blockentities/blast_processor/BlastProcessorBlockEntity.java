@@ -9,10 +9,8 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -156,7 +154,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
                     if (explosionPower < explosionPowerMin) {
                         detonate(explosionPower, producesFire);
-                        ejectItem(processItem);
+                        ejectItem(processItem.split(1));
                         sendDebugMessage("LOW_POWERED");
                         // PRESENT RECIPE BUT LOW-POWERED FUEL
                         // EXPLODE - CONSUME FUEL
@@ -170,7 +168,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                         // DESTROY ITEM
                     } else {
                         detonate(explosionPower, producesFire);
-                        ejectCraftingResult(blstProcMatch.get().getOutput(world.getRegistryManager()));
+                        ejectItem(blstProcMatch.get().getOutput(world.getRegistryManager()));
                         sendDebugMessage("RECIPE_SUCCESS");
                         // PRESENT RECIPE AND VALID FUEL
                         // EXPLODE - CONSUME FUEL
@@ -179,7 +177,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
                 } else {
                     detonate(explosionPower, producesFire);
-                    ejectItem(processItem);
+                    ejectItem(processItem.split(1));
                     sendDebugMessage("MISSING_RECIPE");
                     // VALID FUEL BUT MISSING RECIPE
                     // CONSUME FUEL AND DISPENSE ITEM
@@ -188,9 +186,9 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
             } else {
                 sendDebugMessage("MISSING_FUEL");
                 if (!processItem.isEmpty()) {
-                    ejectItem(processItem);
+                    ejectItem(processItem.split(1));
                 } else if (!catalystItem.isEmpty()) {
-                    ejectItem(catalystItem);
+                    ejectItem(processItem.split(1));
                 }
                 // NO FUEL / INVALID FUEL
                 // NEEDS TO CHECK FOR PROCESSING ITEM AND FUEL AND EJECT EITHER
@@ -246,23 +244,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         markDirty();
     }
 
-    // yoinked from dispenser code
     private void ejectItem(ItemStack itemStack) {
         if (world == null) {
             return;
         }
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-        ItemStack ejectedItem = itemStack.split(1);
-        ItemDispenserBehavior.spawnItem(world, ejectedItem, 0, direction, getOutputLocation(direction));
-        markDirty();
-    }
-
-    private void ejectCraftingResult(ItemStack craftingResult) {
-        if (world == null) {
-            return;
-        }
-        Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-        ItemDispenserBehavior.spawnItem(world, craftingResult, 0, direction, getOutputLocation(direction));
+        ItemDispenserBehavior.spawnItem(world, itemStack, 0, direction, getOutputLocation(direction));
         markDirty();
     }
 
