@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Direction;
 import net.myriantics.klaxon.KlaxonMain;
 
 public class BlastProcessorScreenHandler extends ScreenHandler {
@@ -98,6 +99,7 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
                 slot.markDirty();
             }
         }
+
 
         // If above fails, return original stack as new stack, so nothing changes.
         return ItemStack.EMPTY;

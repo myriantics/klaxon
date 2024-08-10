@@ -267,13 +267,21 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     private Position getOutputLocation(Direction direction) {
-        if (world == null ) {
-            return pos.toCenterPos();
+        Position centerPos = pos.toCenterPos();
+        double x = centerPos.getX();
+        double y = centerPos.getY();
+        double z = centerPos.getZ();
+
+        switch (direction) {
+            case UP -> y += 0.55;
+            case DOWN -> y -= 0.55;
+            case NORTH -> z -= 0.55;
+            case SOUTH -> z += 0.55;
+            case EAST -> x += 0.55;
+            case WEST -> x -= 0.55;
         }
-        double d = pos.getX() + 0.7 * (double)direction.getOffsetX();
-        double e = pos.getY() + 0.7 * (double)direction.getOffsetY();
-        double f = pos.getZ() + 0.7 * (double)direction.getOffsetZ();
-        return new PositionImpl(d, e, f);
+
+        return new Vec3d(x, y, z);
     }
 
     private void sendDebugMessage(String message) {
