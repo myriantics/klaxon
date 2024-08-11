@@ -12,6 +12,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -23,9 +25,8 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
+import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 public class BlastProcessorBlock extends BlockWithEntity{
 
@@ -75,11 +76,15 @@ public class BlastProcessorBlock extends BlockWithEntity{
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlastProcessorBlockEntity blastProcessor = (BlastProcessorBlockEntity) world.getBlockEntity(pos);
+        ItemStack handStack = player.getStackInHand(hand);
+        ItemStack offHandStack = player.getOffHandStack();
+        Direction interactionSide = hit.getSide();
+        Direction facing = state.get(Properties.FACING);
 
         // crappy quick insert logic - blast processor pvp incoming
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
-        if (blastProcessor != null && !player.isSneaking() && hit.getSide() != Direction.DOWN) {
+        if (blastProcessor != null && hit.getSide() != Direction.DOWN) {
             DefaultedList<ItemStack> processorInventory = blastProcessor.getItems();
             if (hit.getSide() == Direction.UP && processorInventory.get(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX).isEmpty()) {
                 ItemStack transferStack = player.getStackInHand(hand).split(1);
@@ -87,15 +92,15 @@ public class BlastProcessorBlock extends BlockWithEntity{
                 blastProcessor.markDirty();
 
                 return ActionResult.SUCCESS;
-            } else if (hit.getSide() != Direction.UP && processorInventory.get(BlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
-                ItemStack handStack = player.getStackInHand(hand);
-                if (ItemExplosionPowerHelper.isValidCatalyst(world, handStack)) {
+                // processorInventory.get(BlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()
+            } else if (interactionSide == BlockDirectionHelper.getLeft(facing) || interactionSide == BlockDirectionHelper.getRight(facing)) {
+                if (blastProcessor.isValid(BlastProcessorBlockEntity.CATALYST_INDEX, handStack)) {
                     ItemStack transferStack = player.getStackInHand(hand).split(1);
                     blastProcessor.setStack(BlastProcessorBlockEntity.CATALYST_INDEX, transferStack);
                     blastProcessor.markDirty();
-
                     return ActionResult.SUCCESS;
-                }
+                } //else if (blastProcessor.isValid(BlastProcessorBlockEntity.CATALYST_INDEX, ))
+                return ActionResult.PASS;
             }
 
         }
@@ -134,11 +139,20 @@ public class BlastProcessorBlock extends BlockWithEntity{
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        if (Objects.requireNonNull(context.getPlayer()).isSneaking()) {
-            return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing());
-        } else {
-            return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
+        PlayerEntity player = context.getPlayer();
+        Direction direction = context.getHorizontalPlayerFacing();
+        if (player != null) {
+            if (player.isSneaking()) {
+                player.sendMessage(Text.literal("Left: " + BlockDirectionHelper.getLeft(direction)));
+                player.sendMessage(Text.literal("Right: " + BlockDirectionHelper.getRight(direction)));
+                return this.getDefaultState().with(FACING, direction);
+            } else {
+                player.sendMessage(Text.literal("Left: " + BlockDirectionHelper.getLeft(direction.getOpposite())));
+                player.sendMessage(Text.literal("Right: " + BlockDirectionHelper.getRight(direction.getOpposite())));
+                return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
+            }
         }
+        return this.getDefaultState();
     }
 
     @Override

@@ -119,7 +119,13 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        return this.getStack(slot).isEmpty();
+        if (slot == 0) {
+            return this.getStack(slot).isEmpty();
+        } else if (slot == 1) {
+            return this.getStack(slot).isEmpty() && ItemExplosionPowerHelper.isValidCatalyst(world, stack);
+        } else {
+            return false;
+        }
     }
 
     private void craft(World world) {

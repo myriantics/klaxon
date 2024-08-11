@@ -3,7 +3,7 @@ package net.myriantics.klaxon.util;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Hand;
 
-public class EquipmentSlotHelper {
+public abstract class EquipmentSlotHelper {
     // theres probably a more efficient way of doing this but idc
     public static EquipmentSlot convert(Hand playerHand) {
         switch (playerHand) {

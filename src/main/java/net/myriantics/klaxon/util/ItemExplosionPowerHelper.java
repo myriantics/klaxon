@@ -4,12 +4,13 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 
 import java.util.Optional;
 
-public class ItemExplosionPowerHelper {
+public abstract class ItemExplosionPowerHelper {
 
     public static Optional<ItemExplosionPowerRecipe> getExplosionPowerData(World world, ItemStack itemStack) {
         if (world == null) {
