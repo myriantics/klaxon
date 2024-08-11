@@ -3,12 +3,14 @@
   "package": "net.myriantics.klaxon.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "blast_processor.BlockItemPlacementOverrideMixin",
     "hammer.LivingEntityShieldDisableMixin",
     "hammer.MobEntityAttackDamageTypeMixin",
     "hammer.MobEntityShieldDisableMixin",
     "hammer.PlayerAttackDamageTypeMixin"
   ],
   "client": [
+    "blast_processor.PlayerSneakFastInputOverride",
     "hammer.ItemRendererAccessor",
     "hammer.ItemRendererMixin",
     "hammer.ModelLoaderMixin"

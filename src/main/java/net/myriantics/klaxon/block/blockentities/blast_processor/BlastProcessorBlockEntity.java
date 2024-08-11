@@ -13,6 +13,7 @@ import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
@@ -22,6 +23,7 @@ import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
@@ -50,9 +52,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        player.sendMessage(Text.literal("is_client: " + player.getWorld().isClient));
-        player.sendMessage(Text.literal("bp_maxcountperstack: " + this.getMaxCountPerStack()));
-        player.sendMessage(Text.literal("blast_power: " + ItemExplosionPowerHelper.getItemExplosionPower(world, inventory.get(CATALYST_INDEX))));
         return new BlastProcessorScreenHandler(syncId, playerInventory, this);
     }
 
@@ -97,25 +96,39 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        if(side == Direction.UP || side == Direction.DOWN) {
-            return CATALYST_ITEM_SLOTS;
+        if (world != null) {
+            Direction blockFacing = world.getBlockState(pos).get(Properties.FACING);
+            if (side == BlockDirectionHelper.getLeft(blockFacing) || side == BlockDirectionHelper.getRight(blockFacing)) {
+                return CATALYST_ITEM_SLOTS;
+            }
+            if(side == Direction.UP) {
+                return PROCESS_ITEM_SLOTS;
+            }
         }
-        return PROCESS_ITEM_SLOTS;
+        return null;
     }
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return this.isValid(slot, stack);
+        // if the slot you want to access is available for the side you're accessing from, check if the item is valid
+        // for that stack
+        int[] availableSlots = getAvailableSlots(dir);
+
+        if (availableSlots == null) {
+            return false;
+        }
+
+        for (int availableSlot : availableSlots) {
+            if (slot == availableSlot) {
+                return this.isValid(slot, stack);
+            }
+        }
+        return false;
     }
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         return slot != CATALYST_INDEX;
     }
-
-    // hi are u a fuel
-
-    // you can still put invalid items in the slots, but they won't do anything
-    // could be changed
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
