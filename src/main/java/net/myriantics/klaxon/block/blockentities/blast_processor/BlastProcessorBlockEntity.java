@@ -114,7 +114,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         // for that stack
         int[] availableSlots = getAvailableSlots(dir);
 
-        if (availableSlots == null) {
+        if (availableSlots == null || stack.isEmpty()) {
             return false;
         }
 

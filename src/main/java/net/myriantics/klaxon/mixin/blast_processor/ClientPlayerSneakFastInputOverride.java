@@ -18,9 +18,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ClientPlayerInteractionManager.class)
 public abstract class ClientPlayerSneakFastInputOverride {
 
-    @Shadow public abstract boolean hasCreativeInventory();
-
-
     @ModifyVariable(
             method = "interactBlockInternal",
             at = @At(value = "LOAD", ordinal = 0),

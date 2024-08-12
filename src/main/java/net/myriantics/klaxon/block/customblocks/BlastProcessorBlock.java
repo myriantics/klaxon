@@ -73,16 +73,10 @@ public class BlastProcessorBlock extends BlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack handStack = player.getStackInHand(hand);
-        ItemStack offHandStack = player.getOffHandStack();
         Direction interactionSide = hit.getSide();
-        Direction facing = state.get(Properties.FACING);
 
-        player.sendMessage(Text.literal("test: " + world.isClient));
-
-        // crappy quick insert logic - blast processor pvp incoming
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
-
         if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
             int[] slots = blastProcessor.getAvailableSlots(interactionSide);
             DefaultedList<ItemStack> processorInventory = blastProcessor.getItems();
@@ -90,8 +84,12 @@ public class BlastProcessorBlock extends BlockWithEntity {
             if (slots != null) {
                 for (int slot : slots) {
                     if (blastProcessor.canInsert(slot, handStack, interactionSide)) {
-                        player.sendMessage(Text.literal("index: " + slot));
-                        ItemStack transferStack = handStack.split(blastProcessor.getMaxCountPerStack());
+                        ItemStack transferStack;
+                        if (!player.isCreative()) {
+                            transferStack = handStack.split(blastProcessor.getMaxCountPerStack());
+                        } else {
+                            transferStack = handStack.copy();
+                        }
                         blastProcessor.setStack(slot, transferStack);
                         blastProcessor.markDirty();
                         return ActionResult.SUCCESS;
