@@ -1,10 +1,7 @@
 package net.myriantics.klaxon.block.customblocks;
 
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
@@ -27,8 +24,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
-import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
-import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class BlastProcessorBlock extends BlockWithEntity {
@@ -81,6 +76,8 @@ public class BlastProcessorBlock extends BlockWithEntity {
         ItemStack offHandStack = player.getOffHandStack();
         Direction interactionSide = hit.getSide();
         Direction facing = state.get(Properties.FACING);
+
+        player.sendMessage(Text.literal("test: " + world.isClient));
 
         // crappy quick insert logic - blast processor pvp incoming
         // trying to make this viable alongside crystal and cart
