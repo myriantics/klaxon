@@ -28,11 +28,12 @@ public abstract class ServerPlayerSneakFastInputOverride {
             boolean original,
             @Local(argsOnly = true) ServerPlayerEntity player,
             @Local(argsOnly = true) BlockHitResult hitResult,
-            @Local(argsOnly = true) Hand hand) {
+            @Local(argsOnly = true) Hand hand,
+            @Local(ordinal = 0) boolean isHoldingSomething) {
 
         World world = player.getWorld();
 
-        if (world.getBlockEntity(hitResult.getBlockPos()) instanceof BlastProcessorBlockEntity blastProcessor) {
+        if (isHoldingSomething && world.getBlockEntity(hitResult.getBlockPos()) instanceof BlastProcessorBlockEntity blastProcessor) {
             Direction dir = hitResult.getSide();
             ItemStack handStack = player.getStackInHand(hand);
             int[] availableSlots = blastProcessor.getAvailableSlots(dir);

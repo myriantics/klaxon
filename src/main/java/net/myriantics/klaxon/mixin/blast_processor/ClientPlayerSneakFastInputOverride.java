@@ -12,6 +12,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
+import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -27,17 +28,18 @@ public abstract class ClientPlayerSneakFastInputOverride {
             boolean original,
             @Local(argsOnly = true) ClientPlayerEntity player,
             @Local(argsOnly = true) BlockHitResult hitResult,
-            @Local(argsOnly = true) Hand hand) {
+            @Local(argsOnly = true) Hand hand,
+            @Local(ordinal = 0) boolean isHoldingSomething) {
 
         World world = player.getWorld();
         BlockState state = world.getBlockState(hitResult.getBlockPos());
+        ItemStack theStackInQuestion = player.getStackInHand(hand);
 
-        if (world.getBlockEntity(hitResult.getBlockPos()) instanceof BlastProcessorBlockEntity blastProcessor) {
-            Direction dir = hitResult.getSide();
-
-            if (!state.get(BlastProcessorBlock.FUELED)) {
+        if (isHoldingSomething && world.getBlockEntity(hitResult.getBlockPos()) instanceof BlastProcessorBlockEntity) {
+            if (!state.get(BlastProcessorBlock.FUELED) && ItemExplosionPowerHelper.isValidCatalyst(world, theStackInQuestion)) {
                 return false;
             }
+
             /*
             ItemStack handStack = player.getStackInHand(hand);
             int[] availableSlots = blastProcessor.getAvailableSlots(dir);

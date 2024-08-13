@@ -25,19 +25,29 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         super(KlaxonMain.BLAST_PROCESSOR_SCREEN_HANDLER, syncId);
         checkSize(inventory, 2);
         this.inventory = inventory;
+        SimpleInventory outputInventory = new SimpleInventory(9);
         inventory.onOpen(playerInventory.player);
 
         int m;
         int l;
         // machine slots
-        for (m = 0; m < 1; m++) {
-            for (l = 0; l < 2; l++) {
-                this.addSlot(new Slot(inventory, l, 62 + l * 18, 17 + m * 18) {
-                    // Prevents visual stutter on client
-                    @Override
-                    public int getMaxItemCount() {
-                        return BlastProcessorBlockEntity.MaxItemStackCount;
-                    }
+        this.addSlot(new Slot(inventory, BlastProcessorBlockEntity.PROCESS_ITEM_INDEX, 35, 17) {
+            @Override
+            public int getMaxItemCount() {
+                return BlastProcessorBlockEntity.MaxItemStackCount;
+            }
+        });
+
+        this.addSlot(new Slot(inventory, BlastProcessorBlockEntity.CATALYST_INDEX, 35, 53) {
+            @Override
+            public int getMaxItemCount() {
+                return BlastProcessorBlockEntity.MaxItemStackCount;
+            }
+        });
+
+        for (m = 0; m < 3; m++) {
+            for (l = 0; l < 3; l++) {
+                this.addSlot(new Slot(outputInventory, l, 107 + l * 18, 17 + m * 18) {
                 });
             }
         }
