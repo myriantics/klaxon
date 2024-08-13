@@ -26,6 +26,9 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
+import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
+import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
+
 public class BlastProcessorBlock extends BlockWithEntity {
 
     public static final BooleanProperty LIT = BooleanProperty.of("lit");
@@ -91,6 +94,7 @@ public class BlastProcessorBlock extends BlockWithEntity {
                             transferStack = handStack.copy();
                         }
                         blastProcessor.setStack(slot, transferStack);
+                        blastProcessor.sendDebugMessage("onUse");
                         blastProcessor.markDirty();
                         return ActionResult.SUCCESS;
                     }
@@ -148,6 +152,32 @@ public class BlastProcessorBlock extends BlockWithEntity {
         builder.add(POWERED, FACING, LIT, FUELED, HATCH_OPEN);
     }
 
+    public void updateBlockState(World world, BlockPos pos, @Nullable BlockState appendedState) {
+        if (appendedState == null) {
+            appendedState = world.getBlockState(pos);
+        }
+
+        BlastProcessorBlockEntity blastProcessor = (BlastProcessorBlockEntity) world.getBlockEntity(pos);
+        if (blastProcessor != null) {
+            DefaultedList<ItemStack> inventory = blastProcessor.getItems();
+
+            boolean hatchOpen = appendedState.get(BlastProcessorBlock.HATCH_OPEN);
+            boolean fueled = appendedState.get(BlastProcessorBlock.FUELED);
+
+            if (inventory.get(CATALYST_INDEX).isEmpty() == fueled) {
+                appendedState = appendedState.with(BlastProcessorBlock.FUELED, !fueled);
+            }
+            if (inventory.get(PROCESS_ITEM_INDEX).isEmpty() != hatchOpen) {
+                appendedState = appendedState.with(BlastProcessorBlock.HATCH_OPEN, !hatchOpen);
+            }
+
+            if (world.getBlockState(pos) != appendedState) {
+                world.setBlockState(pos, appendedState);
+            }
+        }
+
+    }
+
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         PlayerEntity player = context.getPlayer();
@@ -164,18 +194,16 @@ public class BlastProcessorBlock extends BlockWithEntity {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-
         boolean isPowered = world.isReceivingRedstonePower(pos);
         boolean isActivated = state.get(POWERED);
         if (isPowered && !isActivated) {
-            //world.scheduleBlockTick(pos, this, 200);
+            world.scheduleBlockTick(pos, this, 10);
             if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
                 blastProcessor.onRedstoneImpulse();
             }
-            world.setBlockState(pos, state.with(LIT, true));
-            world.setBlockState(pos, state.with(POWERED, true));
+            updateBlockState(world, pos, state.with(LIT, true).with(POWERED, true));
         } else if(!isPowered && isActivated) {
-            world.setBlockState(pos, state.with(POWERED, false));
+            updateBlockState(world, pos, state.with(POWERED, false));
         }
     }
 

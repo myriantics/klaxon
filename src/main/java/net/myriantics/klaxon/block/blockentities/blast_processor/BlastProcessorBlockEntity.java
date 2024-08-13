@@ -63,16 +63,15 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        //this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory);
-        this.markDirty();
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, this.inventory);
-        this.markDirty();
+        sendDebugMessage("writeNbt");
+        markDirty();
     }
 
     public int size() {
@@ -81,7 +80,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     public void onRedstoneImpulse() {
         craft(world);
-        markDirty();
+        updateBlockState();
     }
 
     @Override
@@ -181,7 +180,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                         // DISPENSE ITEM WITH VELOCITY BASED OFF OF FUEL EXPL. POWER
                     } else if(explosionPower > explosionPowerMax) {
                         detonate(explosionPower, producesFire);
-                        destroyItem(PROCESS_ITEM_INDEX);
+                        removeStack(PROCESS_ITEM_INDEX);
                         sendDebugMessage("OVERPOWERED");
                         // PRESENT RECIPE BUT OVERPOWERED FUEL
                         // EXPLODE - CONSUME FUEL
@@ -226,39 +225,26 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         }
     }
 
+    public void updateBlockState() {
+        BlastProcessorBlock blastProcessorBlock = (BlastProcessorBlock) world.getBlockState(pos).getBlock();
+        blastProcessorBlock.updateBlockState(world, pos, null);
+    }
+
 
     @Override
     public void markDirty() {
-        if (world != null) {
-            if (inventory.get(PROCESS_ITEM_INDEX).isEmpty()) {
-                world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.HATCH_OPEN, true));
-            } else {
-                world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.HATCH_OPEN, false));
-            }
-
-            if (inventory.get(CATALYST_INDEX).isEmpty()) {
-                world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.FUELED, false));
-            } else {
-                world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.FUELED, true));
-            }
-        }
+        updateBlockState();
         super.markDirty();
     }
 
     private void detonate(double explosionPower, boolean producesFire) {
-        setStack(CATALYST_INDEX, ItemStack.EMPTY);
-        markDirty();
+        removeStack(CATALYST_INDEX);
         if (world == null || explosionPower <= MAXIMUM_CONTAINED_EXPLOSION_POWER) {
             return;
         }
 
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-
         Position position = this.getOutputLocation(direction);
-
-        if (position == null) {
-            position = new PositionImpl(pos.getX(), pos.getY(), pos.getZ());
-        }
 
         world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
         world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.LIT, true));
@@ -268,18 +254,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         world.updateNeighbor(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, pos);
     }
 
-    private void destroyItem(int index) {
-        setStack(index, ItemStack.EMPTY);
-        markDirty();
-    }
-
     private void ejectItem(ItemStack itemStack) {
         if (world == null) {
             return;
         }
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
         ItemDispenserBehavior.spawnItem(world, itemStack, 0, direction, getOutputLocation(direction));
-        markDirty();
     }
 
     private Position getOutputLocation(Direction direction) {
@@ -300,7 +280,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         return new Vec3d(x, y, z);
     }
 
-    private void sendDebugMessage(String message) {
+    public void sendDebugMessage(String message) {
         if (world != null && !world.isClient) {
             world.getServer().sendMessage(Text.literal(message));
         }

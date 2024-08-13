@@ -85,6 +85,7 @@ public interface ImplementedInventory extends Inventory {
      */
     @Override
     default ItemStack removeStack(int slot) {
+        markDirty();
         return Inventories.removeStack(getItems(), slot);
     }
     
@@ -104,6 +105,7 @@ public interface ImplementedInventory extends Inventory {
         if (stack.getCount() > getMaxCountPerStack()) {
             stack.setCount(getMaxCountPerStack());
         }
+        markDirty();
     }
     
     /**
@@ -112,6 +114,7 @@ public interface ImplementedInventory extends Inventory {
     @Override
     default void clear() {
         getItems().clear();
+        markDirty();
     }
     
     /**
