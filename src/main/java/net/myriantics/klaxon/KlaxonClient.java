@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorScreen;
 import net.myriantics.klaxon.entity.KlaxonEntities;
+import net.myriantics.klaxon.networking.KlaxonMessages;
 
 public class KlaxonClient implements ClientModInitializer {
     @Override
@@ -15,5 +16,7 @@ public class KlaxonClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, (context) ->
                 new FlyingItemEntityRenderer<>(context));
+
+        KlaxonMessages.registerS2CPackets();
     }
 }

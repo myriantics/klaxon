@@ -12,8 +12,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -63,7 +61,6 @@ public class BlastProcessorBlock extends BlockWithEntity {
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
         world.setBlockState(pos, state.with(LIT, false));
     }
 
@@ -99,24 +96,6 @@ public class BlastProcessorBlock extends BlockWithEntity {
                     }
                 }
             }
-
-            /*if (hit.getSide() == Direction.UP && processorInventory.get(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX).isEmpty()) {
-                ItemStack transferStack = player.getStackInHand(hand).split(1);
-                blastProcessor.setStack(BlastProcessorBlockEntity.PROCESS_ITEM_INDEX, transferStack);
-                blastProcessor.markDirty();
-
-                return ActionResult.SUCCESS;
-                // processorInventory.get(BlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()
-            } else if (interactionSide == BlockDirectionHelper.getLeft(facing) || interactionSide == BlockDirectionHelper.getRight(facing)) {
-                if (blastProcessor.isValid(BlastProcessorBlockEntity.CATALYST_INDEX, handStack)) {
-                    ItemStack transferStack = player.getStackInHand(hand).split(1);
-                    blastProcessor.setStack(BlastProcessorBlockEntity.CATALYST_INDEX, transferStack);
-                    blastProcessor.markDirty();
-                    return ActionResult.SUCCESS;
-                } //else if (blastProcessor.isValid(BlastProcessorBlockEntity.CATALYST_INDEX, ))
-                return ActionResult.PASS;
-            } */
-
         }
 
 

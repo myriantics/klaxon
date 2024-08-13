@@ -1,27 +1,35 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityLookup;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
-import net.myriantics.klaxon.recipes.blast_processor.BlastProcessorRecipe;
+import net.myriantics.klaxon.networking.KlaxonMessages;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
@@ -29,6 +37,7 @@ import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class BlastProcessorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
@@ -80,6 +89,17 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     public void onRedstoneImpulse() {
         craft(world);
         updateBlockState();
+        /*if (world != null && !world.isClient) {
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeBlockPos(pos);
+            for (ItemStack stack : inventory) {
+                buf.writeItemStack(stack);
+            }
+            for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(this)) {
+                ServerPlayNetworking.send(playerEntity, KlaxonMessages.FAST_INPUT_SYNC_S2C, buf);
+            }
+            world.getServer().sendMessage(Text.literal("sent packet"));
+        }*/
     }
 
     @Override
@@ -131,9 +151,9 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     @Override
     public boolean isValid(int slot, ItemStack stack) {
         if (slot == 0) {
-            return this.getStack(slot).isEmpty();
+            return getStack(slot).isEmpty();
         } else if (slot == 1) {
-            return this.getStack(slot).isEmpty() && ItemExplosionPowerHelper.isValidCatalyst(world, stack);
+            return getStack(slot).isEmpty() && ItemExplosionPowerHelper.isValidCatalyst(world, stack);
         } else {
             return false;
         }

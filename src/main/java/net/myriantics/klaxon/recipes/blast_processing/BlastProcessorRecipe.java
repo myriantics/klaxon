@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipes.blast_processor;
+package net.myriantics.klaxon.recipes.blast_processing;
 
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;

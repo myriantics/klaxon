@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.mixin.blast_processor;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.item.ItemStack;
@@ -10,8 +11,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -29,19 +30,22 @@ public abstract class ClientPlayerSneakFastInputOverride {
             @Local(argsOnly = true) Hand hand) {
 
         World world = player.getWorld();
+        BlockState state = world.getBlockState(hitResult.getBlockPos());
 
         if (world.getBlockEntity(hitResult.getBlockPos()) instanceof BlastProcessorBlockEntity blastProcessor) {
             Direction dir = hitResult.getSide();
+
+            if (!state.get(BlastProcessorBlock.FUELED)) {
+                return false;
+            }
+            /*
             ItemStack handStack = player.getStackInHand(hand);
             int[] availableSlots = blastProcessor.getAvailableSlots(dir);
 
             if (availableSlots != null) {
                 for (int availableSlot : availableSlots) {
-                    if (blastProcessor.canInsert(availableSlot, handStack, dir)) {
-                        return false;
-                    }
                 }
-            }
+            }*/
         }
         return original;
     }

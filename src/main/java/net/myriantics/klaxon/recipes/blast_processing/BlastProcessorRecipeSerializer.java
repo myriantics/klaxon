@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipes.blast_processor;
+package net.myriantics.klaxon.recipes.blast_processing;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
