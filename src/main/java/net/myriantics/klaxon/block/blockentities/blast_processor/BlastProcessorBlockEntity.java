@@ -37,7 +37,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
-    public static final double MAXIMUM_CONTAINED_EXPLOSION_POWER = 1.0;
+    public static final double MAXIMUM_CONTAINED_EXPLOSION_POWER = 0.5;
 
     public BlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.BLAST_CHAMBER_BLOCK_ENTITY, pos, state);
@@ -70,7 +70,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, this.inventory);
-        sendDebugMessage("writeNbt");
         markDirty();
     }
 
@@ -174,14 +173,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                     if (explosionPower < explosionPowerMin) {
                         detonate(explosionPower, producesFire);
                         ejectItem(processItem.split(1));
-                        sendDebugMessage("LOW_POWERED");
                         // PRESENT RECIPE BUT LOW-POWERED FUEL
                         // EXPLODE - CONSUME FUEL
                         // DISPENSE ITEM WITH VELOCITY BASED OFF OF FUEL EXPL. POWER
                     } else if(explosionPower > explosionPowerMax) {
                         detonate(explosionPower, producesFire);
                         removeStack(PROCESS_ITEM_INDEX);
-                        sendDebugMessage("OVERPOWERED");
                         // PRESENT RECIPE BUT OVERPOWERED FUEL
                         // EXPLODE - CONSUME FUEL
                         // DESTROY ITEM
@@ -189,14 +186,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                         if (requiresFire == producesFire || producesFire) {
                             detonate(explosionPower, producesFire);
                             ejectItem(blstProcMatch.get().getOutput(world.getRegistryManager()));
-                            sendDebugMessage("RECIPE_SUCCESS");
                             // PRESENT RECIPE AND VALID FUEL
                             // EXPLODE - CONSUME FUEL
                             // EJECT RECIPE OUTPUT
                         } else {
                             detonate(explosionPower, producesFire);
                             ejectItem(processItem.split(1));
-                            sendDebugMessage("INVALID_MISSING_FIRE");
                             // INVALID RECIPE
                             // REQUIRES FIRE
                             // CONSUME FUEL AND EJECT PROCESS ITEM
@@ -206,13 +201,11 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                 } else {
                     detonate(explosionPower, producesFire);
                     ejectItem(processItem.split(1));
-                    sendDebugMessage("MISSING_RECIPE");
                     // VALID FUEL BUT MISSING RECIPE
                     // CONSUME FUEL AND DISPENSE ITEM
                     // dispense item with velocity correspondent to explosion power
                 }
             } else {
-                sendDebugMessage("MISSING_FUEL");
                 if (!processItem.isEmpty()) {
                     ejectItem(processItem.split(1));
                 } else if (!catalystItem.isEmpty()) {
@@ -248,14 +241,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
         world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
         world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.LIT, true));
-        sendDebugMessage("explosionPower: " + explosionPower + ", " + producesFire);
-        sendDebugMessage("x: " + position.getX() + ", y: " + position.getY() + ", z: " + position.getZ());
         // noticed pressure plate hanging around midair in some cases after an explosion - this should fix that
         world.updateNeighbor(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, pos);
     }
 
     private void ejectItem(ItemStack itemStack) {
-        if (world == null) {
+        if (world == null || itemStack.isEmpty()) {
             return;
         }
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
@@ -281,7 +272,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     public void sendDebugMessage(String message) {
-        if (world != null && !world.isClient) {
+        if (world != null && world.getServer() != null) {
             world.getServer().sendMessage(Text.literal(message));
         }
     }

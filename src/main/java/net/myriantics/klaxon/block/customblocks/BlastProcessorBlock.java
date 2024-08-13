@@ -94,7 +94,6 @@ public class BlastProcessorBlock extends BlockWithEntity {
                             transferStack = handStack.copy();
                         }
                         blastProcessor.setStack(slot, transferStack);
-                        blastProcessor.sendDebugMessage("onUse");
                         blastProcessor.markDirty();
                         return ActionResult.SUCCESS;
                     }
@@ -141,9 +140,11 @@ public class BlastProcessorBlock extends BlockWithEntity {
         return true;
     }
 
-    // TODO: Replace comparator output with fuel level
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+            return blastProcessor.getStack(CATALYST_INDEX).isEmpty() ? 0 : 15;
+        }
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
     }
 
@@ -196,12 +197,17 @@ public class BlastProcessorBlock extends BlockWithEntity {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         boolean isPowered = world.isReceivingRedstonePower(pos);
         boolean isActivated = state.get(POWERED);
+        boolean isLit = state.get(LIT);
         if (isPowered && !isActivated) {
-            world.scheduleBlockTick(pos, this, 10);
+            world.scheduleBlockTick(pos, this, 20);
             if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
                 blastProcessor.onRedstoneImpulse();
             }
-            updateBlockState(world, pos, state.with(LIT, true).with(POWERED, true));
+            if (!isLit) {
+                state = state.with(LIT, true);
+            }
+
+            updateBlockState(world, pos, state.with(POWERED, true));
         } else if(!isPowered && isActivated) {
             updateBlockState(world, pos, state.with(POWERED, false));
         }
