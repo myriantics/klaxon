@@ -213,11 +213,4 @@ public class BlastProcessorBlock extends BlockWithEntity {
         }
     }
 
-
-
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? null : checkType(type, BlockEntityType.BREWING_STAND, BrewingStandBlockEntity::tick);
-    }
-
 }
