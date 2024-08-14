@@ -23,6 +23,7 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
     private final ItemStack result;
     private final Identifier id;
 
+    private ItemStack catalystItem;
     private double explosionPower;
     private boolean producesFire;
 
@@ -45,9 +46,11 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
             if (explosionPowerMatch.isPresent()) {
                 this.explosionPower = explosionPowerMatch.get().getExplosionPower();
                 this.producesFire = explosionPowerMatch.get().producesFire();
+                this.catalystItem = inventory.getStack(CATALYST_INDEX);
             } else {
                 this.explosionPower = 0.0;
                 this.producesFire = false;
+                this.catalystItem = ItemStack.EMPTY;
             }
         }
 
@@ -74,6 +77,10 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
 
     public double getExplosionPowerMax() {
         return explosionPowerMax;
+    }
+
+    public ItemStack getCatalystItem() {
+        return catalystItem;
     }
 
     public boolean requiresFire() {return requiresFire;}

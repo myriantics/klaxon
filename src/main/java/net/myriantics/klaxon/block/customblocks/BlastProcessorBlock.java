@@ -61,7 +61,9 @@ public class BlastProcessorBlock extends BlockWithEntity {
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        world.setBlockState(pos, state.with(LIT, false));
+        if (world.getBlockState(pos).getBlock() instanceof BlastProcessorBlock) {
+            world.setBlockState(pos, state.with(LIT, false));
+        }
     }
 
     @Nullable
@@ -133,26 +135,27 @@ public class BlastProcessorBlock extends BlockWithEntity {
     }
 
     public void updateBlockState(World world, BlockPos pos, @Nullable BlockState appendedState) {
-        if (appendedState == null) {
-            appendedState = world.getBlockState(pos);
-        }
-
-        BlastProcessorBlockEntity blastProcessor = (BlastProcessorBlockEntity) world.getBlockEntity(pos);
-        if (blastProcessor != null) {
-            DefaultedList<ItemStack> inventory = blastProcessor.getItems();
-
-            boolean hatchOpen = appendedState.get(BlastProcessorBlock.HATCH_OPEN);
-            boolean fueled = appendedState.get(BlastProcessorBlock.FUELED);
-
-            if (inventory.get(CATALYST_INDEX).isEmpty() == fueled) {
-                appendedState = appendedState.with(BlastProcessorBlock.FUELED, !fueled);
-            }
-            if (inventory.get(PROCESS_ITEM_INDEX).isEmpty() != hatchOpen) {
-                appendedState = appendedState.with(BlastProcessorBlock.HATCH_OPEN, !hatchOpen);
+        if (world.getBlockState(pos).getBlock() instanceof BlastProcessorBlock) {
+            if (appendedState == null) {
+                appendedState = world.getBlockState(pos);
             }
 
-            if (world.getBlockState(pos) != appendedState) {
-                world.setBlockState(pos, appendedState);
+            if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+                DefaultedList<ItemStack> inventory = blastProcessor.getItems();
+
+                boolean hatchOpen = appendedState.get(BlastProcessorBlock.HATCH_OPEN);
+                boolean fueled = appendedState.get(BlastProcessorBlock.FUELED);
+
+                if (inventory.get(CATALYST_INDEX).isEmpty() == fueled) {
+                    appendedState = appendedState.with(BlastProcessorBlock.FUELED, !fueled);
+                }
+                if (inventory.get(PROCESS_ITEM_INDEX).isEmpty() != hatchOpen) {
+                    appendedState = appendedState.with(BlastProcessorBlock.HATCH_OPEN, !hatchOpen);
+                }
+
+                if (world.getBlockState(pos) != appendedState) {
+                    world.setBlockState(pos, appendedState);
+                }
             }
         }
 
@@ -178,7 +181,6 @@ public class BlastProcessorBlock extends BlockWithEntity {
         boolean isActivated = state.get(POWERED);
         boolean isLit = state.get(LIT);
         if (isPowered && !isActivated) {
-            world.scheduleBlockTick(pos, this, 20);
             if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
                 blastProcessor.onRedstoneImpulse();
             }

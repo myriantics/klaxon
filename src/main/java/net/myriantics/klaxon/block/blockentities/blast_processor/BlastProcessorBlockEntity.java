@@ -6,6 +6,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
@@ -22,6 +23,7 @@ import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
+import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
@@ -77,7 +79,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     public void onRedstoneImpulse() {
-        craft(world);
+        craft();
         updateBlockState();
         /*if (world != null && !world.isClient) {
             PacketByteBuf buf = PacketByteBufs.create();
@@ -149,7 +151,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         }
     }
 
-    private void craft(World world) {
+    private void craft() {
         if (world != null) {
 
             SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
@@ -158,8 +160,13 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                 blastProcessorRecipeInventory.addStack(itemStack);
             }
 
-            RecipeType<BlastProcessorRecipe> blastProcessorRecipeType = BlastProcessorRecipe.Type.INSTANCE;
-            Optional<BlastProcessorRecipe> blastProcessorMatch = world.getRecipeManager().getFirstMatch(blastProcessorRecipeType, blastProcessorRecipeInventory, world);
+            Optional<BlastProcessorRecipe> blastProcessorMatch = Optional.empty();
+
+            // only look for recipe if processing item is present
+            if (!inventory.get(PROCESS_ITEM_INDEX).isEmpty()) {
+                RecipeType<BlastProcessorRecipe> blastProcessorRecipeType = BlastProcessorRecipe.Type.INSTANCE;
+                blastProcessorMatch = world.getRecipeManager().getFirstMatch(blastProcessorRecipeType, blastProcessorRecipeInventory, world);
+            }
 
             BlastProcessorRecipe.outputState outputState;
             double explosionPower = 0;
@@ -167,6 +174,13 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
             if (blastProcessorMatch.isEmpty()) {
                 outputState = BlastProcessorRecipe.outputState.MISSING_RECIPE;
+
+                // to patch explosion not occuring if no recipe is present
+                Optional<ItemExplosionPowerRecipe> itemExplosionPowerMatch = ItemExplosionPowerHelper.getExplosionPowerData(world, inventory.get(CATALYST_INDEX));
+                if (itemExplosionPowerMatch.isPresent()) {
+                    explosionPower = itemExplosionPowerMatch.get().getExplosionPower();
+                    producesFire = itemExplosionPowerMatch.get().producesFire();
+                }
             } else {
                 outputState = blastProcessorMatch.get().getOutputState();
                 explosionPower = blastProcessorMatch.get().getExplosionPower();
@@ -193,7 +207,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     public void updateBlockState() {
-        BlastProcessorBlock blastProcessorBlock = (BlastProcessorBlock) world.getBlockState(pos).getBlock();
+        if (world != null && world.getBlockState(pos).getBlock() instanceof BlastProcessorBlock blastProcessorBlock)
         blastProcessorBlock.updateBlockState(world, pos, null);
     }
 
@@ -214,7 +228,10 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         Position position = this.getOutputLocation(direction);
 
         world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
-        world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.LIT, true));
+        if (world.getBlockState(pos).getBlock() instanceof BlastProcessorBlock) {
+            world.setBlockState(pos, world.getBlockState(pos).with(BlastProcessorBlock.LIT, true));
+            world.scheduleBlockTick(pos, world.getBlockState(pos).getBlock(), 20);
+        }
         // noticed pressure plate hanging around midair in some cases after an explosion - this should fix that
         world.updateNeighbor(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, pos);
     }
@@ -247,7 +264,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     }
 
     public void sendDebugMessage(String message) {
-        if (world != null && world.getServer() != null) {
+        if (!world.isClient) {
             world.getServer().sendMessage(Text.literal(message));
         }
     }
