@@ -7,6 +7,9 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
+
+import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
 
 public class BlastProcessorScreen extends HandledScreen<BlastProcessorScreenHandler> {
     private static final Identifier TEXTURE = new Identifier("klaxon", "textures/gui/container/deepslate_blast_processor.png");
@@ -27,15 +30,16 @@ public class BlastProcessorScreen extends HandledScreen<BlastProcessorScreenHand
         context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
     }
 
-    // gotta add text somehow
     @Override
-    protected void insertText(String text, boolean override) {
-        super.insertText(text, override);
+    protected void handledScreenTick() {
+        super.handledScreenTick();
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        BlastProcessorScreenHandler screenHandler = getScreenHandler();
         renderBackground(context);
+        context.drawText(textRenderer, "" + screenHandler.getExplosionPower(), 0, 0, 16777215, false);
         super.render(context, mouseX, mouseY, delta);
         drawMouseoverTooltip(context, mouseX, mouseY);
     }

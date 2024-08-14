@@ -1,43 +1,33 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraft.world.entity.EntityLookup;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
-import net.myriantics.klaxon.networking.KlaxonMessages;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class BlastProcessorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
@@ -61,7 +51,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new BlastProcessorScreenHandler(syncId, playerInventory, this);
+        return new BlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
     }
 
     @Override
@@ -161,80 +151,44 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     private void craft(World world) {
         if (world != null) {
-            ItemStack processItem = inventory.get(PROCESS_ITEM_INDEX);
-            ItemStack catalystItem = inventory.get(CATALYST_INDEX);
 
-            RecipeManager recipeManager = world.getRecipeManager();
+            SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
 
-
-            Optional<ItemExplosionPowerRecipe> explPowMatch = ItemExplosionPowerHelper.getExplosionPowerData(world, catalystItem);
-
-
-            // is there fuel present
-            if (explPowMatch.isPresent() && explPowMatch.get().getExplosionPower() > 0) {
-
-                RecipeType<BlastProcessorRecipe> blstProcType = BlastProcessorRecipe.Type.INSTANCE;
-                SimpleInventory blstProcInventory = new SimpleInventory(processItem.copy());
-
-                Optional<BlastProcessorRecipe> blstProcMatch = recipeManager.getFirstMatch(blstProcType, blstProcInventory, world);
-
-                double explosionPower = explPowMatch.get().getExplosionPower();
-                boolean producesFire = explPowMatch.get().producesFire();
-
-
-                // is there a recipe (EDGE CASE WILL PRODUCE RECIPE CONFLICTS BETWEEN BLAST PROCESSING RECIPES OF THE SAME ITEM)
-                // WILL NEED TO FIX LATER
-                if (blstProcMatch.isPresent()) {
-
-                    double explosionPowerMin = blstProcMatch.get().getExplosionPowerMin();
-                    double explosionPowerMax = blstProcMatch.get().getExplosionPowerMax();
-                    boolean requiresFire = blstProcMatch.get().requiresFire();
-
-                    if (explosionPower < explosionPowerMin) {
-                        detonate(explosionPower, producesFire);
-                        ejectItem(processItem.split(1));
-                        // PRESENT RECIPE BUT LOW-POWERED FUEL
-                        // EXPLODE - CONSUME FUEL
-                        // DISPENSE ITEM WITH VELOCITY BASED OFF OF FUEL EXPL. POWER
-                    } else if(explosionPower > explosionPowerMax) {
-                        detonate(explosionPower, producesFire);
-                        removeStack(PROCESS_ITEM_INDEX);
-                        // PRESENT RECIPE BUT OVERPOWERED FUEL
-                        // EXPLODE - CONSUME FUEL
-                        // DESTROY ITEM
-                    } else {
-                        if (requiresFire == producesFire || producesFire) {
-                            detonate(explosionPower, producesFire);
-                            ejectItem(blstProcMatch.get().getOutput(world.getRegistryManager()));
-                            // PRESENT RECIPE AND VALID FUEL
-                            // EXPLODE - CONSUME FUEL
-                            // EJECT RECIPE OUTPUT
-                        } else {
-                            detonate(explosionPower, producesFire);
-                            ejectItem(processItem.split(1));
-                            // INVALID RECIPE
-                            // REQUIRES FIRE
-                            // CONSUME FUEL AND EJECT PROCESS ITEM
-                        }
-                    }
-
-                } else {
-                    detonate(explosionPower, producesFire);
-                    ejectItem(processItem.split(1));
-                    // VALID FUEL BUT MISSING RECIPE
-                    // CONSUME FUEL AND DISPENSE ITEM
-                    // dispense item with velocity correspondent to explosion power
-                }
-            } else {
-                if (!processItem.isEmpty()) {
-                    ejectItem(processItem.split(1));
-                } else if (!catalystItem.isEmpty()) {
-                    ejectItem(processItem.split(1));
-                }
-                // NO FUEL / INVALID FUEL
-                // NEEDS TO CHECK FOR PROCESSING ITEM AND FUEL AND EJECT EITHER
-                // dispense item normally - NO FUEL
+            for (ItemStack itemStack : inventory) {
+                blastProcessorRecipeInventory.addStack(itemStack);
             }
+
+            RecipeType<BlastProcessorRecipe> blastProcessorRecipeType = BlastProcessorRecipe.Type.INSTANCE;
+            Optional<BlastProcessorRecipe> blastProcessorMatch = world.getRecipeManager().getFirstMatch(blastProcessorRecipeType, blastProcessorRecipeInventory, world);
+
+            BlastProcessorRecipe.outputState outputState;
+            double explosionPower = 0;
+            boolean producesFire = false;
+
+            if (blastProcessorMatch.isEmpty()) {
+                outputState = BlastProcessorRecipe.outputState.MISSING_RECIPE;
+            } else {
+                outputState = blastProcessorMatch.get().getOutputState();
+                explosionPower = blastProcessorMatch.get().getExplosionPower();
+                producesFire = blastProcessorMatch.get().producesFire();
+            }
+
+            detonate(explosionPower, producesFire);
+
+            switch (outputState) {
+                case MISSING_RECIPE, UNDERPOWERED, MISSING_FIRE, MISSING_FUEL -> {
+                    for (ItemStack itemStack : inventory) {
+                        dispense(itemStack);
+                    }
+                }
+                case OVERPOWERED -> {
+                    clear();
+                }
+                case SUCCESS -> {
+                    dispense(blastProcessorMatch.get().getOutput(world.getRegistryManager()));
+                }
+            }
+
         }
     }
 
@@ -265,12 +219,13 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         world.updateNeighbor(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, pos);
     }
 
-    private void ejectItem(ItemStack itemStack) {
+    private void dispense(ItemStack itemStack) {
         if (world == null || itemStack.isEmpty()) {
             return;
         }
+        ItemStack splitStack = itemStack.split(1);
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-        ItemDispenserBehavior.spawnItem(world, itemStack, 0, direction, getOutputLocation(direction));
+        ItemDispenserBehavior.spawnItem(world, splitStack, 0, direction, getOutputLocation(direction));
     }
 
     private Position getOutputLocation(Direction direction) {

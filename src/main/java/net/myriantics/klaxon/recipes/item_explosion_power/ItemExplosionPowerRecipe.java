@@ -64,8 +64,8 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
         return item;
     }
 
-    public float getExplosionPower() {
-        return (float) explosionPower;
+    public double getExplosionPower() {
+        return explosionPower;
     }
 
     public boolean producesFire() {

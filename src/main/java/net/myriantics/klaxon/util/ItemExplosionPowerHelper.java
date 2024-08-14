@@ -25,7 +25,7 @@ public abstract class ItemExplosionPowerHelper {
         return recipeManager.getFirstMatch(type, simpleInventory, world);
     }
 
-    public static float getItemExplosionPower(World world, ItemStack itemStack) {
+    public static double getItemExplosionPower(World world, ItemStack itemStack) {
         Optional<ItemExplosionPowerRecipe> match = getExplosionPowerData(world, itemStack);
         if (match.isEmpty()) {
             return 0.0F;

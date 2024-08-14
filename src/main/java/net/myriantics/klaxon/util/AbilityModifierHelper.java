@@ -27,8 +27,6 @@ public abstract class AbilityModifierHelper {
         // make it not a debuff by adding 1
         statusEffectModifier++;
 
-        player.sendMessage(Text.literal("test: " + statusEffectModifier));
-
 
         return statusEffectModifier;
     }
