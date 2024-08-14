@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.recipes.hammer;
 
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -8,7 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.item.KlaxonItems;
 
-public class HammerRecipe implements Recipe<CraftingInventory>{
+public class HammerRecipe implements Recipe<SimpleInventory>{
     private final Ingredient inputA;
     private final ItemStack result;
     private final Identifier id;
@@ -20,12 +21,12 @@ public class HammerRecipe implements Recipe<CraftingInventory>{
     }
 
     @Override
-    public boolean matches(CraftingInventory inventory, World world) {
+    public boolean matches(SimpleInventory inventory, World world) {
         return inputA.test(inventory.getStack(0));
     }
 
     @Override
-    public ItemStack craft(CraftingInventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack craft(SimpleInventory inventory, DynamicRegistryManager registryManager) {
         return this.result.copy();
     }
 

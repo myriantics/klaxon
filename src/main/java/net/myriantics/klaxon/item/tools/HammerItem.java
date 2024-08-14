@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ObserverBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -18,18 +21,19 @@ import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
@@ -39,6 +43,8 @@ import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+
+import static net.minecraft.block.FacingBlock.FACING;
 
 public class HammerItem extends Item implements AttackBlockCallback, AttackEntityCallback {
     public static final float ATTACK_DAMAGE = 9.0F;
@@ -106,37 +112,70 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos interactionPos = context.getBlockPos();
+        Direction hitDir = context.getSide();
+        Position outputPos = getOutputLocation(hitDir, interactionPos);
         BlockState interactionState = context.getWorld().getBlockState(interactionPos);
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
+        Hand activeHand = context.getHand();
 
         if (player == null) {
             return ActionResult.PASS;
         }
 
         // hammering recipe
-        if(player.isOnGround() && interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
-            RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
-            CraftingInventory dummyInventory = new CraftingInventory(player.currentScreenHandler, 1, 1);
-            dummyInventory.setStack(0, player.getOffHandStack());
+        if(player.isOnGround()) {
+            if (interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
+                RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
+                SimpleInventory dummyInventory = new SimpleInventory(player.getStackInHand(activeHand.equals(Hand.MAIN_HAND) ? activeHand : Hand.OFF_HAND));
 
-            Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
+                Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
+                if(match.isPresent()) {
+                    if(world.isClient) {
+                        return ActionResult.SUCCESS;
+                    }
 
-            if(match.isEmpty()) {
-                return ActionResult.PASS;
+                    world.playSound(player, interactionPos, SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, SoundCategory.PLAYERS, 2, 2f);
+                    world.spawnEntity(new ItemEntity(world,
+                            outputPos.getX(),
+                            outputPos.getY(),
+                            outputPos.getZ(),
+                            match.get().getOutput(world.getRegistryManager()).copy(),
+                            0,0.2,0));
+
+                    if (!player.isCreative()) {
+                        player.getOffHandStack().decrement(1);
+                    }
+
+                    if (!player.isSneaking()) {
+                        return ActionResult.SUCCESS;
+                    }
+                }
             }
 
-            if(world.isClient) {
+            if (player.isSneaking()) {
+                if (world.isClient) {
+                    return ActionResult.SUCCESS;
+                }
+
+                // block updating abilities
+                // this quite literally allows you to hit something with a hammer to fix it
+                world.updateNeighbors(interactionPos, interactionState.getBlock());
+                world.updateNeighbor(interactionPos, interactionState.getBlock(), interactionPos);
+
+                // trigger observers next to target block because its really funny
+                for (Direction side : Direction.values()) {
+                    BlockPos observerPos = interactionPos.offset(side);
+                    BlockState observerState = world.getBlockState(observerPos);
+                    if (observerState.getBlock() instanceof ObserverBlock observerBlock) {
+                        if (observerPos.offset(observerState.get(FACING)).equals(interactionPos)) {
+                            observerBlock.scheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
+                        }
+                    }
+                }
+
                 return ActionResult.SUCCESS;
             }
-            world.playSound(player, interactionPos, SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, SoundCategory.PLAYERS, 2, 2f);
-            world.spawnEntity(new ItemEntity(world,
-                    interactionPos.getX() + 0.5,
-                    interactionPos.getY() + 1,
-                    interactionPos.getZ() + 0.5,
-                    match.get().getOutput(world.getRegistryManager()).copy(),
-                    0,0.2,0));
-            player.getOffHandStack().decrement(1);
         }
         return ActionResult.PASS;
     }
@@ -235,6 +274,24 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         }
 
         player.addVelocity(h, k, l);
+    }
+
+    private Position getOutputLocation(Direction direction, BlockPos pos) {
+        Position centerPos = pos.toCenterPos();
+        double x = centerPos.getX();
+        double y = centerPos.getY();
+        double z = centerPos.getZ();
+
+        switch (direction) {
+            case UP -> y += 0.55;
+            case DOWN -> y -= 0.55;
+            case NORTH -> z -= 0.55;
+            case SOUTH -> z += 0.55;
+            case EAST -> x += 0.55;
+            case WEST -> x -= 0.55;
+        }
+
+        return new Vec3d(x, y, z);
     }
 
     @Override
