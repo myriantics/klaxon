@@ -34,8 +34,9 @@ public abstract class ClientPlayerSneakFastInputOverride {
         World world = player.getWorld();
         BlockState state = world.getBlockState(hitResult.getBlockPos());
         ItemStack theStackInQuestion = player.getStackInHand(hand);
+        Direction direction = hitResult.getSide();
 
-        if (isHoldingSomething && world.getBlockEntity(hitResult.getBlockPos()) instanceof BlastProcessorBlockEntity) {
+        if (isHoldingSomething && world.getBlockEntity(hitResult.getBlockPos()) instanceof BlastProcessorBlockEntity blastProcessorBlock && blastProcessorBlock.getAvailableSlots(direction) != null) {
             if (!state.get(BlastProcessorBlock.FUELED) && ItemExplosionPowerHelper.isValidCatalyst(world, theStackInQuestion)) {
                 return false;
             }

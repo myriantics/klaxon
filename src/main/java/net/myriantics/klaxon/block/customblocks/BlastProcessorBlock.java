@@ -187,9 +187,11 @@ public class BlastProcessorBlock extends BlockWithEntity {
             if (!isLit) {
                 state = state.with(LIT, true);
             }
-
             updateBlockState(world, pos, state.with(POWERED, true));
         } else if(!isPowered && isActivated) {
+            if (isLit) {
+                state = state.with(LIT, false);
+            }
             updateBlockState(world, pos, state.with(POWERED, false));
         }
     }

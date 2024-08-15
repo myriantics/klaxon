@@ -160,7 +160,6 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
 
                 // block updating abilities
                 // this quite literally allows you to hit something with a hammer to fix it
-                world.updateNeighbors(interactionPos, interactionState.getBlock());
                 world.updateNeighbor(interactionPos, interactionState.getBlock(), interactionPos);
 
                 // trigger observers next to target block because its really funny
