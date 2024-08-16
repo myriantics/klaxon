@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
-import net.minecraft.block.SignBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,7 +12,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonMain;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
@@ -26,7 +24,7 @@ import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastPro
 import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
 
 public class BlastProcessorScreenHandler extends ScreenHandler {
-    private final Inventory ingredientInventory;
+    private final BlastProcessorCraftingInventory ingredientInventory;
     private final SimpleInventory outputInventory;
     private double explosionPower;
 
@@ -59,7 +57,7 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, ScreenHandlerContext context) {
         super(KlaxonMain.BLAST_PROCESSOR_SCREEN_HANDLER, syncId);
         checkSize(inventory, 2);
-        this.ingredientInventory = inventory;
+        this.ingredientInventory = new BlastProcessorCraftingInventory(this, 2, inventory);
         this.context = context;
         this.player = playerInventory.player;
         this.outputInventory = new SimpleInventory(9);
@@ -68,14 +66,14 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         int m;
         int l;
         // machine slots
-        this.addSlot(new Slot(inventory, PROCESS_ITEM_INDEX, 35, 17) {
+        this.addSlot(new Slot(ingredientInventory, PROCESS_ITEM_INDEX, 35, 17) {
             @Override
             public int getMaxItemCount() {
                 return BlastProcessorBlockEntity.MaxItemStackCount;
             }
         });
 
-        this.addSlot(new Slot(inventory, CATALYST_INDEX, 35, 53) {
+        this.addSlot(new Slot(ingredientInventory, CATALYST_INDEX, 35, 53) {
             @Override
             public int getMaxItemCount() {
                 return BlastProcessorBlockEntity.MaxItemStackCount;
@@ -117,11 +115,13 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     @Override
     public void onContentChanged(Inventory inventory) {
         this.context.run((world, pos) -> {
-            updateResult(this, world, player, (SimpleInventory) ingredientInventory, outputInventory);
+            updateResult(this, world, player, ingredientInventory, outputInventory);
         });
     }
 
-    public void updateResult(ScreenHandler handler, World world, PlayerEntity player, SimpleInventory craftingInventory, SimpleInventory resultInventory) {
+    public void updateResult(ScreenHandler handler, World world, PlayerEntity player, BlastProcessorCraftingInventory craftingInventory, SimpleInventory resultInventory) {
+        player.sendMessage(Text.literal("POGGIES"));
+
         ItemStack processItem = craftingInventory.getStack(PROCESS_ITEM_INDEX);
         ItemStack catalystItem = craftingInventory.getStack(CATALYST_INDEX);
 
