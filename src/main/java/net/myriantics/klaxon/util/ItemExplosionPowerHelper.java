@@ -20,7 +20,8 @@ public abstract class ItemExplosionPowerHelper {
         RecipeManager recipeManager = world.getRecipeManager();
 
         RecipeType<ItemExplosionPowerRecipe> type = ItemExplosionPowerRecipe.Type.INSTANCE;
-        SimpleInventory simpleInventory = new SimpleInventory(itemStack.copy());
+        // yay this will make things gooder
+        SimpleInventory simpleInventory = new SimpleInventory(ItemStack.EMPTY, itemStack.copy());
 
         return recipeManager.getFirstMatch(type, simpleInventory, world);
     }

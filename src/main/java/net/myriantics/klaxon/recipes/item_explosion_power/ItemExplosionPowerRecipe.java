@@ -16,6 +16,8 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.DimensionTypes;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 
+import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
+
 public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
     private final Ingredient item;
     private final double explosionPower;
@@ -33,7 +35,7 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
     // GAH
     @Override
     public boolean matches(SimpleInventory inventory, World world) {
-        return item.test(inventory.getStack(0));
+        return item.test(inventory.getStack(CATALYST_INDEX));
     }
 
     @Override

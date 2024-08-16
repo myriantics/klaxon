@@ -66,19 +66,9 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         int m;
         int l;
         // machine slots
-        this.addSlot(new Slot(ingredientInventory, PROCESS_ITEM_INDEX, 35, 17) {
-            @Override
-            public int getMaxItemCount() {
-                return BlastProcessorBlockEntity.MaxItemStackCount;
-            }
-        });
+        this.addSlot(new Slot(ingredientInventory, PROCESS_ITEM_INDEX, 35, 17));
 
-        this.addSlot(new Slot(ingredientInventory, CATALYST_INDEX, 35, 53) {
-            @Override
-            public int getMaxItemCount() {
-                return BlastProcessorBlockEntity.MaxItemStackCount;
-            }
-        });
+        this.addSlot(new Slot(ingredientInventory, CATALYST_INDEX, 35, 53));
 
         for (m = 0; m < 3; m++) {
             for (l = 0; l < 3; l++) {

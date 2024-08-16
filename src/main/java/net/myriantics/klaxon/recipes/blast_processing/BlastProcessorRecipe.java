@@ -38,23 +38,7 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public boolean matches(SimpleInventory inventory, World world) {
-        boolean matches = processingItem.test(inventory.getStack(PROCESS_ITEM_INDEX));
-
-        if (matches) {
-            Optional<ItemExplosionPowerRecipe> explosionPowerMatch = ItemExplosionPowerHelper.getExplosionPowerData(world, inventory.getStack(CATALYST_INDEX));
-
-            if (explosionPowerMatch.isPresent()) {
-                this.explosionPower = explosionPowerMatch.get().getExplosionPower();
-                this.producesFire = explosionPowerMatch.get().producesFire();
-                this.catalystItem = inventory.getStack(CATALYST_INDEX);
-            } else {
-                this.explosionPower = 0.0;
-                this.producesFire = false;
-                this.catalystItem = ItemStack.EMPTY;
-            }
-        }
-
-        return matches;
+        return processingItem.test(inventory.getStack(PROCESS_ITEM_INDEX));
     }
 
     @Override
@@ -91,38 +75,6 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
 
     public boolean producesFire() {
         return producesFire;
-    }
-
-    public enum outputState {
-        MISSING_RECIPE,
-        MISSING_FUEL,
-        UNDERPOWERED,
-        OVERPOWERED,
-        MISSING_FIRE,
-        SUCCESS;
-    }
-
-    public outputState getOutputState() {
-        // is there fuel present
-        if (explosionPower > 0) {
-            if (explosionPower < explosionPowerMin) {
-                return outputState.UNDERPOWERED;
-                // PRESENT RECIPE BUT LOW-POWERED FUEL
-            } else if(explosionPower > explosionPowerMax) {
-                return outputState.OVERPOWERED;
-                // PRESENT RECIPE BUT OVERPOWERED FUEL
-            } else {
-                if (requiresFire == producesFire || producesFire) {
-                    return outputState.SUCCESS;
-                    // PRESENT RECIPE AND VALID FUEL
-                } else {
-                    return outputState.MISSING_FIRE;
-                    // INVALID RECIPE - REQUIRES FIRE
-                }
-            }
-        }
-        return outputState.MISSING_FUEL;
-        // NO FUEL / INVALID FUEL
     }
 
     @Override

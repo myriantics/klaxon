@@ -1,17 +1,14 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
-import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -20,21 +17,17 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraft.world.tick.WorldTickScheduler;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.FACING;
-import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.LIT;
 
 public class BlastProcessorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
@@ -160,39 +153,19 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
             SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
 
-            for (ItemStack itemStack : inventory) {
-                blastProcessorRecipeInventory.addStack(itemStack);
+            for (int i = 0; i < inventory.size(); i++) {
+                blastProcessorRecipeInventory.setStack(i, inventory.get(i));
             }
 
-            Optional<BlastProcessorRecipe> blastProcessorMatch = Optional.empty();
+            BlastProcessingInator inator = new BlastProcessingInator(world, blastProcessorRecipeInventory);
 
-            // only look for recipe if processing item is present
-            if (!inventory.get(PROCESS_ITEM_INDEX).isEmpty()) {
-                RecipeType<BlastProcessorRecipe> blastProcessorRecipeType = BlastProcessorRecipe.Type.INSTANCE;
-                blastProcessorMatch = world.getRecipeManager().getFirstMatch(blastProcessorRecipeType, blastProcessorRecipeInventory, world);
-            }
+            BlastProcessorOutputState outputState = inator.getOutputState();
+            double explosionPower = inator.getExplosionPower();
+            boolean producesFire = inator.producesFire();
 
-            BlastProcessorRecipe.outputState outputState;
-            double explosionPower = 0;
-            boolean producesFire = false;
+            detonate(outputState, explosionPower, producesFire);
 
-            if (blastProcessorMatch.isEmpty()) {
-                outputState = BlastProcessorRecipe.outputState.MISSING_RECIPE;
-
-                // to patch explosion not occuring if no recipe is present
-                Optional<ItemExplosionPowerRecipe> itemExplosionPowerMatch = ItemExplosionPowerHelper.getExplosionPowerData(world, inventory.get(CATALYST_INDEX));
-                if (itemExplosionPowerMatch.isPresent()) {
-                    explosionPower = itemExplosionPowerMatch.get().getExplosionPower();
-                    producesFire = itemExplosionPowerMatch.get().producesFire();
-                }
-            } else {
-                outputState = blastProcessorMatch.get().getOutputState();
-                explosionPower = blastProcessorMatch.get().getExplosionPower();
-                producesFire = blastProcessorMatch.get().producesFire();
-            }
-
-            detonate(explosionPower, producesFire);
-
+            sendDebugMessage(outputState.toString());
             switch (outputState) {
                 case MISSING_RECIPE, UNDERPOWERED, MISSING_FIRE, MISSING_FUEL -> {
                     dispense(inventory.get(PROCESS_ITEM_INDEX));
@@ -206,7 +179,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                     clear();
                 }
                 case SUCCESS -> {
-                    dispense(blastProcessorMatch.get().getOutput(world.getRegistryManager()));
+                    clear();
+                    dispense(inator.getResult());
                 }
             }
         }
@@ -225,9 +199,9 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         super.markDirty();
     }
 
-    private void detonate(double explosionPower, boolean producesFire) {
+    private void detonate(BlastProcessorOutputState outputState, double explosionPower, boolean producesFire) {
         if (world != null) {
-            BlockState activeBlockState  = world.getBlockState(pos);
+            BlockState activeBlockState = world.getBlockState(pos);
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
                 if (explosionPower > 0.0) {
                     Direction direction = activeBlockState.get(FACING);

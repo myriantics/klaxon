@@ -23,6 +23,11 @@ public class BlastProcessorCraftingInventory implements Inventory {
         this.stacks = stacks;
     }
 
+    @Override
+    public int getMaxCountPerStack() {
+        return 1;
+    }
+
     public BlastProcessorCraftingInventory(BlastProcessorScreenHandler handler, int size, DefaultedList<ItemStack> stacks) {
         this.handler = handler;
         this.stacks = stacks;
