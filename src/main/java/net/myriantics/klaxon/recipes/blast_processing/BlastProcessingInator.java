@@ -27,7 +27,11 @@ public class BlastProcessingInator {
         ItemStack processItem = inventory.getStack(PROCESS_ITEM_INDEX);
         ItemStack catalystItem = inventory.getStack(CATALYST_INDEX);
 
-        SimpleInventory simpleInventory = (SimpleInventory) inventory;
+        SimpleInventory simpleInventory = new SimpleInventory(inventory.size());
+
+        for (int i = 0; i < inventory.size(); i++) {
+            simpleInventory.setStack(i, inventory.getStack(i));
+        }
 
         RecipeManager recipeManager = world.getRecipeManager();
 

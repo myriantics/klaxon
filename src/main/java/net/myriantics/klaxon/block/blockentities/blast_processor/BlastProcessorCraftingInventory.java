@@ -5,8 +5,9 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
+import net.myriantics.klaxon.util.ImplementedInventory;
 
-public class BlastProcessorCraftingInventory implements Inventory {
+public class BlastProcessorCraftingInventory implements ImplementedInventory {
     private final BlastProcessorScreenHandler handler;
     private final DefaultedList<ItemStack> stacks;
 
@@ -31,6 +32,11 @@ public class BlastProcessorCraftingInventory implements Inventory {
     public BlastProcessorCraftingInventory(BlastProcessorScreenHandler handler, int size, DefaultedList<ItemStack> stacks) {
         this.handler = handler;
         this.stacks = stacks;
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return stacks;
     }
 
     @Override

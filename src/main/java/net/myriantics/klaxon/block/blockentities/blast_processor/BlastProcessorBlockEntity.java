@@ -40,6 +40,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     public static final int MaxItemStackCount = 1;
     public static final double MAXIMUM_CONTAINED_EXPLOSION_POWER = 0.5;
 
+    private BlastProcessorScreenHandler screenHandler;
+
     public BlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.BLAST_CHAMBER_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
@@ -53,7 +55,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new BlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
+        this.screenHandler = new BlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
+        return screenHandler;
     }
 
     @Override
@@ -110,11 +113,11 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
             if (side == BlockDirectionHelper.getLeft(blockFacing) || side == BlockDirectionHelper.getRight(blockFacing)) {
                 return CATALYST_ITEM_SLOTS;
             }
-            if(side == Direction.UP) {
+            if(side == Direction.UP || side == Direction.DOWN) {
                 return PROCESS_ITEM_SLOTS;
             }
         }
-        return null;
+        return new int[]{-1};
     }
 
     @Override
@@ -134,9 +137,28 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         }
         return false;
     }
+
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return slot != CATALYST_INDEX;
+        if (world != null) {
+            Direction blockFacing = world.getBlockState(pos).get(Properties.FACING);
+            if (dir == BlockDirectionHelper.getLeft(blockFacing) || dir == BlockDirectionHelper.getRight(blockFacing)) {
+                for (int i = 0; i < CATALYST_ITEM_SLOTS.length; i++) {
+                    if (slot == CATALYST_ITEM_SLOTS[i]) {
+                        return true;
+                    }
+                }
+            }
+
+            if(dir == Direction.UP || dir == Direction.DOWN) {
+                for (int i = 0; i < PROCESS_ITEM_SLOTS.length; i++) {
+                    if (slot == PROCESS_ITEM_SLOTS[i]) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -201,6 +223,9 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     @Override
     public void markDirty() {
+        if (this.screenHandler != null) {
+            screenHandler.onContentChanged(this);
+        }
         updateBlockState(null);
         super.markDirty();
     }

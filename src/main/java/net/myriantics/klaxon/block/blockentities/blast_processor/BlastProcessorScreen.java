@@ -39,7 +39,7 @@ public class BlastProcessorScreen extends HandledScreen<BlastProcessorScreenHand
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         BlastProcessorScreenHandler screenHandler = getScreenHandler();
         renderBackground(context);
-        context.drawText(textRenderer, "" + screenHandler.getExplosionPower(), 0, 0, 16777215, false);
+        context.drawText(textRenderer, "" + screenHandler.getInator().getExplosionPower(), 0, 0, 16777215, false);
         super.render(context, mouseX, mouseY, delta);
         drawMouseoverTooltip(context, mouseX, mouseY);
     }
