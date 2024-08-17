@@ -12,6 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,8 +63,8 @@ public class BlastProcessorBlock extends BlockWithEntity {
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (world.getBlockState(pos).getBlock() instanceof BlastProcessorBlock) {
-            world.setBlockState(pos, state.with(LIT, false));
+        if (state.isOf(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR) && state.get(LIT) && !world.isReceivingRedstonePower(pos)) {
+            world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
         }
     }
 
@@ -147,14 +149,14 @@ public class BlastProcessorBlock extends BlockWithEntity {
                 boolean fueled = appendedState.get(BlastProcessorBlock.FUELED);
 
                 if (inventory.get(CATALYST_INDEX).isEmpty() == fueled) {
-                    appendedState = appendedState.with(BlastProcessorBlock.FUELED, !fueled);
+                    appendedState = appendedState.cycle(BlastProcessorBlock.FUELED);
                 }
                 if (inventory.get(PROCESS_ITEM_INDEX).isEmpty() != hatchOpen) {
-                    appendedState = appendedState.with(BlastProcessorBlock.HATCH_OPEN, !hatchOpen);
+                    appendedState = appendedState.cycle(BlastProcessorBlock.HATCH_OPEN);
                 }
 
                 if (world.getBlockState(pos) != appendedState) {
-                    world.setBlockState(pos, appendedState);
+                    world.setBlockState(pos, appendedState, Block.NOTIFY_LISTENERS);
                 }
             }
         }
@@ -177,22 +179,24 @@ public class BlastProcessorBlock extends BlockWithEntity {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        boolean isPowered = world.isReceivingRedstonePower(pos);
-        boolean isActivated = state.get(POWERED);
-        boolean isLit = state.get(LIT);
-        if (isPowered && !isActivated) {
-            if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
-                blastProcessor.onRedstoneImpulse();
+        if (!world.isClient) {
+            boolean isPowered = world.isReceivingRedstonePower(pos);
+            boolean isActivated = state.get(POWERED);
+            boolean isLit = state.get(LIT);
+            if (isPowered && !isActivated) {
+                if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+                    BlockState appendedState = blastProcessor.onRedstoneImpulse();
+                    if (appendedState != null) {
+                        state = appendedState;
+                    }
+                    updateBlockState(world, pos, state.with(POWERED, true));
+                }
+            } else if(!isPowered && isActivated) {
+                if (isLit) {
+                    world.scheduleBlockTick(pos, this, 8);
+                }
+                updateBlockState(world, pos, state.with(POWERED, false));
             }
-            if (!isLit) {
-                state = state.with(LIT, true);
-            }
-            updateBlockState(world, pos, state.with(POWERED, true));
-        } else if(!isPowered && isActivated) {
-            if (isLit) {
-                state = state.with(LIT, false);
-            }
-            updateBlockState(world, pos, state.with(POWERED, false));
         }
     }
 

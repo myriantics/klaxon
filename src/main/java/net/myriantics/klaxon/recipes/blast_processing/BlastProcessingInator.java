@@ -50,18 +50,13 @@ public class BlastProcessingInator {
             this.producesFire = false;
         }
 
-        if (world.getServer() != null) {
-            world.getServer().sendMessage(Text.literal("processItem: " + catalystItem.getItem().toString()));
-            world.getServer().sendMessage(Text.literal("catalystItem: " + catalystItem.getItem().toString()));
-        }
-
         BlastProcessorOutputState interimOutputState;
 
         if (blastProcessingMatch.isPresent()) {
             this.explosionPowerMin = blastProcessingMatch.get().getExplosionPowerMin();
             this.explosionPowerMax = blastProcessingMatch.get().getExplosionPowerMax();
             this.requiresFire = blastProcessingMatch.get().requiresFire();
-            this.result = blastProcessingMatch.get().getOutput(null);
+            this.result = blastProcessingMatch.get().getOutput(world.getRegistryManager());
             if (explosionPower > 0) {
                 if (explosionPower < explosionPowerMin) {
                     interimOutputState = BlastProcessorOutputState.UNDERPOWERED;

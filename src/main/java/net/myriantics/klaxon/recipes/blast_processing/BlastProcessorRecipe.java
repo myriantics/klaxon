@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.recipes.blast_processing;
 
+import net.minecraft.block.RedstoneLampBlock;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
@@ -22,10 +23,6 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
     private final boolean requiresFire;
     private final ItemStack result;
     private final Identifier id;
-
-    private ItemStack catalystItem;
-    private double explosionPower;
-    private boolean producesFire;
 
     public BlastProcessorRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, boolean requiresFire, ItemStack result, Identifier id) {
         this.processingItem = inputA;
@@ -63,19 +60,7 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
         return explosionPowerMax;
     }
 
-    public ItemStack getCatalystItem() {
-        return catalystItem;
-    }
-
     public boolean requiresFire() {return requiresFire;}
-
-    public double getExplosionPower() {
-        return explosionPower;
-    }
-
-    public boolean producesFire() {
-        return producesFire;
-    }
 
     @Override
     public ItemStack getOutput(DynamicRegistryManager registryManager) {

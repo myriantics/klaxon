@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HopperBlock;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,6 +29,7 @@ import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.FACING;
+import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.LIT;
 
 public class BlastProcessorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
@@ -76,8 +78,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         return 2;
     }
 
-    public void onRedstoneImpulse() {
-        craft();
+    public BlockState onRedstoneImpulse() {
+        return craft();
         /*if (world != null && !world.isClient) {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeBlockPos(pos);
@@ -148,9 +150,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         }
     }
 
-    private void craft() {
+    private BlockState craft() {
         if (world != null) {
-
             SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
 
             for (int i = 0; i < inventory.size(); i++) {
@@ -163,14 +164,17 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
             double explosionPower = inator.getExplosionPower();
             boolean producesFire = inator.producesFire();
 
-            detonate(outputState, explosionPower, producesFire);
+            BlockState appendedState = detonate(outputState, explosionPower, producesFire);
 
-            sendDebugMessage(outputState.toString());
+
+            // really ought to make this better but its fine rn
             switch (outputState) {
                 case MISSING_RECIPE, UNDERPOWERED, MISSING_FIRE, MISSING_FUEL -> {
-                    dispense(inventory.get(PROCESS_ITEM_INDEX));
+                    ejectItem(getStack(PROCESS_ITEM_INDEX));
+                    removeStack(PROCESS_ITEM_INDEX);
                     if (explosionPower <= 0) {
-                        dispense(inventory.get(CATALYST_INDEX));
+                        ejectItem(getStack(CATALYST_INDEX));
+                        removeStack(CATALYST_INDEX);
                     } else {
                         removeStack(CATALYST_INDEX);
                     }
@@ -180,10 +184,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
                 }
                 case SUCCESS -> {
                     clear();
-                    dispense(inator.getResult());
+                    ejectItem(inator.getResult());
                 }
             }
+            return appendedState;
         }
+        return null;
     }
 
     public void updateBlockState(@Nullable BlockState appendedState) {
@@ -199,7 +205,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         super.markDirty();
     }
 
-    private void detonate(BlastProcessorOutputState outputState, double explosionPower, boolean producesFire) {
+    private BlockState detonate(BlastProcessorOutputState outputState, double explosionPower, boolean producesFire) {
         if (world != null) {
             BlockState activeBlockState = world.getBlockState(pos);
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
@@ -209,18 +215,20 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
                     world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
                     world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+
+                    return activeBlockState.with(LIT, true);
                 }
             }
         }
+        return null;
     }
 
-    private void dispense(ItemStack itemStack) {
+    private void ejectItem(ItemStack itemStack) {
         if (world == null || itemStack.isEmpty()) {
             return;
         }
-        ItemStack splitStack = itemStack.split(1);
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-        ItemDispenserBehavior.spawnItem(world, splitStack, 0, direction, getOutputLocation(direction));
+        ItemDispenserBehavior.spawnItem(world, itemStack, 0, direction, getOutputLocation(direction));
     }
 
     private Position getOutputLocation(Direction direction) {
