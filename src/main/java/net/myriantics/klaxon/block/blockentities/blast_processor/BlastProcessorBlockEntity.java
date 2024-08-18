@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HopperBlock;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
@@ -13,6 +14,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.ScreenHandlerListener;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -56,6 +59,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         this.screenHandler = new BlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
+        screenHandler.onContentChanged(this);
         return screenHandler;
     }
 
@@ -223,7 +227,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
 
     @Override
     public void markDirty() {
-        if (this.screenHandler != null) {
+        if (this.screenHandler != null && this.screenHandler.player.currentScreenHandler.syncId == this.screenHandler.syncId) {
             screenHandler.onContentChanged(this);
         }
         updateBlockState(null);

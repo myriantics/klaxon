@@ -5,7 +5,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonMain;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorScreenHandler;
-import net.myriantics.klaxon.events.BlastProcessorScreenDataSyncCallback;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
 
 public class KlaxonMessages {
@@ -30,7 +29,7 @@ public class KlaxonMessages {
 
                 if (client.player != null && client.player.currentScreenHandler instanceof BlastProcessorScreenHandler screenHandler) {
                     if (client.player.currentScreenHandler.syncId == syncId) {
-                        BlastProcessorScreenDataSyncCallback.EVENT.invoker().receivePowerData(explosionPower, explosionPowerMin, explosionPowerMax, producesFire, requiresFire, outputState);
+                        screenHandler.setRecipeData(explosionPower, explosionPowerMin, explosionPowerMax, producesFire, requiresFire, outputState);
                     }
                 }
             });

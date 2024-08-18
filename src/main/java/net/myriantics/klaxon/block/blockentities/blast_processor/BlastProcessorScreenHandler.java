@@ -1,5 +1,7 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
@@ -45,12 +47,14 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
 
     public PlayerEntity player;
 
-    private double explosionPower;
-    private double explosionPowerMin;
-    private double explosionPowerMax;
-    private boolean producesFire;
-    private boolean requiresFire;
-    private BlastProcessorOutputState outputState;
+    private PacketByteBuf clientRecipeDataBuf = null;
+
+    public double explosionPower;
+    public double explosionPowerMin;
+    public double explosionPowerMax;
+    public boolean producesFire;
+    public boolean requiresFire;
+    public BlastProcessorOutputState outputState;
 
     // client constructor
     public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory) {
@@ -68,12 +72,6 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         blockEntityInventory.onOpen(playerInventory.player);
 
         this.inator = new BlastProcessingInator(player.getWorld(), ingredientInventory);
-
-        this.explosionPower = inator.getExplosionPower();
-        this.explosionPowerMin = inator.getExplosionPowerMin();
-        this.explosionPowerMax = inator.getExplosionPowerMax();
-        this.producesFire = inator.producesFire();
-        this.requiresFire = inator.requiresFire();
 
         // machine slots
         for (int i = 0; i < 2; i++) {
@@ -111,24 +109,19 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
-
-        updateResult(this, player.getWorld(), player, ingredientInventory, outputInventory);
     }
+
+
 
     @Override
     public void onContentChanged(Inventory inventory) {
         this.context.run((world, pos) -> {
-            updateResult(this, world, player, ingredientInventory, outputInventory);
+            updateResult(world, player, ingredientInventory, outputInventory);
         });
     }
 
-    public void updateResult(ScreenHandler handler, World world, PlayerEntity player, Inventory craftingInventory, SimpleInventory resultInventory) {
+    public void updateResult(World world, PlayerEntity player, Inventory craftingInventory, SimpleInventory resultInventory) {
         player.sendMessage(Text.literal("POGGIES"));
-
-        ItemStack processItem = craftingInventory.getStack(PROCESS_ITEM_INDEX);
-        ItemStack catalystItem = craftingInventory.getStack(CATALYST_INDEX);
-
-
 
         if (player.getWorld().isClient) {
             player.sendMessage(Text.literal("test: " + player.currentScreenHandler.syncId));
@@ -203,7 +196,17 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         return ItemStack.EMPTY;
     }
 
-    public BlastProcessingInator getInator() {
-        return inator;
+    @Environment(EnvType.CLIENT)
+    public void setRecipeData(double explosionPower, double explosionPowerMin, double explosionPowerMax, boolean producesFire, boolean requiresFire, BlastProcessorOutputState outputState) {
+        this.explosionPower = explosionPower;
+        this.explosionPowerMin = explosionPowerMin;
+        this.explosionPowerMax = explosionPowerMax;
+        this.producesFire = producesFire;
+        this.requiresFire = requiresFire;
+        this.outputState = outputState;
+    }
+
+    public Inventory getIngredientInventory() {
+        return ingredientInventory;
     }
 }
