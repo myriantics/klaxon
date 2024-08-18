@@ -193,7 +193,7 @@ public class BlastProcessorBlock extends BlockWithEntity {
                 }
             } else if(!isPowered && isActivated) {
                 if (isLit) {
-                    world.scheduleBlockTick(pos, this, 8);
+                    world.scheduleBlockTick(pos, this, 20);
                 }
                 updateBlockState(world, pos, state.with(POWERED, false));
             }

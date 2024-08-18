@@ -12,6 +12,7 @@ import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorScreenHandler;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.networking.KlaxonMessages;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipeSerializer;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
@@ -34,6 +35,7 @@ public class KlaxonMain implements ModInitializer {
 	@Override
 	public void onInitialize() {
 
+		KlaxonMessages.registerS2CPackets();
 		KlaxonBlocks.registerModBlocks();
 		KlaxonBlockEntities.registerBlockEntities();
 		KlaxonItems.registerModItems();

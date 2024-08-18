@@ -1,21 +1,27 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.mixin.container.ServerPlayerEntityMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonMain;
+import net.myriantics.klaxon.networking.KlaxonMessages;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
@@ -23,6 +29,7 @@ import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerReci
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 
+import javax.lang.model.type.PrimitiveType;
 import java.util.Optional;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
@@ -37,6 +44,13 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     public ScreenHandlerContext context;
 
     public PlayerEntity player;
+
+    private double explosionPower;
+    private double explosionPowerMin;
+    private double explosionPowerMax;
+    private boolean producesFire;
+    private boolean requiresFire;
+    private BlastProcessorOutputState outputState;
 
     // client constructor
     public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory) {
@@ -55,27 +69,15 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
 
         this.inator = new BlastProcessingInator(player.getWorld(), ingredientInventory);
 
+        this.explosionPower = inator.getExplosionPower();
+        this.explosionPowerMin = inator.getExplosionPowerMin();
+        this.explosionPowerMax = inator.getExplosionPowerMax();
+        this.producesFire = inator.producesFire();
+        this.requiresFire = inator.requiresFire();
+
         // machine slots
         for (int i = 0; i < 2; i++) {
-            this.addSlot(new Slot(ingredientInventory, i, 35, 17 + i * 36) {
-                @Override
-                public void markDirty() {
-                    onContentChanged(ingredientInventory);
-                    super.markDirty();
-                }
-
-                @Override
-                public void setStack(ItemStack stack) {
-                    onContentChanged(ingredientInventory);
-                    super.setStack(stack);
-                }
-
-                @Override
-                public ItemStack takeStack(int amount) {
-                    onContentChanged(ingredientInventory);
-                    return super.takeStack(amount);
-                }
-            });
+            this.addSlot(new Slot(ingredientInventory, i, 35, 17 + i * 36));
         }
 
         int m;
@@ -126,7 +128,28 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         ItemStack processItem = craftingInventory.getStack(PROCESS_ITEM_INDEX);
         ItemStack catalystItem = craftingInventory.getStack(CATALYST_INDEX);
 
+
+
+        if (player.getWorld().isClient) {
+            player.sendMessage(Text.literal("test: " + player.currentScreenHandler.syncId));
+        }
+
         this.inator = new BlastProcessingInator(world, ingredientInventory);
+
+        if (!world.isClient && player instanceof ServerPlayerEntity playerEntity) {
+
+            PacketByteBuf buf = PacketByteBufs.create();
+
+            buf.writeInt(syncId);
+            buf.writeDouble(inator.getExplosionPower());
+            buf.writeDouble(inator.getExplosionPowerMin());
+            buf.writeDouble(inator.getExplosionPowerMax());
+            buf.writeBoolean(inator.producesFire());
+            buf.writeBoolean(inator.requiresFire());
+            buf.writeEnumConstant(inator.getOutputState());
+
+            ServerPlayNetworking.send(playerEntity, KlaxonMessages.BLAST_PROCESSOR_SCREEN_DATA_SYNC_S2C, buf);
+        }
 
         resultInventory.setStack(0, inator.getResult());
     }
