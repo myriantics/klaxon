@@ -17,7 +17,6 @@
     "hammer.ModelLoaderMixin"
   ],
   "server": [
-    "blast_processor.ServerPlayerEntityScreenHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
