@@ -80,7 +80,12 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
 
         // machine slots
         for (int i = 0; i < 2; i++) {
-            this.addSlot(new Slot(ingredientInventory, i, 35, 17 + i * 36));
+            this.addSlot(new Slot(ingredientInventory, i, 35, 17 + i * 36) {
+                @Override
+                public int getMaxItemCount() {
+                    return 1;
+                }
+            });
         }
 
         int m;

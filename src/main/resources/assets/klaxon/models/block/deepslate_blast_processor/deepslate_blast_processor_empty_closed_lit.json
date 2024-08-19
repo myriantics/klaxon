@@ -2,12 +2,12 @@
   "credit": "Made with Blockbench. Some JSON stuff also yonked from Spelunkery",
   "ambientocclusion": false,
   "textures": {
-    "front": "block/blast_furnace_front_on",
-    "side": "block/bee_nest_front",
-    "top": "block/barrel_top",
-    "bottom": "block/furnace_top",
-    "back": "block/furnace_side",
-    "particle": "klaxon:block/crude_extrapolator_topbottom"
+    "front": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_front_lit",
+    "side": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_side_empty",
+    "top": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_top_closed",
+    "bottom": "block/polished_deepslate",
+    "back": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_back",
+    "particle": "block/polished_deepslate"
   },
   "elements": [
     {
@@ -15,7 +15,7 @@
       "to": [16, 16, 16],
       "faces": {
         "north": {"uv": [0, 0, 16, 16], "texture": "front", "cullface": "north"},
-        "east": {"uv": [0, 0, 16, 16], "texture": "side", "cullface": "east"},
+        "east": {"uv": [16, 0, 0, 16], "texture": "side", "cullface": "east"},
         "south": {"uv": [0, 0, 16, 16], "texture": "back", "cullface": "south"},
         "west": {"uv": [0, 0, 16, 16], "texture": "side", "cullface": "west"},
         "up": {"uv": [16, 16, 0, 0], "texture": "top", "cullface": "up"},
