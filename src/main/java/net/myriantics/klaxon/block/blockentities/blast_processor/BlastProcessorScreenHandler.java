@@ -41,6 +41,10 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     private final Inventory ingredientInventory;
     private final SimpleInventory outputInventory;
 
+    public BlastProcessingInator getInator() {
+        return inator;
+    }
+
     private BlastProcessingInator inator;
 
     public ScreenHandlerContext context;
@@ -57,8 +61,9 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     public BlastProcessorOutputState outputState;
 
     // client constructor
-    public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory) {
+    public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
         this(syncId, playerInventory, new SimpleInventory(2), ScreenHandlerContext.EMPTY);
+        setRecipeData(buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readBoolean(), buf.readBoolean(), buf.readEnumConstant(BlastProcessorOutputState.class));
     }
 
     // server constructor

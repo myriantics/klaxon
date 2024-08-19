@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HopperBlock;
@@ -11,6 +12,7 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -34,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.FACING;
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.LIT;
 
-public class BlastProcessorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
+public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     public static final int PROCESS_ITEM_INDEX = 0;
     public static final int CATALYST_INDEX = 1;
@@ -282,5 +284,16 @@ public class BlastProcessorBlockEntity extends BlockEntity implements NamedScree
         if (!world.isClient) {
             world.getServer().sendMessage(Text.literal(message));
         }
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+        BlastProcessingInator inator = screenHandler.getInator();
+        buf.writeDouble(inator.getExplosionPower());
+        buf.writeDouble(inator.getExplosionPowerMin());
+        buf.writeDouble(inator.getExplosionPowerMax());
+        buf.writeBoolean(inator.producesFire());
+        buf.writeBoolean(inator.requiresFire());
+        buf.writeEnumConstant(inator.getOutputState());
     }
 }
