@@ -169,9 +169,9 @@ public class BlastProcessorBlock extends BlockWithEntity {
         Direction direction = context.getHorizontalPlayerFacing();
         if (player != null) {
             if (player.isSneaking()) {
-                return this.getDefaultState().with(FACING, direction);
+                return this.getDefaultState().with(FACING, direction.getOpposite());
             } else {
-                return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
+                return this.getDefaultState().with(FACING, direction);
             }
         }
         return this.getDefaultState();

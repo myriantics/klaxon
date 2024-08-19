@@ -38,8 +38,8 @@ import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.LIT;
 
 public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-    public static final int PROCESS_ITEM_INDEX = 0;
-    public static final int CATALYST_INDEX = 1;
+    public static final int PROCESS_ITEM_INDEX = 1;
+    public static final int CATALYST_INDEX = 0;
     private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
@@ -89,17 +89,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
 
     public BlockState onRedstoneImpulse() {
         return craft();
-        /*if (world != null && !world.isClient) {
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeBlockPos(pos);
-            for (ItemStack stack : inventory) {
-                buf.writeItemStack(stack);
-            }
-            for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(this)) {
-                ServerPlayNetworking.send(playerEntity, KlaxonMessages.FAST_INPUT_SYNC_S2C, buf);
-            }
-            world.getServer().sendMessage(Text.literal("sent packet"));
-        }*/
     }
 
     @Override
@@ -146,7 +135,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        if (world != null) {
+        if (world != null && !world.isReceivingRedstonePower(pos)) {
             Direction blockFacing = world.getBlockState(pos).get(Properties.FACING);
             if (dir == BlockDirectionHelper.getLeft(blockFacing) || dir == BlockDirectionHelper.getRight(blockFacing)) {
                 for (int i = 0; i < CATALYST_ITEM_SLOTS.length; i++) {
@@ -169,9 +158,9 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        if (slot == 0) {
+        if (slot == PROCESS_ITEM_INDEX) {
             return getStack(slot).isEmpty();
-        } else if (slot == 1) {
+        } else if (slot == CATALYST_INDEX) {
             return getStack(slot).isEmpty() && ItemExplosionPowerHelper.isValidCatalyst(world, stack);
         } else {
             return false;
@@ -278,12 +267,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         }
 
         return new Vec3d(x, y, z);
-    }
-
-    public void sendDebugMessage(String message) {
-        if (!world.isClient) {
-            world.getServer().sendMessage(Text.literal(message));
-        }
     }
 
     @Override

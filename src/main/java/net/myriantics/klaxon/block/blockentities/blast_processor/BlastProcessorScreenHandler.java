@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.screen.AbstractFurnaceScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -80,7 +81,7 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
 
         // machine slots
         for (int i = 0; i < 2; i++) {
-            this.addSlot(new Slot(ingredientInventory, i, 35, 17 + i * 36) {
+            this.addSlot(new Slot(ingredientInventory, i, 35, 53 - i * 36) {
                 @Override
                 public int getMaxItemCount() {
                     return 1;
@@ -159,17 +160,10 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack quickMove(PlayerEntity player, int sourceSlotIndex) {
-        //MinecraftClient.getInstance().player.sendMessage(Text.literal("client: " + player.getWorld().isClient));
-        ItemStack newStack = ItemStack.EMPTY;
-        //MinecraftClient.getInstance().player.sendMessage(Text.literal("index: " + sourceSlotIndex));
-        MinecraftClient.getInstance().player.sendMessage(Text.literal("looped"));
         Slot slot = this.slots.get(sourceSlotIndex);
 
-        //MinecraftClient.getInstance().player.sendMessage(Text.literal("start_index: " + 0));
-        //MinecraftClient.getInstance().player.sendMessage(Text.literal("end_index: " + this.inventory.size()));
         if (slot != null && slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
-            newStack = originalStack.copy();
             if (sourceSlotIndex < this.ingredientInventory.size()) {
                 // machine inventory to player inventory
                 if (!this.insertItem(originalStack, this.ingredientInventory.size(), this.slots.size(), true)) {
@@ -179,11 +173,10 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
             } else {
                 // yonked stacking protection logic from EnchantmentScreenHandler - unexpected enchant table carry
                 for (int i = 0; i < this.ingredientInventory.size(); i++) {
-                    if (this.slots.get(i).hasStack() || !this.slots.get(i).canInsert(newStack)) {
+                    if (this.slots.get(i).hasStack() || !this.slots.get(i).canInsert(originalStack)) {
                         continue;
                     }
-                    ItemStack filteredStack = newStack.copyWithCount(BlastProcessorBlockEntity.MaxItemStackCount);
-                    newStack.decrement(BlastProcessorBlockEntity.MaxItemStackCount);
+                    ItemStack filteredStack = originalStack.split(BlastProcessorBlockEntity.MaxItemStackCount);
                     this.slots.get(i).setStack(filteredStack);
                     break;
                 }

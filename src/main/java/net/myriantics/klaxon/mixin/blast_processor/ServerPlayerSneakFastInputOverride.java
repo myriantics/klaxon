@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -38,8 +39,10 @@ public abstract class ServerPlayerSneakFastInputOverride {
             ItemStack handStack = player.getStackInHand(hand);
             int[] availableSlots = blastProcessor.getAvailableSlots(dir);
 
+
             if (availableSlots != null) {
                 for (int availableSlot : availableSlots) {
+                    player.sendMessage(Text.literal("available slot: " + availableSlot + blastProcessor.canInsert(availableSlot, handStack, dir)));
                     if (blastProcessor.canInsert(availableSlot, handStack, dir)) {
                         return false;
                     }
