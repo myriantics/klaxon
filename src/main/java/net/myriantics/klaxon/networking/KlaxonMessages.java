@@ -23,10 +23,6 @@ public class KlaxonMessages {
                 boolean requiresFire = buf.readBoolean();
                 BlastProcessorOutputState outputState = buf.readEnumConstant(BlastProcessorOutputState.class);
 
-                client.player.sendMessage(Text.literal("GAMER = " + (client.player.currentScreenHandler.syncId == syncId)));
-                client.player.sendMessage(Text.literal("GAMER = " + client.player.currentScreenHandler.syncId));
-                client.player.sendMessage(Text.literal("GAMER = " + syncId));
-
                 if (client.player != null && client.player.currentScreenHandler instanceof BlastProcessorScreenHandler screenHandler) {
                     if (client.player.currentScreenHandler.syncId == syncId) {
                         screenHandler.setRecipeData(explosionPower, explosionPowerMin, explosionPowerMax, producesFire, requiresFire, outputState);

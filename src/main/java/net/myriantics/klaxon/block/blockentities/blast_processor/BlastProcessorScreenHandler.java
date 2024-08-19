@@ -126,11 +126,6 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     }
 
     public void updateResult(World world, PlayerEntity player, Inventory craftingInventory, SimpleInventory resultInventory) {
-        player.sendMessage(Text.literal("POGGIES"));
-
-        if (player.getWorld().isClient) {
-            player.sendMessage(Text.literal("test: " + player.currentScreenHandler.syncId));
-        }
 
         this.inator = new BlastProcessingInator(world, ingredientInventory);
 
