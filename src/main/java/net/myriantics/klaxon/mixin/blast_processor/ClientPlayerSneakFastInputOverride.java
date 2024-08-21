@@ -42,7 +42,6 @@ public abstract class ClientPlayerSneakFastInputOverride {
 
             if (availableSlots != null) {
                 for (int availableSlot : availableSlots) {
-                    player.sendMessage(Text.literal("available slot: " + availableSlot + blastProcessor.canInsert(availableSlot, handStack, dir)));
                     if (blastProcessor.canInsert(availableSlot, handStack, dir)) {
                         return false;
                     }

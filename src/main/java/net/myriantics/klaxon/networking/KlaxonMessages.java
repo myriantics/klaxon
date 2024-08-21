@@ -40,12 +40,10 @@ public class KlaxonMessages {
             client.execute(() -> {
                 World clientWorld = client.world;
                 BlockPos pos = buf.readBlockPos();
-                client.player.sendMessage(Text.literal("blockPos: " + pos));
 
                 if (clientWorld != null && clientWorld.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
                     for (int i = 0; i < blastProcessor.getItems().size(); i++) {
                         ItemStack activeStack = buf.readItemStack();
-                        client.player.sendMessage(Text.literal("slot: " + i + ", itemStack: " + activeStack.toString()));
                         blastProcessor.setStack(i, activeStack);
                     }
                 }
