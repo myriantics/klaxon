@@ -1,5 +1,8 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.BlockState;
@@ -18,6 +21,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -26,11 +30,13 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
+import net.myriantics.klaxon.networking.KlaxonMessages;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.FACING;
@@ -80,6 +86,16 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, this.inventory);
+        if (world != null && !world.isClient) {
+            for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld) world, pos, 24)) {
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBlockPos(pos);
+                for (ItemStack stack : inventory) {
+                    buf.writeItemStack(stack);
+                }
+                ServerPlayNetworking.send(player, KlaxonMessages.FAST_INPUT_SYNC_S2C, buf);
+            }
+        }
         markDirty();
     }
 

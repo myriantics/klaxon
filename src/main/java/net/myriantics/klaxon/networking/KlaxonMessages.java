@@ -1,9 +1,13 @@
 package net.myriantics.klaxon.networking;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonMain;
+import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorScreenHandler;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
 
@@ -31,7 +35,7 @@ public class KlaxonMessages {
             });
         });
 
-        /* ClientPlayNetworking.registerGlobalReceiver(FAST_INPUT_SYNC_S2C, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(FAST_INPUT_SYNC_S2C, (client, handler, buf, responseSender) -> {
             buf.retain();
             client.execute(() -> {
                 World clientWorld = client.world;
@@ -46,7 +50,7 @@ public class KlaxonMessages {
                     }
                 }
             });
-        }); */
+        });
     }
 
     public static void registerC2SPackets() {
