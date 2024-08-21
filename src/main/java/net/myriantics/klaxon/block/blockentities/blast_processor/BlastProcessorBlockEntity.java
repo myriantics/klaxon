@@ -47,7 +47,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     private BlastProcessorScreenHandler screenHandler;
 
     public BlastProcessorBlockEntity(BlockPos pos, BlockState state) {
-        super(KlaxonBlockEntities.BLAST_CHAMBER_BLOCK_ENTITY, pos, state);
+        super(KlaxonBlockEntities.BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     }
 
@@ -135,6 +135,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         return false;
     }
 
+
+
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         if (world != null && !world.isReceivingRedstonePower(pos)) {
@@ -185,7 +187,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
 
             BlockState appendedState = detonate(outputState, explosionPower, producesFire);
 
-
             // really ought to make this better but its fine rn
             switch (outputState) {
                 case MISSING_RECIPE, UNDERPOWERED, MISSING_FIRE, MISSING_FUEL -> {
@@ -235,6 +236,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
                     Direction direction = activeBlockState.get(FACING);
                     Position position = this.getOutputLocation(direction);
 
+                    removeStack(CATALYST_INDEX);
                     world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
                     world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
 
@@ -253,7 +255,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         ItemDispenserBehavior.spawnItem(world, itemStack, 0, direction, getOutputLocation(direction));
     }
 
-    private Position getOutputLocation(Direction direction) {
+    public Position getOutputLocation(Direction direction) {
         Position centerPos = pos.toCenterPos();
         double x = centerPos.getX();
         double y = centerPos.getY();

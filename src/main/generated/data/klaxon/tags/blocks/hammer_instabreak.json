@@ -12,6 +12,8 @@
     {
       "id": "#minecraft:ice",
       "required": false
-    }
+    },
+    "minecraft:redstone_lamp",
+    "minecraft:sea_lantern"
   ]
 }

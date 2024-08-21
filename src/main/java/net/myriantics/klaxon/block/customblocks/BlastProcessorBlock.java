@@ -2,6 +2,7 @@ package net.myriantics.klaxon.block.customblocks;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
@@ -22,6 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -169,9 +172,9 @@ public class BlastProcessorBlock extends BlockWithEntity {
         Direction direction = context.getHorizontalPlayerFacing();
         if (player != null) {
             if (player.isSneaking()) {
-                return this.getDefaultState().with(FACING, direction.getOpposite());
-            } else {
                 return this.getDefaultState().with(FACING, direction);
+            } else {
+                return this.getDefaultState().with(FACING, direction.getOpposite());
             }
         }
         return this.getDefaultState();
