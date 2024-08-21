@@ -10,6 +10,7 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.util.Identifier;
+import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -36,6 +37,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_blocks")))
                 .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_panes")))
                 .addOptionalTag(BlockTags.ICE);
+
+        getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "mineable/pickaxe")))
+                .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
 
     }
 }

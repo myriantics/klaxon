@@ -15,7 +15,7 @@ import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
 public class KlaxonBlocks {
 
     public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
-            new BlastProcessorBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(20.0f, 50.0f)));
+            new BlastProcessorBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_DEEPSLATE)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

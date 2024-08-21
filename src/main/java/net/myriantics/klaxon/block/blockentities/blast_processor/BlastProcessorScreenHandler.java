@@ -2,38 +2,21 @@ package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.fabricmc.fabric.mixin.container.ServerPlayerEntityMixin;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.AbstractFurnaceScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonMain;
-import net.myriantics.klaxon.networking.KlaxonMessages;
+import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.util.ImplementedInventory;
-import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
-
-import javax.lang.model.type.PrimitiveType;
-import java.util.Optional;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
 import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
@@ -127,27 +110,16 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     @Override
     public void onContentChanged(Inventory inventory) {
         this.context.run((world, pos) -> {
-            updateResult(world, player, ingredientInventory, outputInventory);
+            updateResult(world, player, outputInventory);
         });
     }
 
-    public void updateResult(World world, PlayerEntity player, Inventory craftingInventory, SimpleInventory resultInventory) {
+    public void updateResult(World world, PlayerEntity player, SimpleInventory resultInventory) {
 
         this.inator = new BlastProcessingInator(world, ingredientInventory);
 
         if (!world.isClient && player instanceof ServerPlayerEntity playerEntity) {
-
-            PacketByteBuf buf = PacketByteBufs.create();
-
-            buf.writeInt(syncId);
-            buf.writeDouble(inator.getExplosionPower());
-            buf.writeDouble(inator.getExplosionPowerMin());
-            buf.writeDouble(inator.getExplosionPowerMax());
-            buf.writeBoolean(inator.producesFire());
-            buf.writeBoolean(inator.requiresFire());
-            buf.writeEnumConstant(inator.getOutputState());
-
-            ServerPlayNetworking.send(playerEntity, KlaxonMessages.BLAST_PROCESSOR_SCREEN_DATA_SYNC_S2C, buf);
+            KlaxonS2CPacketSender.sendBlastProcessorScreenSyncData(inator, playerEntity, syncId);
         }
 
         resultInventory.setStack(0, inator.getResult());

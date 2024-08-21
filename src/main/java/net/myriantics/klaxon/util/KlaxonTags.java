@@ -28,7 +28,7 @@ public class KlaxonTags {
         public static final TagKey<Block> HAMMER_INTERACTION_POINT =
                 createTag("hammer_interaction_base");
         public static final TagKey<Block> HAMMER_MINEABLE =
-                createTag("hammer_mineable");
+                createTag("mineable/hammer");
         public static final TagKey<Block> HAMMER_INSTABREAK =
                 createTag("hammer_instabreak");
 
@@ -38,9 +38,6 @@ public class KlaxonTags {
     }
 
     public static class DamageTypeTags {
-        public static final TagKey<DamageType> SHIELD_PUNCTURE_DAMAGE_TYPES =
-                createTag("shield_puncture_damage_types");
-
 
         private static TagKey<DamageType> createTag(String name) {
             return TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(KlaxonMain.MOD_ID, name));

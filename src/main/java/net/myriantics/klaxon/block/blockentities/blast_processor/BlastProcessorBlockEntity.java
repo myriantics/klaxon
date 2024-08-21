@@ -1,12 +1,9 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HopperBlock;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,12 +13,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -30,13 +24,12 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
-import net.myriantics.klaxon.networking.KlaxonMessages;
+import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.FACING;
@@ -87,14 +80,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, this.inventory);
         if (world != null && !world.isClient) {
-            for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld) world, pos, 24)) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeBlockPos(pos);
-                for (ItemStack stack : inventory) {
-                    buf.writeItemStack(stack);
-                }
-                ServerPlayNetworking.send(player, KlaxonMessages.FAST_INPUT_SYNC_S2C, buf);
-            }
+            KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, inventory);
         }
         markDirty();
     }
@@ -294,5 +280,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         buf.writeBoolean(inator.producesFire());
         buf.writeBoolean(inator.requiresFire());
         buf.writeEnumConstant(inator.getOutputState());
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void syncInventory(DefaultedList<ItemStack> stacks) {
+        for (int i = 0; i < size(); i++) {
+            this.setStack(i, stacks.get(i));
+        }
     }
 }
