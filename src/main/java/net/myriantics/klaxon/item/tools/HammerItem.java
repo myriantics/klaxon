@@ -34,6 +34,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
@@ -64,16 +65,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
     @Override
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
         if (!world.isClient && !state.isIn(BlockTags.FIRE)) {
-            int damageAmount;
-            if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
-                // steel tools have innate unbreaking to compensate for unenchantability
-                damageAmount = Math.random() < 0.2 ? 1 : 0;
-            } else {
-                damageAmount = 1;
-            }
-            stack.damage(damageAmount, miner, (e) -> {
-                e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-            });
+            damageItem(stack, miner, world.getRandom(), state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE));
         }
         return stack.isSuitableFor(state) || super.postMine(stack, world, state, pos, miner);
     }
@@ -82,17 +74,14 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         World world = attacker.getWorld();
         if (!world.isClient) {
-            int damageAmount = Math.random() < 0.5 ? 1 : 0;
-            stack.damage(damageAmount, attacker, (e) -> {
-                e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-            });
+            damageItem(stack, attacker, attacker.getRandom(), true);
         }
         return super.postHit(stack, target, attacker);
     }
 
     @Override
     public boolean isSuitableFor(BlockState state) {
-        return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE) && !state.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT);
+        return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE);
     }
 
     @Override
@@ -114,6 +103,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         BlockPos interactionPos = context.getBlockPos();
         Direction hitDir = context.getSide();
         Position outputPos = getOutputLocation(hitDir, interactionPos);
+        Vec3d outputVelocity = getOutputVelocity(hitDir);
         BlockState interactionState = context.getWorld().getBlockState(interactionPos);
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
@@ -124,57 +114,42 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         }
 
         // hammering recipe
-        if(player.isOnGround()) {
-            if (interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)) {
+        if(player.isOnGround() && player.isSneaking()) {
+
+            damageItem(player.getStackInHand(activeHand), player, player.getRandom(), true);
+            world.addBlockBreakParticles(interactionPos, interactionState);
+
+            if (interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT) && activeHand == Hand.MAIN_HAND) {
                 RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
-                SimpleInventory dummyInventory = new SimpleInventory(player.getStackInHand(activeHand.equals(Hand.MAIN_HAND) ? activeHand : Hand.OFF_HAND));
+                SimpleInventory dummyInventory = new SimpleInventory(player.getOffHandStack());
 
                 Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
                 if(match.isPresent()) {
-                    if(world.isClient) {
-                        return ActionResult.SUCCESS;
+                    if (!world.isClient) {
+                        world.playSound(player, interactionPos, SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, SoundCategory.PLAYERS, 2, 2f);
+                        world.spawnEntity(new ItemEntity(world,
+                                outputPos.getX(),
+                                outputPos.getY(),
+                                outputPos.getZ(),
+                                match.get().getOutput(world.getRegistryManager()).copy(),
+                                outputVelocity.x,
+                                outputVelocity.y,
+                                outputVelocity.z));
                     }
-
-                    world.playSound(player, interactionPos, SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, SoundCategory.PLAYERS, 2, 2f);
-                    world.spawnEntity(new ItemEntity(world,
-                            outputPos.getX(),
-                            outputPos.getY(),
-                            outputPos.getZ(),
-                            match.get().getOutput(world.getRegistryManager()).copy(),
-                            0,0.2,0));
 
                     if (!player.isCreative()) {
                         player.getOffHandStack().decrement(1);
                     }
-
-                    if (!player.isSneaking()) {
-                        return ActionResult.SUCCESS;
-                    }
                 }
             }
 
-            if (player.isSneaking()) {
-                if (world.isClient) {
-                    return ActionResult.SUCCESS;
-                }
-
-                // block updating abilities
-                // this quite literally allows you to hit something with a hammer to fix it
-                world.updateNeighbor(interactionPos, interactionState.getBlock(), interactionPos);
-
-                // trigger observers next to target block because its really funny
-                for (Direction side : Direction.values()) {
-                    BlockPos observerPos = interactionPos.offset(side);
-                    BlockState observerState = world.getBlockState(observerPos);
-                    if (observerState.getBlock() instanceof ObserverBlock observerBlock) {
-                        if (observerPos.offset(observerState.get(FACING)).equals(interactionPos)) {
-                            observerBlock.scheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
-                        }
-                    }
-                }
-
+            if (world.isClient) {
                 return ActionResult.SUCCESS;
             }
+
+            updateObserversAndSuch(world, interactionPos, interactionState);
+
+            return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
     }
@@ -199,16 +174,18 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
 
             processWallJumpPhysics(player, processFallDamage, 1.0f);
 
+            if (player.getAttackCooldownProgress(0.5f) > 0.9) {
+                world.addBlockBreakParticles(pos, targetBlockState);
+                updateObserversAndSuch(world, pos, targetBlockState);
+            }
+
             player.onLanding();
 
             player.resetLastAttackedTicks();
 
             // damage it wheee
-            // damage is based off of attack cooldown progress because thats cool ig
             if (!player.isCreative()) {
-                player.getMainHandStack().damage((Math.random() < player.getAttackCooldownProgress(0.5f) ? 1 : 0), player, (e) -> {
-                    e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-                });
+                damageItem(player.getStackInHand(hand), player, world.getRandom(), true);
             }
         }
 
@@ -246,7 +223,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         return ingredient.isIn(KlaxonTags.Items.STEEL_INGOTS);
     }
     private boolean canWallJump(PlayerEntity player) {
-        return !player.isOnGround() && player.getMainHandStack().getItem() instanceof HammerItem;
+        return !player.isOnGround() && player.getMainHandStack().getItem() instanceof HammerItem && !player.isInsideWaterOrBubbleColumn();
     }
 
     // so you can walljump in creative without demolishing your world
@@ -282,15 +259,67 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         double z = centerPos.getZ();
 
         switch (direction) {
-            case UP -> y += 0.55;
-            case DOWN -> y -= 0.55;
-            case NORTH -> z -= 0.55;
-            case SOUTH -> z += 0.55;
-            case EAST -> x += 0.55;
-            case WEST -> x -= 0.55;
+            case UP -> y += 0.60;
+            case DOWN -> y -= 0.60;
+            case NORTH -> z -= 0.60;
+            case SOUTH -> z += 0.60;
+            case EAST -> x += 0.60;
+            case WEST -> x -= 0.60;
         }
 
         return new Vec3d(x, y, z);
+    }
+
+    private Vec3d getOutputVelocity(Direction direction) {
+        double xVelo = 0.0;
+        double yVelo = 0.0;
+        double zVelo = 0.0;
+
+        switch (direction) {
+            case UP -> yVelo += 0.2;
+            case DOWN -> yVelo -= 0.2;
+            case NORTH -> zVelo -= 0.2;
+            case SOUTH -> zVelo += 0.2;
+            case EAST -> xVelo += 0.2;
+            case WEST -> xVelo -= 0.2;
+        }
+
+        return new Vec3d(xVelo, yVelo, zVelo);
+    }
+
+    private void damageItem(ItemStack stack, LivingEntity attacker, Random random, boolean usedProperly) {
+        int damageAmount;
+
+        if (usedProperly) {
+            damageAmount = random.nextBetween(0, 10) < 2 ? 1 : 0;
+        } else {
+            damageAmount = 1;
+        }
+
+        if (attacker instanceof PlayerEntity player && player.isCreative()) {
+            damageAmount = 0;
+        }
+
+        stack.damage(damageAmount, attacker, (e) -> {
+            e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
+        });
+    }
+
+    private void updateObserversAndSuch(World world, BlockPos interactionPos, BlockState interactionState) {
+        // block updating abilities
+        // this quite literally allows you to hit something with a hammer to fix it
+        world.updateNeighbor(interactionPos, interactionState.getBlock(), interactionPos);
+
+        // trigger observers next to target block because its really funny
+        for (Direction side : Direction.values()) {
+            BlockPos observerPos = interactionPos.offset(side);
+            BlockState observerState = world.getBlockState(observerPos);
+            if (observerState.getBlock() instanceof ObserverBlock observerBlock) {
+                if (observerPos.offset(observerState.get(FACING)).equals(interactionPos)) {
+                    observerBlock.scheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
+                }
+            }
+        }
     }
 
     @Override
