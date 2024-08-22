@@ -29,7 +29,7 @@ public class HammeringEmiRecipe implements EmiRecipe {
     public HammeringEmiRecipe(HammerRecipe recipe) {
         this.id = recipe.getId();
         this.input = List.of(EmiIngredient.of(recipe.getInputA()));
-        this.output = List.of(EmiStack.of(recipe.getOutput(recipe.)));
+        this.output = List.of(EmiStack.of(recipe.getOutput(null)));
         this.interactionBase = List.of(EmiIngredient.of(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT));
     }
 
