@@ -5,24 +5,27 @@
 	"name": "klaxon",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"ThatSmartGuy21"
+		"Myriantics"
 	],
 	"contact": {
 		"homepage": "https://reddit.com/r/feedthememes",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "MIT",
-	"icon": "assets/tutorialmod/icon.png",
+	"icon": "assets/klaxon/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "net.myriantics.klaxon.KlaxonMain"
+			"net.myriantics.klaxon.KlaxonCommon"
 		],
 		"client": [
 			"net.myriantics.klaxon.KlaxonClient"
 		],
 		"fabric-datagen": [
 			"net.myriantics.klaxon.KlaxonDataGenerator"
+		],
+		"emi": [
+			"net.myriantics.klaxon.emi.KlaxonEmiPlugin"
 		]
 	},
 	"mixins": [
@@ -35,6 +38,6 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
+		"EMI": "emi"
 	}
 }

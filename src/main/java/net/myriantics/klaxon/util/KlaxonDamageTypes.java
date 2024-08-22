@@ -1,16 +1,12 @@
 package net.myriantics.klaxon.util;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonMain;
-import org.jetbrains.annotations.Nullable;
+import net.myriantics.klaxon.KlaxonCommon;
 
 public class KlaxonDamageTypes {
 
@@ -21,7 +17,7 @@ public class KlaxonDamageTypes {
             createDamageType("hammer_walloping");
 
     private static RegistryKey<DamageType> createDamageType(String name) {
-        return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(KlaxonMain.MOD_ID, name));
+        return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(KlaxonCommon.MOD_ID, name));
     }
 
     public static DamageSource hammerBonking(Entity attacker) {
@@ -32,6 +28,6 @@ public class KlaxonDamageTypes {
     }
 
     public static void registerModDamageTypes() {
-        KlaxonMain.LOGGER.info("NOW THAT'S A LOTTA DAMAGE");
+        KlaxonCommon.LOGGER.info("NOW THAT'S A LOTTA DAMAGE");
     }
 }

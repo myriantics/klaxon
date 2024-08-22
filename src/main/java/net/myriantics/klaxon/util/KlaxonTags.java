@@ -1,15 +1,13 @@
 package net.myriantics.klaxon.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.KlaxonMain;
+import net.myriantics.klaxon.KlaxonCommon;
 
 public class KlaxonTags {
     public static class Items {
@@ -20,7 +18,7 @@ public class KlaxonTags {
                 createTag("shield_disabling_melee");
 
         private static TagKey<Item> createTag(String name) {
-            return TagKey.of(RegistryKeys.ITEM, new Identifier(KlaxonMain.MOD_ID, name));
+            return TagKey.of(RegistryKeys.ITEM, new Identifier(KlaxonCommon.MOD_ID, name));
         }
     }
 
@@ -33,14 +31,14 @@ public class KlaxonTags {
                 createTag("hammer_instabreak");
 
         private static TagKey<Block> createTag(String name) {
-            return TagKey.of(RegistryKeys.BLOCK, new Identifier(KlaxonMain.MOD_ID, name));
+            return TagKey.of(RegistryKeys.BLOCK, new Identifier(KlaxonCommon.MOD_ID, name));
         }
     }
 
     public static class DamageTypeTags {
 
         private static TagKey<DamageType> createTag(String name) {
-            return TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(KlaxonMain.MOD_ID, name));
+            return TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(KlaxonCommon.MOD_ID, name));
         }
     }
 
@@ -52,7 +50,7 @@ public class KlaxonTags {
 
 
         private static TagKey<EntityType<?>> createTag(String name) {
-            return TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(KlaxonMain.MOD_ID, name));
+            return TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(KlaxonCommon.MOD_ID, name));
         }
     }
 }

@@ -20,9 +20,13 @@ import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerReci
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class KlaxonMain implements ModInitializer {
+public class KlaxonCommon implements ModInitializer {
 	public static final String MOD_ID = "klaxon";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+	public static Identifier locate(String name) {
+		return new Identifier(MOD_ID, name);
+	}
 
 	public static final ExtendedScreenHandlerType<BlastProcessorScreenHandler> BLAST_PROCESSOR_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(BlastProcessorScreenHandler::new);
 

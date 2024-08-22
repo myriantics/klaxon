@@ -8,7 +8,7 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.KlaxonMain;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.consumables.EnderPlateItem;
 import net.myriantics.klaxon.item.tools.HammerItem;
 
@@ -22,11 +22,11 @@ public class KlaxonItems {
     }
 
     private static Item registerItem(String name, Item item) {
-        return Registry.register(Registries.ITEM, new Identifier(KlaxonMain.MOD_ID, name), item);
+        return Registry.register(Registries.ITEM, new Identifier(KlaxonCommon.MOD_ID, name), item);
     }
 
     public static void registerModItems() {
-        KlaxonMain.LOGGER.info("Registering Klaxon's Items");
+        KlaxonCommon.LOGGER.info("Registering Klaxon's Items");
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(KlaxonItems::addItemsToToolTabGroup);
     }

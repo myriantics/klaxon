@@ -12,7 +12,7 @@ public class KlaxonClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        HandledScreens.register(KlaxonMain.BLAST_PROCESSOR_SCREEN_HANDLER, BlastProcessorScreen::new);
+        HandledScreens.register(KlaxonCommon.BLAST_PROCESSOR_SCREEN_HANDLER, BlastProcessorScreen::new);
 
         EntityRendererRegistry.register(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, (context) ->
                 new FlyingItemEntityRenderer<>(context));

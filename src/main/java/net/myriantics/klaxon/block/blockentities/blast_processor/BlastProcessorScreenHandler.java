@@ -13,13 +13,10 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonMain;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
-
-import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
-import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
 
 public class BlastProcessorScreenHandler extends ScreenHandler {
     private final Inventory ingredientInventory;
@@ -52,7 +49,7 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
 
     // server constructor
     public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory blockEntityInventory, ScreenHandlerContext context) {
-        super(KlaxonMain.BLAST_PROCESSOR_SCREEN_HANDLER, syncId);
+        super(KlaxonCommon.BLAST_PROCESSOR_SCREEN_HANDLER, syncId);
         checkSize(blockEntityInventory, 2);
         this.ingredientInventory = blockEntityInventory;
         this.context = context;

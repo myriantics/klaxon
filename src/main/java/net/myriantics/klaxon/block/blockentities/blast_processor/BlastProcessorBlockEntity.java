@@ -288,7 +288,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     @Environment(EnvType.CLIENT)
     public void syncInventory(DefaultedList<ItemStack> stacks) {
         for (int i = 0; i < size(); i++) {
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("stack: " + i + ", " + stacks.get(i)));
             this.setStack(i, stacks.get(i));
         }
     }

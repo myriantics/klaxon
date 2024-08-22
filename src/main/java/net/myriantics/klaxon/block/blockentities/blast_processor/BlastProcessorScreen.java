@@ -3,21 +3,17 @@ package net.myriantics.klaxon.block.blockentities.blast_processor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.KlaxonMain;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
+import net.myriantics.klaxon.KlaxonCommon;
 
 @Environment(EnvType.CLIENT)
 public class BlastProcessorScreen extends HandledScreen<BlastProcessorScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier(KlaxonMain.MOD_ID, "textures/gui/container/deepslate_blast_processor.png");
+    private static final Identifier TEXTURE = new Identifier(KlaxonCommon.MOD_ID, "textures/gui/container/deepslate_blast_processor.png");
 
     public BlastProcessorScreen(BlastProcessorScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
