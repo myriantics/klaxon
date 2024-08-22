@@ -10,6 +10,10 @@
   "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s",
   "tag.item.klaxon.shield_disabling_melee_weapons": "Shield-Disabling Melee Weapons",
   "klaxon.emi.text.explosion_power": "Explosion Power:",
+  "klaxon.emi.text.hammering.offhand": "Hold in Offhand",
+  "klaxon.emi.text.hammering.mainhand": "Hold in Main Hand",
+  "klaxon.emi.text.hammering.sneak_use": "Sneak + Use In World",
   "container.klaxon.emi.item_explosion_power.title": "Item Explosion Power",
-  "container.klaxon.emi.hammering.title": "Hammering"
+  "container.klaxon.emi.hammering.title": "Hammering",
+  "klaxon.emi.text.hammering.sneak_use_compact": "Sneak + Use"
 }

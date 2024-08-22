@@ -9,6 +9,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.block.Block;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.item.KlaxonItems;
@@ -28,7 +29,7 @@ public class HammeringEmiRecipe implements EmiRecipe {
     public HammeringEmiRecipe(HammerRecipe recipe) {
         this.id = recipe.getId();
         this.input = List.of(EmiIngredient.of(recipe.getInputA()));
-        this.output = List.of(EmiStack.of(recipe.getOutput(null)));
+        this.output = List.of(EmiStack.of(recipe.getOutput(recipe.)));
         this.interactionBase = List.of(EmiIngredient.of(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT));
     }
 
@@ -59,18 +60,20 @@ public class HammeringEmiRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayHeight() {
-        return 36;
+        return 46;
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addSlot(input.get(0), 0, 9);
+        widgets.addSlot(input.get(0), 0, 9).appendTooltip(Text.translatable("klaxon.emi.text.hammering.offhand"));
 
-        widgets.addSlot(interactionBase.get(0), 29, 18);
+        widgets.addSlot(interactionBase.get(0), 29, 18).appendTooltip(Text.translatable("klaxon.emi.text.hammering.sneak_use"));
 
-        widgets.addSlot(getCatalysts().get(0), 29, 0);
+        widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Text.translatable("klaxon.emi.text.hammering.mainhand"));
 
         widgets.addSlot(output.get(0), 58, 9).recipeContext(this);
+
+        widgets.addText(Text.translatable("klaxon.emi.text.hammering.sneak_use_compact"), 0, 37, 4210752, false);
     }
 
     @Override
