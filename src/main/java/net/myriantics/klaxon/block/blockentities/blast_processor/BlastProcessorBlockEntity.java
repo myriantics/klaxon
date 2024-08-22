@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
@@ -79,9 +80,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, this.inventory);
-        if (world != null && !world.isClient) {
-            KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, inventory);
-        }
         markDirty();
     }
 
@@ -172,7 +170,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     }
 
     private BlockState craft() {
-        if (world != null) {
+        if (world != null && !inventory.isEmpty()) {
             SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
 
             for (int i = 0; i < inventory.size(); i++) {
@@ -225,6 +223,9 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             screenHandler.onContentChanged(this);
         }
         updateBlockState(null);
+        if (world != null && !world.isClient) {
+            KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, inventory);
+        }
         super.markDirty();
     }
 
@@ -287,6 +288,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     @Environment(EnvType.CLIENT)
     public void syncInventory(DefaultedList<ItemStack> stacks) {
         for (int i = 0; i < size(); i++) {
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("stack: " + i + ", " + stacks.get(i)));
             this.setStack(i, stacks.get(i));
         }
     }

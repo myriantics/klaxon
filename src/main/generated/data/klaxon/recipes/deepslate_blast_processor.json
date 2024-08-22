@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "d": {
+      "item": "minecraft:dispenser"
+    },
+    "p": {
+      "item": "minecraft:polished_deepslate"
+    }
+  },
+  "pattern": [
+    "ppp",
+    "pdp",
+    "ppp"
+  ],
+  "result": {
+    "item": "klaxon:deepslate_blast_processor"
+  },
+  "show_notification": true
+}
