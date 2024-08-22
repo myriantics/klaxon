@@ -176,7 +176,9 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
 
             if (player.getAttackCooldownProgress(0.5f) > 0.9) {
                 world.addBlockBreakParticles(pos, targetBlockState);
-                updateObserversAndSuch(world, pos, targetBlockState);
+                if (!world.isClient) {
+                    updateObserversAndSuch(world, pos, targetBlockState);
+                }
             }
 
             player.onLanding();

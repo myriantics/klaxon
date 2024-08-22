@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "klaxon",
 	"version": "${version}",
-	"name": "klaxon",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Klaxon",
+	"description": "WIP Tech Mod - Figuring on biggering",
 	"authors": [
 		"Myriantics"
 	],
@@ -25,7 +25,7 @@
 			"net.myriantics.klaxon.KlaxonDataGenerator"
 		],
 		"emi": [
-			"net.myriantics.klaxon.emi.KlaxonEmiPlugin"
+			"net.myriantics.klaxon.compat.emi.KlaxonEmiPlugin"
 		]
 	},
 	"mixins": [

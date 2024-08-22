@@ -7,5 +7,9 @@
   "death.attack.hammer_bonking": "%1$s was lethally bonked by %2$s",
   "death.attack.hammer_walloping": "%1$s was walloped by %2$s",
   "death.attack.hammer_bonking.item": "%1$s was lethally bonked by %2$s using %3$s",
-  "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s"
+  "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s",
+  "tag.item.klaxon.shield_disabling_melee_weapons": "Shield-Disabling Melee Weapons",
+  "klaxon.emi.text.explosion_power": "Explosion Power:",
+  "container.klaxon.emi.item_explosion_power.title": "Item Explosion Power",
+  "container.klaxon.emi.hammering.title": "Hammering"
 }

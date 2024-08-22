@@ -15,7 +15,7 @@ public class KlaxonTags {
                 TagKey.of(RegistryKeys.ITEM, new Identifier("c", "ingots/steel"));
 
         public static final TagKey<Item> SHEILD_DISABLING_MELEE =
-                createTag("shield_disabling_melee");
+                createTag("shield_disabling_melee_weapons");
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, new Identifier(KlaxonCommon.MOD_ID, name));
