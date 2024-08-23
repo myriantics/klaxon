@@ -15,8 +15,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipeSerializer;
@@ -49,6 +51,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private void registerRecipes(EmiRegistry registry) {
         addAll(registry, HammerRecipe.Type.INSTANCE, HammeringEmiRecipe::new);
         addAll(registry, ItemExplosionPowerRecipe.Type.INSTANCE, ItemExplosionPowerEmiInfoRecipe::new);
+        addAll(registry, BlastProcessorRecipe.Type.INSTANCE, (recipe -> new BlastProcessingEmiRecipe(recipe, registry)));
     }
 
     public <C extends Inventory, T extends Recipe<C>> void addAll(EmiRegistry registry, RecipeType<T> type, Function<T, EmiRecipe> constructor) {
