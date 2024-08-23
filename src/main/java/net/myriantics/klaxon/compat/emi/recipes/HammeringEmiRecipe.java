@@ -8,6 +8,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -23,14 +24,12 @@ import java.util.stream.Stream;
 public class HammeringEmiRecipe implements EmiRecipe {
     private final Identifier id;
     private final List<EmiIngredient> input;
-    private final List<EmiIngredient> interactionBase;
     private final List<EmiStack> output;
 
     public HammeringEmiRecipe(HammerRecipe recipe) {
         this.id = recipe.getId();
         this.input = List.of(EmiIngredient.of(recipe.getInputA()));
         this.output = List.of(EmiStack.of(recipe.getOutput(null)));
-        this.interactionBase = List.of(EmiIngredient.of(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT));
     }
 
     @Override
@@ -60,24 +59,24 @@ public class HammeringEmiRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayHeight() {
-        return 46;
+        return 45;
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
         widgets.addSlot(input.get(0), 0, 9).appendTooltip(Text.translatable("klaxon.emi.text.hammering.offhand"));
 
-        widgets.addSlot(interactionBase.get(0), 29, 18).appendTooltip(Text.translatable("klaxon.emi.text.hammering.sneak_use"));
+        widgets.addSlot(getCatalysts().get(1), 29, 18).appendTooltip(Text.translatable("klaxon.emi.text.hammering.sneak_use"));
 
         widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Text.translatable("klaxon.emi.text.hammering.mainhand"));
 
         widgets.addSlot(output.get(0), 58, 9).recipeContext(this);
 
-        widgets.addText(Text.translatable("klaxon.emi.text.hammering.sneak_use_compact"), 0, 37, 4210752, false);
+        widgets.addText(Text.translatable("klaxon.emi.text.hammering.sneak_use_compact"), 0, 38, 4210752, false);
     }
 
     @Override
     public List<EmiIngredient> getCatalysts() {
-        return List.of(EmiStack.of(KlaxonItems.HAMMER));
+        return List.of(EmiStack.of(KlaxonItems.HAMMER), EmiIngredient.of(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT));
     }
 }

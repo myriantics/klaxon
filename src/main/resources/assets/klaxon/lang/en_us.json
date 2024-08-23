@@ -13,7 +13,7 @@
   "klaxon.emi.text.hammering.offhand": "Hold in Offhand",
   "klaxon.emi.text.hammering.mainhand": "Hold in Main Hand",
   "klaxon.emi.text.hammering.sneak_use": "Sneak + Use In World",
-  "container.klaxon.emi.item_explosion_power.title": "Item Explosion Power",
-  "container.klaxon.emi.hammering.title": "Hammering",
-  "klaxon.emi.text.hammering.sneak_use_compact": "Sneak + Use"
+  "klaxon.emi.text.hammering.sneak_use_compact": "Sneak + Use",
+  "container.klaxon.item_explosion_power.title": "Item Explosion Power",
+  "container.klaxon.hammering.title": "Hammering"
 }
