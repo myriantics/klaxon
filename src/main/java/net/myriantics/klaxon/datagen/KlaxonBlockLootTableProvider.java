@@ -13,5 +13,6 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         addDrop(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, drops(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
+        addDrop(KlaxonBlocks.STEEL_BLOCK, drops(KlaxonBlocks.STEEL_BLOCK));
     }
 }

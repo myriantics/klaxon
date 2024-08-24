@@ -58,5 +58,13 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                 .criterion(FabricRecipeProvider.hasItem(KlaxonItems.STEEL_INGOT),
                         FabricRecipeProvider.conditionsFromItem(KlaxonItems.STEEL_INGOT))
                 .offerTo(exporter);
+
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, KlaxonItems.STEEL_INGOT, 9)
+                .input(KlaxonTags.Items.STEEL_BLOCKS)
+                .criterion(FabricRecipeProvider.hasItem(KlaxonItems.STEEL_INGOT),
+                        FabricRecipeProvider.conditionsFromItem(KlaxonItems.STEEL_INGOT))
+                .offerTo(exporter);
+
+
     }
 }
