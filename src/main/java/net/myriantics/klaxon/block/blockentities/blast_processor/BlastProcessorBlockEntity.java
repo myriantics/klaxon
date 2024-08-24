@@ -17,6 +17,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -188,6 +190,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             // really ought to make this better but its fine rn
             switch (outputState) {
                 case MISSING_RECIPE, UNDERPOWERED, MISSING_FIRE, MISSING_FUEL -> {
+                    world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_DISPENSER_DISPENSE, SoundCategory.BLOCKS, 2, 2f, true);
                     ejectItem(getStack(PROCESS_ITEM_INDEX));
                     removeStack(PROCESS_ITEM_INDEX);
                     if (explosionPower <= 0) {
@@ -206,6 +209,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
                 }
             }
             return appendedState;
+        } else if (world != null) {
+            world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_DISPENSER_DISPENSE, SoundCategory.BLOCKS, 2, 2f, false);
         }
         return null;
     }

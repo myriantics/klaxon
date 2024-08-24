@@ -116,6 +116,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         // hammering recipe
         if(player.isOnGround() && player.isSneaking()) {
 
+            world.playSound(player, interactionPos, SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
             damageItem(player.getStackInHand(activeHand), player, player.getRandom(), true);
             world.addBlockBreakParticles(interactionPos, interactionState);
 
@@ -126,7 +127,6 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
                 Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
                 if(match.isPresent()) {
                     if (!world.isClient) {
-                        world.playSound(player, interactionPos, SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, SoundCategory.PLAYERS, 2, 2f);
                         world.spawnEntity(new ItemEntity(world,
                                 outputPos.getX(),
                                 outputPos.getY(),
@@ -166,6 +166,8 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
 
         if (canWallJump(player)) {
 
+            float attackCooldownProgress = player.getAttackCooldownProgress(0.5f);
+
             // may remove, idk thought itd be a good tradeoff for the power of the hammer
             // keeps wind charges relevant and encourages going up
             // may need to decrease attack cooldown or at least its impact on walljump power scaling
@@ -174,7 +176,9 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
 
             processWallJumpPhysics(player, processFallDamage, 1.0f);
 
-            if (player.getAttackCooldownProgress(0.5f) > 0.9) {
+            world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
+
+            if (attackCooldownProgress > 0.9) {
                 world.addBlockBreakParticles(pos, targetBlockState);
                 if (!world.isClient) {
                     updateObserversAndSuch(world, pos, targetBlockState);
@@ -293,7 +297,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         int damageAmount;
 
         if (usedProperly) {
-            damageAmount = random.nextBetween(0, 10) < 2 ? 1 : 0;
+            damageAmount = random.nextBetween(0, 10) < 3 ? 1 : 0;
         } else {
             damageAmount = 1;
         }

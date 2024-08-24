@@ -41,7 +41,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.SEA_LANTERN);
 
         getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "mineable/pickaxe")))
-                .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+                .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
+                .add(KlaxonBlocks.STEEL_BLOCK);
 
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.data.server.recipe.RecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
@@ -52,8 +53,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                 .pattern("lsl")
                 .input('b', KlaxonTags.Items.STEEL_BLOCKS)
                 .input('i', KlaxonTags.Items.STEEL_INGOTS)
-                .input('s', TagKey.of(RegistryKeys.ITEM, new Identifier("c", "wood_sticks")))
-                .input('l', TagKey.of(RegistryKeys.ITEM, new Identifier("c", "leather")))
+                .input('s', Items.STICK)
+                .input('l', Items.LEATHER)
                 .criterion(FabricRecipeProvider.hasItem(KlaxonItems.STEEL_INGOT),
                         FabricRecipeProvider.conditionsFromItem(KlaxonItems.STEEL_INGOT))
                 .offerTo(exporter);
