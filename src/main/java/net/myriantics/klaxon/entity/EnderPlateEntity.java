@@ -11,6 +11,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.item.KlaxonItems;
 
+
 public class EnderPlateEntity extends ThrownItemEntity {
     public EnderPlateEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);

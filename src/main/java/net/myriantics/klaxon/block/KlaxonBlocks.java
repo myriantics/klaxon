@@ -17,6 +17,9 @@ public class KlaxonBlocks {
     public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
             new BlastProcessorBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_DEEPSLATE)));
 
+    public static final Block STEEL_BLOCK = registerBlock("steel_block",
+            new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK)));
+
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, new Identifier(KlaxonCommon.MOD_ID, name), block);
