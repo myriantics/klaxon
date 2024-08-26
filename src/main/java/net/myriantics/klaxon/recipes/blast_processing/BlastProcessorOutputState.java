@@ -5,6 +5,5 @@ public enum BlastProcessorOutputState {
     MISSING_FUEL,
     UNDERPOWERED,
     OVERPOWERED,
-    MISSING_FIRE,
     SUCCESS;
 }

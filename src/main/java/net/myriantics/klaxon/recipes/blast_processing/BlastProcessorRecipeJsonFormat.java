@@ -8,5 +8,4 @@ public class BlastProcessorRecipeJsonFormat {
     int outputAmount;
     double explosionPowerMin;
     double explosionPowerMax;
-    boolean requiresFire;
 }

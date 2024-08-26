@@ -18,7 +18,6 @@ public class BlastProcessingInator {
     private final double explosionPowerMin;
     private final double explosionPowerMax;
     private final double explosionPower;
-    private final boolean requiresFire;
     private final boolean producesFire;
     private final ItemStack result;
     private final BlastProcessorOutputState outputState;
@@ -59,7 +58,6 @@ public class BlastProcessingInator {
         if (blastProcessingMatch.isPresent()) {
             this.explosionPowerMin = blastProcessingMatch.get().getExplosionPowerMin();
             this.explosionPowerMax = blastProcessingMatch.get().getExplosionPowerMax();
-            this.requiresFire = blastProcessingMatch.get().requiresFire();
             this.result = blastProcessingMatch.get().getOutput(world.getRegistryManager());
             if (explosionPower > 0) {
                 if (explosionPower < explosionPowerMin) {
@@ -67,11 +65,7 @@ public class BlastProcessingInator {
                 } else if (explosionPower > explosionPowerMax) {
                     interimOutputState = BlastProcessorOutputState.OVERPOWERED;
                 } else {
-                    if (requiresFire == producesFire || producesFire) {
-                        interimOutputState = BlastProcessorOutputState.SUCCESS;
-                    } else {
-                        interimOutputState = BlastProcessorOutputState.MISSING_FIRE;
-                    }
+                    interimOutputState = BlastProcessorOutputState.SUCCESS;
                 }
             } else {
                 interimOutputState = BlastProcessorOutputState.MISSING_FUEL;
@@ -79,7 +73,6 @@ public class BlastProcessingInator {
         } else {
             this.explosionPowerMin = 0.0;
             this.explosionPowerMax = 0.0;
-            this.requiresFire = false;
             this.result = ItemStack.EMPTY;
             interimOutputState = BlastProcessorOutputState.MISSING_RECIPE;
         }
@@ -97,10 +90,6 @@ public class BlastProcessingInator {
 
     public double getExplosionPower() {
         return explosionPower;
-    }
-
-    public boolean requiresFire() {
-        return requiresFire;
     }
 
     public boolean producesFire() {

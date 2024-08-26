@@ -6,6 +6,5 @@
   "outputItem": "klaxon:fractured_raw_iron",
   "outputAmount": "1",
   "explosionPowerMin": "0.3",
-  "explosionPowerMax": "0.5",
-  "requiresFire": "false"
+  "explosionPowerMax": "0.5"
 }

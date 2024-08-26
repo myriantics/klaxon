@@ -74,10 +74,10 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
         return producesFire;
     }
 
-    public boolean matchesConditions(double explosionPowerMin, double explosionPowerMax, boolean requiresFire) {
+    public boolean matchesConditions(double explosionPowerMin, double explosionPowerMax) {
         if (explosionPowerMin <= explosionPower && explosionPower <= explosionPowerMax) {
-            return requiresFire == producesFire || producesFire;
-            //return true;
+            //return requiresFire == producesFire || producesFire;
+            return true;
         }
         return false;
     }

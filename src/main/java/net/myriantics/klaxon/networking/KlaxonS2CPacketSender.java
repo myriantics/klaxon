@@ -35,7 +35,6 @@ public class KlaxonS2CPacketSender {
         buf.writeDouble(inator.getExplosionPowerMin());
         buf.writeDouble(inator.getExplosionPowerMax());
         buf.writeBoolean(inator.producesFire());
-        buf.writeBoolean(inator.requiresFire());
         buf.writeEnumConstant(inator.getOutputState());
 
         ServerPlayNetworking.send(playerEntity, KlaxonS2CPackets.BLAST_PROCESSOR_SCREEN_DATA_SYNC_S2C, buf);

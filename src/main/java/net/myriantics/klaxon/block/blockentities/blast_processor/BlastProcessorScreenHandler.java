@@ -38,13 +38,12 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     public double explosionPowerMin;
     public double explosionPowerMax;
     public boolean producesFire;
-    public boolean requiresFire;
     public BlastProcessorOutputState outputState;
 
     // client constructor
     public BlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
         this(syncId, playerInventory, new SimpleInventory(2), ScreenHandlerContext.EMPTY);
-        setRecipeData(buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readBoolean(), buf.readBoolean(), buf.readEnumConstant(BlastProcessorOutputState.class));
+        setRecipeData(buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readBoolean(), buf.readEnumConstant(BlastProcessorOutputState.class));
     }
 
     // server constructor
@@ -164,12 +163,11 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
     }
 
     @Environment(EnvType.CLIENT)
-    public void setRecipeData(double explosionPower, double explosionPowerMin, double explosionPowerMax, boolean producesFire, boolean requiresFire, BlastProcessorOutputState outputState) {
+    public void setRecipeData(double explosionPower, double explosionPowerMin, double explosionPowerMax, boolean producesFire, BlastProcessorOutputState outputState) {
         this.explosionPower = explosionPower;
         this.explosionPowerMin = explosionPowerMin;
         this.explosionPowerMax = explosionPowerMax;
         this.producesFire = producesFire;
-        this.requiresFire = requiresFire;
         this.outputState = outputState;
     }
 

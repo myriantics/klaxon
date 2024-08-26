@@ -20,15 +20,13 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
     private final Ingredient processingItem;
     private final double explosionPowerMin;
     private final double explosionPowerMax;
-    private final boolean requiresFire;
     private final ItemStack result;
     private final Identifier id;
 
-    public BlastProcessorRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, boolean requiresFire, ItemStack result, Identifier id) {
+    public BlastProcessorRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result, Identifier id) {
         this.processingItem = inputA;
         this.explosionPowerMin = explosionPowerMin;
         this.explosionPowerMax = explosionPowerMax;
-        this.requiresFire = requiresFire;
         this.result = result;
         this.id = id;
     }
@@ -59,8 +57,6 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
     public double getExplosionPowerMax() {
         return explosionPowerMax;
     }
-
-    public boolean requiresFire() {return requiresFire;}
 
     @Override
     public ItemStack getOutput(DynamicRegistryManager registryManager) {

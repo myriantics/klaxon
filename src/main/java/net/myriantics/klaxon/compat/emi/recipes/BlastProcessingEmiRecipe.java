@@ -31,14 +31,11 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
     private final double explosionPowerMin;
     private final double explosionPowerMax;
 
-    private final boolean requiresFire;
-
     public BlastProcessingEmiRecipe(BlastProcessorRecipe recipe, EmiRegistry registry) {
         this.id = recipe.getId();
         this.output = List.of(EmiStack.of(recipe.getOutput(null)));
         this.explosionPowerMin = recipe.getExplosionPowerMin();
         this.explosionPowerMax = recipe.getExplosionPowerMax();
-        this.requiresFire = recipe.requiresFire();
         this.registry = registry;
         this.catalystData = getValidCatalysts();
         DefaultedList<EmiIngredient> catalystStacks = DefaultedList.ofSize(catalystData.size());
@@ -98,7 +95,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
     private DefaultedList<ItemExplosionPowerRecipe> getValidCatalysts() {
         DefaultedList<ItemExplosionPowerRecipe> catalysts = DefaultedList.of();
         for (ItemExplosionPowerRecipe recipe : registry.getRecipeManager().listAllOfType(ItemExplosionPowerRecipe.Type.INSTANCE)) {
-            if (recipe.matchesConditions(explosionPowerMin, explosionPowerMax, requiresFire)) {
+            if (recipe.matchesConditions(explosionPowerMin, explosionPowerMax)) {
                 catalysts.add(recipe);
             }
         }
