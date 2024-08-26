@@ -19,6 +19,7 @@ public class KlaxonItems {
     public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item(new FabricItemSettings()));
     public static final Item FRACTURED_RAW_IRON = registerItem("fractured_raw_iron", new Item(new FabricItemSettings()));
     public static final Item CRUDE_STEEL_MIXTURE = registerItem("crude_steel_mixture", new Item(new FabricItemSettings()));
+    public static final Item STEEL_NUGGET = registerItem("steel_nugget", new Item(new FabricItemSettings()));
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
         entries.add(HAMMER);
@@ -38,6 +39,7 @@ public class KlaxonItems {
         entries.add(KlaxonItems.FRACTURED_RAW_IRON);
         entries.add(KlaxonItems.CRUDE_STEEL_MIXTURE);
         entries.add(KlaxonItems.STEEL_INGOT);
+        entries.add(KlaxonItems.STEEL_NUGGET);
         entries.add(KlaxonBlocks.STEEL_BLOCK);
     }
 

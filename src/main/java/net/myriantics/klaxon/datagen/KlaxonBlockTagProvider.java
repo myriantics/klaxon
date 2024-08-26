@@ -38,7 +38,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_panes")))
                 .addOptionalTag(BlockTags.ICE)
                 .add(Blocks.REDSTONE_LAMP)
-                .add(Blocks.SEA_LANTERN);
+                .add(Blocks.SEA_LANTERN)
+                .add(Blocks.GLOWSTONE);
 
         getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "mineable/pickaxe")))
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)

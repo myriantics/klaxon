@@ -14,6 +14,7 @@
       "required": false
     },
     "minecraft:redstone_lamp",
-    "minecraft:sea_lantern"
+    "minecraft:sea_lantern",
+    "minecraft:glowstone"
   ]
 }

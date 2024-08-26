@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "s": {
-      "item": "klaxon:steel_ingot"
+    "#": {
+      "item": "klaxon:steel_nugget"
     }
   },
   "pattern": [
-    "sss",
-    "sss",
-    "sss"
+    "###",
+    "###",
+    "###"
   ],
   "result": {
-    "item": "klaxon:steel_block"
+    "item": "klaxon:steel_ingot"
   },
   "show_notification": true
 }

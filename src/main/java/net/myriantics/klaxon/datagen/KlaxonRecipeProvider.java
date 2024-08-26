@@ -38,15 +38,6 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                         FabricRecipeProvider.conditionsFromItem(Blocks.DISPENSER))
                 .offerTo(exporter);
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, KlaxonBlocks.STEEL_BLOCK)
-                .pattern("sss")
-                .pattern("sss")
-                .pattern("sss")
-                .input('s', KlaxonItems.STEEL_INGOT)
-                .criterion(FabricRecipeProvider.hasItem(KlaxonItems.STEEL_INGOT),
-                        FabricRecipeProvider.conditionsFromItem(KlaxonItems.STEEL_INGOT))
-                .offerTo(exporter);
-
         ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, KlaxonItems.HAMMER)
                 .pattern("bib")
                 .pattern(" s ")
@@ -58,13 +49,5 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                 .criterion(FabricRecipeProvider.hasItem(KlaxonItems.STEEL_INGOT),
                         FabricRecipeProvider.conditionsFromItem(KlaxonItems.STEEL_INGOT))
                 .offerTo(exporter);
-
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, KlaxonItems.STEEL_INGOT, 9)
-                .input(KlaxonTags.Items.STEEL_BLOCKS)
-                .criterion(FabricRecipeProvider.hasItem(KlaxonItems.STEEL_INGOT),
-                        FabricRecipeProvider.conditionsFromItem(KlaxonItems.STEEL_INGOT))
-                .offerTo(exporter);
-
-
     }
 }
