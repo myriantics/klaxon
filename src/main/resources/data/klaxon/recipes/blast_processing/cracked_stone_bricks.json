@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:blast_processing",
+  "inputA" : {
+    "item": "minecraft:stone_bricks"
+  },
+  "outputItem": "minecraft:cracked_stone_bricks",
+  "outputAmount": "1",
+  "explosionPowerMin": "0.1",
+  "explosionPowerMax": "0.3"
+}

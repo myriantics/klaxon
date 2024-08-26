@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:blast_processing",
+  "inputA" : {
+    "item": "minecraft:nether_bricks"
+  },
+  "outputItem": "minecraft:cracked_nether_bricks",
+  "outputAmount": "1",
+  "explosionPowerMin": "0.1",
+  "explosionPowerMax": "0.3"
+}

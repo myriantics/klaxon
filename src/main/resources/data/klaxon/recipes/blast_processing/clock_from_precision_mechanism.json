@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:blast_processing",
+  "inputA" : {
+    "item": "create:precision_mechanism"
+  },
+  "outputItem": "minecraft:clock",
+  "outputAmount": "1",
+  "explosionPowerMin": "0.2",
+  "explosionPowerMax": "0.4"
+}
