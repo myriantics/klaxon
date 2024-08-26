@@ -1,9 +1,9 @@
 {
   "block.klaxon.deepslate_blast_processor": "Deepslate Blast Processor",
-  "block.klaxon.steel_block": "Steel Block",
+  "block.klaxon.steel_block": "Block of Steel",
+  "item.klaxon.steel_ingot": "Steel Ingot",
   "item.klaxon.hammer": "Hammer",
   "item.klaxon.ender_plate": "Ender Pearl Plate",
-  "item.klaxon.steel_ingot": "Steel Ingot",
   "item.klaxon.crude_steel_mixture": "Crude Steel Mixture",
   "item.klaxon.fractured_raw_iron": "Fractured Raw Iron",
   "entity.klaxon.ender_plate": "Ender Pearl Plate",

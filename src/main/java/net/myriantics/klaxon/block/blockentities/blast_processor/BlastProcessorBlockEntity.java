@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -24,6 +25,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
@@ -209,8 +211,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
                 }
             }
             return appendedState;
-        } else if (world != null) {
-            world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_DISPENSER_DISPENSE, SoundCategory.BLOCKS, 2, 2f, false);
         }
         return null;
     }
@@ -258,7 +258,9 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             return;
         }
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-        ItemDispenserBehavior.spawnItem(world, itemStack, 0, direction, getOutputLocation(direction));
+        world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
+        world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, direction.getId());
+        ItemDispenserBehavior.spawnItem(world, itemStack, 8, direction, getOutputLocation(direction));
     }
 
     public Position getOutputLocation(Direction direction) {
@@ -268,12 +270,12 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         double z = centerPos.getZ();
 
         switch (direction) {
-            case UP -> y += 0.55;
-            case DOWN -> y -= 0.55;
-            case NORTH -> z -= 0.55;
-            case SOUTH -> z += 0.55;
-            case EAST -> x += 0.55;
-            case WEST -> x -= 0.55;
+            case UP -> y += 0.6;
+            case DOWN -> y -= 0.6;
+            case NORTH -> z -= 0.6;
+            case SOUTH -> z += 0.6;
+            case EAST -> x += 0.6;
+            case WEST -> x -= 0.6;
         }
 
         return new Vec3d(x, y, z);
