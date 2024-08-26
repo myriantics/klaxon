@@ -63,6 +63,10 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
         return this.result;
     }
 
+    public boolean isCompatibleWithCatalyst(double explosionPower) {
+        return explosionPowerMin <= explosionPower && explosionPowerMax >= explosionPower;
+    }
+
     @Override
     public Identifier getId() {
         return this.id;

@@ -5,9 +5,13 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
@@ -15,21 +19,25 @@ import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastPro
 
 public class BlastProcessingInator {
 
+    private final SimpleInventory recipeInventory;
     private final double explosionPowerMin;
     private final double explosionPowerMax;
     private final double explosionPower;
     private final boolean producesFire;
     private final ItemStack result;
     private final BlastProcessorOutputState outputState;
+    private final World world;
 
     public BlastProcessingInator(World world, Inventory inventory) {
+        this.world = world;
+
         ItemStack processItem = inventory.getStack(PROCESS_ITEM_INDEX);
         ItemStack catalystItem = inventory.getStack(CATALYST_INDEX);
 
-        SimpleInventory simpleInventory = new SimpleInventory(inventory.size());
+        this.recipeInventory = new SimpleInventory(inventory.size());
 
         for (int i = 0; i < inventory.size(); i++) {
-            simpleInventory.setStack(i, inventory.getStack(i));
+            recipeInventory.setStack(i, inventory.getStack(i));
         }
 
         RecipeManager recipeManager = world.getRecipeManager();
@@ -37,12 +45,9 @@ public class BlastProcessingInator {
         Optional<ItemExplosionPowerRecipe> itemExplosionPowerMatch = Optional.empty();
         Optional<BlastProcessorRecipe> blastProcessingMatch = Optional.empty();
 
-        if (!processItem.isEmpty()) {
-            blastProcessingMatch = recipeManager.getFirstMatch(BlastProcessorRecipe.Type.INSTANCE, simpleInventory, world);
-        }
 
         if (!catalystItem.isEmpty()) {
-            itemExplosionPowerMatch = recipeManager.getFirstMatch(ItemExplosionPowerRecipe.Type.INSTANCE, simpleInventory, world);
+            itemExplosionPowerMatch = recipeManager.getFirstMatch(ItemExplosionPowerRecipe.Type.INSTANCE, recipeInventory, world);
         }
 
         if (itemExplosionPowerMatch.isPresent()) {
@@ -51,6 +56,10 @@ public class BlastProcessingInator {
         } else {
             this.explosionPower = 0.0;
             this.producesFire = false;
+        }
+
+        if (!processItem.isEmpty()) {
+            blastProcessingMatch = getBlastProcessingRecipe();
         }
 
         BlastProcessorOutputState interimOutputState;
@@ -104,6 +113,26 @@ public class BlastProcessingInator {
         return outputState;
     }
 
+    // checks all possible recipes for the one with the lowest explosion power minimum, then uses that one
+    private Optional<BlastProcessorRecipe> getBlastProcessingRecipe() {
+        List<BlastProcessorRecipe> recipes = world.getRecipeManager().getAllMatches(BlastProcessorRecipe.Type.INSTANCE, recipeInventory, world);
+
+        if (recipes.isEmpty()) {
+            return Optional.empty();
+        }
+
+        BlastProcessorRecipe recipe = recipes.get(0);
+        double lowestExplosionPowerMin = recipe.getExplosionPowerMin();
+
+        for (BlastProcessorRecipe activeRecipe : recipes) {
+            double recipeExplosionPowerMin = activeRecipe.getExplosionPowerMin();
+            if(recipeExplosionPowerMin == Math.min(recipeExplosionPowerMin, lowestExplosionPowerMin)) {
+                lowestExplosionPowerMin = recipeExplosionPowerMin;
+                recipe = activeRecipe;
+            }
+        }
+        return Optional.of(recipe);
+    }
     private void selfDestructButton(World world) {
         if (world.getServer() != null) {
             world.getServer().sendMessage(Text.literal("curse you perry the platypus"));
