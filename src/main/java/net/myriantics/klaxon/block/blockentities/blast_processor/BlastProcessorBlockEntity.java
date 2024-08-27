@@ -211,6 +211,10 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             }
             world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
             world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(FACING).getId());
+
+            if (!world.isClient) {
+                KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, inventory);
+            }
         }
     }
 
@@ -227,9 +231,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             screenHandler.onContentChanged(this);
         }
         updateBlockState(null);
-        if (world != null && !world.isClient) {
-            KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, inventory);
-        }
         super.markDirty();
     }
 

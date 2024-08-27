@@ -11,7 +11,9 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
@@ -101,21 +103,31 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         }
     }
 
-
-
     @Override
     public void onContentChanged(Inventory inventory) {
         this.context.run((world, pos) -> {
-            updateResult(world, player, outputInventory);
+            updateResult(world, pos, player, outputInventory);
+        });
+
+        this.context.run((world, pos) -> {
+            if (!world.isClient) {
+                for (int i = 0; i < inventory.size(); i++) {
+                    if (inventory.getStack(i).isEmpty() && world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity) {
+                        KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, getStacks());
+                    }
+                }
+            }
         });
     }
 
-    public void updateResult(World world, PlayerEntity player, SimpleInventory resultInventory) {
+    public void updateResult(World world, BlockPos pos, PlayerEntity player, SimpleInventory resultInventory) {
 
         this.inator = new BlastProcessingInator(world, ingredientInventory);
 
         if (!world.isClient && player instanceof ServerPlayerEntity playerEntity) {
             KlaxonS2CPacketSender.sendBlastProcessorScreenSyncData(inator, playerEntity, syncId);
+            if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+            }
         }
 
         resultInventory.setStack(0, inator.getResult());

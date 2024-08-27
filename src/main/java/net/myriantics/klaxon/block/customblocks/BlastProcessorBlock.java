@@ -23,6 +23,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
+import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
 import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
@@ -84,6 +85,7 @@ public class BlastProcessorBlock extends BlockWithEntity {
             int[] slots = blastProcessor.getAvailableSlots(interactionSide);
             DefaultedList<ItemStack> processorInventory = blastProcessor.getItems();
 
+
             if (slots != null) {
                 for (int slot : slots) {
                     if (blastProcessor.canInsert(slot, handStack, interactionSide)) {
@@ -98,6 +100,10 @@ public class BlastProcessorBlock extends BlockWithEntity {
                         return ActionResult.SUCCESS;
                     }
                 }
+            }
+
+            if (!world.isClient) {
+                KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, processorInventory);
             }
         }
 
