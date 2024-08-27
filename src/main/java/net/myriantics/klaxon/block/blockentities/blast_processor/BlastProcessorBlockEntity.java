@@ -171,45 +171,47 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         }
     }
 
-    private BlockState craft() {
-        if (world != null && !inventory.isEmpty()) {
-            SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
+    private void craft() {
+        if (world != null) {
+            if (!inventory.isEmpty()) {
+                SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
 
-            for (int i = 0; i < inventory.size(); i++) {
-                blastProcessorRecipeInventory.setStack(i, inventory.get(i));
-            }
+                for (int i = 0; i < inventory.size(); i++) {
+                    blastProcessorRecipeInventory.setStack(i, inventory.get(i));
+                }
 
-            BlastProcessingInator inator = new BlastProcessingInator(world, blastProcessorRecipeInventory);
+                BlastProcessingInator inator = new BlastProcessingInator(world, blastProcessorRecipeInventory);
 
-            BlastProcessorOutputState outputState = inator.getOutputState();
-            double explosionPower = inator.getExplosionPower();
-            boolean producesFire = inator.producesFire();
+                BlastProcessorOutputState outputState = inator.getOutputState();
+                double explosionPower = inator.getExplosionPower();
+                boolean producesFire = inator.producesFire();
 
-            BlockState appendedState = detonate(outputState, explosionPower, producesFire);
+                detonate(outputState, explosionPower, producesFire);
 
-            // really ought to make this better but its fine rn
-            switch (outputState) {
-                case MISSING_RECIPE, UNDERPOWERED, MISSING_FUEL -> {
-                    ejectItem(getStack(PROCESS_ITEM_INDEX));
-                    removeStack(PROCESS_ITEM_INDEX);
-                    if (explosionPower <= 0) {
-                        ejectItem(getStack(CATALYST_INDEX));
-                        removeStack(CATALYST_INDEX);
-                    } else {
-                        removeStack(CATALYST_INDEX);
+                // really ought to make this better but its fine rn
+                switch (outputState) {
+                    case MISSING_RECIPE, UNDERPOWERED, MISSING_FUEL -> {
+                        ejectItem(getStack(PROCESS_ITEM_INDEX));
+                        removeStack(PROCESS_ITEM_INDEX);
+                        if (explosionPower <= 0) {
+                            ejectItem(getStack(CATALYST_INDEX));
+                            removeStack(CATALYST_INDEX);
+                        } else {
+                            removeStack(CATALYST_INDEX);
+                        }
+                    }
+                    case OVERPOWERED -> {
+                        clear();
+                    }
+                    case SUCCESS -> {
+                        clear();
+                        ejectItem(inator.getResult());
                     }
                 }
-                case OVERPOWERED -> {
-                    clear();
-                }
-                case SUCCESS -> {
-                    clear();
-                    ejectItem(inator.getResult());
-                }
             }
-            return appendedState;
+            world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
+            world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(FACING).getId());
         }
-        return null;
     }
 
     public void updateBlockState(@Nullable BlockState appendedState) {
@@ -231,7 +233,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         super.markDirty();
     }
 
-    private BlockState detonate(BlastProcessorOutputState outputState, double explosionPower, boolean producesFire) {
+    private void detonate(BlastProcessorOutputState outputState, double explosionPower, boolean producesFire) {
         if (world != null) {
             BlockState activeBlockState = world.getBlockState(pos);
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
@@ -242,12 +244,9 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
                     removeStack(CATALYST_INDEX);
                     world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
                     world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
-
-                    return activeBlockState.with(LIT, true);
                 }
             }
         }
-        return null;
     }
 
     private void ejectItem(ItemStack itemStack) {
@@ -255,8 +254,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             return;
         }
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-        world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
-        world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, direction.getId());
         ItemDispenserBehavior.spawnItem(world, itemStack, 8, direction, getOutputLocation(direction));
     }
 
