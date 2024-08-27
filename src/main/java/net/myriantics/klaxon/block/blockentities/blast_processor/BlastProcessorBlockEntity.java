@@ -89,8 +89,8 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         return 2;
     }
 
-    public BlockState onRedstoneImpulse() {
-        return craft();
+    public void onRedstoneImpulse() {
+        craft();
     }
 
     @Override

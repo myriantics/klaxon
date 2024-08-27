@@ -2,7 +2,6 @@ package net.myriantics.klaxon.block.customblocks;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
@@ -13,7 +12,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -23,8 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -186,20 +182,24 @@ public class BlastProcessorBlock extends BlockWithEntity {
             boolean isPowered = world.isReceivingRedstonePower(pos);
             boolean isActivated = state.get(POWERED);
             boolean isLit = state.get(LIT);
+            BlockState appendedState = state;
             if (isPowered && !isActivated) {
                 if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
-                    BlockState appendedState = blastProcessor.onRedstoneImpulse();
-                    if (appendedState != null) {
-                        state = appendedState;
-                    }
-                    updateBlockState(world, pos, state.with(POWERED, true));
+                    blastProcessor.onRedstoneImpulse();
+                    appendedState = appendedState.with(POWERED, true);
                 }
             } else if(!isPowered && isActivated) {
-                if (isLit) {
-                    world.scheduleBlockTick(pos, this, 20);
-                }
-                updateBlockState(world, pos, state.with(POWERED, false));
+                appendedState = appendedState.with(POWERED, false);
             }
+
+            if (isLit != isPowered) {
+                if (isLit) {
+                    world.scheduleBlockTick(pos, this, 4);
+                } else {
+                    appendedState = state.cycle(LIT);
+                }
+            }
+            updateBlockState(world, pos, appendedState);
         }
     }
 
