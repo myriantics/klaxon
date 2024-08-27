@@ -59,5 +59,4 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             registry.addRecipe(constructor.apply(recipe));
         }
     }
-
 }

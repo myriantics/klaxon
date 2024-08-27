@@ -190,7 +190,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             // really ought to make this better but its fine rn
             switch (outputState) {
                 case MISSING_RECIPE, UNDERPOWERED, MISSING_FUEL -> {
-                    world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_DISPENSER_DISPENSE, SoundCategory.BLOCKS, 2, 2f, true);
                     ejectItem(getStack(PROCESS_ITEM_INDEX));
                     removeStack(PROCESS_ITEM_INDEX);
                     if (explosionPower <= 0) {

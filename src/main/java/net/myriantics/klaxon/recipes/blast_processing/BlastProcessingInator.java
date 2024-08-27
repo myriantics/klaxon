@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,29 +114,29 @@ public class BlastProcessingInator {
         return outputState;
     }
 
-    // checks all possible recipes for the one with the lowest explosion power minimum, then uses that one
+    // defaults to showing recipe with lowest explosion power, but will switch to higher explosion power recipe if lowest is invalid
     private Optional<BlastProcessorRecipe> getBlastProcessingRecipe() {
-        List<BlastProcessorRecipe> recipes = world.getRecipeManager().getAllMatches(BlastProcessorRecipe.Type.INSTANCE, recipeInventory, world);
-
-        if (recipes.isEmpty()) {
+        List<BlastProcessorRecipe> initialRecipes = world.getRecipeManager().getAllMatches(BlastProcessorRecipe.Type.INSTANCE, recipeInventory, world);
+        if (initialRecipes.isEmpty()) {
             return Optional.empty();
         }
 
-        BlastProcessorRecipe recipe = recipes.get(0);
-        double lowestExplosionPowerMin = recipe.getExplosionPowerMin();
+        DefaultedList<BlastProcessorRecipe> recipes = DefaultedList.of();
+        recipes.addAll(initialRecipes);
+
+        Comparator<BlastProcessorRecipe> byLowestExplosionPower = Comparator.comparing(BlastProcessorRecipe::getExplosionPowerMin);
+        recipes.sort(byLowestExplosionPower);
+
+        if (recipeInventory.getStack(CATALYST_INDEX).isEmpty()) {
+            return Optional.of(recipes.get(0));
+        }
 
         for (BlastProcessorRecipe activeRecipe : recipes) {
-            double recipeExplosionPowerMin = activeRecipe.getExplosionPowerMin();
-            if(recipeExplosionPowerMin == Math.min(recipeExplosionPowerMin, lowestExplosionPowerMin)) {
-                lowestExplosionPowerMin = recipeExplosionPowerMin;
-                recipe = activeRecipe;
+            if (activeRecipe.isCompatibleWithCatalyst(explosionPower)) {
+                return Optional.of(activeRecipe);
             }
         }
-        return Optional.of(recipe);
-    }
-    private void selfDestructButton(World world) {
-        if (world.getServer() != null) {
-            world.getServer().sendMessage(Text.literal("curse you perry the platypus"));
-        }
+
+        return Optional.of(recipes.get(0));
     }
 }
