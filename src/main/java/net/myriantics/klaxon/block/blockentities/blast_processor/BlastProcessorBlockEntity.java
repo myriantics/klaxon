@@ -35,11 +35,14 @@ import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.UnaryOperator;
+
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.FACING;
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.LIT;
 
 public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+    private DefaultedList<ItemStack> cachedInventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     public static final int PROCESS_ITEM_INDEX = 1;
     public static final int CATALYST_INDEX = 0;
     private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
@@ -52,6 +55,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     public BlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+        this.cachedInventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     }
 
     @Override
@@ -75,6 +79,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        updateCachedInventory(false);
         Inventories.readNbt(nbt, this.inventory);
     }
 
@@ -211,10 +216,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             }
             world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
             world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(FACING).getId());
-
-            if (!world.isClient) {
-                KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, inventory);
-            }
         }
     }
 
@@ -231,6 +232,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             screenHandler.onContentChanged(this);
         }
         updateBlockState(null);
+        updateCachedInventory(true);
         super.markDirty();
     }
 
@@ -290,6 +292,24 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     public void syncInventory(DefaultedList<ItemStack> stacks) {
         for (int i = 0; i < size(); i++) {
             this.setStack(i, stacks.get(i));
+        }
+    }
+
+    // if the inventory has changed, tell the client
+    private void updateCachedInventory(boolean sendPacket) {
+        if (world != null) {
+            if (this.cachedInventory == null) {
+                cachedInventory = DefaultedList.ofSize(size());
+            }
+
+            if (!this.inventory.equals(this.cachedInventory)) {
+                if (sendPacket) {
+                    KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, inventory);
+                }
+                for (int i = 0; i < inventory.size(); i++) {
+                    cachedInventory.set(i, inventory.get(i).copy());
+                }
+            }
         }
     }
 }

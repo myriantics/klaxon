@@ -101,10 +101,6 @@ public class BlastProcessorBlock extends BlockWithEntity {
                     }
                 }
             }
-
-            if (!world.isClient) {
-                KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, processorInventory);
-            }
         }
 
 

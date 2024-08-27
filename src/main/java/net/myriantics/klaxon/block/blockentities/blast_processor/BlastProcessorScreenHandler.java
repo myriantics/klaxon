@@ -108,16 +108,6 @@ public class BlastProcessorScreenHandler extends ScreenHandler {
         this.context.run((world, pos) -> {
             updateResult(world, pos, player, outputInventory);
         });
-
-        this.context.run((world, pos) -> {
-            if (!world.isClient) {
-                for (int i = 0; i < inventory.size(); i++) {
-                    if (inventory.getStack(i).isEmpty() && world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity) {
-                        KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, getStacks());
-                    }
-                }
-            }
-        });
     }
 
     public void updateResult(World world, BlockPos pos, PlayerEntity player, SimpleInventory resultInventory) {
