@@ -297,7 +297,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
 
     // if the inventory has changed, tell the client
     private void updateCachedInventory(boolean sendPacket) {
-        if (world != null) {
+        if (world != null && !world.isClient) {
             if (this.cachedInventory == null) {
                 cachedInventory = DefaultedList.ofSize(size());
             }

@@ -28,7 +28,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.SMITHING_TABLE)
                 .add(Blocks.ANVIL)
                 .add(Blocks.CHIPPED_ANVIL)
-                .add(Blocks.DAMAGED_ANVIL);
+                .add(Blocks.DAMAGED_ANVIL)
+                .add(KlaxonBlocks.STEEL_BLOCK);
 
         getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_MINEABLE)
                 .addOptionalTag(KlaxonTags.Blocks.HAMMER_INSTABREAK);
@@ -45,5 +46,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .add(KlaxonBlocks.STEEL_BLOCK);
 
+        getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
+                .add(KlaxonBlocks.STEEL_BLOCK);
     }
 }

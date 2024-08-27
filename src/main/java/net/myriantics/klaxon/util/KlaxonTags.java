@@ -14,11 +14,14 @@ public class KlaxonTags {
         public static final TagKey<Item> STEEL_INGOTS =
                 TagKey.of(RegistryKeys.ITEM, new Identifier("c", "ingots/steel"));
 
-        public static final TagKey<Item> SHEILD_DISABLING_MELEE =
-                createTag("shield_disabling_melee_weapons");
+        public static final TagKey<Item> STEEL_NUGGETS =
+                TagKey.of(RegistryKeys.ITEM, new Identifier("c", "nuggets/steel"));
 
         public static final TagKey<Item> STEEL_BLOCKS =
                 TagKey.of(RegistryKeys.ITEM, new Identifier("c", "storage_blocks/steel"));
+        public static final TagKey<Item> SHIELD_DISABLING_MELEE_WEAPONS =
+                createTag("shield_disabling_melee_weapons");
+
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, new Identifier(KlaxonCommon.MOD_ID, name));
