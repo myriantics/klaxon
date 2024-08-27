@@ -7,6 +7,8 @@
   "item.klaxon.ender_plate": "Ender Pearl Plate",
   "item.klaxon.crude_steel_mixture": "Crude Steel Mixture",
   "item.klaxon.fractured_raw_iron": "Fractured Raw Iron",
+  "item.klaxon.fractured_raw_copper": "Fractured Raw Copper",
+  "item.klaxon.fractured_raw_gold": "Fractured Raw Gold",
   "entity.klaxon.ender_plate": "Ender Pearl Plate",
   "death.attack.hammer_bonking": "%1$s was lethally bonked by %2$s",
   "death.attack.hammer_walloping": "%1$s was walloped by %2$s",

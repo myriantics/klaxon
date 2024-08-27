@@ -6,5 +6,13 @@
   "outputItem": "minecraft:clock",
   "outputAmount": "1",
   "explosionPowerMin": "0.2",
-  "explosionPowerMax": "0.4"
+  "explosionPowerMax": "0.4",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "create"
+      ]
+    }
+  ]
 }

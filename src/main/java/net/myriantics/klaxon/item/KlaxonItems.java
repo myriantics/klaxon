@@ -14,10 +14,17 @@ import net.myriantics.klaxon.item.consumables.EnderPlateItem;
 import net.myriantics.klaxon.item.tools.HammerItem;
 
 public class KlaxonItems {
+
+    // cool stuff
     public static final Item HAMMER = registerItem("hammer", new HammerItem(new FabricItemSettings().maxCount(1).maxDamage(512)));
+    // disabled currently because its broken as FUCK - will come later trust
     public static final Item ENDER_PEARL_PLATE_ITEM = null;// = registerItem("ender_plate", new EnderPlateItem(new FabricItemSettings()));
+
+    // filler
     public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item(new FabricItemSettings()));
     public static final Item FRACTURED_RAW_IRON = registerItem("fractured_raw_iron", new Item(new FabricItemSettings()));
+    public static final Item FRACTURED_RAW_COPPER = registerItem("fractured_raw_copper", new Item(new FabricItemSettings()));
+    public static final Item FRACTURED_RAW_GOLD = registerItem("fractured_raw_gold", new Item(new FabricItemSettings()));
     public static final Item CRUDE_STEEL_MIXTURE = registerItem("crude_steel_mixture", new Item(new FabricItemSettings()));
     public static final Item STEEL_NUGGET = registerItem("steel_nugget", new Item(new FabricItemSettings()));
 
@@ -37,6 +44,8 @@ public class KlaxonItems {
 
     private static void addItemsToIngredientTabGroup(FabricItemGroupEntries entries) {
         entries.add(KlaxonItems.FRACTURED_RAW_IRON);
+        entries.add(KlaxonItems.FRACTURED_RAW_COPPER);
+        entries.add(KlaxonItems.FRACTURED_RAW_GOLD);
         entries.add(KlaxonItems.CRUDE_STEEL_MIXTURE);
         entries.add(KlaxonItems.STEEL_INGOT);
         entries.add(KlaxonItems.STEEL_NUGGET);
