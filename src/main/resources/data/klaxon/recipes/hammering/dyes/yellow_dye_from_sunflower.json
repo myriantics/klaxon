@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammering",
+  "inputA" : {
+    "item": "minecraft:sunflower"
+  },
+  "outputItem": "minecraft:yellow_dye",
+  "outputAmount": "4"
+}

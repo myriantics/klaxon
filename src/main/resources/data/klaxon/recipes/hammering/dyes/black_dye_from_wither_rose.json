@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammering",
+  "inputA" : {
+    "item": "minecraft:wither_rose"
+  },
+  "outputItem": "minecraft:black_dye",
+  "outputAmount": "2"
+}

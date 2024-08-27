@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammering",
+  "inputA" : {
+    "item": "minecraft:allium"
+  },
+  "outputItem": "minecraft:magenta_dye",
+  "outputAmount": "2"
+}

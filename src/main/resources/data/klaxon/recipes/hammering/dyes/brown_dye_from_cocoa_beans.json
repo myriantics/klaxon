@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammering",
+  "inputA" : {
+    "item": "minecraft:cocoa_beans"
+  },
+  "outputItem": "minecraft:brown_dye",
+  "outputAmount": "2"
+}

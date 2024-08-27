@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammering",
+  "inputA" : {
+    "item": "minecraft:orange_tulip"
+  },
+  "outputItem": "minecraft:orange_dye",
+  "outputAmount": "2"
+}

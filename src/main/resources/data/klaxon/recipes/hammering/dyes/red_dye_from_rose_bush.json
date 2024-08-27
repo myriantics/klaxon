@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammering",
+  "inputA" : {
+    "item": "minecraft:rose_bush"
+  },
+  "outputItem": "minecraft:red_dye",
+  "outputAmount": "4"
+}

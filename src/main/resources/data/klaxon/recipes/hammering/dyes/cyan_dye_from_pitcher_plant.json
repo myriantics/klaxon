@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammering",
+  "inputA" : {
+    "item": "minecraft:pitcher_plant"
+  },
+  "outputItem": "minecraft:cyan_dye",
+  "outputAmount": "4"
+}
