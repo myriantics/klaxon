@@ -5,9 +5,9 @@
     "front": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_front_lit",
     "side": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_side_closed",
     "top": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_top_open",
-    "bottom": "block/polished_deepslate",
+    "bottom": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_bottom",
     "back": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_back",
-    "particle": "block/polished_deepslate"
+    "particle": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_bottom"
   },
   "elements": [
     {
