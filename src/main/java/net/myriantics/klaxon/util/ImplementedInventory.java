@@ -114,6 +114,7 @@ public interface ImplementedInventory extends Inventory {
     @Override
     default void clear() {
         getItems().clear();
+        markDirty();
     }
     
     /**

@@ -87,7 +87,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, this.inventory);
-        markDirty();
     }
 
     public int size() {
