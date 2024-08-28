@@ -94,10 +94,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         return 2;
     }
 
-    public void onRedstoneImpulse() {
-        craft();
-    }
-
     @Override
     public int getMaxCountPerStack() {
         return MaxItemStackCount;
@@ -176,7 +172,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         }
     }
 
-    private void craft() {
+    public void onRedstoneImpulse() {
         if (world != null) {
             if (!inventory.isEmpty()) {
                 SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
@@ -196,14 +192,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
                 // really ought to make this better but its fine rn
                 switch (outputState) {
                     case MISSING_RECIPE, UNDERPOWERED, MISSING_FUEL -> {
-                        ejectItem(getStack(PROCESS_ITEM_INDEX));
-                        removeStack(PROCESS_ITEM_INDEX);
-                        if (explosionPower <= 0) {
-                            ejectItem(getStack(CATALYST_INDEX));
-                            removeStack(CATALYST_INDEX);
-                        } else {
-                            removeStack(CATALYST_INDEX);
-                        }
+                        ejectInventory();
                     }
                     case OVERPOWERED -> {
                         clear();
@@ -257,7 +246,14 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             return;
         }
         Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-        ItemDispenserBehavior.spawnItem(world, itemStack, 8, direction, getOutputLocation(direction));
+        ItemDispenserBehavior.spawnItem(world, itemStack.copy(), 8, direction, getOutputLocation(direction));
+    }
+
+    private void ejectInventory() {
+        for (ItemStack stack : inventory) {
+            ejectItem(stack);
+        }
+        clear();
     }
 
     public Position getOutputLocation(Direction direction) {
