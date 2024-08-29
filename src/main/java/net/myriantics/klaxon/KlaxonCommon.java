@@ -11,12 +11,7 @@ import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorScreenHandler;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipeSerializer;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipeSerializer;
+import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +26,7 @@ public class KlaxonCommon implements ModInitializer {
 	public static final ExtendedScreenHandlerType<BlastProcessorScreenHandler> BLAST_PROCESSOR_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(BlastProcessorScreenHandler::new);
 
 	static {
-		Registry.register(Registries.SCREEN_HANDLER, new Identifier(MOD_ID, "blast_processor"), BLAST_PROCESSOR_SCREEN_HANDLER);
+		Registry.register(Registries.SCREEN_HANDLER, locate("blast_processor"), BLAST_PROCESSOR_SCREEN_HANDLER);
 	}
 
 	@Override
@@ -41,16 +36,8 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonBlockEntities.registerBlockEntities();
 		KlaxonItems.registerModItems();
 		KlaxonEntities.registerModEntities();
-		Registry.register(Registries.RECIPE_SERIALIZER, HammerRecipeSerializer.ID,
-				HammerRecipeSerializer.INSTANCE);
-		Registry.register(Registries.RECIPE_SERIALIZER, BlastProcessorRecipeSerializer.ID,
-				BlastProcessorRecipeSerializer.INSTANCE);
-		Registry.register(Registries.RECIPE_SERIALIZER, ItemExplosionPowerRecipeSerializer.ID,
-				ItemExplosionPowerRecipeSerializer.INSTANCE);
-		Registry.register(Registries.RECIPE_TYPE, new Identifier("hammering", HammerRecipe.Type.ID), HammerRecipe.Type.INSTANCE);
-		Registry.register(Registries.RECIPE_TYPE, new Identifier("blast_processing", BlastProcessorRecipe.Type.ID), BlastProcessorRecipe.Type.INSTANCE);
-		Registry.register(Registries.RECIPE_TYPE, new Identifier("item_explosion_power", ItemExplosionPowerRecipe.Type.ID), ItemExplosionPowerRecipe.Type.INSTANCE);
+		KlaxonRecipeTypes.registerSerializer();
 
-		LOGGER.info("Klaxon has loaded - i remembered to change this :)");
+		LOGGER.info("Klaxon has loaded");
 	}
 }

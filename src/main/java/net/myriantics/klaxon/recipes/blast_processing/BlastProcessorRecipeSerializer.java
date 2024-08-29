@@ -14,12 +14,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastProcessorRecipe> {
-    private BlastProcessorRecipeSerializer() {
+    public BlastProcessorRecipeSerializer() {
     }
-
-    public static final BlastProcessorRecipeSerializer INSTANCE = new BlastProcessorRecipeSerializer();
-
-    public static final Identifier ID = new Identifier("klaxon:blast_processing");
 
     @Override
     public BlastProcessorRecipe read(Identifier id, JsonObject json) {
@@ -46,7 +42,7 @@ public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastPro
     @Override
     public void write(PacketByteBuf packetData, BlastProcessorRecipe recipe) {
         recipe.getProcessingItem().write(packetData);
-        packetData.writeItemStack(recipe.getOutput(DynamicRegistryManager.of(Registries.REGISTRIES)));
+        packetData.writeItemStack(recipe.getOutput(null));
     }
 
 

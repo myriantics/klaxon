@@ -7,6 +7,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
+import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ public abstract class ItemExplosionPowerHelper {
 
         RecipeManager recipeManager = world.getRecipeManager();
 
-        RecipeType<ItemExplosionPowerRecipe> type = ItemExplosionPowerRecipe.Type.INSTANCE;
+        RecipeType<ItemExplosionPowerRecipe> type = KlaxonRecipeTypes.ITEM_EXPLOSION_POWER;
         // yay this will make things gooder
         SimpleInventory simpleInventory = new SimpleInventory(2);
         simpleInventory.setStack(BlastProcessorBlockEntity.CATALYST_INDEX, itemStack.copy());

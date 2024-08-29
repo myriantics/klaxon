@@ -14,7 +14,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.DimensionTypes;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
+import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
 
@@ -94,17 +96,12 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ItemExplosionPowerRecipeSerializer.INSTANCE;
+        return KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_SERIALIZER;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return Type.INSTANCE;
+        return KlaxonRecipeTypes.ITEM_EXPLOSION_POWER;
     }
 
-    public static class Type implements RecipeType<ItemExplosionPowerRecipe> {
-        private Type() {}
-        public static final Type INSTANCE = new Type();
-        public static final String ID = "item_explosion_power";
-    }
 }

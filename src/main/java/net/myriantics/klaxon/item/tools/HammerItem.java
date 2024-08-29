@@ -37,6 +37,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.util.AbilityModifierHelper;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
@@ -121,7 +122,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
             world.addBlockBreakParticles(interactionPos, interactionState);
 
             if (interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT) && activeHand == Hand.MAIN_HAND) {
-                RecipeType<HammerRecipe> type = HammerRecipe.Type.INSTANCE;
+                RecipeType<HammerRecipe> type = KlaxonRecipeTypes.HAMMERING;
                 SimpleInventory dummyInventory = new SimpleInventory(player.getOffHandStack());
 
                 Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);

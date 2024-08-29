@@ -8,6 +8,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +49,7 @@ public class BlastProcessingInator {
 
 
         if (!catalystItem.isEmpty()) {
-            itemExplosionPowerMatch = recipeManager.getFirstMatch(ItemExplosionPowerRecipe.Type.INSTANCE, recipeInventory, world);
+            itemExplosionPowerMatch = recipeManager.getFirstMatch(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, recipeInventory, world);
         }
 
         if (itemExplosionPowerMatch.isPresent()) {
@@ -116,7 +117,7 @@ public class BlastProcessingInator {
 
     // defaults to showing recipe with lowest explosion power, but will switch to higher explosion power recipe if lowest is invalid
     private Optional<BlastProcessorRecipe> getBlastProcessingRecipe() {
-        List<BlastProcessorRecipe> initialRecipes = world.getRecipeManager().getAllMatches(BlastProcessorRecipe.Type.INSTANCE, recipeInventory, world);
+        List<BlastProcessorRecipe> initialRecipes = world.getRecipeManager().getAllMatches(KlaxonRecipeTypes.BLAST_PROCESSING, recipeInventory, world);
         if (initialRecipes.isEmpty()) {
             return Optional.empty();
         }

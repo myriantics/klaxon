@@ -8,17 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
-    private HammerRecipeSerializer() {
+    public HammerRecipeSerializer() {
     }
-
-    public static final HammerRecipeSerializer INSTANCE = new HammerRecipeSerializer();
-
-    public static final Identifier ID = new Identifier("klaxon:hammering");
 
     @Override
     public HammerRecipe read(Identifier id, JsonObject json) {
@@ -41,7 +36,7 @@ public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
     @Override
     public void write(PacketByteBuf packetData, HammerRecipe recipe) {
         recipe.getInputA().write(packetData);
-        packetData.writeItemStack(recipe.getOutput(DynamicRegistryManager.of(Registries.REGISTRIES)));
+        packetData.writeItemStack(recipe.getOutput(null));
     }
 
     @Override

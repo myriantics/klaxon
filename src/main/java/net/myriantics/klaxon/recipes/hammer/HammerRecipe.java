@@ -7,7 +7,10 @@ import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipeSerializer;
 
 public class HammerRecipe implements Recipe<SimpleInventory>{
     private final Ingredient inputA;
@@ -56,17 +59,11 @@ public class HammerRecipe implements Recipe<SimpleInventory>{
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return HammerRecipeSerializer.INSTANCE;
+        return KlaxonRecipeTypes.HAMMERING_RECIPE_SERIALIZER;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return Type.INSTANCE;
-    }
-
-    public static class Type implements RecipeType<HammerRecipe> {
-        private Type() {}
-        public static final Type INSTANCE = new Type();
-        public static final String ID = "hammer_recipe";
+        return KlaxonRecipeTypes.HAMMERING;
     }
 }

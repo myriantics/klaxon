@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
+import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import org.jetbrains.annotations.Nullable;
@@ -94,7 +95,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
     private DefaultedList<ItemExplosionPowerRecipe> getValidCatalysts() {
         DefaultedList<ItemExplosionPowerRecipe> catalysts = DefaultedList.of();
-        for (ItemExplosionPowerRecipe recipe : registry.getRecipeManager().listAllOfType(ItemExplosionPowerRecipe.Type.INSTANCE)) {
+        for (ItemExplosionPowerRecipe recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER)) {
             if (recipe.matchesConditions(explosionPowerMin, explosionPowerMax)) {
                 catalysts.add(recipe);
             }

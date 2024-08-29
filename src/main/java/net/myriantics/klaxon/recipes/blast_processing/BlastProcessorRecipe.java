@@ -7,7 +7,9 @@ import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 
@@ -79,17 +81,12 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return BlastProcessorRecipeSerializer.INSTANCE;
+        return KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_SERIALIZER;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return BlastProcessorRecipe.Type.INSTANCE;
+        return KlaxonRecipeTypes.BLAST_PROCESSING;
     }
 
-    public static class Type implements RecipeType<BlastProcessorRecipe> {
-        private Type() {}
-        public static final BlastProcessorRecipe.Type INSTANCE = new Type();
-        public static final String ID = "blast_processing";
-    }
 }

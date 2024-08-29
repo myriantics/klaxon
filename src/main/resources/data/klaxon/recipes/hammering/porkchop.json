@@ -1,8 +1,0 @@
-{
-  "type": "klaxon:hammering",
-  "inputA" : {
-    "item": "minecraft:pig_spawn_egg"
-  },
-  "outputItem": "minecraft:porkchop",
-  "outputAmount": "20"
-}

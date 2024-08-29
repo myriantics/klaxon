@@ -11,12 +11,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<ItemExplosionPowerRecipe> {
-    private ItemExplosionPowerRecipeSerializer() {
+    public ItemExplosionPowerRecipeSerializer() {
     }
-
-    public static final ItemExplosionPowerRecipeSerializer INSTANCE = new ItemExplosionPowerRecipeSerializer();
-
-    public static final Identifier ID = new Identifier("klaxon:item_explosion_power");
 
     @Override
     public ItemExplosionPowerRecipe read(Identifier id, JsonObject json) {
@@ -36,7 +32,7 @@ public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<Item
     @Override
     public void write(PacketByteBuf packetData, ItemExplosionPowerRecipe recipe) {
         recipe.getItem().write(packetData);
-        packetData.writeItemStack(recipe.getOutput(DynamicRegistryManager.of(Registries.REGISTRIES)));
+        packetData.writeItemStack(recipe.getOutput(null));
     }
 
 

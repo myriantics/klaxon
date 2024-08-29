@@ -18,7 +18,7 @@ public class KlaxonItems {
     // cool stuff
     public static final Item HAMMER = registerItem("hammer", new HammerItem(new FabricItemSettings().maxCount(1).maxDamage(512)));
     // disabled currently because its broken as FUCK - will come later trust
-    public static final Item ENDER_PEARL_PLATE_ITEM = null;// = registerItem("ender_plate", new EnderPlateItem(new FabricItemSettings()));
+    public static final Item ENDER_PEARL_PLATE_ITEM = registerItem("ender_plate", new EnderPlateItem(new FabricItemSettings()));
 
     // filler
     public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item(new FabricItemSettings()));

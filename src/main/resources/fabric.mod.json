@@ -9,7 +9,7 @@
 	],
 	"contact": {
 		"homepage": "https://reddit.com/r/feedthememes",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/myriantics/klaxon/"
 	},
 	"license": "MIT",
 	"icon": "assets/klaxon/icon.png",
