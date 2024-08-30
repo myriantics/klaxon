@@ -48,5 +48,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK);
+
+        getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "needs_iron_tool")))
+                .add(KlaxonBlocks.STEEL_BLOCK);
     }
 }
