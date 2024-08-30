@@ -10,6 +10,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 
 public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
     public HammerRecipeSerializer() {
@@ -17,20 +18,17 @@ public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
 
     @Override
     public HammerRecipe read(Identifier id, JsonObject json) {
-        HammerRecipeJsonFormat hammerRecipeJson = new Gson().fromJson(json, HammerRecipeJsonFormat.class);
+        Ingredient input = Ingredient.fromJson(json.getAsJsonObject("inputA"));
+        Item outputItem = JsonHelper.getItem(json, "outputItem");
+        int outputAmount = JsonHelper.getInt(json, "outputAmount", 1);
 
-        if(hammerRecipeJson.inputA == null || hammerRecipeJson.outputItem == null) {
+        if(input == null || outputItem == null) {
             throw new JsonSyntaxException("A required attribute is missing!");
         }
 
-        if (hammerRecipeJson.outputAmount == 0) hammerRecipeJson.outputAmount = 1;
+        ItemStack output = new ItemStack(outputItem, outputAmount);
 
-        Ingredient inputA = Ingredient.fromJson(hammerRecipeJson.inputA);
-        Item outputItem = Registries.ITEM.getOrEmpty(new Identifier(hammerRecipeJson.outputItem))
-                .orElseThrow(() -> new JsonSyntaxException("No such item " + hammerRecipeJson.outputItem));
-        ItemStack output = new ItemStack(outputItem, hammerRecipeJson.outputAmount);
-
-        return new HammerRecipe(inputA, output, id);
+        return new HammerRecipe(input, output, id);
     }
 
     @Override

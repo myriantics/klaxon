@@ -3,6 +3,6 @@
   "input" : {
     "item": "minecraft:firework_rocket"
   },
-  "explosion_power": "0.1",
-  "produces_fire": "false"
+  "explosion_power": 0.1,
+  "produces_fire": false
 }

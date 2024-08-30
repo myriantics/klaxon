@@ -3,6 +3,6 @@
   "input" : {
     "item": "minecraft:gunpowder"
   },
-  "explosion_power": "0.3",
-  "produces_fire": "false"
+  "explosion_power": 0.3,
+  "produces_fire": false
 }

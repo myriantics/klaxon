@@ -3,6 +3,6 @@
   "input" : {
     "item": "minecraft:dragon_breath"
   },
-  "explosion_power": "1.5",
-  "produces_fire": "false"
+  "explosion_power": 1.5,
+  "produces_fire": false
 }

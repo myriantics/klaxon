@@ -4,7 +4,7 @@
     "item": "minecraft:deepslate_bricks"
   },
   "outputItem": "minecraft:cracked_deepslate_bricks",
-  "outputAmount": "1",
-  "explosionPowerMin": "0.1",
-  "explosionPowerMax": "0.3"
+  "outputAmount": 1,
+  "explosionPowerMin": 0.1,
+  "explosionPowerMax": 0.3
 }

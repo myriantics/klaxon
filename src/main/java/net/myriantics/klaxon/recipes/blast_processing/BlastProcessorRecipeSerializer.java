@@ -1,17 +1,18 @@
 package net.myriantics.klaxon.recipes.blast_processing;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 
 public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastProcessorRecipe> {
     public BlastProcessorRecipeSerializer() {
@@ -19,22 +20,17 @@ public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastPro
 
     @Override
     public BlastProcessorRecipe read(Identifier id, JsonObject json) {
-        BlastProcessorRecipeJsonFormat blastProcessorRecipeJson = new Gson().fromJson(json, BlastProcessorRecipeJsonFormat.class);
+        Ingredient processingItem = Ingredient.fromJson(json.getAsJsonObject("inputA"));
+        Item outputItem = JsonHelper.getItem(json, "outputItem");
+        int outputAmount = JsonHelper.getInt(json, "outputAmount", 1);
+        double explosionPowerMin = JsonHelper.getDouble(json, "explosionPowerMin", 0.0);
+        double explosionPowerMax = JsonHelper.getDouble(json, "explosionPowerMax", 0.0);
 
-        if(blastProcessorRecipeJson.inputA == null ||
-                blastProcessorRecipeJson.outputItem == null) {
+        if(processingItem == null) {
             throw new JsonSyntaxException("A required attribute is missing!");
         }
 
-        if (blastProcessorRecipeJson.outputAmount == 0) blastProcessorRecipeJson.outputAmount = 1;
-
-
-        Ingredient processingItem = Ingredient.fromJson(blastProcessorRecipeJson.inputA);
-        double explosionPowerMin = blastProcessorRecipeJson.explosionPowerMin;
-        double explosionPowerMax = blastProcessorRecipeJson.explosionPowerMax;
-        Item outputItem = Registries.ITEM.getOrEmpty(new Identifier(blastProcessorRecipeJson.outputItem))
-                .orElseThrow(() -> new JsonSyntaxException("No such item " + blastProcessorRecipeJson.outputItem));
-        ItemStack output = new ItemStack(outputItem, blastProcessorRecipeJson.outputAmount);
+        ItemStack output = new ItemStack(outputItem, outputAmount);
 
         return new BlastProcessorRecipe(processingItem, explosionPowerMin, explosionPowerMax, output, id);
     }
@@ -43,6 +39,8 @@ public class BlastProcessorRecipeSerializer implements RecipeSerializer<BlastPro
     public void write(PacketByteBuf packetData, BlastProcessorRecipe recipe) {
         recipe.getProcessingItem().write(packetData);
         packetData.writeItemStack(recipe.getOutput(null));
+        packetData.writeDouble(recipe.getExplosionPowerMin());
+        packetData.writeDouble(recipe.getExplosionPowerMax());
     }
 
 

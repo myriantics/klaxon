@@ -3,6 +3,6 @@
   "input" : {
     "item": "minecraft:firework_star"
   },
-  "explosion_power": "0.4",
-  "produces_fire": "false"
+  "explosion_power": 0.4,
+  "produces_fire": false
 }

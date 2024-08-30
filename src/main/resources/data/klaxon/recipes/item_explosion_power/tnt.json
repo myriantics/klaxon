@@ -3,6 +3,6 @@
   "input" : {
     "item": "minecraft:tnt"
   },
-  "explosion_power": "4.0",
-  "produces_fire": "false"
+  "explosion_power": 4.0,
+  "produces_fire": false
 }

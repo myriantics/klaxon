@@ -4,5 +4,5 @@
     "item": "minecraft:snowball"
   },
   "outputItem": "minecraft:snow",
-  "outputAmount": "1"
+  "outputAmount": 1
 }

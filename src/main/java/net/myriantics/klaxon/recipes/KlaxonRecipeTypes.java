@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.recipes;
 
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;

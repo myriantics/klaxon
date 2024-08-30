@@ -3,6 +3,6 @@
   "input" : {
     "item": "minecraft:ghast_spawn_egg"
   },
-  "explosion_power": "3.5",
-  "produces_fire": "false"
+  "explosion_power": 3.5,
+  "produces_fire": false
 }

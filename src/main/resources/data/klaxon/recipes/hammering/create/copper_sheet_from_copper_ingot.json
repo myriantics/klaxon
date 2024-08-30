@@ -4,7 +4,7 @@
     "item": "minecraft:copper_ingot"
   },
   "outputItem": "create:copper_sheet",
-  "outputAmount": "1",
+  "outputAmount": 1,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",

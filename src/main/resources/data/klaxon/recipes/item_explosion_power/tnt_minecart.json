@@ -3,6 +3,6 @@
   "input" : {
     "item": "minecraft:tnt_minecart"
   },
-  "explosion_power": "5.0",
-  "produces_fire": "false"
+  "explosion_power": 5.0,
+  "produces_fire": false
 }
