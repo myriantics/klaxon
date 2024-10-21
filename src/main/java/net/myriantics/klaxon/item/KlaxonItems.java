@@ -3,13 +3,18 @@ package net.myriantics.klaxon.item;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.item.consumables.CaffeinatedBagelItem;
 import net.myriantics.klaxon.item.consumables.EnderPlateItem;
 import net.myriantics.klaxon.item.tools.HammerItem;
 
@@ -27,6 +32,19 @@ public class KlaxonItems {
     public static final Item FRACTURED_RAW_GOLD = registerItem("fractured_raw_gold", new Item(new FabricItemSettings()));
     public static final Item CRUDE_STEEL_MIXTURE = registerItem("crude_steel_mixture", new Item(new FabricItemSettings()));
     public static final Item STEEL_NUGGET = registerItem("steel_nugget", new Item(new FabricItemSettings()));
+
+    // food
+    public static final Item RAW_BAGEL = registerItem("raw_bagel", new Item(new FabricItemSettings().food(new FoodComponent.Builder()
+            .hunger(1).saturationModifier(0f).build())));
+    public static final Item BAGEL = registerItem("cooked_bagel", new Item(new FabricItemSettings().food(new FoodComponent.Builder()
+            .hunger(6).saturationModifier(0.5f).build())));
+    public static final Item PINK_CAFFEINATED_BAGEL = registerItem("pink_caffeinated_bagel", new CaffeinatedBagelItem(new FabricItemSettings().food(new FoodComponent.Builder()
+            .hunger(6).saturationModifier(0.5f)
+            .statusEffect(new StatusEffectInstance(StatusEffects.HASTE, 800, 1), 1.0f)
+            .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 800, 1), 1.0f)
+            .statusEffect(new StatusEffectInstance(StatusEffects.WITHER, 800, 3), 0.05f)
+            .alwaysEdible()
+            .build())));
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
         entries.add(HAMMER);
