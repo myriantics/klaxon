@@ -79,7 +79,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        updateCachedInventory(false);
         Inventories.readNbt(nbt, this.inventory);
     }
 
@@ -220,7 +219,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
             screenHandler.onContentChanged(this);
         }
         updateBlockState(null);
-        updateCachedInventory(true);
         super.markDirty();
     }
 
@@ -281,30 +279,5 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         buf.writeDouble(inator.getExplosionPowerMax());
         buf.writeBoolean(inator.producesFire());
         buf.writeEnumConstant(inator.getOutputState());
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void syncInventory(DefaultedList<ItemStack> stacks) {
-        for (int i = 0; i < size(); i++) {
-            this.setStack(i, stacks.get(i));
-        }
-    }
-
-    // if the inventory has changed, tell the client
-    private void updateCachedInventory(boolean sendPacket) {
-        if (world != null && !world.isClient) {
-            if (this.cachedInventory == null) {
-                cachedInventory = DefaultedList.ofSize(size());
-            }
-
-            if (!this.inventory.equals(this.cachedInventory)) {
-                if (sendPacket) {
-                    KlaxonS2CPacketSender.sendFastInputSyncData(world, pos, inventory);
-                }
-                for (int i = 0; i < inventory.size(); i++) {
-                    cachedInventory.set(i, inventory.get(i).copy());
-                }
-            }
-        }
     }
 }

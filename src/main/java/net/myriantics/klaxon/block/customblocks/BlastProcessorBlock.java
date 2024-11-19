@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
+import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
@@ -205,4 +206,14 @@ public class BlastProcessorBlock extends BlockWithEntity {
         }
     }
 
+    public static boolean canFastInput(BlockState state, Direction direction) {
+        Direction blockDirection = state.get(FACING);
+        // check if you can insert from the sides
+        if (!state.get(FUELED) &&
+                (direction.equals(BlockDirectionHelper.getLeft(direction)) || direction.equals(BlockDirectionHelper.getRight(direction)))) {
+            return true;
+        }
+        // check if you can insert from the top. if no, don't bother
+        return state.get(HATCH_OPEN) && direction.equals(BlockDirectionHelper.getUp(blockDirection));
+    }
 }

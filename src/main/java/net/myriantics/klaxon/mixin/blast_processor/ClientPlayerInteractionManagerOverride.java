@@ -5,20 +5,18 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
-import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ClientPlayerInteractionManager.class)
-public abstract class ClientPlayerSneakFastInputOverride {
+public abstract class ClientPlayerInteractionManagerOverride {
 
     @ModifyVariable(
             method = "interactBlockInternal",
@@ -36,18 +34,12 @@ public abstract class ClientPlayerSneakFastInputOverride {
         Direction dir = hitResult.getSide();
         ItemStack handStack = player.getStackInHand(hand);
 
-        if (isHoldingSomething && world.getBlockEntity(hitResult.getBlockPos()) instanceof BlastProcessorBlockEntity blastProcessor) {
-
-            int[] availableSlots = blastProcessor.getAvailableSlots(dir);
-
-            if (availableSlots != null) {
-                for (int availableSlot : availableSlots) {
-                    if (blastProcessor.canInsert(availableSlot, handStack, dir)) {
-                        return false;
-                    }
-                }
-            }
+        // yay! now we're not doing item processing on the client
+        // no more janky shit networking stuff is required!
+        if (state.getBlock() instanceof BlastProcessorBlock) {
+            return !BlastProcessorBlock.canFastInput(state, dir) && original;
         }
+
         return original;
     }
 }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockItem.class)
-public abstract class BlockItemPlacementOverrideMixin {
+public abstract class BlockItemMixin {
 
     @Inject(method = "useOnBlock", at = @At(value = "HEAD"), cancellable = true)
     public void checkFastInput(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {

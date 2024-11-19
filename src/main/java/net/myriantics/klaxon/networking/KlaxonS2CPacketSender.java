@@ -15,17 +15,6 @@ import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
 // netowrk :)))) (from spectrum github) (only inspiration no yoinkage here) (totally)
 public class KlaxonS2CPacketSender {
 
-    public static void sendFastInputSyncData(World world, BlockPos pos, DefaultedList<ItemStack> inventory) {
-        for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld) world, pos, 24)) {
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeBlockPos(pos);
-            for (ItemStack stack : inventory) {
-                buf.writeItemStack(stack);
-            }
-            ServerPlayNetworking.send(player, KlaxonS2CPackets.FAST_INPUT_SYNC_S2C, buf);
-        }
-    }
-
     public static void sendBlastProcessorScreenSyncData(BlastProcessingInator inator, ServerPlayerEntity playerEntity, int syncId) {
 
         PacketByteBuf buf = PacketByteBufs.create();

@@ -11,7 +11,6 @@ import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorS
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
 
 import static net.myriantics.klaxon.networking.KlaxonS2CPackets.BLAST_PROCESSOR_SCREEN_DATA_SYNC_S2C;
-import static net.myriantics.klaxon.networking.KlaxonS2CPackets.FAST_INPUT_SYNC_S2C;
 
 // networking class layout yoinked from spectrum github
 public class KlaxonS2CPacketReciever {
@@ -31,22 +30,6 @@ public class KlaxonS2CPacketReciever {
                     if (client.player.currentScreenHandler.syncId == syncId) {
                         screenHandler.setRecipeData(explosionPower, explosionPowerMin, explosionPowerMax, producesFire, outputState);
                     }
-                }
-            });
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(FAST_INPUT_SYNC_S2C, (client, handler, buf, responseSender) -> {
-            buf.retain();
-            client.execute(() -> {
-                World clientWorld = client.world;
-                BlockPos pos = buf.readBlockPos();
-
-                if (clientWorld != null && clientWorld.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
-                    DefaultedList<ItemStack> stacks = blastProcessor.getItems();
-                    for (int i = 0; i < blastProcessor.getItems().size(); i++) {
-                        stacks.set(i, buf.readItemStack());
-                    }
-                    blastProcessor.syncInventory(stacks);
                 }
             });
         });

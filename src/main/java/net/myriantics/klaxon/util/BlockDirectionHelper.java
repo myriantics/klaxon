@@ -3,9 +3,6 @@ package net.myriantics.klaxon.util;
 import net.minecraft.util.math.Direction;
 
 public abstract class BlockDirectionHelper {
-
-
-
     public static Direction getUp(Direction blockDirection) {
         return Direction.UP;
     }

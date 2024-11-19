@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.mixin.hammer;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -11,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerAttackDamageTypeMixin {
+public abstract class PlayerEntityMixin {
 
     // for future reference
     // bl in PlayerEntity tells if attack is fully charged
@@ -24,7 +25,8 @@ public abstract class PlayerAttackDamageTypeMixin {
     @ModifyExpressionValue(
             method = "attack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSources;playerAttack(Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/entity/damage/DamageSource;",
-            ordinal = 0))
+            ordinal = 0)
+    )
     // ordinal 2 selects boolean #3 (bl3)
     private DamageSource checkCustomAttackType(DamageSource original, @Local(ordinal = 2) boolean willCrit, @Local(ordinal = 0, argsOnly = true) Entity target) {
         if (original.getAttacker() instanceof PlayerEntity player && player.getMainHandStack().isOf(KlaxonItems.HAMMER)) {

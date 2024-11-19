@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityShieldDisableMixin {
+public abstract class LivingEntityMixin {
 
     @Shadow public abstract ItemStack getMainHandStack();
 
