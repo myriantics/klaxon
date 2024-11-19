@@ -1,8 +1,0 @@
-{
-  "type": "klaxon:hammering",
-  "inputA" : {
-    "item": "minecraft:azure_bluet"
-  },
-  "outputItem": "minecraft:light_gray_dye",
-  "outputAmount": 2
-}

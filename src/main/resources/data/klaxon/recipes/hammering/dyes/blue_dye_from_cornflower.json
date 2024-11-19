@@ -1,8 +1,0 @@
-{
-  "type": "klaxon:hammering",
-  "inputA" : {
-    "item": "minecraft:cornflower"
-  },
-  "outputItem": "minecraft:blue_dye",
-  "outputAmount": 2
-}

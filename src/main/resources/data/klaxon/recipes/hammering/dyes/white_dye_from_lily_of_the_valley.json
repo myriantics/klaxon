@@ -1,8 +1,0 @@
-{
-  "type": "klaxon:hammering",
-  "inputA" : {
-    "item": "minecraft:lily_of_the_valley"
-  },
-  "outputItem": "minecraft:white_dye",
-  "outputAmount": 2
-}

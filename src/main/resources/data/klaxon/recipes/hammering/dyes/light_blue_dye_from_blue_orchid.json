@@ -1,8 +1,0 @@
-{
-  "type": "klaxon:hammering",
-  "inputA" : {
-    "item": "minecraft:blue_orchid"
-  },
-  "outputItem": "minecraft:light_blue_dye",
-  "outputAmount": 2
-}

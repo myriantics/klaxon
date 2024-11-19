@@ -50,4 +50,9 @@ public class EnderPlateEntity extends ThrownItemEntity {
             super.tick();
         }
     }
+
+    @Override
+    public boolean hasNoGravity() {
+        return true;
+    }
 }

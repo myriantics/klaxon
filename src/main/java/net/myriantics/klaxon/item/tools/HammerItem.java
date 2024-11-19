@@ -65,7 +65,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
 
     @Override
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        if (!world.isClient && !state.isIn(BlockTags.FIRE)) {
+        if (!world.isClient && !state.isIn(BlockTags.FIRE) && state.getHardness(world, pos) > 0) {
             damageItem(stack, miner, world.getRandom(), state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE));
         }
         return stack.isSuitableFor(state) || super.postMine(stack, world, state, pos, miner);
@@ -88,12 +88,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
     @Override
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
-            if (state.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK)) {
-                // idk why you need the world and pos parameters for this the method doesnt even use them lmao
-                return state.getHardness(null, null) * 30 * 5;
-            } else {
-                return 6.0F;
-            }
+            return 6.0F;
         } else {
             return super.getMiningSpeedMultiplier(stack, state);
         }

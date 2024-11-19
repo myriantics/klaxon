@@ -5,6 +5,7 @@
   "mixins": [
     "blast_processor.BlockItemPlacementOverrideMixin",
     "blast_processor.ServerPlayerSneakFastInputOverride",
+    "hammer.AbstractBlockStateMixin",
     "hammer.LivingEntityShieldDisableMixin",
     "hammer.MobEntityAttackDamageTypeMixin",
     "hammer.MobEntityShieldDisableMixin",
