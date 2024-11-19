@@ -79,7 +79,7 @@ public class KlaxonItems {
     }
 
     public static void registerModItems() {
-        KlaxonCommon.LOGGER.info("Registering Klaxon's Items");
+        KlaxonCommon.LOGGER.info("Registering KLAXON's Items");
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(KlaxonItems::addItemsToToolTabGroup);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(KlaxonItems::addItemsToRedstoneTabGroup);

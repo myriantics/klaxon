@@ -1,7 +1,5 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
@@ -16,8 +14,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -27,7 +23,6 @@ import net.minecraft.world.WorldEvents;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
-import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
@@ -35,10 +30,7 @@ import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.UnaryOperator;
-
 import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.FACING;
-import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.LIT;
 
 public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
@@ -53,7 +45,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     private BlastProcessorScreenHandler screenHandler;
 
     public BlastProcessorBlockEntity(BlockPos pos, BlockState state) {
-        super(KlaxonBlockEntities.BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
+        super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         this.cachedInventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     }

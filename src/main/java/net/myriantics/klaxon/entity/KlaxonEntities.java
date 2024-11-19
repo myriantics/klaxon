@@ -19,6 +19,6 @@ public class KlaxonEntities {
                     .build());
 
     public static void registerModEntities() {
-        KlaxonCommon.LOGGER.info("Registered Klaxon's Entities");
+        KlaxonCommon.LOGGER.info("Registering KLAXON's Entities");
     }
 }

@@ -12,6 +12,7 @@ import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorS
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
+import net.myriantics.klaxon.util.KlaxonDamageTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonItems.registerModItems();
 		KlaxonEntities.registerModEntities();
 		KlaxonRecipeTypes.registerSerializer();
+		KlaxonDamageTypes.registerModDamageTypes();
 
 		LOGGER.info("Klaxon has loaded");
 	}

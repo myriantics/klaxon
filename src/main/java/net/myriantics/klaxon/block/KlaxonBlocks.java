@@ -33,7 +33,7 @@ public class KlaxonBlocks {
     }
 
     public static final void registerModBlocks() {
-        KlaxonCommon.LOGGER.info("Registering Blocks for Klaxon");
+        KlaxonCommon.LOGGER.info("Registering KLAXON's Blocks");
     }
 
 }
