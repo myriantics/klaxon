@@ -3,24 +3,15 @@ package net.myriantics.klaxon.item.tools;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.ObserverBlock;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
 import net.minecraft.recipe.RecipeType;
@@ -28,29 +19,24 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.util.AbilityModifierHelper;
-import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 import static net.minecraft.block.FacingBlock.FACING;
 
-public class HammerItem extends Item implements AttackBlockCallback, AttackEntityCallback {
+public class HammerItem extends Item implements AttackBlockCallback {
     public static final float ATTACK_DAMAGE = 9.0F;
-    public static final float ATTACK_SPEED = -2.8F;
+    public static final float ATTACK_SPEED = -3.0F;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
     public HammerItem(Settings settings) {
@@ -60,7 +46,6 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", ATTACK_SPEED, EntityAttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
         AttackBlockCallback.EVENT.register(this);
-        AttackEntityCallback.EVENT.register(this);
     }
 
     @Override
@@ -98,8 +83,8 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos interactionPos = context.getBlockPos();
         Direction hitDir = context.getSide();
-        Position outputPos = getOutputLocation(hitDir, interactionPos);
-        Vec3d outputVelocity = getOutputVelocity(hitDir);
+        Position outputPos = getRecipeOutputLocation(hitDir, interactionPos);
+        Vec3d outputVelocity = getRecipeOutputVelocity(hitDir);
         BlockState interactionState = context.getWorld().getBlockState(interactionPos);
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
@@ -143,7 +128,8 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
                 return ActionResult.SUCCESS;
             }
 
-            updateObserversAndSuch(world, interactionPos, interactionState);
+            // update nearby observers that are facing into target block
+            updateAdjacentMonitoringObservers(world, interactionPos, interactionState);
 
             return ActionResult.SUCCESS;
         }
@@ -160,25 +146,24 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
             return ActionResult.PASS;
         }
 
-        if (canWallJump(player)) {
+        float attackCooldownProgress = player.getAttackCooldownProgress(0.5f);
 
-            float attackCooldownProgress = player.getAttackCooldownProgress(0.5f);
+        if (canWallJump(player, targetBlockState) && attackCooldownProgress > 0.8) {
 
             // may remove, idk thought itd be a good tradeoff for the power of the hammer
             // keeps wind charges relevant and encourages going up
             // may need to decrease attack cooldown or at least its impact on walljump power scaling
             // made it dynamic based on whether its an instabreak or not to account for dream shear leaf clutch edge case
-            boolean processFallDamage = !targetBlockState.isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK);
+            boolean processFallDamage = targetBlockState.calcBlockBreakingDelta(player, null, null) > 1;
 
+            world.addBlockBreakParticles(pos, targetBlockState);
             processWallJumpPhysics(player, processFallDamage, 1.0f);
 
             world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
 
-            if (attackCooldownProgress > 0.9) {
-                world.addBlockBreakParticles(pos, targetBlockState);
-                if (!world.isClient) {
-                    updateObserversAndSuch(world, pos, targetBlockState);
-                }
+            // update observers monitoring target block
+            if (!world.isClient) {
+                updateAdjacentMonitoringObservers(world, pos, targetBlockState);
             }
 
             player.onLanding();
@@ -194,27 +179,6 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         return ActionResult.PASS;
     }
 
-    // entity hit
-    @Override
-    public ActionResult interact(PlayerEntity player, World world, Hand hand, Entity targetEntity, @Nullable EntityHitResult hitResult) {
-        if (player == null) {
-            return ActionResult.PASS;
-        }
-
-        if (canWallJump(player)) {
-            boolean wallJumpFallDamage = true;
-            float wallJumpMultiplier = 1.0f;
-
-            if (targetEntity.getType().isIn(KlaxonTags.Entities.BOUNCY_ENTITIES)) {
-                wallJumpFallDamage = false;
-                wallJumpMultiplier = 1.3f;
-            }
-
-            processWallJumpPhysics(player, wallJumpFallDamage, wallJumpMultiplier);
-
-        }
-        return ActionResult.PASS;
-    }
     @Override
     public boolean isEnchantable(ItemStack stack) {
         return false;
@@ -224,8 +188,12 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
         return ingredient.isIn(KlaxonTags.Items.STEEL_INGOTS);
     }
-    private boolean canWallJump(PlayerEntity player) {
-        return !player.isOnGround() && player.getMainHandStack().getItem() instanceof HammerItem && !player.isInsideWaterOrBubbleColumn();
+    private boolean canWallJump(PlayerEntity player, BlockState state) {
+        return !player.isOnGround()
+                && player.getMainHandStack().getItem() instanceof HammerItem
+                && !player.isInsideWaterOrBubbleColumn()
+                // you can't walljump off of instabreakable blocks
+                && state.calcBlockBreakingDelta(player, null, null) < 1;
     }
 
     // so you can walljump in creative without demolishing your world
@@ -242,7 +210,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         float k = MathHelper.sin(playerPitch * 0.017453292F);
         float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
         float m = MathHelper.sqrt(h * h + k * k + l * l);
-        float n = 0.8F * player.getAttackCooldownProgress(0.5f) * AbilityModifierHelper.calculate(player) * multiplier;
+        float n = 0.6F * player.getAttackCooldownProgress(0.5f) * AbilityModifierHelper.calculate(player) * multiplier;
         h *= n / m;
         k *= n / m;
         l *= n / m;
@@ -254,7 +222,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         player.addVelocity(h, k, l);
     }
 
-    private Position getOutputLocation(Direction direction, BlockPos pos) {
+    private Position getRecipeOutputLocation(Direction direction, BlockPos pos) {
         Position centerPos = pos.toCenterPos();
         double x = centerPos.getX();
         double y = centerPos.getY();
@@ -272,7 +240,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         return new Vec3d(x, y, z);
     }
 
-    private Vec3d getOutputVelocity(Direction direction) {
+    private Vec3d getRecipeOutputVelocity(Direction direction) {
         double xVelo = 0.0;
         double yVelo = 0.0;
         double zVelo = 0.0;
@@ -290,6 +258,10 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
     }
 
     private void damageItem(ItemStack stack, LivingEntity attacker, Random random, boolean usedProperly) {
+        if (attacker.getWorld().isClient) {
+            return;
+        }
+
         int damageAmount;
 
         if (usedProperly) {
@@ -307,7 +279,7 @@ public class HammerItem extends Item implements AttackBlockCallback, AttackEntit
         });
     }
 
-    private void updateObserversAndSuch(World world, BlockPos interactionPos, BlockState interactionState) {
+    private void updateAdjacentMonitoringObservers(World world, BlockPos interactionPos, BlockState interactionState) {
         // block updating abilities
         // this quite literally allows you to hit something with a hammer to fix it
         world.updateNeighbor(interactionPos, interactionState.getBlock(), interactionPos);
