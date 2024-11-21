@@ -153,8 +153,8 @@ public class HammerItem extends Item implements AttackBlockCallback {
             // may remove, idk thought itd be a good tradeoff for the power of the hammer
             // keeps wind charges relevant and encourages going up
             // may need to decrease attack cooldown or at least its impact on walljump power scaling
-            // made it dynamic based on whether its an instabreak or not to account for dream shear leaf clutch edge case
-            boolean processFallDamage = targetBlockState.calcBlockBreakingDelta(player, null, null) > 1;
+            // if it's not an instabreak, process fall damage (instabreak = bbdelta < 1)
+            boolean processFallDamage = targetBlockState.calcBlockBreakingDelta(player, null, null) < 1;
 
             world.addBlockBreakParticles(pos, targetBlockState);
             processWallJumpPhysics(player, processFallDamage, 1.0f);

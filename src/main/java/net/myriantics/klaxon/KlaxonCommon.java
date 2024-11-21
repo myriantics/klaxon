@@ -40,6 +40,6 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonRecipeTypes.registerSerializer();
 		KlaxonDamageTypes.registerModDamageTypes();
 
-		LOGGER.info("Klaxon has loaded");
+		LOGGER.info("KLAXON has loaded");
 	}
 }
