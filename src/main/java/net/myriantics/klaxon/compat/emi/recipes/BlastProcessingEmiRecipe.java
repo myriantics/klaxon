@@ -12,7 +12,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
     private final double explosionPowerMin;
     private final double explosionPowerMax;
 
-    public BlastProcessingEmiRecipe(BlastProcessorRecipe recipe, EmiRegistry registry) {
+    public BlastProcessingEmiRecipe(BlastProcessingRecipe recipe, EmiRegistry registry) {
         this.id = recipe.getId();
         this.output = List.of(EmiStack.of(recipe.getOutput(null)));
         this.explosionPowerMin = recipe.getExplosionPowerMin();

@@ -1,14 +1,13 @@
 package net.myriantics.klaxon.recipes;
 
-import io.netty.handler.codec.DecoderException;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipeSerializer;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeSerializer;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipeSerializer;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
@@ -17,8 +16,8 @@ import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerReci
 // recipe code structure yoinked from spectrums github
 public class KlaxonRecipeTypes {
     public static final String BLAST_PROCESSING_RECIPE_ID = "blast_processing";
-    public static RecipeSerializer<BlastProcessorRecipe> BLAST_PROCESSING_RECIPE_SERIALIZER;
-    public static RecipeType<BlastProcessorRecipe> BLAST_PROCESSING;
+    public static RecipeSerializer<BlastProcessingRecipe> BLAST_PROCESSING_RECIPE_SERIALIZER;
+    public static RecipeType<BlastProcessingRecipe> BLAST_PROCESSING;
 
     public static final String HAMMERING_RECIPE_ID = "hammering";
     public static RecipeSerializer<HammerRecipe> HAMMERING_RECIPE_SERIALIZER;
@@ -42,7 +41,7 @@ public class KlaxonRecipeTypes {
     }
 
     public static void registerSerializer() {
-        BLAST_PROCESSING_RECIPE_SERIALIZER = registerSerializer(BLAST_PROCESSING_RECIPE_ID, new BlastProcessorRecipeSerializer());
+        BLAST_PROCESSING_RECIPE_SERIALIZER = registerSerializer(BLAST_PROCESSING_RECIPE_ID, new BlastProcessingRecipeSerializer());
         BLAST_PROCESSING = registerRecipeType(BLAST_PROCESSING_RECIPE_ID);
 
         HAMMERING_RECIPE_SERIALIZER = registerSerializer(HAMMERING_RECIPE_ID, new HammerRecipeSerializer());

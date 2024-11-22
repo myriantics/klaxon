@@ -6,9 +6,10 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorScreenHandler;
+import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
@@ -24,7 +25,7 @@ public class KlaxonCommon implements ModInitializer {
 		return new Identifier(MOD_ID, name);
 	}
 
-	public static final ExtendedScreenHandlerType<BlastProcessorScreenHandler> BLAST_PROCESSOR_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(BlastProcessorScreenHandler::new);
+	public static final ExtendedScreenHandlerType<DeepslateBlastProcessorScreenHandler> BLAST_PROCESSOR_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(DeepslateBlastProcessorScreenHandler::new);
 
 	static {
 		Registry.register(Registries.SCREEN_HANDLER, locate("blast_processor"), BLAST_PROCESSOR_SCREEN_HANDLER);
@@ -35,11 +36,12 @@ public class KlaxonCommon implements ModInitializer {
 
 		KlaxonBlocks.registerModBlocks();
 		KlaxonBlockEntities.registerBlockEntities();
+		BlastProcessorBehavior.registerBlastProcessorBehaviors();
 		KlaxonItems.registerModItems();
 		KlaxonEntities.registerModEntities();
 		KlaxonRecipeTypes.registerSerializer();
 		KlaxonDamageTypes.registerModDamageTypes();
 
-		LOGGER.info("KLAXON has loaded");
+		LOGGER.info("KLAXON has loaded!");
 	}
 }

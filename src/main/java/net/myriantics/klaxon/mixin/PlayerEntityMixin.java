@@ -1,7 +1,6 @@
-package net.myriantics.klaxon.mixin.hammer;
+package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -28,6 +27,7 @@ public abstract class PlayerEntityMixin {
             ordinal = 0)
     )
     // ordinal 2 selects boolean #3 (bl3)
+    // Switches the player's attacking damage type to Hammer Walloping if they crit with a hammer, otherwise uses Hammer Bonking if they do a regular hit.
     private DamageSource checkCustomAttackType(DamageSource original, @Local(ordinal = 2) boolean willCrit, @Local(ordinal = 0, argsOnly = true) Entity target) {
         if (original.getAttacker() instanceof PlayerEntity player && player.getMainHandStack().isOf(KlaxonItems.HAMMER)) {
             if (willCrit) {

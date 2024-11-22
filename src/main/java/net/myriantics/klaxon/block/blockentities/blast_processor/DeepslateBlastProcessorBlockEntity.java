@@ -2,7 +2,6 @@ package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,23 +17,23 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
+import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
-import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
+import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
-import static net.myriantics.klaxon.block.customblocks.BlastProcessorBlock.FACING;
+import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.BEHAVIORS;
+import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.FACING;
 
-public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, SidedInventory {
+public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-    private DefaultedList<ItemStack> cachedInventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     public static final int PROCESS_ITEM_INDEX = 1;
     public static final int CATALYST_INDEX = 0;
     private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
@@ -42,12 +41,11 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     public static final int MaxItemStackCount = 1;
     public static final double MAXIMUM_CONTAINED_EXPLOSION_POWER = 0.5;
 
-    private BlastProcessorScreenHandler screenHandler;
+    private DeepslateBlastProcessorScreenHandler screenHandler;
 
-    public BlastProcessorBlockEntity(BlockPos pos, BlockState state) {
+    public DeepslateBlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        this.cachedInventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     }
 
     @Override
@@ -58,7 +56,7 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        this.screenHandler = new BlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
+        this.screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
         screenHandler.onContentChanged(this);
         return screenHandler;
     }
@@ -131,20 +129,11 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         if (world != null && !world.isReceivingRedstonePower(pos)) {
-            Direction blockFacing = world.getBlockState(pos).get(Properties.FACING);
-            if (dir == BlockDirectionHelper.getLeft(blockFacing) || dir == BlockDirectionHelper.getRight(blockFacing)) {
-                for (int i = 0; i < CATALYST_ITEM_SLOTS.length; i++) {
-                    if (slot == CATALYST_ITEM_SLOTS[i]) {
-                        return true;
-                    }
-                }
-            }
-
-            if(dir == Direction.UP || dir == Direction.DOWN) {
-                for (int i = 0; i < PROCESS_ITEM_SLOTS.length; i++) {
-                    if (slot == PROCESS_ITEM_SLOTS[i]) {
-                        return true;
-                    }
+            // get the available slots for the side you're trying to pull from
+            for (int checkedSlotIndex : getAvailableSlots(dir)) {
+                // if the slot you're trying to pull from is in that array, yeah you can extract
+                if (slot == checkedSlotIndex) {
+                    return true;
                 }
             }
         }
@@ -153,53 +142,49 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        if (slot == PROCESS_ITEM_INDEX) {
-            return getStack(slot).isEmpty();
-        } else if (slot == CATALYST_INDEX) {
-            return getStack(slot).isEmpty() && ItemExplosionPowerHelper.isValidCatalyst(world, stack);
-        } else {
-            return false;
+        // look through the whole inventory and return true if selected slot is inbounds and empty
+        for (int i = 0; i < this.size(); i++) {
+            if (slot == i) {
+                return getStack(slot).isEmpty();
+            }
         }
+        return false;
     }
 
     public void onRedstoneImpulse() {
         if (world != null) {
             if (!inventory.isEmpty()) {
-                SimpleInventory blastProcessorRecipeInventory = new SimpleInventory(size());
 
-                for (int i = 0; i < inventory.size(); i++) {
-                    blastProcessorRecipeInventory.setStack(i, inventory.get(i));
+                // calculate behavior to use
+                BlastProcessorBehavior blastProcessorBehavior = BEHAVIORS.get(this.inventory.get(CATALYST_INDEX).getItem());
+
+                // inventory bullshit i need to fix someday
+                SimpleInventory recipeInventory = new SimpleInventory(this.size());
+                for (int i = 0; i < this.size(); i++) {
+                    recipeInventory.setStack(i, this.getStack(i));
                 }
 
-                BlastProcessingInator inator = new BlastProcessingInator(world, blastProcessorRecipeInventory);
+                // get recipe data
+                ItemExplosionPowerData powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
+                BlastProcessingRecipeData processingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, recipeInventory, powerData);
 
-                BlastProcessorOutputState outputState = inator.getOutputState();
-                double explosionPower = inator.getExplosionPower();
-                boolean producesFire = inator.producesFire();
+                // do explosion effect
+                blastProcessorBehavior.onExplosion(world, pos, this, powerData);
 
-                detonate(outputState, explosionPower, producesFire);
-
-                // really ought to make this better but its fine rn
-                switch (outputState) {
-                    case MISSING_RECIPE, UNDERPOWERED, MISSING_FUEL -> {
-                        ejectInventory();
-                    }
-                    case OVERPOWERED -> {
-                        clear();
-                    }
-                    case SUCCESS -> {
-                        clear();
-                        ejectItem(inator.getResult());
-                    }
-                }
+                // eject recipe results
+                blastProcessorBehavior.ejectItems(world, pos, this, processingData, powerData);
             }
-            world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
-            world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(FACING).getId());
+
+            // if this has been exploded, dont run these
+            if (!this.isRemoved()) {
+                world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
+                world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(FACING).getId());
+            }
         }
     }
 
     public void updateBlockState(@Nullable BlockState appendedState) {
-        if (world != null && world.getBlockState(pos).getBlock() instanceof BlastProcessorBlock blastProcessorBlock) {
+        if (world != null && world.getBlockState(pos).getBlock() instanceof DeepslateBlastProcessorBlock blastProcessorBlock) {
             blastProcessorBlock.updateBlockState(world, pos, appendedState);
         }
     }
@@ -212,37 +197,6 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
         }
         updateBlockState(null);
         super.markDirty();
-    }
-
-    private void detonate(BlastProcessorOutputState outputState, double explosionPower, boolean producesFire) {
-        if (world != null) {
-            BlockState activeBlockState = world.getBlockState(pos);
-            if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
-                if (explosionPower > 0.0) {
-                    Direction direction = activeBlockState.get(FACING);
-                    Position position = this.getOutputLocation(direction);
-
-                    removeStack(CATALYST_INDEX);
-                    world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) explosionPower, producesFire, World.ExplosionSourceType.BLOCK);
-                    world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
-                }
-            }
-        }
-    }
-
-    private void ejectItem(ItemStack itemStack) {
-        if (world == null || itemStack.isEmpty()) {
-            return;
-        }
-        Direction direction = world.getBlockState(pos).get(BlastProcessorBlock.FACING);
-        ItemDispenserBehavior.spawnItem(world, itemStack.copy(), 8, direction, getOutputLocation(direction));
-    }
-
-    private void ejectInventory() {
-        for (ItemStack stack : inventory) {
-            ejectItem(stack);
-        }
-        clear();
     }
 
     public Position getOutputLocation(Direction direction) {
@@ -265,11 +219,14 @@ public class BlastProcessorBlockEntity extends BlockEntity implements ExtendedSc
 
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        BlastProcessingInator inator = screenHandler.getInator();
-        buf.writeDouble(inator.getExplosionPower());
-        buf.writeDouble(inator.getExplosionPowerMin());
-        buf.writeDouble(inator.getExplosionPowerMax());
-        buf.writeBoolean(inator.producesFire());
-        buf.writeEnumConstant(inator.getOutputState());
+        BlastProcessingRecipeData blastProcessingRecipeData = screenHandler.getBlastProcessingData();
+        ItemExplosionPowerData itemExplosionPowerData = screenHandler.getPowerData();
+
+        // write to packet
+        buf.writeDouble(itemExplosionPowerData.explosionPower());
+        buf.writeDouble(blastProcessingRecipeData.explosionPowerMin());
+        buf.writeDouble(blastProcessingRecipeData.explosionPowerMax());
+        buf.writeBoolean(itemExplosionPowerData.producesFire());
+        buf.writeEnumConstant(blastProcessingRecipeData.outputState());
     }
 }

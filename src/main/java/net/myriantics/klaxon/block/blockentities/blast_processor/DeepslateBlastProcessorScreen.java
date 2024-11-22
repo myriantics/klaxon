@@ -12,10 +12,10 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 
 @Environment(EnvType.CLIENT)
-public class BlastProcessorScreen extends HandledScreen<BlastProcessorScreenHandler> {
+public class DeepslateBlastProcessorScreen extends HandledScreen<DeepslateBlastProcessorScreenHandler> {
     private static final Identifier TEXTURE = new Identifier(KlaxonCommon.MOD_ID, "textures/gui/container/deepslate_blast_processor.png");
 
-    public BlastProcessorScreen(BlastProcessorScreenHandler handler, PlayerInventory inventory, Text title) {
+    public DeepslateBlastProcessorScreen(DeepslateBlastProcessorScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
 

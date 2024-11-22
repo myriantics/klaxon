@@ -10,13 +10,13 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.BlastProcessorBlock;
+import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 
 public class KlaxonBlocks {
 
     // cool stuff
     public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
-            new BlastProcessorBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
+            new DeepslateBlastProcessorBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
 
     // filler
     public static final Block STEEL_BLOCK = registerBlock("steel_block",

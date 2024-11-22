@@ -1,16 +1,13 @@
 package net.myriantics.klaxon.recipes.hammer;
 
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipeSerializer;
 
 public class HammerRecipe implements Recipe<SimpleInventory>{
     private final Ingredient inputA;

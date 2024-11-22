@@ -2,30 +2,20 @@ package net.myriantics.klaxon.compat.emi;
 
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
-import dev.emi.emi.api.recipe.EmiInfoRecipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorRecipe;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipeSerializer;
 import net.myriantics.klaxon.util.KlaxonTags;
 
-import java.util.List;
 import java.util.function.Function;
 
 // spectrum's emi plugin used as reference

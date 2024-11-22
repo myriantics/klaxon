@@ -3,18 +3,16 @@
   "package": "net.myriantics.klaxon.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "blast_processor.BlockItemMixin",
-    "blast_processor.ServerPlayerInteractionManagerOverride",
-    "hammer.AbstractBlockStateMixin",
-    "hammer.LivingEntityMixin",
-    "hammer.MobEntityMixin",
-    "hammer.PlayerEntityMixin"
+    "FireworkRocketEntityInvoker",
+    "AbstractBlockStateMixin",
+    "LivingEntityMixin",
+    "MobEntityMixin",
+    "PlayerEntityMixin"
   ],
   "client": [
-    "blast_processor.ClientPlayerInteractionManagerOverride",
-    "hammer.ItemRendererAccessor",
-    "hammer.ItemRendererMixin",
-    "hammer.ModelLoaderMixin"
+    "ItemRendererAccessor",
+    "ItemRendererMixin",
+    "ModelLoaderMixin"
   ],
   "server": [
   ],

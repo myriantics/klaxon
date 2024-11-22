@@ -1,30 +1,25 @@
 package net.myriantics.klaxon.networking;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingInator;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerData;
 
 // netowrk :)))) (from spectrum github) (only inspiration no yoinkage here) (totally)
 public class KlaxonS2CPacketSender {
 
-    public static void sendBlastProcessorScreenSyncData(BlastProcessingInator inator, ServerPlayerEntity playerEntity, int syncId) {
+    public static void sendBlastProcessorScreenSyncData(BlastProcessingRecipeData blastProcessingRecipeData, ItemExplosionPowerData powerData, ServerPlayerEntity playerEntity, int syncId) {
 
         PacketByteBuf buf = PacketByteBufs.create();
 
         buf.writeInt(syncId);
-        buf.writeDouble(inator.getExplosionPower());
-        buf.writeDouble(inator.getExplosionPowerMin());
-        buf.writeDouble(inator.getExplosionPowerMax());
-        buf.writeBoolean(inator.producesFire());
-        buf.writeEnumConstant(inator.getOutputState());
+        buf.writeDouble(powerData.explosionPower());
+        buf.writeDouble(blastProcessingRecipeData.explosionPowerMin());
+        buf.writeDouble(blastProcessingRecipeData.explosionPowerMax());
+        buf.writeBoolean(powerData.producesFire());
+        buf.writeEnumConstant(blastProcessingRecipeData.outputState());
 
         ServerPlayNetworking.send(playerEntity, KlaxonS2CPackets.BLAST_PROCESSOR_SCREEN_DATA_SYNC_S2C, buf);
     }

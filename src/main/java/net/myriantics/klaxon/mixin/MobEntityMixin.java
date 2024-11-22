@@ -1,16 +1,10 @@
-package net.myriantics.klaxon.mixin.hammer;
+package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.item.tools.HammerItem;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
 import net.myriantics.klaxon.util.KlaxonTags;
@@ -20,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(MobEntity.class)
 public abstract class MobEntityMixin {
 
+    // Allows tag-defined entities such as Piglin Brutes and Wither Skeletons to use Walloping damage over Bonking
     @ModifyExpressionValue(
             method = "tryAttack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSources;mobAttack(Lnet/minecraft/entity/LivingEntity;)Lnet/minecraft/entity/damage/DamageSource;",

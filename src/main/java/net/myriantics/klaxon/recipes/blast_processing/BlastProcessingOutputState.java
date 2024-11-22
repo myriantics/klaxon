@@ -1,6 +1,6 @@
 package net.myriantics.klaxon.recipes.blast_processing;
 
-public enum BlastProcessorOutputState {
+public enum BlastProcessingOutputState {
     MISSING_RECIPE,
     MISSING_FUEL,
     UNDERPOWERED,

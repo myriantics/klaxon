@@ -1,31 +1,24 @@
 package net.myriantics.klaxon.recipes.blast_processing;
 
-import net.minecraft.block.RedstoneLampBlock;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 
-import java.util.Optional;
+import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
 
-import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
-import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
-
-public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
+public class BlastProcessingRecipe implements Recipe<SimpleInventory> {
     private final Ingredient processingItem;
     private final double explosionPowerMin;
     private final double explosionPowerMax;
     private final ItemStack result;
     private final Identifier id;
 
-    public BlastProcessorRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result, Identifier id) {
+    public BlastProcessingRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result, Identifier id) {
         this.processingItem = inputA;
         this.explosionPowerMin = explosionPowerMin;
         this.explosionPowerMax = explosionPowerMax;
@@ -88,5 +81,4 @@ public class BlastProcessorRecipe implements Recipe<SimpleInventory> {
     public RecipeType<?> getType() {
         return KlaxonRecipeTypes.BLAST_PROCESSING;
     }
-
 }

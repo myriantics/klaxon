@@ -1,14 +1,8 @@
 package net.myriantics.klaxon.networking;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
-import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorScreenHandler;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessorOutputState;
+import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreenHandler;
+import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingOutputState;
 
 import static net.myriantics.klaxon.networking.KlaxonS2CPackets.BLAST_PROCESSOR_SCREEN_DATA_SYNC_S2C;
 
@@ -24,9 +18,9 @@ public class KlaxonS2CPacketReciever {
                 double explosionPowerMin = buf.readDouble();
                 double explosionPowerMax = buf.readDouble();
                 boolean producesFire = buf.readBoolean();
-                BlastProcessorOutputState outputState = buf.readEnumConstant(BlastProcessorOutputState.class);
+                BlastProcessingOutputState outputState = buf.readEnumConstant(BlastProcessingOutputState.class);
 
-                if (client.player != null && client.player.currentScreenHandler instanceof BlastProcessorScreenHandler screenHandler) {
+                if (client.player != null && client.player.currentScreenHandler instanceof DeepslateBlastProcessorScreenHandler screenHandler) {
                     if (client.player.currentScreenHandler.syncId == syncId) {
                         screenHandler.setRecipeData(explosionPower, explosionPowerMin, explosionPowerMax, producesFire, outputState);
                     }

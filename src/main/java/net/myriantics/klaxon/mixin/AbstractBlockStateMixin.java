@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin.hammer;
+package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -14,8 +14,9 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class AbstractBlockStateMixin {
     @Shadow protected abstract BlockState asBlockState();
 
-    @ModifyReturnValue(
-            method = "calcBlockBreakingDelta", at = @At("RETURN"))
+
+    // Used to ensure Hammer instabreaks blocks defined as such via tag
+    @ModifyReturnValue(method = "calcBlockBreakingDelta", at = @At("RETURN"))
     private float hammerInstabreakOverride(float original,
                                            @Local(argsOnly = true) PlayerEntity player) {
         // yonk the block state

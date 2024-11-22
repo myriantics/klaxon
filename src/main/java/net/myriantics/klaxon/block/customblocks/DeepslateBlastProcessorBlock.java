@@ -1,9 +1,12 @@
 package net.myriantics.klaxon.block.customblocks;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -15,22 +18,26 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
+import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity;
-import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
+import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 
-import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.CATALYST_INDEX;
-import static net.myriantics.klaxon.block.blockentities.blast_processor.BlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
+import java.util.Map;
 
-public class BlastProcessorBlock extends BlockWithEntity {
+import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
+import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
+
+public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
     public static final BooleanProperty LIT = BooleanProperty.of("lit");
     public static final BooleanProperty FUELED = BooleanProperty.of("fueled");
@@ -38,7 +45,15 @@ public class BlastProcessorBlock extends BlockWithEntity {
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
     public static final DirectionProperty FACING = FacingBlock.FACING;
 
-    public BlastProcessorBlock(Settings settings) {
+    public static final Map<Item, BlastProcessorBehavior> BEHAVIORS = Util.make(
+            new Object2ObjectOpenHashMap<>(), map -> map.defaultReturnValue(new ItemBlastProcessorBehavior())
+    );
+
+    public static void registerBehavior(ItemConvertible provider, BlastProcessorBehavior behavior) {
+        BEHAVIORS.put(provider.asItem(), behavior);
+    }
+
+    public DeepslateBlastProcessorBlock(Settings settings) {
         super(settings);
 
         setDefaultState(getStateManager().getDefaultState()
@@ -53,7 +68,7 @@ public class BlastProcessorBlock extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof BlastProcessorBlockEntity) {
+            if (blockEntity instanceof DeepslateBlastProcessorBlockEntity) {
                 ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
                 world.updateComparators(pos, this);
             }
@@ -72,7 +87,7 @@ public class BlastProcessorBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new BlastProcessorBlockEntity(pos, state);
+        return new DeepslateBlastProcessorBlockEntity(pos, state);
     }
 
     @Override
@@ -82,7 +97,7 @@ public class BlastProcessorBlock extends BlockWithEntity {
 
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
-        if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+        if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
             int[] slots = blastProcessor.getAvailableSlots(interactionSide);
             DefaultedList<ItemStack> processorInventory = blastProcessor.getItems();
 
@@ -127,7 +142,7 @@ public class BlastProcessorBlock extends BlockWithEntity {
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+        if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
             return blastProcessor.getStack(CATALYST_INDEX).isEmpty() ? 0 : 15;
         }
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
@@ -139,22 +154,22 @@ public class BlastProcessorBlock extends BlockWithEntity {
     }
 
     public void updateBlockState(World world, BlockPos pos, @Nullable BlockState appendedState) {
-        if (world.getBlockState(pos).getBlock() instanceof BlastProcessorBlock) {
+        if (world.getBlockState(pos).getBlock() instanceof DeepslateBlastProcessorBlock) {
             if (appendedState == null) {
                 appendedState = world.getBlockState(pos);
             }
 
-            if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+            if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
                 DefaultedList<ItemStack> inventory = blastProcessor.getItems();
 
-                boolean hatchOpen = appendedState.get(BlastProcessorBlock.HATCH_OPEN);
-                boolean fueled = appendedState.get(BlastProcessorBlock.FUELED);
+                boolean hatchOpen = appendedState.get(DeepslateBlastProcessorBlock.HATCH_OPEN);
+                boolean fueled = appendedState.get(DeepslateBlastProcessorBlock.FUELED);
 
                 if (inventory.get(CATALYST_INDEX).isEmpty() == fueled) {
-                    appendedState = appendedState.cycle(BlastProcessorBlock.FUELED);
+                    appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.FUELED);
                 }
                 if (inventory.get(PROCESS_ITEM_INDEX).isEmpty() != hatchOpen) {
-                    appendedState = appendedState.cycle(BlastProcessorBlock.HATCH_OPEN);
+                    appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.HATCH_OPEN);
                 }
 
                 if (world.getBlockState(pos) != appendedState) {
@@ -187,7 +202,7 @@ public class BlastProcessorBlock extends BlockWithEntity {
             boolean isLit = state.get(LIT);
             BlockState appendedState = state;
             if (isPowered && !isActivated) {
-                if (world.getBlockEntity(pos) instanceof BlastProcessorBlockEntity blastProcessor) {
+                if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
                     blastProcessor.onRedstoneImpulse();
                     appendedState = appendedState.with(POWERED, true);
                 }
