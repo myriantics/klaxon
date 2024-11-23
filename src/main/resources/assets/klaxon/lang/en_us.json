@@ -22,6 +22,7 @@
   "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s",
 
   "tag.item.klaxon.shield_disabling_melee_weapons": "Shield-Disabling Melee Weapons",
+  "tag.item.klaxon.item_explosion_power_emi_omitted": "EMI Omitted Explosion Power Operator Items",
   "tag.entity.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
   "tag.block.klaxon.hammer_interaction_base": "Hammer Interaction Base Blocks",
   "tag.block.klaxon.hammer_mineable": "Hammer Mineable Blocks",

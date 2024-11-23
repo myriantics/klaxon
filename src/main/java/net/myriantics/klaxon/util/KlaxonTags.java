@@ -9,8 +9,18 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 
+import javax.swing.text.html.HTML;
+
 public class KlaxonTags {
     public static class Items {
+
+        // klaxon's tags
+        public static final TagKey<Item> SHIELD_DISABLING_MELEE_WEAPONS =
+                createTag("shield_disabling_melee_weapons");
+        public static final TagKey<Item> ITEM_EXPLOSION_POWER_EMI_OMITTED =
+                createTag("item_explosion_power_emi_omitted");
+
+        // convention tags
         public static final TagKey<Item> STEEL_INGOTS =
                 TagKey.of(RegistryKeys.ITEM, new Identifier("c", "ingots/steel"));
 
@@ -19,8 +29,6 @@ public class KlaxonTags {
 
         public static final TagKey<Item> STEEL_BLOCKS =
                 TagKey.of(RegistryKeys.ITEM, new Identifier("c", "storage_blocks/steel"));
-        public static final TagKey<Item> SHIELD_DISABLING_MELEE_WEAPONS =
-                createTag("shield_disabling_melee_weapons");
 
 
         private static TagKey<Item> createTag(String name) {
@@ -29,6 +37,7 @@ public class KlaxonTags {
     }
 
     public static class Blocks {
+        // klaxon's tags
         public static final TagKey<Block> HAMMER_INTERACTION_POINT =
                 createTag("hammer_interaction_base");
         public static final TagKey<Block> HAMMER_MINEABLE =
@@ -49,10 +58,9 @@ public class KlaxonTags {
     }
 
     public static class Entities {
+        // klaxon's tags
         public static final TagKey<EntityType<?>> HEAVY_HITTERS =
                 createTag("heavy_hitter_entities");
-        public static final TagKey<EntityType<?>> BOUNCY_ENTITIES =
-                createTag("bouncy_entities");
 
 
         private static TagKey<EntityType<?>> createTag(String name) {

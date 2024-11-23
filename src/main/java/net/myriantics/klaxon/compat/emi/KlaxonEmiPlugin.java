@@ -6,6 +6,7 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
@@ -14,6 +15,7 @@ import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
+import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.function.Function;
@@ -41,7 +43,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
     private void registerRecipes(EmiRegistry registry) {
         addAll(registry, KlaxonRecipeTypes.HAMMERING, HammeringEmiRecipe::new);
-        addAll(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
+        addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe -> new BlastProcessingEmiRecipe(recipe, registry)));
     }
 
@@ -50,4 +52,25 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             registry.addRecipe(constructor.apply(recipe));
         }
     }
+
+    public <C extends Inventory, T extends Recipe<C>> void addAllConditional(EmiRegistry registry, RecipeType<T> type, Function<T, EmiRecipe> constructor) {
+        for (T recipe : registry.getRecipeManager().listAllOfType(type)) {
+            boolean fail = false;
+
+            // dont show creative mode items in the scroller
+            if (recipe instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
+                for (ItemStack stack : itemExplosionPowerRecipe.getItem().getMatchingStacks()) {
+                    if (stack.isIn(KlaxonTags.Items.ITEM_EXPLOSION_POWER_EMI_OMITTED)) {
+                        fail = true;
+                    }
+                }
+            }
+
+            if (!fail) {
+                registry.addRecipe(constructor.apply(recipe));
+            }
+        }
+    }
+
+
 }

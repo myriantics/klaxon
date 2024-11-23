@@ -6,6 +6,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -14,6 +15,7 @@ import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -97,7 +99,18 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         DefaultedList<ItemExplosionPowerRecipe> catalysts = DefaultedList.of();
         for (ItemExplosionPowerRecipe recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER)) {
             if (recipe.matchesConditions(explosionPowerMin, explosionPowerMax)) {
-                catalysts.add(recipe);
+                boolean fail = false;
+
+                // dont show creative mode items in the scroller
+                for (ItemStack stack : recipe.getItem().getMatchingStacks()) {
+                    if (stack.isIn(KlaxonTags.Items.ITEM_EXPLOSION_POWER_EMI_OMITTED)) {
+                        fail = true;
+                    }
+                }
+
+                if (!fail) {
+                    catalysts.add(recipe);
+                }
             }
         }
         return catalysts;

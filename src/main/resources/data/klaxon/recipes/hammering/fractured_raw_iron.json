@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hammering",
+  "inputA" : {
+    "item": "minecraft:raw_iron"
+  },
+  "outputItem": "klaxon:fractured_raw_iron",
+  "outputAmount": 1
+}
