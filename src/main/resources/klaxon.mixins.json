@@ -3,10 +3,11 @@
   "package": "net.myriantics.klaxon.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "FireworkRocketEntityInvoker",
     "AbstractBlockStateMixin",
+    "FireworkRocketEntityInvoker",
     "LivingEntityMixin",
     "MobEntityMixin",
+    "ObserverBlockInvoker",
     "PlayerEntityMixin"
   ],
   "client": [

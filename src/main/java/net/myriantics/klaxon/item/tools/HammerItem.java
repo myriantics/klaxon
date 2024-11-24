@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -25,9 +27,12 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
 import net.myriantics.klaxon.util.AbilityModifierHelper;
+import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.Optional;
@@ -37,14 +42,9 @@ import static net.minecraft.block.FacingBlock.FACING;
 public class HammerItem extends Item implements AttackBlockCallback {
     public static final float ATTACK_DAMAGE = 9.0F;
     public static final float ATTACK_SPEED = -3.0F;
-    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
     public HammerItem(Settings settings) {
         super(settings);
-        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", ATTACK_DAMAGE, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", ATTACK_SPEED, EntityAttributeModifier.Operation.ADDITION));
-        this.attributeModifiers = builder.build();
         AttackBlockCallback.EVENT.register(this);
     }
 
@@ -66,16 +66,16 @@ public class HammerItem extends Item implements AttackBlockCallback {
     }
 
     @Override
-    public boolean isSuitableFor(BlockState state) {
+    public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
         return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE);
     }
 
     @Override
-    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
+    public float getMiningSpeed(ItemStack stack, BlockState state) {
         if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
             return 6.0F;
         } else {
-            return super.getMiningSpeedMultiplier(stack, state);
+            return super.getMiningSpeed(stack, state);
         }
     }
 
@@ -274,9 +274,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
             damageAmount = 0;
         }
 
-        stack.damage(damageAmount, attacker, (e) -> {
-            e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-        });
+        stack.damage(damageAmount, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
     }
 
     private void updateAdjacentMonitoringObservers(World world, BlockPos interactionPos, BlockState interactionState) {
@@ -290,14 +288,9 @@ public class HammerItem extends Item implements AttackBlockCallback {
             BlockState observerState = world.getBlockState(observerPos);
             if (observerState.getBlock() instanceof ObserverBlock observerBlock) {
                 if (observerPos.offset(observerState.get(FACING)).equals(interactionPos)) {
-                    observerBlock.scheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
+                    ((ObserverBlockInvoker) observerBlock).invokeScheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
                 }
             }
         }
-    }
-
-    @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
     }
 }

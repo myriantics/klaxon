@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block.customblocks;
 
+import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
+import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
@@ -78,6 +80,11 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return createCodec(DeepslateBlastProcessorBlock::new);
+    }
+
+    @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.isOf(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR) && state.get(LIT) && !world.isReceivingRedstonePower(pos)) {
             world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
@@ -91,8 +98,8 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack handStack = player.getStackInHand(hand);
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        ItemStack handStack = player.getStackInHand(player.getActiveHand());
         Direction interactionSide = hit.getSide();
 
         // trying to make this viable alongside crystal and cart

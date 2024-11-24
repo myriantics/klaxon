@@ -7,9 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,21 +16,20 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
-import net.myriantics.klaxon.util.ItemExplosionPowerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.BEHAVIORS;
 import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.FACING;
 
-public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, SidedInventory {
+public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     public static final int PROCESS_ITEM_INDEX = 1;
     public static final int CATALYST_INDEX = 0;
@@ -64,18 +61,6 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     @Override
     public Text getDisplayName() {
         return Text.translatable(getCachedState().getBlock().getTranslationKey());
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        Inventories.readNbt(nbt, this.inventory);
-    }
-
-    @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, this.inventory);
     }
 
     public int size() {
@@ -218,15 +203,15 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+    public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayerEntity player) {
         BlastProcessingRecipeData blastProcessingRecipeData = screenHandler.getBlastProcessingData();
         ItemExplosionPowerData itemExplosionPowerData = screenHandler.getPowerData();
 
-        // write to packet
-        buf.writeDouble(itemExplosionPowerData.explosionPower());
-        buf.writeDouble(blastProcessingRecipeData.explosionPowerMin());
-        buf.writeDouble(blastProcessingRecipeData.explosionPowerMax());
-        buf.writeBoolean(itemExplosionPowerData.producesFire());
-        buf.writeEnumConstant(blastProcessingRecipeData.outputState());
+        return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
+                blastProcessingRecipeData.explosionPowerMax(),
+                blastProcessingRecipeData.result(),
+                blastProcessingRecipeData.outputState(),
+                itemExplosionPowerData.explosionPower(),
+                itemExplosionPowerData.producesFire());
     }
 }

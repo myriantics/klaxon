@@ -2,12 +2,12 @@ package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.networking.KlaxonS2CPacketSender;
+import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingOutputState;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerData;
@@ -42,10 +42,17 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     public BlastProcessingOutputState outputState;
 
     // client constructor
-        public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
+        public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, BlastProcessorScreenSyncPacket packetData) {
         this(syncId, playerInventory, new SimpleInventory(2), ScreenHandlerContext.EMPTY);
-        setRecipeData(buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readBoolean(), buf.readEnumConstant(BlastProcessingOutputState.class));
+
+            setRecipeData(packetData.explosionPower(),
+                    packetData.explosionPowerMin(),
+                    packetData.explosionPowerMax(),
+                    packetData.producesFire(),
+                    packetData.outputState());
     }
+
+
     // server constructor
 
     public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory blockEntityInventory, ScreenHandlerContext context) {
@@ -115,6 +122,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
     }
+
     @Override
     public void onContentChanged(Inventory inventory) {
         this.context.run((world, pos) -> {
@@ -133,12 +141,20 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         }
 
 
-        if (!world.isClient && player instanceof ServerPlayerEntity playerEntity) {
+        if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
                 this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
                 this.blastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, blastProcessor, recipeInventory, powerData);
             }
-            KlaxonS2CPacketSender.sendBlastProcessorScreenSyncData(blastProcessingData, powerData, playerEntity, syncId);
+            ServerPlayNetworking.send(serverPlayer, new BlastProcessorScreenSyncPacket(
+                    blastProcessingData.explosionPowerMin(),
+                    blastProcessingData.explosionPowerMax(),
+                    blastProcessingData.result(),
+                    blastProcessingData.outputState(),
+                    powerData.explosionPower(),
+                    powerData.producesFire()
+                    )
+            );
         }
 
         resultInventory.setStack(0, blastProcessingData.result());

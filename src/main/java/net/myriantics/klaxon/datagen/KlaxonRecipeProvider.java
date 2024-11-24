@@ -3,29 +3,30 @@ package net.myriantics.klaxon.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.util.KlaxonTags;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class KlaxonRecipeProvider extends FabricRecipeProvider {
-    public KlaxonRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public KlaxonRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void generate(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .pattern("ppp")
                 .pattern("pdp")

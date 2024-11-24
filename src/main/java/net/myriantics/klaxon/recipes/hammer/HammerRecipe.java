@@ -4,6 +4,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.item.KlaxonItems;
@@ -26,7 +27,7 @@ public class HammerRecipe implements Recipe<SimpleInventory>{
     }
 
     @Override
-    public ItemStack craft(SimpleInventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack craft(SimpleInventory input, RegistryWrapper.WrapperLookup lookup) {
         return this.result.copy();
     }
 
@@ -35,16 +36,15 @@ public class HammerRecipe implements Recipe<SimpleInventory>{
         return true;
     }
 
+    @Override
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+        return this.result.copy();
+    }
+
     public Ingredient getInputA() {
         return inputA;
     }
 
-    @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
-        return this.result;
-    }
-
-    @Override
     public Identifier getId() {
         return this.id;
     }
