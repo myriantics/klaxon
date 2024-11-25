@@ -17,6 +17,7 @@ import net.myriantics.klaxon.networking.KlaxonPackets;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
+import net.myriantics.klaxon.util.KlaxonScreenHandlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,15 +29,11 @@ public class KlaxonCommon implements ModInitializer {
 		return Identifier.of(MOD_ID, name);
 	}
 
-	public static final ScreenHandlerType<DeepslateBlastProcessorScreenHandler> BLAST_PROCESSOR_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(DeepslateBlastProcessorScreenHandler::new, BlastProcessorScreenSyncPacket.CODEC);
-
 	static {
-		Registry.register(Registries.SCREEN_HANDLER, locate(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.asItem().toString()), BLAST_PROCESSOR_SCREEN_HANDLER);
-	}
+		}
 
 	@Override
 	public void onInitialize() {
-
 		KlaxonBlocks.registerModBlocks();
 		KlaxonBlockEntities.registerBlockEntities();
 		BlastProcessorBehavior.registerBlastProcessorBehaviors();
@@ -45,6 +42,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonRecipeTypes.registerSerializer();
 		KlaxonDamageTypes.registerModDamageTypes();
 		KlaxonPackets.registerModPackets();
+		KlaxonScreenHandlers.registerModScreenHandlers();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

@@ -10,6 +10,7 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
@@ -26,10 +27,10 @@ public class HammeringEmiRecipe implements EmiRecipe {
     private final List<EmiIngredient> input;
     private final List<EmiStack> output;
 
-    public HammeringEmiRecipe(HammerRecipe recipe) {
-        this.id = recipe.getId();
-        this.input = List.of(EmiIngredient.of(recipe.getInputA()));
-        this.output = List.of(EmiStack.of(recipe.getOutput(null)));
+    public HammeringEmiRecipe(RecipeEntry<HammerRecipe> recipe) {
+        this.id = recipe.id();
+        this.input = List.of(EmiIngredient.of(recipe.value().getInputA()));
+        this.output = List.of(EmiStack.of(recipe.value().getResult(null)));
     }
 
     @Override

@@ -16,7 +16,9 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -103,16 +105,27 @@ public class HammerItem extends Item implements AttackBlockCallback {
 
             if (interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT) && activeHand == Hand.MAIN_HAND) {
                 RecipeType<HammerRecipe> type = KlaxonRecipeTypes.HAMMERING;
-                SimpleInventory dummyInventory = new SimpleInventory(player.getOffHandStack());
 
-                Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
+                RecipeInput dummyInventory = new RecipeInput() {
+                    @Override
+                    public ItemStack getStackInSlot(int slot) {
+                        return new SimpleInventory(player.getOffHandStack()).getStack(slot);
+                    }
+
+                    @Override
+                    public int getSize() {
+                        return 1;
+                    }
+                };
+
+                Optional<RecipeEntry<HammerRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
                 if(match.isPresent()) {
                     if (!world.isClient) {
                         world.spawnEntity(new ItemEntity(world,
                                 outputPos.getX(),
                                 outputPos.getY(),
                                 outputPos.getZ(),
-                                match.get().getOutput(world.getRegistryManager()).copy(),
+                                match.get().value().getResult(null),
                                 outputVelocity.x,
                                 outputVelocity.y,
                                 outputVelocity.z));

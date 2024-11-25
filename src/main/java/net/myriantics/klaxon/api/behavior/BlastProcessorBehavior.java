@@ -1,11 +1,15 @@
 package net.myriantics.klaxon.api.behavior;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FireworkExplosionComponent;
+import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
@@ -17,31 +21,35 @@ import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
 import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerData;
 
+import java.util.List;
+
 public interface BlastProcessorBehavior {
 
     void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData);
 
     void ejectItems(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ItemExplosionPowerData powerData);
 
-    ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, SimpleInventory recipeInventory);
+    ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory);
 
-    BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, SimpleInventory recipeInventory, ItemExplosionPowerData powerData);
+    BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory, ItemExplosionPowerData powerData);
 
     static void registerBlastProcessorBehaviors() {
         KlaxonCommon.LOGGER.info("Registering KLAXON's Blast Processor Behaviors!");
 
         DeepslateBlastProcessorBlock.registerBehavior(Items.FIREWORK_ROCKET, new ItemBlastProcessorBehavior() {
             @Override
-            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, SimpleInventory craftingInventory) {
+            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {
                 ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
-                // will have to redo this probably haha
+                FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
+                List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
+
                 double explosionPower = 0.0;
-                NbtCompound nbtCompound = stack.isEmpty() ? null : stack.getSubNbt("Fireworks");
-                NbtList nbtList = nbtCompound != null ? nbtCompound.getList("Explosions", NbtElement.COMPOUND_TYPE) : null;
-                if (nbtList != null && !nbtList.isEmpty()) {
-                    explosionPower = 0.3 + nbtList.size() * 0.5;
+                if (!list.isEmpty()) {
+                    explosionPower = 0.3 + (list.size() * 0.5);
                 }
+
+
                 return new ItemExplosionPowerData(explosionPower, false);
             }
 
@@ -59,15 +67,17 @@ public interface BlastProcessorBehavior {
 
         DeepslateBlastProcessorBlock.registerBehavior(Items.FIREWORK_STAR, new ItemBlastProcessorBehavior() {
             @Override
-            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, SimpleInventory craftingInventory) {
+            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {
                 ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
-                // will have to redo this probably haha
+                FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
+                List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
+
                 double explosionPower = 0.3;
-                NbtCompound explosions = stack.isEmpty() ? null : stack.getSubNbt("Explosion");
-                if (explosions != null && !explosions.isEmpty()) {
+                if (!list.isEmpty()) {
                     explosionPower += 0.5;
                 }
+
                 return new ItemExplosionPowerData(explosionPower, false);
             }
         });

@@ -20,47 +20,37 @@ public class HammerRecipeSerializer implements RecipeSerializer<HammerRecipe> {
     public HammerRecipeSerializer() {
     }
 
-    private final MapCodec<HammerRecipe> CODEC = RecordCodecBuilder.mapCodec((hammerRecipeInstance -> {
-        return hammerRecipeInstance.group(ItemStack.CODEC.fieldOf("outputItem").forGetter((recipe) -> {
-            return ((HammerRecipe) recipe).getResult(null);
-                }));
+    private final MapCodec<HammerRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance -> {
+        return recipeInstance.group(Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("inputA").forGetter((recipe) -> {
+            return recipe.getInputA();
+                }), ItemStack.CODEC.fieldOf("outputItem").forGetter((recipe) -> {
+            return recipe.getResult(null);
+                })).apply(recipeInstance, HammerRecipe::new);
     }));
 
-    @Override
-    public HammerRecipe read(Identifier id, JsonObject json) {
-        Ingredient input = Ingredient.(json.getAsJsonObject("inputA"));
-        Item outputItem = JsonHelper.getItem(json, "outputItem");
-        int outputAmount = JsonHelper.getInt(json, "outputAmount", 1);
+    private final PacketCodec<RegistryByteBuf, HammerRecipe> PACKET_CODEC = PacketCodec.ofStatic(
+            HammerRecipeSerializer::write, HammerRecipeSerializer::read
+    );
 
-        if(input == null || outputItem == null) {
-            throw new JsonSyntaxException("A required attribute is missing!");
-        }
+    private static HammerRecipe read(RegistryByteBuf buf) {
+        Ingredient ingredient = Ingredient.PACKET_CODEC.decode(buf);
+        ItemStack output = ItemStack.PACKET_CODEC.decode(buf);
 
-        ItemStack output = new ItemStack(outputItem, outputAmount);
-
-        return new HammerRecipe(input, output, id);
+        return new HammerRecipe(ingredient, output);
     }
 
-    @Override
-    public void write(PacketByteBuf packetData, HammerRecipe recipe) {
-        recipe.getInputA().write(packetData);
-        packetData.writeItemStack(recipe.getOutput(null));
-    }
-
-    @Override
-    public HammerRecipe read(Identifier id, PacketByteBuf packetData) {
-        Ingredient inputA = Ingredient.fromPacket(packetData);
-        ItemStack output = packetData.readItemStack();
-        return new HammerRecipe(inputA, output, id);
+    private static void write(RegistryByteBuf buf, HammerRecipe recipe) {
+        Ingredient.PACKET_CODEC.encode(buf, recipe.getInputA());
+        ItemStack.PACKET_CODEC.encode(buf, recipe.getResult(null));
     }
 
     @Override
     public MapCodec<HammerRecipe> codec() {
-        return ;
+        return CODEC;
     }
 
     @Override
     public PacketCodec<RegistryByteBuf, HammerRecipe> packetCodec() {
-        return null;
+        return PACKET_CODEC;
     }
 }

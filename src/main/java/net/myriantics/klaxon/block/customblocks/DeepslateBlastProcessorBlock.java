@@ -56,7 +56,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     public DeepslateBlastProcessorBlock(Settings settings) {
-        super(settings);
+        super(settings/*.luminance(Blocks.createLightLevelFromLitBlockState(15))*/);
 
         setDefaultState(getStateManager().getDefaultState()
                 .with(FACING, Direction.NORTH)

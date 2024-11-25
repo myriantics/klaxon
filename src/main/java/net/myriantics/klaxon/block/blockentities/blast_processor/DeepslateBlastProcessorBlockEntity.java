@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -144,10 +145,17 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 BlastProcessorBehavior blastProcessorBehavior = BEHAVIORS.get(this.inventory.get(CATALYST_INDEX).getItem());
 
                 // inventory bullshit i need to fix someday
-                SimpleInventory recipeInventory = new SimpleInventory(this.size());
-                for (int i = 0; i < this.size(); i++) {
-                    recipeInventory.setStack(i, this.getStack(i));
-                }
+                RecipeInput recipeInventory = new RecipeInput() {
+                    @Override
+                    public ItemStack getStackInSlot(int slot) {
+                        return inventory.get(slot);
+                    }
+
+                    @Override
+                    public int getSize() {
+                        return size();
+                    }
+                };
 
                 // get recipe data
                 ItemExplosionPowerData powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);

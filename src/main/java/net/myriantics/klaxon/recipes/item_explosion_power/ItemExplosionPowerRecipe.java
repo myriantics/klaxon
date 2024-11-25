@@ -7,7 +7,9 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -15,34 +17,37 @@ import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
 
-public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
+public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
     private final Ingredient item;
     private final double explosionPower;
     private final boolean producesFire;
-    private final Identifier id;
 
-    public ItemExplosionPowerRecipe(Ingredient input, double explosionPower, boolean producesFire, Identifier id) {
+    public ItemExplosionPowerRecipe(Ingredient input, double explosionPower, boolean producesFire) {
         this.item = input;
         this.explosionPower = explosionPower;
         this.producesFire = producesFire;
-        this.id = id;
     }
 
     // to whom it may concern: CHECK WHAT INDEX YOU'RE TRYING TO PULL FROM
     // GAH
     @Override
-    public boolean matches(SimpleInventory inventory, World world) {
-        return item.test(inventory.getStack(CATALYST_INDEX));
+    public boolean matches(RecipeInput input, World world) {
+        return item.test(input.getStackInSlot(CATALYST_INDEX));
     }
 
     @Override
-    public ItemStack craft(SimpleInventory inventory, DynamicRegistryManager registryManager) {
-        return explosionPower > 0 ? ItemStack.EMPTY : inventory.getStack(0);
+    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+        return explosionPower > 0 ? ItemStack.EMPTY : input.getStackInSlot(0);
     }
 
     @Override
     public boolean fits(int width, int height) {
         return true;
+    }
+
+    @Override
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+        return null;
     }
 
     // TODO: actually implement dimension support with this for beds and other stuff
@@ -52,11 +57,6 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
 
     public boolean validInDimension(DimensionType dimensionType) {
         return false;
-    }
-
-    @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
-        return ItemStack.EMPTY;
     }
 
     public Ingredient getItem() {
@@ -77,11 +77,6 @@ public class ItemExplosionPowerRecipe implements Recipe<SimpleInventory> {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public Identifier getId() {
-        return this.id;
     }
 
     @Override

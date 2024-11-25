@@ -1,9 +1,16 @@
 package net.myriantics.klaxon.recipes.blast_processing;
 
-public enum BlastProcessingOutputState {
+import net.minecraft.util.StringIdentifiable;
+
+public enum BlastProcessingOutputState implements StringIdentifiable {
     MISSING_RECIPE,
     MISSING_FUEL,
     UNDERPOWERED,
     OVERPOWERED,
     SUCCESS;
+
+    @Override
+    public String asString() {
+        return this.name();
+    }
 }

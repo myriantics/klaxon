@@ -22,17 +22,17 @@ public class KlaxonTags {
 
         // convention tags
         public static final TagKey<Item> STEEL_INGOTS =
-                TagKey.of(RegistryKeys.ITEM, new Identifier("c", "ingots/steel"));
+                TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "ingots/steel"));
 
         public static final TagKey<Item> STEEL_NUGGETS =
-                TagKey.of(RegistryKeys.ITEM, new Identifier("c", "nuggets/steel"));
+                TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "nuggets/steel"));
 
         public static final TagKey<Item> STEEL_BLOCKS =
-                TagKey.of(RegistryKeys.ITEM, new Identifier("c", "storage_blocks/steel"));
+                TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "storage_blocks/steel"));
 
 
         private static TagKey<Item> createTag(String name) {
-            return TagKey.of(RegistryKeys.ITEM, new Identifier(KlaxonCommon.MOD_ID, name));
+            return TagKey.of(RegistryKeys.ITEM, KlaxonCommon.locate(name));
         }
     }
 
@@ -46,14 +46,14 @@ public class KlaxonTags {
                 createTag("hammer_instabreak");
 
         private static TagKey<Block> createTag(String name) {
-            return TagKey.of(RegistryKeys.BLOCK, new Identifier(KlaxonCommon.MOD_ID, name));
+            return TagKey.of(RegistryKeys.BLOCK, KlaxonCommon.locate(name));
         }
     }
 
     public static class DamageTypeTags {
 
         private static TagKey<DamageType> createTag(String name) {
-            return TagKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(KlaxonCommon.MOD_ID, name));
+            return TagKey.of(RegistryKeys.DAMAGE_TYPE, KlaxonCommon.locate(name));
         }
     }
 
@@ -64,7 +64,7 @@ public class KlaxonTags {
 
 
         private static TagKey<EntityType<?>> createTag(String name) {
-            return TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(KlaxonCommon.MOD_ID, name));
+            return TagKey.of(RegistryKeys.ENTITY_TYPE, KlaxonCommon.locate(name));
         }
     }
 }

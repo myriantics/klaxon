@@ -8,8 +8,11 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
@@ -44,21 +47,21 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private void registerRecipes(EmiRegistry registry) {
         addAll(registry, KlaxonRecipeTypes.HAMMERING, HammeringEmiRecipe::new);
         addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
-        addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe -> new BlastProcessingEmiRecipe(recipe, registry)));
+        addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
     }
 
-    public <C extends Inventory, T extends Recipe<C>> void addAll(EmiRegistry registry, RecipeType<T> type, Function<T, EmiRecipe> constructor) {
-        for (T recipe : registry.getRecipeManager().listAllOfType(type)) {
-            registry.addRecipe(constructor.apply(recipe));
+    public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
+        for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
+            registry.addRecipe(constructor.apply(recipeEntry));
         }
     }
 
-    public <C extends Inventory, T extends Recipe<C>> void addAllConditional(EmiRegistry registry, RecipeType<T> type, Function<T, EmiRecipe> constructor) {
-        for (T recipe : registry.getRecipeManager().listAllOfType(type)) {
+    public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
+        for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
             boolean fail = false;
 
             // dont show creative mode items in the scroller
-            if (recipe instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
+            if (recipeEntry.value() instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
                 for (ItemStack stack : itemExplosionPowerRecipe.getItem().getMatchingStacks()) {
                     if (stack.isIn(KlaxonTags.Items.ITEM_EXPLOSION_POWER_EMI_OMITTED)) {
                         fail = true;
@@ -67,7 +70,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             }
 
             if (!fail) {
-                registry.addRecipe(constructor.apply(recipe));
+                registry.addRecipe(constructor.apply(recipeEntry));
             }
         }
     }

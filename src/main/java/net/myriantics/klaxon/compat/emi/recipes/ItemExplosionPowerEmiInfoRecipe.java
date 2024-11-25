@@ -3,6 +3,7 @@ package net.myriantics.klaxon.compat.emi.recipes;
 import dev.emi.emi.api.recipe.EmiInfoRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
@@ -10,11 +11,11 @@ import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerReci
 import java.util.List;
 
 public class ItemExplosionPowerEmiInfoRecipe extends EmiInfoRecipe {
-    public ItemExplosionPowerEmiInfoRecipe(ItemExplosionPowerRecipe recipe) {
-        super(List.of(EmiIngredient.of(recipe.getItem())), List.of(
+    public ItemExplosionPowerEmiInfoRecipe(RecipeEntry<ItemExplosionPowerRecipe> recipe) {
+        super(List.of(EmiIngredient.of(recipe.value().getItem())), List.of(
                 Text.translatable("klaxon.emi.text.explosion_power"),
-                Text.literal("" + recipe.getExplosionPower())),
-                recipe.getId());
+                Text.literal("" + recipe.value().getExplosionPower())),
+                recipe.id());
     }
 
     @Override

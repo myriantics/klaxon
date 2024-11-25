@@ -10,7 +10,7 @@ import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastP
 
 public class KlaxonBlockEntities {
     public static final BlockEntityType<DeepslateBlastProcessorBlockEntity> DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY =
-            Registry.register(Registries.BLOCK_ENTITY_TYPE, KlaxonCommon.locate(toBlockEntity(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)),
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, toBlockEntity(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR),
                     BlockEntityType.Builder.create(DeepslateBlastProcessorBlockEntity::new,
                             KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR).build());
 

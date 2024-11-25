@@ -4,7 +4,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -70,26 +72,26 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
         }
     }
 
-    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, SimpleInventory recipeInventory) {
+    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
         RecipeManager recipeManager = world.getRecipeManager();
 
-        Optional<ItemExplosionPowerRecipe> itemExplosionPowerMatch = Optional.empty();
+        Optional<RecipeEntry<ItemExplosionPowerRecipe>> itemExplosionPowerMatch = Optional.empty();
 
-        if (!recipeInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
-            itemExplosionPowerMatch = recipeManager.getFirstMatch(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, new SimpleInventory(blastProcessor.getItems().get(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX)), world);
+        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
+            itemExplosionPowerMatch = recipeManager.getFirstMatch(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, recipeInventory, world);
         }
 
         if (itemExplosionPowerMatch.isPresent()) {
-            return new ItemExplosionPowerData(itemExplosionPowerMatch.get().getExplosionPower(), itemExplosionPowerMatch.get().producesFire());
+            return new ItemExplosionPowerData(itemExplosionPowerMatch.get().value().getExplosionPower(), itemExplosionPowerMatch.get().value().producesFire());
         }
         return new ItemExplosionPowerData(0.0, false);
     }
 
-    public BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, SimpleInventory recipeInventory, ItemExplosionPowerData powerData) {
+    public BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory, ItemExplosionPowerData powerData) {
 
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
 
-        if (!blastProcessor.getItems().get(DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX).isEmpty()) {
+        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX).isEmpty()) {
             blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
         }
         if (blastProcessingMatch.isPresent()) {
@@ -97,7 +99,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
 
             BlastProcessingOutputState interimOutputState = computeOutputState(powerData, recipe);
 
-            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), recipe.getOutput(world.getRegistryManager()), interimOutputState);
+            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), recipe.getResult(world.getRegistryManager()), interimOutputState);
         } else {
             return new BlastProcessingRecipeData(0.0, 0.0, ItemStack.EMPTY, BlastProcessingOutputState.MISSING_RECIPE);
         }
@@ -125,22 +127,24 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
     }
 
     // defaults to showing recipe with the lowest explosion power, but will switch to higher explosion power recipe if lowest is invalid
-    private Optional<BlastProcessingRecipe> selectBlastProcessingRecipe(World world, SimpleInventory recipeInventory, ItemExplosionPowerData powerData) {
-        List<BlastProcessingRecipe> initialRecipes = world.getRecipeManager().getAllMatches(KlaxonRecipeTypes.BLAST_PROCESSING, recipeInventory, world);
+    private Optional<BlastProcessingRecipe> selectBlastProcessingRecipe(World world, RecipeInput recipeInventory, ItemExplosionPowerData powerData) {
+        List<RecipeEntry<BlastProcessingRecipe>> initialRecipes = world.getRecipeManager().getAllMatches(KlaxonRecipeTypes.BLAST_PROCESSING, recipeInventory, world);
         if (initialRecipes.isEmpty()) {
             return Optional.empty();
         }
 
         // add all matching recipes to one list
         DefaultedList<BlastProcessingRecipe> recipes = DefaultedList.of();
-        recipes.addAll(initialRecipes);
+        for (RecipeEntry<BlastProcessingRecipe> recipeEntry : initialRecipes) {
+            recipes.add(recipeEntry.value());
+        }
 
         // sort all matching recipes by the lowest explosion power, counting up
         Comparator<BlastProcessingRecipe> byLowestExplosionPower = Comparator.comparing(BlastProcessingRecipe::getExplosionPowerMin);
         recipes.sort(byLowestExplosionPower);
 
         // if there's a catalyst, iterate through all matching recipes until you find the matching one with the least explosion power
-        if (!recipeInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
+        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
            for (BlastProcessingRecipe activeRecipe : recipes) {
                 if (activeRecipe.isCompatibleWithCatalyst(powerData.explosionPower())) {
                     return Optional.of(activeRecipe);
@@ -148,6 +152,6 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
             }
         }
 
-        return Optional.of(recipes.get(0));
+        return Optional.of(recipes.getFirst());
     }
 }

@@ -7,6 +7,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -34,11 +35,11 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
     private final double explosionPowerMin;
     private final double explosionPowerMax;
 
-    public BlastProcessingEmiRecipe(BlastProcessingRecipe recipe, EmiRegistry registry) {
-        this.id = recipe.getId();
-        this.output = List.of(EmiStack.of(recipe.getOutput(null)));
-        this.explosionPowerMin = recipe.getExplosionPowerMin();
-        this.explosionPowerMax = recipe.getExplosionPowerMax();
+    public BlastProcessingEmiRecipe(RecipeEntry<BlastProcessingRecipe> recipe, EmiRegistry registry, Identifier id) {
+        this.id = id;
+        this.output = List.of(EmiStack.of(recipe.value().getResult(null)));
+        this.explosionPowerMin = recipe.value().getExplosionPowerMin();
+        this.explosionPowerMax = recipe.value().getExplosionPowerMax();
         this.registry = registry;
         this.catalystData = getValidCatalysts();
         DefaultedList<EmiIngredient> catalystStacks = DefaultedList.ofSize(catalystData.size());
@@ -48,7 +49,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         }
 
         this.catalysts = EmiIngredient.of(catalystStacks);
-        this.input = List.of(EmiIngredient.of(recipe.getProcessingItem()), catalysts);
+        this.input = List.of(EmiIngredient.of(recipe.value().getProcessingItem()), catalysts);
     }
 
     @Override
@@ -97,19 +98,19 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
     private DefaultedList<ItemExplosionPowerRecipe> getValidCatalysts() {
         DefaultedList<ItemExplosionPowerRecipe> catalysts = DefaultedList.of();
-        for (ItemExplosionPowerRecipe recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER)) {
-            if (recipe.matchesConditions(explosionPowerMin, explosionPowerMax)) {
+        for (RecipeEntry<ItemExplosionPowerRecipe> recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER)) {
+            if (recipe.value().matchesConditions(explosionPowerMin, explosionPowerMax)) {
                 boolean fail = false;
 
                 // dont show creative mode items in the scroller
-                for (ItemStack stack : recipe.getItem().getMatchingStacks()) {
+                for (ItemStack stack : recipe.value().getItem().getMatchingStacks()) {
                     if (stack.isIn(KlaxonTags.Items.ITEM_EXPLOSION_POWER_EMI_OMITTED)) {
                         fail = true;
                     }
                 }
 
                 if (!fail) {
-                    catalysts.add(recipe);
+                    catalysts.add(recipe.value());
                 }
             }
         }
