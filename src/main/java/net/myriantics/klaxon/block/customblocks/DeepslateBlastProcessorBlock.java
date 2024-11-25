@@ -16,6 +16,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -41,7 +42,7 @@ import static net.myriantics.klaxon.block.blockentities.blast_processor.Deepslat
 
 public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
-    public static final BooleanProperty LIT = BooleanProperty.of("lit");
+    public static final BooleanProperty LIT = Properties.LIT;
     public static final BooleanProperty FUELED = BooleanProperty.of("fueled");
     public static final BooleanProperty HATCH_OPEN = BooleanProperty.of("hatch_open");
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");

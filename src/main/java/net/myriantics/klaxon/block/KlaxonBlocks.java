@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreenHandler;
@@ -17,7 +18,7 @@ public class KlaxonBlocks {
 
     // cool stuff
     public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
-            new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE)));
+            new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
 
     // filler
     public static final Block STEEL_BLOCK = registerBlock("steel_block",
