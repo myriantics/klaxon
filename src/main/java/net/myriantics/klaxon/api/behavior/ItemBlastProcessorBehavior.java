@@ -2,7 +2,6 @@ package net.myriantics.klaxon.api.behavior;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
@@ -16,12 +15,12 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipe;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeData;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingOutputState;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerData;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingOutputState;
+import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
+import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;

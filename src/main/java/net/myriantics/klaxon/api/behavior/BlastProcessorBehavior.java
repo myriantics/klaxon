@@ -4,11 +4,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
 import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -18,8 +14,8 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeData;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerData;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
 import java.util.List;
 

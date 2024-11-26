@@ -6,7 +6,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 
 import java.util.List;
 

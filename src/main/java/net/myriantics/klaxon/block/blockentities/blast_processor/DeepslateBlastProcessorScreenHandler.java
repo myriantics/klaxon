@@ -15,13 +15,12 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingRecipeData;
-import net.myriantics.klaxon.recipes.blast_processing.BlastProcessingOutputState;
-import net.myriantics.klaxon.recipes.item_explosion_power.ItemExplosionPowerData;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingOutputState;
+import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.util.KlaxonScreenHandlers;
 
 public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {

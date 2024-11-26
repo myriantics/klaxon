@@ -1,18 +1,10 @@
 package net.myriantics.klaxon.item.tools;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
@@ -23,16 +15,14 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
-import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
+import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
+import net.myriantics.klaxon.recipe.hammer.HammeringRecipe;
 import net.myriantics.klaxon.util.AbilityModifierHelper;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
@@ -104,7 +94,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
             world.addBlockBreakParticles(interactionPos, interactionState);
 
             if (interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT) && activeHand == Hand.MAIN_HAND) {
-                RecipeType<HammerRecipe> type = KlaxonRecipeTypes.HAMMERING;
+                RecipeType<HammeringRecipe> type = KlaxonRecipeTypes.HAMMERING;
 
                 RecipeInput dummyInventory = new RecipeInput() {
                     @Override
@@ -118,7 +108,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
                     }
                 };
 
-                Optional<RecipeEntry<HammerRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
+                Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
                 if(match.isPresent()) {
                     if (!world.isClient) {
                         world.spawnEntity(new ItemEntity(world,

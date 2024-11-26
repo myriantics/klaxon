@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:blast_processing",
+  "input": {
+    "item": "minecraft:deepslate_bricks"
+  },
+  "output": {
+    "item": "minecraft:cracked_deepslate_tiles"
+  },
+  "explosionPowerMin": 0.1,
+  "explosionPowerMax": 0.3
+}

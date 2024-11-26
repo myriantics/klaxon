@@ -1,0 +1,17 @@
+{
+  "type": "klaxon:hammering",
+  "input" : {
+    "item": "minecraft:copper_ingot"
+  },
+  "output" : {
+    "item": "create:copper_sheet"
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "create"
+      ]
+    }
+  ]
+}

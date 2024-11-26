@@ -2,20 +2,14 @@ package net.myriantics.klaxon;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.networking.KlaxonPackets;
-import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
-import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
+import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
 import net.myriantics.klaxon.util.KlaxonScreenHandlers;
 import org.slf4j.Logger;

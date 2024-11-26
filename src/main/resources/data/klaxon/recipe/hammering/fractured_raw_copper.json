@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:hammering",
+  "input" : {
+    "item": "minecraft:raw_copper"
+  },
+  "output" : {
+    "item": "klaxon:fractured_raw_copper"
+  }
+}

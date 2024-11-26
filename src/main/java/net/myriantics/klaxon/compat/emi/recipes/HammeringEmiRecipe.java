@@ -2,34 +2,28 @@ package net.myriantics.klaxon.compat.emi.recipes;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
-import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
-import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.block.Block;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.item.KlaxonItems;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
+import net.myriantics.klaxon.recipe.hammer.HammeringRecipe;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class HammeringEmiRecipe implements EmiRecipe {
     private final Identifier id;
     private final List<EmiIngredient> input;
     private final List<EmiStack> output;
 
-    public HammeringEmiRecipe(RecipeEntry<HammerRecipe> recipe) {
+    public HammeringEmiRecipe(RecipeEntry<HammeringRecipe> recipe) {
         this.id = recipe.id();
-        this.input = List.of(EmiIngredient.of(recipe.value().getInputA()));
+        this.input = List.of(EmiIngredient.of(recipe.value().getIngredient()));
         this.output = List.of(EmiStack.of(recipe.value().getResult(null)));
     }
 

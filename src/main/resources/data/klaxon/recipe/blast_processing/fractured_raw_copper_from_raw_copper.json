@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:blast_processing",
+  "input": {
+    "item": "minecraft:raw_copper"
+  },
+  "output": {
+    "item": "klaxon:fractured_raw_copper"
+  },
+  "explosionPowerMin": 0.2,
+  "explosionPowerMax": 0.5
+}

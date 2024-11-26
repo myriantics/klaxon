@@ -15,7 +15,7 @@ public class KlaxonPackets {
         KlaxonCommon.LOGGER.info("Registering KLAXON's Packets!");
 
         // s2c
-        PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.PACKET_CODEC);
 
         // c2s
     }
