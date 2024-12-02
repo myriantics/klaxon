@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosionPowerMax": 0.3,
+  "explosionPowerMin": 0.1,
+  "input": {
+    "item": "minecraft:stone_bricks"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:stone_bricks"
+  }
+}
