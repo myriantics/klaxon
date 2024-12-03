@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 150,
+  "experience": 1.0,
+  "group": "steel_ingot",
+  "ingredient": {
+    "item": "klaxon:crude_steel_mixture"
+  },
+  "result": {
+    "id": "klaxon:steel_ingot"
+  }
+}

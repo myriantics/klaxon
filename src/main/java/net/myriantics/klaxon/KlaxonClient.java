@@ -6,17 +6,19 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreen;
 import net.myriantics.klaxon.entity.KlaxonEntities;
-import net.myriantics.klaxon.networking.KlaxonS2CPacketReciever;
+import net.myriantics.klaxon.networking.KlaxonPackets;
+import net.myriantics.klaxon.util.KlaxonScreenHandlers;
 
 public class KlaxonClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        HandledScreens.register(KlaxonCommon.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);
+        HandledScreens.register(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);
 
         EntityRendererRegistry.register(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, (context) ->
                 new FlyingItemEntityRenderer<>(context));
 
-        KlaxonS2CPacketReciever.registerS2CRecievers();
+
+        KlaxonPackets.registerS2CPacketRecievers();
     }
 }

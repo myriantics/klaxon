@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:hammering",
+  "input": {
+    "item": "minecraft:snowball"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:snow"
+  }
+}

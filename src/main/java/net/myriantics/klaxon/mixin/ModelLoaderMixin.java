@@ -1,7 +1,9 @@
 package net.myriantics.klaxon.mixin;
 
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
@@ -18,13 +20,13 @@ import java.util.Map;
 
 @Mixin(ModelLoader.class)
 public abstract class ModelLoaderMixin {
-    @Shadow
-    protected abstract void addModel(ModelIdentifier modelId);
+
+    @Shadow protected abstract void loadItemModel(ModelIdentifier id);
 
     // Registers the hammer model as an available resource you can pull from
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;addModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 3, shift = At.Shift.AFTER))
-    public void addHammer(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<ModelLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
-        this.addModel(new ModelIdentifier(KlaxonCommon.MOD_ID, "hammer-3d", "inventory"));
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 1, shift = At.Shift.AFTER))
+    public void addHammer(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
+        this.loadItemModel(new ModelIdentifier(KlaxonCommon.locate("hammer-3d"), "inventory"));
     }
 }
 

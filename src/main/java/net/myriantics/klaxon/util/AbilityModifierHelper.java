@@ -3,6 +3,7 @@ package net.myriantics.klaxon.util;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 
 public abstract class AbilityModifierHelper {
@@ -32,7 +33,7 @@ public abstract class AbilityModifierHelper {
     }
 
     // FYI - getAmplifier() counts up from 0; returning 1 would indicate a level II effect
-    private static float getUnborkedStatusEffectAmplifier(PlayerEntity player, StatusEffect statusEffect) {
+    private static float getUnborkedStatusEffectAmplifier(PlayerEntity player, RegistryEntry<StatusEffect> statusEffect) {
         if (player != null && player.getStatusEffect(statusEffect) != null) {
             float amplifier = (float) player.getStatusEffect(statusEffect).getAmplifier();
 

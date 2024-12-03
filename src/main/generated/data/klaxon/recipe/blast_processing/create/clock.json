@@ -1,0 +1,20 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "create"
+      ]
+    }
+  ],
+  "type": "klaxon:blast_processing",
+  "explosionPowerMax": 0.4,
+  "explosionPowerMin": 0.2,
+  "input": {
+    "item": "create:precision_mechanism"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:clock"
+  }
+}

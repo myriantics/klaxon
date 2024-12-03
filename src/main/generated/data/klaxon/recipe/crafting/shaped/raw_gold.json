@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "raw_gold",
+  "key": {
+    "x": {
+      "item": "klaxon:fractured_raw_gold"
+    }
+  },
+  "pattern": [
+    "xx",
+    "xx"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:raw_gold"
+  }
+}

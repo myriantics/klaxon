@@ -7,9 +7,12 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+@Debug(export = true)
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin {
 
@@ -21,17 +24,15 @@ public abstract class PlayerEntityMixin {
     // bl5 is fire aspect
     // bl6 tells if the attack was successful
 
-    @ModifyExpressionValue(
+    @ModifyVariable(
             method = "attack",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSources;playerAttack(Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/entity/damage/DamageSource;",
-            ordinal = 0)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;")
     )
     // ordinal 2 selects boolean #3 (bl3)
     // Switches the player's attacking damage type to Hammer Walloping if they crit with a hammer, otherwise uses Hammer Bonking if they do a regular hit.
-    private DamageSource checkCustomAttackType(DamageSource original, @Local(ordinal = 2) boolean willCrit, @Local(ordinal = 0, argsOnly = true) Entity target) {
+    private DamageSource checkCustomAttackType(DamageSource original, @Local(ordinal = 3) boolean willCrit, @Local(ordinal = 0, argsOnly = true) Entity target) {
         if (original.getAttacker() instanceof PlayerEntity player && player.getMainHandStack().isOf(KlaxonItems.HAMMER)) {
             if (willCrit) {
-
                 return KlaxonDamageTypes.hammerWalloping(player);
             }
 

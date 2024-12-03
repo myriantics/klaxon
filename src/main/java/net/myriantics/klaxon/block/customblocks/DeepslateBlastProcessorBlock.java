@@ -1,22 +1,26 @@
 package net.myriantics.klaxon.block.customblocks;
 
+import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
@@ -29,6 +33,8 @@ import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreenHandler;
+import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +45,7 @@ import static net.myriantics.klaxon.block.blockentities.blast_processor.Deepslat
 
 public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
-    public static final BooleanProperty LIT = BooleanProperty.of("lit");
+    public static final BooleanProperty LIT = Properties.LIT;
     public static final BooleanProperty FUELED = BooleanProperty.of("fueled");
     public static final BooleanProperty HATCH_OPEN = BooleanProperty.of("hatch_open");
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
@@ -54,7 +60,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     public DeepslateBlastProcessorBlock(Settings settings) {
-        super(settings);
+        super(settings/*.luminance(Blocks.createLightLevelFromLitBlockState(15))*/);
 
         setDefaultState(getStateManager().getDefaultState()
                 .with(FACING, Direction.NORTH)
@@ -78,6 +84,11 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return createCodec(DeepslateBlastProcessorBlock::new);
+    }
+
+    @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.isOf(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR) && state.get(LIT) && !world.isReceivingRedstonePower(pos)) {
             world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
@@ -91,16 +102,14 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack handStack = player.getStackInHand(hand);
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        ItemStack handStack = player.getStackInHand(player.getActiveHand());
         Direction interactionSide = hit.getSide();
 
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
         if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
             int[] slots = blastProcessor.getAvailableSlots(interactionSide);
-            DefaultedList<ItemStack> processorInventory = blastProcessor.getItems();
-
 
             if (slots != null) {
                 for (int slot : slots) {
@@ -117,14 +126,9 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                     }
                 }
             }
-        }
 
-
-        if (!world.isClient) {
-            NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
-
-            if(screenHandlerFactory != null) {
-                player.openHandledScreen(screenHandlerFactory);
+            if (!world.isClient) {
+                player.openHandledScreen(blastProcessor);
             }
         }
         return ActionResult.SUCCESS;

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 0.5,
+  "group": "cooked_bagel",
+  "ingredient": {
+    "item": "klaxon:raw_bagel"
+  },
+  "result": {
+    "id": "klaxon:cooked_bagel"
+  }
+}

@@ -12,7 +12,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 public class KlaxonEntities {
     public static final EntityType<EnderPlateEntity> ENDER_PEARL_PLATE_ENTITY_TYPE = Registry.register(
             Registries.ENTITY_TYPE,
-            new Identifier(KlaxonCommon.MOD_ID, "ender_plate"),
+            KlaxonCommon.locate("ender_plate_entity"),
             FabricEntityTypeBuilder.<EnderPlateEntity>create(SpawnGroup.MISC, EnderPlateEntity::new)
                     .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
                     .trackRangeBlocks(4).trackedUpdateRate(10)

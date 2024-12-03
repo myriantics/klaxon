@@ -1,33 +1,30 @@
 package net.myriantics.klaxon.item.tools;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.recipes.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipes.hammer.HammerRecipe;
+import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
+import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
+import net.myriantics.klaxon.recipe.hammer.HammeringRecipe;
 import net.myriantics.klaxon.util.AbilityModifierHelper;
+import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.Optional;
@@ -37,14 +34,9 @@ import static net.minecraft.block.FacingBlock.FACING;
 public class HammerItem extends Item implements AttackBlockCallback {
     public static final float ATTACK_DAMAGE = 9.0F;
     public static final float ATTACK_SPEED = -3.0F;
-    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
     public HammerItem(Settings settings) {
         super(settings);
-        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", ATTACK_DAMAGE, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", ATTACK_SPEED, EntityAttributeModifier.Operation.ADDITION));
-        this.attributeModifiers = builder.build();
         AttackBlockCallback.EVENT.register(this);
     }
 
@@ -66,16 +58,16 @@ public class HammerItem extends Item implements AttackBlockCallback {
     }
 
     @Override
-    public boolean isSuitableFor(BlockState state) {
+    public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
         return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE);
     }
 
     @Override
-    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
+    public float getMiningSpeed(ItemStack stack, BlockState state) {
         if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
             return 6.0F;
         } else {
-            return super.getMiningSpeedMultiplier(stack, state);
+            return super.getMiningSpeed(stack, state);
         }
     }
 
@@ -102,17 +94,28 @@ public class HammerItem extends Item implements AttackBlockCallback {
             world.addBlockBreakParticles(interactionPos, interactionState);
 
             if (interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT) && activeHand == Hand.MAIN_HAND) {
-                RecipeType<HammerRecipe> type = KlaxonRecipeTypes.HAMMERING;
-                SimpleInventory dummyInventory = new SimpleInventory(player.getOffHandStack());
+                RecipeType<HammeringRecipe> type = KlaxonRecipeTypes.HAMMERING;
 
-                Optional<HammerRecipe> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
+                RecipeInput dummyInventory = new RecipeInput() {
+                    @Override
+                    public ItemStack getStackInSlot(int slot) {
+                        return new SimpleInventory(player.getOffHandStack()).getStack(slot);
+                    }
+
+                    @Override
+                    public int getSize() {
+                        return 1;
+                    }
+                };
+
+                Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
                 if(match.isPresent()) {
                     if (!world.isClient) {
                         world.spawnEntity(new ItemEntity(world,
                                 outputPos.getX(),
                                 outputPos.getY(),
                                 outputPos.getZ(),
-                                match.get().getOutput(world.getRegistryManager()).copy(),
+                                match.get().value().getResult(null),
                                 outputVelocity.x,
                                 outputVelocity.y,
                                 outputVelocity.z));
@@ -274,9 +277,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
             damageAmount = 0;
         }
 
-        stack.damage(damageAmount, attacker, (e) -> {
-            e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
-        });
+        stack.damage(damageAmount, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
     }
 
     private void updateAdjacentMonitoringObservers(World world, BlockPos interactionPos, BlockState interactionState) {
@@ -290,14 +291,9 @@ public class HammerItem extends Item implements AttackBlockCallback {
             BlockState observerState = world.getBlockState(observerPos);
             if (observerState.getBlock() instanceof ObserverBlock observerBlock) {
                 if (observerPos.offset(observerState.get(FACING)).equals(interactionPos)) {
-                    observerBlock.scheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
+                    ((ObserverBlockInvoker) observerBlock).invokeScheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
                 }
             }
         }
-    }
-
-    @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
     }
 }

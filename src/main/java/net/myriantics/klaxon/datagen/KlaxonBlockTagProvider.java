@@ -35,21 +35,21 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addOptionalTag(KlaxonTags.Blocks.HAMMER_INSTABREAK);
 
         getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_INSTABREAK)
-                .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_blocks")))
-                .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_panes")))
+                .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, Identifier.of("c", "glass_blocks")))
+                .addOptionalTag(TagKey.of(RegistryKeys.BLOCK, Identifier.of("c", "glass_panes")))
                 .addOptionalTag(BlockTags.ICE)
                 .add(Blocks.REDSTONE_LAMP)
                 .add(Blocks.SEA_LANTERN)
                 .add(Blocks.GLOWSTONE);
 
-        getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "mineable/pickaxe")))
+        getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, Identifier.of("minecraft", "mineable/pickaxe")))
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .add(KlaxonBlocks.STEEL_BLOCK);
 
         getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK);
 
-        getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "needs_iron_tool")))
+        getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, Identifier.of("minecraft", "needs_iron_tool")))
                 .add(KlaxonBlocks.STEEL_BLOCK);
     }
 }

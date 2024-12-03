@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "crude_steel_mixture",
+  "ingredients": [
+    {
+      "item": "klaxon:fractured_raw_iron"
+    },
+    {
+      "item": "klaxon:fractured_raw_iron"
+    },
+    {
+      "tag": "c:coal"
+    },
+    {
+      "tag": "c:coal"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "id": "klaxon:crude_steel_mixture"
+  }
+}

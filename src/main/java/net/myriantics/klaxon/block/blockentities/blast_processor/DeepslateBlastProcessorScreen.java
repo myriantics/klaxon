@@ -13,7 +13,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 
 @Environment(EnvType.CLIENT)
 public class DeepslateBlastProcessorScreen extends HandledScreen<DeepslateBlastProcessorScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier(KlaxonCommon.MOD_ID, "textures/gui/container/deepslate_blast_processor.png");
+    private static final Identifier TEXTURE = KlaxonCommon.locate("textures/gui/container/deepslate_blast_processor.png");
 
     public DeepslateBlastProcessorScreen(DeepslateBlastProcessorScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -36,7 +36,7 @@ public class DeepslateBlastProcessorScreen extends HandledScreen<DeepslateBlastP
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context);
+        renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
         updateRecipeDataDisplay(context);
         drawMouseoverTooltip(context, mouseX, mouseY);

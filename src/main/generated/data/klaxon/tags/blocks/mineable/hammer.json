@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    {
-      "id": "#klaxon:hammer_instabreak",
-      "required": false
-    }
-  ]
-}
