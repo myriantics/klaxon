@@ -4,11 +4,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
-import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.*;
 import net.minecraft.recipe.*;
+import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
@@ -25,30 +25,32 @@ import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecip
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 // structure for this kinda yoinked from energized power
 public class KlaxonRecipeProvider extends FabricRecipeProvider {
-    private Map<RecipeType<?>, ArrayList<Identifier>> spentRecipeIdentifiersByRecipeType;
+    private final HashMap<RecipeType<?>, ArrayList<Identifier>> spentRecipeIdentifiersByRecipeType;
 
     public KlaxonRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
         super(output, registriesFuture);
+
+        HashMap<RecipeType<?>, ArrayList<Identifier>> interimMap = new java.util.HashMap<>(Map.of());
+
+        for (RecipeType<?> type : Registries.RECIPE_TYPE) {
+            interimMap.put(type, new ArrayList<>());
+        }
+
+        this.spentRecipeIdentifiersByRecipeType = interimMap;
     }
 
     @Override
     public void generate(RecipeExporter exporter) {
         buildCraftingRecipes(exporter);
+        buildCookingRecipes(exporter);
         buildItemExplosionPowerRecipes(exporter);
         buildHammeringRecipes(exporter);
         buildBlastProcessingRecipes(exporter);
-    }
-
-    private void buildCookingRecipes(RecipeExporter exporter) {
-
     }
 
     private void buildCraftingRecipes(RecipeExporter exporter) {
@@ -112,6 +114,17 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         );
     }
 
+    private void buildCookingRecipes(RecipeExporter exporter) {
+        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_IRON), new ItemStack(Items.IRON_NUGGET), 1.0f, 150, null, "fractured_ores");
+        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_COPPER), new ItemStack(Items.IRON_NUGGET), 1.0f, 150, null, "fractured_ores",
+                new AllModsLoadedResourceCondition(List.of(KlaxonCompat.CREATE_MOD_ID)));
+        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_GOLD), new ItemStack(Items.GOLD_NUGGET), 1.0f, 150, null, "fractured_ores");
+
+        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_MIXTURE), new ItemStack(KlaxonItems.STEEL_INGOT), 1.0f, 150, null, null);
+
+        addFoodProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.RAW_BAGEL), new ItemStack(KlaxonItems.BAGEL), 0.5f, 200, null);
+    }
+
     private void buildHammeringRecipes(RecipeExporter exporter) {
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER));
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.RAW_COPPER), new ItemStack(KlaxonItems.FRACTURED_RAW_COPPER));
@@ -139,7 +152,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.DEEPSLATE_TILES), 0.1, 0.3, new ItemStack(Items.CRACKED_DEEPSLATE_TILES));
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.NETHER_BRICKS), 0.1, 0.3, new ItemStack(Items.CRACKED_NETHER_BRICKS));
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.POLISHED_BLACKSTONE_BRICKS), 0.1, 0.3, new ItemStack(Items.CRACKED_POLISHED_BLACKSTONE_BRICKS));
-        addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.STONE_BRICKS), 0.1, 0.3, new ItemStack(Items.STONE_BRICKS));
+        addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.STONE_BRICKS), 0.1, 0.3, new ItemStack(Items.CRACKED_STONE_BRICKS));
 
         // create compat
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(KlaxonCompat.CREATE_PRECISION_MECHANISM), 0.2, 0.4, new ItemStack(Items.CLOCK),
@@ -198,12 +211,106 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         addShapedCraftingRecipe(exporter, Map.of('x', input), pattern, output, category, group, conditions);
     }
 
+    private void addFoodProcessingCookingRecipe(RecipeExporter exporter,
+                                        Ingredient input, ItemStack output,
+                                        float experience, int cookingTime,
+                                                @Nullable String group,
+                                        final ResourceCondition... conditions) {
+        addSmokingSmeltingRecipe(exporter,
+                input, output, experience, (int) (cookingTime * 0.5),
+                CookingRecipeCategory.FOOD, group, conditions);
+        addSmeltingRecipe(exporter, input, output, experience, cookingTime, CookingRecipeCategory.FOOD, group, conditions);
+    }
+
+    private void addOreProcessingCookingRecipe(RecipeExporter exporter,
+                                        Ingredient input, ItemStack output,
+                                        float experience, int cookingTime,
+                                        @Nullable CookingRecipeCategory category, @Nullable String group,
+                                        final ResourceCondition... conditions) {
+        addBlastingSmeltingRecipe(exporter,
+                input, output, experience, (int) (cookingTime * 0.5),
+                category, group, conditions);
+        addSmeltingRecipe(exporter, input, output, experience, cookingTime, category, group, conditions);
+    }
+
+    private void addSmeltingRecipe(RecipeExporter exporter,
+                                           Ingredient input, ItemStack output,
+                                           float experience, int cookingTime,
+                                           @Nullable CookingRecipeCategory category, @Nullable String group,
+                                           final ResourceCondition... conditions) {
+
+        Identifier recipeId = computeRecipeIdentifier("cooking/smelting",
+                getItemPath(output.getItem()),
+                conditions
+        );
+
+        if (category == null) {
+            category = CookingRecipeCategory.MISC;
+        }
+
+        if (group == null) {
+            group = getItemPath(output.getItem());
+        }
+
+        BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
+
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    private void addSmokingSmeltingRecipe(RecipeExporter exporter,
+                                           Ingredient input, ItemStack output,
+                                           float experience, int cookingTime,
+                                           @Nullable CookingRecipeCategory category, @Nullable String group,
+                                           final ResourceCondition... conditions) {
+
+        Identifier recipeId = computeRecipeIdentifier("cooking/smoking",
+                getItemPath(output.getItem()),
+                conditions
+        );
+
+        if (category == null) {
+            category = CookingRecipeCategory.MISC;
+        }
+
+        if (group == null) {
+            group = getItemPath(output.getItem());
+        }
+
+        BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
+
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    private void addBlastingSmeltingRecipe(RecipeExporter exporter,
+                                           Ingredient input, ItemStack output,
+                                           float experience, int cookingTime,
+                                           @Nullable CookingRecipeCategory category, @Nullable String group,
+                                           final ResourceCondition... conditions) {
+
+        Identifier recipeId = computeRecipeIdentifier("cooking/blasting",
+                getItemPath(output.getItem()),
+                conditions
+        );
+
+        if (category == null) {
+            category = CookingRecipeCategory.MISC;
+        }
+
+        if (group == null) {
+            group = getItemPath(output.getItem());
+        }
+
+        BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
+
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
     private void addShapelessCraftingRecipe(RecipeExporter exporter,
                                             DefaultedList<Ingredient> input, ItemStack output,
                                             @Nullable CraftingRecipeCategory category, @Nullable String group,
                                             final ResourceCondition... conditions) {
-        Identifier recipeId = computeRecipeIdentifier(Registries.RECIPE_TYPE.getId(RecipeType.CRAFTING).getPath(),
-                getItemPath(output.getItem()) + "_from_" + getItemPath(Arrays.stream(input.getFirst().getMatchingStacks()).findFirst().get().getItem()),
+        Identifier recipeId = computeRecipeIdentifier("crafting/shapeless",
+                getItemPath(output.getItem()),
                 conditions);
 
         if (category == null) {
@@ -216,7 +323,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         ShapelessRecipe recipe = new ShapelessRecipe(group, category, output, input);
 
-        acceptRecipeWithConditions(exporter, recipeId, recipe, null, conditions);
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
 
@@ -225,7 +332,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                                          @Nullable CraftingRecipeCategory category, @Nullable String group,
                                          final ResourceCondition... conditions) {
 
-        Identifier recipeId = computeRecipeIdentifier(Registries.RECIPE_TYPE.getId(RecipeType.CRAFTING).getPath(),
+        Identifier recipeId = computeRecipeIdentifier("crafting/shaped",
                 getItemPath(output.getItem()),
                 conditions);
 
@@ -239,7 +346,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipe recipe = new ShapedRecipe(group, category, RawShapedRecipe.create(key, Arrays.stream(pattern).toList()), output);
 
-        acceptRecipeWithConditions(exporter, recipeId, recipe, null, conditions);
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     private void addItemExplosionPowerRecipe(RecipeExporter exporter, Ingredient input,
@@ -251,7 +358,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input, explosionPower, producesFire);
 
-        acceptRecipeWithConditions(exporter, recipeId, recipe, null, conditions);
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     private void addHammeringRecipe(RecipeExporter exporter, Ingredient input, ItemStack output, final ResourceCondition... conditions) {
@@ -261,7 +368,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         HammeringRecipe recipe = new HammeringRecipe(input, output);
 
-        acceptRecipeWithConditions(exporter, recipeId, recipe, null, conditions);
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     private void addBlastProcessingRecipe(RecipeExporter exporter, Ingredient input,
@@ -273,7 +380,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         BlastProcessingRecipe recipe = new BlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, output);
 
-        acceptRecipeWithConditions(exporter, recipeId, recipe, null, conditions);
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     private Identifier computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {
@@ -286,20 +393,29 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         return KlaxonCommon.locate(typeId + "/" + path);
     }
 
-    private void acceptRecipeWithConditions(RecipeExporter exporter, Identifier recipeId, Recipe<?> recipe, @Nullable AdvancementEntry advancement, final ResourceCondition... conditions) {
+    private void acceptRecipeWithConditions(RecipeExporter exporter, Identifier recipeId, Recipe<?> recipe, final ResourceCondition... conditions) {
         // get all the spent identifiers for the recipe type
         if (spentRecipeIdentifiersByRecipeType.containsKey(recipe.getType())) {
             // iterate through them all to check if theyre the same as the active recipe's id
             for (Identifier potentiallySpentIdentifier : spentRecipeIdentifiersByRecipeType.get(recipe.getType())) {
                 // if there is a match, attach a discriminator to the end of the recipe id
                 if (potentiallySpentIdentifier.equals(recipeId)) {
-                    recipeId = recipeId.withPath(recipeId.getPath() + "_from_" + getItemPath(Arrays.stream(recipe.getIngredients().getFirst().getMatchingStacks()).findFirst().get().getItem()));
-                    KlaxonCommon.LOGGER.info("Accommodated for duplicate recipe ID " + recipeId);
+                    int discriminator = 0;
+
+                    for (Identifier discriminatorDetectorIdentifier : spentRecipeIdentifiersByRecipeType.get(recipe.getType())) {
+                        Identifier proposedRecipeId = recipeId.withPath(recipeId.getPath() + "_" + discriminator);
+
+                        // if a valid open recipe slot is found, set recipeId to that
+                        if (!discriminatorDetectorIdentifier.equals(proposedRecipeId)) {
+                            recipeId = proposedRecipeId;
+                            KlaxonCommon.LOGGER.info("Accommodated for duplicate recipe ID " + recipeId);
+                        }
+
+                        // if the recipe was a dupe, increase the discriminator number
+                        discriminator++;
+                    }
                 }
             }
-        } else {
-            // if this recipe type hasn't had any recipes registered, add it to the map with a fresh arraylist
-            spentRecipeIdentifiersByRecipeType.put(recipe.getType(), new ArrayList<Identifier>());
         }
 
         // add the new recipe id to the map for that recipe type
@@ -307,9 +423,9 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         // if the recipe has resource conditions, apply them
         if (conditions.length > 0) {
-            withConditions(exporter, conditions).accept(recipeId, recipe, advancement);
+            withConditions(exporter, conditions).accept(recipeId, recipe, null);
         } else {
-            exporter.accept(recipeId, recipe, advancement);
+            exporter.accept(recipeId, recipe, null);
         }
     }
 }

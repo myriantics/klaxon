@@ -3,8 +3,11 @@
   "category": "misc",
   "cookingtime": 75,
   "experience": 1.0,
+  "group": "steel_ingot",
   "ingredient": {
-    "item": "klaxon:fractured_raw_gold"
+    "item": "klaxon:crude_steel_mixture"
   },
-  "result": "minecraft:gold_nugget"
+  "result": {
+    "id": "klaxon:steel_ingot"
+  }
 }
