@@ -1,24 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
+  "group": "hammer",
   "key": {
-    "b": {
+    "B": {
       "tag": "c:storage_blocks/steel"
     },
-    "i": {
+    "I": {
       "tag": "c:ingots/steel"
     },
-    "l": {
+    "L": {
       "item": "minecraft:leather"
     },
-    "s": {
+    "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "bib",
-    " s ",
-    "lsl"
+    "BIB",
+    " S ",
+    "LSL"
   ],
   "result": {
     "count": 1,

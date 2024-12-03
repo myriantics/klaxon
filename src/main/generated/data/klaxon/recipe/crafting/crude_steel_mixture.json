@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
+  "group": "crude_steel_mixture",
   "ingredients": [
     {
       "item": "klaxon:fractured_raw_iron"
@@ -17,6 +18,6 @@
   ],
   "result": {
     "count": 2,
-    "item": "klaxon:crude_steel_mixture"
+    "id": "klaxon:crude_steel_mixture"
   }
 }

@@ -33,7 +33,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonItems.registerModItems();
 
 		// if it's datagen, run my hacky hack of hacks
-		if (FabricDataGenHelper.ENABLED) {
+		if (isDatagenEnabled()) {
 			KlaxonCompat.registerPhantomItemsForDatagen();
 		}
 
@@ -44,5 +44,9 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonScreenHandlers.registerModScreenHandlers();
 
 		LOGGER.info("KLAXON has loaded!");
+	}
+
+	public boolean isDatagenEnabled() {
+		return FabricDataGenHelper.ENABLED;
 	}
 }
