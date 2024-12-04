@@ -30,6 +30,9 @@ public class KlaxonTags {
         public static final TagKey<Item> STEEL_BLOCKS =
                 TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "storage_blocks/steel"));
 
+        public static final TagKey<Item> COAL =
+                TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "coal"));
+
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, KlaxonCommon.locate(name));

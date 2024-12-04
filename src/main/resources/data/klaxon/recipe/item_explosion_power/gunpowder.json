@@ -1,8 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "ingredient" : {
-    "item": "minecraft:gunpowder"
-  },
-  "explosion_power": 0.3,
-  "produces_fire": false
-}

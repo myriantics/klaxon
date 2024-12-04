@@ -2,10 +2,12 @@ package net.myriantics.klaxon;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.compat.KlaxonCompat;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.networking.KlaxonPackets;
@@ -23,15 +25,18 @@ public class KlaxonCommon implements ModInitializer {
 		return Identifier.of(MOD_ID, name);
 	}
 
-	static {
-		}
-
 	@Override
 	public void onInitialize() {
 		KlaxonBlocks.registerModBlocks();
 		KlaxonBlockEntities.registerBlockEntities();
 		BlastProcessorBehavior.registerBlastProcessorBehaviors();
 		KlaxonItems.registerModItems();
+
+		// if it's datagen, run my hacky hack of hacks
+		if (isDatagenEnabled()) {
+			KlaxonCompat.registerPhantomItemsForDatagen();
+		}
+
 		KlaxonEntities.registerModEntities();
 		KlaxonRecipeTypes.registerSerializer();
 		KlaxonDamageTypes.registerModDamageTypes();
@@ -39,5 +44,9 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonScreenHandlers.registerModScreenHandlers();
 
 		LOGGER.info("KLAXON has loaded!");
+	}
+
+	public boolean isDatagenEnabled() {
+		return FabricDataGenHelper.ENABLED;
 	}
 }

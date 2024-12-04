@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:hammering",
+  "input": {
+    "item": "minecraft:blaze_rod"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:blaze_powder"
+  }
+}

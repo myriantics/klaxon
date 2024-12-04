@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:item_explosion_power",
+  "explosionPower": 20.0,
+  "ingredient": {
+    "item": "minecraft:ender_dragon_spawn_egg"
+  },
+  "producesFire": false
+}
