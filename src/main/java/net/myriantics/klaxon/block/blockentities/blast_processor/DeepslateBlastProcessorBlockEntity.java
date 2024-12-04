@@ -28,7 +28,7 @@ import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.BEHAVIORS;
-import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.FACING;
+import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.HORIZONTAL_FACING;
 
 public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
@@ -81,7 +81,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     @Override
     public int[] getAvailableSlots(Direction side) {
         if (world != null) {
-            Direction blockFacing = world.getBlockState(pos).get(Properties.FACING);
+            Direction blockFacing = world.getBlockState(pos).get(HORIZONTAL_FACING);
             if (side == BlockDirectionHelper.getLeft(blockFacing) || side == BlockDirectionHelper.getRight(blockFacing)) {
                 return CATALYST_ITEM_SLOTS;
             }
@@ -171,7 +171,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
             // if this has been exploded, dont run these
             if (!this.isRemoved()) {
                 world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
-                world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(FACING).getId());
+                world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(HORIZONTAL_FACING).getId());
             }
         }
     }

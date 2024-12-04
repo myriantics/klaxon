@@ -11,10 +11,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
-import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.item.consumables.CaffeinatedBagelItem;
@@ -44,7 +42,7 @@ public class KlaxonItems {
     // food
     public static final Item RAW_BAGEL = registerItem("raw_bagel", new Item(new Item.Settings().food(new FoodComponent.Builder()
             .nutrition(1).saturationModifier(0f).build())));
-    public static final Item BAGEL = registerItem("cooked_bagel", new Item(new Item.Settings().food(new FoodComponent.Builder()
+    public static final Item COOKED_BAGEL = registerItem("cooked_bagel", new Item(new Item.Settings().food(new FoodComponent.Builder()
             .nutrition(6).saturationModifier(0.5f).build())));
     public static final Item PINK_CAFFEINATED_BAGEL = registerItem("pink_caffeinated_bagel", new CaffeinatedBagelItem(new Item.Settings().food(new FoodComponent.Builder()
             .nutrition(6).saturationModifier(0.5f)

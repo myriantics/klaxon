@@ -2,24 +2,23 @@ package net.myriantics.klaxon.block.customblocks;
 
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
+import net.minecraft.data.client.Model;
+import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.Util;
@@ -31,14 +30,14 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
+import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
-import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreenHandler;
-import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
 import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
@@ -46,10 +45,10 @@ import static net.myriantics.klaxon.block.blockentities.blast_processor.Deepslat
 public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
     public static final BooleanProperty LIT = Properties.LIT;
-    public static final BooleanProperty FUELED = BooleanProperty.of("fueled");
-    public static final BooleanProperty HATCH_OPEN = BooleanProperty.of("hatch_open");
-    public static final BooleanProperty POWERED = BooleanProperty.of("powered");
-    public static final DirectionProperty FACING = FacingBlock.FACING;
+    public static final BooleanProperty FUELED = KlaxonBlockStateProperties.FUELED;
+    public static final BooleanProperty HATCH_OPEN = KlaxonBlockStateProperties.HATCH_OPEN;
+    public static final BooleanProperty POWERED = KlaxonBlockStateProperties.POWERED;
+    public static final DirectionProperty HORIZONTAL_FACING = Properties.HORIZONTAL_FACING;
 
     public static final Map<Item, BlastProcessorBehavior> BEHAVIORS = Util.make(
             new Object2ObjectOpenHashMap<>(), map -> map.defaultReturnValue(new ItemBlastProcessorBehavior())
@@ -60,10 +59,10 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     public DeepslateBlastProcessorBlock(Settings settings) {
-        super(settings/*.luminance(Blocks.createLightLevelFromLitBlockState(15))*/);
+        super(settings);
 
         setDefaultState(getStateManager().getDefaultState()
-                .with(FACING, Direction.NORTH)
+                .with(HORIZONTAL_FACING, Direction.NORTH)
                 .with(POWERED, false)
                 .with(LIT, false)
                 .with(FUELED, false)
@@ -154,7 +153,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(POWERED, FACING, LIT, FUELED, HATCH_OPEN);
+        builder.add(POWERED, HORIZONTAL_FACING, LIT, FUELED, HATCH_OPEN);
     }
 
     public void updateBlockState(World world, BlockPos pos, @Nullable BlockState appendedState) {
@@ -190,9 +189,9 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         Direction direction = context.getHorizontalPlayerFacing();
         if (player != null) {
             if (player.isSneaking()) {
-                return this.getDefaultState().with(FACING, direction);
+                return this.getDefaultState().with(HORIZONTAL_FACING, direction);
             } else {
-                return this.getDefaultState().with(FACING, direction.getOpposite());
+                return this.getDefaultState().with(HORIZONTAL_FACING, direction.getOpposite());
             }
         }
         return this.getDefaultState();
@@ -226,7 +225,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     public static boolean canFastInput(BlockState state, Direction direction) {
-        Direction blockDirection = state.get(FACING);
+        Direction blockDirection = state.get(HORIZONTAL_FACING);
         // check if you can insert from the sides
         if (!state.get(FUELED) &&
                 (direction.equals(BlockDirectionHelper.getLeft(direction)) || direction.equals(BlockDirectionHelper.getRight(direction)))) {
@@ -234,5 +233,9 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         }
         // check if you can insert from the top. if no, don't bother
         return state.get(HATCH_OPEN) && direction.equals(BlockDirectionHelper.getUp(blockDirection));
+    }
+
+    public static Model getBlockStateModel() {
+        return new Model(Optional.of(Registries.BLOCK.getId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)), Optional.empty(), TextureKey.UP, TextureKey.DOWN, TextureKey.FRONT, TextureKey.BACK, TextureKey.SIDE);
     }
 }

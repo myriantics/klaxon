@@ -52,7 +52,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
             return;
         }
 
-        Direction facing = world.getBlockState(pos).get(DeepslateBlastProcessorBlock.FACING);
+        Direction facing = world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
 
         switch (recipeData.outputState()) {
             case MISSING_FUEL, MISSING_RECIPE -> {
