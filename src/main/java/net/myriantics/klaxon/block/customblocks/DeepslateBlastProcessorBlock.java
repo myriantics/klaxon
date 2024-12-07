@@ -34,6 +34,7 @@ import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
+import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -235,7 +236,10 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         return state.get(HATCH_OPEN) && direction.equals(BlockDirectionHelper.getUp(blockDirection));
     }
 
-    public static Model getBlockStateModel() {
-        return new Model(Optional.of(Registries.BLOCK.getId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)), Optional.empty(), TextureKey.UP, TextureKey.DOWN, TextureKey.FRONT, TextureKey.BACK, TextureKey.SIDE);
+    public static boolean isMuffled(World world, BlockPos pos) {
+        BlockState blastProcessorState = world.getBlockState(pos);
+        Direction direction = blastProcessorState.get(HORIZONTAL_FACING);
+        return world.getBlockState(pos.offset(BlockDirectionHelper.getUp(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLERS)
+                || world.getBlockState(pos.offset(BlockDirectionHelper.getFront(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLERS);
     }
 }

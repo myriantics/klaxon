@@ -29,7 +29,7 @@ import java.util.List;
 
 public interface BlastProcessorBehavior {
 
-    void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData);
+    void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled);
 
     void ejectItems(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ItemExplosionPowerData powerData);
 
@@ -58,12 +58,19 @@ public interface BlastProcessorBehavior {
             }
 
             @Override
-            public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
+            public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled) {
                 Position outputPos = blastProcessor.getOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
                 FireworkRocketEntity fireworkRocket = new FireworkRocketEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).copy());
 
                 // explode using firework rocket entity code - summons dummy firework and detonates it
                 world.spawnEntity(fireworkRocket);
+
+                // muffling override so it doesn't trip sculk sensors
+                if (isMuffled) {
+                    world.sendEntityStatus(fireworkRocket, (byte) 17);
+                    ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplode();
+                    fireworkRocket.discard();
+                }
                 // TIL you can't have an invoker method be the same name as the original method. The more you know!
                 ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplodeAndRemove();
             }

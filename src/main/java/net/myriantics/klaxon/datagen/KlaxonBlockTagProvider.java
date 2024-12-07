@@ -2,6 +2,8 @@ package net.myriantics.klaxon.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKeys;
@@ -51,5 +53,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, Identifier.of("minecraft", "needs_iron_tool")))
                 .add(KlaxonBlocks.STEEL_BLOCK);
+
+        getOrCreateTagBuilder(KlaxonTags.Blocks.MACHINE_MUFFLERS)
+                .forceAddTag(BlockTags.WOOL)
+                .add(Blocks.HAY_BLOCK)
+                .add(Blocks.TARGET);
     }
 }

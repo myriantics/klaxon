@@ -3,9 +3,16 @@ package net.myriantics.klaxon.api.behavior;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +38,7 @@ import java.util.Optional;
 public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
 
     @Override
-    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
+    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled) {
         if (world != null) {
             BlockState activeBlockState = world.getBlockState(pos);
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
@@ -40,7 +47,17 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
                     Position position = blastProcessor.getOutputLocation(direction);
 
                     blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
-                    world.createExplosion(null, position.getX(), position.getY(), position.getZ(), (float) powerData.explosionPower(), powerData.producesFire(), World.ExplosionSourceType.BLOCK);
+                    world.createExplosion(null, null,
+                            // this is used to differentiate blast processor explosions from normal ones
+                            new DeepslateBlastProcessorBlockEntity.DeepslateBlastProcessorExplosionBehavior(),
+                            position.getX(), position.getY(), position.getZ(),
+                            (float) powerData.explosionPower(),
+                            powerData.producesFire(),
+                            World.ExplosionSourceType.BLOCK,
+                            ParticleTypes.EXPLOSION,
+                            ParticleTypes.EXPLOSION_EMITTER,
+                            // if block is muffled, don't produce explosion sound
+                            isMuffled ? RegistryEntry.of(SoundEvents.INTENTIONALLY_EMPTY) : SoundEvents.ENTITY_GENERIC_EXPLODE);
                     world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
                 }
             }

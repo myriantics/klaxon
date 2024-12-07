@@ -47,6 +47,8 @@ public class KlaxonTags {
                 createTag("mineable/hammer");
         public static final TagKey<Block> HAMMER_INSTABREAK =
                 createTag("hammer_instabreak");
+        public static final TagKey<Block> MACHINE_MUFFLERS =
+                createTag("machine_mufflers");
 
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, KlaxonCommon.locate(name));

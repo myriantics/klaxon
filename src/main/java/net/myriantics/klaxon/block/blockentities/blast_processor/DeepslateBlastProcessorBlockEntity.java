@@ -17,6 +17,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
+import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.explosion.ExplosionBehavior;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
@@ -138,7 +141,11 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     }
 
     public void onRedstoneImpulse() {
+
         if (world != null) {
+            boolean isMuffled = DeepslateBlastProcessorBlock.isMuffled(world, pos);
+
+            KlaxonCommon.LOGGER.info("isMuffled: " + isMuffled);
             if (!inventory.isEmpty()) {
 
                 // calculate behavior to use
@@ -162,14 +169,15 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 BlastProcessingRecipeData processingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, recipeInventory, powerData);
 
                 // do explosion effect
-                blastProcessorBehavior.onExplosion(world, pos, this, powerData);
+                blastProcessorBehavior.onExplosion(world, pos, this, powerData, isMuffled);
 
                 // eject recipe results
                 blastProcessorBehavior.ejectItems(world, pos, this, processingData, powerData);
             }
 
             // if this has been exploded, dont run these
-            if (!this.isRemoved()) {
+            if (!this.isRemoved() && !isMuffled) {
+                world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(world.getBlockState(pos)));
                 world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
                 world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(HORIZONTAL_FACING).getId());
             }
@@ -222,4 +230,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 itemExplosionPowerData.explosionPower(),
                 itemExplosionPowerData.producesFire());
     }
+
+    // no special functionality except that it is used to differentiate blast processor explosions from regular ones
+    public static class DeepslateBlastProcessorExplosionBehavior extends ExplosionBehavior {}
 }

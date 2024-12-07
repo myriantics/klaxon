@@ -13,4 +13,8 @@ public interface FireworkRocketEntityInvoker {
     // Used to explode fireworks in the corresponding BlastProcessorBehavior
     @Invoker(value = "explodeAndRemove")
     void invokeExplodeAndRemove();
+
+    // Used to discreetly explode fireworks when muffled
+    @Invoker
+    void invokeExplode();
 }
