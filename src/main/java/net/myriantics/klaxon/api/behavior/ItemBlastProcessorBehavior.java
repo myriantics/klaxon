@@ -36,7 +36,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
             BlockState activeBlockState = world.getBlockState(pos);
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
                 if (powerData.explosionPower() > 0.0) {
-                    Direction direction = activeBlockState.get(Properties.FACING);
+                    Direction direction = activeBlockState.get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
                     Position position = blastProcessor.getOutputLocation(direction);
 
                     blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);

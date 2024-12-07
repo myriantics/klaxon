@@ -29,7 +29,6 @@ public class KlaxonCommon implements ModInitializer {
 	public void onInitialize() {
 		KlaxonBlocks.registerModBlocks();
 		KlaxonBlockEntities.registerBlockEntities();
-		BlastProcessorBehavior.registerBlastProcessorBehaviors();
 		KlaxonItems.registerModItems();
 
 		// if it's datagen, run my hacky hack of hacks
@@ -42,6 +41,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonDamageTypes.registerModDamageTypes();
 		KlaxonPackets.registerModPackets();
 		KlaxonScreenHandlers.registerModScreenHandlers();
+		BlastProcessorBehavior.registerBlastProcessorBehaviors();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

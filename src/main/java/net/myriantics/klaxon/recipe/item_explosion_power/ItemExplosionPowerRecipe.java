@@ -47,15 +47,6 @@ public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
         return null;
     }
 
-    // TODO: actually implement dimension support with this for beds and other stuff
-    public DimensionType getValidDimensions() {
-        return null;
-    }
-
-    public boolean validInDimension(DimensionType dimensionType) {
-        return false;
-    }
-
     public Ingredient getItem() {
         return item;
     }

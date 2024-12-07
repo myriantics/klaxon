@@ -44,7 +44,7 @@ public class KlaxonItems {
             .nutrition(1).saturationModifier(0f).build())));
     public static final Item COOKED_BAGEL = registerItem("cooked_bagel", new Item(new Item.Settings().food(new FoodComponent.Builder()
             .nutrition(6).saturationModifier(0.5f).build())));
-    public static final Item PINK_CAFFEINATED_BAGEL = registerItem("pink_caffeinated_bagel", new CaffeinatedBagelItem(new Item.Settings().food(new FoodComponent.Builder()
+    public static final Item PINK_ENERGY_BAGEL = registerItem("pink_energy_bagel", new CaffeinatedBagelItem(new Item.Settings().food(new FoodComponent.Builder()
             .nutrition(6).saturationModifier(0.5f)
             .statusEffect(new StatusEffectInstance(StatusEffects.HASTE, 800, 1), 1.0f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 800, 1), 1.0f)
