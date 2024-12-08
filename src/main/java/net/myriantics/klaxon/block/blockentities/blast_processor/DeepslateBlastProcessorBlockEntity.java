@@ -12,6 +12,7 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -30,8 +31,7 @@ import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
 
-import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.BEHAVIORS;
-import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.HORIZONTAL_FACING;
+import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.*;
 
 public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
@@ -84,15 +84,17 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     @Override
     public int[] getAvailableSlots(Direction side) {
         if (world != null) {
+            // if it's the sides, you can insert into fuel
             Direction blockFacing = world.getBlockState(pos).get(HORIZONTAL_FACING);
             if (side == BlockDirectionHelper.getLeft(blockFacing) || side == BlockDirectionHelper.getRight(blockFacing)) {
                 return CATALYST_ITEM_SLOTS;
             }
-            if(side == Direction.UP || side == Direction.DOWN) {
+            // if it's not the front, you can access input
+            if (side != BlockDirectionHelper.getFront(blockFacing)) {
                 return PROCESS_ITEM_SLOTS;
             }
         }
-        return new int[]{-1};
+        return new int[] {-1};
     }
 
     @Override
@@ -101,7 +103,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
         // for that stack
         int[] availableSlots = getAvailableSlots(dir);
 
-        if (availableSlots == null || stack.isEmpty()) {
+        if (availableSlots == null || stack.isEmpty() || availableSlots[0] == -1) {
             return false;
         }
 
@@ -118,8 +120,16 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         if (world != null && !world.isReceivingRedstonePower(pos)) {
+
             // get the available slots for the side you're trying to pull from
-            for (int checkedSlotIndex : getAvailableSlots(dir)) {
+            int[] availableSlots = getAvailableSlots(dir);
+
+            // null protection go brrr
+            if (availableSlots == null || availableSlots[0] == -1) {
+                return false;
+            }
+
+            for (int checkedSlotIndex : availableSlots) {
                 // if the slot you're trying to pull from is in that array, yeah you can extract
                 if (slot == checkedSlotIndex) {
                     return true;
@@ -142,11 +152,13 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
 
     public void onRedstoneImpulse() {
 
-        if (world != null) {
+        if (world != null && !world.isClient) {
             boolean isMuffled = DeepslateBlastProcessorBlock.isMuffled(world, pos);
 
-            KlaxonCommon.LOGGER.info("isMuffled: " + isMuffled);
-            if (!inventory.isEmpty()) {
+            // default to true so that it shows the particles when dispensing nothing
+            boolean shouldRunDispenserEffects = true;
+
+            if (!this.isEmpty()) {
 
                 // calculate behavior to use
                 BlastProcessorBehavior blastProcessorBehavior = BEHAVIORS.get(this.inventory.get(CATALYST_INDEX).getItem());
@@ -173,13 +185,22 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
 
                 // eject recipe results
                 blastProcessorBehavior.ejectItems(world, pos, this, processingData, powerData);
+
+                shouldRunDispenserEffects = blastProcessorBehavior.shouldRunDispenserEffects(world, pos, this, recipeInventory, isMuffled);
             }
 
             // if this has been exploded, dont run these
-            if (!this.isRemoved() && !isMuffled) {
-                world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(world.getBlockState(pos)));
-                world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
-                world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(HORIZONTAL_FACING).getId());
+            if (shouldRunDispenserEffects && !this.isRemoved()) {
+                // run audio ones if not muffled
+                if (!isMuffled) {
+                    world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(world.getBlockState(pos)));
+                    world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
+                }
+
+                // display particles if not front obstructed
+                if (!isFrontObstructed(world, pos)) {
+                    world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(HORIZONTAL_FACING).getId());
+                }
             }
         }
     }
@@ -200,19 +221,27 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
         super.markDirty();
     }
 
-    public Position getOutputLocation(Direction direction) {
+    public Position getExplosionOutputLocation(Direction direction) {
+        return getOutputLocation(direction, 0.6);
+    }
+
+    public Position getItemOutputLocation(Direction direction) {
+        return getOutputLocation(direction, 0.7);
+    }
+
+    public Position getOutputLocation(Direction direction, double offset) {
         Position centerPos = pos.toCenterPos();
         double x = centerPos.getX();
         double y = centerPos.getY();
         double z = centerPos.getZ();
 
         switch (direction) {
-            case UP -> y += 0.6;
-            case DOWN -> y -= 0.6;
-            case NORTH -> z -= 0.6;
-            case SOUTH -> z += 0.6;
-            case EAST -> x += 0.6;
-            case WEST -> x -= 0.6;
+            case UP -> y += 0.7;
+            case DOWN -> y -= 0.7;
+            case NORTH -> z -= 0.7;
+            case SOUTH -> z += 0.7;
+            case EAST -> x += 0.7;
+            case WEST -> x -= 0.7;
         }
 
         return new Vec3d(x, y, z);

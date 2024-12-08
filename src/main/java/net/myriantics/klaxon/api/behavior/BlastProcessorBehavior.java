@@ -1,19 +1,14 @@
 package net.myriantics.klaxon.api.behavior;
 
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.client.particle.FireworksSparkParticle;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
 import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.*;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
@@ -23,7 +18,6 @@ import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.List;
 
@@ -36,6 +30,8 @@ public interface BlastProcessorBehavior {
     ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory);
 
     BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory, ItemExplosionPowerData powerData);
+
+    boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory, boolean isMuffled);
 
     static void registerBlastProcessorBehaviors() {
         KlaxonCommon.LOGGER.info("Registering KLAXON's Blast Processor Behaviors!");
@@ -59,20 +55,31 @@ public interface BlastProcessorBehavior {
 
             @Override
             public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled) {
-                Position outputPos = blastProcessor.getOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
+                Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
                 FireworkRocketEntity fireworkRocket = new FireworkRocketEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).copy());
 
                 // explode using firework rocket entity code - summons dummy firework and detonates it
                 world.spawnEntity(fireworkRocket);
 
+                // clear the stack from inventory
+                blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+
                 // muffling override so it doesn't trip sculk sensors
                 if (isMuffled) {
-                    world.sendEntityStatus(fireworkRocket, (byte) 17);
+                    fireworkRocket.setSilent(true);
+                    // custom entity status code so that client knows not to play sound
+                    world.sendEntityStatus(fireworkRocket, (byte) 16);
                     ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplode();
                     fireworkRocket.discard();
+                    return;
                 }
                 // TIL you can't have an invoker method be the same name as the original method. The more you know!
                 ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplodeAndRemove();
+            }
+
+            @Override
+            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory, boolean isMuffled) {
+                return false;
             }
         });
 
