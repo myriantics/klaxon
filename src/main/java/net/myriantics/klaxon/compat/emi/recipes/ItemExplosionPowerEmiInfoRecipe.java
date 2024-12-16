@@ -35,7 +35,8 @@ public class ItemExplosionPowerEmiInfoRecipe extends EmiInfoRecipe {
                 List.of(
                         Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power_min").append(Text.literal("" + explosionPowerMin)),
                         Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power_max").append(Text.literal("" + explosionPowerMax)),
-                        infoText
+                        Text.empty(), // lazy newline
+                        infoText // text is defined in the associated blast processor behavior (translatable)
                 ),
                 id
         );

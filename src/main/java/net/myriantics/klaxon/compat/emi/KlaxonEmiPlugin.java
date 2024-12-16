@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.Identifier;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
@@ -80,7 +81,9 @@ public class KlaxonEmiPlugin implements EmiPlugin {
                         data.explosionPowerMax(),
                         data.infoText(),
                         // append entry id to recipe id to prevent duplicate entries
-                        data.id().withPath("/" + data.id().getPath() + "_" + Identifier.of(entry.toString()).getPath())));
+                        KlaxonCommon.locate("/bp_behavior_item_explosion_power_" + Identifier.of(entry.toString()).getPath())
+                        )
+                );
             }
         }
     }

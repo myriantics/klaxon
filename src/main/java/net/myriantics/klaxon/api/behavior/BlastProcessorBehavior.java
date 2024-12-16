@@ -49,12 +49,12 @@ public interface BlastProcessorBehavior {
                 FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
                 List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
 
-                double explosionPower = 0.0;
+                double explosionPower = 0.3;
                 if (!list.isEmpty()) {
-                    explosionPower = 0.3 + (list.size() * 0.5);
+                    explosionPower += (list.size() * 0.5);
                 }
 
-                explosionPower = Math.clamp(explosionPower, 0.0, 10.0);
+                explosionPower = Math.min(explosionPower, 10.0);
 
 
                 return new ItemExplosionPowerData(explosionPower, false);
@@ -92,10 +92,10 @@ public interface BlastProcessorBehavior {
             @Override
             public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
                 return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                        0.0,
+                        0.3,
                         10.0,
                         Text.translatable("klaxon.emi.text.explosion_power_info.firework_behavior_info"),
-                        KlaxonCommon.locate("item_explosion_power/firework_behavior")
+                        "firework_behavior"
                 );
             }
         });
@@ -113,7 +113,7 @@ public interface BlastProcessorBehavior {
                     explosionPower += 0.5;
                 }
 
-                explosionPower = Math.clamp(explosionPower, 0.0, 10.0);
+                explosionPower = Math.min(explosionPower, 10.0);
 
                 return new ItemExplosionPowerData(explosionPower, false);
             }
@@ -121,10 +121,10 @@ public interface BlastProcessorBehavior {
             @Override
             public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
                 return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                        0.0,
+                        0.,
                         10.0,
                         Text.empty(),
-                        KlaxonCommon.locate("item_explosion_power/firework_behavior")
+                        "firework_star_behavior"
                 );
             }
         });
@@ -147,7 +147,7 @@ public interface BlastProcessorBehavior {
                         0.0,
                         5.0,
                         Text.translatable("klaxon.emi.text.explosion_power_info.bed_behavior_info"),
-                        KlaxonCommon.locate("item_explosion_power/bed_behavior")
+                        "bed_behavior"
                 );
             }
         };
@@ -172,7 +172,5 @@ public interface BlastProcessorBehavior {
     }
 
     // long ass name go brrr
-    record BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(double explosionPowerMin, double explosionPowerMax, net.minecraft.text.Text infoText, Identifier id) {
-
-    }
+    record BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(double explosionPowerMin, double explosionPowerMax, net.minecraft.text.Text infoText, String path) {}
 }
