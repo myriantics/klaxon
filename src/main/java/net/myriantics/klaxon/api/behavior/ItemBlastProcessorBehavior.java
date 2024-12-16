@@ -44,7 +44,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
                 if (powerData.explosionPower() > 0.0) {
                     Direction direction = activeBlockState.get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
-                    Position position = blastProcessor.getOutputLocation(direction);
+                    Position position = blastProcessor.getExplosionOutputLocation(direction);
 
                     blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
                     world.createExplosion(null, null,
@@ -74,7 +74,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
         switch (recipeData.outputState()) {
             case MISSING_FUEL, MISSING_RECIPE -> {
                 for (ItemStack ejectedStack : blastProcessor.getItems()) {
-                    ItemDispenserBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getOutputLocation(facing));
+                    ItemDispenserBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
                 }
                 blastProcessor.clear();
             }
@@ -83,7 +83,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
             }
             case SUCCESS -> {
                 blastProcessor.clear();
-                ItemDispenserBehavior.spawnItem(world, recipeData.result().copy(), 8, facing, blastProcessor.getOutputLocation(facing));
+                ItemDispenserBehavior.spawnItem(world, recipeData.result().copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
             }
         }
     }
@@ -174,5 +174,10 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
         }
 
         return Optional.of(recipes.getFirst());
+    }
+
+    @Override
+    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory, boolean isMuffled) {
+        return true;
     }
 }

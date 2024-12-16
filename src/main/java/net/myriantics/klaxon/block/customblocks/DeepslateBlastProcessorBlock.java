@@ -88,6 +88,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.isOf(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR) && state.get(LIT) && !world.isReceivingRedstonePower(pos)) {
             world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
+
         }
     }
 
@@ -177,7 +178,6 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                 }
             }
         }
-
     }
 
     @Override
@@ -197,26 +197,36 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         if (!world.isClient) {
-            boolean isPowered = world.isReceivingRedstonePower(pos);
-            boolean isActivated = state.get(POWERED);
+            boolean isRecievingPower = world.isReceivingRedstonePower(pos);
+            boolean frontObstructed = isFrontObstructed(world, pos);
             boolean isLit = state.get(LIT);
+            boolean isPowered = state.get(POWERED);
             BlockState appendedState = state;
-            if (isPowered && !isActivated) {
-                if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                    blastProcessor.onRedstoneImpulse();
-                    appendedState = appendedState.with(POWERED, true);
+
+            if (isRecievingPower != isPowered) {
+                // only pulse blast processor internals on high signal
+                if (isRecievingPower) {
+                    if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
+                        blastProcessor.onRedstoneImpulse();
+                    }
                 }
-            } else if(!isPowered && isActivated) {
-                appendedState = appendedState.with(POWERED, false);
+                appendedState = appendedState.cycle(POWERED);
             }
 
-            if (isLit != isPowered) {
-                if (isLit) {
-                    world.scheduleBlockTick(pos, this, 4);
+            if (isLit != appendedState.get(POWERED)) {
+                // don't light up block if front is obstructed
+                if (!isLit && !frontObstructed) {
+                    appendedState = appendedState.with(LIT, true);
                 } else {
-                    appendedState = state.cycle(LIT);
+                    world.scheduleBlockTick(pos, this, 4);
                 }
             }
+
+            // if front is obstructed but it's lit, correct itself
+            if ((appendedState.get(LIT) || isLit) && frontObstructed) {
+                appendedState = appendedState.with(LIT, false);
+            }
+
             updateBlockState(world, pos, appendedState);
         }
     }
@@ -237,5 +247,10 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         Direction direction = blastProcessorState.get(HORIZONTAL_FACING);
         return world.getBlockState(pos.offset(BlockDirectionHelper.getUp(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLING_BLOCKS)
                 || world.getBlockState(pos.offset(BlockDirectionHelper.getFront(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLING_BLOCKS);
+    }
+
+    public static boolean isFrontObstructed(World world, BlockPos pos) {
+        Direction facingDirection = world.getBlockState(pos).get(HORIZONTAL_FACING);
+        return world.getBlockState(pos.offset(facingDirection, 1)).isSolidBlock(world, pos);
     }
 }

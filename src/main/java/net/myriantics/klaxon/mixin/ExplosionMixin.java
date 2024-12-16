@@ -37,10 +37,6 @@ public abstract class ExplosionMixin {
         if (behavior instanceof DeepslateBlastProcessorBlockEntity.DeepslateBlastProcessorExplosionBehavior
                 && getSoundEvent().value().equals(SoundEvents.INTENTIONALLY_EMPTY)) {
 
-            KlaxonCommon.LOGGER.info("Processed Muffle on Mixin Side");
-            KlaxonCommon.LOGGER.info("Sound Event: " + getSoundEvent());
-            KlaxonCommon.LOGGER.info("Class Name: " + behavior.getClass().getName());
-
             // don't emit explosion game event if it's a muffled blast processor explosion
             return;
         }

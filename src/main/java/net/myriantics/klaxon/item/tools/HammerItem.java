@@ -195,8 +195,8 @@ public class HammerItem extends Item implements AttackBlockCallback {
         return !player.isOnGround()
                 && player.getMainHandStack().getItem() instanceof HammerItem
                 && !player.isInsideWaterOrBubbleColumn()
-                // you can't walljump off of instabreakable blocks
-                && state.calcBlockBreakingDelta(player, null, null) < 1;
+                // you can't walljump off of instabreakable blocks - in creative you can tho
+                && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative());
     }
 
     // so you can walljump in creative without demolishing your world

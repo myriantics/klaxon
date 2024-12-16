@@ -61,6 +61,10 @@ public interface ImplementedInventory extends Inventory {
      */
     @Override
     default ItemStack getStack(int slot) {
+        if (slot == -1) {
+            return ItemStack.EMPTY;
+        }
+
         return getItems().get(slot);
     }
     

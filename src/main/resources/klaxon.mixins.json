@@ -6,12 +6,15 @@
     "AbstractBlockStateMixin",
     "ExplosionMixin",
     "FireworkRocketEntityInvoker",
+    "FireworkRocketEntityMixin",
     "LivingEntityMixin",
     "MobEntityMixin",
     "ObserverBlockInvoker",
     "PlayerEntityMixin"
   ],
   "client": [
+    "ClientWorldMixin",
+    "FireworkParticleMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
     "ModelLoaderMixin"
