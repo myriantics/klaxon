@@ -160,18 +160,18 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     private void buildItemExplosionPowerRecipes(RecipeExporter exporter) {
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.DRAGON_BREATH), 1.5, false);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.END_CRYSTAL), 6.0, false);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.FIRE_CHARGE), 0.5, true);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.GUNPOWDER), 0.3, false);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.TNT), 4.0, false);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.TNT_MINECART), 5.0, false);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.DRAGON_BREATH), 1.5, false, false);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.END_CRYSTAL), 6.0, false, false);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.FIRE_CHARGE), 0.5, true, false);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.GUNPOWDER), 0.3, false, false);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.TNT), 4.0, false, false);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.TNT_MINECART), 5.0, false, false);
 
         // meme recipes
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.CREEPER_SPAWN_EGG), 3.0, false);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.ENDER_DRAGON_SPAWN_EGG), 20.0, false);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.WITHER_SPAWN_EGG), 10.0, false);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.GHAST_SPAWN_EGG), 3.5, true);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.CREEPER_SPAWN_EGG), 3.0, false, true);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.ENDER_DRAGON_SPAWN_EGG), 20.0, false, true);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.WITHER_SPAWN_EGG), 10.0, false, true);
+        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.GHAST_SPAWN_EGG), 3.5, true, true);
     }
 
     private void add3x3UnpackingRecipe(RecipeExporter exporter,
@@ -350,13 +350,13 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     private void addItemExplosionPowerRecipe(RecipeExporter exporter, Ingredient input,
-                                             double explosionPower, boolean producesFire, final ResourceCondition... conditions) {
+                                             double explosionPower, boolean producesFire, boolean isHidden,  final ResourceCondition... conditions) {
 
         Identifier recipeId = computeRecipeIdentifier(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID,
                 Registries.ITEM.getId(input.getMatchingStacks()[0].getItem()).getPath(),
                 conditions);
 
-        ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input, explosionPower, producesFire);
+        ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input, explosionPower, producesFire, isHidden);
 
         acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

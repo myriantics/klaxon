@@ -5,13 +5,13 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.item.Item;
+import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.util.Identifier;
+import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
@@ -45,6 +45,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private void registerRecipes(EmiRegistry registry) {
         addAll(registry, KlaxonRecipeTypes.HAMMERING, HammeringEmiRecipe::new);
         addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
+        addBlastProcessorBehaviorItemExplosionPowerRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
     }
 
@@ -56,22 +57,31 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
     public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
         for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
-            boolean fail = false;
 
-            // dont show creative mode items in the scroller
+            // dont show hidden recipes
             if (recipeEntry.value() instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
-                for (ItemStack stack : itemExplosionPowerRecipe.getItem().getMatchingStacks()) {
-                    if (stack.isIn(KlaxonTags.Items.ITEM_EXPLOSION_POWER_EMI_OMITTED)) {
-                        fail = true;
-                    }
+                if (!itemExplosionPowerRecipe.isHidden()) {
+                    registry.addRecipe(constructor.apply(recipeEntry));
                 }
-            }
-
-            if (!fail) {
-                registry.addRecipe(constructor.apply(recipeEntry));
             }
         }
     }
 
+    public void addBlastProcessorBehaviorItemExplosionPowerRecipes(EmiRegistry registry) {
+        for (Item entry : DeepslateBlastProcessorBlock.BEHAVIORS.keySet()) {
+            BlastProcessorBehavior behavior = DeepslateBlastProcessorBlock.BEHAVIORS.get(entry);
+            BlastProcessorBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
 
+            // only add the recipe if the behavior actually passes in the data
+            if (data != null) {
+                registry.addRecipe(new ItemExplosionPowerEmiInfoRecipe(
+                        Ingredient.ofItems(entry),
+                        data.explosionPowerMin(),
+                        data.explosionPowerMax(),
+                        data.infoText(),
+                        // append entry id to recipe id to prevent duplicate entries
+                        data.id().withPath("/" + data.id().getPath() + "_" + Identifier.of(entry.toString()).getPath())));
+            }
+        }
+    }
 }

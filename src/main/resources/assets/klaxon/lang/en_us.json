@@ -22,19 +22,23 @@
   "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s",
 
   "tag.item.klaxon.shield_disabling_melee_weapons": "Shield-Disabling Melee Weapons",
-  "tag.item.klaxon.item_explosion_power_emi_omitted": "EMI Omitted Explosion Power Operator Items",
   "tag.entity.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
   "tag.block.klaxon.hammer_interaction_base": "Hammer Interaction Base Blocks",
   "tag.block.klaxon.hammer_mineable": "Hammer Mineable Blocks",
   "tag.block.klaxon.hammer_instabreak": "Hammer Instabreakable Blocks",
 
-  "klaxon.emi.text.explosion_power": "Explosion Power:",
+  "klaxon.emi.text.explosion_power_info.explosion_power": "Explosion Power: ",
+  "klaxon.emi.text.explosion_power_info.explosion_power_min": "Explosion Power Min: ",
+  "klaxon.emi.text.explosion_power_info.explosion_power_max": "Explosion Power Max: ",
+  "klaxon.emi.text.explosion_power_info.bed_behavior_info": "Only produces explosion in the proper dimensions",
+  "klaxon.emi.text.explosion_power_info.firework_behavior_info": "Explosion power based on firework components - Produces firework particles instead of explosion",
   "klaxon.emi.text.hammering.offhand": "Hold in Offhand",
   "klaxon.emi.text.hammering.mainhand": "Hold in Main Hand",
   "klaxon.emi.text.hammering.sneak_use": "Sneak + Use In World",
   "klaxon.emi.text.hammering.sneak_use_compact": "Sneak + Use",
 
   "container.klaxon.item_explosion_power.title": "Item Explosion Power",
+
   "container.klaxon.hammering.title": "Hammering",
   "container.klaxon.blast_processing.title": "Blast Processing"
 }

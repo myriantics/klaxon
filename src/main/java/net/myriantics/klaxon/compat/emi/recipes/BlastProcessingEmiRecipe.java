@@ -100,16 +100,9 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         DefaultedList<ItemExplosionPowerRecipe> catalysts = DefaultedList.of();
         for (RecipeEntry<ItemExplosionPowerRecipe> recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER)) {
             if (recipe.value().matchesConditions(explosionPowerMin, explosionPowerMax)) {
-                boolean fail = false;
 
-                // dont show creative mode items in the scroller
-                for (ItemStack stack : recipe.value().getItem().getMatchingStacks()) {
-                    if (stack.isIn(KlaxonTags.Items.ITEM_EXPLOSION_POWER_EMI_OMITTED)) {
-                        fail = true;
-                    }
-                }
-
-                if (!fail) {
+                // dont show hidden recipes in the scroller
+                if (!recipe.value().isHidden()) {
                     catalysts.add(recipe.value());
                 }
             }

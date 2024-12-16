@@ -4,15 +4,12 @@ import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -38,7 +35,6 @@ import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
 import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
@@ -149,7 +145,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
             return blastProcessor.getStack(CATALYST_INDEX).isEmpty() ? 0 : 15;
         }
-        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+        return 0;
     }
 
     @Override
@@ -239,7 +235,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     public static boolean isMuffled(World world, BlockPos pos) {
         BlockState blastProcessorState = world.getBlockState(pos);
         Direction direction = blastProcessorState.get(HORIZONTAL_FACING);
-        return world.getBlockState(pos.offset(BlockDirectionHelper.getUp(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLERS)
-                || world.getBlockState(pos.offset(BlockDirectionHelper.getFront(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLERS);
+        return world.getBlockState(pos.offset(BlockDirectionHelper.getUp(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLING_BLOCKS)
+                || world.getBlockState(pos.offset(BlockDirectionHelper.getFront(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLING_BLOCKS);
     }
 }

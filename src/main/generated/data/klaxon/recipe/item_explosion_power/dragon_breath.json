@@ -4,5 +4,6 @@
   "ingredient": {
     "item": "minecraft:dragon_breath"
   },
+  "isHidden": false,
   "producesFire": false
 }

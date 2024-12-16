@@ -4,5 +4,6 @@
   "ingredient": {
     "item": "minecraft:tnt"
   },
+  "isHidden": false,
   "producesFire": false
 }

@@ -4,5 +4,6 @@
   "ingredient": {
     "item": "minecraft:ender_dragon_spawn_egg"
   },
+  "isHidden": true,
   "producesFire": false
 }

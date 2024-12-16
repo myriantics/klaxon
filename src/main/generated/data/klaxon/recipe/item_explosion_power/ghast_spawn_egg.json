@@ -4,5 +4,6 @@
   "ingredient": {
     "item": "minecraft:ghast_spawn_egg"
   },
+  "isHidden": true,
   "producesFire": true
 }

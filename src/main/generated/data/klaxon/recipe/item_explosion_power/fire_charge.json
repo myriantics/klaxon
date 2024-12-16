@@ -4,5 +4,6 @@
   "ingredient": {
     "item": "minecraft:fire_charge"
   },
+  "isHidden": false,
   "producesFire": true
 }

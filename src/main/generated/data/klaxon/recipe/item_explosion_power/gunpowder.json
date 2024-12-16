@@ -4,5 +4,6 @@
   "ingredient": {
     "item": "minecraft:gunpowder"
   },
+  "isHidden": false,
   "producesFire": false
 }

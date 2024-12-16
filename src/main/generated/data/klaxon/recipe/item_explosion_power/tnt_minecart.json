@@ -4,5 +4,6 @@
   "ingredient": {
     "item": "minecraft:tnt_minecart"
   },
+  "isHidden": false,
   "producesFire": false
 }

@@ -1,19 +1,13 @@
 package net.myriantics.klaxon.api.behavior;
 
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
 import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.*;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
@@ -23,7 +17,6 @@ import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.List;
 
@@ -36,6 +29,9 @@ public interface BlastProcessorBehavior {
     ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory);
 
     BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory, ItemExplosionPowerData powerData);
+
+    BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData();
+
 
     static void registerBlastProcessorBehaviors() {
         KlaxonCommon.LOGGER.info("Registering KLAXON's Blast Processor Behaviors!");
@@ -52,6 +48,8 @@ public interface BlastProcessorBehavior {
                 if (!list.isEmpty()) {
                     explosionPower = 0.3 + (list.size() * 0.5);
                 }
+
+                explosionPower = Math.clamp(explosionPower, 0.0, 10.0);
 
 
                 return new ItemExplosionPowerData(explosionPower, false);
@@ -74,6 +72,16 @@ public interface BlastProcessorBehavior {
                 // TIL you can't have an invoker method be the same name as the original method. The more you know!
                 ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplodeAndRemove();
             }
+
+            @Override
+            public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
+                return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
+                        0.0,
+                        10.0,
+                        Text.translatable("klaxon.emi.text.explosion_power_info.firework_behavior_info"),
+                        KlaxonCommon.locate("item_explosion_power/firework_behavior")
+                );
+            }
         });
 
         DeepslateBlastProcessorBlock.registerBehavior(Items.FIREWORK_STAR, new ItemBlastProcessorBehavior() {
@@ -89,7 +97,19 @@ public interface BlastProcessorBehavior {
                     explosionPower += 0.5;
                 }
 
+                explosionPower = Math.clamp(explosionPower, 0.0, 10.0);
+
                 return new ItemExplosionPowerData(explosionPower, false);
+            }
+
+            @Override
+            public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
+                return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
+                        0.0,
+                        10.0,
+                        Text.empty(),
+                        KlaxonCommon.locate("item_explosion_power/firework_behavior")
+                );
             }
         });
 
@@ -103,6 +123,16 @@ public interface BlastProcessorBehavior {
                 }
 
                 return super.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
+            }
+
+            @Override
+            public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
+                return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
+                        0.0,
+                        5.0,
+                        Text.translatable("klaxon.emi.text.explosion_power_info.bed_behavior_info"),
+                        KlaxonCommon.locate("item_explosion_power/bed_behavior")
+                );
             }
         };
 
@@ -123,5 +153,10 @@ public interface BlastProcessorBehavior {
         DeepslateBlastProcessorBlock.registerBehavior(Items.PURPLE_BED, bedBlastProcessorBehavior);
         DeepslateBlastProcessorBlock.registerBehavior(Items.WHITE_BED, bedBlastProcessorBehavior);
         DeepslateBlastProcessorBlock.registerBehavior(Items.YELLOW_BED, bedBlastProcessorBehavior);
+    }
+
+    // long ass name go brrr
+    record BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(double explosionPowerMin, double explosionPowerMax, net.minecraft.text.Text infoText, Identifier id) {
+
     }
 }

@@ -18,11 +18,13 @@ public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
     private final Ingredient item;
     private final double explosionPower;
     private final boolean producesFire;
+    private final boolean isHidden;
 
-    public ItemExplosionPowerRecipe(Ingredient input, double explosionPower, boolean producesFire) {
+    public ItemExplosionPowerRecipe(Ingredient input, double explosionPower, boolean producesFire, boolean isHidden) {
         this.item = input;
         this.explosionPower = explosionPower;
         this.producesFire = producesFire;
+        this.isHidden = isHidden;
     }
 
     // to whom it may concern: CHECK WHAT INDEX YOU'RE TRYING TO PULL FROM
@@ -57,6 +59,10 @@ public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
 
     public boolean producesFire() {
         return producesFire;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
     }
 
     public boolean matchesConditions(double explosionPowerMin, double explosionPowerMax) {

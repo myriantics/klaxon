@@ -4,5 +4,6 @@
   "ingredient": {
     "item": "minecraft:end_crystal"
   },
+  "isHidden": false,
   "producesFire": false
 }

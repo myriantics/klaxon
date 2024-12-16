@@ -121,6 +121,11 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
         }
     }
 
+    @Override
+    public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
+        return null;
+    }
+
     private static @NotNull BlastProcessingOutputState computeOutputState(ItemExplosionPowerData powerData, BlastProcessingRecipe recipe) {
         double explosionPower = powerData.explosionPower();
         double explosionPowerMin = recipe.getExplosionPowerMin();

@@ -20,6 +20,8 @@ public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<Item
             return recipe.getExplosionPower();
         }), PrimitiveCodec.BOOL.fieldOf("producesFire").forGetter((recipe) -> {
             return recipe.producesFire();
+        }), PrimitiveCodec.BOOL.fieldOf("isHidden").forGetter((recipe) -> {
+            return recipe.isHidden();
         })).apply(recipeInstance, ItemExplosionPowerRecipe::new);
     });
 
@@ -31,14 +33,16 @@ public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<Item
         Ingredient.PACKET_CODEC.encode(buf, recipe.getItem());
         PacketCodecs.DOUBLE.encode(buf, recipe.getExplosionPower());
         PacketCodecs.BOOL.encode(buf, recipe.producesFire());
+        PacketCodecs.BOOL.encode(buf, recipe.isHidden());
     }
 
     private static ItemExplosionPowerRecipe read(RegistryByteBuf buf) {
         Ingredient item = Ingredient.PACKET_CODEC.decode(buf);
         double explosionPower = PacketCodecs.DOUBLE.decode(buf);
         boolean producesFire = PacketCodecs.BOOL.decode(buf);
+        boolean isHidden = PacketCodecs.BOOL.decode(buf);
 
-        return new ItemExplosionPowerRecipe(item, explosionPower, producesFire);
+        return new ItemExplosionPowerRecipe(item, explosionPower, producesFire, isHidden);
     }
 
     @Override

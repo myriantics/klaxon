@@ -20,7 +20,7 @@ public abstract class AbstractBlockStateMixin {
     private float hammerInstabreakOverride(float original,
                                            @Local(argsOnly = true) PlayerEntity player) {
         // yonk the block state
-        if (asBlockState().isIn(KlaxonTags.Blocks.HAMMER_INSTABREAK)
+        if (asBlockState().isIn(KlaxonTags.Blocks.HAMMER_INSTABREAKABLE)
                 && player.getMainHandStack().getItem() instanceof HammerItem) {
             // if it can instabreak, set it to a value over 1.0 so that it instabreaks
             return 2.0f;

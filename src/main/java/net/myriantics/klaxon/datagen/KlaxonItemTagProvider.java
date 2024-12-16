@@ -22,19 +22,10 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_INGOTS)
                 .add(KlaxonItems.STEEL_INGOT);
 
-        getOrCreateTagBuilder(KlaxonTags.Items.SHIELD_DISABLING_MELEE_WEAPONS)
-                .add(KlaxonItems.HAMMER);
-
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK.asItem());
 
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_NUGGETS)
                 .add(KlaxonItems.STEEL_NUGGET);
-
-        getOrCreateTagBuilder(KlaxonTags.Items.ITEM_EXPLOSION_POWER_EMI_OMITTED)
-                .add(Items.CREEPER_SPAWN_EGG)
-                .add(Items.GHAST_SPAWN_EGG)
-                .add(Items.ENDER_DRAGON_SPAWN_EGG)
-                .add(Items.WITHER_SPAWN_EGG);
     }
 }
