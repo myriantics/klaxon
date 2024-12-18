@@ -113,8 +113,6 @@ public interface BlastProcessorBehavior {
                     explosionPower += 0.5;
                 }
 
-                explosionPower = Math.min(explosionPower, 10.0);
-
                 return new ItemExplosionPowerData(explosionPower, false);
             }
 
@@ -122,7 +120,7 @@ public interface BlastProcessorBehavior {
             public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
                 return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
                         0.,
-                        10.0,
+                        0.8,
                         Text.empty(),
                         "firework_star_behavior"
                 );
