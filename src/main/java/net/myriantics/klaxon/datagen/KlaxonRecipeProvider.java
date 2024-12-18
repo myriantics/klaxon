@@ -122,7 +122,6 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_MIXTURE), new ItemStack(KlaxonItems.STEEL_INGOT), 1.0f, 150, null, null);
 
-        addFoodProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.RAW_BAGEL), new ItemStack(KlaxonItems.COOKED_BAGEL), 0.5f, 200, null);
     }
 
     private void buildHammeringRecipes(RecipeExporter exporter) {

@@ -64,20 +64,11 @@ public class KlaxonModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-        ArrayList<Item> simpleItems = new ArrayList<>();
-
-        // yoink all items that are added by KLAXON and are not a block item into this list
-        for (Item item : Registries.ITEM.stream().toList()) {
-            if (Registries.ITEM.getId(item).getNamespace().equals(KlaxonCommon.MOD_ID)
-                    && !(item instanceof BlockItem)) {
-                simpleItems.add(item);
-            }
-        }
 
         // remove any items that have custom model processing here
 
-        // must be on bottom to process item list
-        generateSimpleItemModels(itemModelGenerator, simpleItems);
+        // generate all simple item models for stuff defined in list in klaxonitems so i dont have to poll the registry
+        generateSimpleItemModels(itemModelGenerator, KlaxonItems.simpleItems);
     }
 
     private void generateSimpleItemModels(ItemModelGenerator itemModelGenerator, ArrayList<Item> simpleItems) {

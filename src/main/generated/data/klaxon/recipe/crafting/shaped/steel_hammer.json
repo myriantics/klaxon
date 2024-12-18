@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
-  "group": "hammer",
+  "group": "steel_hammer",
   "key": {
     "B": {
       "tag": "c:storage_blocks/steel"
@@ -23,6 +23,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "klaxon:hammer"
+    "id": "klaxon:steel_hammer"
   }
 }
