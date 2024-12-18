@@ -3,11 +3,15 @@ package net.myriantics.klaxon.item.tools;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
+import net.minecraft.particle.ItemStackParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.tag.BlockTags;
@@ -79,22 +83,24 @@ public class HammerItem extends Item implements AttackBlockCallback {
 
         Position outputPos = targetDroppedItem.getPos();
 
-        KlaxonCommon.LOGGER.info("Tried to process Hammering recipe! Entity item: " + targetDroppedItem.getStack().getItem().toString());
-
         // hammering recipe
         if(canProcessHammerRecipe(player)) {
             world.playSound(player, targetDroppedItem.getBlockPos(), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
             damageItem(handStack, player, player.getRandom(), true);
 
+            ItemStack targetStack = targetDroppedItem.getStack();
+
             // no need to process further if its the client
             if (world.isClient()) {
+                // spawn le funny particle effects
+                spawnHammeringParticleEffects(world, targetStack, 5, targetDroppedItem);
                 return ActionResult.SUCCESS;
             }
 
             RecipeInput dummyInventory = new RecipeInput() {
                 @Override
                 public ItemStack getStackInSlot(int slot) {
-                    return new SimpleInventory(targetDroppedItem.getStack()).getStack(slot);
+                    return new SimpleInventory(targetStack).getStack(slot);
                 }
 
                 @Override
@@ -106,7 +112,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
             Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
             if(match.isPresent()) {
                 if (!world.isClient) {
-                    // spawn the dropped output item
+                   // spawn the dropped output item
                     ItemScatterer.spawn(
                             world,
                             outputPos.getX(),
@@ -249,6 +255,25 @@ public class HammerItem extends Item implements AttackBlockCallback {
                     ((ObserverBlockInvoker) observerBlock).invokeScheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
                 }
             }
+        }
+    }
+
+    // yoinked from living entity
+    private static void spawnHammeringParticleEffects(World world, ItemStack stack, int count, Entity source) {
+        Random random = source.getRandom();
+        float pitch = source.getPitch();
+        float yaw = source.getYaw();
+
+        for (int i = 0; i < count; i++) {
+            Vec3d vec3d = new Vec3d(((double)random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0);
+            vec3d = vec3d.rotateX(-pitch * (float) (Math.PI / 180.0));
+            vec3d = vec3d.rotateY(-yaw * (float) (Math.PI / 180.0));
+            double d = (double)(-random.nextFloat()) * 0.6 - 0.3;
+            Vec3d vec3d2 = new Vec3d(((double)random.nextFloat() - 0.5) * 0.3, d, 0.6);
+            vec3d2 = vec3d2.rotateX(-pitch * (float) (Math.PI / 180.0));
+            vec3d2 = vec3d2.rotateY(-yaw * (float) (Math.PI / 180.0));
+            vec3d2 = vec3d2.add(source.getX(), source.getEyeY(), source.getZ());
+            source.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
         }
     }
 }
