@@ -9,20 +9,22 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipe.hammer.HammeringRecipe;
+import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.util.AbilityModifierHelper;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
@@ -71,75 +73,59 @@ public class HammerItem extends Item implements AttackBlockCallback {
         }
     }
 
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        BlockPos interactionPos = context.getBlockPos();
-        Direction hitDir = context.getSide();
-        Position outputPos = getRecipeOutputLocation(hitDir, interactionPos);
-        Vec3d outputVelocity = getRecipeOutputVelocity(hitDir);
-        BlockState interactionState = context.getWorld().getBlockState(interactionPos);
-        World world = context.getWorld();
-        PlayerEntity player = context.getPlayer();
-        Hand activeHand = context.getHand();
+    // called in PlayerEntityMixin - supplemented by GameRendererMixin
+    public static ActionResult useOnItemStack(ItemStack handStack, PlayerEntity player, ItemEntity targetDroppedItem, Hand activeHand) {
+        World world = player.getWorld();
 
-        if (player == null) {
-            return ActionResult.PASS;
-        }
+        Position outputPos = targetDroppedItem.getPos();
+
+        KlaxonCommon.LOGGER.info("Tried to process Hammering recipe! Entity item: " + targetDroppedItem.getStack().getItem().toString());
 
         // hammering recipe
-        if(player.isOnGround() && player.isSneaking()) {
+        if(canProcessHammerRecipe(player)) {
+            world.playSound(player, targetDroppedItem.getBlockPos(), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
+            damageItem(handStack, player, player.getRandom(), true);
 
-            world.playSound(player, interactionPos, SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
-            damageItem(player.getStackInHand(activeHand), player, player.getRandom(), true);
-            world.addBlockBreakParticles(interactionPos, interactionState);
-
-            if (interactionState.isIn(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT) && activeHand == Hand.MAIN_HAND) {
-                RecipeType<HammeringRecipe> type = KlaxonRecipeTypes.HAMMERING;
-
-                RecipeInput dummyInventory = new RecipeInput() {
-                    @Override
-                    public ItemStack getStackInSlot(int slot) {
-                        return new SimpleInventory(player.getOffHandStack()).getStack(slot);
-                    }
-
-                    @Override
-                    public int getSize() {
-                        return 1;
-                    }
-                };
-
-                Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
-                if(match.isPresent()) {
-                    if (!world.isClient) {
-                        world.spawnEntity(new ItemEntity(world,
-                                outputPos.getX(),
-                                outputPos.getY(),
-                                outputPos.getZ(),
-                                match.get().value().getResult(null),
-                                outputVelocity.x,
-                                outputVelocity.y,
-                                outputVelocity.z));
-                    }
-
-                    if (!player.isCreative()) {
-                        player.getOffHandStack().decrement(1);
-                    }
-                }
-            }
-
-            if (world.isClient) {
+            // no need to process further if its the client
+            if (world.isClient()) {
                 return ActionResult.SUCCESS;
             }
 
-            // update nearby observers that are facing into target block
-            updateAdjacentMonitoringObservers(world, interactionPos, interactionState);
+            RecipeInput dummyInventory = new RecipeInput() {
+                @Override
+                public ItemStack getStackInSlot(int slot) {
+                    return new SimpleInventory(targetDroppedItem.getStack()).getStack(slot);
+                }
+
+                @Override
+                public int getSize() {
+                    return 1;
+                }
+            };
+
+            Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
+            if(match.isPresent()) {
+                if (!world.isClient) {
+                    // spawn the dropped output item
+                    ItemScatterer.spawn(
+                            world,
+                            outputPos.getX(),
+                            outputPos.getY(),
+                            outputPos.getZ(),
+                            match.get().value().getResult(null));
+                }
+
+                // decrement target dropped item's stack because a match was present, so the item was used up in crafting
+                targetDroppedItem.getStack().decrement(1);
+            }
 
             return ActionResult.SUCCESS;
+
         }
         return ActionResult.PASS;
     }
 
-    // block hit
+    // block hit - used for walljumping
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
 
@@ -199,6 +185,10 @@ public class HammerItem extends Item implements AttackBlockCallback {
                 && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative());
     }
 
+    public static boolean canProcessHammerRecipe(PlayerEntity player) {
+        return player.isOnGround() && player.isSneaking();
+    }
+
     // so you can walljump in creative without demolishing your world
     @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
@@ -225,42 +215,7 @@ public class HammerItem extends Item implements AttackBlockCallback {
         player.addVelocity(h, k, l);
     }
 
-    private Position getRecipeOutputLocation(Direction direction, BlockPos pos) {
-        Position centerPos = pos.toCenterPos();
-        double x = centerPos.getX();
-        double y = centerPos.getY();
-        double z = centerPos.getZ();
-
-        switch (direction) {
-            case UP -> y += 0.60;
-            case DOWN -> y -= 0.60;
-            case NORTH -> z -= 0.60;
-            case SOUTH -> z += 0.60;
-            case EAST -> x += 0.60;
-            case WEST -> x -= 0.60;
-        }
-
-        return new Vec3d(x, y, z);
-    }
-
-    private Vec3d getRecipeOutputVelocity(Direction direction) {
-        double xVelo = 0.0;
-        double yVelo = 0.0;
-        double zVelo = 0.0;
-
-        switch (direction) {
-            case UP -> yVelo += 0.2;
-            case DOWN -> yVelo -= 0.2;
-            case NORTH -> zVelo -= 0.2;
-            case SOUTH -> zVelo += 0.2;
-            case EAST -> xVelo += 0.2;
-            case WEST -> xVelo -= 0.2;
-        }
-
-        return new Vec3d(xVelo, yVelo, zVelo);
-    }
-
-    private void damageItem(ItemStack stack, LivingEntity attacker, Random random, boolean usedProperly) {
+    private static void damageItem(ItemStack stack, LivingEntity attacker, Random random, boolean usedProperly) {
         if (attacker.getWorld().isClient) {
             return;
         }

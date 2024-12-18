@@ -10,8 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.item.KlaxonItems;
-import net.myriantics.klaxon.recipe.hammer.HammeringRecipe;
-import net.myriantics.klaxon.util.KlaxonTags;
+import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -59,19 +58,19 @@ public class HammeringEmiRecipe implements EmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addSlot(input.get(0), 0, 9).appendTooltip(Text.translatable("klaxon.emi.text.hammering.offhand"));
+        widgets.addSlot(input.get(0), 0, 9).appendTooltip(Text.translatable("klaxon.emi.text.hammering.dropped_item"));
 
-        widgets.addSlot(getCatalysts().get(1), 29, 18).appendTooltip(Text.translatable("klaxon.emi.text.hammering.sneak_use"));
-
-        widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Text.translatable("klaxon.emi.text.hammering.mainhand"));
+        widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Text.translatable("klaxon.emi.text.hammering.hammer")).appendTooltip(Text.translatable("klaxon.emi.text.hammering.sneak_use"));
 
         widgets.addSlot(output.get(0), 58, 9).recipeContext(this);
+
+        // todo: add dropped item animation here (maybe an accompanying hammer swinging one as well)
 
         widgets.addText(Text.translatable("klaxon.emi.text.hammering.sneak_use_compact"), 0, 38, 4210752, false);
     }
 
     @Override
     public List<EmiIngredient> getCatalysts() {
-        return List.of(EmiStack.of(KlaxonItems.HAMMER), EmiIngredient.of(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT));
+        return List.of(EmiStack.of(KlaxonItems.STEEL_HAMMER));
     }
 }

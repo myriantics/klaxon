@@ -8,8 +8,8 @@ import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeSerializer;
-import net.myriantics.klaxon.recipe.hammer.HammeringRecipe;
-import net.myriantics.klaxon.recipe.hammer.HammeringRecipeSerializer;
+import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
+import net.myriantics.klaxon.recipe.hammering.HammeringRecipeSerializer;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipeSerializer;
 

@@ -4,15 +4,12 @@
 
   "item.klaxon.steel_ingot": "Steel Ingot",
   "item.klaxon.steel_nugget": "Steel Nugget",
-  "item.klaxon.hammer": "Hammer",
+  "item.klaxon.steel_hammer": "Steel Hammer",
   "item.klaxon.ender_plate": "Ender Pearl Plate",
   "item.klaxon.crude_steel_mixture": "Crude Steel Mixture",
   "item.klaxon.fractured_raw_iron": "Fractured Raw Iron",
   "item.klaxon.fractured_raw_copper": "Fractured Raw Copper",
   "item.klaxon.fractured_raw_gold": "Fractured Raw Gold",
-  "item.klaxon.raw_bagel": "Raw Bagel",
-  "item.klaxon.cooked_bagel": "Cooked Bagel",
-  "item.klaxon.pink_energy_bagel": "Pink Caffeinated Bagel",
 
   "entity.klaxon.ender_plate": "Ender Pearl Plate",
 
@@ -32,8 +29,8 @@
   "klaxon.emi.text.explosion_power_info.explosion_power_max": "Explosion Power Max: ",
   "klaxon.emi.text.explosion_power_info.bed_behavior_info": "Only produces explosion in the proper dimensions",
   "klaxon.emi.text.explosion_power_info.firework_behavior_info": "Explosion power based on firework components - Produces firework particles instead of explosion",
-  "klaxon.emi.text.hammering.offhand": "Hold in Offhand",
-  "klaxon.emi.text.hammering.mainhand": "Hold in Main Hand",
+  "klaxon.emi.text.hammering.dropped_item": "Dropped Item",
+  "klaxon.emi.text.hammering.hammer": "Hold to perform recipe",
   "klaxon.emi.text.hammering.sneak_use": "Sneak + Use In World",
   "klaxon.emi.text.hammering.sneak_use_compact": "Sneak + Use",
 

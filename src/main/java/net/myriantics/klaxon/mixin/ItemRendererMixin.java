@@ -19,7 +19,7 @@ public abstract class ItemRendererMixin {
     // Overrides the 2D Hammer model with the 3D version if proper conditions are met
     @ModifyVariable(method = "renderItem", at = @At(value = "HEAD"), argsOnly = true)
     public BakedModel useHammerModel(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model) {
-        if (stack.isOf(KlaxonItems.HAMMER) && renderMode != ModelTransformationMode.GUI && renderMode != ModelTransformationMode.FIXED && renderMode != ModelTransformationMode.GROUND) {
+        if (stack.isOf(KlaxonItems.STEEL_HAMMER) && renderMode != ModelTransformationMode.GUI && renderMode != ModelTransformationMode.FIXED && renderMode != ModelTransformationMode.GROUND) {
             return ((ItemRendererAccessor) this).mccourse$getModels().getModelManager().getModel(new ModelIdentifier(KlaxonCommon.locate("steel_hammer_3d"), "inventory"));
         }
         return value;

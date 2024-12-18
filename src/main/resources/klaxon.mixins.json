@@ -17,6 +17,7 @@
     "FireworkParticleMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
+    "GameRendererMixin",
     "ModelLoaderMixin"
   ],
   "server": [

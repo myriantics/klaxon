@@ -14,7 +14,7 @@ import net.myriantics.klaxon.item.KlaxonItems;
 // also yoinked from spectrum
 public class KlaxonEmiRecipeCategories {
     public static final EmiRecipeCategory BLAST_PROCESSING = new KlaxonCategory(KlaxonCommon.locate("blast_processing"), EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
-    public static final EmiRecipeCategory HAMMERING = new KlaxonCategory(KlaxonCommon.locate("hammering"), EmiStack.of(KlaxonItems.HAMMER));
+    public static final EmiRecipeCategory HAMMERING = new KlaxonCategory(KlaxonCommon.locate("hammering"), EmiStack.of(KlaxonItems.STEEL_HAMMER));
     public static final EmiRecipeCategory ITEM_EXPLOSION_POWER = new KlaxonCategory(KlaxonCommon.locate("item_explosion_power"), EmiStack.of(Blocks.TNT));
 
 

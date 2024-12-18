@@ -20,7 +20,7 @@ import net.myriantics.klaxon.compat.KlaxonCompat;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
-import net.myriantics.klaxon.recipe.hammer.HammeringRecipe;
+import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
@@ -108,7 +108,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                         " S ",
                         "LSL"
                 },
-                new ItemStack(KlaxonItems.HAMMER),
+                new ItemStack(KlaxonItems.STEEL_HAMMER),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
@@ -125,7 +125,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     private void buildHammeringRecipes(RecipeExporter exporter) {
-        addHammeringRecipe(exporter, Ingredient.ofItems(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER));
+        addHammeringRecipe(exporter, Ingredient.ofItems(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 4));
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.RAW_COPPER), new ItemStack(KlaxonItems.FRACTURED_RAW_COPPER));
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.RAW_IRON), new ItemStack(KlaxonItems.FRACTURED_RAW_IRON));
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.RAW_GOLD), new ItemStack(KlaxonItems.FRACTURED_RAW_GOLD));

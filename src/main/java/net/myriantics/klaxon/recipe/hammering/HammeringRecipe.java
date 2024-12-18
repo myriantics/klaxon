@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.hammer;
+package net.myriantics.klaxon.recipe.hammering;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
@@ -43,7 +43,7 @@ public class HammeringRecipe implements Recipe<RecipeInput>{
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(KlaxonItems.HAMMER);
+        return new ItemStack(KlaxonItems.STEEL_HAMMER);
     }
 
     @Override

@@ -4,11 +4,8 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
@@ -25,7 +22,7 @@ public class KlaxonItems {
     public static ArrayList<Item> simpleItems = new ArrayList<>();
 
     // cool stuff
-    public static final Item HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(
+    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(
             AttributeModifiersComponent.builder()
                     .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(KlaxonCommon.locate("hammer_damage"), HammerItem.ATTACK_DAMAGE, EntityAttributeModifier.Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND)
                     .add(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(KlaxonCommon.locate("hammer_attack_speed"), HammerItem.ATTACK_SPEED, EntityAttributeModifier.Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND)
@@ -43,17 +40,17 @@ public class KlaxonItems {
     public static final Item STEEL_NUGGET = registerSimpleItem("steel_nugget", new Item(new Item.Settings()));
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
-        entries.add(HAMMER);
+        entries.add(STEEL_HAMMER);
     }
 
     private static void addItemsToRedstoneTabGroup(FabricItemGroupEntries entries) {
         entries.add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
-        entries.add(KlaxonItems.HAMMER);
+        entries.add(KlaxonItems.STEEL_HAMMER);
     }
 
     private static void addItemsToCombatTabGroup(FabricItemGroupEntries entries) {
         entries.add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
-        entries.add(KlaxonItems.HAMMER);
+        entries.add(KlaxonItems.STEEL_HAMMER);
     }
 
     private static void addItemsToIngredientTabGroup(FabricItemGroupEntries entries) {

@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.hammer;
+package net.myriantics.klaxon.recipe.hammering;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
