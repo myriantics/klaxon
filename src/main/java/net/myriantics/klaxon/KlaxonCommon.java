@@ -40,6 +40,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonRecipeTypes.registerSerializer();
 		KlaxonDamageTypes.registerModDamageTypes();
 		KlaxonPackets.registerModPackets();
+		KlaxonPackets.registerC2SPacketRecievers();
 		KlaxonScreenHandlers.registerModScreenHandlers();
 		BlastProcessorBehavior.registerBlastProcessorBehaviors();
 

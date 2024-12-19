@@ -15,10 +15,11 @@
   "client": [
     "ClientWorldMixin",
     "FireworkParticleMixin",
+    "GameRendererMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
-    "GameRendererMixin",
-    "ModelLoaderMixin"
+    "ModelLoaderMixin",
+    "MinecraftClientMixin"
   ],
   "server": [
   ],

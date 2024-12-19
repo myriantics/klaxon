@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.item.tools.HammerItem;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
@@ -63,7 +62,7 @@ public abstract class PlayerEntityMixin {
 
             // calls the recipe processing code in the hammer and stores the actionresult
             // maybe will add an event for this if i find another use case in the future
-            ActionResult actionResult = HammerItem.useOnItemStack(player.getStackInHand(activeHand), player, targetDroppedItem, activeHand);
+            ActionResult actionResult = HammerItem.useOnDroppedItem(player.getStackInHand(activeHand), player, targetDroppedItem, activeHand);
             // only commit the actionresult if its a success
             if (actionResult.isAccepted()) {
                 cir.setReturnValue(actionResult);
