@@ -3,15 +3,13 @@ package net.myriantics.klaxon.item.tools;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.tag.BlockTags;
@@ -21,6 +19,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
@@ -32,6 +31,7 @@ import net.myriantics.klaxon.util.AbilityModifierHelper;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonTags;
 
+import java.util.List;
 import java.util.Optional;
 
 import static net.minecraft.block.FacingBlock.FACING;
@@ -39,6 +39,7 @@ import static net.minecraft.block.FacingBlock.FACING;
 public class HammerItem extends Item {
     public static final float ATTACK_DAMAGE = 9.0F;
     public static final float ATTACK_SPEED = -3.0F;
+    public static final float DROPPED_ITEM_INTERACTION_LEEWAY_BLOCKDISTANCE = 0.2f;
 
     public HammerItem(Settings settings) {
         super(settings);
@@ -80,48 +81,48 @@ public class HammerItem extends Item {
     public static ActionResult useOnDroppedItem(ItemStack handStack, PlayerEntity player, ItemEntity targetDroppedItem, Hand activeHand) {
         World world = player.getWorld();
 
-        Position outputPos = targetDroppedItem.getPos();
-
         // hammering recipe
         if(canProcessHammerRecipe(player)) {
             world.playSound(player, targetDroppedItem.getBlockPos(), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
             damageItem(handStack, player, player.getRandom(), true);
 
-            ItemStack targetStack = targetDroppedItem.getStack();
+            for (ItemEntity iteratedDroppedItem : world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), targetDroppedItem.getBoundingBox().expand(DROPPED_ITEM_INTERACTION_LEEWAY_BLOCKDISTANCE), (e) -> true)) {
 
-            // no need to process further if its the client
-            if (world.isClient()) {
-                // spawn le funny particle effects
-                spawnHammeringParticleEffects(world, targetStack, 5, targetDroppedItem);
-                return ActionResult.SUCCESS;
-            }
+                ItemStack targetStack = iteratedDroppedItem.getStack().copy();
+                Position outputPos = iteratedDroppedItem.getPos();
 
-            RecipeInput dummyInventory = new RecipeInput() {
-                @Override
-                public ItemStack getStackInSlot(int slot) {
-                    return new SimpleInventory(targetStack).getStack(slot);
+                // dont run recipe stuff on the client
+                if (!world.isClient()) {
+                    RecipeInput dummyInventory = new RecipeInput() {
+                        @Override
+                        public ItemStack getStackInSlot(int slot) {
+                            return new SimpleInventory(targetStack).getStack(slot);
+                        }
+
+                        @Override
+                        public int getSize() {
+                            return 1;
+                        }
+                    };
+
+                    Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
+                    if(match.isPresent()) {
+                        // spawn the dropped output item
+                        ItemScatterer.spawn(
+                                world,
+                                outputPos.getX(),
+                                outputPos.getY(),
+                                outputPos.getZ(),
+                                match.get().value().getResult(null));
+
+                        // decrement target dropped item's stack because a match was present, so the item was used up in crafting
+                        targetStack.decrement(1);
+                        iteratedDroppedItem.setStack(targetStack);
+                    }
+                } else {
+                    // spawn hammering particle effects
+                    spawnHammeringParticleEffects(world, targetStack, 5, targetDroppedItem);
                 }
-
-                @Override
-                public int getSize() {
-                    return 1;
-                }
-            };
-
-            Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
-            if(match.isPresent()) {
-                if (!world.isClient) {
-                   // spawn the dropped output item
-                    ItemScatterer.spawn(
-                            world,
-                            outputPos.getX(),
-                            outputPos.getY(),
-                            outputPos.getZ(),
-                            match.get().value().getResult(null));
-                }
-
-                // decrement target dropped item's stack because a match was present, so the item was used up in crafting
-                targetDroppedItem.getStack().decrement(1);
             }
 
             return ActionResult.SUCCESS;

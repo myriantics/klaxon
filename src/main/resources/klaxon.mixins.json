@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractBlockStateMixin",
+    "EntityMixin",
     "ExplosionMixin",
     "FireworkRocketEntityInvoker",
     "FireworkRocketEntityMixin",
@@ -18,8 +19,8 @@
     "GameRendererMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
-    "ModelLoaderMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "ModelLoaderMixin"
   ],
   "server": [
   ],
