@@ -183,9 +183,9 @@ public class HammerItem extends Item {
     }
 
     public static boolean canWallJump(PlayerEntity player, BlockState state) {
-        return !player.isOnGround()
+        return player.getVelocity().getY() > 0
                 && player.getMainHandStack().getItem() instanceof HammerItem
-                && !player.isInsideWaterOrBubbleColumn()
+                && !player.isInFluid()
                 // you can't walljump off of instabreakable blocks - in creative you can tho
                 && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative());
     }

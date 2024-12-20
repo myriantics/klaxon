@@ -110,7 +110,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
             if (slots != null) {
                 for (int slot : slots) {
-                    if (blastProcessor.canInsert(slot, handStack, interactionSide)) {
+                    if (canFastInput(state, hit.getSide()) && blastProcessor.canInsert(slot, handStack, interactionSide)) {
                         ItemStack transferStack;
                         if (!player.isCreative()) {
                             transferStack = handStack.split(blastProcessor.getMaxCountPerStack());
