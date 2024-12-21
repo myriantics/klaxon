@@ -22,12 +22,7 @@ public class KlaxonItems {
     public static ArrayList<Item> simpleItems = new ArrayList<>();
 
     // cool stuff
-    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(
-            AttributeModifiersComponent.builder()
-                    .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(KlaxonCommon.locate("hammer_damage"), HammerItem.ATTACK_DAMAGE, EntityAttributeModifier.Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND)
-                    .add(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(KlaxonCommon.locate("hammer_attack_speed"), HammerItem.ATTACK_SPEED, EntityAttributeModifier.Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND)
-                    .build()
-    )));
+    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(HammerItem.createAttributeModifiers())));
     // disabled currently because its broken as FUCK - will come later trust
     public static final Item ENDER_PEARL_PLATE_ITEM = registerSimpleItem("ender_plate", new EnderPlateItem(new Item.Settings()));
 
