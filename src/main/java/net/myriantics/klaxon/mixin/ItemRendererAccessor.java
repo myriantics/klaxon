@@ -10,5 +10,5 @@ public interface ItemRendererAccessor {
 
     // Used in ItemRendererMixin
     @Accessor("models")
-    ItemModels mccourse$getModels();
+    ItemModels klaxon$getModels();
 }

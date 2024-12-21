@@ -25,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
@@ -103,14 +104,16 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         ItemStack handStack = player.getStackInHand(player.getActiveHand());
         Direction interactionSide = hit.getSide();
 
+        KlaxonCommon.LOGGER.info("Can Fast Input?" + (interactionSide.equals(BlockDirectionHelper.getLeft(interactionSide)) || interactionSide.equals(BlockDirectionHelper.getRight(interactionSide))));
+
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
         if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            int[] slots = blastProcessor.getAvailableSlots(interactionSide);
+            int[] slots = canFastInput(state, interactionSide) ? blastProcessor.getAvailableSlots(interactionSide) : new int[] {};
 
             if (slots != null) {
                 for (int slot : slots) {
-                    if (canFastInput(state, hit.getSide()) && blastProcessor.canInsert(slot, handStack, interactionSide)) {
+                    if (blastProcessor.canInsert(slot, handStack, interactionSide)) {
                         ItemStack transferStack;
                         if (!player.isCreative()) {
                             transferStack = handStack.split(blastProcessor.getMaxCountPerStack());
@@ -231,15 +234,15 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         }
     }
 
-    public static boolean canFastInput(BlockState state, Direction direction) {
+    public static boolean canFastInput(BlockState state, Direction clickSide) {
         Direction blockDirection = state.get(HORIZONTAL_FACING);
         // check if you can insert from the sides
         if (!state.get(FUELED) &&
-                (direction.equals(BlockDirectionHelper.getLeft(direction)) || direction.equals(BlockDirectionHelper.getRight(direction)))) {
+                (clickSide.equals(BlockDirectionHelper.getLeft(blockDirection)) || clickSide.equals(BlockDirectionHelper.getRight(blockDirection)))) {
             return true;
         }
         // check if you can insert from the top. if no, don't bother
-        return state.get(HATCH_OPEN) && direction.equals(BlockDirectionHelper.getUp(blockDirection));
+        return state.get(HATCH_OPEN) && clickSide.equals(BlockDirectionHelper.getUp(blockDirection));
     }
 
     public static boolean isMuffled(World world, BlockPos pos) {

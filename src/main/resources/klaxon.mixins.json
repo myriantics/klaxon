@@ -4,17 +4,18 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractBlockStateMixin",
-    "EntityMixin",
     "ExplosionMixin",
     "FireworkRocketEntityInvoker",
     "FireworkRocketEntityMixin",
     "LivingEntityMixin",
     "MobEntityMixin",
     "ObserverBlockInvoker",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "WindChargeEntityInvoker"
   ],
   "client": [
     "ClientWorldMixin",
+    "EntityMixinClient",
     "FireworkParticleMixin",
     "GameRendererMixin",
     "ItemRendererAccessor",

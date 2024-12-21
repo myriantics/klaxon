@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.ExplosionBehavior;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
@@ -49,7 +50,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
                     blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
                     world.createExplosion(null, null,
                             // this is used to differentiate blast processor explosions from normal ones
-                            new DeepslateBlastProcessorBlockEntity.DeepslateBlastProcessorExplosionBehavior(),
+                            new ExplosionBehavior(),
                             position.getX(), position.getY(), position.getZ(),
                             (float) powerData.explosionPower(),
                             powerData.producesFire(),

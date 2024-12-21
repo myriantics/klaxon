@@ -34,8 +34,7 @@ public abstract class ExplosionMixin {
         // this is so it doesnt proc sculk sensors
         // top 10 features people will totally make use of
 
-        if (behavior instanceof DeepslateBlastProcessorBlockEntity.DeepslateBlastProcessorExplosionBehavior
-                && getSoundEvent().value().equals(SoundEvents.INTENTIONALLY_EMPTY)) {
+        if (getSoundEvent().value().equals(SoundEvents.INTENTIONALLY_EMPTY)) {
 
             // don't emit explosion game event if it's a muffled blast processor explosion
             return;

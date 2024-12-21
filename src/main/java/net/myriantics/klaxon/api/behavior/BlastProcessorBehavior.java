@@ -7,17 +7,23 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
 import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
+import net.minecraft.entity.projectile.WindChargeEntity;
 import net.minecraft.item.*;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
+import net.myriantics.klaxon.mixin.WindChargeEntityInvoker;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
@@ -119,7 +125,7 @@ public interface BlastProcessorBehavior {
             @Override
             public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
                 return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                        0.,
+                        0.3,
                         0.8,
                         Text.empty(),
                         "firework_star_behavior"
@@ -167,6 +173,64 @@ public interface BlastProcessorBehavior {
         DeepslateBlastProcessorBlock.registerBehavior(Items.PURPLE_BED, bedBlastProcessorBehavior);
         DeepslateBlastProcessorBlock.registerBehavior(Items.WHITE_BED, bedBlastProcessorBehavior);
         DeepslateBlastProcessorBlock.registerBehavior(Items.YELLOW_BED, bedBlastProcessorBehavior);
+
+        DeepslateBlastProcessorBlock.registerBehavior(Items.WIND_CHARGE, new ItemBlastProcessorBehavior() {
+            @Override
+            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
+                // wind charges don't do any damage
+                return new ItemExplosionPowerData(0, false);
+            }
+
+            @Override
+            public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled) {
+                Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
+                WindChargeEntity windCharge = new WindChargeEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), Vec3d.ZERO);
+                WindChargeEntityInvoker windChargeInvoker = ((WindChargeEntityInvoker) windCharge);
+
+                world.spawnEntity(windCharge);
+
+                if (isMuffled) {
+                    // explode silently and discard
+                    world.createExplosion(
+                            windCharge,
+                            null,
+                            // cast so that its identified as a blast processor explosion
+                            windChargeInvoker.klaxon$getExplosionBehavior(),
+                            outputPos.getX(),
+                            outputPos.getY(),
+                            outputPos.getZ(),
+                            windChargeInvoker.klaxon$getExplosionPower(),
+                            false,
+                            World.ExplosionSourceType.TRIGGER,
+                            ParticleTypes.GUST_EMITTER_SMALL,
+                            ParticleTypes.GUST_EMITTER_LARGE,
+                            RegistryEntry.of(SoundEvents.INTENTIONALLY_EMPTY)
+                    );
+                } else {
+                    // explode using regular method
+                    windChargeInvoker.invokeCreateExplosion(new Vec3d(outputPos.getX(), outputPos.getY(), outputPos.getZ()));
+                }
+
+                // remove stack and discard
+                blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+                windCharge.discard();
+            }
+
+            @Override
+            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory, boolean isMuffled) {
+                return false;
+            }
+
+            @Override
+            public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
+                return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
+                        0.0,
+                        0.0,
+                        Text.translatable("klaxon.emi.text.explosion_power_info.wind_charge_behavior_info"),
+                        "wind_charge_behavior"
+                );
+            }
+        });
     }
 
     // long ass name go brrr

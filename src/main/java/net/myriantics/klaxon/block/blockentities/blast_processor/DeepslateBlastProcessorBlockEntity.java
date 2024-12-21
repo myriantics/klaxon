@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,6 +10,7 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,6 +21,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.explosion.AdvancedExplosionBehavior;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
@@ -30,6 +33,8 @@ import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.*;
 
@@ -94,7 +99,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 return PROCESS_ITEM_SLOTS;
             }
         }
-        return new int[] {-1};
+        return new int[] {};
     }
 
     @Override
@@ -259,7 +264,4 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 itemExplosionPowerData.explosionPower(),
                 itemExplosionPowerData.producesFire());
     }
-
-    // no special functionality except that it is used to differentiate blast processor explosions from regular ones
-    public static class DeepslateBlastProcessorExplosionBehavior extends ExplosionBehavior {}
 }

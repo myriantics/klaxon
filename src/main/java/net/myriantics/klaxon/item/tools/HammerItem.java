@@ -24,6 +24,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
@@ -117,7 +118,11 @@ public class HammerItem extends Item {
 
                         // decrement target dropped item's stack because a match was present, so the item was used up in crafting
                         targetStack.decrement(1);
-                        iteratedDroppedItem.setStack(targetStack);
+                        if (targetStack.getCount() == 0) {
+                            iteratedDroppedItem.remove(Entity.RemovalReason.DISCARDED);
+                        } else {
+                            iteratedDroppedItem.setStack(targetStack);
+                        }
                     }
                 } else {
                     // spawn hammering particle effects
@@ -185,13 +190,20 @@ public class HammerItem extends Item {
 
     public static boolean canWallJump(PlayerEntity player, BlockState state) {
         return player.getVelocity().getY() > 0
-                && player.getMainHandStack().getItem() instanceof HammerItem
+                // make sure they're actually holding a hammer
+                && player.getMainHandStack().isOf(KlaxonItems.STEEL_HAMMER)
+                // allows players to not walljump if they don't want to
+                && !player.isSneaking()
+                // you cant walljump when you're in a boat or some this
+                && player.getVehicle() == null
+                // walljumping in water is janky
                 && !player.isInFluid()
                 // you can't walljump off of instabreakable blocks - in creative you can tho
                 && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative());
     }
 
     public static boolean canProcessHammerRecipe(PlayerEntity player) {
+        // has conditions so that player has control - as well as item hitboxes not blocking block selection constantly
         return player.isOnGround() && player.isSneaking();
     }
 

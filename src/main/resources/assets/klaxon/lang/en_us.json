@@ -37,5 +37,6 @@
   "container.klaxon.item_explosion_power.title": "Item Explosion Power",
 
   "container.klaxon.hammering.title": "Hammering",
-  "container.klaxon.blast_processing.title": "Blast Processing"
+  "container.klaxon.blast_processing.title": "Blast Processing",
+  "klaxon.emi.text.explosion_power_info.wind_charge_behavior_info": "Summons a wind charge burst! Does not have any explosion power for the purpose of crafting!"
 }
