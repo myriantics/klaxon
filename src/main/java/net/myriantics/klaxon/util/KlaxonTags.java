@@ -40,8 +40,6 @@ public class KlaxonTags {
 
     public static class Blocks {
         // klaxon's tags
-        public static final TagKey<Block> HAMMER_INTERACTION_POINT =
-                createTag("hammer_interaction_point");
         public static final TagKey<Block> HAMMER_MINEABLE =
                 createTag("mineable/hammer");
         public static final TagKey<Block> HAMMER_INSTABREAKABLE =

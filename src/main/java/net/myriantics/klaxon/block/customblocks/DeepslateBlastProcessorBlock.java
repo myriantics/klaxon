@@ -104,8 +104,6 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         ItemStack handStack = player.getStackInHand(player.getActiveHand());
         Direction interactionSide = hit.getSide();
 
-        KlaxonCommon.LOGGER.info("Can Fast Input?" + (interactionSide.equals(BlockDirectionHelper.getLeft(interactionSide)) || interactionSide.equals(BlockDirectionHelper.getRight(interactionSide))));
-
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
         if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {

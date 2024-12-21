@@ -20,14 +20,6 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
-        getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT)
-                .add(Blocks.NETHERITE_BLOCK)
-                .add(Blocks.IRON_BLOCK)
-                .add(Blocks.SMITHING_TABLE)
-                .add(Blocks.ANVIL)
-                .add(Blocks.CHIPPED_ANVIL)
-                .add(Blocks.DAMAGED_ANVIL)
-                .add(KlaxonBlocks.STEEL_BLOCK);
 
         getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_MINEABLE)
                 .addOptionalTag(KlaxonTags.Blocks.HAMMER_INSTABREAKABLE);

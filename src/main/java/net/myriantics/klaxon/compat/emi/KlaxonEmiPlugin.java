@@ -38,7 +38,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addCategory(KlaxonEmiRecipeCategories.BLAST_PROCESSING);
         registry.addCategory(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER);
 
-        registry.addWorkstation(KlaxonEmiRecipeCategories.HAMMERING, EmiIngredient.of(KlaxonTags.Blocks.HAMMER_INTERACTION_POINT));
         registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
     }
