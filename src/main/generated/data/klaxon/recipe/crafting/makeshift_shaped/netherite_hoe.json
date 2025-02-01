@@ -1,0 +1,35 @@
+{
+  "type": "klaxon:makeshift_shaped",
+  "category": "misc",
+  "group": "netherite_hoe",
+  "key": {
+    "P": [
+      {
+        "item": "minecraft:potato"
+      },
+      {
+        "item": "minecraft:poisonous_potato"
+      }
+    ]
+  },
+  "pattern": [
+    "PPP",
+    "PPP",
+    "PPP"
+  ],
+  "potential_makeshift_ingredients": [
+    [
+      {
+        "item": "minecraft:potato"
+      },
+      {
+        "item": "minecraft:poisonous_potato"
+      }
+    ]
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:netherite_hoe"
+  },
+  "show_notification": false
+}

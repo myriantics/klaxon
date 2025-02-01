@@ -27,5 +27,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_NUGGETS)
                 .add(KlaxonItems.STEEL_NUGGET);
+
+        getOrCreateTagBuilder(KlaxonTags.Items.MAKESHIFT_CRAFTING_INGREDIENTS)
+                .add(Items.POISONOUS_POTATO);
     }
 }

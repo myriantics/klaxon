@@ -13,6 +13,14 @@ public class KlaxonTags {
     public static class Items {
 
         // klaxon's tags
+        public static final TagKey<Item> MAKESHIFT_CRAFTING_INGREDIENTS =
+                createTag("makeshift_crafting_ingredients");
+        public static final TagKey<Item> MAKESHIFT_REPAIR_MATERIALS =
+                createTag("makeshift_repair_materials");
+        public static final TagKey<Item> INFINITELY_REPAIRABLE =
+                createTag("infinitely_repairable");
+        public static final TagKey<Item> NO_XP_COST_REPAIRABLE =
+                createTag("no_xp_cost_repairable");
 
 
         // convention tags

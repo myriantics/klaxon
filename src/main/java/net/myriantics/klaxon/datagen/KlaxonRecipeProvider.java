@@ -22,6 +22,7 @@ import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,6 +111,19 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                 },
                 new ItemStack(KlaxonItems.STEEL_HAMMER),
                 CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
+
+        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+                'P', Ingredient.ofItems(Items.POTATO, Items.POISONOUS_POTATO)),
+                new String[]{
+                        "PPP",
+                        "PPP",
+                        "PPP"
+                },
+                List.of(Ingredient.ofItems(Items.POTATO, Items.POISONOUS_POTATO)),
+                new ItemStack(Items.NETHERITE_HOE),
+                null,
                 null
         );
     }
@@ -344,6 +358,28 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         }
 
         ShapedRecipe recipe = new ShapedRecipe(group, category, RawShapedRecipe.create(key, Arrays.stream(pattern).toList()), output);
+
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    private void addMakeshiftShapedCraftingRecipe(RecipeExporter exporter,
+                                         Map<Character, Ingredient> key, String[] pattern, List<Ingredient> potentialMakeshiftIngredients, ItemStack output,
+                                         @Nullable CraftingRecipeCategory category, @Nullable String group,
+                                         final ResourceCondition... conditions) {
+
+        Identifier recipeId = computeRecipeIdentifier("crafting/makeshift_shaped",
+                getItemPath(output.getItem()),
+                conditions);
+
+        if (category == null) {
+            category = CraftingRecipeCategory.MISC;
+        }
+
+        if (group == null) {
+            group = getItemPath(output.getItem());
+        }
+
+        ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(group, category, RawShapedRecipe.create(key, Arrays.stream(pattern).toList()), potentialMakeshiftIngredients,  output, false);
 
         acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
