@@ -15,9 +15,7 @@
   ],
   "client": [
     "ClientWorldMixin",
-    "EntityMixinClient",
     "FireworkParticleMixin",
-    "GameRendererMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
     "MinecraftClientMixin",

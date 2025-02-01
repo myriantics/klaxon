@@ -48,25 +48,4 @@ public abstract class PlayerEntityMixin {
 
         return value;
     }
-
-    // this mixin is needed because the built in entity item interaction code only works for LivingEntities!
-    // Such fun!
-    @Inject(
-            method = "interact",
-            at = @At(value = "HEAD"),
-            cancellable = true)
-    private void droppedItemEntityInteraction(Entity targetEntity, Hand activeHand, CallbackInfoReturnable<ActionResult> cir) {
-        PlayerEntity player = ((PlayerEntity) (Object) this);
-        ItemStack handStack = player.getStackInHand(activeHand);
-        if (!player.isSpectator() && targetEntity instanceof ItemEntity targetDroppedItem && handStack.isOf(KlaxonItems.STEEL_HAMMER)) {
-
-            // calls the recipe processing code in the hammer and stores the actionresult
-            // maybe will add an event for this if i find another use case in the future
-            ActionResult actionResult = HammerItem.useOnDroppedItem(player.getStackInHand(activeHand), player, targetDroppedItem, activeHand);
-            // only commit the actionresult if its a success
-            if (actionResult.isAccepted()) {
-                cir.setReturnValue(actionResult);
-            }
-        }
-    }
 }

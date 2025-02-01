@@ -44,7 +44,6 @@ import static net.minecraft.block.FacingBlock.FACING;
 public class HammerItem extends Item {
     public static final float ATTACK_DAMAGE = 9.0F;
     public static final float ATTACK_SPEED = -3.0F;
-    public static final float DROPPED_ITEM_INTERACTION_LEEWAY_BLOCKDISTANCE = 0.2f;
 
     public HammerItem(Settings settings) {
         super(settings);
@@ -96,16 +95,29 @@ public class HammerItem extends Item {
         }
     }
 
-    // called in PlayerEntityMixin - supplemented by GameRendererMixin
-    public static ActionResult useOnDroppedItem(ItemStack handStack, PlayerEntity player, ItemEntity targetDroppedItem, Hand activeHand) {
-        World world = player.getWorld();
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        World world = context.getWorld();
+        PlayerEntity player = context.getPlayer();
+        Vec3d clickedPos = context.getHitPos();
+        ItemStack handStack = context.getStack();
 
-        // hammering recipe
-        if(canProcessHammerRecipe(player)) {
-            world.playSound(player, targetDroppedItem.getBlockPos(), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
+        // check if player is actually in the position to hammer stuff before doing anything
+        if (player != null && canProcessHammerRecipe(player)) {
+
+            List<ItemEntity> selectedItems = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), Box.of(clickedPos, 0.5, 0.5, 0.5), (e) -> true);
+
+            // if there aren't any dropped items in the targeted area, don't do anything
+            if (selectedItems.isEmpty()) {
+                return ActionResult.PASS;
+            }
+
+            // play sound and damage item only after we're sure there are items selected
+            world.playSound(player, BlockPos.ofFloored(clickedPos), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
             damageItem(handStack, player, player.getRandom(), true);
 
-            for (ItemEntity iteratedDroppedItem : world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), targetDroppedItem.getBoundingBox().expand(DROPPED_ITEM_INTERACTION_LEEWAY_BLOCKDISTANCE), (e) -> true)) {
+            // run recipe and dropping code for each selected dropped item
+            for (ItemEntity iteratedDroppedItem : selectedItems) {
 
                 ItemStack targetStack = iteratedDroppedItem.getStack().copy();
                 Position outputPos = iteratedDroppedItem.getPos();
@@ -144,13 +156,14 @@ public class HammerItem extends Item {
                     }
                 } else {
                     // spawn hammering particle effects
-                    spawnHammeringParticleEffects(world, targetStack, 5, targetDroppedItem);
+                    spawnHammeringParticleEffects(world, targetStack, 5, iteratedDroppedItem);
                 }
             }
 
             return ActionResult.SUCCESS;
 
         }
+
         return ActionResult.PASS;
     }
 

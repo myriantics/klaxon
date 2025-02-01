@@ -26,13 +26,17 @@ public class KlaxonItems {
     // disabled currently because its broken as FUCK - will come later trust
     public static final Item ENDER_PEARL_PLATE_ITEM = registerSimpleItem("ender_plate", new EnderPlateItem(new Item.Settings()));
 
-    // filler
-    public static final Item STEEL_INGOT = registerSimpleItem("steel_ingot", new Item(new Item.Settings()));
+    // raw ores / blends
     public static final Item FRACTURED_RAW_IRON = registerSimpleItem("fractured_raw_iron", new Item(new Item.Settings()));
     public static final Item FRACTURED_RAW_COPPER = registerSimpleItem("fractured_raw_copper", new Item(new Item.Settings()));
     public static final Item FRACTURED_RAW_GOLD = registerSimpleItem("fractured_raw_gold", new Item(new Item.Settings()));
     public static final Item CRUDE_STEEL_MIXTURE = registerSimpleItem("crude_steel_mixture", new Item(new Item.Settings()));
+
+    // raw materials
+    public static final Item STEEL_INGOT = registerSimpleItem("steel_ingot", new Item(new Item.Settings()));
     public static final Item STEEL_NUGGET = registerSimpleItem("steel_nugget", new Item(new Item.Settings()));
+
+    // processed materials
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
         entries.add(STEEL_HAMMER);
