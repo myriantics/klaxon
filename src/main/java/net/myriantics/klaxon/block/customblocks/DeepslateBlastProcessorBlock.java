@@ -187,9 +187,9 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         Direction direction = context.getHorizontalPlayerFacing();
         if (player != null) {
             if (player.isSneaking()) {
-                return this.getDefaultState().with(HORIZONTAL_FACING, direction);
-            } else {
                 return this.getDefaultState().with(HORIZONTAL_FACING, direction.getOpposite());
+            } else {
+                return this.getDefaultState().with(HORIZONTAL_FACING, direction);
             }
         }
         return this.getDefaultState();
