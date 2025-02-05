@@ -1,7 +1,7 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 0.6,
-  "explosionPowerMin": 0.3,
+  "explosionPowerMax": 0.4,
+  "explosionPowerMin": 0.1,
   "input": {
     "item": "minecraft:raw_iron"
   },

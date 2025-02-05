@@ -21,20 +21,23 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         getOrCreateTagBuilder(ConventionalItemTags.INGOTS)
-                .add(KlaxonItems.STEEL_INGOT);
+                .forceAddTag(KlaxonTags.Items.STEEL_INGOTS);
 
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_INGOTS)
-                .add(KlaxonItems.STEEL_INGOT);
+                .add(KlaxonItems.STEEL_INGOT)
+                .add(KlaxonItems.CRUDE_STEEL_INGOT);
 
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_BLOCKS)
-                .add(KlaxonBlocks.STEEL_BLOCK.asItem());
+                .add(KlaxonBlocks.STEEL_BLOCK.asItem())
+                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
 
         getOrCreateTagBuilder(KlaxonTags.Items.STEEL_NUGGETS)
                 .add(KlaxonItems.STEEL_NUGGET);
 
         getOrCreateTagBuilder(KlaxonTags.Items.MAKESHIFT_CRAFTING_INGREDIENTS)
-                .add(Items.POISONOUS_POTATO)
-                .add(Items.GOLD_INGOT);
+                .add(KlaxonItems.CRUDE_STEEL_INGOT)
+                .add(KlaxonItems.CRUDE_STEEL_PLATE)
+                .add(KlaxonItems.CRUDE_STEEL_INGOT);
 
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER);

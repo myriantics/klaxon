@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "iron_ingot",
+  "key": {
+    "x": {
+      "item": "klaxon:fractured_iron_fragments"
+    }
+  },
+  "pattern": [
+    "xx",
+    "xx"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:iron_ingot"
+  }
+}

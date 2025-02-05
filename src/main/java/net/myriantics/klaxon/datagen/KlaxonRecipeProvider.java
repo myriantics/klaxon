@@ -54,6 +54,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         buildItemExplosionPowerRecipes(exporter);
         buildHammeringRecipes(exporter);
         buildBlastProcessingRecipes(exporter);
+        buildBlastingSmeltingRecipes(exporter);
+        buildFracturedOreProcessingRecipes(exporter);
     }
 
     private void buildCraftingRecipes(RecipeExporter exporter) {
@@ -66,8 +68,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     private void buildMaterialCraftingRecipes(RecipeExporter exporter) {
         addShapelessCraftingRecipe(exporter,
                 DefaultedList.copyOf(Ingredient.EMPTY,
-                        Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_IRON),
-                        Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_IRON),
+                        Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
+                        Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
                         Ingredient.fromTag(KlaxonTags.Items.COAL),
                         Ingredient.fromTag(KlaxonTags.Items.COAL)),
                 new ItemStack(KlaxonItems.CRUDE_STEEL_MIXTURE, 2),
@@ -79,10 +81,6 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         add3x3PackingRecipe(exporter, Ingredient.ofItems(KlaxonItems.STEEL_NUGGET), new ItemStack(KlaxonItems.STEEL_INGOT), null, null);
         add3x3UnpackingRecipe(exporter, Ingredient.ofItems(KlaxonBlocks.STEEL_BLOCK), KlaxonItems.STEEL_INGOT, null, null);
         add3x3UnpackingRecipe(exporter, Ingredient.ofItems(KlaxonItems.STEEL_INGOT), KlaxonItems.STEEL_NUGGET, null, null);
-
-        add2x2PackingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_COPPER), new ItemStack(Items.RAW_COPPER), null, null);
-        add2x2PackingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_IRON), new ItemStack(Items.RAW_IRON), null, null);
-        add2x2PackingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_GOLD), new ItemStack(Items.RAW_GOLD), null, null);
     }
 
     private void buildMachineCraftingRecipes(RecipeExporter exporter) {
@@ -101,7 +99,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     private void buildEquipmentCraftingRecipes(RecipeExporter exporter) {
-        addShapedCraftingRecipe(exporter, Map.of(
+        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
                 'B', Ingredient.fromTag(KlaxonTags.Items.STEEL_BLOCKS),
                 'I', Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS),
                 'S', Ingredient.ofItems(Items.STICK),
@@ -111,48 +109,31 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                         " S ",
                         "LSL"
                 },
+                List.of(Ingredient.fromTag(KlaxonTags.Items.STEEL_BLOCKS), Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS)),
                 new ItemStack(KlaxonItems.STEEL_HAMMER),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
 
-        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
-                'P', Ingredient.ofItems(Items.POTATO, Items.POISONOUS_POTATO)),
-                new String[]{
-                        "PPP",
-                        "PPP",
-                        "PPP"
-                },
-                List.of(Ingredient.ofItems(Items.POTATO, Items.POISONOUS_POTATO)),
-                new ItemStack(Items.NETHERITE_HOE),
-                null,
-                null
-        );
-
         addMakeshiftShapelessCraftingRecipe(exporter,
                 DefaultedList.copyOf(Ingredient.EMPTY,
-                        Ingredient.fromTag(ConventionalItemTags.INGOTS),
+                        Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS),
                         Ingredient.ofItems(Items.FLINT)),
                 new ItemStack(Items.FLINT_AND_STEEL),
-                List.of(Ingredient.fromTag(ConventionalItemTags.INGOTS)),
+                List.of(Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS)),
                 null, null);
     }
 
     private void buildCookingRecipes(RecipeExporter exporter) {
-        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_IRON), new ItemStack(Items.IRON_NUGGET), 1.0f, 150, null, "fractured_ores");
-        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_COPPER), new ItemStack(Items.IRON_NUGGET), 1.0f, 150, null, "fractured_ores",
-                new AllModsLoadedResourceCondition(List.of(KlaxonCompat.CREATE_MOD_ID)));
-        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_RAW_GOLD), new ItemStack(Items.GOLD_NUGGET), 1.0f, 150, null, "fractured_ores");
+        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_MIXTURE), new ItemStack(KlaxonItems.CRUDE_STEEL_INGOT), 1.0f, 150, null, null);
+    }
 
-        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_MIXTURE), new ItemStack(KlaxonItems.STEEL_INGOT), 1.0f, 150, null, null);
-
+    private void buildBlastingSmeltingRecipes(RecipeExporter exporter) {
+        addBlastingSmeltingRecipe(exporter, Ingredient.ofItems(KlaxonItems.STEEL_HAMMER), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
     }
 
     private void buildHammeringRecipes(RecipeExporter exporter) {
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 4));
-        addHammeringRecipe(exporter, Ingredient.ofItems(Items.RAW_COPPER), new ItemStack(KlaxonItems.FRACTURED_RAW_COPPER));
-        addHammeringRecipe(exporter, Ingredient.ofItems(Items.RAW_IRON), new ItemStack(KlaxonItems.FRACTURED_RAW_IRON));
-        addHammeringRecipe(exporter, Ingredient.ofItems(Items.RAW_GOLD), new ItemStack(KlaxonItems.FRACTURED_RAW_GOLD));
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.SNOWBALL), new ItemStack(Items.SNOW));
 
         // create compat recipes - done manually for now because of issues with itemstacks returning air as an id - should resolve in future
@@ -167,10 +148,6 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     private void buildBlastProcessingRecipes(RecipeExporter exporter) {
-        addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.RAW_COPPER), 0.2, 0.5, new ItemStack(KlaxonItems.FRACTURED_RAW_COPPER));
-        addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.RAW_IRON), 0.3, 0.6, new ItemStack(KlaxonItems.FRACTURED_RAW_IRON));
-        addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.RAW_GOLD), 0.2, 0.5, new ItemStack(KlaxonItems.FRACTURED_RAW_GOLD));
-
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.DEEPSLATE_BRICKS), 0.1, 0.3, new ItemStack(Items.CRACKED_DEEPSLATE_BRICKS));
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.DEEPSLATE_TILES), 0.1, 0.3, new ItemStack(Items.CRACKED_DEEPSLATE_TILES));
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.NETHER_BRICKS), 0.1, 0.3, new ItemStack(Items.CRACKED_NETHER_BRICKS));
@@ -197,6 +174,27 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.GHAST_SPAWN_EGG), 3.5, true, true);
     }
 
+    private void buildFracturedOreProcessingRecipes(RecipeExporter exporter) {
+        addFracturedOreProcessingRecipes(exporter, KlaxonItems.FRACTURED_RAW_IRON, Items.RAW_IRON, KlaxonItems.FRACTURED_IRON_FRAGMENTS, Items.IRON_INGOT);
+        addFracturedOreProcessingRecipes(exporter, KlaxonItems.FRACTURED_RAW_GOLD, Items.RAW_GOLD, KlaxonItems.FRACTURED_GOLD_FRAGMENTS, Items.GOLD_INGOT);
+        addFracturedOreProcessingRecipes(exporter, KlaxonItems.FRACTURED_RAW_COPPER, Items.RAW_COPPER, KlaxonItems.FRACTURED_COPPER_FRAGMENTS, Items.COPPER_INGOT);
+    }
+
+    private void addFracturedOreProcessingRecipes(RecipeExporter exporter,
+                                                  Item fracturedRawOreItem, Item rawOreItem, Item fracturedOreFragmentsItem, Item oreIngotItem,
+                                                  final ResourceCondition... conditions) {
+        // blast processing
+        addBlastProcessingRecipe(exporter, Ingredient.ofItems(rawOreItem), 0.1, 0.4, new ItemStack(fracturedRawOreItem), conditions);
+        addBlastProcessingRecipe(exporter, Ingredient.ofItems(oreIngotItem), 0.2, 0.5, new ItemStack(fracturedOreFragmentsItem), conditions);
+
+        // smelting
+        addOreProcessingCookingRecipe(exporter, Ingredient.ofItems(fracturedRawOreItem), new ItemStack(fracturedOreFragmentsItem), 1.0f, 150, null, "fractured_ores", conditions);
+
+        // crafting
+        add2x2PackingRecipe(exporter, Ingredient.ofItems(fracturedRawOreItem), new ItemStack(rawOreItem), null, null, conditions);
+        add2x2PackingRecipe(exporter, Ingredient.ofItems(fracturedOreFragmentsItem), new ItemStack(oreIngotItem), null, null, conditions);
+    }
+
     private void add3x3UnpackingRecipe(RecipeExporter exporter,
                                      Ingredient input, ItemConvertible output,
                                      @Nullable CraftingRecipeCategory category, @Nullable String group) {
@@ -218,8 +216,9 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
     private void add2x2UnpackingRecipe(RecipeExporter exporter,
                                        Ingredient input, ItemConvertible output,
-                                       @Nullable CraftingRecipeCategory category, @Nullable String group) {
-        addShapelessCraftingRecipe(exporter, DefaultedList.copyOf(Ingredient.EMPTY, input), new ItemStack(output, 4), category, group);
+                                       @Nullable CraftingRecipeCategory category, @Nullable String group,
+                                       final ResourceCondition... conditions) {
+        addShapelessCraftingRecipe(exporter, DefaultedList.copyOf(Ingredient.EMPTY, input), new ItemStack(output, 4), category, group, conditions);
     }
 
     private void add2x2PackingRecipe(RecipeExporter exporter,

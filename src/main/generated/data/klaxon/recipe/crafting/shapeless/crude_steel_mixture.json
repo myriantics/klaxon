@@ -4,10 +4,10 @@
   "group": "crude_steel_mixture",
   "ingredients": [
     {
-      "item": "klaxon:fractured_raw_iron"
+      "item": "klaxon:fractured_iron_fragments"
     },
     {
-      "item": "klaxon:fractured_raw_iron"
+      "item": "klaxon:fractured_iron_fragments"
     },
     {
       "tag": "c:coal"

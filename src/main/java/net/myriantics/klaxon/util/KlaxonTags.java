@@ -22,7 +22,6 @@ public class KlaxonTags {
         public static final TagKey<Item> NO_XP_COST_REPAIRABLE =
                 createTag("no_xp_cost_repairable");
 
-
         // convention tags
         public static final TagKey<Item> STEEL_INGOTS =
                 createConventionTag("ingots/steel");

@@ -5,9 +5,9 @@
   "experience": 1.0,
   "group": "fractured_ores",
   "ingredient": {
-    "item": "klaxon:fractured_raw_gold"
+    "item": "klaxon:fractured_raw_iron"
   },
   "result": {
-    "id": "minecraft:gold_nugget"
+    "id": "klaxon:fractured_iron_fragments"
   }
 }

@@ -27,16 +27,25 @@ public class KlaxonItems {
     public static final Item ENDER_PEARL_PLATE_ITEM = registerSimpleItem("ender_plate", new EnderPlateItem(new Item.Settings()));
 
     // raw ores / blends
-    public static final Item FRACTURED_RAW_IRON = registerSimpleItem("fractured_raw_iron", new Item(new Item.Settings()));
-    public static final Item FRACTURED_RAW_COPPER = registerSimpleItem("fractured_raw_copper", new Item(new Item.Settings()));
-    public static final Item FRACTURED_RAW_GOLD = registerSimpleItem("fractured_raw_gold", new Item(new Item.Settings()));
-    public static final Item CRUDE_STEEL_MIXTURE = registerSimpleItem("crude_steel_mixture", new Item(new Item.Settings()));
+    public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");
+    public static final Item FRACTURED_RAW_COPPER = registerReallySimpleItem("fractured_raw_copper");
+    public static final Item FRACTURED_RAW_GOLD = registerReallySimpleItem("fractured_raw_gold");
+    public static final Item FRACTURED_IRON_FRAGMENTS = registerReallySimpleItem("fractured_iron_fragments");
+    public static final Item FRACTURED_COPPER_FRAGMENTS = registerReallySimpleItem("fractured_copper_fragments");
+    public static final Item FRACTURED_GOLD_FRAGMENTS = registerReallySimpleItem("fractured_gold_fragments");
+    public static final Item CRUDE_STEEL_MIXTURE = registerReallySimpleItem("crude_steel_mixture");
 
     // raw materials
-    public static final Item STEEL_INGOT = registerSimpleItem("steel_ingot", new Item(new Item.Settings()));
-    public static final Item STEEL_NUGGET = registerSimpleItem("steel_nugget", new Item(new Item.Settings()));
+    public static final Item CRUDE_STEEL_INGOT = registerReallySimpleItem("crude_steel_ingot");
+    public static final Item CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
+    public static final Item STEEL_INGOT = registerReallySimpleItem("steel_ingot");
+    public static final Item STEEL_NUGGET = registerReallySimpleItem("steel_nugget");
 
     // processed materials
+    public static final Item CRUDE_STEEL_PLATE = registerReallySimpleItem("crude_steel_plate");
+    public static final Item STEEL_PLATE = registerReallySimpleItem("steel_plate");
+    public static final Item IRON_PLATE = registerReallySimpleItem("iron_plate");
+    public static final Item GOLD_PLATE = registerReallySimpleItem("gold_plate");
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
         entries.add(STEEL_HAMMER);
@@ -68,6 +77,10 @@ public class KlaxonItems {
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);
+    }
+
+    private static Item registerReallySimpleItem(String name) {
+        return registerSimpleItem(name, new Item(new Item.Settings()));
     }
 
     private static Item registerSimpleItem(String name, Item item) {

@@ -1,6 +1,7 @@
 {
   "values": [
     "klaxon:deepslate_blast_processor",
-    "klaxon:steel_block"
+    "klaxon:steel_block",
+    "klaxon:crude_steel_block"
   ]
 }

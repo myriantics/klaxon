@@ -1,6 +1,7 @@
 {
   "values": [
-    "minecraft:poisonous_potato",
-    "minecraft:gold_ingot"
+    "klaxon:crude_steel_ingot",
+    "klaxon:crude_steel_plate",
+    "klaxon:crude_steel_ingot"
   ]
 }

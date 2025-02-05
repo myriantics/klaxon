@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "klaxon:makeshift_shaped",
   "category": "equipment",
   "group": "steel_hammer",
   "key": {
@@ -21,8 +21,17 @@
     " S ",
     "LSL"
   ],
+  "potential_makeshift_ingredients": [
+    {
+      "tag": "c:storage_blocks/steel"
+    },
+    {
+      "tag": "c:ingots/steel"
+    }
+  ],
   "result": {
     "count": 1,
     "id": "klaxon:steel_hammer"
-  }
+  },
+  "show_notification": false
 }

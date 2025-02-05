@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 public class KlaxonCompat {
     public static final String CREATE_MOD_ID = "create";
 
+    public static Item CREATE_COPPER_NUGGET = null;
     public static Item CREATE_IRON_SHEET = null;
     public static Item CREATE_COPPER_SHEET = null;
     public static Item CREATE_GOLD_SHEET = null;
@@ -17,6 +18,7 @@ public class KlaxonCompat {
 
     // do not EVER call this in the actual mod - just for datagen
     public static void registerPhantomItemsForDatagen() {
+        CREATE_COPPER_NUGGET = registerItem(CREATE_MOD_ID, "copper_nugget");
         CREATE_IRON_SHEET = registerItem(CREATE_MOD_ID, "iron_sheet");
         CREATE_COPPER_SHEET = registerItem(CREATE_MOD_ID, "copper_sheet");
         CREATE_BRASS_SHEET = registerItem(CREATE_MOD_ID, "brass_sheet");

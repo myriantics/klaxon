@@ -4,7 +4,7 @@
   "group": "flint_and_steel",
   "ingredients": [
     {
-      "tag": "c:ingots"
+      "tag": "c:ingots/steel"
     },
     {
       "item": "minecraft:flint"
@@ -12,7 +12,7 @@
   ],
   "potential_makeshift_ingredients": [
     {
-      "tag": "c:ingots"
+      "tag": "c:ingots/steel"
     }
   ],
   "result": {

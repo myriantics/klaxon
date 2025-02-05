@@ -1,7 +1,7 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 0.5,
-  "explosionPowerMin": 0.2,
+  "explosionPowerMax": 0.4,
+  "explosionPowerMin": 0.1,
   "input": {
     "item": "minecraft:raw_copper"
   },
