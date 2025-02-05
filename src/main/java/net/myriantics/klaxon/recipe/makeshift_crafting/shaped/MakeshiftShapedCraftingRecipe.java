@@ -27,11 +27,6 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
     }
 
     @Override
-    public boolean matches(CraftingRecipeInput craftingRecipeInput, World world) {
-        return super.matches(craftingRecipeInput, world);
-    }
-
-    @Override
     public ItemStack craft(CraftingRecipeInput craftingRecipeInput, RegistryWrapper.WrapperLookup wrapperLookup) {
         List<ItemStack> inputStacks = craftingRecipeInput.getStacks();
 

@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
@@ -23,6 +24,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
+import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,6 +128,14 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                 null,
                 null
         );
+
+        addMakeshiftShapelessCraftingRecipe(exporter,
+                DefaultedList.copyOf(Ingredient.EMPTY,
+                        Ingredient.fromTag(ConventionalItemTags.INGOTS),
+                        Ingredient.ofItems(Items.FLINT)),
+                new ItemStack(Items.FLINT_AND_STEEL),
+                List.of(Ingredient.fromTag(ConventionalItemTags.INGOTS)),
+                null, null);
     }
 
     private void buildCookingRecipes(RecipeExporter exporter) {
@@ -335,6 +345,28 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         }
 
         ShapelessRecipe recipe = new ShapelessRecipe(group, category, output, input);
+
+        acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    private void addMakeshiftShapelessCraftingRecipe(RecipeExporter exporter,
+                                            DefaultedList<Ingredient> input, ItemStack output,
+                                            List<Ingredient> potentialMakeshiftIngredients,
+                                            @Nullable CraftingRecipeCategory category, @Nullable String group,
+                                            final ResourceCondition... conditions) {
+        Identifier recipeId = computeRecipeIdentifier("crafting/makeshift_shapeless",
+                getItemPath(output.getItem()),
+                conditions);
+
+        if (category == null) {
+            category = CraftingRecipeCategory.MISC;
+        }
+
+        if (group == null) {
+            group = getItemPath(output.getItem());
+        }
+
+        MakeshiftShapelessCraftingRecipe recipe = new MakeshiftShapelessCraftingRecipe(group, category, output, input, potentialMakeshiftIngredients);
 
         acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

@@ -14,6 +14,8 @@ import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecip
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipeSerializer;
+import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
+import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipeSerializer;
 
 // recipe code structure yoinked from spectrums github
 public class KlaxonRecipeTypes {
@@ -31,7 +33,9 @@ public class KlaxonRecipeTypes {
 
     public static final String MAKESHIFT_SHAPED_CRAFTING_ID = "makeshift_shaped";
     public static RecipeSerializer<MakeshiftShapedCraftingRecipe> MAKESHIFT_SHAPED_CRAFTING_RECIPE_SERIALIZER;
-    public static RecipeType<MakeshiftShapedCraftingRecipe> MAKESHIFT_SHAPED_CRAFTING;
+
+    public static final String MAKESHIFT_SHAPELESS_CRAFTING_ID = "makeshift_shapeless";
+    public static RecipeSerializer<MakeshiftShapelessCraftingRecipe> MAKESHIFT_SHAPELESS_CRAFTING_RECIPE_SERIALIZER;
 
     static <S extends RecipeSerializer<T>, T extends Recipe<?>> S registerSerializer(String id, S serializer) {
         return Registry.register(Registries.RECIPE_SERIALIZER, KlaxonCommon.locate(id), serializer);
@@ -57,5 +61,7 @@ public class KlaxonRecipeTypes {
         ITEM_EXPLOSION_POWER = registerRecipeType(ITEM_EXPLOSION_POWER_RECIPE_ID);
 
         MAKESHIFT_SHAPED_CRAFTING_RECIPE_SERIALIZER = registerSerializer(MAKESHIFT_SHAPED_CRAFTING_ID, new MakeshiftShapedCraftingRecipeSerializer());
+
+        MAKESHIFT_SHAPELESS_CRAFTING_RECIPE_SERIALIZER = registerSerializer(MAKESHIFT_SHAPELESS_CRAFTING_ID, new MakeshiftShapelessCraftingRecipeSerializer());
     }
 }
