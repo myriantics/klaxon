@@ -274,7 +274,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
             group = getItemPath(output.getItem());
         }
 
-        BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
+        SmeltingRecipe recipe = new SmeltingRecipe(group, category, input, output, experience, cookingTime);
 
         acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
