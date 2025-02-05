@@ -35,9 +35,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_NUGGET);
 
         getOrCreateTagBuilder(KlaxonTags.Items.MAKESHIFT_CRAFTING_INGREDIENTS)
-                .add(KlaxonItems.CRUDE_STEEL_INGOT)
                 .add(KlaxonItems.CRUDE_STEEL_PLATE)
-                .add(KlaxonItems.CRUDE_STEEL_INGOT);
+                .add(KlaxonItems.CRUDE_STEEL_INGOT)
+                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
 
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER);
