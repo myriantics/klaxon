@@ -220,7 +220,10 @@ public class HammerItem extends Item {
     }
 
     public static boolean canWallJump(PlayerEntity player, BlockState state) {
-        return player.getVelocity().getY() > 0
+        // originally you could use the hammer in spectator - funny, but not good.
+        return !player.isSpectator()
+                // prevents spammy bs when descending and unintentional hammer walljump procs
+                && player.getVelocity().getY() > 0
                 // make sure they're actually holding a hammer
                 && player.getMainHandStack().isOf(KlaxonItems.STEEL_HAMMER)
                 // allows players to not walljump if they don't want to
@@ -229,8 +232,8 @@ public class HammerItem extends Item {
                 && player.getVehicle() == null
                 // walljumping in water is janky
                 && !player.isInFluid()
-                // you can't walljump off of instabreakable blocks - in creative you can tho
-                && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative());
+                // you can't walljump off of instabreakable blocks - in creative you can tho - also in adventure
+                && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative() || !player.getAbilities().allowModifyWorld);
     }
 
     public static boolean canProcessHammerRecipe(PlayerEntity player) {

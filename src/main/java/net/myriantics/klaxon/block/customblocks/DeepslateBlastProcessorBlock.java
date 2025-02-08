@@ -198,7 +198,8 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         if (!world.isClient) {
-            boolean isRecievingPower = world.isReceivingRedstonePower(pos);
+            // deepslate blast processor has quasiconnectivity because its really funny - imagine if someone reads this because theyre digging through source to figure out why their device isnt working lol
+            boolean isRecievingPower = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up());
             boolean frontObstructed = isFrontObstructed(world, pos);
             boolean isLit = state.get(LIT);
             boolean isPowered = state.get(POWERED);
