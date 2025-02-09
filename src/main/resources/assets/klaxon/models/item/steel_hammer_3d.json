@@ -63,6 +63,20 @@
 			}
 		}
 	],
+	"display": {
+		"thirdperson_lefthand": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 0, 2]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 180, 0]
+		},
+		"head": {
+			"rotation": [180, 90, 0],
+			"translation": [-2, 14.25, 0],
+			"scale": [2, 2, 2]
+		}
+	},
 	"groups": [
 		{
 			"name": "hammer",
