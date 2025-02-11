@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.compat.KlaxonCompat;
+import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
@@ -35,7 +35,7 @@ public class KlaxonCommon implements ModInitializer {
 
 		// if it's datagen, run my hacky hack of hacks
 		if (isDatagenEnabled()) {
-			KlaxonCompat.registerPhantomItemsForDatagen();
+			KlaxonDatagenPhantomItems.registerPhantomItemsForDatagen();
 		}
 
 		KlaxonEntities.registerModEntities();

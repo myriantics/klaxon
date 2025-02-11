@@ -2,29 +2,22 @@
   "type": "klaxon:makeshift_shaped",
   "category": "equipment",
   "constant_ingredients": [],
-  "group": "steel_hammer",
+  "group": "steel_helmet",
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/steel"
-    },
     "I": {
       "tag": "c:ingots/steel"
     },
-    "L": {
-      "item": "minecraft:leather"
-    },
-    "S": {
-      "item": "minecraft:stick"
+    "P": {
+      "tag": "c:plates/steel"
     }
   },
   "pattern": [
-    "BIB",
-    " S ",
-    "LSL"
+    "PIP",
+    "P P"
   ],
   "result": {
     "count": 1,
-    "id": "klaxon:steel_hammer"
+    "id": "klaxon:steel_helmet"
   },
   "show_notification": false
 }

@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:hammering",
+  "input": {
+    "item": "klaxon:steel_ingot"
+  },
+  "output": {
+    "count": 1,
+    "id": "klaxon:steel_plate"
+  }
+}

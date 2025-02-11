@@ -29,9 +29,10 @@ import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.util.AbilityModifierHelper;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
-import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +65,7 @@ public class HammerItem extends Item {
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
         // only damage the item if it's not tall grass or something that shouldn't reduce durability
         if (!world.isClient && !state.isIn(BlockTags.FIRE) && state.getHardness(world, pos) > 0) {
-            damageItem(stack, miner, world.getRandom(), state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE));
+            damageItem(stack, miner, world.getRandom(), state.isIn(KlaxonBlockTags.HAMMER_MINEABLE));
         }
         return stack.isSuitableFor(state) || super.postMine(stack, world, state, pos, miner);
     }
@@ -80,12 +81,12 @@ public class HammerItem extends Item {
 
     @Override
     public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
-        return state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE);
+        return state.isIn(KlaxonBlockTags.HAMMER_MINEABLE);
     }
 
     @Override
     public float getMiningSpeed(ItemStack stack, BlockState state) {
-        if (state.isIn(KlaxonTags.Blocks.HAMMER_MINEABLE)) {
+        if (state.isIn(KlaxonBlockTags.HAMMER_MINEABLE)) {
             return 6.0F;
         } else {
             return super.getMiningSpeed(stack, state);
@@ -213,7 +214,7 @@ public class HammerItem extends Item {
 
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.isIn(KlaxonTags.Items.STEEL_INGOTS);
+        return ingredient.isIn(KlaxonConventionalItemTags.STEEL_INGOTS);
     }
 
     public static boolean canWallJump(PlayerEntity player, BlockState state) {

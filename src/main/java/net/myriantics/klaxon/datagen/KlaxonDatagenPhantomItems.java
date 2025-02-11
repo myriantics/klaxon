@@ -1,11 +1,11 @@
-package net.myriantics.klaxon.compat;
+package net.myriantics.klaxon.datagen;
 
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-public class KlaxonCompat {
+public class KlaxonDatagenPhantomItems {
     public static final String CREATE_MOD_ID = "create";
 
     public static Item CREATE_COPPER_NUGGET = null;

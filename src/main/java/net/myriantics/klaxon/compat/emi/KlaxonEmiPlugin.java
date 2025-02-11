@@ -3,7 +3,6 @@ package net.myriantics.klaxon.compat.emi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.*;
@@ -18,7 +17,6 @@ import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.util.KlaxonTags;
 
 import java.util.function.Function;
 

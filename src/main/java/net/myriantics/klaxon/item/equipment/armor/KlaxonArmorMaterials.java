@@ -11,7 +11,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.util.KlaxonTags;
+import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -24,7 +24,7 @@ public class KlaxonArmorMaterials {
         map.put(ArmorItem.Type.CHESTPLATE, 8);
         map.put(ArmorItem.Type.HELMET, 3);
         map.put(ArmorItem.Type.BODY, 11);
-    }), 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2.0f, 0.2f, () -> Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS));
+    }), 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2.0f, 0.2f, () -> Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS));
 
     private static RegistryEntry<ArmorMaterial> register(
             String id,

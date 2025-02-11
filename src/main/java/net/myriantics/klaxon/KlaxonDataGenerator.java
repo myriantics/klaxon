@@ -2,10 +2,7 @@ package net.myriantics.klaxon;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
-import net.myriantics.klaxon.compat.KlaxonCompat;
 import net.myriantics.klaxon.datagen.*;
-import org.jetbrains.annotations.Nullable;
 
 public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 	@Override

@@ -6,7 +6,6 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -16,7 +15,6 @@ import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

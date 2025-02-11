@@ -4,13 +4,10 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Blocks;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.util.KlaxonTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,10 +19,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
 
-        getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_MINEABLE)
-                .addOptionalTag(KlaxonTags.Blocks.HAMMER_INSTABREAKABLE);
+        getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_MINEABLE)
+                .addOptionalTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE);
 
-        getOrCreateTagBuilder(KlaxonTags.Blocks.HAMMER_INSTABREAKABLE)
+        getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS)
                 .addOptionalTag(ConventionalBlockTags.GLASS_PANES)
                 .addOptionalTag(BlockTags.ICE)
@@ -45,7 +42,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_BLOCK)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
 
-        getOrCreateTagBuilder(KlaxonTags.Blocks.MACHINE_MUFFLING_BLOCKS)
+        getOrCreateTagBuilder(KlaxonBlockTags.MACHINE_MUFFLING_BLOCKS)
                 .forceAddTag(BlockTags.WOOL)
                 .add(Blocks.HAY_BLOCK)
                 .add(Blocks.TARGET);

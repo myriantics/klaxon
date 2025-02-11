@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -25,14 +24,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
-import net.myriantics.klaxon.util.KlaxonTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -247,8 +245,8 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     public static boolean isMuffled(World world, BlockPos pos) {
         BlockState blastProcessorState = world.getBlockState(pos);
         Direction direction = blastProcessorState.get(HORIZONTAL_FACING);
-        return world.getBlockState(pos.offset(BlockDirectionHelper.getUp(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLING_BLOCKS)
-                || world.getBlockState(pos.offset(BlockDirectionHelper.getFront(direction))).isIn(KlaxonTags.Blocks.MACHINE_MUFFLING_BLOCKS);
+        return world.getBlockState(pos.offset(BlockDirectionHelper.getUp(direction))).isIn(KlaxonBlockTags.MACHINE_MUFFLING_BLOCKS)
+                || world.getBlockState(pos.offset(BlockDirectionHelper.getFront(direction))).isIn(KlaxonBlockTags.MACHINE_MUFFLING_BLOCKS);
     }
 
     public static boolean isFrontObstructed(World world, BlockPos pos) {

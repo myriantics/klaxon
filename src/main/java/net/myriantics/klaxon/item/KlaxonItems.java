@@ -11,6 +11,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.item.consumables.EnderPlateItem;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
+import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 
 import java.util.ArrayList;
@@ -24,7 +25,10 @@ public class KlaxonItems {
 
     // equipment
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(HammerItem.createAttributeModifiers())));
-    public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet", new ArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()));
+    public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings().attributeModifiers(SteelArmorItem.createAttributeModifiers()).maxCount(1)));
+    public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.CHESTPLATE, new Item.Settings().attributeModifiers(SteelArmorItem.createAttributeModifiers()).maxCount(1)));
+    public static final Item STEEL_LEGGINGS = registerSimpleItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.LEGGINGS, new Item.Settings().attributeModifiers(SteelArmorItem.createAttributeModifiers()).maxCount(1)));
+    public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.BOOTS, new Item.Settings().attributeModifiers(SteelArmorItem.createAttributeModifiers()).maxCount(1)));
 
     // raw ores / blends
     public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");
@@ -46,6 +50,7 @@ public class KlaxonItems {
     public static final Item STEEL_PLATE = registerReallySimpleItem("steel_plate");
     public static final Item IRON_PLATE = registerReallySimpleItem("iron_plate");
     public static final Item GOLD_PLATE = registerReallySimpleItem("gold_plate");
+    public static final Item COPPER_PLATE = registerReallySimpleItem("copper_plate");
 
     private static void addItemsToToolTabGroup(FabricItemGroupEntries entries) {
         entries.add(STEEL_HAMMER);
@@ -59,12 +64,19 @@ public class KlaxonItems {
     private static void addItemsToCombatTabGroup(FabricItemGroupEntries entries) {
         entries.add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
         entries.add(KlaxonItems.STEEL_HAMMER);
+        entries.add(KlaxonItems.STEEL_HELMET);
+        entries.add(KlaxonItems.STEEL_CHESTPLATE);
+        entries.add(KlaxonItems.STEEL_LEGGINGS);
+        entries.add(KlaxonItems.STEEL_BOOTS);
     }
 
     private static void addItemsToIngredientTabGroup(FabricItemGroupEntries entries) {
         entries.add(KlaxonItems.FRACTURED_RAW_IRON);
         entries.add(KlaxonItems.FRACTURED_RAW_COPPER);
         entries.add(KlaxonItems.FRACTURED_RAW_GOLD);
+        entries.add(KlaxonItems.FRACTURED_IRON_FRAGMENTS);
+        entries.add(KlaxonItems.FRACTURED_COPPER_FRAGMENTS);
+        entries.add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS);
         entries.add(KlaxonItems.CRUDE_STEEL_MIXTURE);
         entries.add(KlaxonItems.STEEL_INGOT);
         entries.add(KlaxonItems.STEEL_NUGGET);

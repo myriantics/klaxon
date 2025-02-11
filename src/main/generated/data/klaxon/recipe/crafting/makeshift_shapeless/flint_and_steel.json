@@ -1,6 +1,11 @@
 {
   "type": "klaxon:makeshift_shapeless",
   "category": "misc",
+  "constant_ingredients": [
+    {
+      "tag": "c:ingots/steel"
+    }
+  ],
   "group": "flint_and_steel",
   "ingredients": [
     {
@@ -8,11 +13,6 @@
     },
     {
       "item": "minecraft:flint"
-    }
-  ],
-  "potential_makeshift_ingredients": [
-    {
-      "tag": "c:ingots/steel"
     }
   ],
   "result": {

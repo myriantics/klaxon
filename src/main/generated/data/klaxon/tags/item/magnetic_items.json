@@ -1,0 +1,17 @@
+{
+  "values": [
+    "#klaxon:steel_armor",
+    "minecraft:netherite_helmet",
+    "minecraft:netherite_chestplate",
+    "minecraft:netherite_leggings",
+    "minecraft:netherite_boots",
+    "minecraft:iron_helmet",
+    "minecraft:iron_chestplate",
+    "minecraft:iron_leggings",
+    "minecraft:iron_boots",
+    "minecraft:chainmail_helmet",
+    "minecraft:chainmail_chestplate",
+    "minecraft:chainmail_leggings",
+    "minecraft:chainmail_boots"
+  ]
+}

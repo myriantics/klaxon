@@ -10,12 +10,9 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.collection.DefaultedList;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 
 import java.util.List;
@@ -44,7 +41,7 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
                                     DataResult::success
                             )
                             .forGetter(ShapelessRecipe::getIngredients),
-                    KlaxonCodecUtils.INGREDIENT_LIST_CODEC.fieldOf("potential_makeshift_ingredients").forGetter(MakeshiftShapelessCraftingRecipe::getPotentialMakeshiftIngredients)
+                    KlaxonCodecUtils.INGREDIENT_LIST_CODEC.fieldOf("constant_ingredients").forGetter(MakeshiftShapelessCraftingRecipe::getConstantIngredients)
             )
                     .apply(instance, MakeshiftShapelessCraftingRecipe::new)
     );
@@ -63,7 +60,7 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
         }
 
         ItemStack.PACKET_CODEC.encode(buf, recipe.getRawResult());
-        KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.encode(buf, recipe.getPotentialMakeshiftIngredients());
+        KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.encode(buf, recipe.getConstantIngredients());
     }
 
     private static MakeshiftShapelessCraftingRecipe read(RegistryByteBuf buf) {
@@ -75,8 +72,8 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
         defaultedList.replaceAll(empty -> Ingredient.PACKET_CODEC.decode(buf));
 
         ItemStack result = ItemStack.PACKET_CODEC.decode(buf);
-        List<Ingredient> potentialMakeshiftIngredients = KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.decode(buf);
-        return new MakeshiftShapelessCraftingRecipe(group, category, result, defaultedList, potentialMakeshiftIngredients);
+        List<Ingredient> constantIngredients = KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.decode(buf);
+        return new MakeshiftShapelessCraftingRecipe(group, category, result, defaultedList, constantIngredients);
     }
 
     @Override

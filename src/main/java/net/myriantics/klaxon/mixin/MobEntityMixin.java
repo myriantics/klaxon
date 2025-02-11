@@ -6,8 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
+import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
-import net.myriantics.klaxon.util.KlaxonTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -23,7 +23,7 @@ public abstract class MobEntityMixin {
 
         // change damage type to reflect hammer damage type
         if(original.getAttacker() instanceof MobEntity attacker && attacker.getMainHandStack().getItem() instanceof HammerItem) {
-            if (attacker.getType().isIn(KlaxonTags.Entities.HEAVY_HITTERS)) {
+            if (attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS)) {
                 // if the entity is defined to hit harder, it uses walloping
                 return KlaxonDamageTypes.hammerWalloping(attacker);
             }

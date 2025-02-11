@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:hammering",
+  "input": {
+    "item": "minecraft:iron_ingot"
+  },
+  "output": {
+    "count": 1,
+    "id": "klaxon:iron_plate"
+  }
+}

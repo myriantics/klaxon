@@ -2,7 +2,7 @@
   "type": "klaxon:makeshift_shaped",
   "category": "equipment",
   "constant_ingredients": [],
-  "group": "steel_hammer",
+  "group": "steel_chestplate",
   "key": {
     "B": {
       "tag": "c:storage_blocks/steel"
@@ -10,21 +10,18 @@
     "I": {
       "tag": "c:ingots/steel"
     },
-    "L": {
-      "item": "minecraft:leather"
-    },
-    "S": {
-      "item": "minecraft:stick"
+    "P": {
+      "tag": "c:plates/steel"
     }
   },
   "pattern": [
-    "BIB",
-    " S ",
-    "LSL"
+    "I I",
+    "PBP",
+    "PPP"
   ],
   "result": {
     "count": 1,
-    "id": "klaxon:steel_hammer"
+    "id": "klaxon:steel_chestplate"
   },
   "show_notification": false
 }

@@ -3,7 +3,6 @@ package net.myriantics.klaxon.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
@@ -13,11 +12,11 @@ import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.compat.KlaxonCompat;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
@@ -25,7 +24,7 @@ import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
-import net.myriantics.klaxon.util.KlaxonTags;
+import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -70,8 +69,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                 DefaultedList.copyOf(Ingredient.EMPTY,
                         Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
                         Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
-                        Ingredient.fromTag(KlaxonTags.Items.COAL),
-                        Ingredient.fromTag(KlaxonTags.Items.COAL)),
+                        Ingredient.fromTag(ItemTags.COALS),
+                        Ingredient.fromTag(ItemTags.COALS)),
                 new ItemStack(KlaxonItems.CRUDE_STEEL_MIXTURE, 2),
                 null, null);
     }
@@ -100,8 +99,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
     private void buildEquipmentCraftingRecipes(RecipeExporter exporter) {
         addMakeshiftShapedCraftingRecipe(exporter, Map.of(
-                'B', Ingredient.fromTag(KlaxonTags.Items.STEEL_BLOCKS),
-                'I', Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS),
+                'B', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_BLOCKS),
+                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
                 'S', Ingredient.ofItems(Items.STICK),
                 'L', Ingredient.ofItems(Items.LEATHER)),
                 new String[]{
@@ -109,18 +108,76 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                         " S ",
                         "LSL"
                 },
-                List.of(Ingredient.fromTag(KlaxonTags.Items.STEEL_BLOCKS), Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS)),
+                List.of(),
                 new ItemStack(KlaxonItems.STEEL_HAMMER),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
+
+        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
+                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
+                new String[]{
+                        "PIP",
+                        "P P"
+                },
+                List.of(),
+                new ItemStack(KlaxonItems.STEEL_HELMET),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
+
+        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
+                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
+                'B', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
+                ),
+                new String[]{
+                        "I I",
+                        "PBP",
+                        "PPP"
+                },
+                List.of(),
+                new ItemStack(KlaxonItems.STEEL_CHESTPLATE),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
+
+        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
+                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)
+                ),
+                new String[]{
+                        "IPI",
+                        "P P",
+                        "P P"
+                },
+                List.of(),
+                new ItemStack(KlaxonItems.STEEL_LEGGINGS),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
+
+        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
+                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)
+                ),
+                new String[]{
+                        "P P",
+                        "I I"
+                },
+                List.of(),
+                new ItemStack(KlaxonItems.STEEL_BOOTS),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
 
         addMakeshiftShapelessCraftingRecipe(exporter,
                 DefaultedList.copyOf(Ingredient.EMPTY,
-                        Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS),
+                        Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
                         Ingredient.ofItems(Items.FLINT)),
                 new ItemStack(Items.FLINT_AND_STEEL),
-                List.of(Ingredient.fromTag(KlaxonTags.Items.STEEL_INGOTS)),
+                List.of(Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
                 null, null);
     }
 
@@ -136,15 +193,15 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 4));
         addHammeringRecipe(exporter, Ingredient.ofItems(Items.SNOWBALL), new ItemStack(Items.SNOW));
 
+        addHammeringRecipe(exporter, Ingredient.ofItems(KlaxonItems.STEEL_INGOT), new ItemStack(KlaxonItems.STEEL_PLATE));
+        addHammeringRecipe(exporter, Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_INGOT), new ItemStack(KlaxonItems.CRUDE_STEEL_PLATE));
+        addHammeringRecipe(exporter, Ingredient.ofItems(Items.IRON_INGOT), new ItemStack(KlaxonItems.IRON_PLATE));
+        addHammeringRecipe(exporter, Ingredient.ofItems(Items.GOLD_INGOT), new ItemStack(KlaxonItems.GOLD_PLATE));
+        addHammeringRecipe(exporter, Ingredient.ofItems(Items.COPPER_INGOT), new ItemStack(KlaxonItems.COPPER_PLATE));
+
         // create compat recipes - done manually for now because of issues with itemstacks returning air as an id - should resolve in future
-        addHammeringRecipe(exporter, Ingredient.ofItems(Items.COPPER_INGOT), new ItemStack(KlaxonCompat.CREATE_COPPER_SHEET),
-                new AllModsLoadedResourceCondition(List.of(KlaxonCompat.CREATE_MOD_ID)));
-        addHammeringRecipe(exporter, Ingredient.ofItems(Items.IRON_INGOT), new ItemStack(KlaxonCompat.CREATE_IRON_SHEET),
-                new AllModsLoadedResourceCondition(List.of(KlaxonCompat.CREATE_MOD_ID)));
-        addHammeringRecipe(exporter, Ingredient.ofItems(Items.GOLD_INGOT), new ItemStack(KlaxonCompat.CREATE_GOLD_SHEET),
-                new AllModsLoadedResourceCondition(List.of(KlaxonCompat.CREATE_MOD_ID)));
-        addHammeringRecipe(exporter, Ingredient.ofItems(KlaxonCompat.CREATE_BRASS_INGOT), new ItemStack(KlaxonCompat.CREATE_BRASS_SHEET),
-                new AllModsLoadedResourceCondition(List.of(KlaxonCompat.CREATE_MOD_ID)));
+        addHammeringRecipe(exporter, Ingredient.ofItems(KlaxonDatagenPhantomItems.CREATE_BRASS_INGOT), new ItemStack(KlaxonDatagenPhantomItems.CREATE_BRASS_SHEET),
+                new AllModsLoadedResourceCondition(List.of(KlaxonDatagenPhantomItems.CREATE_MOD_ID)));
     }
 
     private void buildBlastProcessingRecipes(RecipeExporter exporter) {
@@ -155,8 +212,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(Items.STONE_BRICKS), 0.1, 0.3, new ItemStack(Items.CRACKED_STONE_BRICKS));
 
         // create compat
-        addBlastProcessingRecipe(exporter, Ingredient.ofItems(KlaxonCompat.CREATE_PRECISION_MECHANISM), 0.2, 0.4, new ItemStack(Items.CLOCK),
-                new AllModsLoadedResourceCondition(List.of(KlaxonCompat.CREATE_MOD_ID)));
+        addBlastProcessingRecipe(exporter, Ingredient.ofItems(KlaxonDatagenPhantomItems.CREATE_PRECISION_MECHANISM), 0.2, 0.4, new ItemStack(Items.CLOCK),
+                new AllModsLoadedResourceCondition(List.of(KlaxonDatagenPhantomItems.CREATE_MOD_ID)));
     }
 
     private void buildItemExplosionPowerRecipes(RecipeExporter exporter) {
