@@ -10,6 +10,7 @@ import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.compat.KlaxonCompat;
 import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.networking.KlaxonPackets;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
@@ -29,6 +30,7 @@ public class KlaxonCommon implements ModInitializer {
 	public void onInitialize() {
 		KlaxonBlocks.registerModBlocks();
 		KlaxonBlockEntities.registerBlockEntities();
+		KlaxonArmorMaterials.registerArmorMaterials();
 		KlaxonItems.registerModItems();
 
 		// if it's datagen, run my hacky hack of hacks

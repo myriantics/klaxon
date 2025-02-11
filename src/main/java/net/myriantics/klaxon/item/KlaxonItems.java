@@ -2,10 +2,7 @@ package net.myriantics.klaxon.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
@@ -13,7 +10,8 @@ import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.item.consumables.EnderPlateItem;
-import net.myriantics.klaxon.item.tools.HammerItem;
+import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
+import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 
 import java.util.ArrayList;
 
@@ -21,10 +19,12 @@ public class KlaxonItems {
 
     public static ArrayList<Item> simpleItems = new ArrayList<>();
 
-    // cool stuff
-    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(HammerItem.createAttributeModifiers())));
     // disabled currently because its broken as FUCK - will come later trust
     public static final Item ENDER_PEARL_PLATE_ITEM = registerSimpleItem("ender_plate", new EnderPlateItem(new Item.Settings()));
+
+    // equipment
+    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(HammerItem.createAttributeModifiers())));
+    public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet", new ArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()));
 
     // raw ores / blends
     public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");

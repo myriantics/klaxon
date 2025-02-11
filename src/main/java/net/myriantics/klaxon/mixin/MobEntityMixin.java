@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
-import net.myriantics.klaxon.item.tools.HammerItem;
+import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
 import net.myriantics.klaxon.util.KlaxonTags;
 import org.spongepowered.asm.mixin.Mixin;
