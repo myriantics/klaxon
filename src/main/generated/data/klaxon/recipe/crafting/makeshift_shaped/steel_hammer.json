@@ -1,14 +1,21 @@
 {
   "type": "klaxon:makeshift_shaped",
   "category": "equipment",
-  "constant_ingredients": [],
+  "constant_ingredients": [
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:leather"
+    }
+  ],
   "group": "steel_hammer",
   "key": {
     "B": {
-      "tag": "c:storage_blocks/steel"
+      "tag": "klaxon:crude_inclusive_steel_blocks"
     },
     "I": {
-      "tag": "c:ingots/steel"
+      "tag": "klaxon:crude_inclusive_steel_ingots"
     },
     "L": {
       "item": "minecraft:leather"

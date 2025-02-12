@@ -25,6 +25,7 @@ import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecip
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -99,8 +100,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
     private void buildEquipmentCraftingRecipes(RecipeExporter exporter) {
         addMakeshiftShapedCraftingRecipe(exporter, Map.of(
-                'B', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_BLOCKS),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
+                'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS),
+                'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
                 'S', Ingredient.ofItems(Items.STICK),
                 'L', Ingredient.ofItems(Items.LEATHER)),
                 new String[]{
@@ -108,15 +109,15 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                         " S ",
                         "LSL"
                 },
-                List.of(),
+                List.of(Ingredient.ofItems(Items.STICK), Ingredient.ofItems(Items.LEATHER)),
                 new ItemStack(KlaxonItems.STEEL_HAMMER),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
 
         addMakeshiftShapedCraftingRecipe(exporter, Map.of(
-                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
+                'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)),
                 new String[]{
                         "PIP",
                         "P P"
@@ -128,9 +129,9 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         );
 
         addMakeshiftShapedCraftingRecipe(exporter, Map.of(
-                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
-                'B', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
+                'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
+                'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
                 ),
                 new String[]{
                         "I I",
@@ -144,8 +145,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         );
 
         addMakeshiftShapedCraftingRecipe(exporter, Map.of(
-                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)
+                'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)
                 ),
                 new String[]{
                         "IPI",
@@ -159,8 +160,8 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         );
 
         addMakeshiftShapedCraftingRecipe(exporter, Map.of(
-                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)
+                'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)
                 ),
                 new String[]{
                         "P P",
@@ -174,10 +175,10 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         addMakeshiftShapelessCraftingRecipe(exporter,
                 DefaultedList.copyOf(Ingredient.EMPTY,
-                        Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
+                        Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
                         Ingredient.ofItems(Items.FLINT)),
                 new ItemStack(Items.FLINT_AND_STEEL),
-                List.of(Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
+                List.of(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)),
                 null, null);
     }
 
@@ -407,7 +408,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
     private void addMakeshiftShapelessCraftingRecipe(RecipeExporter exporter,
                                             DefaultedList<Ingredient> input, ItemStack output,
-                                            List<Ingredient> potentialMakeshiftIngredients,
+                                            List<Ingredient> constantIngredients,
                                             @Nullable CraftingRecipeCategory category, @Nullable String group,
                                             final ResourceCondition... conditions) {
         Identifier recipeId = computeRecipeIdentifier("crafting/makeshift_shapeless",
@@ -422,7 +423,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
             group = getItemPath(output.getItem());
         }
 
-        MakeshiftShapelessCraftingRecipe recipe = new MakeshiftShapelessCraftingRecipe(group, category, output, input, potentialMakeshiftIngredients);
+        MakeshiftShapelessCraftingRecipe recipe = new MakeshiftShapelessCraftingRecipe(group, category, output, input, constantIngredients);
 
         acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
@@ -451,7 +452,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     private void addMakeshiftShapedCraftingRecipe(RecipeExporter exporter,
-                                         Map<Character, Ingredient> key, String[] pattern, List<Ingredient> potentialMakeshiftIngredients, ItemStack output,
+                                         Map<Character, Ingredient> key, String[] pattern, List<Ingredient> constantIngredients, ItemStack output,
                                          @Nullable CraftingRecipeCategory category, @Nullable String group,
                                          final ResourceCondition... conditions) {
 
@@ -467,7 +468,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
             group = getItemPath(output.getItem());
         }
 
-        ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(group, category, RawShapedRecipe.create(key, Arrays.stream(pattern).toList()), potentialMakeshiftIngredients,  output, false);
+        ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(group, category, RawShapedRecipe.create(key, Arrays.stream(pattern).toList()), constantIngredients,  output, false);
 
         acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

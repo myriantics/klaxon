@@ -5,10 +5,10 @@
   "group": "steel_helmet",
   "key": {
     "I": {
-      "tag": "c:ingots/steel"
+      "tag": "klaxon:crude_inclusive_steel_ingots"
     },
     "P": {
-      "tag": "c:plates/steel"
+      "tag": "klaxon:crude_inclusive_steel_plates"
     }
   },
   "pattern": [

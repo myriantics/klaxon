@@ -22,20 +22,41 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     protected void configure(RegistryWrapper.WrapperLookup arg) {
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_INGOTS)
-                .add(KlaxonItems.STEEL_INGOT)
+                .add(KlaxonItems.STEEL_INGOT);
+
+        getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_BLOCKS)
-                .add(KlaxonBlocks.STEEL_BLOCK.asItem())
-                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
+                .add(KlaxonBlocks.STEEL_BLOCK.asItem());
+
+        getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
+                .add(KlaxonBlocks.STEEL_BLOCK.asItem());
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_NUGGETS)
-                .add(KlaxonItems.STEEL_NUGGET)
+                .add(KlaxonItems.STEEL_NUGGET);
+
+        getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS)
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_NUGGETS)
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET);
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_PLATES)
-                .add(KlaxonItems.STEEL_PLATE)
+                .add(KlaxonItems.STEEL_PLATE);
+
+        getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_PLATES)
                 .add(KlaxonItems.CRUDE_STEEL_PLATE);
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.IRON_PLATES)
+                .add(KlaxonItems.IRON_PLATE);
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_PLATES)
+                .add(KlaxonItems.COPPER_PLATE);
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_PLATES)
+                .add(KlaxonItems.GOLD_PLATE);
 
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS)
                 .add(KlaxonItems.CRUDE_STEEL_PLATE)
@@ -56,7 +77,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.NETHERITE_LEGGINGS)
                 .add(Items.NETHERITE_BOOTS);
 
-        getOrCreateTagBuilder(KlaxonItemTags.MAGNETIC_EQUIPMENT)
+        getOrCreateTagBuilder(KlaxonItemTags.MAGNETIZABLE_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.NETHERITE_HELMET)
                 .add(Items.NETHERITE_CHESTPLATE)
@@ -85,7 +106,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS);
 
         getOrCreateTagBuilder(ConventionalItemTags.INGOTS)
-                .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS);
+                .forceAddTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS);
 
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER);

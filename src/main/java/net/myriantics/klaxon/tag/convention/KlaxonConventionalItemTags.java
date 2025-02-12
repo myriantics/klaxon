@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.tag.convention;
 
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -11,6 +12,9 @@ public class KlaxonConventionalItemTags {
     public static final TagKey<Item> STEEL_NUGGETS = createConventionalNuggetTag("steel");
     public static final TagKey<Item> STEEL_BLOCKS = createConventionalStorageBlockTag("steel");
     public static final TagKey<Item> STEEL_PLATES = createConventionalPlateTag("steel");
+    public static final TagKey<Item> IRON_PLATES = createConventionalPlateTag("iron");
+    public static final TagKey<Item> GOLD_PLATES = createConventionalPlateTag("gold");
+    public static final TagKey<Item> COPPER_PLATES = createConventionalPlateTag("copper");
 
     private static TagKey<Item> createConventionalNuggetTag(String name) {
         return createConventionalItemTag("nuggets/" + name);

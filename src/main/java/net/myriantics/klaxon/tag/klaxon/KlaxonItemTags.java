@@ -17,10 +17,19 @@ public class KlaxonItemTags {
             createTag("no_xp_cost_repairable");
     public static final TagKey<Item> HEAVY_EQUIPMENT =
             createTag("heavy_equipment");
-    public static final TagKey<Item> MAGNETIC_EQUIPMENT =
-            createTag("magnetic_items");
+    public static final TagKey<Item> MAGNETIZABLE_EQUIPMENT =
+            createTag("magnetizable_equipment");
     public static final TagKey<Item> STEEL_ARMOR =
             createTag("steel_armor");
+
+    public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_INGOTS =
+            createTag("crude_inclusive_steel_ingots");
+    public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_NUGGETS =
+            createTag("crude_inclusive_steel_nuggets");
+    public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_PLATES =
+            createTag("crude_inclusive_steel_plates");
+    public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_BLOCKS =
+            createTag("crude_inclusive_steel_blocks");
 
     private static TagKey<Item> createTag(String name) {
         return TagKey.of(RegistryKeys.ITEM, KlaxonCommon.locate(name));
