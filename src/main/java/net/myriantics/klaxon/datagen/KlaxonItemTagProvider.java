@@ -92,6 +92,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.CHAINMAIL_LEGGINGS)
                 .add(Items.CHAINMAIL_BOOTS);
 
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)
+                .add(Items.FLINT_AND_STEEL);
+
         getOrCreateTagBuilder(KlaxonItemTags.INFINITELY_REPAIRABLE)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HAMMER)

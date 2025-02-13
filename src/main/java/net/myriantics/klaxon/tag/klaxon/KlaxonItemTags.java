@@ -22,6 +22,9 @@ public class KlaxonItemTags {
     public static final TagKey<Item> STEEL_ARMOR =
             createTag("steel_armor");
 
+    public static final TagKey<Item> STEEL_REPAIRABLE_FLINT_AND_STEEL =
+            createTag("steel_repairable_flint_and_steel");
+
     public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_INGOTS =
             createTag("crude_inclusive_steel_ingots");
     public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_NUGGETS =

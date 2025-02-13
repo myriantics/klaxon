@@ -33,6 +33,7 @@ import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.api.AbilityModifierHelper;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 
 import java.util.List;
@@ -216,7 +217,7 @@ public class HammerItem extends Item {
 
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.isIn(KlaxonConventionalItemTags.STEEL_INGOTS);
+        return ingredient.isIn(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS);
     }
 
     public static boolean canWallJump(PlayerEntity player, BlockState state) {
