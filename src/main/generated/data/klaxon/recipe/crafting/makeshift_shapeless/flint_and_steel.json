@@ -3,7 +3,7 @@
   "category": "misc",
   "constant_ingredients": [
     {
-      "tag": "klaxon:crude_inclusive_steel_ingots"
+      "item": "minecraft:flint"
     }
   ],
   "group": "flint_and_steel",

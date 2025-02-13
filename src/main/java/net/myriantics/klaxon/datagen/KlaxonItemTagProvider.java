@@ -33,7 +33,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
-                .add(KlaxonBlocks.STEEL_BLOCK.asItem());
+                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_NUGGETS)
                 .add(KlaxonItems.STEEL_NUGGET);

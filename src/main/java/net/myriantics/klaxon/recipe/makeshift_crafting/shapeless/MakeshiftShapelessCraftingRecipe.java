@@ -8,6 +8,7 @@ import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -41,12 +42,15 @@ public class MakeshiftShapelessCraftingRecipe extends ShapelessRecipe {
         for (ItemStack inputStack : inputStacks) {
 
             // checks to see if the marked ingredient has been indicated to have a makeshift replacement
-            if (this.constantIngredients.stream().anyMatch((ingredient -> !ingredient.test(inputStack)))) {
+            if (!this.constantIngredients.stream().anyMatch((ingredient -> ingredient.test(inputStack))) && !inputStack.isEmpty()) {
                 totalPotentialMakeshiftIngredients++;
 
                 totalPresentMakeshiftIngredients += inputStack.isIn(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS) ? 1 : 0;
             }
         }
+
+        KlaxonCommon.LOGGER.info("Total present makeshift ingredients: " + totalPresentMakeshiftIngredients);
+        KlaxonCommon.LOGGER.info("Total potential makeshift ingredients: " + totalPotentialMakeshiftIngredients);
 
         // decrease the result's durability according to how many makeshift stacks were used in crafting out of all potential makeshift ingredients in the recipe
         result.setDamage((int) (result.getMaxDamage() * durabilityPenaltyCap * ((double) totalPresentMakeshiftIngredients / totalPotentialMakeshiftIngredients)));

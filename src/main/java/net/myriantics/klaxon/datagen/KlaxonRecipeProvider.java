@@ -179,7 +179,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                         Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
                         Ingredient.ofItems(Items.FLINT)),
                 new ItemStack(Items.FLINT_AND_STEEL),
-                List.of(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)),
+                List.of(Ingredient.ofItems(Items.FLINT)),
                 null, null);
     }
 
