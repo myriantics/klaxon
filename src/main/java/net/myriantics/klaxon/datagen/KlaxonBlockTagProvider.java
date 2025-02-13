@@ -20,7 +20,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     protected void configure(RegistryWrapper.WrapperLookup arg) {
 
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_MINEABLE)
-                .addOptionalTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE);
+                .addOptionalTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
+                .add(Blocks.BEACON);
 
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS)
