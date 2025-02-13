@@ -102,6 +102,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(Items.FLINT_AND_STEEL);
 
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.UNENCHANTABLE)
+                .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(Items.FLINT_AND_STEEL);
+
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_REPAIR_MATERIALS)
                 .forceAddTag(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS);
 

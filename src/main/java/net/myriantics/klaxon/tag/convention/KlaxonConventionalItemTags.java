@@ -16,6 +16,8 @@ public class KlaxonConventionalItemTags {
     public static final TagKey<Item> GOLD_PLATES = createConventionalPlateTag("gold");
     public static final TagKey<Item> COPPER_PLATES = createConventionalPlateTag("copper");
 
+    public static final TagKey<Item> UNENCHANTABLE = createConventionalItemTag("unenchantable");
+
     private static TagKey<Item> createConventionalNuggetTag(String name) {
         return createConventionalItemTag("nuggets/" + name);
     }

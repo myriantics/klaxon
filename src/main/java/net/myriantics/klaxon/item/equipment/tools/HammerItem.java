@@ -25,13 +25,14 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.HeavyAbilityModifierHelper;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
-import net.myriantics.klaxon.util.AbilityModifierHelper;
+import net.myriantics.klaxon.api.AbilityModifierHelper;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 
 import java.util.List;
@@ -95,6 +96,7 @@ public class HammerItem extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
+
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
         Vec3d clickedPos = context.getHitPos();
@@ -191,8 +193,8 @@ public class HammerItem extends Item {
 
             world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
 
-            // update observers monitoring target block
-            if (!world.isClient()) {
+            // update observers monitoring target block - doesn't work in adventure
+            if (!world.isClient() && player.getAbilities().allowModifyWorld) {
                 updateAdjacentMonitoringObservers(world, pos, targetBlockState);
             }
 
@@ -230,6 +232,8 @@ public class HammerItem extends Item {
                 && player.getVehicle() == null
                 // walljumping in water is janky
                 && !player.isInFluid()
+                // dont allow heavy entities to walljump
+                && !HeavyAbilityModifierHelper.isEntityHeavy(player)
                 // you can't walljump off of instabreakable blocks - in creative you can tho - also in adventure
                 && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative() || !player.getAbilities().allowModifyWorld);
     }

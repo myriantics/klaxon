@@ -1,10 +1,9 @@
-package net.myriantics.klaxon.util;
+package net.myriantics.klaxon.api;
 
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
 
 public abstract class AbilityModifierHelper {
     public static float calculate(PlayerEntity player) {

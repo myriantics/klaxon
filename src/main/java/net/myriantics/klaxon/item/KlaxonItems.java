@@ -25,10 +25,14 @@ public class KlaxonItems {
 
     // equipment
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(HammerItem.createAttributeModifiers())));
-    public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings().attributeModifiers(SteelArmorItem.createAttributeModifiers()).maxCount(1)));
-    public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.CHESTPLATE, new Item.Settings().attributeModifiers(SteelArmorItem.createAttributeModifiers()).maxCount(1)));
-    public static final Item STEEL_LEGGINGS = registerSimpleItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.LEGGINGS, new Item.Settings().attributeModifiers(SteelArmorItem.createAttributeModifiers()).maxCount(1)));
-    public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.BOOTS, new Item.Settings().attributeModifiers(SteelArmorItem.createAttributeModifiers()).maxCount(1)));
+    public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
+            new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()));
+    public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate",
+            new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+    public static final Item STEEL_LEGGINGS = registerSimpleItem("steel_leggings",
+            new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.LEGGINGS, new Item.Settings()));
+    public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots",
+            new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.BOOTS, new Item.Settings()));
 
     // raw ores / blends
     public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");

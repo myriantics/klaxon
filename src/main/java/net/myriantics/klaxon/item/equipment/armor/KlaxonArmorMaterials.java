@@ -24,7 +24,7 @@ public class KlaxonArmorMaterials {
         map.put(ArmorItem.Type.CHESTPLATE, 8);
         map.put(ArmorItem.Type.HELMET, 3);
         map.put(ArmorItem.Type.BODY, 11);
-    }), 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2.0f, 0.2f, () -> Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS));
+    }), 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.5f, 0.1f, () -> Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS));
 
     private static RegistryEntry<ArmorMaterial> register(
             String id,
