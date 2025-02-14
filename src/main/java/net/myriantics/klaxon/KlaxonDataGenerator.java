@@ -3,6 +3,7 @@ package net.myriantics.klaxon;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.myriantics.klaxon.datagen.*;
+import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 
 public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 	@Override

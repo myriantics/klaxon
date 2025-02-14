@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "crude_steel_block",
+  "key": {
+    "x": {
+      "item": "klaxon:crude_steel_ingot"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "xxx",
+    "xxx"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:crude_steel_block"
+  }
+}

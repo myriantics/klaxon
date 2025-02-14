@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 150,
+  "experience": 3.0,
+  "group": "steel_nugget",
+  "ingredient": {
+    "item": "klaxon:steel_chestplate"
+  },
+  "result": {
+    "id": "klaxon:steel_nugget"
+  }
+}
