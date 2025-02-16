@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.ItemTags;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
@@ -121,5 +122,20 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         getOrCreateTagBuilder(ConventionalItemTags.MELEE_WEAPON_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER);
+
+        getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
+                .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
+
+        getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)
+                .add(KlaxonItems.STEEL_HELMET);
+
+        getOrCreateTagBuilder(ItemTags.CHEST_ARMOR)
+                .add(KlaxonItems.STEEL_CHESTPLATE);
+
+        getOrCreateTagBuilder(ItemTags.LEG_ARMOR)
+                .add(KlaxonItems.STEEL_LEGGINGS);
+
+        getOrCreateTagBuilder(ItemTags.FOOT_ARMOR)
+                .add(KlaxonItems.STEEL_BOOTS);
     }
 }
