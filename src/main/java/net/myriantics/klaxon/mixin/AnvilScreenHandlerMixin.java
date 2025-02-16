@@ -31,7 +31,7 @@ public abstract class AnvilScreenHandlerMixin {
     )
     public boolean klaxon$unenchantableOverride(boolean original, @Local ItemStack inputStack) {
         // this way anvils are still allowed to be used but anything else that calls the canHaveEnchantments methods get denied
-        return original || inputStack.isIn(KlaxonConventionalItemTags.UNENCHANTABLE);
+        return original || inputStack.isIn(KlaxonItemTags.UNENCHANTABLE);
     }
 
     @ModifyExpressionValue(
@@ -40,7 +40,7 @@ public abstract class AnvilScreenHandlerMixin {
     )
     public boolean klaxon$repairOverride(boolean original, @Local(ordinal = 0) ItemStack inputStack) {
         // doesnt allow enchants to be applied to unenchantable items
-        return original || !inputStack.isIn(KlaxonConventionalItemTags.UNENCHANTABLE);
+        return original || !inputStack.isIn(KlaxonItemTags.UNENCHANTABLE);
     }
 
     // halves durability gained from using makeshift repair materials to repair items

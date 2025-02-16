@@ -78,7 +78,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.NETHERITE_LEGGINGS)
                 .add(Items.NETHERITE_BOOTS);
 
-        getOrCreateTagBuilder(KlaxonItemTags.MAGNETIZABLE_EQUIPMENT)
+        getOrCreateTagBuilder(KlaxonItemTags.FERROMAGNETIC_ITEMS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.NETHERITE_HELMET)
                 .add(Items.NETHERITE_CHESTPLATE)
@@ -106,7 +106,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(Items.FLINT_AND_STEEL);
 
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.UNENCHANTABLE)
+        getOrCreateTagBuilder(KlaxonItemTags.UNENCHANTABLE)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(Items.FLINT_AND_STEEL);

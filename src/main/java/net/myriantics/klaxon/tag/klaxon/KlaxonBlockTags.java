@@ -13,6 +13,8 @@ public class KlaxonBlockTags {
             createTag("hammer_instabreakable");
     public static final TagKey<Block> MACHINE_MUFFLING_BLOCKS =
             createTag("machine_muffling_blocks");
+    public static final TagKey<Block> FERROMAGNETIC_BLOCKS =
+            createTag("ferromagnetic_blocks");
 
     private static TagKey<Block> createTag(String name) {
         return TagKey.of(RegistryKeys.BLOCK, KlaxonCommon.locate(name));

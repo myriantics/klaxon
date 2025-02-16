@@ -17,10 +17,13 @@ public class KlaxonItemTags {
             createTag("no_xp_cost_repairable");
     public static final TagKey<Item> HEAVY_EQUIPMENT =
             createTag("heavy_equipment");
-    public static final TagKey<Item> MAGNETIZABLE_EQUIPMENT =
-            createTag("magnetizable_equipment");
+    public static final TagKey<Item> FERROMAGNETIC_ITEMS =
+            createTag("ferromagnetic_items");
     public static final TagKey<Item> STEEL_ARMOR =
             createTag("steel_armor");
+    public static final TagKey<Item> UNENCHANTABLE =
+            createTag("unenchantable");
+
 
     public static final TagKey<Item> STEEL_REPAIRABLE_FLINT_AND_STEEL =
             createTag("steel_repairable_flint_and_steel");

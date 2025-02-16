@@ -6,6 +6,7 @@ import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,6 +22,6 @@ public abstract class EnchantmentHelperMixin {
     )
     private static boolean klaxon$unenchantableOverride(boolean original, @Local(argsOnly = true) ItemStack stack) {
 
-        return original && !stack.isIn(KlaxonConventionalItemTags.UNENCHANTABLE);
+        return original && !stack.isIn(KlaxonItemTags.UNENCHANTABLE);
     }
 }

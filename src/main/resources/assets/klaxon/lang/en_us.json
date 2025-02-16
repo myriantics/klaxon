@@ -1,17 +1,39 @@
 {
   "block.klaxon.deepslate_blast_processor": "Deepslate Blast Processor",
   "block.klaxon.steel_block": "Block of Steel",
+  "block.klaxon.crude_steel_block": "Block of Crude Steel",
+
+  "item.klaxon.steel_hammer": "Steel Hammer",
+  "item.klaxon.steel_helmet": "Steel Helmet",
+  "item.klaxon.steel_chestplate": "Steel Chestplate",
+  "item.klaxon.steel_leggings": "Steel Leggings",
+  "item.klaxon.steel_boots": "Steel Boots",
 
   "item.klaxon.steel_ingot": "Steel Ingot",
   "item.klaxon.steel_nugget": "Steel Nugget",
-  "item.klaxon.steel_hammer": "Steel Hammer",
+  "item.klaxon.crude_steel_ingot": "Crude Steel Ingot",
+  "item.klaxon.crude_steel_nugget": "Crude Steel Nugget",
   "item.klaxon.ender_plate": "Ender Pearl Plate",
+  "item.klaxon.steel_plate": "Steel Plate",
+  "item.klaxon.crude_steel_plate": "Crude Steel Plate",
+  "item.klaxon.iron_plate": "Iron Plate",
+  "item.klaxon.copper_plate": "Copper Plate",
+  "item.klaxon.gold_plate": "Gold Plate",
   "item.klaxon.crude_steel_mixture": "Crude Steel Mixture",
   "item.klaxon.fractured_raw_iron": "Fractured Raw Iron",
   "item.klaxon.fractured_raw_copper": "Fractured Raw Copper",
   "item.klaxon.fractured_raw_gold": "Fractured Raw Gold",
+  "item.klaxon.fractured_iron_fragments": "Fractured Iron Fragments",
+  "item.klaxon.fractured_copper_fragments": "Fractured Copper Fragments",
+  "item.klaxon.fractured_gold_fragments": "Fractured Gold Fragments",
+  "item.klaxon.fractured_coal": "Fractured Coal",
 
   "entity.klaxon.ender_plate": "Ender Pearl Plate",
+  "entity.klaxon.steel_plate": "Steel Plate",
+  "entity.klaxon.crude_steel_plate": "Crude Steel Plate",
+  "entity.klaxon.iron_plate": "Iron Plate",
+  "entity.klaxon.copper_plate": "Copper Plate",
+  "entity.klaxon.gold_plate": "Gold Plate",
 
   "death.attack.hammer_bonking": "%1$s was bonked by %2$s",
   "death.attack.hammer_walloping": "%1$s was walloped by %2$s",
@@ -19,6 +41,20 @@
   "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s",
 
   "tag.item.klaxon.shield_disabling_melee_weapons": "Shield-Disabling Melee Weapons",
+  "tag.item.klaxon.crude_inclusive_steel_blocks": "Crude-Inclusive Steel Blocks",
+  "tag.item.klaxon.crude_inclusive_steel_ingots": "Crude-Inclusive Steel Ingots",
+  "tag.item.klaxon.crude_inclusive_steel_nuggets": "Crude-Inclusive Steel Nuggets",
+  "tag.item.klaxon.crude_inclusive_steel_plates": "Crude-Inclusive Steel Plates",
+  "tag.item.klaxon.heavy_equipment": "Heavy Equipment",
+  "tag.item.klaxon.infinitely_repairable": "Infinitely Repairable Items",
+  "tag.item.klaxon.ferromagnetic_items": "Ferromagnetic Items",
+  "tag.item.klaxon.makeshift_crafting_ingredients": "Makeshift Crafting Ingredients",
+  "tag.item.klaxon.makeshift_repair_materials": "Makeshift Repair Materials",
+  "tag.item.klaxon.no_xp_cost_repairable": "Items Repairable with No EXP",
+  "tag.item.klaxon.steel_armor": "Steel Armor",
+  "tag.item.klaxon.steel_repairable_flint_and_steel": "Steel Repairable Flint and Steel",
+  "tag.item.klaxon.unenchantable": "Unenchantable Items",
+
   "tag.entity.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
   "tag.block.klaxon.hammer_interaction_base": "Hammer Interaction Base Blocks",
   "tag.block.klaxon.hammer_mineable": "Hammer Mineable Blocks",
@@ -38,5 +74,10 @@
 
   "container.klaxon.hammering.title": "Hammering",
   "container.klaxon.blast_processing.title": "Blast Processing",
-  "klaxon.emi.text.explosion_power_info.wind_charge_behavior_info": "Summons a wind charge burst! Does not have any explosion power for the purpose of crafting!"
+  "klaxon.emi.text.explosion_power_info.wind_charge_behavior_info": "Summons a wind charge burst! Does not have any explosion power for the purpose of crafting!",
+
+  "itemGroup.klaxon.building_blocks": "KLAXON's Building Blocks",
+  "itemGroup.klaxon.equipment": "KLAXON's Equipment",
+  "itemGroup.klaxon.machines": "KLAXON's Machines",
+  "itemGroup.klaxon.materials": "KLAXON's Materials"
 }
