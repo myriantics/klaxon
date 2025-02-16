@@ -41,11 +41,25 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(KlaxonBlocks.STEEL_BLOCK)
-                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+                .add(KlaxonBlocks.STEEL_DOOR)
+                .add(KlaxonBlocks.STEEL_TRAPDOOR);
+
+        getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
+                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK)
+                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_DOOR);
 
         getOrCreateTagBuilder(KlaxonBlockTags.MACHINE_MUFFLING_BLOCKS)
                 .forceAddTag(BlockTags.WOOL)
                 .add(Blocks.HAY_BLOCK)
                 .add(Blocks.TARGET);
+
+        getOrCreateTagBuilder(BlockTags.DOORS)
+                .add(KlaxonBlocks.STEEL_DOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_DOOR);
+
+        getOrCreateTagBuilder(BlockTags.TRAPDOORS)
+                .add(KlaxonBlocks.STEEL_TRAPDOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
     }
 }

@@ -26,6 +26,10 @@ public class KlaxonItemGroups {
             .entries(((displayContext, entries) -> {
                 entries.add(KlaxonBlocks.STEEL_BLOCK);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+                entries.add(KlaxonBlocks.STEEL_DOOR);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_DOOR);
+                entries.add(KlaxonBlocks.STEEL_TRAPDOOR);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
             })).build();
 
     public static final ItemGroup KLAXON_EQUIPMENT = FabricItemGroup.builder()

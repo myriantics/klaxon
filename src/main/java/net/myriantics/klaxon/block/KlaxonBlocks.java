@@ -14,6 +14,8 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.customblocks.SteelDoorBlock;
+import net.myriantics.klaxon.block.customblocks.SteelTrapdoorBlock;
 
 public class KlaxonBlocks {
 
@@ -26,6 +28,15 @@ public class KlaxonBlocks {
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
     public static final Block CRUDE_STEEL_BLOCK = registerBlock("crude_steel_block",
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).pistonBehavior(PistonBehavior.DESTROY).strength(2.5f, 3.0f)));
+
+    public static final Block STEEL_DOOR = registerBlock("steel_door",
+            new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK)));
+    public static final Block CRUDE_STEEL_DOOR = registerBlock("crude_steel_door",
+            new SteelDoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK)));
+    public static final Block STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
+            new SteelTrapdoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK)));
+    public static final Block CRUDE_STEEL_TRAPDOOR = registerBlock("crude_steel_trapdoor",
+            new SteelTrapdoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
