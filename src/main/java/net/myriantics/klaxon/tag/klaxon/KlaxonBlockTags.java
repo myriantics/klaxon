@@ -15,6 +15,8 @@ public class KlaxonBlockTags {
             createTag("machine_muffling_blocks");
     public static final TagKey<Block> FERROMAGNETIC_BLOCKS =
             createTag("ferromagnetic_blocks");
+    public static final TagKey<Block> BLAST_PROCESSORS =
+            createTag("blast_processors");
 
     private static TagKey<Block> createTag(String name) {
         return TagKey.of(RegistryKeys.BLOCK, KlaxonCommon.locate(name));

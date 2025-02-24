@@ -24,6 +24,9 @@ public class KlaxonItemTags {
     public static final TagKey<Item> UNENCHANTABLE =
             createTag("unenchantable");
 
+    public static final TagKey<Item> KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS =
+            createTag("root_advancement_granting_items");
+
 
     public static final TagKey<Item> STEEL_REPAIRABLE_FLINT_AND_STEEL =
             createTag("steel_repairable_flint_and_steel");

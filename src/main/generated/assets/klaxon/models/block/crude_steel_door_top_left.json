@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left",
+  "textures": {
+    "bottom": "klaxon:block/crude_steel_door_bottom",
+    "top": "klaxon:block/crude_steel_door_top"
+  }
+}

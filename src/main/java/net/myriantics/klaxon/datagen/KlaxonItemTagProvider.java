@@ -117,6 +117,10 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ConventionalItemTags.INGOTS)
                 .forceAddTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS);
 
+        getOrCreateTagBuilder(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
+                .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.asItem());
+
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER);
 

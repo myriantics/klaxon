@@ -25,10 +25,18 @@ public class KlaxonModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         registerSimpleBlockStateModels(blockStateModelGenerator);
         registerMachineBlockStateModels(blockStateModelGenerator);
+        registerMiscBlockStateModels(blockStateModelGenerator);
     }
 
     private void registerSimpleBlockStateModels(BlockStateModelGenerator generator) {
         generator.registerSimpleState(KlaxonBlocks.STEEL_BLOCK);
+    }
+
+    private void registerMiscBlockStateModels(BlockStateModelGenerator generator) {
+        generator.registerDoor(KlaxonBlocks.CRUDE_STEEL_DOOR);
+        generator.registerDoor(KlaxonBlocks.STEEL_DOOR);
+        generator.registerTrapdoor(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
+        generator.registerTrapdoor(KlaxonBlocks.STEEL_TRAPDOOR);
     }
 
     private void registerMachineBlockStateModels(BlockStateModelGenerator generator) {

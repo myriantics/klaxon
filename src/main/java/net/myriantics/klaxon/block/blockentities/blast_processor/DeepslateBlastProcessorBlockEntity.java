@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.block.blockentities.blast_processor;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,20 +9,14 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.AdvancedExplosionBehavior;
-import net.minecraft.world.explosion.ExplosionBehavior;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
@@ -33,8 +26,6 @@ import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock.*;
 
@@ -227,14 +218,14 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     }
 
     public Position getExplosionOutputLocation(Direction direction) {
-        return getOutputLocation(direction, 0.6);
+        return getItemOutputLocation(direction, 0.6);
     }
 
     public Position getItemOutputLocation(Direction direction) {
-        return getOutputLocation(direction, 0.7);
+        return getItemOutputLocation(direction, 0.7);
     }
 
-    public Position getOutputLocation(Direction direction, double offset) {
+    public Position getItemOutputLocation(Direction direction, double offset) {
         Position centerPos = pos.toCenterPos();
         double x = centerPos.getX();
         double y = centerPos.getY();

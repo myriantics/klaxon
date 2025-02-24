@@ -61,5 +61,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.TRAPDOORS)
                 .add(KlaxonBlocks.STEEL_TRAPDOOR)
                 .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
+
+        getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)
+                .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
     }
 }

@@ -7,19 +7,15 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Position;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.ExplosionBehavior;
+import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
@@ -83,8 +79,15 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
                 blastProcessor.clear();
             }
             case SUCCESS -> {
+                Position itemOutputPos = blastProcessor.getItemOutputLocation(facing);
+                double advancementGrantRange = 17.0;
+
                 blastProcessor.clear();
-                ItemDispenserBehavior.spawnItem(world, recipeData.result().copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
+                ItemDispenserBehavior.spawnItem(world, recipeData.result().copy(), 8, facing, itemOutputPos);
+
+                for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of((Vec3d) itemOutputPos, advancementGrantRange, advancementGrantRange, advancementGrantRange))) {
+                    KlaxonAdvancementCriteria.BLOCK_ACTIVATION_CRITERION.trigger(serverPlayerEntity, world.getBlockState(pos));
+                }
             }
         }
     }
