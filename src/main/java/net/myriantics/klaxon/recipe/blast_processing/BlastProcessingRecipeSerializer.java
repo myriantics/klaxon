@@ -13,11 +13,9 @@ public class BlastProcessingRecipeSerializer implements RecipeSerializer<BlastPr
     public BlastProcessingRecipeSerializer() {
     }
 
-
-
     private final MapCodec<BlastProcessingRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance -> {
-        return recipeInstance.group(Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input").forGetter((recipe) -> {
-            return recipe.getProcessingItem();
+        return recipeInstance.group(Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredientItem").forGetter((recipe) -> {
+            return recipe.getIngredientItem();
         }), PrimitiveCodec.DOUBLE.fieldOf("explosionPowerMin").forGetter((recipe) -> {
             return recipe.getExplosionPowerMin();
         }), PrimitiveCodec.DOUBLE.fieldOf("explosionPowerMax").forGetter((recipe) -> {
@@ -32,16 +30,16 @@ public class BlastProcessingRecipeSerializer implements RecipeSerializer<BlastPr
     );
 
     private static BlastProcessingRecipe read(RegistryByteBuf buf) {
-        Ingredient inputA = Ingredient.PACKET_CODEC.decode(buf);
+        Ingredient ingredientItem = Ingredient.PACKET_CODEC.decode(buf);
         double explosionPowerMin = PacketCodecs.DOUBLE.decode(buf);
         double explosionPowerMax = PacketCodecs.DOUBLE.decode(buf);
         ItemStack output = ItemStack.OPTIONAL_PACKET_CODEC.decode(buf);
 
-        return new BlastProcessingRecipe(inputA, explosionPowerMin, explosionPowerMax, output);
+        return new BlastProcessingRecipe(ingredientItem, explosionPowerMin, explosionPowerMax, output);
     }
 
     private static void write(RegistryByteBuf buf, BlastProcessingRecipe recipe) {
-        Ingredient.PACKET_CODEC.encode(buf, recipe.getProcessingItem());
+        Ingredient.PACKET_CODEC.encode(buf, recipe.getIngredientItem());
         PacketCodecs.DOUBLE.encode(buf, recipe.getExplosionPowerMin());
         PacketCodecs.DOUBLE.encode(buf, recipe.getExplosionPowerMax());
         ItemStack.OPTIONAL_PACKET_CODEC.encode(buf, recipe.getResult(null));

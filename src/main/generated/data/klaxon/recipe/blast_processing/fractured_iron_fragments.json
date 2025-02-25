@@ -2,7 +2,7 @@
   "type": "klaxon:blast_processing",
   "explosionPowerMax": 0.5,
   "explosionPowerMin": 0.2,
-  "input": {
+  "ingredientItem": {
     "item": "minecraft:iron_ingot"
   },
   "output": {

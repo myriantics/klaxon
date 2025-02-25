@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
-import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
+import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
 public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
@@ -169,7 +169,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                 if (inventory.get(CATALYST_INDEX).isEmpty() == fueled) {
                     appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.FUELED);
                 }
-                if (inventory.get(PROCESS_ITEM_INDEX).isEmpty() != hatchOpen) {
+                if (inventory.get(INGREDIENT_INDEX).isEmpty() != hatchOpen) {
                     appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.HATCH_OPEN);
                 }
 

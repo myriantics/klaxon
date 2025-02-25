@@ -87,8 +87,16 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
             });
         }
 
+        // ingredient slot
+        this.addSlot(new Slot(ingredientInventory, 0, 35, 53 - 36) {
+            @Override
+            public int getMaxItemCount() {
+                return 1;
+            }
+        });
+
         // catalyst slot
-        this.addSlot(new Slot(ingredientInventory, 0, 35, 53) {
+        this.addSlot(new Slot(ingredientInventory, 1, 35, 53) {
             @Override
             public int getMaxItemCount() {
                 return 1;
@@ -106,29 +114,6 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
                 return super.canTakeItems(playerEntity) && PermissionsHelper.canModifyWorld(player);
             }
         });
-
-        // ingredient slot
-        this.addSlot(new Slot(ingredientInventory, 1, 35, 53 - 36) {
-            @Override
-            public int getMaxItemCount() {
-                return 1;
-            }
-        });
-
-        // machine slots
-        for (int i = 0; i < 2; i++) {
-            this.addSlot(new Slot(ingredientInventory, i, 35, 53 - i * 36) {
-                @Override
-                public int getMaxItemCount() {
-                    return 1;
-                }
-
-                @Override
-                public boolean canInsert(ItemStack stack) {
-                    return super.canInsert(stack);
-                }
-            });
-        }
 
         int m;
         int l;

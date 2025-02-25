@@ -9,12 +9,12 @@ import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.ExplosionBehavior;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
@@ -73,16 +73,13 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
                 for (ItemStack ejectedStack : blastProcessor.getItems()) {
                     ItemDispenserBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
                 }
-                blastProcessor.clear();
             }
             case OVERPOWERED, UNDERPOWERED -> {
-                blastProcessor.clear();
             }
             case SUCCESS -> {
                 Position itemOutputPos = blastProcessor.getItemOutputLocation(facing);
                 double advancementGrantRange = 17.0;
 
-                blastProcessor.clear();
                 ItemDispenserBehavior.spawnItem(world, recipeData.result().copy(), 8, facing, itemOutputPos);
 
                 for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of((Vec3d) itemOutputPos, advancementGrantRange, advancementGrantRange, advancementGrantRange))) {
@@ -90,6 +87,9 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
                 }
             }
         }
+
+        // blast processor will always be empty after actions have been performed
+        blastProcessor.clear();
     }
 
     public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
@@ -111,7 +111,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
 
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
 
-        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX).isEmpty()) {
+        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty()) {
             blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
         }
         if (blastProcessingMatch.isPresent()) {

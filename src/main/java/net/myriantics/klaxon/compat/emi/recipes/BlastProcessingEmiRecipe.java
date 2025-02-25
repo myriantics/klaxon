@@ -47,7 +47,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         }
 
         this.catalysts = EmiIngredient.of(catalystStacks);
-        this.input = List.of(EmiIngredient.of(recipe.value().getProcessingItem()), catalysts);
+        this.input = List.of(EmiIngredient.of(recipe.value().getIngredientItem()), catalysts);
     }
 
     @Override

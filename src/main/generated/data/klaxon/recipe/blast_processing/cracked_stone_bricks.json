@@ -2,7 +2,7 @@
   "type": "klaxon:blast_processing",
   "explosionPowerMax": 0.3,
   "explosionPowerMin": 0.1,
-  "input": {
+  "ingredientItem": {
     "item": "minecraft:stone_bricks"
   },
   "output": {

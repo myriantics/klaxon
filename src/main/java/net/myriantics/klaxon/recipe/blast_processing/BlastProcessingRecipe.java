@@ -8,16 +8,16 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 
-import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.PROCESS_ITEM_INDEX;
+import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
 public class BlastProcessingRecipe implements Recipe<RecipeInput> {
-    private final Ingredient processingItem;
+    private final Ingredient ingredientItem;
     private final double explosionPowerMin;
     private final double explosionPowerMax;
     private final ItemStack result;
 
     public BlastProcessingRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result) {
-        this.processingItem = inputA;
+        this.ingredientItem = inputA;
         this.explosionPowerMin = explosionPowerMin;
         this.explosionPowerMax = explosionPowerMax;
         this.result = result;
@@ -25,7 +25,7 @@ public class BlastProcessingRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput inventory, World world) {
-        return processingItem.test(inventory.getStackInSlot(PROCESS_ITEM_INDEX));
+        return ingredientItem.test(inventory.getStackInSlot(INGREDIENT_INDEX));
     }
 
     @Override
@@ -43,8 +43,8 @@ public class BlastProcessingRecipe implements Recipe<RecipeInput> {
         return this.result;
     }
 
-    public Ingredient getProcessingItem() {
-        return processingItem;
+    public Ingredient getIngredientItem() {
+        return ingredientItem;
     }
 
     public double getExplosionPowerMin() {

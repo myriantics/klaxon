@@ -31,9 +31,9 @@ import static net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBl
 
 public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-    public static final int PROCESS_ITEM_INDEX = 1;
-    public static final int CATALYST_INDEX = 0;
-    private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
+    public static final int INGREDIENT_INDEX = 0;
+    public static final int CATALYST_INDEX = 1;
+    private static final int[] INGREDIENT_ITEM_SLOTS = new int[]{INGREDIENT_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
 
@@ -86,7 +86,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
             }
             // if it's not the front, you can access input
             if (side != BlockDirectionHelper.getFront(blockFacing)) {
-                return PROCESS_ITEM_SLOTS;
+                return INGREDIENT_ITEM_SLOTS;
             }
         }
         return new int[] {};
