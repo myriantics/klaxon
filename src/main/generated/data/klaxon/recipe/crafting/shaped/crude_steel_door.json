@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "crude_steel_door",
+  "key": {
+    "I": {
+      "tag": "c:ingots/crude_steel"
+    },
+    "P": {
+      "tag": "c:plates/crude_steel"
+    }
+  },
+  "pattern": [
+    "PP",
+    "PP",
+    "II"
+  ],
+  "result": {
+    "count": 3,
+    "id": "klaxon:crude_steel_door"
+  }
+}

@@ -10,7 +10,6 @@ import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.advancement.criterion.BlockActivationCriterion;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.item.KlaxonItems;
@@ -27,34 +26,34 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
 
     @Override
     public void generateAdvancement(RegistryWrapper.WrapperLookup registryLookup, Consumer<AdvancementEntry> consumer) {
-        AdvancementEntry root = generateRoot(consumer);
-        generateAdvancements(consumer, root);
+        AdvancementEntry preludeRoot = generatePreludeRoot(consumer);
+        generatePreludeAdvancements(consumer, preludeRoot);
     }
 
-    private AdvancementEntry generateRoot(Consumer<AdvancementEntry> consumer) {
+    private AdvancementEntry generatePreludeRoot(Consumer<AdvancementEntry> consumer) {
 
         return Advancement.Builder.create()
                 .display(
                         KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.asItem(),
-                        Text.translatable("advancements.klaxon.root.title"),
-                        Text.translatable("advancements.klaxon.root.description"),
-                        KlaxonCommon.locate("textures/gui/advancements/backgrounds/adventure.png"),
+                        Text.translatable("advancements.klaxon_prelude.root.title"),
+                        Text.translatable("advancements.klaxon_prelude.root.description"),
+                        KlaxonCommon.locate("textures/block/steel_block"),
                         AdvancementFrame.TASK,
                         false,
                         false,
                         false
                 )
                 .criterion("blast_processor_obtain", InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)))
-                .build(consumer, "klaxon/root");
+                .build(consumer, "klaxon_prelude/root");
     }
 
-    private void generateAdvancements(Consumer<AdvancementEntry> consumer, AdvancementEntry root) {
+    private void generatePreludeAdvancements(Consumer<AdvancementEntry> consumer, AdvancementEntry preludeRoot) {
         AdvancementEntry watchBlastProcessorCraft = Advancement.Builder.create()
-                .parent(root)
+                .parent(preludeRoot)
                 .display(
                         KlaxonItems.FRACTURED_RAW_IRON,
-                        Text.translatable("advancements.klaxon.blast_processor_craft.title"),
-                        Text.translatable("advancements.klaxon.blast_processor_craft.description"),
+                        Text.translatable("advancements.klaxon_prelude.watch_blast_processor_craft.title"),
+                        Text.translatable("advancements.klaxon_prelude.watch_blast_processor_craft.description"),
                         null,
                         AdvancementFrame.TASK,
                         true,
@@ -62,6 +61,6 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                         false
                 )
                 .criterion("watch_blast_processor_craft", BlockActivationCriterion.Conditions.create(KlaxonBlockTags.BLAST_PROCESSORS))
-                .build(consumer, "klaxon/watch_blast_processor_craft");
+                .build(consumer, "klaxon_prelude/watch_blast_processor_craft");
     }
 }

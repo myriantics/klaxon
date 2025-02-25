@@ -81,8 +81,8 @@
   "itemGroup.klaxon.machines": "KLAXON's Machines",
   "itemGroup.klaxon.materials": "KLAXON's Materials",
 
-  "advancements.klaxon.root.title": "KLAXON",
-  "advancements.klaxon.root.description": "Figuring on biggering",
-  "advancements.klaxon.blast_processor_craft.title": "Divide!",
-  "advancements.klaxon.blast_processor_craft.description": "Watch a Blast Processor craft something"
+  "advancements.klaxon_prelude.root.title": "KLAXON - Prelude",
+  "advancements.klaxon_prelude.root.description": "An explosive introduction",
+  "advancements.klaxon_prelude.watch_blast_processor_craft.title": "Divide!",
+  "advancements.klaxon_prelude.watch_blast_processor_craft.description": "Watch a Blast Processor craft something"
 }

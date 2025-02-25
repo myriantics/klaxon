@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "steel_door",
+  "key": {
+    "I": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    "PP",
+    "PP",
+    "II"
+  ],
+  "result": {
+    "count": 3,
+    "id": "klaxon:steel_door"
+  }
+}

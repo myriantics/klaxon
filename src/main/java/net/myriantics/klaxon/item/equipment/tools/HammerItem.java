@@ -26,6 +26,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.HeavyAbilityModifierHelper;
+import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
@@ -195,7 +196,7 @@ public class HammerItem extends Item {
             world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
 
             // update observers monitoring target block - doesn't work in adventure
-            if (!world.isClient() && player.getAbilities().allowModifyWorld) {
+            if (!world.isClient() && PermissionsHelper.canModifyWorld(player)) {
                 updateAdjacentMonitoringObservers(world, pos, targetBlockState);
             }
 

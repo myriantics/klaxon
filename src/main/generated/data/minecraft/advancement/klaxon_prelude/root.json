@@ -13,9 +13,9 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "klaxon:textures/gui/advancements/backgrounds/adventure.png",
+    "background": "klaxon:textures/block/steel_block",
     "description": {
-      "translate": "advancements.klaxon.root.description"
+      "translate": "advancements.klaxon_prelude.root.description"
     },
     "icon": {
       "count": 1,
@@ -23,7 +23,7 @@
     },
     "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon.root.title"
+      "translate": "advancements.klaxon_prelude.root.title"
     }
   },
   "requirements": [

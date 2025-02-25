@@ -24,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
@@ -105,7 +106,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
         if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            int[] slots = canFastInput(state, interactionSide) ? blastProcessor.getAvailableSlots(interactionSide) : new int[] {};
+            int[] slots = canFastInput(player, state, interactionSide) ? blastProcessor.getAvailableSlots(interactionSide) : new int[] {};
 
             if (slots != null) {
                 for (int slot : slots) {
@@ -231,11 +232,13 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         }
     }
 
-    public static boolean canFastInput(BlockState state, Direction clickSide) {
+    public static boolean canFastInput(PlayerEntity player, BlockState state, Direction clickSide) {
         Direction blockDirection = state.get(HORIZONTAL_FACING);
         // check if you can insert from the sides
         if (!state.get(FUELED) &&
-                (clickSide.equals(BlockDirectionHelper.getLeft(blockDirection)) || clickSide.equals(BlockDirectionHelper.getRight(blockDirection)))) {
+                (clickSide.equals(BlockDirectionHelper.getLeft(blockDirection)) || clickSide.equals(BlockDirectionHelper.getRight(blockDirection))
+                        // prevent adventure mode players from fastinputting to catalyst slot
+                        && PermissionsHelper.canModifyWorld(player))) {
             return true;
         }
         // check if you can insert from the top. if no, don't bother

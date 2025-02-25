@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:klaxon/root",
+  "parent": "minecraft:klaxon_prelude/root",
   "criteria": {
-    "blast_processor_craft": {
+    "watch_blast_processor_craft": {
       "conditions": {
         "block": "#klaxon:blast_processors"
       },
@@ -10,19 +10,19 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.blast_processor_craft.description"
+      "translate": "advancements.klaxon_prelude.watch_blast_processor_craft.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:fractured_raw_iron"
     },
     "title": {
-      "translate": "advancements.klaxon.blast_processor_craft.title"
+      "translate": "advancements.klaxon_prelude.watch_blast_processor_craft.title"
     }
   },
   "requirements": [
     [
-      "blast_processor_craft"
+      "watch_blast_processor_craft"
     ]
   ],
   "sends_telemetry_event": true

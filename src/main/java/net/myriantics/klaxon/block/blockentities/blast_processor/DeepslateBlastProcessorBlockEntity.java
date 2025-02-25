@@ -36,7 +36,6 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     private static final int[] PROCESS_ITEM_SLOTS = new int[]{PROCESS_ITEM_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
-    public static final double MAXIMUM_CONTAINED_EXPLOSION_POWER = 0.5;
 
     private DeepslateBlastProcessorScreenHandler screenHandler;
 

@@ -15,6 +15,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
@@ -86,6 +87,33 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
             });
         }
 
+        // catalyst slot
+        this.addSlot(new Slot(ingredientInventory, 0, 35, 53) {
+            @Override
+            public int getMaxItemCount() {
+                return 1;
+            }
+
+            // don't allow players to modify catalyst slot - protection put in for blanketcon
+
+            @Override
+            public boolean canInsert(ItemStack stack) {
+                return super.canInsert(stack) && PermissionsHelper.canModifyWorld(player);
+            }
+
+            @Override
+            public boolean canTakeItems(PlayerEntity playerEntity) {
+                return super.canTakeItems(playerEntity) && PermissionsHelper.canModifyWorld(player);
+            }
+        });
+
+        // ingredient slot
+        this.addSlot(new Slot(ingredientInventory, 1, 35, 53 - 36) {
+            @Override
+            public int getMaxItemCount() {
+                return 1;
+            }
+        });
 
         // machine slots
         for (int i = 0; i < 2; i++) {
@@ -93,6 +121,11 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
                 @Override
                 public int getMaxItemCount() {
                     return 1;
+                }
+
+                @Override
+                public boolean canInsert(ItemStack stack) {
+                    return super.canInsert(stack);
                 }
             });
         }

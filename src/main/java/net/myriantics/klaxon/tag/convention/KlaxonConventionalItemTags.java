@@ -7,11 +7,19 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 public class KlaxonConventionalItemTags {
-    // convention tags
-    public static final TagKey<Item> STEEL_INGOTS = createConventionalIngotTag("steel");
+    // nuggies
     public static final TagKey<Item> STEEL_NUGGETS = createConventionalNuggetTag("steel");
+
+    // blocks
     public static final TagKey<Item> STEEL_BLOCKS = createConventionalStorageBlockTag("steel");
+
+    // ingots
+    public static final TagKey<Item> STEEL_INGOTS = createConventionalIngotTag("steel");
+    public static final TagKey<Item> CRUDE_STEEL_INGOTS = createConventionalIngotTag("crude_steel");
+
+    // plates
     public static final TagKey<Item> STEEL_PLATES = createConventionalPlateTag("steel");
+    public static final TagKey<Item> CRUDE_STEEL_PLATES = createConventionalPlateTag("crude_steel");
     public static final TagKey<Item> IRON_PLATES = createConventionalPlateTag("iron");
     public static final TagKey<Item> GOLD_PLATES = createConventionalPlateTag("gold");
     public static final TagKey<Item> COPPER_PLATES = createConventionalPlateTag("copper");
