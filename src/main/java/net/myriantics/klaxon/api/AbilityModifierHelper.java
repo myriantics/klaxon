@@ -17,6 +17,9 @@ public abstract class AbilityModifierHelper {
         statusEffectModifier += getUnborkedStatusEffectAmplifier(player, StatusEffects.STRENGTH);
         statusEffectModifier -= getUnborkedStatusEffectAmplifier(player, StatusEffects.WEAKNESS);
 
+        // entity wearing heavy equipment counts like a weakness level
+        statusEffectModifier -= EntityWeightHelper.isEntityHeavy(player) ? 1 : 0;
+
         // no negative velocity for you
         if (statusEffectModifier < 0) {
             return 0.0F;

@@ -19,6 +19,8 @@ public class KlaxonItemTags {
             createTag("heavy_equipment");
     public static final TagKey<Item> FERROMAGNETIC_ITEMS =
             createTag("ferromagnetic_items");
+    public static final TagKey<Item> FERROMAGNETIC_ITEM_BLACKLIST =
+            createTag("ferromagnetic_item_blacklist");
     public static final TagKey<Item> STEEL_ARMOR =
             createTag("steel_armor");
     public static final TagKey<Item> UNENCHANTABLE =

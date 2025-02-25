@@ -2,6 +2,10 @@
   "block.klaxon.deepslate_blast_processor": "Deepslate Blast Processor",
   "block.klaxon.steel_block": "Block of Steel",
   "block.klaxon.crude_steel_block": "Block of Crude Steel",
+  "block.klaxon.steel_door": "Steel Door",
+  "block.klaxon.steel_trapdoor": "Steel Trapdoor",
+  "block.klaxon.crude_steel_door": "Crude Steel Door",
+  "block.klaxon.crude_steel_trapdoor": "Crude Steel Trapdoor",
 
   "item.klaxon.steel_hammer": "Steel Hammer",
   "item.klaxon.steel_helmet": "Steel Helmet",
@@ -48,6 +52,7 @@
   "tag.item.klaxon.heavy_equipment": "Heavy Equipment",
   "tag.item.klaxon.infinitely_repairable": "Infinitely Repairable Items",
   "tag.item.klaxon.ferromagnetic_items": "Ferromagnetic Items",
+  "tag.item.klaxon.ferromagnetic_item_blacklist": "Ferromagnetic Item Blacklist",
   "tag.item.klaxon.makeshift_crafting_ingredients": "Makeshift Crafting Ingredients",
   "tag.item.klaxon.makeshift_repair_materials": "Makeshift Repair Materials",
   "tag.item.klaxon.no_xp_cost_repairable": "Items Repairable with No EXP",

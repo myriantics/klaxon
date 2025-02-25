@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
-public abstract class HeavyAbilityModifierHelper {
+public abstract class EntityWeightHelper {
 
     public static boolean isEntityHeavy(LivingEntity entity) {
         boolean isHeavy = false;

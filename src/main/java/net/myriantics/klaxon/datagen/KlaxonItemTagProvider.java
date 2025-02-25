@@ -25,6 +25,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonItems.STEEL_INGOT);
 
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)
+                .add(KlaxonItems.CRUDE_STEEL_INGOT);
+
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);
@@ -45,6 +48,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_PLATES)
                 .add(KlaxonItems.STEEL_PLATE);
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES)
+                .add(KlaxonItems.CRUDE_STEEL_PLATE);
 
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_PLATES)

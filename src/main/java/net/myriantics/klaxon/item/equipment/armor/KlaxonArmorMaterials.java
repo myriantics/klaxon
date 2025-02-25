@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -24,7 +25,7 @@ public class KlaxonArmorMaterials {
         map.put(ArmorItem.Type.CHESTPLATE, 8);
         map.put(ArmorItem.Type.HELMET, 3);
         map.put(ArmorItem.Type.BODY, 11);
-    }), 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.5f, 0.1f, () -> Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
+    }), 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.5f, 0.1f, () -> Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
             List.of(new ArmorMaterial.Layer(KlaxonCommon.locate("steel"))));
 
     private static RegistryEntry<ArmorMaterial> register(

@@ -82,6 +82,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
 
                 ItemDispenserBehavior.spawnItem(world, recipeData.result().copy(), 8, facing, itemOutputPos);
 
+                // proc blast processor crafting advancement
                 for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of((Vec3d) itemOutputPos, advancementGrantRange, advancementGrantRange, advancementGrantRange))) {
                     KlaxonAdvancementCriteria.BLOCK_ACTIVATION_CRITERION.trigger(serverPlayerEntity, world.getBlockState(pos));
                 }
