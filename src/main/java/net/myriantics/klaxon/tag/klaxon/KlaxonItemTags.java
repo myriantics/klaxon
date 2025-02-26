@@ -11,6 +11,8 @@ public class KlaxonItemTags {
             createTag("makeshift_crafting_ingredients");
     public static final TagKey<Item> MAKESHIFT_REPAIR_MATERIALS =
             createTag("makeshift_repair_materials");
+    public static final TagKey<Item> MAKESHIFT_CRAFTED_EQUIPMENT =
+            createTag("makeshift_crafted_equipment");
     public static final TagKey<Item> INFINITELY_REPAIRABLE =
             createTag("infinitely_repairable");
     public static final TagKey<Item> NO_XP_COST_REPAIRABLE =

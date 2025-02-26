@@ -5,12 +5,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.myriantics.klaxon.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -97,5 +97,15 @@ public abstract class AnvilScreenHandlerMixin {
             return (T) Integer.valueOf(0);
         }
         return original.call(instance, type, value);
+    }
+
+    @Inject(
+            method = "onTakeOutput",
+            at = @At(value = "HEAD")
+    )
+    public void klaxon$repairAdvancementHook(PlayerEntity player, ItemStack stack, CallbackInfo ci) {
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            KlaxonAdvancementCriteria.ANVIL_REPAIR_CRITERION.trigger(serverPlayer, stack);
+        }
     }
 }

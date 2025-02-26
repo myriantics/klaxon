@@ -6,11 +6,13 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.criterion.BlockActivationCriterion;
+import net.myriantics.klaxon.advancement.criterion.AnvilRepairCriterion;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -37,7 +39,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                         KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.asItem(),
                         Text.translatable("advancements.klaxon_prelude.root.title"),
                         Text.translatable("advancements.klaxon_prelude.root.description"),
-                        KlaxonCommon.locate("textures/block/steel_block"),
+                        KlaxonCommon.locate("textures/gui/advancements/backgrounds/klaxon_prelude.png"),
                         AdvancementFrame.TASK,
                         false,
                         false,
@@ -62,5 +64,19 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .criterion("watch_blast_processor_craft", BlockActivationCriterion.Conditions.create(KlaxonBlockTags.BLAST_PROCESSORS))
                 .build(consumer, "klaxon_prelude/watch_blast_processor_craft");
+        AdvancementEntry makeshiftItemFullRepair = Advancement.Builder.create()
+                .parent(watchBlastProcessorCraft)
+                .display(
+                        Items.CHIPPED_ANVIL,
+                        Text.translatable("advancements.klaxon_prelude.makeshift_item_full_repair.title"),
+                        Text.translatable("advancements.klaxon_prelude.makeshift_item_full_repair.description"),
+                        null,
+                        AdvancementFrame.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .criterion("makeshift_crafting_full_repair", AnvilRepairCriterion.Conditions.createFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT, 0.0))
+                .build(consumer, "klaxon_prelude/makeshift_crafting_full_repair");
     }
 }

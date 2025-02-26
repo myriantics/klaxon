@@ -71,6 +71,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem())
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET);
 
+        getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT)
+                .add(KlaxonItems.STEEL_HAMMER)
+                .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
+                .add(Items.FLINT_AND_STEEL);
+
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET)
                 .add(KlaxonItems.STEEL_CHESTPLATE)

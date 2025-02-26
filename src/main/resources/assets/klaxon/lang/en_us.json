@@ -89,5 +89,11 @@
   "advancements.klaxon_prelude.root.title": "KLAXON - Prelude",
   "advancements.klaxon_prelude.root.description": "An explosive introduction",
   "advancements.klaxon_prelude.watch_blast_processor_craft.title": "Divide!",
-  "advancements.klaxon_prelude.watch_blast_processor_craft.description": "Watch a Blast Processor craft something"
+  "advancements.klaxon_prelude.watch_blast_processor_craft.description": "Watch a Blast Processor craft something",
+  "advancements.klaxon_prelude.makeshift_item_full_repair.title": "Tip-Top Condition",
+  "advancements.klaxon_prelude.makeshift_item_full_repair.description": "Fully repair an item made with Makeshift Crafting",
+
+
+  "advancements.klaxon_prelude.drink_coffee.title": "9:05 Sharp",
+  "advancements.klaxon_prelude.drink_coffee.description": "Drink some Coffee"
 }
