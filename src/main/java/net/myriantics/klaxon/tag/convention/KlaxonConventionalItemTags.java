@@ -42,7 +42,7 @@ public class KlaxonConventionalItemTags {
     }
 
     private static TagKey<Item> createConventionalPlateStorageBlockTag(String name) {
-        return createConventionalItemTag("storage_blocks/plates" + name);
+        return createConventionalItemTag("storage_blocks/plates/" + name);
     }
 
     private static TagKey<Item> createConventionalPlateTag(String name) {
