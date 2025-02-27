@@ -26,6 +26,13 @@ public class KlaxonItemGroups {
             .entries(((displayContext, entries) -> {
                 entries.add(KlaxonBlocks.STEEL_BLOCK);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+
+                entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.IRON_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.GOLD_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.COPPER_PLATING_BLOCK);
+
                 entries.add(KlaxonBlocks.STEEL_DOOR);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_DOOR);
                 entries.add(KlaxonBlocks.STEEL_TRAPDOOR);
@@ -37,10 +44,12 @@ public class KlaxonItemGroups {
             .displayName(Text.translatable("itemGroup.klaxon.equipment"))
             .entries(((displayContext, entries) -> {
                 entries.add(KlaxonItems.STEEL_HAMMER);
+
                 entries.add(KlaxonItems.STEEL_HELMET);
                 entries.add(KlaxonItems.STEEL_CHESTPLATE);
                 entries.add(KlaxonItems.STEEL_LEGGINGS);
                 entries.add(KlaxonItems.STEEL_BOOTS);
+
                 entries.add(Items.FLINT_AND_STEEL);
             })).build();
 
@@ -55,18 +64,36 @@ public class KlaxonItemGroups {
             .icon(() -> new ItemStack(KlaxonItems.STEEL_PLATE))
             .displayName(Text.translatable("itemGroup.klaxon.materials"))
             .entries(((displayContext, entries) -> {
+                // storage blocks
                 entries.add(KlaxonBlocks.STEEL_BLOCK);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+
+                // plating storage blocks
+                entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.IRON_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.GOLD_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.COPPER_PLATING_BLOCK);
+
+                // ingots
                 entries.add(KlaxonItems.STEEL_INGOT);
                 entries.add(KlaxonItems.CRUDE_STEEL_INGOT);
+
+                // nuggets
                 entries.add(KlaxonItems.STEEL_NUGGET);
                 entries.add(KlaxonItems.CRUDE_STEEL_NUGGET);
+
+                // plates
                 entries.add(KlaxonItems.IRON_PLATE);
                 entries.add(KlaxonItems.COPPER_PLATE);
                 entries.add(KlaxonItems.GOLD_PLATE);
                 entries.add(KlaxonItems.CRUDE_STEEL_PLATE);
                 entries.add(KlaxonItems.STEEL_PLATE);
+
+                // blends
                 entries.add(KlaxonItems.CRUDE_STEEL_MIXTURE);
+
+                // fractured items
                 entries.add(KlaxonItems.FRACTURED_IRON_FRAGMENTS);
                 entries.add(KlaxonItems.FRACTURED_COPPER_FRAGMENTS);
                 entries.add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS);

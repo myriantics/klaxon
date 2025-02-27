@@ -2,6 +2,9 @@
   "values": [
     "klaxon:steel_block",
     "klaxon:steel_door",
-    "klaxon:steel_trapdoor"
+    "klaxon:steel_trapdoor",
+    "klaxon:steel_plating_block",
+    "klaxon:iron_plating_block",
+    "klaxon:gold_plating_block"
   ]
 }

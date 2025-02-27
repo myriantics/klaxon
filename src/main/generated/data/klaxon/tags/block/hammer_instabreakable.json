@@ -9,6 +9,10 @@
       "required": false
     },
     {
+      "id": "#c:buds",
+      "required": false
+    },
+    {
       "id": "#minecraft:ice",
       "required": false
     },

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "steel_plate",
+  "ingredients": [
+    {
+      "item": "klaxon:steel_plating_block"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "klaxon:steel_plate"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "copper_plating_block",
+  "key": {
+    "x": {
+      "item": "klaxon:copper_plate"
+    }
+  },
+  "pattern": [
+    "xx",
+    "xx"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:copper_plating_block"
+  }
+}

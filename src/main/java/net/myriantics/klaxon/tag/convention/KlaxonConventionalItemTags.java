@@ -12,6 +12,11 @@ public class KlaxonConventionalItemTags {
 
     // blocks
     public static final TagKey<Item> STEEL_BLOCKS = createConventionalStorageBlockTag("steel");
+    public static final TagKey<Item> STEEL_PLATING_BLOCKS = createConventionalPlateStorageBlockTag("steel");
+    public static final TagKey<Item> CRUDE_STEEL_PLATING_BLOCKS = createConventionalPlateStorageBlockTag("crude_steel");
+    public static final TagKey<Item> IRON_PLATING_BLOCKS = createConventionalPlateStorageBlockTag("iron");
+    public static final TagKey<Item> GOLD_PLATING_BLOCKS = createConventionalPlateStorageBlockTag("gold");
+    public static final TagKey<Item> COPPER_PLATING_BLOCKS = createConventionalPlateStorageBlockTag("copper");
 
     // ingots
     public static final TagKey<Item> STEEL_INGOTS = createConventionalIngotTag("steel");
@@ -24,7 +29,6 @@ public class KlaxonConventionalItemTags {
     public static final TagKey<Item> GOLD_PLATES = createConventionalPlateTag("gold");
     public static final TagKey<Item> COPPER_PLATES = createConventionalPlateTag("copper");
 
-
     private static TagKey<Item> createConventionalNuggetTag(String name) {
         return createConventionalItemTag("nuggets/" + name);
     }
@@ -33,12 +37,16 @@ public class KlaxonConventionalItemTags {
         return createConventionalItemTag("ingots/" + name);
     }
 
-    private static TagKey<Item> createConventionalPlateTag(String name) {
-        return createConventionalItemTag("plates/" + name);
-    }
-
     private static TagKey<Item> createConventionalStorageBlockTag(String name) {
         return createConventionalItemTag("storage_blocks/" + name);
+    }
+
+    private static TagKey<Item> createConventionalPlateStorageBlockTag(String name) {
+        return createConventionalItemTag("storage_blocks/plates" + name);
+    }
+
+    private static TagKey<Item> createConventionalPlateTag(String name) {
+        return createConventionalItemTag("plates/" + name);
     }
 
     private static TagKey<Item> createConventionalItemTag(String name) {

@@ -26,6 +26,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS)
                 .addOptionalTag(ConventionalBlockTags.GLASS_PANES)
+                .addOptionalTag(ConventionalBlockTags.BUDS)
                 .addOptionalTag(BlockTags.ICE)
                 .add(Blocks.REDSTONE_LAMP)
                 .add(Blocks.SEA_LANTERN)
@@ -34,7 +35,16 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .add(KlaxonBlocks.STEEL_BLOCK)
-                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK)
+                .add(KlaxonBlocks.STEEL_DOOR)
+                .add(KlaxonBlocks.STEEL_TRAPDOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
+                .add(KlaxonBlocks.STEEL_PLATING_BLOCK)
+                .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK)
+                .add(KlaxonBlocks.IRON_PLATING_BLOCK)
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
+                .add(KlaxonBlocks.COPPER_PLATING_BLOCK);
 
         getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK);
@@ -42,12 +52,17 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(KlaxonBlocks.STEEL_BLOCK)
                 .add(KlaxonBlocks.STEEL_DOOR)
-                .add(KlaxonBlocks.STEEL_TRAPDOOR);
+                .add(KlaxonBlocks.STEEL_TRAPDOOR)
+                .add(KlaxonBlocks.STEEL_PLATING_BLOCK)
+                .add(KlaxonBlocks.IRON_PLATING_BLOCK)
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
 
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK)
                 .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
-                .add(KlaxonBlocks.CRUDE_STEEL_DOOR);
+                .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK)
+                .add(KlaxonBlocks.COPPER_PLATING_BLOCK);
 
         getOrCreateTagBuilder(KlaxonBlockTags.MACHINE_MUFFLING_BLOCKS)
                 .forceAddTag(BlockTags.WOOL)

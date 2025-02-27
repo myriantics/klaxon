@@ -13,7 +13,7 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "klaxon:textures/block/steel_block",
+    "background": "klaxon:textures/gui/advancements/backgrounds/klaxon_prelude.png",
     "description": {
       "translate": "advancements.klaxon_prelude.root.description"
     },

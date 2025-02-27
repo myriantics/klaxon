@@ -3,6 +3,7 @@ package net.myriantics.klaxon.block;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -23,12 +24,23 @@ public class KlaxonBlocks {
     public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
             new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
 
-    // filler
+    // storage blocks
     public static final Block STEEL_BLOCK = registerBlock("steel_block",
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
     public static final Block CRUDE_STEEL_BLOCK = registerBlock("crude_steel_block",
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).pistonBehavior(PistonBehavior.DESTROY).strength(2.5f, 3.0f)));
+    public static final Block STEEL_PLATING_BLOCK = registerBlock("steel_plating_block",
+            new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
+    public static final Block CRUDE_STEEL_PLATING_BLOCK = registerBlock("crude_steel_plating_block",
+            new PillarBlock(AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK)));
+    public static final Block IRON_PLATING_BLOCK = registerBlock("iron_plating_block",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+    public static final Block GOLD_PLATING_BLOCK = registerBlock("gold_plating_block",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.GOLD_BLOCK)));
+    public static final Block COPPER_PLATING_BLOCK = registerBlock("copper_plating_block",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)));
 
+    // misc decor
     public static final Block STEEL_DOOR = registerBlock("steel_door",
             new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK)));
     public static final Block CRUDE_STEEL_DOOR = registerBlock("crude_steel_door",

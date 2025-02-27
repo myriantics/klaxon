@@ -30,6 +30,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
 
     private void registerSimpleBlockStateModels(BlockStateModelGenerator generator) {
         generator.registerSimpleState(KlaxonBlocks.STEEL_BLOCK);
+        generator.registerSimpleState(KlaxonBlocks.CRUDE_STEEL_BLOCK);
     }
 
     private void registerMiscBlockStateModels(BlockStateModelGenerator generator) {
@@ -37,6 +38,12 @@ public class KlaxonModelProvider extends FabricModelProvider {
         generator.registerDoor(KlaxonBlocks.STEEL_DOOR);
         generator.registerTrapdoor(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
         generator.registerTrapdoor(KlaxonBlocks.STEEL_TRAPDOOR);
+
+        registerPlatingBlock(generator, KlaxonBlocks.STEEL_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.IRON_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.GOLD_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.COPPER_PLATING_BLOCK);
     }
 
     private void registerMachineBlockStateModels(BlockStateModelGenerator generator) {
@@ -68,6 +75,10 @@ public class KlaxonModelProvider extends FabricModelProvider {
                 )
                 .coordinate(BlockStateModelGenerator.createNorthDefaultHorizontalRotationStates())
         );
+    }
+
+    private void registerPlatingBlock(BlockStateModelGenerator generator, Block platingBlock) {
+        generator.registerAxisRotated(platingBlock, ModelIds.getBlockModelId(platingBlock));
     }
 
     @Override

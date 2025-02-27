@@ -35,6 +35,21 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK.asItem());
 
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_PLATING_BLOCKS)
+                .add(KlaxonBlocks.STEEL_PLATING_BLOCK.asItem());
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_PLATING_BLOCKS)
+                .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK.asItem());
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.IRON_PLATING_BLOCKS)
+                .add(KlaxonBlocks.IRON_PLATING_BLOCK.asItem());
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_PLATING_BLOCKS)
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_PLATING_BLOCKS)
+                .add(KlaxonBlocks.COPPER_PLATING_BLOCK.asItem());
+
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
