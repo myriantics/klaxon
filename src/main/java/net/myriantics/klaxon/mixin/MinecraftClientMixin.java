@@ -26,7 +26,7 @@ public abstract class MinecraftClientMixin {
             method = "doAttack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isAir()Z", ordinal = 0)
     )
-    public boolean risingEdgeBlockAttackCheck(boolean original, @Local BlockHitResult hitResult) {
+    public boolean klaxon$risingEdgeBlockAttackCheck(boolean original, @Local BlockHitResult hitResult) {
         if (interactionManager != null && player != null && HammerItem.canWallJump(player, player.getWorld().getBlockState(hitResult.getBlockPos()))) {
 
             // run walljump on client side

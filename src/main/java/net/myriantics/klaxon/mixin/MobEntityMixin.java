@@ -23,13 +23,7 @@ public abstract class MobEntityMixin {
 
         // change damage type to reflect hammer damage type
         if(original.getAttacker() instanceof MobEntity attacker && attacker.getMainHandStack().getItem() instanceof HammerItem) {
-            if (attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS)) {
-                // if the entity is defined to hit harder, it uses walloping
-                return KlaxonDamageTypes.hammerWalloping(attacker);
-            }
-
-            // if it's a regular entity, use bonking
-            return KlaxonDamageTypes.hammerBonking(attacker);
+            return HammerItem.getDamageType(attacker, attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS));
         }
 
         return original;

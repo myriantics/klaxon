@@ -2,10 +2,12 @@ package net.myriantics.klaxon.block.customblocks;
 
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.entity.Entity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.mixin.DoorBlockInvoker;
+import org.jetbrains.annotations.Nullable;
 
 public class SteelDoorBlock extends DoorBlock {
     public SteelDoorBlock(BlockSetType type, Settings settings) {
@@ -23,12 +25,18 @@ public class SteelDoorBlock extends DoorBlock {
                 // flips on up signal
                 if (!this.getDefaultState().isOf(sourceBlock) && isRecievingPower) {
                     // dude these random ass private methods have me tweaking
-                    ((DoorBlockInvoker) state.getBlock()).klaxon$playOpenCloseSound(null, world, pos, !state.get(OPEN));
+                    playOpenCloseSound(null, world, pos, !state.get(OPEN));
                     newState = newState.cycle(OPEN);
                 }
 
                 world.setBlockState(pos, newState);
             }
         }
+    }
+
+    private void playOpenCloseSound(@Nullable Entity entity, World world, BlockPos pos, boolean open) {
+        world.playSound(
+                entity, pos, open ? this.getBlockSetType().doorOpen() : this.getBlockSetType().doorClose(), SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.1F + 0.9F
+        );
     }
 }

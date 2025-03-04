@@ -17,13 +17,13 @@ public abstract class AbstractBlockStateMixin {
 
     // Used to ensure Hammer instabreaks blocks defined as such via tag
     @ModifyReturnValue(method = "calcBlockBreakingDelta", at = @At("RETURN"))
-    private float hammerInstabreakOverride(float original,
-                                           @Local(argsOnly = true) PlayerEntity player) {
+    private float klaxon$hammerInstabreakOverride(float original,
+                                                  @Local(argsOnly = true) PlayerEntity player) {
         // yonk the block state
         if (asBlockState().isIn(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 && player.getMainHandStack().getItem() instanceof HammerItem) {
             // if it can instabreak, set it to a value over 1.0 so that it instabreaks
-            return 2.0f;
+            return Integer.MAX_VALUE;
         }
 
         // if it can't instabreak, return original

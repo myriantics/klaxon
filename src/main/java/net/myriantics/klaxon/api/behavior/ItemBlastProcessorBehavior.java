@@ -16,6 +16,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import net.myriantics.klaxon.advancement.KlaxonAdvancementCriteria;
+import net.myriantics.klaxon.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
@@ -84,7 +85,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
 
                 // proc blast processor crafting advancement
                 for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of((Vec3d) itemOutputPos, advancementGrantRange, advancementGrantRange, advancementGrantRange))) {
-                    KlaxonAdvancementCriteria.BLOCK_ACTIVATION_CRITERION.trigger(serverPlayerEntity, world.getBlockState(pos));
+                    KlaxonAdvancementTriggers.triggerBlockActivation(serverPlayerEntity, world.getBlockState(pos));
                 }
             }
         }

@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.Entity;
@@ -11,8 +10,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,7 +26,7 @@ public abstract class ExplosionMixin {
             method = "collectBlocksAndDamageEntities",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;emitGameEvent(Lnet/minecraft/entity/Entity;Lnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/util/math/Vec3d;)V")
     )
-    public void muffledBlastProcessorOverride(World instance, Entity entity, RegistryEntry registryEntry, Vec3d vec3d, Operation<Void> original) {
+    public void klaxon$muffledBlastProcessorOverride(World instance, Entity entity, RegistryEntry registryEntry, Vec3d vec3d, Operation<Void> original) {
         // if the explosion is from a muffled blast processor, bonk the explosion game event
         // this is so it doesnt proc sculk sensors
         // top 10 features people will totally make use of

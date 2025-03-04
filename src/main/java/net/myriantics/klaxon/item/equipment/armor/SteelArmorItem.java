@@ -30,16 +30,8 @@ public class SteelArmorItem extends ArmorItem {
 
         return attributeModifiers
                 .with(
-                        EntityAttributes.GENERIC_JUMP_STRENGTH,
-                        new EntityAttributeModifier(JUMP_STRENGTH_MULTIPLIER_ID, JUMP_STRENGTH_MULTIPLIER, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                        slot
-                ).with(
                         EntityAttributes.GENERIC_MOVEMENT_SPEED,
                         new EntityAttributeModifier(MOVEMENT_SPEED_MULTIPLIER_ID, MOVEMENT_SPEED_MULTIPLIER, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                        slot
-                ).with(
-                        EntityAttributes.GENERIC_FALL_DAMAGE_MULTIPLIER,
-                        new EntityAttributeModifier(FALL_DAMAGE_MULTIPLIER_ID, FALL_DAMAGE_MULTIPLER, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         slot
                 );
     }

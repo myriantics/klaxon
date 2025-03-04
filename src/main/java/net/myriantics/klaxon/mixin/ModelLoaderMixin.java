@@ -3,7 +3,6 @@ package net.myriantics.klaxon.mixin;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
@@ -25,7 +24,7 @@ public abstract class ModelLoaderMixin {
 
     // Registers the hammer model as an available resource you can pull from
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 1, shift = At.Shift.AFTER))
-    public void addHammer(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
+    public void klaxon$addHammer(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
         this.loadItemModel(new ModelIdentifier(KlaxonCommon.locate("steel_hammer_3d"), "inventory"));
     }
 }

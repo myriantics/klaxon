@@ -7,6 +7,7 @@ import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
@@ -34,6 +35,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.api.AbilityModifierCalculator;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
+import net.myriantics.klaxon.util.KlaxonDamageTypes;
 
 import java.util.List;
 import java.util.Optional;
@@ -321,5 +323,10 @@ public class HammerItem extends Item {
             vec3d2 = vec3d2.add(source.getX(), source.getEyeY(), source.getZ());
             source.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
         }
+    }
+
+    // called in PlayerEntityMixin and MobEntityMixin
+    public static DamageSource getDamageType(Entity attacker, boolean willCrit) {
+        return willCrit ? KlaxonDamageTypes.hammerWalloping(attacker) : KlaxonDamageTypes.hammerBonking(attacker);
     }
 }

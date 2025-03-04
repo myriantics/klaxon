@@ -5,7 +5,6 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.type.FireworkExplosionComponent;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.MuffledBlastProcessorFireworkParticle;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,9 +26,9 @@ public abstract class ClientWorldMixin {
             at = @At(value = "HEAD"),
             cancellable = true
     )
-    public void removeDummyExplosionIfPresent(double x, double y, double z, double velocityX, double velocityY, double velocityZ,
-                                              List<FireworkExplosionComponent> explosions, CallbackInfo ci,
-                                              @Local(argsOnly = true) LocalRef<List<FireworkExplosionComponent>> explosionRef) {
+    public void klaxon$removeDummyExplosionIfPresent(double x, double y, double z, double velocityX, double velocityY, double velocityZ,
+                                                     List<FireworkExplosionComponent> explosions, CallbackInfo ci,
+                                                     @Local(argsOnly = true) LocalRef<List<FireworkExplosionComponent>> explosionRef) {
         if (hasMuffledDummyExplosion(explosions)) {
             // remove the dummy element from the list if present
             explosions = explosions.subList(0, explosions.size() - 1);

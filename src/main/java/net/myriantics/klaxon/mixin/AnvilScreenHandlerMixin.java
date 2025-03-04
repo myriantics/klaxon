@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.myriantics.klaxon.advancement.KlaxonAdvancementCriteria;
+import net.myriantics.klaxon.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -105,7 +105,7 @@ public abstract class AnvilScreenHandlerMixin {
     )
     public void klaxon$repairAdvancementHook(PlayerEntity player, ItemStack stack, CallbackInfo ci) {
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            KlaxonAdvancementCriteria.ANVIL_REPAIR_CRITERION.trigger(serverPlayer, stack);
+            KlaxonAdvancementTriggers.triggerAnvilRepair(serverPlayer, stack);
         }
     }
 }

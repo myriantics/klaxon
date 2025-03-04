@@ -24,7 +24,7 @@ public abstract class FireworkRocketEntityMixin {
             method = "handleStatus",
             at = @At(value = "HEAD", target = "Lnet/minecraft/entity/projectile/ProjectileEntity;handleStatus(B)V")
     )
-    public void muffledBlastProcessorSoundOverride(byte status, CallbackInfo ci) {
+    public void klaxon$muffledBlastProcessorSoundOverride(byte status, CallbackInfo ci) {
         FireworkRocketEntity fireworkRocket = ((FireworkRocketEntity) (Object) this);
         if (status == 16 && fireworkRocket.getWorld().isClient) {
             Vec3d vec3d = fireworkRocket.getVelocity();
