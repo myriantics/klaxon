@@ -30,9 +30,9 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(KlaxonBlocks.COPPER_PLATING_BLOCK, drops(KlaxonBlocks.COPPER_PLATING_BLOCK));
 
         // decor
-        addDrop(KlaxonBlocks.STEEL_DOOR);
+        doorDrops(KlaxonBlocks.STEEL_DOOR);
         addDrop(KlaxonBlocks.STEEL_TRAPDOOR);
-        addDrop(KlaxonBlocks.CRUDE_STEEL_DOOR);
+        doorDrops(KlaxonBlocks.CRUDE_STEEL_DOOR);
         addDrop(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
     }
 }

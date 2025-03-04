@@ -15,9 +15,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -99,8 +97,8 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        ItemStack handStack = player.getStackInHand(player.getActiveHand());
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        ItemStack handStack = player.getStackInHand(hand);
         Direction interactionSide = hit.getSide();
 
         // trying to make this viable alongside crystal and cart
@@ -119,7 +117,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                         }
                         blastProcessor.setStack(slot, transferStack);
                         blastProcessor.markDirty();
-                        return ActionResult.SUCCESS;
+                        return ItemActionResult.SUCCESS;
                     }
                 }
             }
@@ -128,7 +126,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                 player.openHandledScreen(blastProcessor);
             }
         }
-        return ActionResult.SUCCESS;
+        return ItemActionResult.SUCCESS;
     }
 
     @Override

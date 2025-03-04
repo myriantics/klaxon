@@ -60,7 +60,7 @@ public abstract class EntityWeightHelper {
             // subtract 1 from new value because effects are 0-indexed
             heavyStatusEffectNewValue--;
 
-            entity.setStatusEffect(new StatusEffectInstance(KlaxonStatusEffects.HEAVY, -1, heavyStatusEffectNewValue), entity);
+            entity.setStatusEffect(new StatusEffectInstance(KlaxonStatusEffects.HEAVY, -1, heavyStatusEffectNewValue, false, false), entity);
         }
     }
 

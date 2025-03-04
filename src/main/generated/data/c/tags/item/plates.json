@@ -1,0 +1,9 @@
+{
+  "values": [
+    "#c:plates/steel",
+    "#c:plates/crude_steel",
+    "#c:plates/iron",
+    "#c:plates/copper",
+    "#c:plates/gold"
+  ]
+}
