@@ -25,14 +25,13 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.EntityWeightHelper;
 import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.item.KlaxonItems;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
-import net.myriantics.klaxon.api.AbilityModifierHelper;
+import net.myriantics.klaxon.api.AbilityModifierCalculator;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 
@@ -256,7 +255,7 @@ public class HammerItem extends Item {
         float k = MathHelper.sin(playerPitch * 0.017453292F);
         float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
         float m = MathHelper.sqrt(h * h + k * k + l * l);
-        float n = 0.6F * player.getAttackCooldownProgress(0.5f) * AbilityModifierHelper.calculate(player) * multiplier;
+        float n = 0.6F * player.getAttackCooldownProgress(0.5f) * AbilityModifierCalculator.calculateHammerWalljumpMultiplier(player) * multiplier;
         h *= n / m;
         k *= n / m;
         l *= n / m;

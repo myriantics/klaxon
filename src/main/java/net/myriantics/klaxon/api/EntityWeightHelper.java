@@ -1,22 +1,67 @@
 package net.myriantics.klaxon.api;
 
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryList;
+import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.entity.effects.KlaxonStatusEffects;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
+
+import java.util.Optional;
 
 public abstract class EntityWeightHelper {
 
-    public static boolean isEntityHeavy(LivingEntity entity) {
-        boolean isHeavy = false;
+    public static boolean isHeavy(LivingEntity entity) {
+        return getEntityWeightValue(entity) > 0;
+    }
 
-        // check if entity is wearing any heavy itemstacks
-        for (ItemStack stack : entity.getAllArmorItems()) {
-            if (isStackHeavy(stack)) {
-                return true;
+    public static int getEntityWeightValue(LivingEntity entity) {
+        int weightValue = 0;
+
+        Optional<RegistryEntryList.Named<StatusEffect>> effectsToCheck = Registries.STATUS_EFFECT.getEntryList(KlaxonStatusEffectTags.HEAVY_STATUS_EFFECTS);
+
+        // deal with the optional so intellij doesnt complain
+        if (effectsToCheck.isEmpty()) return 0;
+
+        // go through all the effect values in the tag. if the entity has any of them, add their amplifier to the weight value.
+        for (RegistryEntry<StatusEffect> effect : effectsToCheck.get()) {
+            weightValue += StatusEffectHelper.getUnborkedStatusEffectAmplifier(entity, effect);
+        }
+
+        return weightValue;
+    }
+
+    // called in LivingEntityMixin
+    public static void updateEntityWeightStatusEffect(LivingEntity entity, EquipmentSlot changedSlot, ItemStack newStack) {
+        int heavyStatusEffectNewValue = 0;
+
+        for (EquipmentSlot checkedSlot : EquipmentSlot.values()) {
+            if (checkedSlot.isArmorSlot()) {
+                boolean checkedEqualsChanged = checkedSlot.equals(changedSlot);
+
+                // ternary bs here to prevent desync bs when doffing armor
+                ItemStack stack = checkedEqualsChanged ? newStack : entity.getEquippedStack(checkedSlot);
+
+                // add one to the tally for every piece of heavy equipment equipped
+                heavyStatusEffectNewValue += isStackHeavy(stack) ? 1 : 0;
             }
         }
 
-        return isHeavy;
+        // if new value is 0, don't bother updating effect
+        if (heavyStatusEffectNewValue == 0) {
+            entity.removeStatusEffect(KlaxonStatusEffects.HEAVY);
+        } else {
+            // subtract 1 from new value because effects are 0-indexed
+            heavyStatusEffectNewValue--;
+
+            entity.setStatusEffect(new StatusEffectInstance(KlaxonStatusEffects.HEAVY, -1, heavyStatusEffectNewValue), entity);
+        }
     }
 
     public static boolean isStackHeavy(ItemStack stack) {

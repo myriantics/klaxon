@@ -22,9 +22,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
 
+        // ingots
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonItems.STEEL_INGOT);
-
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);
 
@@ -32,21 +32,19 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);
 
+        // storage blocks
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK.asItem());
 
+        // plating blocks
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_PLATING_BLOCKS)
                 .add(KlaxonBlocks.STEEL_PLATING_BLOCK.asItem());
-
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_PLATING_BLOCKS)
                 .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK.asItem());
-
         getOrCreateTagBuilder(KlaxonConventionalItemTags.IRON_PLATING_BLOCKS)
                 .add(KlaxonBlocks.IRON_PLATING_BLOCK.asItem());
-
         getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_PLATING_BLOCKS)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
-
         getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_PLATING_BLOCKS)
                 .add(KlaxonBlocks.COPPER_PLATING_BLOCK.asItem());
 
@@ -54,6 +52,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
 
+        // nuggets
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_NUGGETS)
                 .add(KlaxonItems.STEEL_NUGGET);
 
@@ -80,30 +79,31 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_PLATES)
                 .add(KlaxonItems.GOLD_PLATE);
 
+        // makeshift-related tags
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS)
                 .add(KlaxonItems.CRUDE_STEEL_PLATE)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem())
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET);
-
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.FLINT_AND_STEEL);
 
+        // makeshift crafting tags
+
+        // equipment tags
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET)
                 .add(KlaxonItems.STEEL_CHESTPLATE)
                 .add(KlaxonItems.STEEL_LEGGINGS)
                 .add(KlaxonItems.STEEL_BOOTS);
-
         getOrCreateTagBuilder(KlaxonItemTags.HEAVY_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.NETHERITE_HELMET)
                 .add(Items.NETHERITE_CHESTPLATE)
                 .add(Items.NETHERITE_LEGGINGS)
                 .add(Items.NETHERITE_BOOTS);
-
         getOrCreateTagBuilder(KlaxonItemTags.FERROMAGNETIC_ITEMS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.NETHERITE_HELMET)

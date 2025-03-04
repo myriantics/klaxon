@@ -61,7 +61,6 @@
   "tag.item.klaxon.unenchantable": "Unenchantable Items",
 
   "tag.entity.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
-  "tag.block.klaxon.hammer_interaction_base": "Hammer Interaction Base Blocks",
   "tag.block.klaxon.hammer_mineable": "Hammer Mineable Blocks",
   "tag.block.klaxon.hammer_instabreak": "Hammer Instabreakable Blocks",
 
@@ -93,6 +92,7 @@
   "advancements.klaxon_prelude.makeshift_item_full_repair.title": "Tip-Top Condition",
   "advancements.klaxon_prelude.makeshift_item_full_repair.description": "Fully repair an item made with Makeshift Crafting",
 
+  "effect.klaxon.heavy": "Heavy",
 
   "advancements.klaxon_prelude.drink_coffee.title": "9:05 Sharp",
   "advancements.klaxon_prelude.drink_coffee.description": "Drink some Coffee"

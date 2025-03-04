@@ -21,6 +21,7 @@ public abstract class FerromagnetismHelper {
             "steel",
             "ferro",
             "magnet",
+            "netherite"
     };
 
     public static boolean isItemFerromagnetic(ItemStack itemStack) {

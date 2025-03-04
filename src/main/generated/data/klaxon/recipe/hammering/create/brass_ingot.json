@@ -9,10 +9,10 @@
   ],
   "type": "klaxon:hammering",
   "input": {
-    "item": "create:brass_ingot"
+    "item": "create:gold_sheet"
   },
   "output": {
     "count": 1,
-    "id": "create:brass_sheet"
+    "id": "create:brass_ingot"
   }
 }
