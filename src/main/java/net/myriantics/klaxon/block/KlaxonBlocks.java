@@ -29,6 +29,8 @@ public class KlaxonBlocks {
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
     public static final Block CRUDE_STEEL_BLOCK = registerBlock("crude_steel_block",
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).pistonBehavior(PistonBehavior.DESTROY).strength(2.5f, 3.0f)));
+
+    // plating blocks
     public static final Block STEEL_PLATING_BLOCK = registerBlock("steel_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
     public static final Block CRUDE_STEEL_PLATING_BLOCK = registerBlock("crude_steel_plating_block",

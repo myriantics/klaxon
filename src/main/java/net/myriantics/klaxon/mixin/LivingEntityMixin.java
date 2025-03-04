@@ -1,14 +1,19 @@
 package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.myriantics.klaxon.api.EntityWeightHelper;
+import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +27,8 @@ public abstract class LivingEntityMixin {
     @Shadow public abstract void damageShield(float amount);
 
     @Shadow protected abstract void takeShieldHit(LivingEntity attacker);
+
+    @Shadow public abstract ItemStack eatFood(World world, ItemStack stack, FoodComponent foodComponent);
 
     // Allows hammer walloping damage to disable shields and deal damage through them - only activated on crit
     @ModifyExpressionValue(
@@ -55,5 +62,16 @@ public abstract class LivingEntityMixin {
     )
     public void klaxon$updateHeavyEquipmentEffect(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack, CallbackInfo ci) {
         EntityWeightHelper.updateEntityWeightStatusEffect((LivingEntity) (Object) this, slot, newStack);
+    }
+
+    @WrapOperation(
+            method = "clearStatusEffects",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;onStatusEffectRemoved(Lnet/minecraft/entity/effect/StatusEffectInstance;)V")
+    )
+    public void klaxon$removalImmuneEffectOverride(LivingEntity instance, StatusEffectInstance effect, Operation<Void> original) {
+        // bonk removal if it's in the defined tag - prevents heavy effect from being cleared
+        if (effect.getEffectType().isIn(KlaxonStatusEffectTags.REMOVAL_IMMUNE_EFFECTS)) return;
+
+        original.call(instance, effect);
     }
 }

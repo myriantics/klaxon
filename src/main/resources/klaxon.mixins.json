@@ -7,7 +7,6 @@
     "AnvilScreenHandlerMixin",
     "ArmorItemMixin",
     "BlockSetTypeInvoker",
-    "DoorBlockInvoker",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
     "ExplosionMixin",
