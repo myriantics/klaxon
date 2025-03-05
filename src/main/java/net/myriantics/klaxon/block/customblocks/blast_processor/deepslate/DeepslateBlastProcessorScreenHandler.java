@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.blockentities.blast_processor;
+package net.myriantics.klaxon.block.customblocks.blast_processor.deepslate;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,7 +17,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
-import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingOutputState;

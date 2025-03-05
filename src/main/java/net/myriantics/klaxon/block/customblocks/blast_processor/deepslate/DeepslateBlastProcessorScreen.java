@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.blockentities.blast_processor;
+package net.myriantics.klaxon.block.customblocks.blast_processor.deepslate;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;

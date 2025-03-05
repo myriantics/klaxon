@@ -9,10 +9,9 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 
-import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
+import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
 
 public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
     private final Ingredient item;

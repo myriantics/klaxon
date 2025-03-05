@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;

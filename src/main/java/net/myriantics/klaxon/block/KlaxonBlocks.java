@@ -7,14 +7,10 @@ import net.minecraft.block.PillarBlock;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorScreenHandler;
-import net.myriantics.klaxon.block.customblocks.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.SteelDoorBlock;
 import net.myriantics.klaxon.block.customblocks.SteelTrapdoorBlock;
 

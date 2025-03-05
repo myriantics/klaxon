@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 
-import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
+import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
 public class BlastProcessingRecipe implements Recipe<RecipeInput> {
     private final Ingredient ingredientItem;

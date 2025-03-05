@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks;
+package net.myriantics.klaxon.block.customblocks.blast_processor.deepslate;
 
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -11,6 +11,8 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -22,20 +24,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
-import static net.myriantics.klaxon.block.blockentities.blast_processor.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
+import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
+import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
 public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
@@ -66,15 +68,25 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.isOf(newState.getBlock())) {
+        if (!state.isOf(newState.getBlock()) && !world.isClient()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof DeepslateBlastProcessorBlockEntity) {
                 ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
                 world.updateComparators(pos, this);
             }
 
-            super.onStateReplaced(state, world, pos, newState, moved);
+        } else if (newState.getBlock() instanceof DeepslateBlastProcessorBlock) {
+            // if something was input into hatch
+            if (!newState.get(HATCH_OPEN) && state.get(HATCH_OPEN)) {
+                playItemInputSound(world, pos, newState);
+            }
+
+            // if something was input into fuel
+            if (newState.get(FUELED) && !state.get(FUELED)) {
+                playItemInputSound(world, pos, state);
+            }
         }
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 
     @Override
@@ -84,9 +96,8 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (state.isOf(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR) && state.get(LIT) && !world.isReceivingRedstonePower(pos)) {
+        if (state.getBlock() instanceof DeepslateBlastProcessorBlock && state.get(LIT) && !world.isReceivingRedstonePower(pos)) {
             world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
-
         }
     }
 
@@ -165,9 +176,11 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                 boolean fueled = appendedState.get(DeepslateBlastProcessorBlock.FUELED);
 
                 if (inventory.get(CATALYST_INDEX).isEmpty() == fueled) {
+
                     appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.FUELED);
                 }
                 if (inventory.get(INGREDIENT_INDEX).isEmpty() != hatchOpen) {
+
                     appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.HATCH_OPEN);
                 }
 
@@ -228,6 +241,18 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
             updateBlockState(world, pos, appendedState);
         }
+    }
+
+    private static void playItemInputSound(World world, BlockPos pos, BlockState state) {
+        // don't bother playing sounds if its muffled
+        if (isMuffled(world, pos)) return;
+
+        Random random = world.getRandom();
+
+        world.playSound(null, pos, SoundEvents.BLOCK_DEEPSLATE_PLACE, SoundCategory.BLOCKS, random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F);
+
+        // trip sculk sensors
+        world.emitGameEvent(GameEvent.BLOCK_CLOSE, pos, GameEvent.Emitter.of(state));
     }
 
     public static boolean canFastInput(PlayerEntity player, BlockState state, Direction clickSide) {
