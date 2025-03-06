@@ -147,7 +147,6 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     public void onRedstoneImpulse() {
 
         if (world != null && !world.isClient) {
-            boolean isMuffled = DeepslateBlastProcessorBlock.isMuffled(world, pos);
 
             // default to true so that it shows the particles when dispensing nothing
             boolean shouldRunDispenserEffects = true;
@@ -175,21 +174,18 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 BlastProcessingRecipeData processingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, recipeInventory, powerData);
 
                 // do explosion effect
-                blastProcessorBehavior.onExplosion(world, pos, this, powerData, isMuffled);
+                blastProcessorBehavior.onExplosion(world, pos, this, powerData);
 
                 // eject recipe results
                 blastProcessorBehavior.ejectItems(world, pos, this, processingData, powerData);
 
-                shouldRunDispenserEffects = blastProcessorBehavior.shouldRunDispenserEffects(world, pos, this, recipeInventory, isMuffled);
+                shouldRunDispenserEffects = blastProcessorBehavior.shouldRunDispenserEffects(world, pos, this, recipeInventory);
             }
 
             // if this has been exploded, dont run these
             if (shouldRunDispenserEffects && !this.isRemoved()) {
-                // run audio ones if not muffled
-                if (!isMuffled) {
-                    world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(world.getBlockState(pos)));
-                    world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
-                }
+                world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(world.getBlockState(pos)));
+                world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
 
                 // display particles if not front obstructed
                 if (!isFrontObstructed(world, pos)) {

@@ -244,9 +244,6 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     private static void playItemInputSound(World world, BlockPos pos, BlockState state) {
-        // don't bother playing sounds if its muffled
-        if (isMuffled(world, pos)) return;
-
         Random random = world.getRandom();
 
         world.playSound(null, pos, SoundEvents.BLOCK_DEEPSLATE_PLACE, SoundCategory.BLOCKS, random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F);
@@ -266,13 +263,6 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         }
         // check if you can insert from the top. if no, don't bother
         return state.get(HATCH_OPEN) && clickSide.equals(BlockDirectionHelper.getUp(blockDirection));
-    }
-
-    public static boolean isMuffled(World world, BlockPos pos) {
-        BlockState blastProcessorState = world.getBlockState(pos);
-        Direction direction = blastProcessorState.get(HORIZONTAL_FACING);
-        return world.getBlockState(pos.offset(BlockDirectionHelper.getUp(direction))).isIn(KlaxonBlockTags.MACHINE_MUFFLING_BLOCKS)
-                || world.getBlockState(pos.offset(BlockDirectionHelper.getFront(direction))).isIn(KlaxonBlockTags.MACHINE_MUFFLING_BLOCKS);
     }
 
     public static boolean isFrontObstructed(World world, BlockPos pos) {

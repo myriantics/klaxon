@@ -27,7 +27,7 @@ import java.util.List;
 
 public interface BlastProcessorBehavior {
 
-    void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled);
+    void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData);
 
     void ejectItems(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ItemExplosionPowerData powerData);
 
@@ -38,7 +38,7 @@ public interface BlastProcessorBehavior {
     BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData();
 
 
-    boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory, boolean isMuffled);
+    boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory);
 
     static void registerBlastProcessorBehaviors() {
         KlaxonCommon.LOGGER.info("Registering KLAXON's Blast Processor Behaviors!");
@@ -63,7 +63,7 @@ public interface BlastProcessorBehavior {
             }
 
             @Override
-            public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled) {
+            public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
                 Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
                 FireworkRocketEntity fireworkRocket = new FireworkRocketEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).copy());
 
@@ -72,22 +72,13 @@ public interface BlastProcessorBehavior {
 
                 // clear the stack from inventory
                 blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
-
-                // muffling override so it doesn't trip sculk sensors
-                if (isMuffled) {
-                    fireworkRocket.setSilent(true);
-                    // custom entity status code so that client knows not to play sound
-                    world.sendEntityStatus(fireworkRocket, (byte) 16);
-                    ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplode();
-                    fireworkRocket.discard();
-                    return;
-                }
+                
                 // TIL you can't have an invoker method be the same name as the original method. The more you know!
                 ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplodeAndRemove();
             }
 
             @Override
-            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory, boolean isMuffled) {
+            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
                 return false;
             }
 
@@ -178,42 +169,23 @@ public interface BlastProcessorBehavior {
             }
 
             @Override
-            public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled) {
+            public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
                 Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
                 WindChargeEntity windCharge = new WindChargeEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), Vec3d.ZERO);
                 WindChargeEntityInvoker windChargeInvoker = ((WindChargeEntityInvoker) windCharge);
 
                 world.spawnEntity(windCharge);
-
-                if (isMuffled) {
-                    // explode silently and discard
-                    world.createExplosion(
-                            windCharge,
-                            null,
-                            // cast so that its identified as a blast processor explosion
-                            windChargeInvoker.klaxon$getExplosionBehavior(),
-                            outputPos.getX(),
-                            outputPos.getY(),
-                            outputPos.getZ(),
-                            windChargeInvoker.klaxon$getExplosionPower(),
-                            false,
-                            World.ExplosionSourceType.TRIGGER,
-                            ParticleTypes.GUST_EMITTER_SMALL,
-                            ParticleTypes.GUST_EMITTER_LARGE,
-                            RegistryEntry.of(SoundEvents.INTENTIONALLY_EMPTY)
-                    );
-                } else {
-                    // explode using regular method
-                    windChargeInvoker.invokeCreateExplosion(new Vec3d(outputPos.getX(), outputPos.getY(), outputPos.getZ()));
-                }
-
+                
+                // explode
+                windChargeInvoker.invokeCreateExplosion(new Vec3d(outputPos.getX(), outputPos.getY(), outputPos.getZ()));
+                
                 // remove stack and discard
                 blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
                 windCharge.discard();
             }
 
             @Override
-            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory, boolean isMuffled) {
+            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
                 return false;
             }
 

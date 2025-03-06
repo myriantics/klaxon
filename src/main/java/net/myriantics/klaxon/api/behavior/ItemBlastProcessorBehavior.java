@@ -34,7 +34,7 @@ import java.util.Optional;
 public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
 
     @Override
-    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean isMuffled) {
+    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
         if (world != null) {
             BlockState activeBlockState = world.getBlockState(pos);
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
@@ -52,8 +52,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
                             World.ExplosionSourceType.BLOCK,
                             ParticleTypes.EXPLOSION,
                             ParticleTypes.EXPLOSION_EMITTER,
-                            // if block is muffled, don't produce explosion sound
-                            isMuffled ? RegistryEntry.of(SoundEvents.INTENTIONALLY_EMPTY) : SoundEvents.ENTITY_GENERIC_EXPLODE);
+                            SoundEvents.ENTITY_GENERIC_EXPLODE);
                     world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
                 }
             }
@@ -181,7 +180,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
     }
 
     @Override
-    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory, boolean isMuffled) {
+    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
         return true;
     }
 }

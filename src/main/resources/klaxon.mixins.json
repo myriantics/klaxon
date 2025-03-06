@@ -9,9 +9,7 @@
     "BlockSetTypeInvoker",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
-    "ExplosionMixin",
     "FireworkRocketEntityInvoker",
-    "FireworkRocketEntityMixin",
     "ItemMixin",
     "LivingEntityMixin",
     "MobEntityMixin",
@@ -20,8 +18,6 @@
     "WindChargeEntityInvoker"
   ],
   "client": [
-    "ClientWorldMixin",
-    "FireworkParticleMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
     "MinecraftClientMixin",

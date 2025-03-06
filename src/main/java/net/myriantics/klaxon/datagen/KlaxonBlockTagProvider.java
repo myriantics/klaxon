@@ -62,12 +62,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.COPPER_PLATING_BLOCK);
 
         // behavior related tags
-        getOrCreateTagBuilder(KlaxonBlockTags.MACHINE_MUFFLING_BLOCKS)
-                .forceAddTag(BlockTags.WOOL)
-                .add(Blocks.HAY_BLOCK)
-                .add(Blocks.TARGET);
-        getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
-                .add(KlaxonBlocks.STEEL_BLOCK);
+
 
         // machine category tags
         getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)
