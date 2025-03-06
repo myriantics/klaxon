@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.datagen;
+package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;

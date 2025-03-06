@@ -1,5 +1,6 @@
 {
   "values": [
-    "#klaxon:crude_inclusive_steel_ingots"
+    "#c:ingots/steel",
+    "#c:ingots/crude_steel"
   ]
 }

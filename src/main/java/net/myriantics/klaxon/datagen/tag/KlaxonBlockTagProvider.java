@@ -1,9 +1,8 @@
-package net.myriantics.klaxon.datagen;
+package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
@@ -62,7 +61,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.COPPER_PLATING_BLOCK);
 
         // behavior related tags
-
+        getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
+                .add(KlaxonBlocks.STEEL_BLOCK);
 
         // machine category tags
         getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)

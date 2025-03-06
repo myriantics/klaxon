@@ -1,6 +1,6 @@
 {
   "values": [
     "#c:storage_blocks/steel",
-    "klaxon:crude_steel_block"
+    "#c:storage_blocks/crude_steel"
   ]
 }

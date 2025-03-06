@@ -1,6 +1,6 @@
 {
   "values": [
     "#c:ingots/steel",
-    "klaxon:crude_steel_ingot"
+    "#c:nuggets/crude_steel"
   ]
 }

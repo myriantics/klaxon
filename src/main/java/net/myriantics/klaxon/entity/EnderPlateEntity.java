@@ -27,7 +27,7 @@ public class EnderPlateEntity extends ThrownItemEntity {
 
     @Override
     protected Item getDefaultItem() {
-        return KlaxonItems.ENDER_PEARL_PLATE_ITEM;
+        return KlaxonItems.ENDER_PEARL_PLATE;
     }
 
     @Override

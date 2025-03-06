@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.datagen;
+package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -24,7 +24,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // ingots
         getOrCreateTagBuilder(ConventionalItemTags.INGOTS)
-                .forceAddTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS);
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonItems.STEEL_INGOT);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)
@@ -51,16 +52,16 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         // makeshift crafting ingredient tags
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_NUGGETS)
-                .add(KlaxonItems.CRUDE_STEEL_NUGGET);
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS);
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
-                .add(KlaxonItems.CRUDE_STEEL_INGOT);
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS);
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
-                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_BLOCKS);
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_PLATES)
-                .add(KlaxonItems.CRUDE_STEEL_PLATE);
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES);
 
         // material plate tags
         getOrCreateTagBuilder(KlaxonConventionalItemTags.PLATES)

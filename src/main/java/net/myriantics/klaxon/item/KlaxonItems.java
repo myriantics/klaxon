@@ -1,14 +1,10 @@
 package net.myriantics.klaxon.item;
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.KlaxonBlocks;
 import net.myriantics.klaxon.item.consumables.EnderPlateItem;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
@@ -20,8 +16,6 @@ public class KlaxonItems {
 
     public static ArrayList<Item> simpleItems = new ArrayList<>();
 
-    // disabled currently because its broken as FUCK - will come later trust
-    public static final Item ENDER_PEARL_PLATE_ITEM = registerSimpleItem("ender_plate", new EnderPlateItem(new Item.Settings()));
 
     // equipment
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().maxCount(1).maxDamage(512).attributeModifiers(HammerItem.createAttributeModifiers())));
@@ -45,17 +39,20 @@ public class KlaxonItems {
     public static final Item CRUDE_STEEL_MIXTURE = registerReallySimpleItem("crude_steel_mixture");
 
     // raw materials
-    public static final Item CRUDE_STEEL_INGOT = registerReallySimpleItem("crude_steel_ingot");
-    public static final Item CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
     public static final Item STEEL_INGOT = registerReallySimpleItem("steel_ingot");
     public static final Item STEEL_NUGGET = registerReallySimpleItem("steel_nugget");
+    public static final Item CRUDE_STEEL_INGOT = registerReallySimpleItem("crude_steel_ingot");
+    public static final Item CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
 
-    // processed materials
-    public static final Item CRUDE_STEEL_PLATE = registerReallySimpleItem("crude_steel_plate");
+    // plates
     public static final Item STEEL_PLATE = registerReallySimpleItem("steel_plate");
+    public static final Item CRUDE_STEEL_PLATE = registerReallySimpleItem("crude_steel_plate");
     public static final Item IRON_PLATE = registerReallySimpleItem("iron_plate");
     public static final Item GOLD_PLATE = registerReallySimpleItem("gold_plate");
     public static final Item COPPER_PLATE = registerReallySimpleItem("copper_plate");
+    // disabled currently because its broken as FUCK - will come later trust
+    public static final Item ENDER_PEARL_PLATE = registerSimpleItem("ender_plate", new EnderPlateItem(new Item.Settings()));
+
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);
