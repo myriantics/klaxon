@@ -55,7 +55,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS);
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
-                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS);
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS);
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_BLOCKS);
