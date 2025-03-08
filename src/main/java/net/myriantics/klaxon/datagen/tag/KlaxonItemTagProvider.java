@@ -134,11 +134,15 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(Items.FLINT_AND_STEEL);
         getOrCreateTagBuilder(KlaxonItemTags.UNENCHANTABLE)
-                .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(Items.FLINT_AND_STEEL);
+                .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
+        getOrCreateTagBuilder(KlaxonItemTags.INNATE_UNBREAKING_EQUIPMENT)
+                .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
 
         // equipment category tags
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
+                .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
+                .forceAddTag(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)
+                .add(KlaxonItems.STEEL_HAMMER);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET)
                 .add(KlaxonItems.STEEL_CHESTPLATE)

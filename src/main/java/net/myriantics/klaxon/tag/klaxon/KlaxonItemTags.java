@@ -31,6 +31,9 @@ public class KlaxonItemTags {
             createTag("unenchantable");
     public static final TagKey<Item> STEEL_REPAIRABLE_FLINT_AND_STEEL =
             createTag("steel_repairable_flint_and_steel");
+    public static final TagKey<Item> INNATE_UNBREAKING_EQUIPMENT =
+            // used in EnchantmentHelper
+            createTag("innate_unbreaking_equipment");
 
     // gear modifier tags
     public static final TagKey<Item> HEAVY_EQUIPMENT =
@@ -43,6 +46,8 @@ public class KlaxonItemTags {
     // gear categories
     public static final TagKey<Item> STEEL_ARMOR =
             createTag("steel_armor");
+    public static final TagKey<Item> STEEL_EQUIPMENT =
+            createTag("steel_equipment");
 
     // advancement-related tags
     public static final TagKey<Item> KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS =

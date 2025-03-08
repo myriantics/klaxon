@@ -57,8 +57,10 @@
   "tag.item.klaxon.makeshift_repair_materials": "Makeshift Repair Materials",
   "tag.item.klaxon.no_xp_cost_repairable": "Items Repairable with No EXP",
   "tag.item.klaxon.steel_armor": "Steel Armor",
+  "tag.item.klaxon.steel_equipment": "Steel Equipment",
   "tag.item.klaxon.steel_repairable_flint_and_steel": "Steel Repairable Flint and Steel",
   "tag.item.klaxon.unenchantable": "Unenchantable Items",
+  "tag.item.klaxon.innate_unbreaking_equipment": "Innate Unbreaking Equipment",
 
   "tag.entity.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
   "tag.block.klaxon.hammer_interaction_base": "Hammer Interaction Base Blocks",

@@ -67,8 +67,8 @@ public class HammerItem extends Item {
     @Override
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
         // only damage the item if it's not tall grass or something that shouldn't reduce durability
-        if (!world.isClient && !state.isIn(BlockTags.FIRE) && state.getHardness(world, pos) > 0) {
-            damageItem(stack, miner, world.getRandom(), state.isIn(KlaxonBlockTags.HAMMER_MINEABLE));
+        if (!world.isClient && state.getHardness(world, pos) > 0) {
+            damageItem(stack, miner, state.isIn(KlaxonBlockTags.HAMMER_MINEABLE));
         }
         return stack.isSuitableFor(state) || super.postMine(stack, world, state, pos, miner);
     }
@@ -77,7 +77,7 @@ public class HammerItem extends Item {
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         World world = attacker.getWorld();
         if (!world.isClient) {
-            damageItem(stack, attacker, attacker.getRandom(), true);
+            damageItem(stack, attacker, true);
         }
         return super.postHit(stack, target, attacker);
     }
@@ -116,7 +116,7 @@ public class HammerItem extends Item {
 
             // play sound and damage item only after we're sure there are items selected
             world.playSound(player, BlockPos.ofFloored(clickedPos), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
-            damageItem(handStack, player, player.getRandom(), true);
+            damageItem(handStack, player, true);
 
             // run recipe and dropping code for each selected dropped item
             for (ItemEntity iteratedDroppedItem : selectedItems) {
@@ -206,7 +206,7 @@ public class HammerItem extends Item {
 
             // damage it wheee
             if (!player.isCreative()) {
-                damageItem(player.getMainHandStack(), player, world.getRandom(), true);
+                damageItem(player.getMainHandStack(), player, true);
             }
         }
     }
@@ -269,24 +269,12 @@ public class HammerItem extends Item {
         player.addVelocity(h, k, l);
     }
 
-    private static void damageItem(ItemStack stack, LivingEntity attacker, Random random, boolean usedProperly) {
+    private static void damageItem(ItemStack stack, LivingEntity attacker, boolean usedProperly) {
         if (attacker.getWorld().isClient) {
             return;
         }
 
-        int damageAmount;
-
-        if (usedProperly) {
-            damageAmount = random.nextBetween(0, 10) < 3 ? 1 : 0;
-        } else {
-            damageAmount = 1;
-        }
-
-        if (attacker instanceof PlayerEntity player && player.isCreative()) {
-            damageAmount = 0;
-        }
-
-        stack.damage(damageAmount, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
+        stack.damage(usedProperly ? 1 : 2, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
     }
 
     private static void updateAdjacentMonitoringObservers(World world, BlockPos interactionPos, BlockState interactionState) {
