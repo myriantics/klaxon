@@ -1,18 +1,17 @@
 package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.EntityWeightHelper;
+import net.myriantics.klaxon.api.StatusEffectHelper;
+import net.myriantics.klaxon.entity.effects.HeavyStatusEffect;
 import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,6 +19,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
@@ -64,14 +64,11 @@ public abstract class LivingEntityMixin {
         EntityWeightHelper.updateEntityWeightStatusEffect((LivingEntity) (Object) this, slot, newStack);
     }
 
-    @WrapOperation(
+    @Inject(
             method = "clearStatusEffects",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;onStatusEffectRemoved(Lnet/minecraft/entity/effect/StatusEffectInstance;)V")
+            at = @At(value = "RETURN", ordinal = 1)
     )
-    public void klaxon$removalImmuneEffectOverride(LivingEntity instance, StatusEffectInstance effect, Operation<Void> original) {
-        // bonk removal if it's in the defined tag - prevents heavy effect from being cleared
-        if (effect.getEffectType().isIn(KlaxonStatusEffectTags.REMOVAL_IMMUNE_EFFECTS)) return;
-
-        original.call(instance, effect);
+    public void klaxon$recomputeEffectsOverride(CallbackInfoReturnable<Boolean> cir) {
+        StatusEffectHelper.recomputePersistentEffects((LivingEntity) (Object) this);
     }
 }

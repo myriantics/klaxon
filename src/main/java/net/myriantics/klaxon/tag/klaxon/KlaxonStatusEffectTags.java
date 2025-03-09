@@ -11,8 +11,6 @@ public class KlaxonStatusEffectTags {
 
     public static final TagKey<StatusEffect> HEAVY_STATUS_EFFECTS =
             createTag("heavy_status_effects");
-    public static final TagKey<StatusEffect> REMOVAL_IMMUNE_EFFECTS =
-            createTag("removal_immune_effects");
 
     private static TagKey<StatusEffect> createTag(String name) {
         return TagKey.of(RegistryKeys.STATUS_EFFECT, KlaxonCommon.locate(name));

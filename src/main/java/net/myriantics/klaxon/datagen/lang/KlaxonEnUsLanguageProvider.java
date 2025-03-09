@@ -157,7 +157,6 @@ public class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
 
     private static void generateStatusEffectTagTranslations(TranslationBuilder translationBuilder) {
         translationBuilder.add(KlaxonStatusEffectTags.HEAVY_STATUS_EFFECTS, "Heavy Status Effects");
-        translationBuilder.add(KlaxonStatusEffectTags.REMOVAL_IMMUNE_EFFECTS, "Removal Immune Status Effects");
     }
 
     private static void generateDeathMessageTranslations(TranslationBuilder translationBuilder) {
