@@ -4,6 +4,8 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
+import net.fabricmc.fabric.impl.resource.conditions.conditions.NotResourceCondition;
+import net.fabricmc.fabric.impl.resource.conditions.conditions.TrueResourceCondition;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.*;
@@ -57,6 +59,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         new KlaxonItemExplosionPowerRecipeProvider(this).generateRecipes(exporter);
         new KlaxonSmeltingRecipeProvider(this).generateRecipes(exporter);
         new KlaxonOreProcessingRecipeProvider(this).generateRecipes(exporter);
+        new KlaxonRecipeOverrideProvider(this).generateRecipes(exporter);
     }
 
     public Identifier computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {
@@ -103,5 +106,17 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         } else {
             exporter.accept(recipeId, recipe, null);
         }
+    }
+
+    public void acceptOverrideRecipe(RecipeExporter exporter, Identifier id) {
+        // accept a blank recipe with the "never loads" resource condition
+        withConditions(exporter, new NotResourceCondition(new TrueResourceCondition()))
+                .accept(id, new HammeringRecipe(Ingredient.ofItems(Items.DIRT), ItemStack.EMPTY), null);
+    }
+
+    // gotcha stinker
+    @Override
+    protected Identifier getRecipeIdentifier(Identifier identifier) {
+        return identifier;
     }
 }

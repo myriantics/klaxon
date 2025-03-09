@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "klaxon:block/crude_steel_plating_block_top",
+    "side": "klaxon:block/crude_steel_plating_block_side"
+  }
+}

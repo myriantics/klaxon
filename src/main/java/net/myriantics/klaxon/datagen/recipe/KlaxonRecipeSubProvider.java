@@ -295,4 +295,8 @@ public abstract class KlaxonRecipeSubProvider {
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
+
+    public void addOverrideRecipe(RecipeExporter exporter, Identifier id) {
+        provider.acceptOverrideRecipe(exporter, id);
+    }
 }

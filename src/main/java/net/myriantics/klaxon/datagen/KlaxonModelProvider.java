@@ -29,8 +29,8 @@ public class KlaxonModelProvider extends FabricModelProvider {
     }
 
     private void registerSimpleBlockStateModels(BlockStateModelGenerator generator) {
-        generator.registerSimpleState(KlaxonBlocks.STEEL_BLOCK);
-        generator.registerSimpleState(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+        generator.registerSimpleCubeAll(KlaxonBlocks.STEEL_BLOCK);
+        generator.registerSimpleCubeAll(KlaxonBlocks.CRUDE_STEEL_BLOCK);
     }
 
     private void registerMiscBlockStateModels(BlockStateModelGenerator generator) {
@@ -78,7 +78,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
     }
 
     private void registerPlatingBlock(BlockStateModelGenerator generator, Block platingBlock) {
-        generator.registerAxisRotated(platingBlock, ModelIds.getBlockModelId(platingBlock));
+        generator.registerAxisRotated(platingBlock, TexturedModel.CUBE_COLUMN);
     }
 
     @Override

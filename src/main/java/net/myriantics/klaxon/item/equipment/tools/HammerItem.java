@@ -25,6 +25,7 @@ import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.item.KlaxonItems;
@@ -156,6 +157,9 @@ public class HammerItem extends Item {
                             iteratedDroppedItem.setStack(targetStack);
                         }
                     }
+
+                    // trip sculk sensors
+                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, clickedPos);
                 } else {
                     // spawn hammering particle effects
                     spawnHammeringParticleEffects(world, targetStack, 5, iteratedDroppedItem);
@@ -200,14 +204,15 @@ public class HammerItem extends Item {
                 updateAdjacentMonitoringObservers(world, pos, targetBlockState);
             }
 
+            // trip sculk sensors
+            world.emitGameEvent(player, GameEvent.HIT_GROUND, pos);
+
             player.onLanding();
 
             player.resetLastAttackedTicks();
 
             // damage it wheee
-            if (!player.isCreative()) {
-                damageItem(player.getMainHandStack(), player, true);
-            }
+            damageItem(player.getMainHandStack(), player, true);
         }
     }
 
