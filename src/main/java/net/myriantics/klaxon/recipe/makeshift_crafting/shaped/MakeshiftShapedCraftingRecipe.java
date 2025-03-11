@@ -6,7 +6,7 @@ import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.List;

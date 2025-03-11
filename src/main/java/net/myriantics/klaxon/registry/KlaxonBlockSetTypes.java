@@ -1,6 +1,5 @@
-package net.myriantics.klaxon.block;
+package net.myriantics.klaxon.registry;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockSetType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvents;

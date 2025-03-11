@@ -18,7 +18,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
-import net.myriantics.klaxon.block.KlaxonBlockEntities;
+import net.myriantics.klaxon.registry.KlaxonBlockEntities;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;

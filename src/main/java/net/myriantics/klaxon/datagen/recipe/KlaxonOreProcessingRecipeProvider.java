@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.registry.KlaxonItems;
 
 public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
 

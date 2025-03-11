@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
-import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.registry.KlaxonBlocks;
+import net.myriantics.klaxon.registry.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -121,6 +121,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.CHAINMAIL_CHESTPLATE)
                 .add(Items.CHAINMAIL_LEGGINGS)
                 .add(Items.CHAINMAIL_BOOTS);
+        getOrCreateTagBuilder(ItemTags.PIGLIN_LOVED)
+                .add(KlaxonItems.GOLD_PLATE)
+                .add(KlaxonItems.FRACTURED_RAW_GOLD)
+                .add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS)
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
 
         // anvil-related tags
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)

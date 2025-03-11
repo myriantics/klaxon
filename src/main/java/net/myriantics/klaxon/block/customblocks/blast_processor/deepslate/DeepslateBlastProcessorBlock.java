@@ -29,8 +29,6 @@ import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
-import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 

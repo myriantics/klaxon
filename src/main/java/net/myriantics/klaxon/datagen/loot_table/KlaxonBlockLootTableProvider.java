@@ -3,7 +3,7 @@ package net.myriantics.klaxon.datagen.loot_table;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.registry.RegistryWrapper;
-import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.KlaxonBlocks;
 
 import java.util.concurrent.CompletableFuture;
 

@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.registry.KlaxonItems;
 
 public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
 

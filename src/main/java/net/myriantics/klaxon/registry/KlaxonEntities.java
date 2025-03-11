@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.entity;
+package net.myriantics.klaxon.registry;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -6,8 +6,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.entity.EnderPlateEntity;
 
 public class KlaxonEntities {
     public static final EntityType<EnderPlateEntity> ENDER_PEARL_PLATE_ENTITY_TYPE = Registry.register(

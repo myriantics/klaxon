@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe;
+package net.myriantics.klaxon.registry;
 
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;

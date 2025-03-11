@@ -3,19 +3,17 @@ package net.myriantics.klaxon.datagen.recipe.providers;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.collection.DefaultedList;
-import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.KlaxonBlocks;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.registry.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
-import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.Map;
 

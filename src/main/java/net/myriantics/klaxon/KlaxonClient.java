@@ -6,11 +6,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorScreen;
-import net.myriantics.klaxon.entity.KlaxonEntities;
-import net.myriantics.klaxon.networking.KlaxonPackets;
-import net.myriantics.klaxon.util.KlaxonScreenHandlers;
+import net.myriantics.klaxon.registry.KlaxonEntities;
+import net.myriantics.klaxon.registry.KlaxonPackets;
+import net.myriantics.klaxon.registry.KlaxonScreenHandlers;
 
 public class KlaxonClient implements ClientModInitializer {
     @Override

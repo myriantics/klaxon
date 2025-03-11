@@ -4,15 +4,13 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.*;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
-import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.registry.KlaxonBlocks;
+import net.myriantics.klaxon.registry.KlaxonItems;
 
 import java.util.ArrayList;
 

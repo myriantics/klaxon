@@ -1,10 +1,8 @@
 package net.myriantics.klaxon.compat.emi;
 
-import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.item.Item;
@@ -14,13 +12,13 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
-import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.KlaxonEMIAnvilRecipe;
-import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 

@@ -21,7 +21,7 @@ import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingOutputState;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-import net.myriantics.klaxon.util.KlaxonScreenHandlers;
+import net.myriantics.klaxon.registry.KlaxonScreenHandlers;
 
 public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     private final Inventory ingredientInventory;

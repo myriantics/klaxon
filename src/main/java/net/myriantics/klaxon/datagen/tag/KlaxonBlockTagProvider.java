@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
-import net.myriantics.klaxon.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.KlaxonBlocks;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -63,6 +63,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // behavior related tags
         getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK);
+        getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
 
         // machine category tags
         getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)

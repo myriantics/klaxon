@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.advancement;
+package net.myriantics.klaxon.registry;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;

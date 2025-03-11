@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.item;
+package net.myriantics.klaxon.registry;
 
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;

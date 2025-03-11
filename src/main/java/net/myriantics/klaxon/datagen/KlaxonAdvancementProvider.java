@@ -13,8 +13,8 @@ import net.minecraft.text.Text;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.criterion.BlockActivationCriterion;
 import net.myriantics.klaxon.advancement.criterion.AnvilRepairCriterion;
-import net.myriantics.klaxon.block.KlaxonBlocks;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.registry.KlaxonBlocks;
+import net.myriantics.klaxon.registry.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 

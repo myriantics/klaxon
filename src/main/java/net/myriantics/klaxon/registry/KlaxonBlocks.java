@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block;
+package net.myriantics.klaxon.registry;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;

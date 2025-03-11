@@ -9,7 +9,7 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.registry.KlaxonItems;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import org.jetbrains.annotations.Nullable;
 

@@ -9,7 +9,8 @@ import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.registry.KlaxonEntities;
+import net.myriantics.klaxon.registry.KlaxonItems;
 
 
 public class EnderPlateEntity extends ThrownItemEntity {
