@@ -1,10 +1,14 @@
 package net.myriantics.klaxon.compat.emi;
 
+import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.Identifier;
@@ -15,13 +19,18 @@ import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.Deepsl
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
+import net.myriantics.klaxon.compat.emi.recipes.KlaxonEMIAnvilRecipe;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.Random;
 import java.util.function.Function;
 
 // spectrum's emi plugin used as reference
 public class KlaxonEmiPlugin implements EmiPlugin {
+
+    public static final Random RANDOM = new Random();
 
     @Override
     public void register(EmiRegistry registry) {
@@ -45,6 +54,11 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
         addBlastProcessorBehaviorItemExplosionPowerRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
+        registerMiscRecipes(registry);
+    }
+
+    private void registerMiscRecipes(EmiRegistry registry) {
+        registry.addRecipe(new KlaxonEMIAnvilRecipe(EmiStack.of(Items.FLINT_AND_STEEL), EmiIngredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS), "flint_and_steel"));
     }
 
     public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {

@@ -13,6 +13,7 @@ import net.myriantics.klaxon.entity.KlaxonEntities;
 import net.myriantics.klaxon.entity.effects.KlaxonStatusEffects;
 import net.myriantics.klaxon.item.KlaxonItemGroups;
 import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.item.KlaxonToolMaterials;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.networking.KlaxonPackets;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
@@ -51,6 +52,7 @@ public class KlaxonCommon implements ModInitializer {
 		BlastProcessorBehavior.registerBlastProcessorBehaviors();
 		KlaxonAdvancementCriteria.registerAdvancementCriteria();
 		KlaxonStatusEffects.registerStatusEffects();
+		KlaxonToolMaterials.registerToolMaterials();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

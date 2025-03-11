@@ -15,7 +15,6 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -29,12 +28,12 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.PermissionsHelper;
 import net.myriantics.klaxon.item.KlaxonItems;
+import net.myriantics.klaxon.item.KlaxonToolMaterials;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.api.AbilityModifierCalculator;
-import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.KlaxonDamageTypes;
 
@@ -43,24 +42,24 @@ import java.util.Optional;
 
 import static net.minecraft.block.FacingBlock.FACING;
 
-public class HammerItem extends Item {
-    public static final float ATTACK_DAMAGE = 9.0F;
-    public static final float ATTACK_SPEED = -3.0F;
+public class HammerItem extends ToolItem {
+    public static final float STEEL_HAMMER_BASE_ATTACK_DAMAGE = 5.0F;
+    public static final float STEEL_HAMMER_ATTACK_SPEED = -3.1F;
 
     public HammerItem(Settings settings) {
-        super(settings);
+        super(KlaxonToolMaterials.STEEL, settings.maxCount(1));
     }
 
-    public static AttributeModifiersComponent createAttributeModifiers() {
+    public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
         return AttributeModifiersComponent.builder()
                 .add(
                         EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                        new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, ATTACK_DAMAGE, EntityAttributeModifier.Operation.ADD_VALUE),
+                        new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, material.getAttackDamage() + baseAttackDamage, EntityAttributeModifier.Operation.ADD_VALUE),
                         AttributeModifierSlot.MAINHAND
                 )
                 .add(
                         EntityAttributes.GENERIC_ATTACK_SPEED,
-                        new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, ATTACK_SPEED, EntityAttributeModifier.Operation.ADD_VALUE),
+                        new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
                         AttributeModifierSlot.MAINHAND
                 ).build();
     }
@@ -219,11 +218,6 @@ public class HammerItem extends Item {
     @Override
     public boolean isEnchantable(ItemStack stack) {
         return false;
-    }
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.isIn(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS);
     }
 
     public static boolean canWallJump(PlayerEntity player, BlockState state) {

@@ -11,6 +11,8 @@ public class KlaxonBlockTags {
             createTag("mineable/hammer");
     public static final TagKey<Block> HAMMER_INSTABREAKABLE =
             createTag("hammer_instabreakable");
+    public static final TagKey<Block> INCORRECT_FOR_STEEL_TOOL =
+            createTag("incorrect_for_steel_tool");
     public static final TagKey<Block> FERROMAGNETIC_BLOCKS =
             createTag("ferromagnetic_blocks");
     public static final TagKey<Block> BLAST_PROCESSORS =
