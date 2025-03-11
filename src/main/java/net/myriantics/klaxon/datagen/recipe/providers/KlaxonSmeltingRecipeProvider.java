@@ -2,6 +2,7 @@ package net.myriantics.klaxon.datagen.recipe.providers;
 
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
@@ -22,6 +23,7 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
 
     private void buildGearRecyclingRecipes(RecipeExporter exporter) {
         addBlastingSmeltingRecipe(exporter, Ingredient.ofItems(KlaxonItems.STEEL_HAMMER), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
+        addBlastingSmeltingRecipe(exporter, Ingredient.ofItems(Items.FLINT_AND_STEEL), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
         addBlastingSmeltingRecipe(exporter, Ingredient.ofItems(KlaxonItems.STEEL_HELMET), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
         addBlastingSmeltingRecipe(exporter, Ingredient.ofItems(KlaxonItems.STEEL_CHESTPLATE), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
         addBlastingSmeltingRecipe(exporter, Ingredient.ofItems(KlaxonItems.STEEL_LEGGINGS), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
