@@ -1,8 +1,7 @@
-package net.myriantics.klaxon.api;
+package net.myriantics.klaxon.util;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 
 public abstract class StatusEffectHelper {

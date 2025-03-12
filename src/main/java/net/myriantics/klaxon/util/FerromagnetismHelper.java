@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.api;
+package net.myriantics.klaxon.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -1,8 +1,7 @@
-package net.myriantics.klaxon.api;
+package net.myriantics.klaxon.util;
 
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.myriantics.klaxon.KlaxonCommon;
 
 public abstract class AbilityModifierCalculator {
     public static float calculateHammerWalljumpMultiplier(PlayerEntity player) {

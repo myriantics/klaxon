@@ -76,7 +76,7 @@ public abstract class AnvilScreenHandlerMixin {
 
     @ModifyExpressionValue(
             method = "canTakeOutput",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/Property;get()I")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/Property;get()I", ordinal = 1)
     )
     public int klaxon$canTakeItemOverride(int original, @Local(argsOnly = true) boolean present) {
         // jank method of allowing items to be removed if they cost 0 levels

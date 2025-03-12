@@ -29,13 +29,13 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.EntityWeightHelper;
-import net.myriantics.klaxon.api.PermissionsHelper;
+import net.myriantics.klaxon.util.EntityWeightHelper;
+import net.myriantics.klaxon.util.PermissionsHelper;
 import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
-import net.myriantics.klaxon.api.AbilityModifierCalculator;
+import net.myriantics.klaxon.util.AbilityModifierCalculator;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 
 import java.util.List;
