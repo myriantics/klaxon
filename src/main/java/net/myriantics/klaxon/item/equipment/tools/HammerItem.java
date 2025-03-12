@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -15,27 +16,27 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.EntityWeightHelper;
 import net.myriantics.klaxon.api.PermissionsHelper;
-import net.myriantics.klaxon.registry.KlaxonItems;
-import net.myriantics.klaxon.registry.KlaxonToolMaterials;
+import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
-import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.api.AbilityModifierCalculator;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
-import net.myriantics.klaxon.registry.KlaxonDamageTypes;
 
 import java.util.List;
 import java.util.Optional;
@@ -118,6 +119,8 @@ public class HammerItem extends ToolItem {
             world.playSound(player, BlockPos.ofFloored(clickedPos), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
             damageItem(handStack, player, true);
 
+            boolean recipeSuccessPresent = false;
+
             // run recipe and dropping code for each selected dropped item
             for (ItemEntity iteratedDroppedItem : selectedItems) {
 
@@ -126,6 +129,7 @@ public class HammerItem extends ToolItem {
 
                 // dont run recipe stuff on the client
                 if (!world.isClient()) {
+
                     RecipeInput dummyInventory = new RecipeInput() {
                         @Override
                         public ItemStack getStackInSlot(int slot) {
@@ -140,13 +144,16 @@ public class HammerItem extends ToolItem {
 
                     Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
                     if(match.isPresent()) {
+                        // indicate that at least one craft was successful
+                        recipeSuccessPresent = true;
+
                         // spawn the dropped output item
                         ItemScatterer.spawn(
                                 world,
                                 outputPos.getX(),
                                 outputPos.getY(),
                                 outputPos.getZ(),
-                                match.get().value().getResult(null));
+                                match.get().value().craft(dummyInventory, world.getRegistryManager()));
 
                         // decrement target dropped item's stack because a match was present, so the item was used up in crafting
                         targetStack.decrement(1);
@@ -157,12 +164,17 @@ public class HammerItem extends ToolItem {
                         }
                     }
 
-                    // trip sculk sensors
-                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, clickedPos);
                 } else {
                     // spawn hammering particle effects
                     spawnHammeringParticleEffects(world, targetStack, 5, iteratedDroppedItem);
                 }
+            }
+
+            if (!world.isClient()) {
+                // pop the hammering advancement
+                KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, UsageType.RECIPE_SUCCESS);
+                // trip sculk sensors
+                world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, clickedPos);
             }
 
             return ActionResult.SUCCESS;
@@ -194,13 +206,21 @@ public class HammerItem extends ToolItem {
             boolean processFallDamage = targetBlockState.calcBlockBreakingDelta(player, null, null) < 1;
 
             world.addBlockBreakParticles(pos, targetBlockState);
-            processWallJumpPhysics(player, processFallDamage, 1.0f);
+            boolean walljumpSucceeded = processWallJumpPhysics(player, processFallDamage, 1.0f);
 
             world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
 
-            // update observers monitoring target block - doesn't work in adventure
-            if (!world.isClient() && PermissionsHelper.canModifyWorld(player)) {
-                updateAdjacentMonitoringObservers(world, pos, targetBlockState);
+            if (!world.isClient()) {
+                // update observers monitoring target block - doesn't work in adventure
+                if (PermissionsHelper.canModifyWorld(player)) {
+                    updateAdjacentMonitoringObservers(world, pos, targetBlockState);
+                }
+
+                KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, walljumpSucceeded ? UsageType.WALLJUMP_SUCCEEDED : UsageType.WALLJUMP_FAILED);
+                // if player overpowered steel armor with strength proc this
+                if (walljumpSucceeded && EntityWeightHelper.isHeavy(player)) {
+                    KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, UsageType.STRENGTH_WALLJUMP_SUCCEEDED);
+                }
             }
 
             // trip sculk sensors
@@ -249,7 +269,7 @@ public class HammerItem extends ToolItem {
     }
 
     // yoinked from trident riptide physics - edited to suit my needs
-    private static void processWallJumpPhysics(PlayerEntity player, boolean fallDamage, float multiplier) {
+    private static boolean processWallJumpPhysics(PlayerEntity player, boolean fallDamage, float multiplier) {
         float playerYaw = player.getYaw();
         float playerPitch = player.getPitch();
         float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
@@ -266,6 +286,9 @@ public class HammerItem extends ToolItem {
         }
 
         player.addVelocity(h, k, l);
+
+        // returns false if failed, true if succeeded in moving player
+        return n > 0;
     }
 
     private static void damageItem(ItemStack stack, LivingEntity attacker, boolean usedProperly) {
@@ -315,5 +338,23 @@ public class HammerItem extends ToolItem {
     // called in PlayerEntityMixin and MobEntityMixin
     public static DamageSource getDamageType(Entity attacker, boolean willCrit) {
         return willCrit ? KlaxonDamageTypes.hammerWalloping(attacker) : KlaxonDamageTypes.hammerBonking(attacker);
+    }
+
+    public enum UsageType implements StringIdentifiable {
+        RECIPE_SUCCESS,
+        WALLJUMP_SUCCEEDED,
+        STRENGTH_WALLJUMP_SUCCEEDED,
+        WALLJUMP_FAILED;
+
+        private static final Codec<UsageType> CODEC = StringIdentifiable.createCodec(UsageType::values);
+
+        @Override
+        public String asString() {
+            return this.toString().toLowerCase();
+        }
+
+        public static Codec<UsageType> getCodec() {
+            return CODEC;
+        }
     }
 }

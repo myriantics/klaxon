@@ -46,9 +46,6 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
             }
         }
 
-        KlaxonCommon.LOGGER.info("Total present makeshift ingredients: " + totalPresentMakeshiftIngredients);
-        KlaxonCommon.LOGGER.info("Total potential makeshift ingredients: " + totalPotentialMakeshiftIngredients);
-
         // decrease the result's durability according to how many makeshift stacks were used in crafting out of all potential makeshift ingredients in the recipe
         result.setDamage((int) (result.getMaxDamage() * durabilityPenaltyCap * ((double) totalPresentMakeshiftIngredients / totalPotentialMakeshiftIngredients)));
 

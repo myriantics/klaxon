@@ -117,7 +117,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
 
             BlastProcessingOutputState interimOutputState = computeOutputState(powerData, recipe);
 
-            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), recipe.getResult(world.getRegistryManager()), interimOutputState);
+            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), recipe.craft(recipeInventory, world.getRegistryManager()), interimOutputState);
         } else {
             return new BlastProcessingRecipeData(0.0, 0.0, ItemStack.EMPTY, BlastProcessingOutputState.MISSING_RECIPE);
         }

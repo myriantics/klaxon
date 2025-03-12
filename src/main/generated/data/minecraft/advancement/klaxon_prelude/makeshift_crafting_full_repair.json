@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:klaxon_prelude/watch_blast_processor_craft",
+  "parent": "minecraft:klaxon_prelude/use_hammer_on_dropped_item",
   "criteria": {
     "makeshift_crafting_full_repair": {
       "conditions": {
@@ -17,7 +17,7 @@
     },
     "icon": {
       "count": 1,
-      "id": "minecraft:chipped_anvil"
+      "id": "minecraft:anvil"
     },
     "title": {
       "translate": "advancements.klaxon_prelude.makeshift_item_full_repair.title"
