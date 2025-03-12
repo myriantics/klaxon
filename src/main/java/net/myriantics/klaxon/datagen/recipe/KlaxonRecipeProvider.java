@@ -64,10 +64,22 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
             for (Identifier potentiallySpentIdentifier : spentRecipeIdentifiersByRecipeType.get(recipe.getType())) {
                 // if there is a match, attach a discriminator to the end of the recipe id
                 if (potentiallySpentIdentifier.equals(recipeId)) {
-                    int discriminator = 0;
+                    int discriminator = 1;
 
                     for (Identifier discriminatorDetectorIdentifier : spentRecipeIdentifiersByRecipeType.get(recipe.getType())) {
-                        Identifier proposedRecipeId = recipeId.withPath(recipeId.getPath() + "_" + discriminator);
+                        String path = recipeId.getPath();
+
+                        // this might cause a problem if some item has a name like "skibid_i"
+                        // but i dont care lol
+                        // it'd just become leetspeak anyways
+                        // like skibid_1 yk?
+                        // thatd be epic
+                        if (path.charAt(path.length() - 2) == '_') {
+                            // give the raw path without any numbers
+                            path = path.substring(0, path.length() - 2);
+                        }
+
+                        Identifier proposedRecipeId = recipeId.withPath(path + "_" + discriminator);
 
                         // if a valid open recipe slot is found, set recipeId to that
                         if (!discriminatorDetectorIdentifier.equals(proposedRecipeId)) {
