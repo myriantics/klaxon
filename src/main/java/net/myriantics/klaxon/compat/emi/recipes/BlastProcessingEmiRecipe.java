@@ -6,11 +6,15 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.item.Item;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
+import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
@@ -44,6 +48,15 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
         for (ItemExplosionPowerRecipe catalystRecipe : catalystData) {
             catalystStacks.add(EmiIngredient.of(catalystRecipe.getItem()));
+        }
+
+        // crude ass code but it works haha
+        for (Item item : DeepslateBlastProcessorBlock.BEHAVIORS.keySet()) {
+            BlastProcessorBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound behaviorEmiData = DeepslateBlastProcessorBlock.BEHAVIORS.get(item).getEmiData();
+
+            if (explosionPowerMin <= behaviorEmiData.explosionPowerMin() && explosionPowerMin <= explosionPowerMax) {
+                catalystStacks.add(EmiIngredient.of(Ingredient.ofItems(item)));
+            }
         }
 
         this.catalysts = EmiIngredient.of(catalystStacks);
