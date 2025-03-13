@@ -10,14 +10,14 @@
       "item": "klaxon:fractured_iron_fragments"
     },
     {
-      "tag": "minecraft:coals"
+      "item": "klaxon:fractured_coal_chunks"
     },
     {
-      "tag": "minecraft:coals"
+      "item": "klaxon:fractured_coal_chunks"
     }
   ],
   "result": {
-    "count": 2,
+    "count": 3,
     "id": "klaxon:crude_steel_mixture"
   }
 }

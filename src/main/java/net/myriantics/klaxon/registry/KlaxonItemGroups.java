@@ -95,7 +95,7 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonItems.FRACTURED_IRON_FRAGMENTS);
                 entries.add(KlaxonItems.FRACTURED_COPPER_FRAGMENTS);
                 entries.add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS);
-                entries.add(KlaxonItems.FRACTURED_COAL);
+                entries.add(KlaxonItems.FRACTURED_COAL_CHUNKS);
                 entries.add(KlaxonItems.FRACTURED_RAW_IRON);
                 entries.add(KlaxonItems.FRACTURED_RAW_COPPER);
                 entries.add(KlaxonItems.FRACTURED_RAW_GOLD);

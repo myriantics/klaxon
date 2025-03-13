@@ -100,9 +100,9 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 DefaultedList.copyOf(Ingredient.EMPTY,
                         Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
                         Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
-                        Ingredient.fromTag(ItemTags.COALS),
-                        Ingredient.fromTag(ItemTags.COALS)),
-                new ItemStack(KlaxonItems.CRUDE_STEEL_MIXTURE, 2),
+                        Ingredient.ofItems(KlaxonItems.FRACTURED_COAL_CHUNKS),
+                        Ingredient.ofItems(KlaxonItems.FRACTURED_COAL_CHUNKS)),
+                new ItemStack(KlaxonItems.CRUDE_STEEL_MIXTURE, 3),
                 null, null);
     }
 

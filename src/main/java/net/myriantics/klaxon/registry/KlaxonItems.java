@@ -35,7 +35,7 @@ public class KlaxonItems {
     public static final Item FRACTURED_IRON_FRAGMENTS = registerReallySimpleItem("fractured_iron_fragments");
     public static final Item FRACTURED_COPPER_FRAGMENTS = registerReallySimpleItem("fractured_copper_fragments");
     public static final Item FRACTURED_GOLD_FRAGMENTS = registerReallySimpleItem("fractured_gold_fragments");
-    public static final Item FRACTURED_COAL = registerReallySimpleItem("fractured_coal");
+    public static final Item FRACTURED_COAL_CHUNKS = registerReallySimpleItem("fractured_coal_chunks");
     public static final Item CRUDE_STEEL_MIXTURE = registerReallySimpleItem("crude_steel_mixture");
 
     // raw materials
