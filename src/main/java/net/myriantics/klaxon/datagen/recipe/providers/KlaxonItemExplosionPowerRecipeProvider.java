@@ -27,8 +27,6 @@ public class KlaxonItemExplosionPowerRecipeProvider extends KlaxonRecipeSubProvi
 
         // meme recipes
         addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.CREEPER_SPAWN_EGG), 3.0, false, true);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.ENDER_DRAGON_SPAWN_EGG), 20.0, false, true);
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.WITHER_SPAWN_EGG), 10.0, false, true);
         addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.GHAST_SPAWN_EGG), 3.5, true, true);
     }
 }

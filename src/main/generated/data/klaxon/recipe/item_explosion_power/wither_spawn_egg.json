@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosionPower": 10.0,
-  "ingredient": {
-    "item": "minecraft:wither_spawn_egg"
-  },
-  "isHidden": true,
-  "producesFire": false
-}

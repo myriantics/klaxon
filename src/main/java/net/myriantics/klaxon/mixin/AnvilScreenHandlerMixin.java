@@ -96,6 +96,7 @@ public abstract class AnvilScreenHandlerMixin {
         if (instance.isIn(KlaxonItemTags.INFINITELY_REPAIRABLE)) {
             return (T) Integer.valueOf(0);
         }
+        // this throws an error in IDE but it runs fine and has caused no problems... this is fine...
         return original.call(instance, type, value);
     }
 
