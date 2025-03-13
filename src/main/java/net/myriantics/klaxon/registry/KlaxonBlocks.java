@@ -40,13 +40,13 @@ public class KlaxonBlocks {
 
     // misc decor
     public static final Block STEEL_DOOR = registerBlock("steel_door",
-            new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK)));
+            new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK).nonOpaque()));
     public static final Block CRUDE_STEEL_DOOR = registerBlock("crude_steel_door",
-            new SteelDoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK)));
+            new SteelDoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK).nonOpaque()));
     public static final Block STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
-            new SteelTrapdoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK)));
+            new SteelTrapdoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_DOOR)));
     public static final Block CRUDE_STEEL_TRAPDOOR = registerBlock("crude_steel_trapdoor",
-            new SteelTrapdoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK)));
+            new SteelTrapdoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_DOOR)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
