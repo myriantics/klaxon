@@ -23,10 +23,6 @@ public class KlaxonClient implements ClientModInitializer {
 
         HandledScreens.register(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);
 
-        EntityRendererRegistry.register(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, (context) ->
-                new FlyingItemEntityRenderer<>(context));
-
-
         KlaxonPackets.registerS2CPacketRecievers();
     }
 }

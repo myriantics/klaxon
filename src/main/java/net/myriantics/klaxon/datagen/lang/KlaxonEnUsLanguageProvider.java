@@ -73,7 +73,6 @@ public class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(KlaxonItems.IRON_PLATE, "Iron Plate");
         translationBuilder.add(KlaxonItems.GOLD_PLATE, "Gold Plate");
         translationBuilder.add(KlaxonItems.COPPER_PLATE, "Copper Plate");
-        translationBuilder.add(KlaxonItems.ENDER_PEARL_PLATE, "Ender Pearl Plate");
     }
 
     private static void generateBlockTranslations(TranslationBuilder translationBuilder) {
@@ -99,7 +98,7 @@ public class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
     }
 
     private static void generateEntityTypeTranslations(TranslationBuilder translationBuilder) {
-        translationBuilder.add(KlaxonEntities.ENDER_PEARL_PLATE_ENTITY_TYPE, "Ender Pearl Plate");
+
     }
 
     private static void generateStatusEffectTranslations(TranslationBuilder translationBuilder) {

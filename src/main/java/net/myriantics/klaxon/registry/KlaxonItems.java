@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.item.consumables.EnderPlateItem;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
@@ -50,9 +49,6 @@ public class KlaxonItems {
     public static final Item IRON_PLATE = registerReallySimpleItem("iron_plate");
     public static final Item GOLD_PLATE = registerReallySimpleItem("gold_plate");
     public static final Item COPPER_PLATE = registerReallySimpleItem("copper_plate");
-    // disabled currently because its broken as FUCK - will come later trust
-    public static final Item ENDER_PEARL_PLATE = registerSimpleItem("ender_plate", new EnderPlateItem(new Item.Settings()));
-
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);
