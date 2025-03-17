@@ -1,46 +1,68 @@
 package net.myriantics.klaxon.advancement.criterion;
 
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterion;
+import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.predicate.BlockPredicate;
+import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
+import net.minecraft.predicate.entity.AdvancementEntityPredicateSerializer;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.myriantics.klaxon.registry.KlaxonAdvancementCriteria;
-
-import java.util.Optional;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.myriantics.klaxon.KlaxonCommon;
 
 public class BlockActivationCriterion extends AbstractCriterion<BlockActivationCriterion.Conditions> {
+    static final Identifier ID = KlaxonCommon.locate("block_activation");
 
     @Override
-    public Codec<BlockActivationCriterion.Conditions> getConditionsCodec() {
-        return BlockActivationCriterion.Conditions.CODEC;
+    public Identifier getId() {
+        return ID;
     }
 
-    public void trigger(ServerPlayerEntity player, BlockState state) {
-        this.trigger(player, conditions -> conditions.matches(state));
+    public void trigger(ServerPlayerEntity player, BlockPos pos) {
+        this.trigger(player, conditions -> conditions.matches(player.getServerWorld(), pos));
     }
 
-    public static record Conditions(Optional<LootContextPredicate> player, TagKey<Block> blockTag) implements AbstractCriterion.Conditions {
-        public static final Codec<BlockActivationCriterion.Conditions> CODEC = RecordCodecBuilder.create(
-                instance -> instance.group(
-                                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(BlockActivationCriterion.Conditions::player),
-                                TagKey.codec(RegistryKeys.BLOCK).fieldOf("block").forGetter(BlockActivationCriterion.Conditions::blockTag)
-                        )
-                        .apply(instance, BlockActivationCriterion.Conditions::new)
-        );
+    @Override
+    protected Conditions conditionsFromJson(JsonObject jsonObject, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+        BlockPredicate acceptedBlocks = BlockPredicate.fromJson(jsonObject.get("accepted_blocks"));
+        return Conditions.create(playerPredicate, acceptedBlocks);
+    }
 
-        public static AdvancementCriterion<BlockActivationCriterion.Conditions> create(TagKey<Block> blockTag) {
-            return KlaxonAdvancementCriteria.BLOCK_ACTIVATION_CRITERION.create(new BlockActivationCriterion.Conditions(Optional.empty(), blockTag));
+    public static class Conditions extends AbstractCriterionConditions {
+        private final BlockPredicate acceptedBlocks;
+
+        public Conditions(LootContextPredicate player, BlockPredicate acceptedBlockStates) {
+            super(BlockActivationCriterion.ID, player);
+            this.acceptedBlocks = acceptedBlockStates;
         }
 
-        boolean matches(BlockState block) {
-            return block.isIn(blockTag);
+        public static BlockActivationCriterion.Conditions create(TagKey<Block> blockTag) {
+            return create(LootContextPredicate.EMPTY, BlockPredicate.Builder.create().tag(blockTag).build());
+        }
+
+        public static BlockActivationCriterion.Conditions create(LootContextPredicate player, BlockPredicate acceptedBlocks) {
+            return new BlockActivationCriterion.Conditions(player, acceptedBlocks);
+        }
+
+        boolean matches(ServerWorld serverWorld, BlockPos pos) {
+            return acceptedBlocks.test(serverWorld, pos);
+        }
+
+        @Override
+        public JsonObject toJson(AdvancementEntityPredicateSerializer predicateSerializer) {
+            JsonObject jsonObject = super.toJson(predicateSerializer);
+            jsonObject.add("accepted_blocks", this.acceptedBlocks.toJson());
+            return jsonObject;
         }
     }
 }
