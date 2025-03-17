@@ -33,7 +33,7 @@ public abstract class MinecraftClientMixin {
             HammerItem.processHammerWalljump(player, player.getWorld(), hitResult.getBlockPos(), hitResult.getSide());
 
             // send packet that triggers hammer walljump on the server side
-            ClientPlayNetworking.send(new HammerWalljumpTriggerPacket(hitResult.getBlockPos(), hitResult.getSide()));
+            HammerWalljumpTriggerPacket.send(hitResult.getBlockPos(), hitResult.getSide());
         }
         return original;
     }

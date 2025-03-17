@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.registry;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,26 +17,18 @@ public class KlaxonPackets {
 
     public static void registerModPackets() {
         KlaxonCommon.LOGGER.info("Registering KLAXON's Packets!");
-
-        // s2c
-        PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.PACKET_CODEC);
-
-        // c2s
-        PayloadTypeRegistry.playC2S().register(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket.PACKET_CODEC);
     }
 
     // client only
     public static void registerS2CPacketRecievers() {
-        ClientPlayNetworking.registerGlobalReceiver(BlastProcessorScreenSyncPacket.ID, ((payload, context) -> {
-            context.client().execute(() -> {
-                MinecraftClient client = context.client();
+        ClientPlayNetworking.registerGlobalReceiver(BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID, ((client, handler, buf, responseSender) -> {
+            buf.retain();
+            client.execute(() -> {
+                BlastProcessorScreenSyncPacket payload = BlastProcessorScreenSyncPacket.decode(buf);
 
                 if (client.player != null && client.player.currentScreenHandler instanceof DeepslateBlastProcessorScreenHandler screenHandler) {
-                    screenHandler.setRecipeData(payload.explosionPower(),
-                            payload.explosionPowerMin(),
-                            payload.explosionPowerMax(),
-                            payload.producesFire(),
-                            payload.outputState());
+                    if (screenHandler.syncId == payload.syncId())
+                        screenHandler.setRecipeData(payload);
                 }
             });
         }));
@@ -45,11 +36,11 @@ public class KlaxonPackets {
 
     // server only
     public static void registerC2SPacketRecievers() {
-        ServerPlayNetworking.registerGlobalReceiver(HammerWalljumpTriggerPacket.ID, ((payload, context) -> {
-            context.server().execute(() -> {
-                ServerPlayerEntity player = context.player();
+        ServerPlayNetworking.registerGlobalReceiver(HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID, ((server, player, handler, buf, responseSender) -> {
+            buf.retain();
+            server.execute(() -> {
+                HammerWalljumpTriggerPacket payload = HammerWalljumpTriggerPacket.decode(buf);
 
-                // run the walljump ability :D
                 HammerItem.processHammerWalljump(player, player.getWorld(), payload.pos(), payload.direction());
             });
         }));
