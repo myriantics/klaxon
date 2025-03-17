@@ -8,10 +8,8 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 
 import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
@@ -22,13 +20,14 @@ public class ItemExplosionPowerRecipe implements Recipe<Inventory> {
     private final boolean producesFire;
     private final boolean isHidden;
 
-    public final Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID);
+    private final Identifier identifier;
 
-    public ItemExplosionPowerRecipe(Ingredient input, double explosionPower, boolean producesFire, boolean isHidden) {
+    public ItemExplosionPowerRecipe(Identifier id, Ingredient input, double explosionPower, boolean producesFire, boolean isHidden) {
         this.item = input;
         this.explosionPower = explosionPower;
         this.producesFire = producesFire;
         this.isHidden = isHidden;
+        this.identifier = id;
     }
 
     // to whom it may concern: CHECK WHAT INDEX YOU'RE TRYING TO PULL FROM
@@ -53,7 +52,7 @@ public class ItemExplosionPowerRecipe implements Recipe<Inventory> {
         return null;
     }
 
-    public Ingredient getItem() {
+    public Ingredient getIngredient() {
         return item;
     }
 
@@ -94,6 +93,6 @@ public class ItemExplosionPowerRecipe implements Recipe<Inventory> {
 
     @Override
     public Identifier getId() {
-        return ID;
+        return identifier;
     }
 }

@@ -1,17 +1,21 @@
 package net.myriantics.klaxon.recipe.makeshift_crafting.shapeless;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 
@@ -19,70 +23,77 @@ import java.util.List;
 
 public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSerializer<MakeshiftShapelessCraftingRecipe> {
 
-    private final MapCodec<MakeshiftShapelessCraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance.group(
-                    Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessRecipe::getGroup),
-                    CraftingRecipeCategory.CODEC.fieldOf("category").orElse(CraftingRecipeCategory.MISC).forGetter(ShapelessRecipe::getCategory),
-                    ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(MakeshiftShapelessCraftingRecipe::getRawResult),
-                    Ingredient.DISALLOW_EMPTY_CODEC
-                            .listOf()
-                            .fieldOf("ingredients")
-                            .flatXmap(
-                                    ingredients -> {
-                                        Ingredient[] ingredients2 = (Ingredient[])ingredients.stream().filter(ingredient -> !ingredient.isEmpty()).toArray(Ingredient[]::new);
-                                        if (ingredients2.length == 0) {
-                                            return DataResult.error(() -> "No ingredients for shapeless recipe");
-                                        } else {
-                                            return ingredients2.length > 9
-                                                    ? DataResult.error(() -> "Too many ingredients for shapeless recipe")
-                                                    : DataResult.success(DefaultedList.copyOf(Ingredient.EMPTY, ingredients2));
-                                        }
-                                    },
-                                    DataResult::success
-                            )
-                            .forGetter(ShapelessRecipe::getIngredients),
-                    KlaxonCodecUtils.INGREDIENT_LIST_CODEC.fieldOf("constant_ingredients").forGetter(MakeshiftShapelessCraftingRecipe::getConstantIngredients)
-            )
-                    .apply(instance, MakeshiftShapelessCraftingRecipe::new)
-    );
+    @Override
+    public MakeshiftShapelessCraftingRecipe read(Identifier id, JsonObject json) {
+        String group = JsonHelper.getString(json, "group", "");
+        CraftingRecipeCategory category = CraftingRecipeCategory.CODEC
+                .byId(JsonHelper.getString(json, "category", null), CraftingRecipeCategory.MISC);
+        DefaultedList<Ingredient> inputIngredients = getIngredients(JsonHelper.getArray(json, "ingredients"));
+        if (inputIngredients.isEmpty()) {
+            throw new JsonParseException("No ingredients for shapeless recipe");
+        } else if (inputIngredients.size() > 9) {
+            throw new JsonParseException("Too many ingredients for shapeless recipe");
+        } else {
+            ItemStack itemStack = ShapedRecipe.outputFromJson(JsonHelper.getObject(json, "result"));
+            List<Ingredient> constantIngredients = KlaxonCodecUtils.readIngredientListFromJson(JsonHelper.getArray(json, "constant_ingredients"));
+            return new MakeshiftShapelessCraftingRecipe(id, group, category, itemStack, inputIngredients, constantIngredients);
+        }
+    }
 
-    private final PacketCodec<RegistryByteBuf, MakeshiftShapelessCraftingRecipe> PACKET_CODEC = PacketCodec.ofStatic(
-            MakeshiftShapelessCraftingRecipeSerializer::write, MakeshiftShapelessCraftingRecipeSerializer::read
-    );
+    @Override
+    public MakeshiftShapelessCraftingRecipe read(Identifier id, PacketByteBuf buf) {
+        // decode group stuff
+        String group = buf.readString();
+        CraftingRecipeCategory category = buf.readEnumConstant(CraftingRecipeCategory.class);
 
-    private static void write(RegistryByteBuf buf, MakeshiftShapelessCraftingRecipe recipe) {
-        PacketCodecs.STRING.encode(buf, recipe.getGroup());
-        CraftingRecipeCategory.PACKET_CODEC.encode(buf, recipe.getCategory());
-        PacketCodecs.VAR_INT.encode(buf, recipe.getIngredients().size());
+        // decode ingredients
+        int inputIngredientsLength = buf.readVarInt();
+        DefaultedList<Ingredient> inputIngredients = DefaultedList.ofSize(inputIngredientsLength);
+        inputIngredients.replaceAll(empty -> Ingredient.fromPacket(buf));
 
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            Ingredient.PACKET_CODEC.encode(buf, ingredient);
+        // decode constant ingredients
+        int constantIngredientsLength = buf.readVarInt();
+        DefaultedList<Ingredient> constantIngredients = DefaultedList.ofSize(constantIngredientsLength);
+        constantIngredients.replaceAll(empty -> Ingredient.fromPacket(buf));
+
+        // decode result
+        ItemStack result = buf.readItemStack();
+
+        return new MakeshiftShapelessCraftingRecipe(id, group, category, result, inputIngredients, constantIngredients);
+    }
+
+    @Override
+    public void write(PacketByteBuf buf, MakeshiftShapelessCraftingRecipe recipe) {
+        // encode group stuff
+        buf.writeString(recipe.getGroup());
+        buf.writeEnumConstant(recipe.getCategory());
+
+        // encode ingredients
+        buf.writeVarInt(recipe.ingredients.size());
+        for (Ingredient ingredient : recipe.ingredients) {
+            ingredient.write(buf);
         }
 
-        ItemStack.PACKET_CODEC.encode(buf, recipe.getRawResult());
-        KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.encode(buf, recipe.getConstantIngredients());
+        // encode constant ingredients
+        buf.writeVarInt(recipe.constantIngredients.size());
+        for (Ingredient ingredient : recipe.constantIngredients) {
+            ingredient.write(buf);
+        }
+
+        // encode result
+        buf.writeItemStack(recipe.getRawResult());
     }
 
-    private static MakeshiftShapelessCraftingRecipe read(RegistryByteBuf buf) {
-        String group = PacketCodecs.STRING.decode(buf);
-        CraftingRecipeCategory category = CraftingRecipeCategory.PACKET_CODEC.decode(buf);
-        int i = PacketCodecs.VAR_INT.decode(buf);
+    private static DefaultedList<Ingredient> getIngredients(JsonArray json) {
+        DefaultedList<Ingredient> defaultedList = DefaultedList.of();
 
-        DefaultedList<Ingredient> defaultedList = DefaultedList.ofSize(i, Ingredient.EMPTY);
-        defaultedList.replaceAll(empty -> Ingredient.PACKET_CODEC.decode(buf));
+        for (int i = 0; i < json.size(); i++) {
+            Ingredient ingredient = Ingredient.fromJson(json.get(i), false);
+            if (!ingredient.isEmpty()) {
+                defaultedList.add(ingredient);
+            }
+        }
 
-        ItemStack result = ItemStack.PACKET_CODEC.decode(buf);
-        List<Ingredient> constantIngredients = KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.decode(buf);
-        return new MakeshiftShapelessCraftingRecipe(group, category, result, defaultedList, constantIngredients);
-    }
-
-    @Override
-    public MapCodec<MakeshiftShapelessCraftingRecipe> codec() {
-        return CODEC;
-    }
-
-    @Override
-    public PacketCodec<RegistryByteBuf, MakeshiftShapelessCraftingRecipe> packetCodec() {
-        return PACKET_CODEC;
+        return defaultedList;
     }
 }

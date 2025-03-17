@@ -12,14 +12,16 @@ import net.myriantics.klaxon.registry.KlaxonItems;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 
 public class HammeringRecipe implements Recipe<Inventory>{
-    public static final Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.HAMMERING_RECIPE_ID);
 
     private final Ingredient inputA;
     private final ItemStack result;
 
-    public HammeringRecipe(Ingredient inputA, ItemStack result ) {
+    private final Identifier identifier;
+
+    public HammeringRecipe(Identifier id, Ingredient inputA, ItemStack result ) {
         this.inputA = inputA;
         this.result = result;
+        this.identifier = id;
     }
 
     @Override
@@ -63,6 +65,6 @@ public class HammeringRecipe implements Recipe<Inventory>{
 
     @Override
     public Identifier getId() {
-        return ID;
+        return identifier;
     }
 }

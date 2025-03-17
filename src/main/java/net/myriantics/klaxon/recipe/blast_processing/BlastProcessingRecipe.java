@@ -4,10 +4,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.KlaxonBlocks;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 
@@ -19,13 +17,14 @@ public class BlastProcessingRecipe implements Recipe<Inventory> {
     private final double explosionPowerMax;
     private final ItemStack result;
 
-    public static final Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID);
+    private final Identifier identifier;
 
-    public BlastProcessingRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result) {
+    public BlastProcessingRecipe(Identifier id, Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result) {
         this.ingredientItem = inputA;
         this.explosionPowerMin = explosionPowerMin;
         this.explosionPowerMax = explosionPowerMax;
         this.result = result;
+        this.identifier = id;
     }
 
     @Override
@@ -48,7 +47,7 @@ public class BlastProcessingRecipe implements Recipe<Inventory> {
         return this.result;
     }
 
-    public Ingredient getIngredientItem() {
+    public Ingredient getIngredient() {
         return ingredientItem;
     }
 
@@ -82,6 +81,6 @@ public class BlastProcessingRecipe implements Recipe<Inventory> {
 
     @Override
     public Identifier getId() {
-        return ID;
+        return identifier;
     }
 }

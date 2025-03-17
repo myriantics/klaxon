@@ -40,7 +40,7 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
         for (ItemStack inputStack : inputStacks) {
 
             // checks to see if the marked ingredient has been indicated to have a makeshift replacement
-            if (!this.constantIngredients.stream().anyMatch((ingredient -> ingredient.test(inputStack))) && !inputStack.isEmpty()) {
+            if (this.constantIngredients.stream().noneMatch((ingredient -> ingredient.test(inputStack))) && !inputStack.isEmpty()) {
                 totalPotentialMakeshiftIngredients++;
 
                 totalPresentMakeshiftIngredients += inputStack.isIn(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS) ? 1 : 0;

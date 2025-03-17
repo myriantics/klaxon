@@ -20,8 +20,6 @@ import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCra
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -250,7 +248,7 @@ public abstract class KlaxonRecipeSubProvider {
             stringKeys.put(character.toString(), key.get(character));
         }
 
-        ShapedRecipe recipe = new ShapedRecipe(recipeId, group, category, width, height, ShapedRecipeInvoker.klaxon$createPatternMatrix(pattern, stringKeys, width, height), output);
+        ShapedRecipe recipe = new ShapedRecipe(recipeId, group, category, width, height, ShapedRecipeInvoker.klaxon$invokeCreatePatternMatrix(pattern, stringKeys, width, height), output);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
@@ -282,7 +280,7 @@ public abstract class KlaxonRecipeSubProvider {
             stringKeys.put(character.toString(), key.get(character));
         }
 
-        ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(recipeId, group, category, width, height, ShapedRecipeInvoker.klaxon$createPatternMatrix(pattern, stringKeys, width, height), constantIngredients,  output, false);
+        ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(recipeId, group, category, width, height, ShapedRecipeInvoker.klaxon$invokeCreatePatternMatrix(pattern, stringKeys, width, height), constantIngredients,  output, false);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

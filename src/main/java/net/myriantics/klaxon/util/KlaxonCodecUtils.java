@@ -1,15 +1,42 @@
 package net.myriantics.klaxon.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.util.JsonHelper;
+import net.minecraft.util.collection.DefaultedList;
 
 import java.util.List;
 
 public abstract class KlaxonCodecUtils {
 
-    public static final Codec<List<Ingredient>> INGREDIENT_LIST_CODEC = Codec.list(Ingredient.ALLOW_EMPTY_CODEC);
-    public static final PacketCodec<ByteBuf, List<Ingredient>> INGREDIENT_LIST_PACKET_CODEC = PacketCodecs.codec(INGREDIENT_LIST_CODEC);
+    public static void writeIngredientListToJson(List<Ingredient> ingredients, JsonObject jsonObject) {
+
+    }
+
+    public static List<Ingredient> readIngredientListFromJson(JsonArray jsonArray) {
+        DefaultedList<Ingredient> ingredients = DefaultedList.of();
+
+        for (JsonElement jsonElement : jsonArray) {
+            ingredients.add(Ingredient.fromJson(jsonElement));
+        }
+
+        return List.copyOf(ingredients);
+    }
+
+    public static void writeStackToJson(ItemStack stack, JsonObject jsonObject) {
+
+    }
+
+    public static ItemStack readStackFromJson(JsonObject jsonObject) {
+        Item item = JsonHelper.getItem(jsonObject, "item");
+        int count = JsonHelper.getInt(jsonObject, "count");
+
+        return new ItemStack(item, count);
+    }
 }

@@ -1,12 +1,14 @@
 package net.myriantics.klaxon.recipe.makeshift_crafting.shapeless;
 
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.recipe.input.CraftingRecipeInput;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
@@ -16,24 +18,22 @@ import java.util.List;
 
 public class MakeshiftShapelessCraftingRecipe extends ShapelessRecipe {
 
-
     private final ItemStack result;
     List<Ingredient> constantIngredients;
     DefaultedList<Ingredient> ingredients;
 
-
-    public MakeshiftShapelessCraftingRecipe(String group, CraftingRecipeCategory category, ItemStack result, DefaultedList<Ingredient> ingredients, List<Ingredient> constantIngredients) {
-        super(group, category, result, ingredients);
+    public MakeshiftShapelessCraftingRecipe(Identifier id, String group, CraftingRecipeCategory category, ItemStack result, DefaultedList<Ingredient> ingredients, List<Ingredient> constantIngredients) {
+        super(id, group, category, result, ingredients);
         this.constantIngredients = constantIngredients;
         this.ingredients = ingredients;
         this.result = result;
     }
 
     @Override
-    public ItemStack craft(CraftingRecipeInput craftingRecipeInput, RegistryWrapper.WrapperLookup wrapperLookup) {
-        List<ItemStack> inputStacks = craftingRecipeInput.getStacks();
+    public ItemStack craft(RecipeInputInventory craftingRecipeInput, DynamicRegistryManager registryManager) {
+        List<ItemStack> inputStacks = craftingRecipeInput.getInputStacks();
 
-        ItemStack result = this.getResult(wrapperLookup);
+        ItemStack result = this.getOutput(registryManager);
 
         final double durabilityPenaltyCap = 0.5;
         int totalPresentMakeshiftIngredients = 0;
@@ -42,7 +42,7 @@ public class MakeshiftShapelessCraftingRecipe extends ShapelessRecipe {
         for (ItemStack inputStack : inputStacks) {
 
             // checks to see if the marked ingredient has been indicated to have a makeshift replacement
-            if (!this.constantIngredients.stream().anyMatch((ingredient -> ingredient.test(inputStack))) && !inputStack.isEmpty()) {
+            if (this.constantIngredients.stream().noneMatch((ingredient -> ingredient.test(inputStack))) && !inputStack.isEmpty()) {
                 totalPotentialMakeshiftIngredients++;
 
                 totalPresentMakeshiftIngredients += inputStack.isIn(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS) ? 1 : 0;

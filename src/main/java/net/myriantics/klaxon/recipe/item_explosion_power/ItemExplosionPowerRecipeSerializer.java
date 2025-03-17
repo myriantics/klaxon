@@ -1,57 +1,45 @@
 package net.myriantics.klaxon.recipe.item_explosion_power;
 
+import com.google.gson.JsonObject;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 
 public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<ItemExplosionPowerRecipe> {
     public ItemExplosionPowerRecipeSerializer() {
     }
 
-    private final MapCodec<ItemExplosionPowerRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance) -> {
-        return recipeInstance.group(Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter((recipe) ->  {
-            return recipe.getItem();
-        }), PrimitiveCodec.DOUBLE.fieldOf("explosionPower").forGetter((recipe) -> {
-            return recipe.getExplosionPower();
-        }), PrimitiveCodec.BOOL.fieldOf("producesFire").forGetter((recipe) -> {
-            return recipe.producesFire();
-        }), PrimitiveCodec.BOOL.fieldOf("isHidden").forGetter((recipe) -> {
-            return recipe.isHidden();
-        })).apply(recipeInstance, ItemExplosionPowerRecipe::new);
-    });
 
-    private final PacketCodec<RegistryByteBuf, ItemExplosionPowerRecipe> PACKET_CODEC = PacketCodec.ofStatic(
-            ItemExplosionPowerRecipeSerializer::write, ItemExplosionPowerRecipeSerializer::read
-    );
+    @Override
+    public ItemExplosionPowerRecipe read(Identifier id, JsonObject json) {
+        Ingredient catalystIngredient = Ingredient.fromJson(json.getAsJsonObject("catalyst_ingredient"));
+        double explosionPower = JsonHelper.getDouble(json, "explosion_power");
+        boolean producesFire = JsonHelper.getBoolean(json, "produces_fire");
+        boolean isHidden = JsonHelper.getBoolean(json, "isHidden");
 
-    private static void write(RegistryByteBuf buf, ItemExplosionPowerRecipe recipe) {
-        Ingredient.PACKET_CODEC.encode(buf, recipe.getItem());
-        PacketCodecs.DOUBLE.encode(buf, recipe.getExplosionPower());
-        PacketCodecs.BOOL.encode(buf, recipe.producesFire());
-        PacketCodecs.BOOL.encode(buf, recipe.isHidden());
-    }
-
-    private static ItemExplosionPowerRecipe read(RegistryByteBuf buf) {
-        Ingredient item = Ingredient.PACKET_CODEC.decode(buf);
-        double explosionPower = PacketCodecs.DOUBLE.decode(buf);
-        boolean producesFire = PacketCodecs.BOOL.decode(buf);
-        boolean isHidden = PacketCodecs.BOOL.decode(buf);
-
-        return new ItemExplosionPowerRecipe(item, explosionPower, producesFire, isHidden);
+        return new ItemExplosionPowerRecipe(id, catalystIngredient, explosionPower, producesFire, isHidden);
     }
 
     @Override
-    public MapCodec<ItemExplosionPowerRecipe> codec() {
-        return CODEC;
+    public ItemExplosionPowerRecipe read(Identifier id, PacketByteBuf buf) {
+        Ingredient catalystIngredient = Ingredient.fromPacket(buf);
+        double explosionPower = buf.readDouble();
+        boolean producesFire = buf.readBoolean();
+        boolean isHidden = buf.readBoolean();
+
+        return new ItemExplosionPowerRecipe(id, catalystIngredient, explosionPower, producesFire, isHidden);
     }
 
     @Override
-    public PacketCodec<RegistryByteBuf, ItemExplosionPowerRecipe> packetCodec() {
-        return PACKET_CODEC;
+    public void write(PacketByteBuf buf, ItemExplosionPowerRecipe recipe) {
+        recipe.getIngredient().write(buf);
+        buf.writeDouble(recipe.getExplosionPower());
+        buf.writeBoolean(recipe.producesFire());
+        buf.writeBoolean(recipe.isHidden());
     }
 }
