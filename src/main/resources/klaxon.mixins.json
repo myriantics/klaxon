@@ -15,7 +15,7 @@
     "MobEntityMixin",
     "ObserverBlockInvoker",
     "PlayerEntityMixin",
-    "WindChargeEntityInvoker"
+    "ShapedRecipeInvoker"
   ],
   "client": [
     "ItemRendererAccessor",

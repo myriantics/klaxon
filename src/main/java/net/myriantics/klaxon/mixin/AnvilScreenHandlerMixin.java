@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AnvilScreenHandler;
@@ -12,7 +11,6 @@ import net.minecraft.screen.Property;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.registry.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,15 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AnvilScreenHandlerMixin {
 
     @Shadow @Final private Property levelCost;
-
-    @ModifyExpressionValue(
-            method = "updateResult",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;canHaveEnchantments(Lnet/minecraft/item/ItemStack;)Z")
-    )
-    public boolean klaxon$unenchantableOverride(boolean original, @Local ItemStack inputStack) {
-        // this way anvils are still allowed to be used but anything else that calls the canHaveEnchantments methods get denied
-        return original || inputStack.isIn(KlaxonItemTags.UNENCHANTABLE);
-    }
 
     @ModifyExpressionValue(
             method = "updateResult",
@@ -88,16 +77,15 @@ public abstract class AnvilScreenHandlerMixin {
 
     @WrapOperation(
             method = "updateResult",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;",
-            ordinal = 1)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setRepairCost(I)V")
     )
-    private <T> T klaxon$anvilUsesOverride(ItemStack instance, ComponentType<? super T> type, @Nullable T value, Operation<T> original) {
+    private <T> void klaxon$anvilUsesOverride(ItemStack instance, int repairCost, Operation<Void> original) {
         // crappy way of overwriting anvil uses
         if (instance.isIn(KlaxonItemTags.INFINITELY_REPAIRABLE)) {
-            return (T) Integer.valueOf(0);
+            return;
         }
         // this throws an error in IDE but it runs fine and has caused no problems... this is fine...
-        return original.call(instance, type, value);
+        original.call(instance, repairCost);
     }
 
     @Inject(

@@ -9,17 +9,13 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
-import net.myriantics.klaxon.mixin.WindChargeEntityInvoker;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-
-import java.util.List;
 
 public interface BlastProcessorBehavior {
 

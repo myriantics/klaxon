@@ -2,8 +2,6 @@ package net.myriantics.klaxon.mixin;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ArmorItem;
