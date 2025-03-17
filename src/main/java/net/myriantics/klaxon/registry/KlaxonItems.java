@@ -17,7 +17,7 @@ public class KlaxonItems {
 
 
     // equipment
-    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, HammerItem.STEEL_HAMMER_BASE_ATTACK_DAMAGE, HammerItem.STEEL_HAMMER_ATTACK_SPEED))));
+    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings(), KlaxonToolMaterials.STEEL, HammerItem.STEEL_HAMMER_BASE_ATTACK_DAMAGE, HammerItem.STEEL_HAMMER_ATTACK_SPEED));
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()));
     public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate",

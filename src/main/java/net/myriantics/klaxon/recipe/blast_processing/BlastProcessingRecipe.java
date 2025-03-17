@@ -1,20 +1,25 @@
 package net.myriantics.klaxon.recipe.blast_processing;
 
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.KlaxonBlocks;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 
 import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
-public class BlastProcessingRecipe implements Recipe<RecipeInput> {
+public class BlastProcessingRecipe implements Recipe<Inventory> {
     private final Ingredient ingredientItem;
     private final double explosionPowerMin;
     private final double explosionPowerMax;
     private final ItemStack result;
+
+    public static final Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID);
 
     public BlastProcessingRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result) {
         this.ingredientItem = inputA;
@@ -24,12 +29,12 @@ public class BlastProcessingRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public boolean matches(RecipeInput inventory, World world) {
-        return ingredientItem.test(inventory.getStackInSlot(INGREDIENT_INDEX));
+    public boolean matches(Inventory inventory, World world) {
+        return ingredientItem.test(inventory.getStack(INGREDIENT_INDEX));
     }
 
     @Override
-    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack craft(Inventory input, DynamicRegistryManager registryManager) {
         return this.result.copy();
     }
 
@@ -39,7 +44,7 @@ public class BlastProcessingRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getOutput(DynamicRegistryManager registryManager) {
         return this.result;
     }
 
@@ -73,5 +78,10 @@ public class BlastProcessingRecipe implements Recipe<RecipeInput> {
     @Override
     public RecipeType<?> getType() {
         return KlaxonRecipeTypes.BLAST_PROCESSING;
+    }
+
+    @Override
+    public Identifier getId() {
+        return ID;
     }
 }

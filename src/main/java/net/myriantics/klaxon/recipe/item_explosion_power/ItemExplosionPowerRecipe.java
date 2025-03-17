@@ -1,23 +1,28 @@
 package net.myriantics.klaxon.recipe.item_explosion_power;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 
 import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
 
-public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
+public class ItemExplosionPowerRecipe implements Recipe<Inventory> {
     private final Ingredient item;
     private final double explosionPower;
     private final boolean producesFire;
     private final boolean isHidden;
+
+    public final Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID);
 
     public ItemExplosionPowerRecipe(Ingredient input, double explosionPower, boolean producesFire, boolean isHidden) {
         this.item = input;
@@ -29,13 +34,13 @@ public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
     // to whom it may concern: CHECK WHAT INDEX YOU'RE TRYING TO PULL FROM
     // GAH
     @Override
-    public boolean matches(RecipeInput input, World world) {
-        return item.test(input.getStackInSlot(CATALYST_INDEX));
+    public boolean matches(Inventory input, World world) {
+        return item.test(input.getStack(CATALYST_INDEX));
     }
 
     @Override
-    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return explosionPower > 0 ? ItemStack.EMPTY : input.getStackInSlot(0);
+    public ItemStack craft(Inventory input, DynamicRegistryManager registryManager) {
+        return explosionPower > 0 ? ItemStack.EMPTY : input.getStack(0);
     }
 
     @Override
@@ -44,7 +49,7 @@ public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getOutput(DynamicRegistryManager registryManager) {
         return null;
     }
 
@@ -87,4 +92,8 @@ public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
         return KlaxonRecipeTypes.ITEM_EXPLOSION_POWER;
     }
 
+    @Override
+    public Identifier getId() {
+        return ID;
+    }
 }

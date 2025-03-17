@@ -2,11 +2,10 @@ package net.myriantics.klaxon.api.behavior;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.collection.DefaultedList;
@@ -49,9 +48,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
                             (float) powerData.explosionPower(),
                             powerData.producesFire(),
                             World.ExplosionSourceType.BLOCK,
-                            ParticleTypes.EXPLOSION,
-                            ParticleTypes.EXPLOSION_EMITTER,
-                            SoundEvents.ENTITY_GENERIC_EXPLODE);
+                            true);
                     world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
                 }
             }
@@ -90,26 +87,26 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
         blastProcessor.clear();
     }
 
-    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
+    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, Inventory recipeInventory) {
         RecipeManager recipeManager = world.getRecipeManager();
 
-        Optional<RecipeEntry<ItemExplosionPowerRecipe>> itemExplosionPowerMatch = Optional.empty();
+        Optional<ItemExplosionPowerRecipe> itemExplosionPowerMatch = Optional.empty();
 
-        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
+        if (!recipeInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
             itemExplosionPowerMatch = recipeManager.getFirstMatch(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, recipeInventory, world);
         }
 
         if (itemExplosionPowerMatch.isPresent()) {
-            return new ItemExplosionPowerData(itemExplosionPowerMatch.get().value().getExplosionPower(), itemExplosionPowerMatch.get().value().producesFire());
+            return new ItemExplosionPowerData(itemExplosionPowerMatch.get().getExplosionPower(), itemExplosionPowerMatch.get().producesFire());
         }
         return new ItemExplosionPowerData(0.0, false);
     }
 
-    public BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory, ItemExplosionPowerData powerData) {
+    public BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, Inventory recipeInventory, ItemExplosionPowerData powerData) {
 
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
 
-        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty()) {
+        if (!recipeInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty()) {
             blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
         }
         if (blastProcessingMatch.isPresent()) {
@@ -150,24 +147,22 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
     }
 
     // defaults to showing recipe with the lowest explosion power, but will switch to higher explosion power recipe if lowest is invalid
-    private Optional<BlastProcessingRecipe> selectBlastProcessingRecipe(World world, RecipeInput recipeInventory, ItemExplosionPowerData powerData) {
-        List<RecipeEntry<BlastProcessingRecipe>> initialRecipes = world.getRecipeManager().getAllMatches(KlaxonRecipeTypes.BLAST_PROCESSING, recipeInventory, world);
+    private Optional<BlastProcessingRecipe> selectBlastProcessingRecipe(World world, Inventory recipeInventory, ItemExplosionPowerData powerData) {
+        List<BlastProcessingRecipe> initialRecipes = world.getRecipeManager().getAllMatches(KlaxonRecipeTypes.BLAST_PROCESSING, recipeInventory, world);
         if (initialRecipes.isEmpty()) {
             return Optional.empty();
         }
 
         // add all matching recipes to one list
         DefaultedList<BlastProcessingRecipe> recipes = DefaultedList.of();
-        for (RecipeEntry<BlastProcessingRecipe> recipeEntry : initialRecipes) {
-            recipes.add(recipeEntry.value());
-        }
+        recipes.addAll(initialRecipes);
 
         // sort all matching recipes by the lowest explosion power, counting up
         Comparator<BlastProcessingRecipe> byLowestExplosionPower = Comparator.comparing(BlastProcessingRecipe::getExplosionPowerMin);
         recipes.sort(byLowestExplosionPower);
 
         // if there's a catalyst, iterate through all matching recipes until you find the matching one with the least explosion power
-        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
+        if (!recipeInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
            for (BlastProcessingRecipe activeRecipe : recipes) {
                 if (activeRecipe.isCompatibleWithCatalyst(powerData.explosionPower())) {
                     return Optional.of(activeRecipe);
@@ -179,7 +174,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
     }
 
     @Override
-    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
+    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, Inventory recipeInventory) {
         return true;
     }
 }

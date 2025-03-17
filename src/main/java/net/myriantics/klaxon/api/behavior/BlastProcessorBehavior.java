@@ -1,15 +1,11 @@
 package net.myriantics.klaxon.api.behavior;
 
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.FireworkExplosionComponent;
-import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.entity.projectile.WindChargeEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
@@ -31,29 +27,29 @@ public interface BlastProcessorBehavior {
 
     void ejectItems(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ItemExplosionPowerData powerData);
 
-    ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory);
+    ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, Inventory recipeInventory);
 
-    BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory, ItemExplosionPowerData powerData);
+    BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, Inventory recipeInventory, ItemExplosionPowerData powerData);
 
     BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData();
 
 
-    boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory);
+    boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, Inventory recipeInventory);
 
     static void registerBlastProcessorBehaviors() {
         KlaxonCommon.LOGGER.info("Registering KLAXON's Blast Processor Behaviors!");
 
         DeepslateBlastProcessorBlock.registerBehavior(Items.FIREWORK_ROCKET, new ItemBlastProcessorBehavior() {
             @Override
-            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {
+            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, Inventory craftingInventory) {
                 ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
-                FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
-                List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
+                NbtCompound fireworksComponent = stack.isEmpty() ? null : stack.getSubNbt("Fireworks");
+                NbtList explosionsList =  fireworksComponent != null ? fireworksComponent.getList("Explosions", NbtElement.COMPOUND_TYPE) : null;
 
                 double explosionPower = 0.3;
-                if (!list.isEmpty()) {
-                    explosionPower += (list.size() * 0.5);
+                if (explosionsList != null && !explosionsList.isEmpty()) {
+                    explosionPower += (explosionsList.size() * 0.5);
                 }
 
                 explosionPower = Math.min(explosionPower, 10.0);
@@ -78,7 +74,7 @@ public interface BlastProcessorBehavior {
             }
 
             @Override
-            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
+            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, Inventory recipeInventory) {
                 return false;
             }
 
@@ -95,14 +91,13 @@ public interface BlastProcessorBehavior {
 
         DeepslateBlastProcessorBlock.registerBehavior(Items.FIREWORK_STAR, new ItemBlastProcessorBehavior() {
             @Override
-            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {
+            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, Inventory craftingInventory) {
                 ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
-                FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
-                List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
+                NbtCompound explosion = stack.isEmpty() ? null : stack.getSubNbt("Explosion");
 
                 double explosionPower = 0.3;
-                if (!list.isEmpty()) {
+                if (explosion != null && !explosion.isEmpty()) {
                     explosionPower += 0.5;
                 }
 
@@ -122,7 +117,7 @@ public interface BlastProcessorBehavior {
 
         ItemBlastProcessorBehavior bedBlastProcessorBehavior = new ItemBlastProcessorBehavior() {
             @Override
-            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
+            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, Inventory recipeInventory) {
 
                 // if the bed doesnt work in dimension, explode
                 if (!world.getDimension().bedWorks()) {
@@ -160,45 +155,6 @@ public interface BlastProcessorBehavior {
         DeepslateBlastProcessorBlock.registerBehavior(Items.PURPLE_BED, bedBlastProcessorBehavior);
         DeepslateBlastProcessorBlock.registerBehavior(Items.WHITE_BED, bedBlastProcessorBehavior);
         DeepslateBlastProcessorBlock.registerBehavior(Items.YELLOW_BED, bedBlastProcessorBehavior);
-
-        DeepslateBlastProcessorBlock.registerBehavior(Items.WIND_CHARGE, new ItemBlastProcessorBehavior() {
-            @Override
-            public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
-                // wind charges don't do any damage
-                return new ItemExplosionPowerData(0, false);
-            }
-
-            @Override
-            public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
-                Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
-                WindChargeEntity windCharge = new WindChargeEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), Vec3d.ZERO);
-                WindChargeEntityInvoker windChargeInvoker = ((WindChargeEntityInvoker) windCharge);
-
-                world.spawnEntity(windCharge);
-                
-                // explode
-                windChargeInvoker.invokeCreateExplosion(new Vec3d(outputPos.getX(), outputPos.getY(), outputPos.getZ()));
-                
-                // remove stack and discard
-                blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
-                windCharge.discard();
-            }
-
-            @Override
-            public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
-                return false;
-            }
-
-            @Override
-            public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
-                return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                        0.0,
-                        0.0,
-                        Text.translatable("klaxon.emi.text.explosion_power_info.wind_charge_behavior_info"),
-                        "wind_charge_behavior"
-                );
-            }
-        });
     }
 
     // long ass name go brrr
