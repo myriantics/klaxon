@@ -8,7 +8,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock.*;
 
-public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
+public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     public static final int INGREDIENT_INDEX = 0;
     public static final int CATALYST_INDEX = 1;
@@ -156,18 +156,8 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 // calculate behavior to use
                 BlastProcessorBehavior blastProcessorBehavior = BEHAVIORS.get(this.inventory.get(CATALYST_INDEX).getItem());
 
-                // inventory bullshit i need to fix someday
-                RecipeInput recipeInventory = new RecipeInput() {
-                    @Override
-                    public ItemStack getStackInSlot(int slot) {
-                        return inventory.get(slot);
-                    }
-
-                    @Override
-                    public int getSize() {
-                        return size();
-                    }
-                };
+                // inventory. yay.
+                Inventory recipeInventory = this;
 
                 // get recipe data
                 ItemExplosionPowerData powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
@@ -238,15 +228,14 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     }
 
     @Override
-    public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayerEntity player) {
+    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf buf) {
         BlastProcessingRecipeData blastProcessingRecipeData = screenHandler.getBlastProcessingData();
         ItemExplosionPowerData itemExplosionPowerData = screenHandler.getPowerData();
 
-        return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
-                blastProcessingRecipeData.explosionPowerMax(),
-                blastProcessingRecipeData.result(),
-                blastProcessingRecipeData.outputState(),
-                itemExplosionPowerData.explosionPower(),
-                itemExplosionPowerData.producesFire());
+        buf.writeDouble(blastProcessingRecipeData.explosionPowerMin());
+        buf.writeDouble(blastProcessingRecipeData.explosionPowerMax());
+        buf.writeItemStack(blastProcessingRecipeData.result());
+        buf.writeDouble(itemExplosionPowerData.explosionPower());
+        buf.writeBoolean(itemExplosionPowerData.producesFire());
     }
 }
