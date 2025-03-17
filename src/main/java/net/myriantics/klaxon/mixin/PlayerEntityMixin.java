@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,9 +23,10 @@ public abstract class PlayerEntityMixin {
 
     // this is how it was in 1.20.1 idk if thats how it works now lol
     
-    @ModifyVariable(
+    @ModifyExpressionValue(
             method = "attack",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSources;playerAttack(Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/entity/damage/DamageSource;",
+            ordinal = 0)
     )
     // ordinal 2 selects boolean #3 (bl3)
     // Switches the player's attacking damage type to Hammer Walloping if they crit with a hammer, otherwise uses Hammer Bonking if they do a regular hit.

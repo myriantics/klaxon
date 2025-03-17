@@ -27,7 +27,7 @@ public class SteelArmorItem extends ArmorItem {
     public static final Identifier KNOCKBACK_RESISTANCE_MULTIPLIER_ID = KlaxonCommon.locate("steel_armor_knockback_resistance_multiplier_id");
 
     public SteelArmorItem(ArmorMaterial material, Type type, Settings settings) {
-        super(material, type, settings.maxDamage(material.getDurability(type)).maxCount(1));
+        super(material, type, settings.maxDamage(material.getDurability(type)));
     }
 
     public static void appendAttributeModifiers(ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder, EnumMap<Type, UUID> modifiers, ArmorMaterial material, ArmorItem.Type type) {
