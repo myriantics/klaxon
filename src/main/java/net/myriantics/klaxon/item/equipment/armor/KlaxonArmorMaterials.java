@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class KlaxonArmorMaterials{
-    public static final ArmorMaterial STEEL = register("steel", 27, Util.make(new EnumMap<ArmorItem.Type, Integer>(ArmorItem.Type.class), map -> {
+    public static final ArmorMaterial STEEL = register("steel", 15, Util.make(new EnumMap<ArmorItem.Type, Integer>(ArmorItem.Type.class), map -> {
         map.put(ArmorItem.Type.BOOTS, 3);
         map.put(ArmorItem.Type.LEGGINGS, 6);
         map.put(ArmorItem.Type.CHESTPLATE, 8);
