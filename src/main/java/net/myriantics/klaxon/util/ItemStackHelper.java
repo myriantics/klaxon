@@ -18,7 +18,7 @@ public abstract class ItemStackHelper {
     }
 
     public static boolean canStacksMerge(ItemStack stackA, ItemStack stackB) {
-        return stackA.getCount() <= stackA.getMaxCount() && ItemStack.areItemsAndComponentsEqual(stackA, stackB);
+        return stackA.getCount() <= stackA.getMaxCount() && ItemStack.canCombine(stackA, stackB);
     }
 
     public static boolean hasStackedToMax(ItemStack stack) {

@@ -18,15 +18,7 @@ public abstract class EnchantmentMixin {
             method = "isAcceptableItem",
             at = @At(value = "RETURN")
     )
-    public boolean klaxon$unenchantableOverride1(boolean original, @Local(argsOnly = true) ItemStack stack) {
-        return original && !stack.isIn(KlaxonItemTags.UNENCHANTABLE);
-    }
-
-    @ModifyReturnValue(
-            method = "isSupportedItem",
-            at = @At(value = "RETURN")
-    )
-    public boolean klaxon$unenchantableOverride2(boolean original, @Local(argsOnly = true) ItemStack stack) {
+    public boolean klaxon$unenchantableOverride(boolean original, @Local(argsOnly = true) ItemStack stack) {
         return original && !stack.isIn(KlaxonItemTags.UNENCHANTABLE);
     }
 }

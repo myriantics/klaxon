@@ -7,7 +7,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 public abstract class StatusEffectHelper {
 
     // FYI - getAmplifier() counts up from 0; returning 1 would indicate a level II effect
-    public static int getUnborkedStatusEffectAmplifier(LivingEntity livingEntity, RegistryEntry<StatusEffect> statusEffect) {
+    public static int getUnborkedStatusEffectAmplifier(LivingEntity livingEntity, StatusEffect statusEffect) {
         if (livingEntity != null && livingEntity.getStatusEffect(statusEffect) != null) {
             int amplifier = livingEntity.getStatusEffect(statusEffect).getAmplifier();
 

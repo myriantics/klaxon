@@ -31,7 +31,7 @@ public abstract class EntityWeightHelper {
 
         // go through all the effect values in the tag. if the entity has any of them, add their amplifier to the weight value.
         for (RegistryEntry<StatusEffect> effect : effectsToCheck.get()) {
-            weightValue += StatusEffectHelper.getUnborkedStatusEffectAmplifier(entity, effect);
+            weightValue += StatusEffectHelper.getUnborkedStatusEffectAmplifier(entity, effect.value());
         }
 
         return weightValue;
@@ -55,12 +55,12 @@ public abstract class EntityWeightHelper {
 
         // if new value is 0, don't bother updating effect
         if (heavyStatusEffectNewValue == 0) {
-            entity.removeStatusEffect(KlaxonStatusEffects.HEAVY);
+            entity.removeStatusEffect(KlaxonStatusEffects.HEAVY.value());
         } else {
             // subtract 1 from new value because effects are 0-indexed
             heavyStatusEffectNewValue--;
 
-            entity.setStatusEffect(new StatusEffectInstance(KlaxonStatusEffects.HEAVY, -1, heavyStatusEffectNewValue, false, false), entity);
+            entity.setStatusEffect(new StatusEffectInstance(KlaxonStatusEffects.HEAVY.value(), -1, heavyStatusEffectNewValue, false, false), entity);
         }
     }
 
