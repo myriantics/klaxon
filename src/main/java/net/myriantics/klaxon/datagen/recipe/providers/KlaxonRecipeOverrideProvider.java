@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
-import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;

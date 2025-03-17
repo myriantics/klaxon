@@ -2,7 +2,7 @@ package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
@@ -32,7 +32,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);
 
         // storage blocks
-        getOrCreateTagBuilder(ConventionalItemTags.STORAGE_BLOCKS)
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.STORAGE_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_BLOCKS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_BLOCKS)
@@ -126,6 +126,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.FRACTURED_RAW_GOLD)
                 .add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
+        getOrCreateTagBuilder(ItemTags.TRIMMABLE_ARMOR)
+                .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
 
         // anvil-related tags
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)
@@ -153,19 +155,19 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CHESTPLATE)
                 .add(KlaxonItems.STEEL_LEGGINGS)
                 .add(KlaxonItems.STEEL_BOOTS);
-        getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.MINING_TOOL_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER);
-        getOrCreateTagBuilder(ConventionalItemTags.MELEE_WEAPON_TOOLS)
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.MELEE_WEAPON_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER);
-        getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.ARMORS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
-        getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.HEAD_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET);
-        getOrCreateTagBuilder(ItemTags.CHEST_ARMOR)
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.CHEST_ARMOR)
                 .add(KlaxonItems.STEEL_CHESTPLATE);
-        getOrCreateTagBuilder(ItemTags.LEG_ARMOR)
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.LEG_ARMOR)
                 .add(KlaxonItems.STEEL_LEGGINGS);
-        getOrCreateTagBuilder(ItemTags.FOOT_ARMOR)
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.FOOT_ARMOR)
                 .add(KlaxonItems.STEEL_BOOTS);
     }
 }
