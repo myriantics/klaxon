@@ -11,11 +11,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class SteelDoorBlock extends DoorBlock {
     public SteelDoorBlock(BlockSetType type, Settings settings) {
-        super(type, settings);
+        super(settings, type);
     }
 
     @Override
-    protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         if (!world.isClient()) {
             boolean isRecievingPower = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
 

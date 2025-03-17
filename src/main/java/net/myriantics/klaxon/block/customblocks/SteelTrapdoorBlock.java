@@ -11,11 +11,11 @@ import net.myriantics.klaxon.mixin.BlockSetTypeInvoker;
 
 public class SteelTrapdoorBlock extends TrapdoorBlock {
     public SteelTrapdoorBlock(BlockSetType type, Settings settings) {
-        super(type, settings);
+        super(settings, type);
     }
 
     @Override
-    protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         if (!world.isClient()) {
             boolean isRecievingPower = world.isReceivingRedstonePower(pos);
 
