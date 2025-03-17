@@ -10,10 +10,10 @@ import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.Deepsl
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 
 public class KlaxonScreenHandlers {
-    public static final ExtendedScreenHandlerType<DeepslateBlastProcessorScreenHandler, BlastProcessorScreenSyncPacket> BLAST_PROCESSOR_SCREEN_HANDLER
-            = new ExtendedScreenHandlerType<>(DeepslateBlastProcessorScreenHandler::new, BlastProcessorScreenSyncPacket.PACKET_CODEC);
+    public static final ExtendedScreenHandlerType<DeepslateBlastProcessorScreenHandler> BLAST_PROCESSOR_SCREEN_HANDLER
+            = new ExtendedScreenHandlerType<>(DeepslateBlastProcessorScreenHandler::new);
 
-    private static void createScreenHandler(String name, ScreenHandlerType type) {
+    private static void createScreenHandler(String name, ScreenHandlerType<?> type) {
         Registry.register(Registries.SCREEN_HANDLER, Identifier.tryParse(name), type);
     }
 

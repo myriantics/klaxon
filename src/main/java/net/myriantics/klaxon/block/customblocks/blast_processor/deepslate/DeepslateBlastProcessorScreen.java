@@ -36,7 +36,7 @@ public class DeepslateBlastProcessorScreen extends HandledScreen<DeepslateBlastP
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context, mouseX, mouseY, delta);
+        renderBackground(context);
         super.render(context, mouseX, mouseY, delta);
         updateRecipeDataDisplay(context);
         drawMouseoverTooltip(context, mouseX, mouseY);

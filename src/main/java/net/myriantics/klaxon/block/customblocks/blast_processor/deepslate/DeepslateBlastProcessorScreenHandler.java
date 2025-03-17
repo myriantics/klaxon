@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -41,10 +42,12 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     public BlastProcessingOutputState outputState;
 
     // client constructor
-        public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, BlastProcessorScreenSyncPacket packetData) {
+        public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
         this(syncId, playerInventory, new SimpleInventory(2), ScreenHandlerContext.EMPTY);
 
-            setRecipeData(packetData);
+        // decode
+        BlastProcessorScreenSyncPacket packetData = BlastProcessorScreenSyncPacket.decode(buf);
+        setRecipeData(packetData);
     }
 
 
