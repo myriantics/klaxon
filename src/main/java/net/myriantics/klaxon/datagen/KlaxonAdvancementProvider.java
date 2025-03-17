@@ -28,16 +28,16 @@ import java.util.function.Consumer;
 
 public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
     public KlaxonAdvancementProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(output, registryLookup);
+        super(output);
     }
 
     @Override
-    public void generateAdvancement(RegistryWrapper.WrapperLookup registryLookup, Consumer<AdvancementEntry> consumer) {
-        AdvancementEntry preludeRoot = generatePreludeRoot(consumer);
+    public void generateAdvancement(Consumer<Advancement> consumer) {
+        Advancement preludeRoot = generatePreludeRoot(consumer);
         generatePreludeAdvancements(consumer, preludeRoot);
     }
 
-    private AdvancementEntry generatePreludeRoot(Consumer<AdvancementEntry> consumer) {
+    private Advancement generatePreludeRoot(Consumer<Advancement> consumer) {
 
         return Advancement.Builder.create()
                 .display(
@@ -50,12 +50,12 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                         false,
                         false
                 )
-                .criterion("blast_processor_obtain", InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)))
+                .criterion("blast_processor_obtain", InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS).build()))
                 .build(consumer, getKlaxonPreludeIdString("root"));
     }
 
-    private void generatePreludeAdvancements(Consumer<AdvancementEntry> consumer, AdvancementEntry preludeRoot) {
-        AdvancementEntry watchBlastProcessorCraft = Advancement.Builder.create()
+    private void generatePreludeAdvancements(Consumer<Advancement> consumer, Advancement preludeRoot) {
+        Advancement watchBlastProcessorCraft = Advancement.Builder.create()
                 .parent(preludeRoot)
                 .display(
                         KlaxonItems.FRACTURED_RAW_IRON,
@@ -69,7 +69,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .criterion("watch_blast_processor_craft", BlockActivationCriterion.Conditions.create(KlaxonBlockTags.BLAST_PROCESSORS))
                 .build(consumer, getKlaxonPreludeIdString("watch_blast_processor_craft"));
-        AdvancementEntry successfullyHammerDroppedItem = Advancement.Builder.create()
+        Advancement successfullyHammerDroppedItem = Advancement.Builder.create()
                 .parent(watchBlastProcessorCraft)
                 .display(
                         KlaxonItems.CRUDE_STEEL_PLATE,
@@ -83,7 +83,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .criterion("use_hammer_on_dropped_item", HammerUseCriterion.Conditions.createRecipeSuccess())
                 .build(consumer, getKlaxonPreludeIdString("use_hammer_on_dropped_item"));
-        AdvancementEntry successfullyHammerWalljump = Advancement.Builder.create()
+        Advancement successfullyHammerWalljump = Advancement.Builder.create()
                 .parent(watchBlastProcessorCraft)
                 .display(
                         KlaxonItems.STEEL_HAMMER,
@@ -97,7 +97,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .criterion("successful_hammer_walljump", HammerUseCriterion.Conditions.createWalljump(true))
                 .build(consumer, getKlaxonPreludeIdString("successful_hammer_walljump"));
-        AdvancementEntry strengthHammerWalljump = Advancement.Builder.create()
+        Advancement strengthHammerWalljump = Advancement.Builder.create()
                 .parent(successfullyHammerWalljump)
                 .display(
                         Items.BLAZE_POWDER,
@@ -112,7 +112,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 .criterion("successful_hammer_walljump", HammerUseCriterion.Conditions.createStrengthWalljump())
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(consumer, getKlaxonPreludeIdString("successful_strength_hammer_walljump"));
-        AdvancementEntry steelArmorJuggernaut = Advancement.Builder.create()
+        Advancement steelArmorJuggernaut = Advancement.Builder.create()
                 .parent(successfullyHammerDroppedItem)
                 .display(
                         KlaxonItems.STEEL_CHESTPLATE,
@@ -126,7 +126,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .criterion("steel_armor", InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_HELMET, KlaxonItems.STEEL_CHESTPLATE, KlaxonItems.STEEL_LEGGINGS, KlaxonItems.STEEL_BOOTS))
                 .build(consumer, getKlaxonPreludeIdString("steel_armor"));
-        AdvancementEntry makeshiftItemFullRepair = Advancement.Builder.create()
+        Advancement makeshiftItemFullRepair = Advancement.Builder.create()
                 .parent(successfullyHammerDroppedItem)
                 .display(
                         Items.ANVIL,

@@ -88,11 +88,6 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
-        return createCodec(DeepslateBlastProcessorBlock::new);
-    }
-
-    @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.getBlock() instanceof DeepslateBlastProcessorBlock && state.get(LIT) && !world.isReceivingRedstonePower(pos)) {
             world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
@@ -106,7 +101,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     }
 
     @Override
-    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack handStack = player.getStackInHand(hand);
         Direction interactionSide = hit.getSide();
 
@@ -126,7 +121,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                         }
                         blastProcessor.setStack(slot, transferStack);
                         blastProcessor.markDirty();
-                        return ItemActionResult.SUCCESS;
+                        return ActionResult.SUCCESS;
                     }
                 }
             }
@@ -135,7 +130,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                 player.openHandledScreen(blastProcessor);
             }
         }
-        return ItemActionResult.SUCCESS;
+        return ActionResult.SUCCESS;
     }
 
     @Override

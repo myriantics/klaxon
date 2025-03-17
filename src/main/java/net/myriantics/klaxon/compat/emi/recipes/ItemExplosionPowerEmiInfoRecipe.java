@@ -4,7 +4,6 @@ import dev.emi.emi.api.recipe.EmiInfoRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
@@ -16,11 +15,11 @@ public class ItemExplosionPowerEmiInfoRecipe extends EmiInfoRecipe {
 
     private final Text tooltipDisplayText;
 
-    public ItemExplosionPowerEmiInfoRecipe(RecipeEntry<ItemExplosionPowerRecipe> recipe) {
+    public ItemExplosionPowerEmiInfoRecipe(ItemExplosionPowerRecipe recipe) {
         super(
-                List.of(EmiIngredient.of(recipe.value().getItem())), List.of(
-                Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power").append(Text.literal("" + recipe.value().getExplosionPower()))),
-                recipe.id()
+                List.of(EmiIngredient.of(recipe.getItem())), List.of(
+                Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power").append(Text.literal("" + recipe.getExplosionPower()))),
+                recipe.getId()
         );
 
         tooltipDisplayText = null;

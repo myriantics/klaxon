@@ -18,8 +18,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
-import net.myriantics.klaxon.registry.KlaxonBlockEntities;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
+import net.myriantics.klaxon.registry.KlaxonBlockEntities;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
@@ -232,10 +232,11 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
         BlastProcessingRecipeData blastProcessingRecipeData = screenHandler.getBlastProcessingData();
         ItemExplosionPowerData itemExplosionPowerData = screenHandler.getPowerData();
 
-        buf.writeDouble(blastProcessingRecipeData.explosionPowerMin());
-        buf.writeDouble(blastProcessingRecipeData.explosionPowerMax());
-        buf.writeItemStack(blastProcessingRecipeData.result());
-        buf.writeDouble(itemExplosionPowerData.explosionPower());
-        buf.writeBoolean(itemExplosionPowerData.producesFire());
+        BlastProcessorScreenSyncPacket.encode(
+                buf,
+                blastProcessingRecipeData,
+                itemExplosionPowerData,
+                screenHandler.syncId
+        );
     }
 }

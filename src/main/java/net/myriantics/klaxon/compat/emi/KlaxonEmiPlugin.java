@@ -5,10 +5,10 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.*;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
@@ -51,7 +51,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         addAll(registry, KlaxonRecipeTypes.HAMMERING, HammeringEmiRecipe::new);
         addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
         addBlastProcessorBehaviorItemExplosionPowerRecipes(registry);
-        addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
+        addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.getId()));
         registerMiscRecipes(registry);
     }
 
@@ -59,17 +59,17 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addRecipe(new KlaxonEMIAnvilRecipe(EmiStack.of(Items.FLINT_AND_STEEL), EmiIngredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS), "flint_and_steel"));
     }
 
-    public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
-        for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
+    public <C extends Recipe<Inventory>> void addAll(EmiRegistry registry, RecipeType<C> type, Function<C, EmiRecipe> constructor) {
+        for (C recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
             registry.addRecipe(constructor.apply(recipeEntry));
         }
     }
 
-    public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
-        for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
+    public <C extends Recipe<Inventory>> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<C, EmiRecipe> constructor) {
+        for (C recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
 
             // dont show hidden recipes
-            if (recipeEntry.value() instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
+            if (recipeEntry instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
                 if (!itemExplosionPowerRecipe.isHidden()) {
                     registry.addRecipe(constructor.apply(recipeEntry));
                 }
@@ -90,7 +90,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
                         data.explosionPowerMax(),
                         data.infoText(),
                         // append entry id to recipe id to prevent duplicate entries
-                        KlaxonCommon.locate("/bp_behavior_item_explosion_power_" + Identifier.of(entry.toString()).getPath())
+                        KlaxonCommon.locate("/bp_behavior_item_explosion_power/" + entry.toString())
                         )
                 );
             }

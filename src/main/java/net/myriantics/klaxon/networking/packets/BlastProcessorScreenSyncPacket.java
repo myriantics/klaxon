@@ -1,30 +1,45 @@
 package net.myriantics.klaxon.networking.packets;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.registry.KlaxonPackets;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingOutputState;
 
-public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double explosionPowerMax, ItemStack result, BlastProcessingOutputState outputState, double explosionPower, boolean producesFire) implements CustomPayload {
+public record BlastProcessorScreenSyncPacket(int syncId, double explosionPowerMin, double explosionPowerMax, ItemStack result, BlastProcessingOutputState outputState, double explosionPower, boolean producesFire) {
 
-    public static final CustomPayload.Id<BlastProcessorScreenSyncPacket> ID = new CustomPayload.Id<>(KlaxonPackets.BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID);
+    public static void send(ServerPlayerEntity serverPlayer, BlastProcessingRecipeData blastProcessingRecipeData, ItemExplosionPowerData explosionPowerData, int syncId) {
+        PacketByteBuf buf = PacketByteBufs.create();
 
-    // beeg packet
-    public static final PacketCodec<RegistryByteBuf, BlastProcessorScreenSyncPacket> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMin,
-            PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMax,
-            ItemStack.OPTIONAL_PACKET_CODEC, BlastProcessorScreenSyncPacket::result,
-            PacketCodecs.indexed((index) -> BlastProcessingOutputState.values()[index], Enum::ordinal), BlastProcessorScreenSyncPacket::outputState,
-            PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPower,
-            PacketCodecs.BOOL, BlastProcessorScreenSyncPacket::producesFire,
-            BlastProcessorScreenSyncPacket::new
-    );
+        ServerPlayNetworking.send(serverPlayer, KlaxonPackets.BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID,
+                encode(buf, blastProcessingRecipeData, explosionPowerData, syncId));
+    }
 
-    @Override
-    public Id<? extends CustomPayload> getId() {
-        return ID;
+    public static PacketByteBuf encode(PacketByteBuf buf, BlastProcessingRecipeData blastProcessingRecipeData, ItemExplosionPowerData explosionPowerData, int syncId) {
+        buf.writeInt(syncId);
+        buf.writeDouble(blastProcessingRecipeData.explosionPowerMin());
+        buf.writeDouble(blastProcessingRecipeData.explosionPowerMax());
+        buf.writeItemStack(blastProcessingRecipeData.result());
+        buf.writeEnumConstant(blastProcessingRecipeData.outputState());
+        buf.writeDouble(explosionPowerData.explosionPower());
+        buf.writeBoolean(explosionPowerData.producesFire());
+
+        return buf;
+    }
+
+    public static BlastProcessorScreenSyncPacket decode(PacketByteBuf buf) {
+        return new BlastProcessorScreenSyncPacket(
+                buf.readInt(),
+                buf.readDouble(),
+                buf.readDouble(),
+                buf.readItemStack(),
+                buf.readEnumConstant(BlastProcessingOutputState.class),
+                buf.readDouble(),
+                buf.readBoolean()
+        );
     }
 }
