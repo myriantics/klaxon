@@ -2,29 +2,34 @@ package net.myriantics.klaxon.datagen.recipe;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
-import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
-import net.fabricmc.fabric.impl.resource.conditions.conditions.NotResourceCondition;
-import net.fabricmc.fabric.impl.resource.conditions.conditions.TrueResourceCondition;
-import net.minecraft.data.server.recipe.RecipeExporter;
+import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
+import net.minecraft.data.server.recipe.CookingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.item.*;
 import net.minecraft.recipe.*;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.recipe.providers.*;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 // structure for this kinda yoinked from energized power
 public class KlaxonRecipeProvider extends FabricRecipeProvider {
     private final HashMap<RecipeType<?>, ArrayList<Identifier>> spentRecipeIdentifiersByRecipeType;
 
-    public KlaxonRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-        super(output, registriesFuture);
+    public KlaxonRecipeProvider(FabricDataOutput output) {
+        super(output);
 
         HashMap<RecipeType<?>, ArrayList<Identifier>> interimMap = new java.util.HashMap<>(Map.of());
 
@@ -36,28 +41,28 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void generate(RecipeExporter exporter) {
-        new KlaxonHammeringRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonBlastProcessingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonCraftingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonMakeshiftCraftingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonItemExplosionPowerRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonSmeltingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonOreProcessingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonRecipeOverrideProvider(this).generateRecipes(exporter);
+    public void generate(Consumer<RecipeJsonProvider> consumer) {
+        new KlaxonHammeringRecipeProvider(this).generateRecipes(consumer);
+        new KlaxonBlastProcessingRecipeProvider(this).generateRecipes(consumer);
+        new KlaxonCraftingRecipeProvider(this).generateRecipes(consumer);
+        new KlaxonMakeshiftCraftingRecipeProvider(this).generateRecipes(consumer);
+        new KlaxonItemExplosionPowerRecipeProvider(this).generateRecipes(consumer);
+        new KlaxonSmeltingRecipeProvider(this).generateRecipes(consumer);
+        new KlaxonOreProcessingRecipeProvider(this).generateRecipes(consumer);
+        new KlaxonRecipeOverrideProvider(this).generateRecipes(consumer);
     }
 
-    public Identifier computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {
-        for (ResourceCondition condition : conditions) {
-            if (condition instanceof AllModsLoadedResourceCondition allModsLoadedResourceCondition) {
-                return KlaxonCommon.locate(typeId + "/" + allModsLoadedResourceCondition.modIds().getFirst() + "/" + path);
+    public Identifier computeRecipeIdentifier(String typeId, String path, final ConditionJsonProvider... conditions) {
+        for (ConditionJsonProvider condition : conditions) {
+            if (condition.getConditionId().equals(Identifier.tryParse("fabric:all_mods_loaded"))) {
+                return KlaxonCommon.locate(typeId + "/" + condition.toJson().get("values").getAsJsonArray().get(0) + "/" + path);
             }
         }
 
         return KlaxonCommon.locate(typeId + "/" + path);
     }
 
-    public void acceptRecipeWithConditions(RecipeExporter exporter, Identifier recipeId, Recipe<?> recipe, final ResourceCondition... conditions) {
+    public void acceptRecipeWithConditions(Consumer<RecipeJsonProvider> consumer, Identifier recipeId, Recipe<?> recipe, final ConditionJsonProvider... conditions) {
         // get all the spent identifiers for the recipe type
         if (spentRecipeIdentifiersByRecipeType.containsKey(recipe.getType())) {
             // iterate through them all to check if theyre the same as the active recipe's id
@@ -99,16 +104,122 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
         // if the recipe has resource conditions, apply them
         if (conditions.length > 0) {
-            withConditions(exporter, conditions).accept(recipeId, recipe, null);
+            withConditions(consumer, conditions).accept(getJsonProvider(recipeId, recipe));
         } else {
-            exporter.accept(recipeId, recipe, null);
+            consumer.accept(getJsonProvider(recipeId, recipe));
         }
     }
 
-    public void acceptOverrideRecipe(RecipeExporter exporter, Identifier id) {
+    public void acceptOverrideRecipe(Consumer<RecipeJsonProvider> consumer, Identifier id) {
         // accept a blank recipe with the "never loads" resource condition
-        withConditions(exporter, new NotResourceCondition(new TrueResourceCondition()))
-                .accept(id, new HammeringRecipe(Ingredient.ofItems(Items.DIRT), ItemStack.EMPTY), null);
+        withConditions(consumer, DefaultResourceConditions.not(DefaultResourceConditions.allModsLoaded(KlaxonCommon.MOD_ID)))
+                .accept(getJsonProvider(id, new HammeringRecipe(Ingredient.ofItems(Items.DIRT), ItemStack.EMPTY)));
+    }
+
+    // WACK BS OMG
+    // but it works :)
+    private RecipeJsonProvider getJsonProvider(Identifier recipeId, Recipe<?> recipe) {
+        if (recipe instanceof ShapedRecipe shapedRecipe) {
+            CraftingBS craftingBS = getShapedCraftingPatternFromIngredients(recipe.getIngredients());
+
+            ShapedRecipeJsonBuilder builder = ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, shapedRecipe.getOutput(null).getItem());
+
+            builder = builder
+                    .pattern(craftingBS.pattern[0])
+                    .pattern(craftingBS.pattern[1])
+                    .pattern(craftingBS.pattern[2]);
+
+            for (Ingredient ingredient : craftingBS.keyMap.keySet()) {
+                builder = builder.input(craftingBS.keyMap.get(ingredient), ingredient);
+            }
+
+            // dont even ask bro
+            AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
+            builder.offerTo((provider::set), recipeId);
+            return provider.get();
+        }
+        if (recipe instanceof ShapelessRecipe shapelessRecipe) {
+            ShapelessRecipeJsonBuilder builder = ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, shapelessRecipe.getOutput(null).getItem());
+
+            for (Ingredient ingredient : shapelessRecipe.getIngredients()) {
+                builder.input(ingredient);
+            }
+
+            // dont even ask bro
+            AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
+            builder.offerTo((provider::set), recipeId);
+            return provider.get();
+        }
+        if (recipe instanceof SmeltingRecipe smeltingRecipe) {
+            CookingRecipeJsonBuilder builder = CookingRecipeJsonBuilder.createSmelting(
+                    smeltingRecipe.getIngredients().getFirst(),
+                    RecipeCategory.MISC,
+                    smeltingRecipe.getOutput(null).getItem(),
+                    smeltingRecipe.getExperience(),
+                    smeltingRecipe.getCookTime()
+            );
+
+            // dont even ask bro
+            AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
+            builder.offerTo((provider::set), recipeId);
+            return provider.get();
+        }
+        if (recipe instanceof SmokingRecipe smokingRecipe) {
+            CookingRecipeJsonBuilder builder = CookingRecipeJsonBuilder.createSmoking(
+                    smokingRecipe.getIngredients().getFirst(),
+                    RecipeCategory.MISC,
+                    smokingRecipe.getOutput(null).getItem(),
+                    smokingRecipe.getExperience(),
+                    smokingRecipe.getCookTime()
+            );
+
+            // dont even ask bro
+            AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
+            builder.offerTo((provider::set), recipeId);
+            return provider.get();
+        }
+        if (recipe instanceof BlastingRecipe blastingRecipe) {
+            CookingRecipeJsonBuilder builder = CookingRecipeJsonBuilder.createBlasting(
+                    blastingRecipe.getIngredients().getFirst(),
+                    RecipeCategory.MISC,
+                    blastingRecipe.getOutput(null).getItem(),
+                    blastingRecipe.getExperience(),
+                    blastingRecipe.getCookTime()
+            );
+
+            // dont even ask bro
+            AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
+            builder.offerTo((provider::set), recipeId);
+            return provider.get();
+        }
+
+        KlaxonCommon.LOGGER.info("oopsy daisy no json provider for crafting recipe :(");
+        return null;
+    }
+
+    // hacky bs that lets me keep my 1.21 datagen code
+    private CraftingBS getShapedCraftingPatternFromIngredients(DefaultedList<Ingredient> ingredients) {
+        Map<Ingredient, Character> ingredientCharacterMap = new HashMap<>(Map.of());
+
+        int incrementor = 0;
+
+        StringBuilder patternStringBuilder = new StringBuilder();
+
+        for (Ingredient ingredient : ingredients) {
+            Character workingChar = ingredientCharacterMap.get(ingredient);
+            if (workingChar == null) {
+                char newChar = (char) incrementor++;
+                ingredientCharacterMap.put(ingredient, newChar);
+                workingChar = newChar;
+            }
+            patternStringBuilder.append(workingChar);
+        }
+
+        String patternString = patternStringBuilder.toString();
+
+        String[] pattern = {patternString.substring(0, 2), patternString.substring(3, 5), patternString.substring(6, 9)};
+
+        return new CraftingBS(pattern, ingredientCharacterMap);
     }
 
     // gotcha stinker
@@ -116,4 +227,6 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     protected Identifier getRecipeIdentifier(Identifier identifier) {
         return identifier;
     }
+
+    private record CraftingBS(String[] pattern, Map<Ingredient, Character> keyMap) {}
 }

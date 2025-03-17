@@ -1,8 +1,8 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
-import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -16,6 +16,7 @@ import net.myriantics.klaxon.registry.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
 
@@ -24,15 +25,15 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     @Override
-    public void generateRecipes(RecipeExporter exporter) {
-        buildMachineCraftingRecipes(exporter);
-        buildMaterialCraftingRecipes(exporter);
-        buildCompressionCraftingRecipes(exporter);
-        buildDecorationCraftingRecipes(exporter);
+    public void generateRecipes(Consumer<RecipeJsonProvider> consumer) {
+        buildMachineCraftingRecipes(consumer);
+        buildMaterialCraftingRecipes(consumer);
+        buildCompressionCraftingRecipes(consumer);
+        buildDecorationCraftingRecipes(consumer);
     }
 
-    private void buildMachineCraftingRecipes(RecipeExporter exporter) {
-        addShapedCraftingRecipe(exporter, Map.of(
+    private void buildMachineCraftingRecipes(Consumer<RecipeJsonProvider> consumer) {
+        addShapedCraftingRecipe(consumer, Map.of(
                         'P', Ingredient.ofItems(Blocks.POLISHED_DEEPSLATE),
                         'D', Ingredient.ofItems(Blocks.DISPENSER)),
                 new String[]{
@@ -46,8 +47,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         );
     }
 
-    private void buildDecorationCraftingRecipes(RecipeExporter exporter) {
-        addShapedCraftingRecipe(exporter, Map.of(
+    private void buildDecorationCraftingRecipes(Consumer<RecipeJsonProvider> consumer) {
+        addShapedCraftingRecipe(consumer, Map.of(
                 'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
                 'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
                 new String[] {
@@ -59,7 +60,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingRecipeCategory.REDSTONE,
                 null
         );
-        addShapedCraftingRecipe(exporter, Map.of(
+        addShapedCraftingRecipe(consumer, Map.of(
                 'P', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES),
                 'I', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)),
                 new String[] {
@@ -71,7 +72,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingRecipeCategory.REDSTONE,
                 null
         );
-        addShapedCraftingRecipe(exporter, Map.of(
+        addShapedCraftingRecipe(consumer, Map.of(
                 'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
                 'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
                 new String[] {
@@ -82,7 +83,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingRecipeCategory.REDSTONE,
                 null
         );
-        addShapedCraftingRecipe(exporter, Map.of(
+        addShapedCraftingRecipe(consumer, Map.of(
                 'P', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES),
                 'I', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)),
                 new String[] {
@@ -95,8 +96,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         );
     }
 
-    private void buildMaterialCraftingRecipes(RecipeExporter exporter) {
-        addShapelessCraftingRecipe(exporter,
+    private void buildMaterialCraftingRecipes(Consumer<RecipeJsonProvider> consumer) {
+        addShapelessCraftingRecipe(consumer,
                 DefaultedList.copyOf(Ingredient.EMPTY,
                         Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
                         Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
@@ -106,31 +107,31 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null, null);
     }
 
-    private void buildCompressionCraftingRecipes(RecipeExporter exporter) {
+    private void buildCompressionCraftingRecipes(Consumer<RecipeJsonProvider> consumer) {
         // storage blocks
-        add3x3IngotNuggetBlockCompressionDecompressionRecipes(exporter, KlaxonItems.STEEL_NUGGET, KlaxonItems.STEEL_INGOT, KlaxonBlocks.STEEL_BLOCK.asItem());
-        add3x3IngotNuggetBlockCompressionDecompressionRecipes(exporter, KlaxonItems.CRUDE_STEEL_NUGGET, KlaxonItems.CRUDE_STEEL_INGOT, KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
+        add3x3IngotNuggetBlockCompressionDecompressionRecipes(consumer, KlaxonItems.STEEL_NUGGET, KlaxonItems.STEEL_INGOT, KlaxonBlocks.STEEL_BLOCK.asItem());
+        add3x3IngotNuggetBlockCompressionDecompressionRecipes(consumer, KlaxonItems.CRUDE_STEEL_NUGGET, KlaxonItems.CRUDE_STEEL_INGOT, KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
 
         // plating blocks
-        add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.STEEL_PLATE, KlaxonBlocks.STEEL_PLATING_BLOCK);
-        add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.CRUDE_STEEL_PLATE, KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
-        add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.IRON_PLATE, KlaxonBlocks.IRON_PLATING_BLOCK);
-        add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.GOLD_PLATE, KlaxonBlocks.GOLD_PLATING_BLOCK);
-        add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.COPPER_PLATE, KlaxonBlocks.COPPER_PLATING_BLOCK);
+        add2x2CompressionDecompressionRecipes(consumer, KlaxonItems.STEEL_PLATE, KlaxonBlocks.STEEL_PLATING_BLOCK);
+        add2x2CompressionDecompressionRecipes(consumer, KlaxonItems.CRUDE_STEEL_PLATE, KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+        add2x2CompressionDecompressionRecipes(consumer, KlaxonItems.IRON_PLATE, KlaxonBlocks.IRON_PLATING_BLOCK);
+        add2x2CompressionDecompressionRecipes(consumer, KlaxonItems.GOLD_PLATE, KlaxonBlocks.GOLD_PLATING_BLOCK);
+        add2x2CompressionDecompressionRecipes(consumer, KlaxonItems.COPPER_PLATE, KlaxonBlocks.COPPER_PLATING_BLOCK);
     }
 
-    private void add3x3IngotNuggetBlockCompressionDecompressionRecipes(RecipeExporter exporter, ItemConvertible tiny, ItemConvertible small, ItemConvertible large, ResourceCondition... conditions) {
-        add3x3CompressionDecompressionRecipes(exporter, tiny, small);
-        add3x3CompressionDecompressionRecipes(exporter, small, large);
+    private void add3x3IngotNuggetBlockCompressionDecompressionRecipes(Consumer<RecipeJsonProvider> consumer, ItemConvertible tiny, ItemConvertible small, ItemConvertible large, ConditionJsonProvider... conditions) {
+        add3x3CompressionDecompressionRecipes(consumer, tiny, small);
+        add3x3CompressionDecompressionRecipes(consumer, small, large);
     }
 
-    private void add3x3CompressionDecompressionRecipes(RecipeExporter exporter, ItemConvertible small, ItemConvertible large, ResourceCondition... conditions) {
-        add3x3PackingRecipe(exporter, Ingredient.ofItems(small), new ItemStack(large, 1), null, null, conditions);
-        add3x3UnpackingRecipe(exporter, Ingredient.ofItems(large), small, null, null, conditions);
+    private void add3x3CompressionDecompressionRecipes(Consumer<RecipeJsonProvider> consumer, ItemConvertible small, ItemConvertible large, ConditionJsonProvider... conditions) {
+        add3x3PackingRecipe(consumer, Ingredient.ofItems(small), new ItemStack(large, 1), null, null, conditions);
+        add3x3UnpackingRecipe(consumer, Ingredient.ofItems(large), small, null, null, conditions);
     }
 
-    private void add2x2CompressionDecompressionRecipes(RecipeExporter exporter, ItemConvertible small, ItemConvertible large, ResourceCondition... conditions) {
-        add2x2PackingRecipe(exporter, Ingredient.ofItems(small), new ItemStack(large, 1), null, null, conditions);
-        add2x2UnpackingRecipe(exporter, Ingredient.ofItems(large), small, null, null, conditions);
+    private void add2x2CompressionDecompressionRecipes(Consumer<RecipeJsonProvider> consumer, ItemConvertible small, ItemConvertible large, ConditionJsonProvider... conditions) {
+        add2x2PackingRecipe(consumer, Ingredient.ofItems(small), new ItemStack(large, 1), null, null, conditions);
+        add2x2UnpackingRecipe(consumer, Ingredient.ofItems(large), small, null, null, conditions);
     }
 }

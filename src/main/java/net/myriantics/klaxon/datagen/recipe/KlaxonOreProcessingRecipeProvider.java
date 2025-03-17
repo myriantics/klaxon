@@ -1,12 +1,14 @@
 package net.myriantics.klaxon.datagen.recipe;
 
-import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
-import net.minecraft.data.server.recipe.RecipeExporter;
+import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
+import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.myriantics.klaxon.registry.KlaxonItems;
+
+import java.util.function.Consumer;
 
 public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
 
@@ -15,19 +17,19 @@ public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
     }
 
     @Override
-    public void generateRecipes(RecipeExporter exporter) {
-        buildFracturedOreProcessingRecipes(exporter);
+    public void generateRecipes(Consumer<RecipeJsonProvider> consumer) {
+        buildFracturedOreProcessingRecipes(consumer);
     }
 
-    private void buildFracturedOreProcessingRecipes(RecipeExporter exporter) {
-        addFracturedOreProcessingRecipes(exporter, KlaxonItems.FRACTURED_RAW_IRON, Items.RAW_IRON, KlaxonItems.FRACTURED_IRON_FRAGMENTS, Items.IRON_INGOT);
-        addFracturedOreProcessingRecipes(exporter, KlaxonItems.FRACTURED_RAW_GOLD, Items.RAW_GOLD, KlaxonItems.FRACTURED_GOLD_FRAGMENTS, Items.GOLD_INGOT);
-        addFracturedOreProcessingRecipes(exporter, KlaxonItems.FRACTURED_RAW_COPPER, Items.RAW_COPPER, KlaxonItems.FRACTURED_COPPER_FRAGMENTS, Items.COPPER_INGOT);
+    private void buildFracturedOreProcessingRecipes(Consumer<RecipeJsonProvider> consumer) {
+        addFracturedOreProcessingRecipes(consumer, KlaxonItems.FRACTURED_RAW_IRON, Items.RAW_IRON, KlaxonItems.FRACTURED_IRON_FRAGMENTS, Items.IRON_INGOT);
+        addFracturedOreProcessingRecipes(consumer, KlaxonItems.FRACTURED_RAW_GOLD, Items.RAW_GOLD, KlaxonItems.FRACTURED_GOLD_FRAGMENTS, Items.GOLD_INGOT);
+        addFracturedOreProcessingRecipes(consumer, KlaxonItems.FRACTURED_RAW_COPPER, Items.RAW_COPPER, KlaxonItems.FRACTURED_COPPER_FRAGMENTS, Items.COPPER_INGOT);
     }
 
-    public void addFracturedOreProcessingRecipes(RecipeExporter exporter,
+    public void addFracturedOreProcessingRecipes(Consumer<RecipeJsonProvider> exporter,
                                                  Item fracturedRawOreItem, Item rawOreItem, Item fracturedOreFragmentsItem, Item oreIngotItem,
-                                                 final ResourceCondition... conditions) {
+                                                 final ConditionJsonProvider... conditions) {
         // blast processing
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(rawOreItem), 0.1, 0.4, new ItemStack(fracturedRawOreItem), conditions);
         addBlastProcessingRecipe(exporter, Ingredient.ofItems(oreIngotItem), 0.2, 0.5, new ItemStack(fracturedOreFragmentsItem), conditions);

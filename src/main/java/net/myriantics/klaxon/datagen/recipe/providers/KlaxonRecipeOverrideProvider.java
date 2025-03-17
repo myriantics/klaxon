@@ -1,9 +1,12 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
 import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
+
+import java.util.function.Consumer;
 
 public class KlaxonRecipeOverrideProvider extends KlaxonRecipeSubProvider {
     public KlaxonRecipeOverrideProvider(KlaxonRecipeProvider provider) {
@@ -11,11 +14,11 @@ public class KlaxonRecipeOverrideProvider extends KlaxonRecipeSubProvider {
     }
 
     @Override
-    public void generateRecipes(RecipeExporter exporter) {
-        buildOverrideRecipes(exporter);
+    public void generateRecipes(Consumer<RecipeJsonProvider> consumer) {
+        buildOverrideRecipes(consumer);
     }
 
-    private void buildOverrideRecipes(RecipeExporter exporter) {
-        addOverrideRecipe(exporter, Identifier.ofVanilla("flint_and_steel"));
+    private void buildOverrideRecipes(Consumer<RecipeJsonProvider> consumer) {
+        addOverrideRecipe(consumer, Identifier.of(Identifier.DEFAULT_NAMESPACE, "flint_and_steel"));
     }
 }

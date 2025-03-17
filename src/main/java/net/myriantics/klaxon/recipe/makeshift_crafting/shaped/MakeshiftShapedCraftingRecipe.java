@@ -1,10 +1,13 @@
 package net.myriantics.klaxon.recipe.makeshift_crafting.shaped;
 
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.recipe.input.CraftingRecipeInput;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
@@ -12,25 +15,23 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import java.util.List;
 
 public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
+    public Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.MAKESHIFT_SHAPED_CRAFTING_ID);
 
     public ItemStack result;
 
-    public RawShapedRecipe raw;
-
     List<Ingredient> constantIngredients;
 
-    public MakeshiftShapedCraftingRecipe(String group, CraftingRecipeCategory category, RawShapedRecipe raw, List<Ingredient> constantIngredients, ItemStack result, boolean showNotification) {
-        super(group, category, raw, result, showNotification);
-        this.raw = raw;
+    public MakeshiftShapedCraftingRecipe(Identifier id,  String group, CraftingRecipeCategory category, int width, int height, DefaultedList<Ingredient> input, List<Ingredient> constantIngredients, ItemStack result, boolean showNotification) {
+        super(id, group, category, width, height, input, result, showNotification);
         this.result = result;
         this.constantIngredients = constantIngredients;
     }
 
     @Override
-    public ItemStack craft(CraftingRecipeInput craftingRecipeInput, RegistryWrapper.WrapperLookup wrapperLookup) {
-        List<ItemStack> inputStacks = craftingRecipeInput.getStacks();
+    public ItemStack craft(RecipeInputInventory craftingRecipeInput, DynamicRegistryManager registryManager) {
+        List<ItemStack> inputStacks = craftingRecipeInput.getInputStacks();
 
-        ItemStack result = this.getResult(wrapperLookup);
+        ItemStack result = this.getOutput(registryManager).copy();
 
         final double durabilityPenaltyCap = 0.5;
         int totalPresentMakeshiftIngredients = 0;
@@ -63,5 +64,10 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
 
     public List<Ingredient> getConstantIngredients() {
         return constantIngredients;
+    }
+
+    @Override
+    public Identifier getId() {
+        return ID;
     }
 }
