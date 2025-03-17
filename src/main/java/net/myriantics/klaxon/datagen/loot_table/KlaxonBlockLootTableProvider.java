@@ -9,8 +9,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
 
-    public KlaxonBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(dataOutput, registryLookup);
+    public KlaxonBlockLootTableProvider(FabricDataOutput dataOutput) {
+        super(dataOutput);
     }
 
     @Override

@@ -113,7 +113,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     public void acceptOverrideRecipe(Consumer<RecipeJsonProvider> consumer, Identifier id) {
         // accept a blank recipe with the "never loads" resource condition
         withConditions(consumer, DefaultResourceConditions.not(DefaultResourceConditions.allModsLoaded(KlaxonCommon.MOD_ID)))
-                .accept(getJsonProvider(id, new HammeringRecipe(Ingredient.ofItems(Items.DIRT), ItemStack.EMPTY)));
+                .accept(getJsonProvider(id, new HammeringRecipe(id, Ingredient.ofItems(Items.DIRT), ItemStack.EMPTY)));
     }
 
     // WACK BS OMG

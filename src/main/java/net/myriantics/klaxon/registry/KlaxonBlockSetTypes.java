@@ -10,9 +10,6 @@ public class KlaxonBlockSetTypes {
             new BlockSetType(
                     "iron",
                     false,
-                    false,
-                    false,
-                    BlockSetType.ActivationRule.MOBS,
                     BlockSoundGroup.METAL,
                     SoundEvents.BLOCK_IRON_DOOR_CLOSE,
                     SoundEvents.BLOCK_IRON_DOOR_OPEN,
@@ -28,10 +25,7 @@ public class KlaxonBlockSetTypes {
     public static final BlockSetType CRUDE_STEEL = register(
             new BlockSetType(
                     "crude_steel",
-                    true,
-                    true,
                     false,
-                    BlockSetType.ActivationRule.EVERYTHING,
                     BlockSoundGroup.METAL,
                     SoundEvents.BLOCK_IRON_DOOR_CLOSE,
                     SoundEvents.BLOCK_IRON_DOOR_OPEN,

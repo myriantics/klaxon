@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry;
 
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.advancement.criterion.Criterion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -15,7 +16,7 @@ public class KlaxonAdvancementCriteria {
     public static final HammerUseCriterion HAMMER_USE_CRITERION = register("hammer_right_click_use", new HammerUseCriterion());
 
     private static <T extends Criterion<?>> T register(String name, T criterion) {
-        return Registry.register(Registries.CRITERION, KlaxonCommon.locate(name), criterion);
+        return Criteria.register(criterion);
     }
 
     public static void registerAdvancementCriteria() {

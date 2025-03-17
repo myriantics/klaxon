@@ -10,9 +10,4 @@ public class HeavyStatusEffect extends StatusEffect {
     public HeavyStatusEffect(StatusEffectCategory category, int color) {
         super(category, color);
     }
-
-    @Override
-    public ParticleEffect createParticle(StatusEffectInstance effect) {
-        return super.createParticle(effect);
-    }
 }

@@ -213,7 +213,7 @@ public abstract class KlaxonRecipeSubProvider {
             group = getItemPath(output.getItem());
         }
 
-        MakeshiftShapelessCraftingRecipe recipe = new MakeshiftShapelessCraftingRecipe(group, category, output, input, constantIngredients);
+        MakeshiftShapelessCraftingRecipe recipe = new MakeshiftShapelessCraftingRecipe(recipeId, group, category, output, input, constantIngredients);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
@@ -292,7 +292,7 @@ public abstract class KlaxonRecipeSubProvider {
                 Registries.ITEM.getId(input.getMatchingStacks()[0].getItem()).getPath(),
                 conditions);
 
-        ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input, explosionPower, producesFire, isHidden);
+        ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(recipeId, input, explosionPower, producesFire, isHidden);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
@@ -302,7 +302,7 @@ public abstract class KlaxonRecipeSubProvider {
                 getItemPath(output.getItem()),
                 conditions);
 
-        HammeringRecipe recipe = new HammeringRecipe(input, output);
+        HammeringRecipe recipe = new HammeringRecipe(recipeId, input, output);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
@@ -314,7 +314,7 @@ public abstract class KlaxonRecipeSubProvider {
                 getItemPath(output.getItem()),
                 conditions);
 
-        BlastProcessingRecipe recipe = new BlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, output);
+        BlastProcessingRecipe recipe = new BlastProcessingRecipe(recipeId, input, explosionPowerMin, explosionPowerMax, output);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

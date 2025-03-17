@@ -15,6 +15,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import java.util.Map;
 
 public class KlaxonArmorTrimMaterials {
+    /*
     // not gonna do this rn lol - will come later
     public static final RegistryKey<ArmorTrimMaterial> STEEL = of("steel");
     public static final RegistryKey<ArmorTrimMaterial> CRUDE_STEEL = of("crude_steel");
@@ -48,5 +49,5 @@ public class KlaxonArmorTrimMaterials {
 
     private static RegistryKey<ArmorTrimMaterial> of(String id) {
         return RegistryKey.of(RegistryKeys.TRIM_MATERIAL, KlaxonCommon.locate(id));
-    }
+    }*/
 }

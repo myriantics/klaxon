@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry;
 
+import net.fabricmc.yarn.constants.MiningLevels;
 import net.minecraft.block.Block;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
@@ -35,8 +36,8 @@ public class KlaxonToolMaterials {
             }
 
             @Override
-            public TagKey<Block> getInverseTag() {
-                return inverseTag;
+            public int getMiningLevel() {
+                return MiningLevels.DIAMOND;
             }
 
             @Override
