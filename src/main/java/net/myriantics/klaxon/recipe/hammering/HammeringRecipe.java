@@ -1,14 +1,20 @@
 package net.myriantics.klaxon.recipe.hammering;
 
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.KlaxonItems;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 
-public class HammeringRecipe implements Recipe<RecipeInput>{
+public class HammeringRecipe implements Recipe<Inventory>{
+    public static final Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.HAMMERING_RECIPE_ID);
+
     private final Ingredient inputA;
     private final ItemStack result;
 
@@ -18,12 +24,12 @@ public class HammeringRecipe implements Recipe<RecipeInput>{
     }
 
     @Override
-    public boolean matches(RecipeInput inventory, World world) {
-        return inputA.test(inventory.getStackInSlot(0));
+    public boolean matches(Inventory inventory, World world) {
+        return inputA.test(inventory.getStack(0));
     }
 
     @Override
-    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack craft(Inventory input, DynamicRegistryManager registryManager) {
         return this.result.copy();
     }
 
@@ -33,7 +39,7 @@ public class HammeringRecipe implements Recipe<RecipeInput>{
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getOutput(DynamicRegistryManager registryManager) {
         return this.result.copy();
     }
 
@@ -54,5 +60,10 @@ public class HammeringRecipe implements Recipe<RecipeInput>{
     @Override
     public RecipeType<?> getType() {
         return KlaxonRecipeTypes.HAMMERING;
+    }
+
+    @Override
+    public Identifier getId() {
+        return ID;
     }
 }

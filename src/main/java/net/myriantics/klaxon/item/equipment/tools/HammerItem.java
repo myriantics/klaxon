@@ -1,21 +1,23 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.mojang.serialization.Codec;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalFluidTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -47,29 +49,34 @@ public class HammerItem extends ToolItem {
     public static final float STEEL_HAMMER_BASE_ATTACK_DAMAGE = 5.0F;
     public static final float STEEL_HAMMER_ATTACK_SPEED = -3.1F;
 
-    public HammerItem(Settings settings) {
+    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
+
+    public HammerItem(Settings settings, ToolMaterial material, float attackDamage, float attackSpeed) {
         super(KlaxonToolMaterials.STEEL, settings.maxCount(1));
+        attributeModifiers = createAttributeModifiers(material, attackDamage, attackSpeed);
     }
 
-    public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
-        return AttributeModifiersComponent.builder()
-                .add(
+    public static Multimap<EntityAttribute, EntityAttributeModifier> createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
+        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+
+        builder.put(
                         EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                        new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, material.getAttackDamage() + baseAttackDamage, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.MAINHAND
-                )
-                .add(
+                        new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", material.getAttackDamage() + baseAttackDamage, EntityAttributeModifier.Operation.ADDITION)
+                );
+
+        builder.put(
                         EntityAttributes.GENERIC_ATTACK_SPEED,
-                        new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.MAINHAND
-                ).build();
+                        new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION)
+                );
+
+        return builder.build();
     }
 
     @Override
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
         // only damage the item if it's not tall grass or something that shouldn't reduce durability
         if (!world.isClient && state.getHardness(world, pos) > 0) {
-            damageItem(stack, miner, state.isIn(KlaxonBlockTags.HAMMER_MINEABLE));
+            damageItem(stack, miner, state.isIn(KlaxonBlockTags.HAMMER_MINEABLE), EquipmentSlot.MAINHAND);
         }
         return stack.isSuitableFor(state) || super.postMine(stack, world, state, pos, miner);
     }
@@ -78,22 +85,22 @@ public class HammerItem extends ToolItem {
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         World world = attacker.getWorld();
         if (!world.isClient) {
-            damageItem(stack, attacker, true);
+            damageItem(stack, attacker, true, EquipmentSlot.MAINHAND);
         }
         return super.postHit(stack, target, attacker);
     }
 
     @Override
-    public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
+    public boolean isSuitableFor(BlockState state) {
         return state.isIn(KlaxonBlockTags.HAMMER_MINEABLE);
     }
 
     @Override
-    public float getMiningSpeed(ItemStack stack, BlockState state) {
+    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         if (state.isIn(KlaxonBlockTags.HAMMER_MINEABLE)) {
             return 6.0F;
         } else {
-            return super.getMiningSpeed(stack, state);
+            return super.getMiningSpeedMultiplier(stack, state);
         }
     }
 
@@ -117,7 +124,7 @@ public class HammerItem extends ToolItem {
 
             // play sound and damage item only after we're sure there are items selected
             world.playSound(player, BlockPos.ofFloored(clickedPos), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
-            damageItem(handStack, player, true);
+            damageItem(handStack, player, true, EquipmentSlotHelper.convert(context.getHand()));
 
             boolean recipeSuccessPresent = false;
 
@@ -130,19 +137,9 @@ public class HammerItem extends ToolItem {
                 // dont run recipe stuff on the client
                 if (!world.isClient()) {
 
-                    RecipeInput dummyInventory = new RecipeInput() {
-                        @Override
-                        public ItemStack getStackInSlot(int slot) {
-                            return new SimpleInventory(targetStack).getStack(slot);
-                        }
+                    SimpleInventory dummyInventory = new SimpleInventory(targetStack);
 
-                        @Override
-                        public int getSize() {
-                            return 1;
-                        }
-                    };
-
-                    Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
+                    Optional<HammeringRecipe> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
                     if(match.isPresent()) {
                         // indicate that at least one craft was successful
                         recipeSuccessPresent = true;
@@ -153,7 +150,7 @@ public class HammerItem extends ToolItem {
                                 outputPos.getX(),
                                 outputPos.getY(),
                                 outputPos.getZ(),
-                                match.get().value().craft(dummyInventory, world.getRegistryManager()));
+                                match.get().craft(dummyInventory, world.getRegistryManager()));
 
                         // decrement target dropped item's stack because a match was present, so the item was used up in crafting
                         targetStack.decrement(1);
@@ -231,7 +228,7 @@ public class HammerItem extends ToolItem {
             player.resetLastAttackedTicks();
 
             // damage it wheee
-            damageItem(player.getMainHandStack(), player, true);
+            damageItem(player.getMainHandStack(), player, true, EquipmentSlot.MAINHAND);
         }
     }
 
@@ -252,7 +249,7 @@ public class HammerItem extends ToolItem {
                 // you cant walljump when you're in a boat or some this
                 && player.getVehicle() == null
                 // walljumping in water is janky
-                && !player.isInFluid()
+                && !(player.isTouchingWater() || player.isInLava())
                 // you can't walljump off of instabreakable blocks - in creative you can tho - also in adventure
                 && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative() || !player.getAbilities().allowModifyWorld);
     }
@@ -291,12 +288,12 @@ public class HammerItem extends ToolItem {
         return n > 0;
     }
 
-    private static void damageItem(ItemStack stack, LivingEntity attacker, boolean usedProperly) {
+    private static void damageItem(ItemStack stack, LivingEntity attacker, boolean usedProperly, EquipmentSlot equipmentSlot) {
         if (attacker.getWorld().isClient) {
             return;
         }
 
-        stack.damage(usedProperly ? 1 : 2, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
+        stack.damage(usedProperly ? 1 : 2, attacker, (callback) -> callback.sendEquipmentBreakStatus(equipmentSlot));
     }
 
     private static void updateAdjacentMonitoringObservers(World world, BlockPos interactionPos, BlockState interactionState) {
@@ -318,7 +315,7 @@ public class HammerItem extends ToolItem {
 
     // yoinked from living entity
     private static void spawnHammeringParticleEffects(World world, ItemStack stack, int count, Entity source) {
-        Random random = source.getRandom();
+        Random random = world.getRandom();
         float pitch = source.getPitch();
         float yaw = source.getYaw();
 
