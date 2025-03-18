@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "klaxon:crafting/makeshift_shaped/steel_hammer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "steel_hammer": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:steel_hammer"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "steel_hammer",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "klaxon:crafting/makeshift_shaped/steel_hammer"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "klaxon:crafting/makeshift_shaped/steel_boots"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "steel_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:steel_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "steel_boots",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "klaxon:crafting/makeshift_shaped/steel_boots"
+    ]
+  },
+  "sends_telemetry_event": false
+}

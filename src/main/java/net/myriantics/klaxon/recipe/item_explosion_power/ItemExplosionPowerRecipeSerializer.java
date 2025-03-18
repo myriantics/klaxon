@@ -20,7 +20,7 @@ public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<Item
         Ingredient catalystIngredient = Ingredient.fromJson(json.getAsJsonObject("catalyst_ingredient"));
         double explosionPower = JsonHelper.getDouble(json, "explosion_power");
         boolean producesFire = JsonHelper.getBoolean(json, "produces_fire");
-        boolean isHidden = JsonHelper.getBoolean(json, "isHidden");
+        boolean isHidden = JsonHelper.getBoolean(json, "is_hidden");
 
         return new ItemExplosionPowerRecipe(id, catalystIngredient, explosionPower, producesFire, isHidden);
     }

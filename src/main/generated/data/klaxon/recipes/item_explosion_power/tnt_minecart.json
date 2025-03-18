@@ -4,6 +4,6 @@
     "item": "minecraft:tnt_minecart"
   },
   "explosion_power": 5.0,
-  "isHidden": false,
-  "producesFire": false
+  "is_hidden": false,
+  "produces_fire": false
 }

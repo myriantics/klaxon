@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "klaxon:crafting/makeshift_shaped/steel_chestplate"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "steel_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:steel_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "steel_chestplate",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "klaxon:crafting/makeshift_shaped/steel_chestplate"
+    ]
+  },
+  "sends_telemetry_event": false
+}

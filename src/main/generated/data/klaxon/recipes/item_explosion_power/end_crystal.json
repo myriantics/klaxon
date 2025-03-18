@@ -4,6 +4,6 @@
     "item": "minecraft:end_crystal"
   },
   "explosion_power": 6.0,
-  "isHidden": false,
-  "producesFire": false
+  "is_hidden": false,
+  "produces_fire": false
 }

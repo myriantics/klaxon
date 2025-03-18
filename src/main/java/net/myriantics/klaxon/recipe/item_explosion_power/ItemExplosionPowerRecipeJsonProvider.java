@@ -20,8 +20,8 @@ public class ItemExplosionPowerRecipeJsonProvider implements RecipeJsonProvider 
     public void serialize(JsonObject json) {
         json.add("catalyst_ingredient", itemExplosionPowerRecipe.getIngredient().toJson());
         json.addProperty("explosion_power", itemExplosionPowerRecipe.getExplosionPower());
-        json.addProperty("producesFire", itemExplosionPowerRecipe.producesFire());
-        json.addProperty("isHidden", itemExplosionPowerRecipe.isHidden());
+        json.addProperty("produces_fire", itemExplosionPowerRecipe.producesFire());
+        json.addProperty("is_hidden", itemExplosionPowerRecipe.isHidden());
     }
 
     @Override

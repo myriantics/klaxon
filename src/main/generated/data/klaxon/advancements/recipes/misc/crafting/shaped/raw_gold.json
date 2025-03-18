@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "klaxon:crafting/shaped/raw_gold"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "raw_gold": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:raw_gold"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "raw_gold",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "klaxon:crafting/shaped/raw_gold"
+    ]
+  },
+  "sends_telemetry_event": false
+}

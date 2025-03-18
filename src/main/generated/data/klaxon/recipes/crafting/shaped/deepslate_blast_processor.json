@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "0": {
+      "item": "minecraft:polished_deepslate"
+    },
+    "1": {
+      "item": "minecraft:dispenser"
+    }
+  },
+  "pattern": [
+    "000",
+    "010",
+    "000"
+  ],
+  "result": {
+    "item": "klaxon:deepslate_blast_processor"
+  },
+  "show_notification": true
+}

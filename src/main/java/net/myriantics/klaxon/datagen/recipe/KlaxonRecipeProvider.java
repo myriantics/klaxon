@@ -153,6 +153,11 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                 builder = builder.input(craftingBS.keyMap.get(ingredient).toString().charAt(0), ingredient);
             }
 
+            Item outputItem = recipe.getOutput(null).getItem();
+
+            // oh FINE i'll add recipe advancements
+            builder = builder.criterion(Registries.ITEM.getId(outputItem).getPath(), FabricRecipeProvider.conditionsFromItem(outputItem));
+
             // dont even ask bro
             AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
             builder.offerTo((provider::set), recipeId);

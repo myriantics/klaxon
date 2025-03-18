@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "0": {
+      "item": "klaxon:fractured_raw_iron"
+    }
+  },
+  "pattern": [
+    "00",
+    "00"
+  ],
+  "result": {
+    "item": "minecraft:raw_iron"
+  },
+  "show_notification": true
+}

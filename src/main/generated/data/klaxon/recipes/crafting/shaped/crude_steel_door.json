@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "0": {
+      "tag": "c:plates/crude_steel"
+    },
+    "1": {
+      "tag": "c:ingots/crude_steel"
+    }
+  },
+  "pattern": [
+    "00",
+    "00",
+    "11"
+  ],
+  "result": {
+    "item": "klaxon:crude_steel_door"
+  },
+  "show_notification": true
+}

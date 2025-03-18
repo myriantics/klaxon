@@ -4,6 +4,6 @@
     "item": "minecraft:dragon_breath"
   },
   "explosion_power": 1.5,
-  "isHidden": false,
-  "producesFire": false
+  "is_hidden": false,
+  "produces_fire": false
 }

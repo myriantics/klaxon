@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "klaxon:crafting/shaped/steel_trapdoor"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "steel_trapdoor": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:steel_trapdoor"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "steel_trapdoor",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "klaxon:crafting/shaped/steel_trapdoor"
+    ]
+  },
+  "sends_telemetry_event": false
+}

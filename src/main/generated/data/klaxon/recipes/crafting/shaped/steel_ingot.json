@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "0": {
+      "item": "klaxon:steel_nugget"
+    }
+  },
+  "pattern": [
+    "000",
+    "000",
+    "000"
+  ],
+  "result": {
+    "item": "klaxon:steel_ingot"
+  },
+  "show_notification": true
+}

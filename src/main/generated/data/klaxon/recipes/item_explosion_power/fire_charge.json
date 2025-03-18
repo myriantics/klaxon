@@ -4,6 +4,6 @@
     "item": "minecraft:fire_charge"
   },
   "explosion_power": 0.5,
-  "isHidden": false,
-  "producesFire": true
+  "is_hidden": false,
+  "produces_fire": true
 }

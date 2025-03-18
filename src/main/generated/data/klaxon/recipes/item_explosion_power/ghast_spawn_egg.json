@@ -4,6 +4,6 @@
     "item": "minecraft:ghast_spawn_egg"
   },
   "explosion_power": 3.5,
-  "isHidden": true,
-  "producesFire": true
+  "is_hidden": true,
+  "produces_fire": true
 }

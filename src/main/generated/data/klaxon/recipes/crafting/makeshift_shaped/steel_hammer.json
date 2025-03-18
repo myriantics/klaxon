@@ -1,0 +1,36 @@
+{
+  "type": "klaxon:makeshift_shaped",
+  "category": "misc",
+  "constant_ingredients": [
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:leather"
+    }
+  ],
+  "key": {
+    "0": {
+      "tag": "klaxon:crude_inclusive_steel_blocks"
+    },
+    "1": {
+      "tag": "klaxon:crude_inclusive_steel_ingots"
+    },
+    "2": [],
+    "3": {
+      "item": "minecraft:stick"
+    },
+    "4": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    "010",
+    "232",
+    "434"
+  ],
+  "result": {
+    "item": "klaxon:steel_hammer"
+  },
+  "show_notification": true
+}

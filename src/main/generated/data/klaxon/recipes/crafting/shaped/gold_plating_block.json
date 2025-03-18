@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "0": {
+      "item": "klaxon:gold_plate"
+    }
+  },
+  "pattern": [
+    "00",
+    "00"
+  ],
+  "result": {
+    "item": "klaxon:gold_plating_block"
+  },
+  "show_notification": true
+}

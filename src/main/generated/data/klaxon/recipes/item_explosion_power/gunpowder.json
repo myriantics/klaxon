@@ -4,6 +4,6 @@
     "item": "minecraft:gunpowder"
   },
   "explosion_power": 0.3,
-  "isHidden": false,
-  "producesFire": false
+  "is_hidden": false,
+  "produces_fire": false
 }

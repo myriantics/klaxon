@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "klaxon:crafting/makeshift_shaped/steel_helmet"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "steel_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:steel_helmet"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "steel_helmet",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "klaxon:crafting/makeshift_shaped/steel_helmet"
+    ]
+  },
+  "sends_telemetry_event": false
+}

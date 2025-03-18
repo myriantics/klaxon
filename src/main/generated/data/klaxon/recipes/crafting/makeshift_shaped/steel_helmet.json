@@ -1,0 +1,22 @@
+{
+  "type": "klaxon:makeshift_shaped",
+  "category": "misc",
+  "constant_ingredients": [],
+  "key": {
+    "0": {
+      "tag": "klaxon:crude_inclusive_steel_plates"
+    },
+    "1": {
+      "tag": "klaxon:crude_inclusive_steel_ingots"
+    },
+    "2": []
+  },
+  "pattern": [
+    "010",
+    "020"
+  ],
+  "result": {
+    "item": "klaxon:steel_helmet"
+  },
+  "show_notification": true
+}

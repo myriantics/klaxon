@@ -4,6 +4,6 @@
     "item": "minecraft:tnt"
   },
   "explosion_power": 4.0,
-  "isHidden": false,
-  "producesFire": false
+  "is_hidden": false,
+  "produces_fire": false
 }
