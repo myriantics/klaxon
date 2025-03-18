@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:item_explosion_power",
+  "catalyst_ingredient": {
+    "item": "minecraft:fire_charge"
+  },
+  "explosion_power": 0.5,
+  "isHidden": false,
+  "producesFire": true
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:klaxon_prelude/watch_blast_processor_craft",
+  "criteria": {
+    "use_hammer_on_dropped_item": {
+      "conditions": {
+        "usage_type": "recipe_success"
+      },
+      "trigger": "klaxon:hammer_use"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.klaxon_prelude.use_hammer_on_dropped_item.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "klaxon:crude_steel_plate"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.klaxon_prelude.use_hammer_on_dropped_item.title"
+    }
+  },
+  "requirements": [
+    [
+      "use_hammer_on_dropped_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -4,6 +4,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.registry.entry.RegistryEntry;
 
+import java.util.Map;
+
 public abstract class StatusEffectHelper {
 
     // FYI - getAmplifier() counts up from 0; returning 1 would indicate a level II effect
@@ -17,7 +19,7 @@ public abstract class StatusEffectHelper {
     }
 
     public static void recomputePersistentEffects(LivingEntity livingEntity) {
-        EntityWeightHelper.updateEntityWeightStatusEffect(livingEntity, null, null);
+        EntityWeightHelper.updateEntityWeightStatusEffect(livingEntity, Map.of());
     }
 
 }

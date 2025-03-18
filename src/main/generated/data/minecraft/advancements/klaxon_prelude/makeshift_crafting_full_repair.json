@@ -1,0 +1,37 @@
+{
+  "parent": "minecraft:klaxon_prelude/use_hammer_on_dropped_item",
+  "criteria": {
+    "makeshift_crafting_full_repair": {
+      "conditions": {
+        "accepted_items": {
+          "tag": "klaxon:makeshift_crafted_equipment"
+        },
+        "max_damage_proportion": {
+          "max": 0.0
+        }
+      },
+      "trigger": "klaxon:anvil_repair"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.klaxon_prelude.makeshift_item_full_repair.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:anvil"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.klaxon_prelude.makeshift_item_full_repair.title"
+    }
+  },
+  "requirements": [
+    [
+      "makeshift_crafting_full_repair"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

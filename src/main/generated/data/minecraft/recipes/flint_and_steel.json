@@ -1,0 +1,21 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:all_mods_loaded",
+        "values": [
+          "klaxon"
+        ]
+      }
+    }
+  ],
+  "type": "klaxon:hammering",
+  "input_ingredient": {
+    "item": "minecraft:dirt"
+  },
+  "output_stack": {
+    "count": 0,
+    "item": "minecraft:air"
+  }
+}

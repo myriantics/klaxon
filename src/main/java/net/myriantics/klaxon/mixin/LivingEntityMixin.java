@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Map;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
@@ -52,12 +54,14 @@ public abstract class LivingEntityMixin {
     }
 
     @Inject(
-            method = "onEquipStack",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;emitGameEvent(Lnet/minecraft/world/event/GameEvent;)V")
+            method = "sendEquipmentChanges(Ljava/util/Map;)V",
+            at = @At(value = "HEAD")
     )
-    public void klaxon$updateHeavyEquipmentEffect(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack, CallbackInfo ci) {
-        EntityWeightHelper.updateEntityWeightStatusEffect((LivingEntity) (Object) this, slot, newStack);
+    public void klaxon$updateHeavyEquipmentEffect(CallbackInfo ci, @Local(argsOnly = true) Map<EquipmentSlot, ItemStack> map) {
+        EntityWeightHelper.updateEntityWeightStatusEffect((LivingEntity) (Object) this, map);
     }
+
+
 
     @Inject(
             method = "clearStatusEffects",

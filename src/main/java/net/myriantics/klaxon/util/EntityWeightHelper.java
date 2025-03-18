@@ -13,6 +13,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Optional;
 
 public abstract class EntityWeightHelper {
@@ -38,15 +39,15 @@ public abstract class EntityWeightHelper {
     }
 
     // called in LivingEntityMixin
-    public static void updateEntityWeightStatusEffect(LivingEntity entity, @Nullable EquipmentSlot changedSlot, @Nullable ItemStack newStack) {
+    public static void updateEntityWeightStatusEffect(LivingEntity entity, Map<EquipmentSlot, ItemStack> changedSlots) {
         int heavyStatusEffectNewValue = 0;
 
         for (EquipmentSlot checkedSlot : EquipmentSlot.values()) {
             if (checkedSlot.isArmorSlot()) {
-                boolean checkedEqualsChanged = checkedSlot.equals(changedSlot);
+                boolean checkedEqualsChanged = changedSlots.containsKey(checkedSlot);
 
                 // ternary bs here to prevent desync bs when doffing armor
-                ItemStack stack = checkedEqualsChanged && newStack != null ? newStack : entity.getEquippedStack(checkedSlot);
+                ItemStack stack = checkedEqualsChanged && changedSlots.get(checkedSlot) != null ? changedSlots.get(checkedSlot) : entity.getEquippedStack(checkedSlot);
 
                 // add one to the tally for every piece of heavy equipment equipped
                 heavyStatusEffectNewValue += isStackHeavy(stack) ? 1 : 0;

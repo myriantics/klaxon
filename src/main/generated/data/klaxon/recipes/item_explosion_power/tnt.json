@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:item_explosion_power",
+  "catalyst_ingredient": {
+    "item": "minecraft:tnt"
+  },
+  "explosion_power": 4.0,
+  "isHidden": false,
+  "producesFire": false
+}

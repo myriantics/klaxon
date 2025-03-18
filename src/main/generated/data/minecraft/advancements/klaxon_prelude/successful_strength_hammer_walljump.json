@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:klaxon_prelude/successful_hammer_walljump",
+  "criteria": {
+    "successful_hammer_walljump": {
+      "conditions": {
+        "usage_type": "strength_walljump_succeeded"
+      },
+      "trigger": "klaxon:hammer_use"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.klaxon_prelude.hammer_walljump_strength.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:blaze_powder"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.klaxon_prelude.hammer_walljump_strength.title"
+    }
+  },
+  "requirements": [
+    [
+      "successful_hammer_walljump"
+    ]
+  ],
+  "rewards": {
+    "experience": 200
+  },
+  "sends_telemetry_event": true
+}

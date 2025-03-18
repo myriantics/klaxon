@@ -1,0 +1,36 @@
+{
+  "criteria": {
+    "blast_processor_obtain": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "klaxon:root_advancement_granting_items"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "klaxon:textures/gui/advancements/backgrounds/klaxon_prelude.png",
+    "description": {
+      "translate": "advancements.klaxon_prelude.root.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "klaxon:deepslate_blast_processor"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.klaxon_prelude.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "blast_processor_obtain"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

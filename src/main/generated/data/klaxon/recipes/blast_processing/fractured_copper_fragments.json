@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosion_power_max": 0.5,
+  "explosion_power_min": 0.2,
+  "input_ingredient": {
+    "item": "minecraft:copper_ingot"
+  },
+  "output_stack": {
+    "count": 1,
+    "item": "klaxon:fractured_copper_fragments"
+  }
+}

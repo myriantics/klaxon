@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:item_explosion_power",
+  "catalyst_ingredient": {
+    "item": "minecraft:creeper_spawn_egg"
+  },
+  "explosion_power": 3.0,
+  "isHidden": true,
+  "producesFire": false
+}

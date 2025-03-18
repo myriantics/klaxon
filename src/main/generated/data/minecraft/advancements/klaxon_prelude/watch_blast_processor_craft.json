@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:klaxon_prelude/root",
+  "criteria": {
+    "watch_blast_processor_craft": {
+      "conditions": {
+        "accepted_blocks": {
+          "tag": "klaxon:blast_processors"
+        }
+      },
+      "trigger": "klaxon:block_activation"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.klaxon_prelude.watch_blast_processor_craft.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "klaxon:fractured_raw_iron"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.klaxon_prelude.watch_blast_processor_craft.title"
+    }
+  },
+  "requirements": [
+    [
+      "watch_blast_processor_craft"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

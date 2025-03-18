@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:klaxon_prelude/watch_blast_processor_craft",
+  "criteria": {
+    "successful_hammer_walljump": {
+      "conditions": {
+        "usage_type": "walljump_succeeded"
+      },
+      "trigger": "klaxon:hammer_use"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.klaxon_prelude.hammer_walljump.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "klaxon:steel_hammer",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.klaxon_prelude.hammer_walljump.title"
+    }
+  },
+  "requirements": [
+    [
+      "successful_hammer_walljump"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
