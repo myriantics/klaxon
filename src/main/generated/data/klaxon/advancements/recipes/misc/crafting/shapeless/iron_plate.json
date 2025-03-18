@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "klaxon:crafting/shapeless/iron_plate"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "iron_plate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:iron_plate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "iron_plate",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "klaxon:crafting/shapeless/iron_plate"
+    ]
+  },
+  "sends_telemetry_event": false
+}

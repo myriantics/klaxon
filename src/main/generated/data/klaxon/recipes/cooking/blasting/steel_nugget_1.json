@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 150,
+  "experience": 3.0,
+  "ingredient": {
+    "item": "minecraft:flint_and_steel"
+  },
+  "result": "klaxon:steel_nugget"
+}

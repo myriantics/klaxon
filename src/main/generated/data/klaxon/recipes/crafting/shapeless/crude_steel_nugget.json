@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "klaxon:crude_steel_ingot"
+    }
+  ],
+  "result": {
+    "item": "klaxon:crude_steel_nugget"
+  }
+}

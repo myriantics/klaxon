@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "klaxon:crude_steel_plating_block"
+    }
+  ],
+  "result": {
+    "item": "klaxon:crude_steel_plate"
+  }
+}

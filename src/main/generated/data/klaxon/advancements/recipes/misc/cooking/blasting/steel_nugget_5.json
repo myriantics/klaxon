@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "klaxon:cooking/blasting/steel_nugget_5"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "steel_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:steel_nugget"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "steel_nugget",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "klaxon:cooking/blasting/steel_nugget_5"
+    ]
+  },
+  "sends_telemetry_event": false
+}

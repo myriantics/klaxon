@@ -175,6 +175,11 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                 builder.input(ingredient);
             }
 
+            Item outputItem = recipe.getOutput(null).getItem();
+
+            // oh FINE i'll add recipe advancements
+            builder = builder.criterion(Registries.ITEM.getId(outputItem).getPath(), FabricRecipeProvider.conditionsFromItem(outputItem));
+
             // dont even ask bro
             AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
             builder.offerTo((provider::set), recipeId);
@@ -194,6 +199,11 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                     smeltingRecipe.getCookTime()
             );
 
+            Item outputItem = recipe.getOutput(null).getItem();
+
+            // oh FINE i'll add recipe advancements
+            builder = builder.criterion(Registries.ITEM.getId(outputItem).getPath(), FabricRecipeProvider.conditionsFromItem(outputItem));
+
             // dont even ask bro
             AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
             builder.offerTo((provider::set), recipeId);
@@ -208,6 +218,11 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                     smokingRecipe.getCookTime()
             );
 
+            Item outputItem = recipe.getOutput(null).getItem();
+
+            // oh FINE i'll add recipe advancements
+            builder = builder.criterion(Registries.ITEM.getId(outputItem).getPath(), FabricRecipeProvider.conditionsFromItem(outputItem));
+
             // dont even ask bro
             AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
             builder.offerTo((provider::set), recipeId);
@@ -221,6 +236,11 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
                     blastingRecipe.getExperience(),
                     blastingRecipe.getCookTime()
             );
+
+            Item outputItem = recipe.getOutput(null).getItem();
+
+            // oh FINE i'll add recipe advancements
+            builder = builder.criterion(Registries.ITEM.getId(outputItem).getPath(), FabricRecipeProvider.conditionsFromItem(outputItem));
 
             // dont even ask bro
             AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();

@@ -1,0 +1,20 @@
+{
+  "type": "klaxon:makeshift_shapeless",
+  "category": "misc",
+  "constant_ingredients": [
+    {
+      "item": "minecraft:flint"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "klaxon:crude_inclusive_steel_ingots"
+    },
+    {
+      "item": "minecraft:flint"
+    }
+  ],
+  "result": {
+    "item": "minecraft:flint_and_steel"
+  }
+}

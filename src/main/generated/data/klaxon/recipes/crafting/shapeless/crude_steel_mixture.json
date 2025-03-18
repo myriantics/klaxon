@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "klaxon:fractured_iron_fragments"
+    },
+    {
+      "item": "klaxon:fractured_iron_fragments"
+    },
+    {
+      "item": "klaxon:fractured_coal_chunks"
+    },
+    {
+      "item": "klaxon:fractured_coal_chunks"
+    }
+  ],
+  "result": {
+    "item": "klaxon:crude_steel_mixture"
+  }
+}
