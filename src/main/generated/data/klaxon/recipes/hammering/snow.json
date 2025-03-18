@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:hammering",
+  "input_ingredient": {
+    "item": "minecraft:snowball"
+  },
+  "output_stack": {
+    "count": 1,
+    "item": "minecraft:snow"
+  }
+}

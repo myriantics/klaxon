@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#klaxon:steel_armor",
+    "klaxon:steel_hammer",
+    "minecraft:flint_and_steel"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:hammering",
+  "input_ingredient": {
+    "item": "minecraft:blaze_rod"
+  },
+  "output_stack": {
+    "count": 4,
+    "item": "minecraft:blaze_powder"
+  }
+}

@@ -17,7 +17,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.recipe.providers.*;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeJsonProvider;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
+import net.myriantics.klaxon.recipe.hammering.HammeringRecipeJsonProvider;
+import net.myriantics.klaxon.recipe.hammering.HammeringRecipeSerializer;
+import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipeJsonProvider;
+import net.myriantics.klaxon.recipe.makeshift_crafting.MakeshiftRecipeJsonProvider;
+import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
+import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -55,7 +64,11 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     public Identifier computeRecipeIdentifier(String typeId, String path, final ConditionJsonProvider... conditions) {
         for (ConditionJsonProvider condition : conditions) {
             if (condition.getConditionId().equals(Identifier.tryParse("fabric:all_mods_loaded"))) {
-                return KlaxonCommon.locate(typeId + "/" + condition.toJson().get("values").getAsJsonArray().get(0) + "/" + path);
+                String requiredModId = condition.toJson().get("values").getAsJsonArray().get(0).toString();
+
+                // remove the freaking quotes put around it to prevent crash
+                requiredModId = requiredModId.substring(1, requiredModId.length() - 1);
+                return KlaxonCommon.locate(typeId + "/" + requiredModId + "/" + path);
             }
         }
 
@@ -102,12 +115,18 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         // add the new recipe id to the map for that recipe type
         spentRecipeIdentifiersByRecipeType.get(recipe.getType()).add(recipeId);
 
+        try {
         // if the recipe has resource conditions, apply them
         if (conditions.length > 0) {
             withConditions(consumer, conditions).accept(getJsonProvider(recipeId, recipe));
         } else {
             consumer.accept(getJsonProvider(recipeId, recipe));
         }
+        } catch (IllegalStateException e) {
+            // i said i dont WANT any stinking recipe advancements
+            KlaxonCommon.LOGGER.info("I DEFY YOU MOJANG");
+        }
+
     }
 
     public void acceptOverrideRecipe(Consumer<RecipeJsonProvider> consumer, Identifier id) {
@@ -119,23 +138,29 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     // WACK BS OMG
     // but it works :)
     private RecipeJsonProvider getJsonProvider(Identifier recipeId, Recipe<?> recipe) {
+
+
         if (recipe instanceof ShapedRecipe shapedRecipe) {
-            CraftingBS craftingBS = getShapedCraftingPatternFromIngredients(recipe.getIngredients());
+            CraftingBS craftingBS = getShapedCraftingPatternFromIngredients(recipe.getIngredients(), shapedRecipe.getWidth(), shapedRecipe.getHeight());
 
             ShapedRecipeJsonBuilder builder = ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, shapedRecipe.getOutput(null).getItem());
 
-            builder = builder
-                    .pattern(craftingBS.pattern[0])
-                    .pattern(craftingBS.pattern[1])
-                    .pattern(craftingBS.pattern[2]);
+            for (String string : craftingBS.pattern) {
+                builder = builder.pattern(string);
+            }
 
             for (Ingredient ingredient : craftingBS.keyMap.keySet()) {
-                builder = builder.input(craftingBS.keyMap.get(ingredient), ingredient);
+                builder = builder.input(craftingBS.keyMap.get(ingredient).toString().charAt(0), ingredient);
             }
 
             // dont even ask bro
             AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
             builder.offerTo((provider::set), recipeId);
+
+            // check for makeshift crafting
+            if (shapedRecipe instanceof MakeshiftShapedCraftingRecipe makeshiftShapedCraftingRecipe) {
+                return new MakeshiftRecipeJsonProvider(provider.get(), makeshiftShapedCraftingRecipe.getSerializer(), makeshiftShapedCraftingRecipe);
+            }
             return provider.get();
         }
         if (recipe instanceof ShapelessRecipe shapelessRecipe) {
@@ -148,6 +173,11 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
             // dont even ask bro
             AtomicReference<RecipeJsonProvider> provider = new AtomicReference<>();
             builder.offerTo((provider::set), recipeId);
+
+            // check for makeshift crafting
+            if (shapelessRecipe instanceof MakeshiftShapelessCraftingRecipe makeshiftShapelessCraftingRecipe) {
+                return new MakeshiftRecipeJsonProvider(provider.get(), makeshiftShapelessCraftingRecipe.getSerializer(), makeshiftShapelessCraftingRecipe);
+            }
             return provider.get();
         }
         if (recipe instanceof SmeltingRecipe smeltingRecipe) {
@@ -192,34 +222,53 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
             builder.offerTo((provider::set), recipeId);
             return provider.get();
         }
+        if (recipe instanceof BlastProcessingRecipe blastProcessingRecipe) {
+            return new BlastProcessingRecipeJsonProvider(blastProcessingRecipe);
+        }
+        if (recipe instanceof HammeringRecipe hammeringRecipe) {
+            return new HammeringRecipeJsonProvider(hammeringRecipe);
+        }
+        if (recipe instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
+            return new ItemExplosionPowerRecipeJsonProvider(itemExplosionPowerRecipe);
+        }
 
         KlaxonCommon.LOGGER.info("oopsy daisy no json provider for crafting recipe :(");
         return null;
     }
 
     // hacky bs that lets me keep my 1.21 datagen code
-    private CraftingBS getShapedCraftingPatternFromIngredients(DefaultedList<Ingredient> ingredients) {
-        Map<Ingredient, Character> ingredientCharacterMap = new HashMap<>(Map.of());
+    private CraftingBS getShapedCraftingPatternFromIngredients(DefaultedList<Ingredient> ingredients, int width, int height) {
+        Map<Ingredient, Integer> ingredientCharacterMap = new HashMap<>(Map.of());
 
         int incrementor = 0;
 
         StringBuilder patternStringBuilder = new StringBuilder();
 
         for (Ingredient ingredient : ingredients) {
-            Character workingChar = ingredientCharacterMap.get(ingredient);
-            if (workingChar == null) {
-                char newChar = (char) incrementor++;
-                ingredientCharacterMap.put(ingredient, newChar);
-                workingChar = newChar;
+            Integer workingIncrementor = ingredientCharacterMap.get(ingredient);
+            if (workingIncrementor == null) {
+                ingredientCharacterMap.put(ingredient, incrementor);
+                workingIncrementor = incrementor;
+                incrementor++;
             }
-            patternStringBuilder.append(workingChar);
+            patternStringBuilder.append(workingIncrementor);
         }
 
         String patternString = patternStringBuilder.toString();
+        // 012 345 678
+        // 012
+        // 345
+        // 678
 
-        String[] pattern = {patternString.substring(0, 2), patternString.substring(3, 5), patternString.substring(6, 9)};
+        // more fucky bullshit
+        ArrayList<String> patternStrings = new ArrayList<>();
+        for (int i = 0; i <= patternString.length(); i++) {
+            if (i != 0 && i % width == 0) {
+                patternStrings.add(patternString.substring(i - width, i));
+            }
+        }
 
-        return new CraftingBS(pattern, ingredientCharacterMap);
+        return new CraftingBS(patternStrings.toArray(new String[] {}), ingredientCharacterMap);
     }
 
     // gotcha stinker
@@ -228,5 +277,5 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         return identifier;
     }
 
-    private record CraftingBS(String[] pattern, Map<Ingredient, Character> keyMap) {}
+    private record CraftingBS(String[] pattern, Map<Ingredient, Integer> keyMap) {}
 }

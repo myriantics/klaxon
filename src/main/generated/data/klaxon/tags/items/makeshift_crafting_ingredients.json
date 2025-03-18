@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "klaxon:crude_steel_plate",
+    "klaxon:crude_steel_ingot",
+    "klaxon:crude_steel_block",
+    "klaxon:crude_steel_nugget"
+  ]
+}

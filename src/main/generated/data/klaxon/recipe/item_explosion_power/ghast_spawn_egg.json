@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosionPower": 3.5,
-  "ingredient": {
-    "item": "minecraft:ghast_spawn_egg"
-  },
-  "isHidden": true,
-  "producesFire": true
-}

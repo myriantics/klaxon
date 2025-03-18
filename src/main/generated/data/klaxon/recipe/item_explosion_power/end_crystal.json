@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosionPower": 6.0,
-  "ingredient": {
-    "item": "minecraft:end_crystal"
-  },
-  "isHidden": false,
-  "producesFire": false
-}

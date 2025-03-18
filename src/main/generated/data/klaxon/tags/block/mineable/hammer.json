@@ -1,9 +1,0 @@
-{
-  "values": [
-    {
-      "id": "#klaxon:hammer_instabreakable",
-      "required": false
-    },
-    "minecraft:beacon"
-  ]
-}

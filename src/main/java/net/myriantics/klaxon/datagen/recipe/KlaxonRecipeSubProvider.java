@@ -248,7 +248,10 @@ public abstract class KlaxonRecipeSubProvider {
             stringKeys.put(character.toString(), key.get(character));
         }
 
-        ShapedRecipe recipe = new ShapedRecipe(recipeId, group, category, width, height, ShapedRecipeInvoker.klaxon$invokeCreatePatternMatrix(pattern, stringKeys, width, height), output);
+        // yay lovely hack
+        stringKeys.put(" ", Ingredient.EMPTY);
+
+        ShapedRecipe recipe = new ShapedRecipe(recipeId, group, category, width, height, ShapedRecipeInvoker.klaxon$invokeCreatePatternMatrix(ShapedRecipeInvoker.klaxon$invokeRemovePadding(pattern), stringKeys, width, height), output);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
@@ -280,7 +283,10 @@ public abstract class KlaxonRecipeSubProvider {
             stringKeys.put(character.toString(), key.get(character));
         }
 
-        ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(recipeId, group, category, width, height, ShapedRecipeInvoker.klaxon$invokeCreatePatternMatrix(pattern, stringKeys, width, height), constantIngredients,  output, false);
+        // yay lovely hack
+        stringKeys.put(" ", Ingredient.EMPTY);
+
+        ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(recipeId, group, category, width, height, ShapedRecipeInvoker.klaxon$invokeCreatePatternMatrix(ShapedRecipeInvoker.klaxon$invokeRemovePadding(pattern), stringKeys, width, height), constantIngredients,  output, false);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

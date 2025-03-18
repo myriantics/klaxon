@@ -12,9 +12,9 @@ public class KlaxonDatagenPhantomItems {
     public static final Item CREATE_COPPER_NUGGET = registerItem(CREATE_MOD_ID, "copper_nugget");
     public static final Item CREATE_IRON_SHEET = registerItem(CREATE_MOD_ID, "iron_sheet");
     public static final Item CREATE_COPPER_SHEET = registerItem(CREATE_MOD_ID, "copper_sheet");
-    public static final Item CREATE_GOLD_SHEET = registerItem(CREATE_MOD_ID, "brass_sheet");
-    public static final Item CREATE_BRASS_SHEET = registerItem(CREATE_MOD_ID, "brass_ingot");
-    public static final Item CREATE_BRASS_INGOT = registerItem(CREATE_MOD_ID, "gold_sheet");
+    public static final Item CREATE_GOLD_SHEET = registerItem(CREATE_MOD_ID, "gold_sheet");
+    public static final Item CREATE_BRASS_SHEET = registerItem(CREATE_MOD_ID, "brass_sheet");
+    public static final Item CREATE_BRASS_INGOT = registerItem(CREATE_MOD_ID, "brass_ingot");
     public static final Item CREATE_PRECISION_MECHANISM = registerItem(CREATE_MOD_ID, "precision_mechanism");
 
     // do not EVER call this in the actual mod - just for datagen

@@ -11,12 +11,13 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.recipe.makeshift_crafting.MakeshiftCraftingRecipe;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.List;
 
-public class MakeshiftShapelessCraftingRecipe extends ShapelessRecipe {
+public class MakeshiftShapelessCraftingRecipe extends ShapelessRecipe implements MakeshiftCraftingRecipe {
 
     private final ItemStack result;
     List<Ingredient> constantIngredients;

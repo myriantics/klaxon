@@ -9,12 +9,13 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.recipe.makeshift_crafting.MakeshiftCraftingRecipe;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.List;
 
-public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
+public class MakeshiftShapedCraftingRecipe extends ShapedRecipe implements MakeshiftCraftingRecipe {
     public Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.MAKESHIFT_SHAPED_CRAFTING_ID);
 
     public ItemStack result;
