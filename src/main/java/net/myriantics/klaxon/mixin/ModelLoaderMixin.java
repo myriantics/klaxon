@@ -22,7 +22,7 @@ public abstract class ModelLoaderMixin {
     @Shadow protected abstract void addModel(ModelIdentifier id);
 
     // Registers the hammer model as an available resource you can pull from
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;addModel(Lnet/minecraft/client/util/ModelIdentifier;)V", shift = At.Shift.AFTER))
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;addModel(Lnet/minecraft/client/util/ModelIdentifier;)V", shift = At.Shift.AFTER, ordinal = 2))
     public void klaxon$addHammer(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<ModelLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
         this.addModel(new ModelIdentifier(KlaxonCommon.locate("steel_hammer_3d"), "inventory"));
     }
