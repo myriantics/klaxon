@@ -4,6 +4,8 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.spongepowered.asm.mixin.Mixin;

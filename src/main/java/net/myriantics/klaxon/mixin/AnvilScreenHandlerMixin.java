@@ -25,11 +25,11 @@ public abstract class AnvilScreenHandlerMixin {
 
     @ModifyExpressionValue(
             method = "updateResult",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isDamageable()Z", ordinal = 1)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;isAcceptableItem(Lnet/minecraft/item/ItemStack;)Z")
     )
     public boolean klaxon$repairOverride(boolean original, @Local(ordinal = 0) ItemStack inputStack) {
         // doesnt allow enchants to be applied to unenchantable items
-        return original || !inputStack.isIn(KlaxonItemTags.UNENCHANTABLE);
+        return original && !inputStack.isIn(KlaxonItemTags.UNENCHANTABLE);
     }
 
     // halves durability gained from using makeshift repair materials to repair items
