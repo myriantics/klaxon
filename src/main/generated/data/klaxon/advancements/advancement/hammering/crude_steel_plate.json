@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "crude_steel_plate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:crude_steel_plate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "crude_steel_plate"
+    ]
+  ],
   "sends_telemetry_event": true
 }

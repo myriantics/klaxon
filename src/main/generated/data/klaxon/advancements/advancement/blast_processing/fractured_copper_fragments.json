@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "fractured_copper_fragments": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:fractured_copper_fragments"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "fractured_copper_fragments"
+    ]
+  ],
   "sends_telemetry_event": true
 }

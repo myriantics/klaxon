@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "fractured_iron_fragments": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:fractured_iron_fragments"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "fractured_iron_fragments"
+    ]
+  ],
   "sends_telemetry_event": true
 }

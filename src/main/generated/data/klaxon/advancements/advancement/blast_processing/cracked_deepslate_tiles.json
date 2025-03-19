@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "cracked_deepslate_tiles": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:cracked_deepslate_tiles"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "cracked_deepslate_tiles"
+    ]
+  ],
   "sends_telemetry_event": true
 }

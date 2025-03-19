@@ -169,13 +169,16 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
             return provider.get();
         }
         if (recipe instanceof ShapelessRecipe shapelessRecipe) {
-            ShapelessRecipeJsonBuilder builder = ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, shapelessRecipe.getOutput(null).getItem());
+            ItemStack outputStack = shapelessRecipe.getOutput(null);
+
+            ShapelessRecipeJsonBuilder builder = ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, outputStack.getItem(), outputStack.getCount());
 
             for (Ingredient ingredient : shapelessRecipe.getIngredients()) {
                 builder.input(ingredient);
             }
 
             Item outputItem = recipe.getOutput(null).getItem();
+
 
             // oh FINE i'll add recipe advancements
             builder = builder.criterion(Registries.ITEM.getId(outputItem).getPath(), FabricRecipeProvider.conditionsFromItem(outputItem));
@@ -270,6 +273,12 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         StringBuilder patternStringBuilder = new StringBuilder();
 
         for (Ingredient ingredient : ingredients) {
+            // serializers dont like empty ingredients in the key
+            if (ingredient.equals(Ingredient.EMPTY))  {
+                patternStringBuilder.append(" ");
+                continue;
+            }
+
             Integer workingIncrementor = ingredientCharacterMap.get(ingredient);
             if (workingIncrementor == null) {
                 ingredientCharacterMap.put(ingredient, incrementor);

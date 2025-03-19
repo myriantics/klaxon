@@ -1,9 +1,14 @@
 package net.myriantics.klaxon.recipe.item_explosion_power;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.item.Item;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
@@ -37,7 +42,9 @@ public class ItemExplosionPowerRecipeJsonProvider implements RecipeJsonProvider 
     @Nullable
     @Override
     public JsonObject toAdvancementJson() {
-        return Advancement.Builder.create().toJson();
+        Item item = itemExplosionPowerRecipe.getIngredient().getMatchingStacks()[0].getItem();
+
+        return Advancement.Builder.create().criterion(Registries.ITEM.getId(item).getPath(), FabricRecipeProvider.conditionsFromItem(item)).build(getAdvancementId()).createTask().toJson();
     }
 
     @Nullable

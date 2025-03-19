@@ -2,6 +2,7 @@
   "added": [
     "klaxon:crafting/shapeless/crude_steel_nugget",
     "klaxon:crafting/makeshift_shaped/steel_boots",
+    "klaxon:crafting/makeshift_shapeless/flint_and_steel",
     "klaxon:crafting/shaped/crude_steel_plating_block",
     "klaxon:blast_processing/fractured_raw_gold",
     "klaxon:crafting/shaped/deepslate_blast_processor",

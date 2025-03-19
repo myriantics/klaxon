@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "fractured_coal_chunks": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:fractured_coal_chunks"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "fractured_coal_chunks"
+    ]
+  ],
   "sends_telemetry_event": true
 }

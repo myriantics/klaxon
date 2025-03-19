@@ -3,11 +3,14 @@ package net.myriantics.klaxon.recipe.makeshift_crafting;
 import com.google.gson.JsonObject;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class MakeshiftRecipeJsonProvider implements RecipeJsonProvider {
     RecipeJsonProvider provider;
@@ -24,7 +27,11 @@ public class MakeshiftRecipeJsonProvider implements RecipeJsonProvider {
     public void serialize(JsonObject json) {
         provider.serialize(json);
 
-        json.add("constant_ingredients", KlaxonCodecUtils.writeIngredientListToJson(makeshiftCraftingRecipe.getConstantIngredients()));
+        List<Ingredient> constantIngredients = makeshiftCraftingRecipe.getConstantIngredients();
+
+        if (!constantIngredients.isEmpty()) {
+            json.add("constant_ingredients", KlaxonCodecUtils.writeIngredientListToJson(makeshiftCraftingRecipe.getConstantIngredients()));
+        }
     }
 
     @Override

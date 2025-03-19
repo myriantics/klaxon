@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "snow": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:snow"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "snow"
+    ]
+  ],
   "sends_telemetry_event": true
 }

@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "copper_plate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:copper_plate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "copper_plate"
+    ]
+  ],
   "sends_telemetry_event": true
 }

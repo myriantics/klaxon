@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "creeper_spawn_egg": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:creeper_spawn_egg"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "creeper_spawn_egg"
+    ]
+  ],
   "sends_telemetry_event": true
 }

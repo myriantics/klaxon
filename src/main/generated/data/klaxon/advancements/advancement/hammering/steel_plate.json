@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "steel_plate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:steel_plate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "steel_plate"
+    ]
+  ],
   "sends_telemetry_event": true
 }

@@ -1,23 +1,21 @@
 {
   "type": "klaxon:makeshift_shaped",
   "category": "misc",
-  "constant_ingredients": [],
   "key": {
     "0": {
       "tag": "klaxon:crude_inclusive_steel_ingots"
     },
-    "1": [],
-    "2": {
+    "1": {
       "tag": "klaxon:crude_inclusive_steel_plates"
     },
-    "3": {
+    "2": {
       "tag": "klaxon:crude_inclusive_steel_blocks"
     }
   },
   "pattern": [
-    "010",
-    "232",
-    "222"
+    "0 0",
+    "121",
+    "111"
   ],
   "result": {
     "item": "klaxon:steel_chestplate"

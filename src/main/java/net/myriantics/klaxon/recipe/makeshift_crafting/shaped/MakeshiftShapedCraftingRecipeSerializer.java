@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.recipe.makeshift_crafting.shaped;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -31,7 +32,7 @@ public class MakeshiftShapedCraftingRecipeSerializer implements RecipeSerializer
         int i = strings[0].length();
         int j = strings.length;
 
-        List<Ingredient> constantIngredients = KlaxonCodecUtils.readIngredientListFromJson(json.getAsJsonArray("constant_ingredients"));
+        List<Ingredient> constantIngredients = KlaxonCodecUtils.readIngredientListFromJson(JsonHelper.getArray(json, "constant_ingredients", KlaxonCodecUtils.getDummyIngredientJsonArray()));
 
         DefaultedList<Ingredient> ingredients = ShapedRecipeInvoker.klaxon$invokeCreatePatternMatrix(strings, key, i, j);
         ItemStack itemStack = ShapedRecipe.outputFromJson(JsonHelper.getObject(json, "result"));

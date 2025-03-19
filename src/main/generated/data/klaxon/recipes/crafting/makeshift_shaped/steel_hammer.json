@@ -16,18 +16,17 @@
     "1": {
       "tag": "klaxon:crude_inclusive_steel_ingots"
     },
-    "2": [],
-    "3": {
+    "2": {
       "item": "minecraft:stick"
     },
-    "4": {
+    "3": {
       "item": "minecraft:leather"
     }
   },
   "pattern": [
     "010",
-    "232",
-    "434"
+    " 2 ",
+    "323"
   ],
   "result": {
     "item": "klaxon:steel_hammer"

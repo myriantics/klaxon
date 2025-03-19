@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "gold_plate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:gold_plate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "gold_plate"
+    ]
+  ],
   "sends_telemetry_event": true
 }

@@ -16,16 +16,18 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import java.util.List;
 
 public class MakeshiftShapedCraftingRecipe extends ShapedRecipe implements MakeshiftCraftingRecipe {
-    public Identifier ID = KlaxonCommon.locate(KlaxonRecipeTypes.MAKESHIFT_SHAPED_CRAFTING_ID);
 
     public ItemStack result;
 
     List<Ingredient> constantIngredients;
 
+    private final Identifier id;
+
     public MakeshiftShapedCraftingRecipe(Identifier id,  String group, CraftingRecipeCategory category, int width, int height, DefaultedList<Ingredient> input, List<Ingredient> constantIngredients, ItemStack result, boolean showNotification) {
         super(id, group, category, width, height, input, result, showNotification);
         this.result = result;
         this.constantIngredients = constantIngredients;
+        this.id = id;
     }
 
     @Override
@@ -69,6 +71,6 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe implements Makes
 
     @Override
     public Identifier getId() {
-        return ID;
+        return id;
     }
 }

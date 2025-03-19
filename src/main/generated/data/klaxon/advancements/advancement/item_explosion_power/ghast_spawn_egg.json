@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "ghast_spawn_egg": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:ghast_spawn_egg"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "ghast_spawn_egg"
+    ]
+  ],
   "sends_telemetry_event": true
 }

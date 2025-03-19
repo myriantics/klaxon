@@ -7,7 +7,24 @@
       ]
     }
   ],
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "brass_sheet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:brass_sheet"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "brass_sheet"
+    ]
+  ],
   "sends_telemetry_event": true
 }

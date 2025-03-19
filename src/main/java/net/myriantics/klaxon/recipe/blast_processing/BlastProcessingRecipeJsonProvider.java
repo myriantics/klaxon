@@ -1,11 +1,14 @@
 package net.myriantics.klaxon.recipe.blast_processing;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.item.Item;
 import net.minecraft.recipe.BlastingRecipe;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
@@ -42,8 +45,9 @@ public class BlastProcessingRecipeJsonProvider implements RecipeJsonProvider {
     @Nullable
     @Override
     public JsonObject toAdvancementJson() {
-        // not doin it
-        return Advancement.Builder.create().toJson();
+        Item item = blastProcessingRecipe.getOutput(null).getItem();
+
+        return Advancement.Builder.create().criterion(Registries.ITEM.getId(item).getPath(), FabricRecipeProvider.conditionsFromItem(item)).build(getAdvancementId()).createTask().toJson();
     }
 
     @Nullable

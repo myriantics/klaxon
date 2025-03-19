@@ -35,7 +35,9 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
             throw new JsonParseException("Too many ingredients for shapeless recipe");
         } else {
             ItemStack itemStack = ShapedRecipe.outputFromJson(JsonHelper.getObject(json, "result"));
-            List<Ingredient> constantIngredients = KlaxonCodecUtils.readIngredientListFromJson(JsonHelper.getArray(json, "constant_ingredients"));
+
+            // parse constant ingredients
+            List<Ingredient> constantIngredients = KlaxonCodecUtils.readIngredientListFromJson(JsonHelper.getArray(json, "constant_ingredients", KlaxonCodecUtils.getDummyIngredientJsonArray()));
             return new MakeshiftShapelessCraftingRecipe(id, group, category, itemStack, inputIngredients, constantIngredients);
         }
     }

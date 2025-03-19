@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "fractured_gold_fragments": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:fractured_gold_fragments"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "fractured_gold_fragments"
+    ]
+  ],
   "sends_telemetry_event": true
 }

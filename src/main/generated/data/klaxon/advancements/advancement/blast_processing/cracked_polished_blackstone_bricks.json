@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "cracked_polished_blackstone_bricks": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:cracked_polished_blackstone_bricks"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "cracked_polished_blackstone_bricks"
+    ]
+  ],
   "sends_telemetry_event": true
 }

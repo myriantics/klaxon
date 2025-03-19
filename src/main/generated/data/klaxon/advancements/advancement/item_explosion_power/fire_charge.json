@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "fire_charge": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:fire_charge"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "fire_charge"
+    ]
+  ],
   "sends_telemetry_event": true
 }

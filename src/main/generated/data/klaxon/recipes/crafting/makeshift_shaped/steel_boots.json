@@ -1,19 +1,17 @@
 {
   "type": "klaxon:makeshift_shaped",
   "category": "misc",
-  "constant_ingredients": [],
   "key": {
     "0": {
       "tag": "klaxon:crude_inclusive_steel_plates"
     },
-    "1": [],
-    "2": {
+    "1": {
       "tag": "klaxon:crude_inclusive_steel_ingots"
     }
   },
   "pattern": [
-    "010",
-    "212"
+    "0 0",
+    "1 1"
   ],
   "result": {
     "item": "klaxon:steel_boots"

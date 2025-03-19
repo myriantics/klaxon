@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "cracked_nether_bricks": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:cracked_nether_bricks"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "cracked_nether_bricks"
+    ]
+  ],
   "sends_telemetry_event": true
 }

@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "cracked_stone_bricks": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:cracked_stone_bricks"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "cracked_stone_bricks"
+    ]
+  ],
   "sends_telemetry_event": true
 }

@@ -3,8 +3,6 @@ package net.myriantics.klaxon.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -17,8 +15,12 @@ import java.util.List;
 
 public abstract class KlaxonCodecUtils {
 
-    public static void writeIngredientToJson(Ingredient ingredient, JsonObject jsonObject) {
+    public static JsonArray getDummyIngredientJsonArray() {
+        JsonArray jsonArray = new JsonArray();
 
+        jsonArray.add(Ingredient.EMPTY.toJson());
+
+        return jsonArray;
     }
 
     public static JsonArray writeIngredientListToJson(List<Ingredient> ingredients) {

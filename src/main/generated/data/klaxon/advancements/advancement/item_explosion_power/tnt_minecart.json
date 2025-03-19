@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "tnt_minecart": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:tnt_minecart"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "tnt_minecart"
+    ]
+  ],
   "sends_telemetry_event": true
 }

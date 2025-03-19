@@ -1,5 +1,22 @@
 {
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "fractured_raw_gold": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "klaxon:fractured_raw_gold"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "fractured_raw_gold"
+    ]
+  ],
   "sends_telemetry_event": true
 }

@@ -10,7 +10,24 @@
       }
     }
   ],
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "air": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:air"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "air"
+    ]
+  ],
   "sends_telemetry_event": true
 }

@@ -7,7 +7,24 @@
       ]
     }
   ],
-  "criteria": {},
-  "requirements": [],
+  "criteria": {
+    "clock": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:clock"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "clock"
+    ]
+  ],
   "sends_telemetry_event": true
 }
