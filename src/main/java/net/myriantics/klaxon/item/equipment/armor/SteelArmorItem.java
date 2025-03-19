@@ -38,7 +38,7 @@ public class SteelArmorItem extends ArmorItem {
         );
         builder.put(
                 EntityAttributes.GENERIC_MOVEMENT_SPEED,
-                new EntityAttributeModifier(modifiers.get(type), MOVEMENT_SPEED_MULTIPLIER_ID.getPath(), MOVEMENT_SPEED_MULTIPLIER, EntityAttributeModifier.Operation.MULTIPLY_BASE)
+                new EntityAttributeModifier(modifiers.get(type), MOVEMENT_SPEED_MULTIPLIER_ID.getPath(), MOVEMENT_SPEED_MULTIPLIER, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
         );
     }
 }
