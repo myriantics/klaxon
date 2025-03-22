@@ -49,7 +49,6 @@ public class MakeshiftShapedCraftingRecipeSerializer implements RecipeSerializer
         CraftingRecipeCategory craftingRecipeCategory = buf.readEnumConstant(CraftingRecipeCategory.class);
         boolean bl = buf.readBoolean();
 
-
         // parse input ingredients
         int width = buf.readVarInt();
         int height = buf.readVarInt();
@@ -57,7 +56,7 @@ public class MakeshiftShapedCraftingRecipeSerializer implements RecipeSerializer
         ingredients.replaceAll(empty -> Ingredient.fromPacket(buf));
 
         // parse constant ingredients
-        DefaultedList<Ingredient> constantIngredients = DefaultedList.ofSize(buf.readVarInt());
+        DefaultedList<Ingredient> constantIngredients = DefaultedList.ofSize(buf.readVarInt(), Ingredient.EMPTY);
         constantIngredients.replaceAll(empty -> Ingredient.fromPacket(buf));
 
         // parse output

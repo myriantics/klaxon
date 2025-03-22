@@ -50,12 +50,12 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
 
         // decode ingredients
         int inputIngredientsLength = buf.readVarInt();
-        DefaultedList<Ingredient> inputIngredients = DefaultedList.ofSize(inputIngredientsLength);
+        DefaultedList<Ingredient> inputIngredients = DefaultedList.ofSize(inputIngredientsLength, Ingredient.EMPTY);
         inputIngredients.replaceAll(empty -> Ingredient.fromPacket(buf));
 
         // decode constant ingredients
         int constantIngredientsLength = buf.readVarInt();
-        DefaultedList<Ingredient> constantIngredients = DefaultedList.ofSize(constantIngredientsLength);
+        DefaultedList<Ingredient> constantIngredients = DefaultedList.ofSize(constantIngredientsLength, Ingredient.EMPTY);
         constantIngredients.replaceAll(empty -> Ingredient.fromPacket(buf));
 
         // decode result

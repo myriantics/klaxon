@@ -43,12 +43,12 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
                     blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
                     world.createExplosion(null, null,
                             // this is used to differentiate blast processor explosions from normal ones
-                            new ExplosionBehavior(),
+                            null,
                             position.getX(), position.getY(), position.getZ(),
                             (float) powerData.explosionPower(),
                             powerData.producesFire(),
-                            World.ExplosionSourceType.BLOCK,
-                            true);
+                            World.ExplosionSourceType.BLOCK
+                    );
                     world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
                 }
             }
