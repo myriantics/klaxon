@@ -8,7 +8,7 @@ import net.myriantics.klaxon.mixin.BlockSetTypeInvoker;
 public class KlaxonBlockSetTypes {
     public static final BlockSetType STEEL = register(
             new BlockSetType(
-                    "iron",
+                    "steel",
                     false,
                     BlockSoundGroup.METAL,
                     SoundEvents.BLOCK_IRON_DOOR_CLOSE,
@@ -25,7 +25,7 @@ public class KlaxonBlockSetTypes {
     public static final BlockSetType CRUDE_STEEL = register(
             new BlockSetType(
                     "crude_steel",
-                    false,
+                    true,
                     BlockSoundGroup.METAL,
                     SoundEvents.BLOCK_IRON_DOOR_CLOSE,
                     SoundEvents.BLOCK_IRON_DOOR_OPEN,
