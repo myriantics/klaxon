@@ -56,6 +56,11 @@ public class HammerItem extends ToolItem {
         attributeModifiers = createAttributeModifiers(material, attackDamage, attackSpeed);
     }
 
+    @Override
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
+    }
+
     public static Multimap<EntityAttribute, EntityAttributeModifier> createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 
