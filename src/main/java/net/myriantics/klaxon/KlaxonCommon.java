@@ -43,6 +43,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonStatusEffects.registerStatusEffects();
 		KlaxonToolMaterials.registerToolMaterials();
 		KlaxonGamerules.registerGamerules();
+		KlaxonFuelRegistry.registerFuelItems();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

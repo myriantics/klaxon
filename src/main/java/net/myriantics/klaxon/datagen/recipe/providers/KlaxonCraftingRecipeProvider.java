@@ -5,6 +5,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.tag.ItemTags;
@@ -104,6 +105,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         Ingredient.ofItems(KlaxonItems.FRACTURED_COAL_CHUNKS)),
                 new ItemStack(KlaxonItems.CRUDE_STEEL_MIXTURE, 3),
                 null, null);
+
+        add2x2PackingRecipe(exporter, Ingredient.ofItems(KlaxonItems.FRACTURED_COAL_CHUNKS), new ItemStack(Items.COAL), null, null);
     }
 
     private void buildCompressionCraftingRecipes(RecipeExporter exporter) {
