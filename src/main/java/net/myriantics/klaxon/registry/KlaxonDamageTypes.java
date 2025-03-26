@@ -28,6 +28,6 @@ public class KlaxonDamageTypes {
     }
 
     public static void registerModDamageTypes() {
-        KlaxonCommon.LOGGER.info("Registering KLAXON's Damage Types");
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Damage Types!");
     }
 }

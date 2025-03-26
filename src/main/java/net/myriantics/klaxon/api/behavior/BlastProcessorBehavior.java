@@ -41,7 +41,7 @@ public interface BlastProcessorBehavior {
     boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory);
 
     static void registerBlastProcessorBehaviors() {
-        KlaxonCommon.LOGGER.info("Registering KLAXON's Blast Processor Behaviors!");
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Blast Processor Behaviors!");
 
         DeepslateBlastProcessorBlock.registerBehavior(Items.FIREWORK_ROCKET, new ItemBlastProcessorBehavior() {
             @Override

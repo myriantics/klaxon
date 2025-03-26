@@ -59,7 +59,7 @@ public class KlaxonBlocks {
     }
 
     public static void registerModBlocks() {
-        KlaxonCommon.LOGGER.info("Registering KLAXON's Blocks");
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Blocks!");
     }
 
 }

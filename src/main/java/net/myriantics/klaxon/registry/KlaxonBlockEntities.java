@@ -14,7 +14,7 @@ public class KlaxonBlockEntities {
                             KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR).build());
 
     public static void registerBlockEntities() {
-        KlaxonCommon.LOGGER.info("Registering KLAXON's Block Entities");
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Block Entities!");
     }
 
     public static String toBlockEntity(Block block) {

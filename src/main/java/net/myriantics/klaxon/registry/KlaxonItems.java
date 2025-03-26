@@ -64,6 +64,6 @@ public class KlaxonItems {
     }
 
     public static void registerModItems() {
-        KlaxonCommon.LOGGER.info("Registering KLAXON's Items");
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Items!");
     }
 }

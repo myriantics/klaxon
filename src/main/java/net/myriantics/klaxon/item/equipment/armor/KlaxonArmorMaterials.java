@@ -65,6 +65,6 @@ public class KlaxonArmorMaterials {
     }
 
     public static void registerArmorMaterials() {
-        KlaxonCommon.LOGGER.info("Registered KLAXON's Armor Materials");
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Armor Materials!");
     }
 }

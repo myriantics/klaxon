@@ -111,7 +111,7 @@ public class KlaxonItemGroups {
         register(KLAXON_MACHINES_ID, KLAXON_MACHINES);
         register(KLAXON_MATERIALS_ID, KLAXON_MATERIALS);
 
-        KlaxonCommon.LOGGER.info("Registered KLAXON's Item Groups");
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Item Groups!");
     }
 
     private static void register(RegistryKey<ItemGroup> key, ItemGroup group) {

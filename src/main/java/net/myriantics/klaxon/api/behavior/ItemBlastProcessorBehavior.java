@@ -8,6 +8,7 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
@@ -17,6 +18,7 @@ import net.myriantics.klaxon.registry.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.registry.KlaxonGamerules;
 import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -34,25 +36,28 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
 
     @Override
     public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
-        if (world != null) {
+        if (world instanceof ServerWorld serverWorld) {
             BlockState activeBlockState = world.getBlockState(pos);
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
                 if (powerData.explosionPower() > 0.0) {
                     Direction direction = activeBlockState.get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
                     Position position = blastProcessor.getExplosionOutputLocation(direction);
 
+                    // make sure we're actually allowed to modify world
+                    boolean shouldModifyWorld = serverWorld.getGameRules().getBoolean(KlaxonGamerules.SHOULD_BLAST_PROCESSOR_EXPLOSION_MODIFY_WORLD);
+
                     blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
-                    world.createExplosion(null, null,
+                    serverWorld.createExplosion(null, null,
                             // this is used to differentiate blast processor explosions from normal ones
-                            new ExplosionBehavior(),
+                            new BlastProcessorExplosionBehavior(shouldModifyWorld),
                             position.getX(), position.getY(), position.getZ(),
                             (float) powerData.explosionPower(),
-                            powerData.producesFire(),
+                            shouldModifyWorld && powerData.producesFire(),
                             World.ExplosionSourceType.BLOCK,
                             ParticleTypes.EXPLOSION,
                             ParticleTypes.EXPLOSION_EMITTER,
                             SoundEvents.ENTITY_GENERIC_EXPLODE);
-                    world.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+                    serverWorld.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
                 }
             }
         }

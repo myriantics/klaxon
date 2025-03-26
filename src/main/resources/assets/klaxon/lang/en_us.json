@@ -112,5 +112,7 @@
   "effect.klaxon.heavy.description": "Modifies the function of KLAXON's weight-dependent abilities such as the Hammer WallJump",
 
   "advancements.klaxon_prelude.drink_coffee.title": "9:05 Sharp",
-  "advancements.klaxon_prelude.drink_coffee.description": "Drink some Coffee"
+  "advancements.klaxon_prelude.drink_coffee.description": "Drink some Coffee",
+
+  "gamerule.shouldBlastProcessorExplosionModifyWorld": "Blast Processor Explosions should modify world"
 }

@@ -12,10 +12,4 @@ public interface WindChargeEntityInvoker {
 
     @Invoker
     void invokeCreateExplosion(Vec3d pos);
-
-    @Accessor("EXPLOSION_BEHAVIOR")
-    ExplosionBehavior klaxon$getExplosionBehavior();
-
-    @Accessor("EXPLOSION_POWER")
-    float klaxon$getExplosionPower();
 }

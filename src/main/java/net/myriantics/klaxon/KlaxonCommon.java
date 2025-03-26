@@ -4,21 +4,10 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.registry.KlaxonAdvancementCriteria;
+import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
-import net.myriantics.klaxon.registry.KlaxonBlockEntities;
-import net.myriantics.klaxon.registry.KlaxonBlocks;
 import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
-import net.myriantics.klaxon.registry.KlaxonEntities;
-import net.myriantics.klaxon.registry.KlaxonStatusEffects;
-import net.myriantics.klaxon.registry.KlaxonItemGroups;
-import net.myriantics.klaxon.registry.KlaxonItems;
-import net.myriantics.klaxon.registry.KlaxonToolMaterials;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
-import net.myriantics.klaxon.registry.KlaxonPackets;
-import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
-import net.myriantics.klaxon.registry.KlaxonDamageTypes;
-import net.myriantics.klaxon.registry.KlaxonScreenHandlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +31,8 @@ public class KlaxonCommon implements ModInitializer {
 			KlaxonDatagenPhantomItems.registerPhantomItemsForDatagen();
 		}
 
-		KlaxonEntities.registerModEntities();
-		KlaxonRecipeTypes.registerSerializer();
+		// KlaxonEntities.registerModEntities();
+		KlaxonRecipeTypes.registerRecipeTypes();
 		KlaxonDamageTypes.registerModDamageTypes();
 		KlaxonPackets.registerModPackets();
 		KlaxonPackets.registerC2SPacketRecievers();
@@ -53,6 +42,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonAdvancementCriteria.registerAdvancementCriteria();
 		KlaxonStatusEffects.registerStatusEffects();
 		KlaxonToolMaterials.registerToolMaterials();
+		KlaxonGamerules.registerGamerules();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

@@ -17,7 +17,7 @@ public class KlaxonPackets {
     public static final Identifier HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID = KlaxonCommon.locate("hammer_walljump_trigger_packet_c2s");
 
     public static void registerModPackets() {
-        KlaxonCommon.LOGGER.info("Registering KLAXON's Packets!");
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Packets!");
 
         // s2c
         PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.PACKET_CODEC);
