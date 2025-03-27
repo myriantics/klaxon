@@ -195,7 +195,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         }
         if (recipe instanceof SmeltingRecipe smeltingRecipe) {
             CookingRecipeJsonBuilder builder = CookingRecipeJsonBuilder.createSmelting(
-                    smeltingRecipe.getIngredients().getFirst(),
+                    smeltingRecipe.getIngredients().get(0),
                     RecipeCategory.MISC,
                     smeltingRecipe.getOutput(null).getItem(),
                     smeltingRecipe.getExperience(),
@@ -214,7 +214,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         }
         if (recipe instanceof SmokingRecipe smokingRecipe) {
             CookingRecipeJsonBuilder builder = CookingRecipeJsonBuilder.createSmoking(
-                    smokingRecipe.getIngredients().getFirst(),
+                    smokingRecipe.getIngredients().get(0),
                     RecipeCategory.MISC,
                     smokingRecipe.getOutput(null).getItem(),
                     smokingRecipe.getExperience(),
@@ -233,7 +233,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         }
         if (recipe instanceof BlastingRecipe blastingRecipe) {
             CookingRecipeJsonBuilder builder = CookingRecipeJsonBuilder.createBlasting(
-                    blastingRecipe.getIngredients().getFirst(),
+                    blastingRecipe.getIngredients().get(0),
                     RecipeCategory.MISC,
                     blastingRecipe.getOutput(null).getItem(),
                     blastingRecipe.getExperience(),

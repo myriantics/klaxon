@@ -170,7 +170,7 @@ public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
             }
         }
 
-        return Optional.of(recipes.getFirst());
+        return Optional.of(recipes.get(0));
     }
 
     @Override
