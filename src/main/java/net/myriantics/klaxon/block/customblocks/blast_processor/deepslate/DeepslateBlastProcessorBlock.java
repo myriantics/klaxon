@@ -45,14 +45,6 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     public static final BooleanProperty POWERED = KlaxonBlockStateProperties.POWERED;
     public static final DirectionProperty HORIZONTAL_FACING = Properties.HORIZONTAL_FACING;
 
-    public static final Map<Item, BlastProcessorBehavior> BEHAVIORS = Util.make(
-            new Object2ObjectOpenHashMap<>(), map -> map.defaultReturnValue(new ItemBlastProcessorBehavior())
-    );
-
-    public static void registerBehavior(ItemConvertible provider, BlastProcessorBehavior behavior) {
-        BEHAVIORS.put(provider.asItem(), behavior);
-    }
-
     public DeepslateBlastProcessorBlock(Settings settings) {
         super(settings);
 

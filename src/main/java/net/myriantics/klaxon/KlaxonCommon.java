@@ -44,7 +44,6 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonScreenHandlers.registerModScreenHandlers();
 		KlaxonItemGroups.registerKlaxonItemGroups();
 		KlaxonBlastProcessorBehaviors.registerBlastProcessorBehaviors();
-		BlastProcessorBehavior.registerBlastProcessorBehaviors();
 		KlaxonAdvancementCriteria.registerAdvancementCriteria();
 		KlaxonStatusEffects.registerStatusEffects();
 		KlaxonToolMaterials.registerToolMaterials();
