@@ -16,6 +16,8 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
@@ -51,11 +53,13 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         }
 
         // crude ass code but it works haha
-        for (Item item : DeepslateBlastProcessorBlock.BEHAVIORS.keySet()) {
-            BlastProcessorBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound behaviorEmiData = DeepslateBlastProcessorBlock.BEHAVIORS.get(item).getEmiData();
+        for (RecipeEntry<BlastProcessorBehaviorRecipe> behaviorRecipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
 
-            if (explosionPowerMin <= behaviorEmiData.explosionPowerMin() && explosionPowerMin <= explosionPowerMax) {
-                catalystStacks.add(EmiIngredient.of(Ingredient.ofItems(item)));
+            BlastProcessorBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorRecipe.value().getBehaviorId());
+            BlastProcessorBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
+
+            if (data != null && explosionPowerMin <= data.explosionPowerMin() && data.explosionPowerMax() <= explosionPowerMax) {
+                catalystStacks.add(EmiIngredient.of(behaviorRecipe.value().getIngredient()));
             }
         }
 

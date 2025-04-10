@@ -3,17 +3,28 @@ package net.myriantics.klaxon.registry.custom;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
 import net.minecraft.component.type.FireworksComponent;
+import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.projectile.DragonFireballEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.entity.projectile.WindChargeEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
@@ -31,6 +42,7 @@ public class KlaxonBlastProcessorBehaviors {
     public static final Identifier FIREWORK_STAR_ID = KlaxonCommon.locate("firework_star_behavior");
     public static final Identifier BEDLIKE_EXPLODABLE_ID = KlaxonCommon.locate("bedlike_explodable_behavior");
     public static final Identifier WIND_CHARGE_ID = KlaxonCommon.locate("wind_charge_behavior");
+    public static final Identifier DRAGONS_BREATH_ID = KlaxonCommon.locate("dragons_breath_behavior");
 
     public static final BlastProcessorBehavior FIREWORK_ROCKET = registerBehavior(FIREWORK_ROCKET_ID, new ItemBlastProcessorBehavior() {
         @Override
@@ -168,6 +180,48 @@ public class KlaxonBlastProcessorBehaviors {
                     Text.translatable("klaxon.emi.text.explosion_power_info.wind_charge_behavior_info"),
                     WIND_CHARGE_ID.getPath()
             );
+        }
+    });
+    public static final BlastProcessorBehavior DRAGONS_BREATH = registerBehavior(DRAGONS_BREATH_ID, new ItemBlastProcessorBehavior() {
+        @Override
+        public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
+            Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
+
+            if (!world.isClient()) {
+
+                AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ());
+
+                areaEffectCloudEntity.setParticleType(ParticleTypes.DRAGON_BREATH);
+                areaEffectCloudEntity.setRadius(1.0F);
+                areaEffectCloudEntity.setDuration(80);
+                areaEffectCloudEntity.setRadiusGrowth((0.6F - areaEffectCloudEntity.getRadius()) / areaEffectCloudEntity.getDuration());
+                areaEffectCloudEntity.addEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 1, 1));
+
+                world.syncWorldEvent(WorldEvents.DRAGON_BREATH_CLOUD_SPAWNS, pos, 1);
+                world.spawnEntity(areaEffectCloudEntity);
+
+                blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+            }
+        }
+
+        @Override
+        public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
+            return new ItemExplosionPowerData(1.5, false);
+        }
+
+        @Override
+        public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
+            return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
+                    1.5,
+                    1.5,
+                    Text.translatable("klaxon.emi.text.explosion_power_info.dragons_breath_behavior_info"),
+                    DRAGONS_BREATH_ID.getPath()
+            );
+        }
+
+        @Override
+        public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
+            return false;
         }
     });
 

@@ -23,5 +23,6 @@ public class KlaxonBlastProcessorBehaviorRecipeProvider extends KlaxonRecipeSubP
         addBlastProcessorBehaviorRecipe(exporter, Ingredient.ofItems(Items.FIREWORK_STAR), KlaxonBlastProcessorBehaviors.FIREWORK_STAR_ID);
         addBlastProcessorBehaviorRecipe(exporter, Ingredient.fromTag(KlaxonItemTags.BEDLIKE_EXPLODABLES), KlaxonBlastProcessorBehaviors.BEDLIKE_EXPLODABLE_ID);
         addBlastProcessorBehaviorRecipe(exporter, Ingredient.ofItems(Items.WIND_CHARGE), KlaxonBlastProcessorBehaviors.WIND_CHARGE_ID);
+        addBlastProcessorBehaviorRecipe(exporter, Ingredient.ofItems(Items.DRAGON_BREATH), KlaxonBlastProcessorBehaviors.DRAGONS_BREATH_ID);
     }
 }

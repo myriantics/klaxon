@@ -77,6 +77,8 @@
   "klaxon.emi.text.explosion_power_info.explosion_power_max": "Explosion Power Max: ",
   "klaxon.emi.text.explosion_power_info.bed_behavior_info": "Only produces explosion in the proper dimensions",
   "klaxon.emi.text.explosion_power_info.firework_behavior_info": "Explosion power based on firework components - Produces firework particles instead of explosion",
+  "klaxon.emi.text.explosion_power_info.wind_charge_behavior_info": "Summons a wind charge burst! Does not have any explosion power for the purpose of crafting!",
+  "klaxon.emi.text.explosion_power_info.dragons_breath_behavior_info": "Summons a small cloud of Dragon's Breath.",
   "klaxon.emi.text.hammering.dropped_item": "Dropped Item",
   "klaxon.emi.text.hammering.hammer": "Hold to perform recipe",
   "klaxon.emi.text.hammering.sneak_use": "Sneak + Use In World",
@@ -86,7 +88,6 @@
 
   "container.klaxon.hammering.title": "Hammering",
   "container.klaxon.blast_processing.title": "Blast Processing",
-  "klaxon.emi.text.explosion_power_info.wind_charge_behavior_info": "Summons a wind charge burst! Does not have any explosion power for the purpose of crafting!",
 
   "itemGroup.klaxon.building_blocks": "KLAXON's Building Blocks",
   "itemGroup.klaxon.equipment": "KLAXON's Equipment",

@@ -66,8 +66,6 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         blockEntityInventory.onOpen(playerInventory.player);
 
         if (!player.getWorld().isClient) {
-            BlastProcessorBehavior blastProcessorBehavior = DeepslateBlastProcessorBlock.BEHAVIORS.get(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).getItem());
-
             this.context.run((world, pos) -> {
                 RecipeInput recipeInventory = new RecipeInput() {
                     @Override
@@ -80,6 +78,8 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
                         return ingredientInventory.size();
                     }
                 };
+
+                BlastProcessorBehavior blastProcessorBehavior = DeepslateBlastProcessorBlockEntity.computeBehavior(world, recipeInventory);
 
                 this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInventory);
                 this.blastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInventory, powerData);
@@ -156,7 +156,6 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
 
     public void updateResult(World world, BlockPos pos, PlayerEntity player, SimpleInventory resultInventory) {
 
-        BlastProcessorBehavior blastProcessorBehavior = DeepslateBlastProcessorBlock.BEHAVIORS.get(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).getItem());
 
         RecipeInput recipeInventory = new RecipeInput() {
             @Override
@@ -169,6 +168,8 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
                 return ingredientInventory.size();
             }
         };
+
+        BlastProcessorBehavior blastProcessorBehavior = DeepslateBlastProcessorBlockEntity.computeBehavior(world, recipeInventory);
 
         if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {

@@ -18,7 +18,6 @@ public class KlaxonItemExplosionPowerRecipeProvider extends KlaxonRecipeSubProvi
     }
 
     private void buildItemExplosionPowerRecipes(RecipeExporter exporter) {
-        addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.DRAGON_BREATH), 1.5, false, false);
         addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.END_CRYSTAL), 6.0, false, false);
         addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.FIRE_CHARGE), 0.5, true, false);
         addItemExplosionPowerRecipe(exporter, Ingredient.ofItems(Items.GUNPOWDER), 0.3, false, false);

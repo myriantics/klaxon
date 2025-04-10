@@ -17,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -175,22 +176,8 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                     }
                 };
 
-                // get blast processor behavior from recipe
-                Optional<RecipeEntry<BlastProcessorBehaviorRecipe>> behaviorRecipe = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR, recipeInventory, world);
-
-                // initialize as the default behavior
-                BlastProcessorBehavior blastProcessorBehavior = new ItemBlastProcessorBehavior();
-
-                // replace with new behavior if valid
-                if (behaviorRecipe.isPresent()) {
-                    Identifier behaviorId = behaviorRecipe.get().value().getBehaviorId();
-
-                    BlastProcessorBehavior interimBehavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
-
-                    if (interimBehavior != null) {
-                        blastProcessorBehavior = interimBehavior;
-                    }
-                }
+                // compute blast processor behavior
+                BlastProcessorBehavior blastProcessorBehavior = computeBehavior(world, recipeInventory);
 
                 // get recipe data
                 ItemExplosionPowerData powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
@@ -271,5 +258,26 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 blastProcessingRecipeData.outputState(),
                 itemExplosionPowerData.explosionPower(),
                 itemExplosionPowerData.producesFire());
+    }
+
+    public static BlastProcessorBehavior computeBehavior(World world, RecipeInput recipeInventory) {
+        // get blast processor behavior from recipe
+        Optional<RecipeEntry<BlastProcessorBehaviorRecipe>> behaviorRecipe = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR, recipeInventory, world);
+
+        // initialize as the default behavior
+        BlastProcessorBehavior blastProcessorBehavior = new ItemBlastProcessorBehavior();
+
+        // replace with new behavior if valid
+        if (behaviorRecipe.isPresent()) {
+            Identifier behaviorId = behaviorRecipe.get().value().getBehaviorId();
+
+            BlastProcessorBehavior interimBehavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
+
+            if (interimBehavior != null) {
+                blastProcessorBehavior = interimBehavior;
+            }
+        }
+
+        return blastProcessorBehavior;
     }
 }
