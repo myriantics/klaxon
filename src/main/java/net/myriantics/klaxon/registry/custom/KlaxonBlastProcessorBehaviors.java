@@ -27,13 +27,11 @@ import net.myriantics.klaxon.registry.KlaxonRegistries;
 import java.util.List;
 
 public class KlaxonBlastProcessorBehaviors {
-    public static final Identifier DEFAULT_BEHAVIOR_ID = KlaxonCommon.locate("default_behavior");
     public static final Identifier FIREWORK_ROCKET_ID = KlaxonCommon.locate("firework_rocket_behavior");
     public static final Identifier FIREWORK_STAR_ID = KlaxonCommon.locate("firework_star_behavior");
     public static final Identifier BEDLIKE_EXPLODABLE_ID = KlaxonCommon.locate("bedlike_explodable_behavior");
     public static final Identifier WIND_CHARGE_ID = KlaxonCommon.locate("wind_charge_behavior");
 
-    public static final BlastProcessorBehavior DEFAULT_BEHAVIOR = registerBehavior(DEFAULT_BEHAVIOR_ID, new ItemBlastProcessorBehavior());
     public static final BlastProcessorBehavior FIREWORK_ROCKET = registerBehavior(FIREWORK_ROCKET_ID, new ItemBlastProcessorBehavior() {
         @Override
         public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {

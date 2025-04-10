@@ -9,7 +9,7 @@ import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorBehaviors;
 
 public class KlaxonRegistries {
     public static final Registry<BlastProcessorBehavior> BLAST_PROCESSOR_BEHAVIORS =
-            FabricRegistryBuilder.createDefaulted(KlaxonRegistryKeys.BLAST_PROCESSOR_BEHAVIORS, KlaxonCommon.locate("default_behavior")).attribute(RegistryAttribute.SYNCED).buildAndRegister();
+            FabricRegistryBuilder.createSimple(KlaxonRegistryKeys.BLAST_PROCESSOR_BEHAVIORS).attribute(RegistryAttribute.SYNCED).buildAndRegister();
 
     public static void registerRegistries() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Registries!");
