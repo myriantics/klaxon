@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
-import net.myriantics.klaxon.registry.KlaxonBlocks;
+import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 import java.util.concurrent.CompletableFuture;

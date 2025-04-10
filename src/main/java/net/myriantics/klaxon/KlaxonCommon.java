@@ -4,10 +4,10 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
+import net.myriantics.klaxon.registry.minecraft.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

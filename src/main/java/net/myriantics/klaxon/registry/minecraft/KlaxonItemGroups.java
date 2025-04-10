@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.minecraft;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;

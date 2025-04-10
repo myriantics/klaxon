@@ -4,13 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterion;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.entity.LootContextPredicate;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
-import net.myriantics.klaxon.registry.KlaxonAdvancementCriteria;
+import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
 
 import java.util.Optional;
 

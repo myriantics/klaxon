@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.minecraft;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.registry.Registries;

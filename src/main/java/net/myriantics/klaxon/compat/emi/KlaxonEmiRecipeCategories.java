@@ -8,8 +8,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.registry.KlaxonBlocks;
-import net.myriantics.klaxon.registry.KlaxonItems;
+import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
+import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 
 // also yoinked from spectrum
 public class KlaxonEmiRecipeCategories {

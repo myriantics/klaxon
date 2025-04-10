@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.myriantics.klaxon.registry.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;

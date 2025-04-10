@@ -1,7 +1,6 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.minecraft;
 
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.fabricmc.fabric.impl.content.registry.FuelRegistryImpl;
 import net.myriantics.klaxon.KlaxonCommon;
 
 public class KlaxonFuelRegistry {

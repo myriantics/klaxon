@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.util.EntityWeightHelper;
 import net.myriantics.klaxon.util.StatusEffectHelper;
-import net.myriantics.klaxon.registry.KlaxonDamageTypes;
+import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

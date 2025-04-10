@@ -9,8 +9,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
-import net.myriantics.klaxon.registry.KlaxonBlocks;
-import net.myriantics.klaxon.registry.KlaxonItems;
+import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
+import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.minecraft;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;

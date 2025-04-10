@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
-import net.myriantics.klaxon.registry.KlaxonStatusEffects;
+import net.myriantics.klaxon.registry.minecraft.KlaxonStatusEffects;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 import org.jetbrains.annotations.Nullable;

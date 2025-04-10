@@ -16,7 +16,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
-import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import org.jetbrains.annotations.Nullable;

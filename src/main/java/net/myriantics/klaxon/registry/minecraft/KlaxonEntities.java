@@ -1,6 +1,5 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.minecraft;
 
-import net.minecraft.entity.EntityType;
 import net.myriantics.klaxon.KlaxonCommon;
 
 public class KlaxonEntities {

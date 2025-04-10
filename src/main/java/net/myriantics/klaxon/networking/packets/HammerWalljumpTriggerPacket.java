@@ -5,7 +5,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.myriantics.klaxon.registry.KlaxonPackets;
+import net.myriantics.klaxon.registry.minecraft.KlaxonPackets;
 
 public record HammerWalljumpTriggerPacket(BlockPos pos, Direction direction) implements CustomPayload {
 

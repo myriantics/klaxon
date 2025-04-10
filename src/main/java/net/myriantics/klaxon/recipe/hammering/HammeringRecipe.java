@@ -5,8 +5,8 @@ import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.registry.KlaxonItems;
-import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
+import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
 public class HammeringRecipe implements Recipe<RecipeInput>{
     private final Ingredient inputA;

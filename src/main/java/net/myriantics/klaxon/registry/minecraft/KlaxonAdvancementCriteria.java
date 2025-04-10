@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.minecraft;
 
 import net.minecraft.advancement.criterion.Criterion;
 import net.minecraft.registry.Registries;

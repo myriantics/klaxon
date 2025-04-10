@@ -3,7 +3,7 @@ package net.myriantics.klaxon.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.myriantics.klaxon.registry.KlaxonItems;
+import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

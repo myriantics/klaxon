@@ -12,13 +12,13 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
-import net.myriantics.klaxon.registry.KlaxonBlocks;
+import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.KlaxonEMIAnvilRecipe;
-import net.myriantics.klaxon.registry.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 

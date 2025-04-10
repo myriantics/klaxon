@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.minecraft;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.component.ComponentType;

@@ -8,7 +8,7 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.registry.KlaxonItems;
+import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
