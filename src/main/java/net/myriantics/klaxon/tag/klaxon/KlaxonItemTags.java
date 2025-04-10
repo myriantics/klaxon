@@ -55,6 +55,10 @@ public class KlaxonItemTags {
     public static final TagKey<Item> MAKESHIFT_CRAFTED_EQUIPMENT =
             createTag("makeshift_crafted_equipment");
 
+    // blast processor behavior tags
+    public static final TagKey<Item> BEDLIKE_EXPLODABLES =
+            createTag("bedlike_explodables");
+
     private static TagKey<Item> createTag(String name) {
         return TagKey.of(RegistryKeys.ITEM, KlaxonCommon.locate(name));
     }

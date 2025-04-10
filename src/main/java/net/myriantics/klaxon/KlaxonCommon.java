@@ -35,6 +35,7 @@ public class KlaxonCommon implements ModInitializer {
 		}
 
 		// KlaxonEntities.registerModEntities();
+		KlaxonRegistryKeys.registerRegistryKeys();
 		KlaxonRegistries.registerRegistries();
 		KlaxonRecipeTypes.registerRecipeTypes();
 		KlaxonDamageTypes.registerModDamageTypes();

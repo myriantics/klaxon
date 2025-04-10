@@ -28,9 +28,13 @@ import java.util.List;
 
 public class KlaxonBlastProcessorBehaviors {
     public static final Identifier DEFAULT_BEHAVIOR_ID = KlaxonCommon.locate("default_behavior");
+    public static final Identifier FIREWORK_ROCKET_ID = KlaxonCommon.locate("firework_rocket_behavior");
+    public static final Identifier FIREWORK_STAR_ID = KlaxonCommon.locate("firework_star_behavior");
+    public static final Identifier BEDLIKE_EXPLODABLE_ID = KlaxonCommon.locate("bedlike_explodable_behavior");
+    public static final Identifier WIND_CHARGE_ID = KlaxonCommon.locate("wind_charge_behavior");
 
-    public static final BlastProcessorBehavior DEFAULT_BEHAVIOR = registerBehavior("default_behavior", new ItemBlastProcessorBehavior());
-    public static final BlastProcessorBehavior FIREWORK_ROCKET = registerBehavior("firework_rocket", new ItemBlastProcessorBehavior() {
+    public static final BlastProcessorBehavior DEFAULT_BEHAVIOR = registerBehavior(DEFAULT_BEHAVIOR_ID, new ItemBlastProcessorBehavior());
+    public static final BlastProcessorBehavior FIREWORK_ROCKET = registerBehavior(FIREWORK_ROCKET_ID, new ItemBlastProcessorBehavior() {
         @Override
         public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {
             ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
@@ -75,12 +79,12 @@ public class KlaxonBlastProcessorBehaviors {
                     0.3,
                     10.0,
                     Text.translatable("klaxon.emi.text.explosion_power_info.firework_behavior_info"),
-                    "firework_behavior"
+                    FIREWORK_ROCKET_ID.getPath()
             );
         }
     });
 
-    public static final BlastProcessorBehavior FIREWORK_STAR = registerBehavior("firework_star", new ItemBlastProcessorBehavior() {
+    public static final BlastProcessorBehavior FIREWORK_STAR = registerBehavior(FIREWORK_STAR_ID, new ItemBlastProcessorBehavior() {
         @Override
         public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {
             ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
@@ -102,12 +106,12 @@ public class KlaxonBlastProcessorBehaviors {
                     0.3,
                     0.8,
                     Text.empty(),
-                    "firework_star_behavior"
+                    FIREWORK_STAR_ID.getPath()
             );
         }
     });
 
-    public static final BlastProcessorBehavior BEDLIKE_EXPLODABLE = registerBehavior("bedlike_explodable", new ItemBlastProcessorBehavior() {
+    public static final BlastProcessorBehavior BEDLIKE_EXPLODABLE = registerBehavior(BEDLIKE_EXPLODABLE_ID, new ItemBlastProcessorBehavior() {
         @Override
         public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
 
@@ -125,12 +129,12 @@ public class KlaxonBlastProcessorBehaviors {
                     0.0,
                     5.0,
                     Text.translatable("klaxon.emi.text.explosion_power_info.bed_behavior_info"),
-                    "bed_behavior"
+                    BEDLIKE_EXPLODABLE_ID.getPath()
             );
         }
     });
 
-    public static final BlastProcessorBehavior WIND_CHARGE = registerBehavior("wind_charge", new ItemBlastProcessorBehavior() {
+    public static final BlastProcessorBehavior WIND_CHARGE = registerBehavior(WIND_CHARGE_ID, new ItemBlastProcessorBehavior() {
         @Override
         public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
             // wind charges don't do any damage
@@ -164,13 +168,13 @@ public class KlaxonBlastProcessorBehaviors {
                     0.0,
                     0.0,
                     Text.translatable("klaxon.emi.text.explosion_power_info.wind_charge_behavior_info"),
-                    "wind_charge_behavior"
+                    WIND_CHARGE_ID.getPath()
             );
         }
     });
 
-    private static BlastProcessorBehavior registerBehavior(String name, BlastProcessorBehavior behavior) {
-        return Registry.register(KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS, KlaxonCommon.locate(name), behavior);
+    private static BlastProcessorBehavior registerBehavior(Identifier id, BlastProcessorBehavior behavior) {
+        return Registry.register(KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS, id, behavior);
     }
 
     public static void registerBlastProcessorBehaviors() {

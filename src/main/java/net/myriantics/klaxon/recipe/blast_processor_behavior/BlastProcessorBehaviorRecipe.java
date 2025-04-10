@@ -9,6 +9,7 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
 public class BlastProcessorBehaviorRecipe implements Recipe<RecipeInput> {
 
@@ -31,17 +32,17 @@ public class BlastProcessorBehaviorRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput input, World world) {
-        return false;
+        return ingredient.test(input.getStackInSlot(0));
     }
 
     @Override
     public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return null;
+        return getResult(lookup).copy();
     }
 
     @Override
     public boolean fits(int width, int height) {
-        return false;
+        return true;
     }
 
     @Override
@@ -51,11 +52,11 @@ public class BlastProcessorBehaviorRecipe implements Recipe<RecipeInput> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return null;
+        return KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR_RECIPE_SERIALIZER;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return null;
+        return KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR;
     }
 }

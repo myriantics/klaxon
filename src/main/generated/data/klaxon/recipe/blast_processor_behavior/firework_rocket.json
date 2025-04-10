@@ -1,0 +1,7 @@
+{
+  "type": "klaxon:blast_processor_behavior",
+  "behavior_id": "klaxon:firework_rocket_behavior",
+  "ingredient": {
+    "item": "minecraft:firework_rocket"
+  }
+}

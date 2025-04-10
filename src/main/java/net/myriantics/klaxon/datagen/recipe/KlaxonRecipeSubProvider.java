@@ -11,6 +11,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
@@ -264,8 +265,16 @@ public abstract class KlaxonRecipeSubProvider {
     public void addItemExplosionPowerRecipe(RecipeExporter exporter, Ingredient input,
                                             double explosionPower, boolean producesFire, boolean isHidden,  final ResourceCondition... conditions) {
 
+        ItemStack[] stacks = input.getMatchingStacks();
+        String path;
+        if (stacks.length > 0) {
+            path = Registries.ITEM.getId(stacks[0].getItem()).getPath();
+        } else {
+            path = "some_tag";
+        }
+
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID,
-                Registries.ITEM.getId(input.getMatchingStacks()[0].getItem()).getPath(),
+                path,
                 conditions);
 
         ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input, explosionPower, producesFire, isHidden);
@@ -291,6 +300,27 @@ public abstract class KlaxonRecipeSubProvider {
                 conditions);
 
         BlastProcessingRecipe recipe = new BlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, output);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addBlastProcessorBehaviorRecipe(RecipeExporter exporter, Ingredient ingredient,
+                                                Identifier behaviorIdentifier, final ResourceCondition... conditions) {
+
+        // i apologise for this janky shit code. good thing it only has to run on dev machines amirite haha
+        ItemStack[] stacks = ingredient.getMatchingStacks();
+        String path;
+        if (stacks.length > 0) {
+            path = Registries.ITEM.getId(stacks[0].getItem()).getPath();
+        } else {
+            path = "some_tag";
+        }
+
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID,
+                path,
+                conditions);
+
+        BlastProcessorBehaviorRecipe recipe = new BlastProcessorBehaviorRecipe(ingredient, behaviorIdentifier);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

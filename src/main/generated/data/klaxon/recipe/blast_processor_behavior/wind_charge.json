@@ -1,0 +1,7 @@
+{
+  "type": "klaxon:blast_processor_behavior",
+  "behavior_id": "klaxon:wind_charge_behavior",
+  "ingredient": {
+    "item": "minecraft:wind_charge"
+  }
+}

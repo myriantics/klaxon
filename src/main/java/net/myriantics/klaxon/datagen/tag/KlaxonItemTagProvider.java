@@ -168,6 +168,23 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ItemTags.FOOT_ARMOR)
                 .add(KlaxonItems.STEEL_BOOTS);
 
-        // compat
+        // blast processor behaviors
+        getOrCreateTagBuilder(KlaxonItemTags.BEDLIKE_EXPLODABLES)
+                .add(Items.WHITE_BED)
+                .add(Items.ORANGE_BED)
+                .add(Items.MAGENTA_BED)
+                .add(Items.LIGHT_BLUE_BED)
+                .add(Items.YELLOW_BED)
+                .add(Items.LIME_BED)
+                .add(Items.PINK_BED)
+                .add(Items.GRAY_BED)
+                .add(Items.LIGHT_GRAY_BED)
+                .add(Items.CYAN_BED)
+                .add(Items.PURPLE_BED)
+                .add(Items.BLUE_BED)
+                .add(Items.BROWN_BED)
+                .add(Items.GREEN_BED)
+                .add(Items.RED_BED)
+                .add(Items.BLACK_BED);
     }
 }
