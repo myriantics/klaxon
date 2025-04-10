@@ -9,6 +9,7 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
 public class BlastProcessorBehaviorRecipe implements Recipe<RecipeInput> {
@@ -32,7 +33,7 @@ public class BlastProcessorBehaviorRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput input, World world) {
-        return ingredient.test(input.getStackInSlot(0));
+        return ingredient.test(input.getStackInSlot(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
     }
 
     @Override

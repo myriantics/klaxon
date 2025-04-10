@@ -93,8 +93,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
                         data.explosionPowerMin(),
                         data.explosionPowerMax(),
                         data.infoText(),
-                        entry.id()
-                        )
+                        entry.id())
                 );
             }
         }
