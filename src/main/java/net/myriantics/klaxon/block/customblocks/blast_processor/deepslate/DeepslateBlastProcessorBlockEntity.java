@@ -8,23 +8,33 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
+import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorBehaviors;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlockEntities;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
+import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock.*;
 
@@ -153,10 +163,6 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
 
             if (!this.isEmpty()) {
 
-                // calculate behavior to use
-                BlastProcessorBehavior blastProcessorBehavior = BEHAVIORS.get(this.inventory.get(CATALYST_INDEX).getItem());
-
-                // inventory bullshit i need to fix someday
                 RecipeInput recipeInventory = new RecipeInput() {
                     @Override
                     public ItemStack getStackInSlot(int slot) {
@@ -168,6 +174,23 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                         return size();
                     }
                 };
+
+                // get blast processor behavior from recipe
+                Optional<RecipeEntry<BlastProcessorBehaviorRecipe>> behaviorRecipe = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR, recipeInventory, world);
+
+                // initialize as the default behavior
+                BlastProcessorBehavior blastProcessorBehavior = new ItemBlastProcessorBehavior();
+
+                // replace with new behavior if valid
+                if (behaviorRecipe.isPresent()) {
+                    Identifier behaviorId = behaviorRecipe.get().value().getBehaviorId();
+
+                    BlastProcessorBehavior interimBehavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
+
+                    if (interimBehavior != null) {
+                        blastProcessorBehavior = interimBehavior;
+                    }
+                }
 
                 // get recipe data
                 ItemExplosionPowerData powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
