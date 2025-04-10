@@ -7,6 +7,9 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorBehaviors;
 import net.myriantics.klaxon.registry.minecraft.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +35,14 @@ public class KlaxonCommon implements ModInitializer {
 		}
 
 		// KlaxonEntities.registerModEntities();
+		KlaxonRegistries.registerRegistries();
 		KlaxonRecipeTypes.registerRecipeTypes();
 		KlaxonDamageTypes.registerModDamageTypes();
 		KlaxonPackets.registerModPackets();
 		KlaxonPackets.registerC2SPacketRecievers();
 		KlaxonScreenHandlers.registerModScreenHandlers();
 		KlaxonItemGroups.registerKlaxonItemGroups();
+		KlaxonBlastProcessorBehaviors.registerBlastProcessorBehaviors();
 		BlastProcessorBehavior.registerBlastProcessorBehaviors();
 		KlaxonAdvancementCriteria.registerAdvancementCriteria();
 		KlaxonStatusEffects.registerStatusEffects();

@@ -8,6 +8,8 @@ import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeSerializer;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeSerializer;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipeSerializer;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
@@ -21,9 +23,15 @@ import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapel
 public class KlaxonRecipeTypes {
     public static final String BLAST_PROCESSING_RECIPE_ID = "blast_processing";
     public static RecipeSerializer<BlastProcessingRecipe> BLAST_PROCESSING_RECIPE_SERIALIZER =
-            registerSerializer(BLAST_PROCESSING_RECIPE_ID, new BlastProcessingRecipeSerializer());;
+            registerSerializer(BLAST_PROCESSING_RECIPE_ID, new BlastProcessingRecipeSerializer());
     public static RecipeType<BlastProcessingRecipe> BLAST_PROCESSING =
             registerRecipeType(BLAST_PROCESSING_RECIPE_ID);
+
+    public static final String BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID = "blast_processor_behavior";
+    public static RecipeSerializer<BlastProcessorBehaviorRecipe> BLAST_PROCESSOR_BEHAVIOR_RECIPE_SERIALIZER =
+            registerSerializer(BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID, new BlastProcessorBehaviorRecipeSerializer());
+    public static RecipeType<BlastProcessorBehaviorRecipe> BLAST_PROCESSOR_BEHAVIOR =
+            registerRecipeType(BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID);
 
     public static final String HAMMERING_RECIPE_ID = "hammering";
     public static RecipeSerializer<HammeringRecipe> HAMMERING_RECIPE_SERIALIZER =
