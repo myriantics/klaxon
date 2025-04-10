@@ -12,6 +12,8 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
@@ -78,19 +80,20 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     public void addBlastProcessorBehaviorItemExplosionPowerRecipes(EmiRegistry registry) {
-        for (Item entry : DeepslateBlastProcessorBlock.BEHAVIORS.keySet()) {
-            BlastProcessorBehavior behavior = DeepslateBlastProcessorBlock.BEHAVIORS.get(entry);
+        for (RecipeEntry<BlastProcessorBehaviorRecipe> entry : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
+            BlastProcessorBehaviorRecipe recipe = entry.value();
+
+            BlastProcessorBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(recipe.getBehaviorId());
             BlastProcessorBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
 
             // only add the recipe if the behavior actually passes in the data
             if (data != null) {
                 registry.addRecipe(new ItemExplosionPowerEmiInfoRecipe(
-                        Ingredient.ofItems(entry),
+                        recipe.getIngredient(),
                         data.explosionPowerMin(),
                         data.explosionPowerMax(),
                         data.infoText(),
-                        // append entry id to recipe id to prevent duplicate entries
-                        KlaxonCommon.locate("/bp_behavior_item_explosion_power_" + Identifier.of(entry.toString()).getPath())
+                        entry.id()
                         )
                 );
             }
