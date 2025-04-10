@@ -170,9 +170,5 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_BOOTS);
 
         // compat
-
-        // combat amenities
-        getOrCreateTagBuilder(KlaxonCompatItemTags.COMBAT_AMENITIES_KEEP_DURABILITY)
-                .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
     }
 }
