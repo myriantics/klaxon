@@ -51,6 +51,8 @@ public class HammerItem extends ToolItem {
         super(KlaxonToolMaterials.STEEL, settings.maxCount(1));
     }
 
+    // Walljumping is now component based
+
     public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
         return AttributeModifiersComponent.builder()
                 .add(

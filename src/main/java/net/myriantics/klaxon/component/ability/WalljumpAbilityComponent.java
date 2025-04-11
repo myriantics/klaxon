@@ -1,12 +1,15 @@
-package net.myriantics.klaxon.component;
+package net.myriantics.klaxon.component.ability;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -17,6 +20,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -24,6 +28,7 @@ import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.util.AbilityModifierCalculator;
 import net.myriantics.klaxon.util.EntityWeightHelper;
 import net.myriantics.klaxon.util.PermissionsHelper;
@@ -65,16 +70,19 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
 
         float attackCooldownProgress = player.getAttackCooldownProgress(0.5f);
 
-        if (canWallJump(player, walljumpStack, targetBlockState) && attackCooldownProgress > 0.8) {
+        boolean canWalljumpWithEntity = canWalljumpWithEntity(player, walljumpStack, targetBlockState);
 
-            // may remove, idk thought itd be a good tradeoff for the power of the hammer
-            // keeps wind charges relevant and encourages going up
-            // may need to decrease attack cooldown or at least its impact on walljump power scaling
-            // if it's not an instabreak, process fall damage (instabreak = bbdelta < 1)
-            boolean processFallDamage = targetBlockState.calcBlockBreakingDelta(player, null, null) < 1;
+        // validate that player has sufficient attack cooldown and satisfies conditions for walljump
+        if (attackCooldownProgress > 0.8 && (canWalljumpWithEntity || canStandardWallJump(player, walljumpStack, targetBlockState))) {
 
             world.addBlockBreakParticles(pos, targetBlockState);
-            boolean walljumpSucceeded = processWallJumpPhysics(player, processFallDamage, velocityMultiplier);
+
+            Entity movedEntity = canWalljumpWithEntity ? player.getVehicle() : player;
+
+            // velocity needs to be multiplied by 8 because minecarts don't play well with velocity
+            // you know that one spongebob meme where they go over the little bump in the rollercoaster
+            // thats this easter egg without this change
+            boolean walljumpSucceeded = processWallJumpPhysics(player, movedEntity, velocityMultiplier);
 
             world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
 
@@ -100,39 +108,47 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
 
             // damage it wheee
             walljumpStack.damage(1, player, EquipmentSlot.MAINHAND);
+
         }
     }
 
     // yoinked from trident riptide physics - edited to suit my needs
-    private static boolean processWallJumpPhysics(PlayerEntity player, boolean fallDamage, float multiplier) {
-        float playerYaw = player.getYaw();
-        float playerPitch = player.getPitch();
+    private static boolean processWallJumpPhysics(PlayerEntity sourcePlayer, Entity launchedEntity, float multiplier) {
+        float playerYaw = sourcePlayer.getYaw();
+        float playerPitch = sourcePlayer.getPitch();
         float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
         float k = MathHelper.sin(playerPitch * 0.017453292F);
         float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
         float m = MathHelper.sqrt(h * h + k * k + l * l);
-        float n = 0.6F * player.getAttackCooldownProgress(0.5f) * AbilityModifierCalculator.calculateHammerWalljumpMultiplier(player) * multiplier;
+        float n = 0.6F * sourcePlayer.getAttackCooldownProgress(0.5f) * AbilityModifierCalculator.calculateHammerWalljumpMultiplier(sourcePlayer) * multiplier;
         h *= n / m;
         k *= n / m;
         l *= n / m;
 
-        if (fallDamage) {
-            player.handleFallDamage(player.fallDistance, 1, player.getDamageSources().fall());
+        // this is needed because minecarts are wack and don't want to move horizontally as much
+        if (launchedEntity instanceof MinecartEntity) {
+            h *= 12;
+            k *= 3;
+            l *= 12;
         }
 
-        player.addVelocity(h, k, l);
+        launchedEntity.addVelocity(h, k, l);
 
         // returns false if failed, true if succeeded in moving player
         return n > 0;
     }
 
-    public static boolean canWallJump(PlayerEntity player, ItemStack wallJumpStack, BlockState state) {
+    public static boolean canWallJump(PlayerEntity player, ItemStack walljumpStack, BlockState state) {
+        return canWalljumpWithEntity(player, walljumpStack, state) || canStandardWallJump(player, walljumpStack, state);
+    }
+
+    public static boolean canStandardWallJump(PlayerEntity player, ItemStack wallJumpStack, BlockState state) {
         // originally you could use the hammer in spectator - funny, but not good.
         return !player.isSpectator()
                 // prevents spammy bs when descending and unintentional hammer walljump procs
                 && player.getVelocity().getY() > 0
                 // make sure they're actually holding a walljumpable item
-                && wallJumpStack.getComponents().contains(KlaxonDataComponentTypes.WALLJUMP_ABILITY)
+                && read(wallJumpStack) != null
                 // allows players to not walljump if they don't want to
                 && !player.isSneaking()
                 // you cant walljump when you're in a boat or on a horse
@@ -140,6 +156,19 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
                 // walljumping in water is janky
                 && !player.isInFluid()
                 // you can't walljump off of instabreakable blocks - in creative you can tho - also in adventure
+                && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative() || !player.getAbilities().allowModifyWorld);
+    }
+
+    public static boolean canWalljumpWithEntity(PlayerEntity player, ItemStack wallJumpStack, BlockState state) {
+        // make sure there is a vehicle
+        return player.getVehicle() != null
+                // make sure vehicle is suitable for walljump
+                && player.getVehicle().getType().isIn(KlaxonEntityTypeTags.WALLJUMP_MOVABLE_ENTITIES)
+                // make sure you can actually walljump
+                && read(wallJumpStack) != null
+                // still can't walljump in spectator
+                && !player.isSpectator()
+                // block still has to be suitable
                 && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative() || !player.getAbilities().allowModifyWorld);
     }
 

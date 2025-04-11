@@ -11,6 +11,8 @@ public class KlaxonEntityTypeTags {
             createTag("heavy_hitter_entities");
     public static final TagKey<EntityType<?>> FERROMAGNETIC_ENTITIES =
             createTag("ferromagnetic_entities");
+    public static final TagKey<EntityType<?>> WALLJUMP_MOVABLE_ENTITIES =
+            createTag("walljump_movable_entities");
 
     private static TagKey<EntityType<?>> createTag(String name) {
         return TagKey.of(RegistryKeys.ENTITY_TYPE, KlaxonCommon.locate(name));

@@ -24,5 +24,8 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
                 .add(EntityType.FOX)
                 .add(EntityType.WITHER_SKELETON)
                 .add(EntityType.ZOMBIFIED_PIGLIN);
+
+        getOrCreateTagBuilder(KlaxonEntityTypeTags.WALLJUMP_MOVABLE_ENTITIES)
+                .add(EntityType.MINECART);
     }
 }
