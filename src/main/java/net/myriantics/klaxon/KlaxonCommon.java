@@ -4,7 +4,6 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
 import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
@@ -44,6 +43,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonScreenHandlers.registerModScreenHandlers();
 		KlaxonItemGroups.registerKlaxonItemGroups();
 		KlaxonBlastProcessorBehaviors.registerBlastProcessorBehaviors();
+		KlaxonDataComponentTypes.registerKlaxonComponents();
 		KlaxonAdvancementCriteria.registerAdvancementCriteria();
 		KlaxonStatusEffects.registerStatusEffects();
 		KlaxonToolMaterials.registerToolMaterials();

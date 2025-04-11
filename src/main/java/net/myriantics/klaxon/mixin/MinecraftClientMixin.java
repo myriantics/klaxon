@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.util.hit.BlockHitResult;
+import net.myriantics.klaxon.component.WalljumpAbilityComponent;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.networking.packets.HammerWalljumpTriggerPacket;
 import org.jetbrains.annotations.Nullable;
@@ -27,10 +28,10 @@ public abstract class MinecraftClientMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isAir()Z", ordinal = 0)
     )
     public boolean klaxon$risingEdgeBlockAttackCheck(boolean original, @Local BlockHitResult hitResult) {
-        if (interactionManager != null && player != null && HammerItem.canWallJump(player, player.getWorld().getBlockState(hitResult.getBlockPos()))) {
+        if (interactionManager != null && player != null && WalljumpAbilityComponent.canWallJump(player, player.getMainHandStack(), player.getWorld().getBlockState(hitResult.getBlockPos()))) {
 
             // run walljump on client side
-            HammerItem.processHammerWalljump(player, player.getWorld(), hitResult.getBlockPos(), hitResult.getSide());
+            WalljumpAbilityComponent.read(player.getMainHandStack()).processHammerWalljump(player, player.getWorld(), hitResult.getBlockPos(), hitResult.getSide());
 
             // send packet that triggers hammer walljump on the server side
             ClientPlayNetworking.send(new HammerWalljumpTriggerPacket(hitResult.getBlockPos(), hitResult.getSide()));

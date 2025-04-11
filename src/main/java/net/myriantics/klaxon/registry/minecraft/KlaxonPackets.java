@@ -8,6 +8,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
+import net.myriantics.klaxon.component.WalljumpAbilityComponent;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.networking.packets.HammerWalljumpTriggerPacket;
@@ -49,8 +50,12 @@ public class KlaxonPackets {
             context.server().execute(() -> {
                 ServerPlayerEntity player = context.player();
 
-                // run the walljump ability :D
-                HammerItem.processHammerWalljump(player, player.getWorld(), payload.pos(), payload.direction());
+                WalljumpAbilityComponent component = WalljumpAbilityComponent.read(player.getMainHandStack());
+
+                if (component != null) {
+                    // run the walljump ability :D
+                    component.processHammerWalljump(player, player.getWorld(), payload.pos(), payload.direction());
+                }
             });
         }));
     }

@@ -184,77 +184,9 @@ public class HammerItem extends ToolItem {
         return ActionResult.PASS;
     }
 
-    // rising edge block hit - uses MinecraftClientMixin and HammerWalljumpTriggerPacket
-    // called on both client and server
-    public static void processHammerWalljump(PlayerEntity player, World world, BlockPos pos, Direction direction) {
-
-        BlockState targetBlockState = world.getBlockState(pos);
-
-        if (player == null) {
-            KlaxonCommon.LOGGER.error("Player is null when trying to do a Hammer Walljump. Why?");
-            return;
-        }
-
-        float attackCooldownProgress = player.getAttackCooldownProgress(0.5f);
-
-        if (canWallJump(player, targetBlockState) && attackCooldownProgress > 0.8) {
-
-            // may remove, idk thought itd be a good tradeoff for the power of the hammer
-            // keeps wind charges relevant and encourages going up
-            // may need to decrease attack cooldown or at least its impact on walljump power scaling
-            // if it's not an instabreak, process fall damage (instabreak = bbdelta < 1)
-            boolean processFallDamage = targetBlockState.calcBlockBreakingDelta(player, null, null) < 1;
-
-            world.addBlockBreakParticles(pos, targetBlockState);
-            boolean walljumpSucceeded = processWallJumpPhysics(player, processFallDamage, 1.0f);
-
-            world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
-
-            if (!world.isClient()) {
-                // update observers monitoring target block - doesn't work in adventure
-                if (PermissionsHelper.canModifyWorld(player)) {
-                    updateAdjacentMonitoringObservers(world, pos, targetBlockState);
-                }
-
-                KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, walljumpSucceeded ? UsageType.WALLJUMP_SUCCEEDED : UsageType.WALLJUMP_FAILED);
-                // if player overpowered steel armor with strength proc this
-                if (walljumpSucceeded && EntityWeightHelper.isHeavy(player)) {
-                    KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, UsageType.STRENGTH_WALLJUMP_SUCCEEDED);
-                }
-            }
-
-            // trip sculk sensors
-            world.emitGameEvent(player, GameEvent.HIT_GROUND, pos);
-
-            player.onLanding();
-
-            player.resetLastAttackedTicks();
-
-            // damage it wheee
-            damageItem(player.getMainHandStack(), player, true);
-        }
-    }
-
     @Override
     public boolean isEnchantable(ItemStack stack) {
         return false;
-    }
-
-    public static boolean canWallJump(PlayerEntity player, BlockState state) {
-        // originally you could use the hammer in spectator - funny, but not good.
-        return !player.isSpectator()
-                // prevents spammy bs when descending and unintentional hammer walljump procs
-                && player.getVelocity().getY() > 0
-                // make sure they're actually holding a hammer
-                && player.getMainHandStack().isOf(KlaxonItems.STEEL_HAMMER)
-                // allows players to not walljump if they don't want to
-                && !player.isSneaking()
-                // you cant walljump when you're in a boat or some this
-                && player.getVehicle() == null
-                // walljumping in water is janky
-                && !player.isInFluid()
-                // you can't walljump off of instabreakable blocks - in creative you can tho - also in adventure
-                && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative() || !player.getAbilities().allowModifyWorld);
     }
 
     public static boolean canProcessHammerRecipe(PlayerEntity player) {
@@ -268,52 +200,12 @@ public class HammerItem extends ToolItem {
         return !miner.isCreative();
     }
 
-    // yoinked from trident riptide physics - edited to suit my needs
-    private static boolean processWallJumpPhysics(PlayerEntity player, boolean fallDamage, float multiplier) {
-        float playerYaw = player.getYaw();
-        float playerPitch = player.getPitch();
-        float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
-        float k = MathHelper.sin(playerPitch * 0.017453292F);
-        float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
-        float m = MathHelper.sqrt(h * h + k * k + l * l);
-        float n = 0.6F * player.getAttackCooldownProgress(0.5f) * AbilityModifierCalculator.calculateHammerWalljumpMultiplier(player) * multiplier;
-        h *= n / m;
-        k *= n / m;
-        l *= n / m;
-
-        if (fallDamage) {
-            player.handleFallDamage(player.fallDistance, 1, player.getDamageSources().fall());
-        }
-
-        player.addVelocity(h, k, l);
-
-        // returns false if failed, true if succeeded in moving player
-        return n > 0;
-    }
-
     private static void damageItem(ItemStack stack, LivingEntity attacker, boolean usedProperly) {
         if (attacker.getWorld().isClient) {
             return;
         }
 
         stack.damage(usedProperly ? 1 : 2, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
-    }
-
-    private static void updateAdjacentMonitoringObservers(World world, BlockPos interactionPos, BlockState interactionState) {
-        // block updating abilities
-        // this quite literally allows you to hit something with a hammer to fix it
-        world.updateNeighbor(interactionPos, interactionState.getBlock(), interactionPos);
-
-        // trigger observers next to target block because its really funny
-        for (Direction side : Direction.values()) {
-            BlockPos observerPos = interactionPos.offset(side);
-            BlockState observerState = world.getBlockState(observerPos);
-            if (observerState.getBlock() instanceof ObserverBlock observerBlock) {
-                if (observerPos.offset(observerState.get(FACING)).equals(interactionPos)) {
-                    ((ObserverBlockInvoker) observerBlock).invokeScheduledTick(observerState, (ServerWorld) world, observerPos, world.getRandom());
-                }
-            }
-        }
     }
 
     // yoinked from living entity
