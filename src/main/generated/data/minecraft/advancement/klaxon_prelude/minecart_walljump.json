@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:klaxon_prelude/successful_hammer_walljump",
+  "criteria": {
+    "minecart_walljump": {
+      "conditions": {
+        "usageType": "minecart_walljump_success"
+      },
+      "trigger": "klaxon:hammer_right_click_use"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon_prelude.hammer_walljump_minecart.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "minecraft:cauldron"
+    },
+    "title": {
+      "translate": "advancements.klaxon_prelude.hammer_walljump_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "minecart_walljump"
+    ]
+  ],
+  "rewards": {
+    "experience": 400
+  },
+  "sends_telemetry_event": true
+}

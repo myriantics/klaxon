@@ -106,6 +106,21 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 .criterion("successful_hammer_walljump", HammerUseCriterion.Conditions.createStrengthWalljump())
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(consumer, getKlaxonPreludeIdString("successful_strength_hammer_walljump"));
+        AdvancementEntry minecartWalljump = Advancement.Builder.create()
+                .parent(successfullyHammerWalljump)
+                .display(
+                        Items.CAULDRON,
+                        Text.translatable("advancements.klaxon_prelude.hammer_walljump_minecart.title"),
+                        Text.translatable("advancements.klaxon_prelude.hammer_walljump_minecart.description"),
+                        null,
+                        AdvancementFrame.CHALLENGE,
+                        true,
+                        true,
+                        true
+                )
+                .criterion("minecart_walljump", HammerUseCriterion.Conditions.createMinecartWalljump())
+                .rewards(AdvancementRewards.Builder.experience(400))
+                .build(consumer, getKlaxonPreludeIdString("minecart_walljump"));
         AdvancementEntry steelArmorJuggernaut = Advancement.Builder.create()
                 .parent(successfullyHammerDroppedItem)
                 .display(

@@ -44,6 +44,10 @@ public class HammerUseCriterion extends AbstractCriterion<HammerUseCriterion.Con
             return KlaxonAdvancementCriteria.HAMMER_USE_CRITERION.create(new HammerUseCriterion.Conditions(Optional.empty(), HammerItem.UsageType.STRENGTH_WALLJUMP_SUCCEEDED));
         }
 
+        public static AdvancementCriterion<HammerUseCriterion.Conditions> createMinecartWalljump() {
+            return KlaxonAdvancementCriteria.HAMMER_USE_CRITERION.create(new HammerUseCriterion.Conditions(Optional.empty(), HammerItem.UsageType.MINECART_WALLJUMP_SUCCESS));
+        }
+
         boolean matches(HammerItem.UsageType usageType) {
             return usageType.equals(this.usageType());
         }

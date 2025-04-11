@@ -238,7 +238,8 @@ public class HammerItem extends ToolItem {
         RECIPE_SUCCESS,
         WALLJUMP_SUCCEEDED,
         STRENGTH_WALLJUMP_SUCCEEDED,
-        WALLJUMP_FAILED;
+        WALLJUMP_FAILED,
+        MINECART_WALLJUMP_SUCCESS;
 
         private static final Codec<UsageType> CODEC = StringIdentifiable.createCodec(UsageType::values);
 

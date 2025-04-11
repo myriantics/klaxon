@@ -108,6 +108,8 @@
   "advancements.klaxon_prelude.hammer_walljump.description": "Perform a Hammer Walljump by attacking the ground while jumping.",
   "advancements.klaxon_prelude.hammer_walljump_strength.title": "Unstoppable Force",
   "advancements.klaxon_prelude.hammer_walljump_strength.description": "Bypass the walljump-inhibiting effects of Steel Armor with Strength II.",
+  "advancements.klaxon_prelude.hammer_walljump_minecart.title": "Close Enough",
+  "advancements.klaxon_prelude.hammer_walljump_minecart.description": "Propel a Minecart using the Steel Hammer",
 
   "effect.klaxon.heavy": "Heavy",
   "effect.klaxon.heavy.description": "Modifies the function of KLAXON's weight-dependent abilities such as the Hammer WallJump",

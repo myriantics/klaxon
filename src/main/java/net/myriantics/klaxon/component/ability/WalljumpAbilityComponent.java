@@ -3,9 +3,11 @@ package net.myriantics.klaxon.component.ability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +15,7 @@ import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -26,6 +29,7 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
+import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
@@ -96,6 +100,9 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
                 // if player overpowered steel armor with strength proc this
                 if (walljumpSucceeded && EntityWeightHelper.isHeavy(player)) {
                     KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, HammerItem.UsageType.STRENGTH_WALLJUMP_SUCCEEDED);
+                }
+                if (walljumpSucceeded && movedEntity.getType().isIn(ConventionalEntityTypeTags.MINECARTS)) {
+                    KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, HammerItem.UsageType.MINECART_WALLJUMP_SUCCESS);
                 }
             }
 
