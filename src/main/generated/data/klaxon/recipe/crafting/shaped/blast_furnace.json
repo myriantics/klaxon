@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "blast_furnace",
+  "key": {
+    "#": {
+      "item": "minecraft:smooth_stone"
+    },
+    "S": {
+      "tag": "klaxon:crude_inclusive_steel_plates"
+    },
+    "X": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "SXS",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:blast_furnace"
+  }
+}

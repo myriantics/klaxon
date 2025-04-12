@@ -7,12 +7,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldEvents;
 import net.minecraft.world.block.NeighborUpdater;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonFluidTags;
-
-import java.util.Optional;
 
 public class MoltenRubberBlock extends MagmaBlock {
     public MoltenRubberBlock(Settings settings) {
@@ -24,13 +23,17 @@ public class MoltenRubberBlock extends MagmaBlock {
         if (world.isClient()) return;
 
         for (Direction dir : NeighborUpdater.UPDATE_ORDER) {
-            if (testForColdness(world, pos.offset(dir))) world.setBlockState(pos, KlaxonBlocks.RUBBER_BLOCK.getDefaultState());
+            if (testForColdness(world, pos.offset(dir))) {
+                world.syncWorldEvent(WorldEvents.LAVA_EXTINGUISHED, pos, 0);
+                world.setBlockState(pos, KlaxonBlocks.RUBBER_BLOCK.getDefaultState());
+            }
         }
     }
 
     @Override
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (!world.isClient() && testForColdness(world, neighborPos)) {
+            world.syncWorldEvent(WorldEvents.LAVA_EXTINGUISHED, pos, 0);
             return KlaxonBlocks.RUBBER_BLOCK.getDefaultState();
         }
 

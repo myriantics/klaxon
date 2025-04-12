@@ -3,7 +3,7 @@
   "explosionPowerMax": 1.5,
   "explosionPowerMin": 0.8,
   "ingredientItem": {
-    "tag": "klaxon:t2_rubber_extractable_logs"
+    "tag": "klaxon:nether_rubber_extractable_logs"
   },
   "output": {
     "count": 3,

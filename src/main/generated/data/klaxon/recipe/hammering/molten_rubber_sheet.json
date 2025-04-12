@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:hammering",
+  "input": {
+    "item": "klaxon:molten_rubber_glob"
+  },
+  "output": {
+    "count": 1,
+    "id": "klaxon:molten_rubber_sheet"
+  }
+}

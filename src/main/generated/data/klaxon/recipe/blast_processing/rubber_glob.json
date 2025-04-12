@@ -3,7 +3,7 @@
   "explosionPowerMax": 1.0,
   "explosionPowerMin": 0.5,
   "ingredientItem": {
-    "tag": "klaxon:t1_rubber_extractable_logs"
+    "tag": "klaxon:overworld_rubber_extractable_logs"
   },
   "output": {
     "count": 1,
