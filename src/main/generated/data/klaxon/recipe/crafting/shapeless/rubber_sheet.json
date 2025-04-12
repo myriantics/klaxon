@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "rubber_sheet",
+  "ingredients": [
+    {
+      "item": "klaxon:rolled_rubber_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "klaxon:rubber_sheet"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "molten_rubber_glob",
+  "ingredients": [
+    {
+      "item": "klaxon:molten_rubber_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "klaxon:molten_rubber_glob"
+  }
+}

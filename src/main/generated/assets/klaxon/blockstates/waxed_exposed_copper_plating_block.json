@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "klaxon:block/waxed_exposed_copper_plating_block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "klaxon:block/waxed_exposed_copper_plating_block"
+    },
+    "axis=z": {
+      "model": "klaxon:block/waxed_exposed_copper_plating_block",
+      "x": 90
+    }
+  }
+}

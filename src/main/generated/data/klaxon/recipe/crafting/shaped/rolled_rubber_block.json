@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "rolled_rubber_block",
+  "key": {
+    "x": {
+      "item": "klaxon:rubber_sheet"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "xxx",
+    "xxx"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:rolled_rubber_block"
+  }
+}

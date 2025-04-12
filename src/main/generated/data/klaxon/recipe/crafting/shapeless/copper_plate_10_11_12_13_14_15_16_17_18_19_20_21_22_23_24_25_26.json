@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "copper_plate",
+  "ingredients": [
+    {
+      "item": "klaxon:waxed_copper_plating_block"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "klaxon:copper_plate"
+  }
+}

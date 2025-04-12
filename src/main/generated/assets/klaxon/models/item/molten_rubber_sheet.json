@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "klaxon:item/molten_rubber_sheet"
+  }
+}

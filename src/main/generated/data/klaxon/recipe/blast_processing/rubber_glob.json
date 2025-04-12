@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosionPowerMax": 1.0,
+  "explosionPowerMin": 0.5,
+  "ingredientItem": {
+    "tag": "klaxon:t1_rubber_extractable_logs"
+  },
+  "output": {
+    "count": 1,
+    "id": "klaxon:rubber_glob"
+  }
+}
