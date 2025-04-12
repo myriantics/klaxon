@@ -40,7 +40,7 @@ public class KlaxonBlockTags {
             createTag("blast_processors");
 
     private static TagKey<Block> createInstabreakableTag(String name) {
-        return createMineableTag("instabreakable/" + name);
+        return createTag("instabreakable/" + name);
     }
 
     private static TagKey<Block> createMineableTag(String name) {

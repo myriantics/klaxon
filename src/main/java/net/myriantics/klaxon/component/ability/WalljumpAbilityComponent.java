@@ -149,7 +149,6 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
     // called in ItemMixin
     // present to prevent you from demolishing your world when walljumping around in creative
     public static boolean allowsMining(PlayerEntity miner) {
-        KlaxonCommon.LOGGER.info("Walljump Ability Component: " + WalljumpAbilityComponent.get(miner.getWeaponStack()));
         if (miner.isCreative()) {
             // mining is allowed if there's no walljump ability component
             return WalljumpAbilityComponent.get(miner.getWeaponStack()) == null;

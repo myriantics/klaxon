@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.api.behavior;
+package net.myriantics.klaxon.api.behavior.blast_processor_catalyst;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

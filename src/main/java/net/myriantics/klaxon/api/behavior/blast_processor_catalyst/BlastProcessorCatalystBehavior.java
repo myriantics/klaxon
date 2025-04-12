@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.api.behavior;
+package net.myriantics.klaxon.api.behavior.blast_processor_catalyst;
 
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.util.math.BlockPos;
@@ -7,7 +7,7 @@ import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepsla
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
-public interface BlastProcessorBehavior {
+public interface BlastProcessorCatalystBehavior {
 
     void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData);
 

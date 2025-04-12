@@ -20,10 +20,12 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
-import net.myriantics.klaxon.api.behavior.ItemBlastProcessorBehavior;
+import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.datagen.recipe.providers.KlaxonBlastProcessorBehaviorRecipeProvider;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlockEntities;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -175,7 +177,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 };
 
                 // compute blast processor behavior
-                BlastProcessorBehavior blastProcessorBehavior = computeBehavior(world, recipeInventory);
+                BlastProcessorCatalystBehavior blastProcessorBehavior = computeBehavior(world, recipeInventory);
 
                 // get recipe data
                 ItemExplosionPowerData powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
@@ -258,18 +260,18 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 itemExplosionPowerData.producesFire());
     }
 
-    public static BlastProcessorBehavior computeBehavior(World world, RecipeInput recipeInventory) {
+    public static BlastProcessorCatalystBehavior computeBehavior(World world, RecipeInput recipeInventory) {
         // get blast processor behavior from recipe
         Optional<RecipeEntry<BlastProcessorBehaviorRecipe>> behaviorRecipe = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR, recipeInventory, world);
 
         // initialize as the default behavior
-        BlastProcessorBehavior blastProcessorBehavior = new ItemBlastProcessorBehavior();
+        BlastProcessorCatalystBehavior blastProcessorBehavior = KlaxonBlastProcessorCatalystBehaviors.DEFAULT;
 
         // replace with new behavior if valid
         if (behaviorRecipe.isPresent()) {
             Identifier behaviorId = behaviorRecipe.get().value().getBehaviorId();
 
-            BlastProcessorBehavior interimBehavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
+            BlastProcessorCatalystBehavior interimBehavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
 
             if (interimBehavior != null) {
                 blastProcessorBehavior = interimBehavior;

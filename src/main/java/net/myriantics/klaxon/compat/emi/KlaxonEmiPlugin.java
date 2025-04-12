@@ -6,14 +6,11 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.tag.ItemTags;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.behavior.BlastProcessorBehavior;
+import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
@@ -23,11 +20,8 @@ import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.KlaxonEMIAnvilRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
-import net.myriantics.klaxon.tag.klaxon.KlaxonFluidTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
-import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -94,8 +88,8 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         for (RecipeEntry<BlastProcessorBehaviorRecipe> entry : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
             BlastProcessorBehaviorRecipe recipe = entry.value();
 
-            BlastProcessorBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(recipe.getBehaviorId());
-            BlastProcessorBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
+            BlastProcessorCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(recipe.getBehaviorId());
+            BlastProcessorCatalystBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
 
             // only add the recipe if the behavior actually passes in the data
             if (data != null) {

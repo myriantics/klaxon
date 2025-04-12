@@ -1,0 +1,7 @@
+{
+  "type": "klaxon:blast_processor_behavior",
+  "behavior_id": "klaxon:glowstone_block_behavior",
+  "ingredient": {
+    "item": "minecraft:glowstone"
+  }
+}

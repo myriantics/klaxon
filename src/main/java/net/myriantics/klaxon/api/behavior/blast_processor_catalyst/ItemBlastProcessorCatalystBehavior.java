@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.api.behavior;
+package net.myriantics.klaxon.api.behavior.blast_processor_catalyst;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
@@ -10,6 +10,7 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -31,7 +32,16 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class ItemBlastProcessorBehavior implements BlastProcessorBehavior {
+public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalystBehavior {
+    private final Identifier id;
+
+    public ItemBlastProcessorCatalystBehavior(Identifier id) {
+        this.id = id;
+    }
+
+    public Identifier getId() {
+        return id;
+    }
 
     @Override
     public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
