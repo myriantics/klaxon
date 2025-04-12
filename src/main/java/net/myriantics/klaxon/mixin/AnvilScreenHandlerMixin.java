@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AnvilScreenHandlerMixin {
 
     @Shadow @Final private Property levelCost;
+
+    @ModifyExpressionValue(
+            method = "updateResult",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;canRepair(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z")
+    )
+    public boolean klaxon$repairItemOverride(
+            boolean original,
+            @Local(ordinal = 1) ItemStack repairedStack,
+            @Local(ordinal = 2) ItemStack repairIngredientStack
+    ) {
+        // we completely override whatever the other ingredient could be if the component's present.
+        // it's called an override for a reason.
+        RepairIngredientOverrideComponent repairIngredientOverrideComponent = RepairIngredientOverrideComponent.get(repairedStack);
+        if (repairIngredientOverrideComponent != null) {
+            return repairIngredientOverrideComponent.repairMaterial().test(repairIngredientStack);
+        }
+
+        return original;
+    }
 
     @ModifyExpressionValue(
             method = "updateResult",

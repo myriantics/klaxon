@@ -9,6 +9,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.ShieldPenetrationComponent;
 import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 
 import java.util.function.UnaryOperator;
 
@@ -32,6 +33,13 @@ public class KlaxonDataComponentTypes {
             builder -> {
                 builder.codec(DamageTypeOverrideComponent.CODEC);
                 builder.packetCodec(DamageTypeOverrideComponent.PACKET_CODEC);
+                return builder;
+            });
+
+    public static final ComponentType<RepairIngredientOverrideComponent> REPAIR_INGREDIENT_OVERRIDE = register("repair_ingredient_override",
+            builder -> {
+                builder.codec(RepairIngredientOverrideComponent.CODEC);
+                builder.packetCodec(RepairIngredientOverrideComponent.PACKET_CODEC);
                 return builder;
             });
 

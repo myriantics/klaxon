@@ -1,18 +1,22 @@
 package net.myriantics.klaxon.registry.minecraft;
 
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.ShieldPenetrationComponent;
 import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
+import net.myriantics.klaxon.item.equipment.tools.CleaverItem;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
-import net.myriantics.klaxon.item.equipment.tools.SteelWirecuttingShearsItem;
+import net.myriantics.klaxon.item.equipment.tools.CableShearsItem;
+import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.ArrayList;
 
@@ -20,11 +24,28 @@ public class KlaxonItems {
 
     public static ArrayList<Item> simpleItems = new ArrayList<>();
 
-    // equipment
-    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings().attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, HammerItem.STEEL_HAMMER_BASE_ATTACK_DAMAGE, HammerItem.STEEL_HAMMER_ATTACK_SPEED))
-            .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
-            .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new DamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
-            .component(KlaxonDataComponentTypes.SHIELD_PENETRATION, new ShieldPenetrationComponent(KlaxonDamageTypes.HAMMER_WALLOPING, true))));
+    // tools
+    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer",
+            new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+                    .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, HammerItem.STEEL_HAMMER_BASE_ATTACK_DAMAGE, HammerItem.STEEL_HAMMER_ATTACK_SPEED))
+                    .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
+                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new DamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
+                    .component(KlaxonDataComponentTypes.SHIELD_PENETRATION, new ShieldPenetrationComponent(KlaxonDamageTypes.HAMMER_WALLOPING, true))));
+    public static final Item STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
+            new CableShearsItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+                    .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
+                    .attributeModifiers(CableShearsItem.createAttributeModifiers())
+            ));
+    public static final Item STEEL_CLEAVER = registerSimpleItem("steel_cleaver",
+            new CleaverItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+                    .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
+            ));
+    public static final Item STEEL_WRENCH = registerItem("steel_wrench",
+            new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+                    .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
+            ));
+
+    // armor
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()));
     public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate",
@@ -33,10 +54,6 @@ public class KlaxonItems {
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.LEGGINGS, new Item.Settings()));
     public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.BOOTS, new Item.Settings()));
-    public static final Item STEEL_WIRECUTTING_SHEARS = registerSimpleItem("steel_wirecutting_shears",
-            new SteelWirecuttingShearsItem(new Item.Settings()
-                    .attributeModifiers(SteelWirecuttingShearsItem.createAttributeModifiers()
-                    )));
 
     // raw ores / blends
     public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");

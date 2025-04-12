@@ -189,7 +189,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.NETHERITE_LEGGINGS)
                 .add(Items.NETHERITE_BOOTS);
         getOrCreateTagBuilder(KlaxonItemTags.FERROMAGNETIC_ITEMS)
-                .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
+                .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT)
                 .add(Items.NETHERITE_HELMET)
                 .add(Items.NETHERITE_CHESTPLATE)
                 .add(Items.NETHERITE_LEGGINGS)
@@ -207,31 +207,27 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.FRACTURED_RAW_GOLD)
                 .add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
+        getOrCreateTagBuilder(KlaxonItemTags.INNATE_UNBREAKING_EQUIPMENT)
+                .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
     }
 
     private void buildAnvilRelatedTags() {
-        getOrCreateTagBuilder(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)
-                .add(Items.FLINT_AND_STEEL);
         getOrCreateTagBuilder(KlaxonItemTags.INFINITELY_REPAIRABLE)
-                .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(Items.FLINT_AND_STEEL);
-        getOrCreateTagBuilder(KlaxonItemTags.NO_XP_COST_REPAIRABLE)
-                .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(Items.FLINT_AND_STEEL);
-        getOrCreateTagBuilder(KlaxonItemTags.UNENCHANTABLE)
                 .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
-        getOrCreateTagBuilder(KlaxonItemTags.INNATE_UNBREAKING_EQUIPMENT)
+        getOrCreateTagBuilder(KlaxonItemTags.NO_XP_COST_REPAIRABLE)
+                .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
+        getOrCreateTagBuilder(KlaxonItemTags.UNENCHANTABLE)
                 .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
     }
 
     private void buildEquipmentCategoryTags() {
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
-                .forceAddTag(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)
+                .add(Items.FLINT_AND_STEEL)
                 .add(KlaxonItems.STEEL_HAMMER)
-                .add(KlaxonItems.STEEL_WIRECUTTING_SHEARS);
+                .add(KlaxonItems.STEEL_CABLE_SHEARS)
+                .add(KlaxonItems.STEEL_CLEAVER)
+                .add(KlaxonItems.STEEL_WRENCH);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET)
                 .add(KlaxonItems.STEEL_CHESTPLATE)

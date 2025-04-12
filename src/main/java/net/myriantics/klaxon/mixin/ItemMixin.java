@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,10 +18,19 @@ public abstract class ItemMixin {
             method = "canRepair",
             at =  @At(value = "RETURN")
     )
-    public boolean klaxon$flintAndSteelRepairItemOverride(boolean original, @Local(ordinal = 0, argsOnly = true) ItemStack repairedStack, @Local(ordinal = 1, argsOnly = true) ItemStack repairIngredientStack) {
-        // allows for flint and steels to be repaired using steel nuggets - if a mod wants to override this its tag based :D
-        // top 10 necessary and good features
-        return original || (repairedStack.isIn(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL) && repairIngredientStack.isIn(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS));
+    public boolean klaxon$flintAndSteelRepairItemOverride(
+            boolean original,
+            @Local(ordinal = 0, argsOnly = true) ItemStack repairedStack,
+            @Local(ordinal = 1, argsOnly = true) ItemStack repairIngredientStack
+    ) {
+        // we completely override whatever the other ingredient could be if the component's present.
+        // it's called an override for a reason.
+        RepairIngredientOverrideComponent repairIngredientOverrideComponent = RepairIngredientOverrideComponent.get(repairedStack);
+        if (repairIngredientOverrideComponent != null) {
+            return repairIngredientOverrideComponent.repairMaterial().test(repairIngredientStack);
+        }
+
+        return original;
     }
 
     @ModifyReturnValue(

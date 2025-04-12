@@ -52,13 +52,16 @@ public class KlaxonItemGroups {
             .displayName(Text.translatable("itemGroup.klaxon.equipment"))
             .entries(((displayContext, entries) -> {
                 entries.add(KlaxonItems.STEEL_HAMMER);
+                entries.add(KlaxonItems.STEEL_CABLE_SHEARS);
+                entries.add(KlaxonItems.STEEL_WRENCH);
+                entries.add(KlaxonItems.STEEL_CLEAVER);
+                entries.add(Items.FLINT_AND_STEEL);
 
                 entries.add(KlaxonItems.STEEL_HELMET);
                 entries.add(KlaxonItems.STEEL_CHESTPLATE);
                 entries.add(KlaxonItems.STEEL_LEGGINGS);
                 entries.add(KlaxonItems.STEEL_BOOTS);
 
-                entries.add(Items.FLINT_AND_STEEL);
             })).build();
 
     public static final ItemGroup KLAXON_MACHINES = FabricItemGroup.builder()

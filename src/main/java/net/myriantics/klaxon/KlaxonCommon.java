@@ -9,6 +9,7 @@ import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorBehaviors;
+import net.myriantics.klaxon.registry.custom.KlaxonEventListeners;
 import net.myriantics.klaxon.registry.minecraft.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonGamerules.registerGamerules();
 		KlaxonFuelRegistry.registerFuelItems();
 		KlaxonOxidationRegistry.registerOxidationStages();
+		KlaxonEventListeners.registerListeners();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

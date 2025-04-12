@@ -2,13 +2,11 @@ package net.myriantics.klaxon.item.equipment.tools;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ObserverBlock;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.*;
@@ -17,7 +15,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -28,31 +25,25 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.InstabreakMiningToolItem;
 import net.myriantics.klaxon.registry.minecraft.*;
-import net.myriantics.klaxon.util.EntityWeightHelper;
-import net.myriantics.klaxon.util.PermissionsHelper;
-import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
-import net.myriantics.klaxon.util.AbilityModifierCalculator;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 
 import java.util.List;
 import java.util.Optional;
 
-import static net.minecraft.block.FacingBlock.FACING;
-
-public class HammerItem extends ToolItem {
+public class HammerItem extends InstabreakMiningToolItem {
     public static final float STEEL_HAMMER_BASE_ATTACK_DAMAGE = 5.0F;
     public static final float STEEL_HAMMER_ATTACK_SPEED = -3.1F;
 
     public HammerItem(ToolMaterial toolMaterial, Settings settings) {
-        super(toolMaterial, settings.maxCount(1));
+        super(toolMaterial, KlaxonBlockTags.HAMMER_MINEABLE, settings.maxCount(1));
     }
 
-    // Walljumping is now component based
 
+    // Walljumping is now component based
     public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
         return AttributeModifiersComponent.builder()
                 .add(
@@ -86,8 +77,8 @@ public class HammerItem extends ToolItem {
     }
 
     @Override
-    public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
-        return state.isIn(KlaxonBlockTags.HAMMER_MINEABLE);
+    public boolean isCorrectForInstabreak(ItemStack stack, BlockState state) {
+        return state.isIn(KlaxonBlockTags.HAMMER_INSTABREAKABLE);
     }
 
     @Override
