@@ -24,12 +24,23 @@ public class KlaxonItemGroups {
             .entries(((displayContext, entries) -> {
                 entries.add(KlaxonBlocks.STEEL_BLOCK);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+                entries.add(KlaxonBlocks.RUBBER_BLOCK);
+                entries.add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
 
                 entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.IRON_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.GOLD_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
+                entries.add(KlaxonBlocks.MOLTEN_RUBBER_SHEET_BLOCK);
 
                 entries.add(KlaxonBlocks.STEEL_DOOR);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_DOOR);
@@ -81,12 +92,18 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonItems.STEEL_NUGGET);
                 entries.add(KlaxonItems.CRUDE_STEEL_NUGGET);
 
+                // raw materials
+                entries.add(KlaxonItems.RUBBER_GLOB);
+                entries.add(KlaxonItems.MOLTEN_RUBBER_GLOB);
+
                 // plates
                 entries.add(KlaxonItems.IRON_PLATE);
                 entries.add(KlaxonItems.COPPER_PLATE);
                 entries.add(KlaxonItems.GOLD_PLATE);
                 entries.add(KlaxonItems.CRUDE_STEEL_PLATE);
                 entries.add(KlaxonItems.STEEL_PLATE);
+                entries.add(KlaxonItems.RUBBER_SHEET);
+                entries.add(KlaxonItems.MOLTEN_RUBBER_SHEET);
 
                 // blends
                 entries.add(KlaxonItems.CRUDE_STEEL_MIXTURE);

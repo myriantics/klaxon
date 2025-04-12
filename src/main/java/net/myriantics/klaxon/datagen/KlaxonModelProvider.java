@@ -41,7 +41,19 @@ public class KlaxonModelProvider extends FabricModelProvider {
         registerPlatingBlock(generator, KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.IRON_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.GOLD_PLATING_BLOCK);
+
+        // oxidization is so fun :D
         registerPlatingBlock(generator, KlaxonBlocks.COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+
+        registerPlatingBlock(generator, KlaxonBlocks.RUBBER_SHEET_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.MOLTEN_RUBBER_SHEET_BLOCK);
     }
 
     private void registerMachineBlockStateModels(BlockStateModelGenerator generator) {

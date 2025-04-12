@@ -112,6 +112,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         // storage blocks
         add3x3IngotNuggetBlockCompressionDecompressionRecipes(exporter, KlaxonItems.STEEL_NUGGET, KlaxonItems.STEEL_INGOT, KlaxonBlocks.STEEL_BLOCK.asItem());
         add3x3IngotNuggetBlockCompressionDecompressionRecipes(exporter, KlaxonItems.CRUDE_STEEL_NUGGET, KlaxonItems.CRUDE_STEEL_INGOT, KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
+        add3x3CompressionDecompressionRecipes(exporter, KlaxonItems.MOLTEN_RUBBER_GLOB, KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
 
         // plating blocks
         add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.STEEL_PLATE, KlaxonBlocks.STEEL_PLATING_BLOCK);
@@ -119,6 +120,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.IRON_PLATE, KlaxonBlocks.IRON_PLATING_BLOCK);
         add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.GOLD_PLATE, KlaxonBlocks.GOLD_PLATING_BLOCK);
         add2x2CompressionDecompressionRecipes(exporter, KlaxonItems.COPPER_PLATE, KlaxonBlocks.COPPER_PLATING_BLOCK);
+        add2x2UnpackingRecipe(exporter, Ingredient.ofItems(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK), KlaxonItems.COPPER_PLATE, null, null);
+        add2x2PackingRecipe(exporter, Ingredient.ofItems(KlaxonItems.MOLTEN_RUBBER_SHEET), new ItemStack(KlaxonBlocks.MOLTEN_RUBBER_SHEET_BLOCK), null, null);
     }
 
     private void add3x3IngotNuggetBlockCompressionDecompressionRecipes(RecipeExporter exporter, ItemConvertible tiny, ItemConvertible small, ItemConvertible large, ResourceCondition... conditions) {
