@@ -9,6 +9,7 @@ import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
+import net.myriantics.klaxon.item.equipment.tools.SteelWirecuttingShearsItem;
 
 import java.util.ArrayList;
 
@@ -16,9 +17,8 @@ public class KlaxonItems {
 
     public static ArrayList<Item> simpleItems = new ArrayList<>();
 
-
     // equipment
-    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(new Item.Settings().attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, HammerItem.STEEL_HAMMER_BASE_ATTACK_DAMAGE, HammerItem.STEEL_HAMMER_ATTACK_SPEED))
+    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings().attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, HammerItem.STEEL_HAMMER_BASE_ATTACK_DAMAGE, HammerItem.STEEL_HAMMER_ATTACK_SPEED))
             .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))));
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()));
@@ -28,6 +28,10 @@ public class KlaxonItems {
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.LEGGINGS, new Item.Settings()));
     public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.BOOTS, new Item.Settings()));
+    public static final Item STEEL_WIRECUTTING_SHEARS = registerSimpleItem("steel_wirecutting_shears",
+            new SteelWirecuttingShearsItem(new Item.Settings()
+                    .attributeModifiers(SteelWirecuttingShearsItem.createAttributeModifiers()
+                    )));
 
     // raw ores / blends
     public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");

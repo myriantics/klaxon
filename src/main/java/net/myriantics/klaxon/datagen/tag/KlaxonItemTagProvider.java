@@ -230,7 +230,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .forceAddTag(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)
-                .add(KlaxonItems.STEEL_HAMMER);
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(KlaxonItems.STEEL_WIRECUTTING_SHEARS);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET)
                 .add(KlaxonItems.STEEL_CHESTPLATE)

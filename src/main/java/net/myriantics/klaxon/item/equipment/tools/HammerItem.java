@@ -47,8 +47,8 @@ public class HammerItem extends ToolItem {
     public static final float STEEL_HAMMER_BASE_ATTACK_DAMAGE = 5.0F;
     public static final float STEEL_HAMMER_ATTACK_SPEED = -3.1F;
 
-    public HammerItem(Settings settings) {
-        super(KlaxonToolMaterials.STEEL, settings.maxCount(1));
+    public HammerItem(ToolMaterial toolMaterial, Settings settings) {
+        super(toolMaterial, settings.maxCount(1));
     }
 
     // Walljumping is now component based
