@@ -21,8 +21,34 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
+        // build material tags
+        buildMaterialIngotTags();
+        buildMaterialGlobTags();
+        buildMaterialStorageBlockTags();
+        buildMaterialNuggetTags();
+        buildMaterialPlateTags();
+        buildMaterialSheetTags();
 
-        // ingots
+        // build makeshift crafting tags
+        buildMakeshiftCraftingIngredientTags();
+        buildMakeshiftCraftingLogisticsTags();
+
+        // build recipe tags
+        buildCraftingTags();
+
+        // build advancement tags
+        buildAdvancementRelatedTags();
+
+        // build mechanics tags
+        buildMechanicsTags();
+        buildAnvilRelatedTags();
+        buildBlastProcessorBehaviorTags();
+
+        // build categorical tags
+        buildEquipmentCategoryTags();
+    }
+
+    private void buildMaterialIngotTags() {
         getOrCreateTagBuilder(ConventionalItemTags.INGOTS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS);
@@ -30,17 +56,36 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_INGOT);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);
+    }
 
-        // storage blocks
+    private void buildMaterialGlobTags() {
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.GLOBS)
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS)
+                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_GLOBS)
+                .add(KlaxonItems.RUBBER_GLOB);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS)
+                .add(KlaxonItems.MOLTEN_RUBBER_GLOB);
+    }
+
+    private void buildMaterialStorageBlockTags() {
         getOrCreateTagBuilder(ConventionalItemTags.STORAGE_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_BLOCKS)
-                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_BLOCKS);
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_BLOCKS)
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_BLOCKS)
+                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK.asItem());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_BLOCKS)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_BLOCKS)
+                .add(KlaxonBlocks.RUBBER_BLOCK.asItem())
+                .add(KlaxonBlocks.ROLLED_RUBBER_BLOCK.asItem());
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS)
+                .add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK.asItem());
+    }
 
-        // nuggets
+    private void buildMaterialNuggetTags() {
         getOrCreateTagBuilder(ConventionalItemTags.NUGGETS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_NUGGETS)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS);
@@ -48,8 +93,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_NUGGET);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET);
+    }
 
-        // makeshift crafting ingredient tags
+    private void buildMakeshiftCraftingIngredientTags() {
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_NUGGETS)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS);
@@ -62,8 +108,18 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES);
+        getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_GLOBS)
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS)
+                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS);
+        getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_BLOCKS)
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_BLOCKS)
+                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS);
+        getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_SHEETS)
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS)
+                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS);
+    }
 
-        // material plate tags
+    private void buildMaterialPlateTags() {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES)
@@ -80,18 +136,42 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.COPPER_PLATE);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_PLATES)
                 .add(KlaxonItems.GOLD_PLATE);
+    }
 
-        // makeshift crafting logistics tags
+    private void buildMaterialSheetTags() {
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEETS)
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS)
+                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_SHEETS)
+                .add(KlaxonItems.RUBBER_SHEET);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS)
+                .add(KlaxonItems.MOLTEN_RUBBER_SHEET);
+    }
+
+    private void buildMakeshiftCraftingLogisticsTags() {
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS)
                 .add(KlaxonItems.CRUDE_STEEL_PLATE)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem())
-                .add(KlaxonItems.CRUDE_STEEL_NUGGET);
+                .add(KlaxonItems.CRUDE_STEEL_NUGGET)
+                .add(KlaxonItems.MOLTEN_RUBBER_SHEET)
+                .add(KlaxonItems.MOLTEN_RUBBER_GLOB)
+                .add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK.asItem());
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_REPAIR_MATERIALS)
                 .forceAddTag(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS);
+    }
 
+    private void buildCraftingTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS)
+                .forceAddTag(ItemTags.JUNGLE_LOGS)
+                .forceAddTag(ItemTags.ACACIA_LOGS)
+                .forceAddTag(ItemTags.MANGROVE_LOGS);
+        getOrCreateTagBuilder(KlaxonItemTags.NETHER_RUBBER_EXTRACTABLE_LOGS)
+                .forceAddTag(ItemTags.CRIMSON_STEMS)
+                .forceAddTag(ItemTags.WARPED_STEMS);
+    }
 
-        // advancement-related tags
+    private void buildAdvancementRelatedTags() {
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
@@ -99,8 +179,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.asItem());
+    }
 
-        // mechanics tags
+    private void buildMechanicsTags() {
         getOrCreateTagBuilder(KlaxonItemTags.HEAVY_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.NETHERITE_HELMET)
@@ -126,8 +207,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.FRACTURED_RAW_GOLD)
                 .add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
+    }
 
-        // anvil-related tags
+    private void buildAnvilRelatedTags() {
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)
                 .add(Items.FLINT_AND_STEEL);
         getOrCreateTagBuilder(KlaxonItemTags.INFINITELY_REPAIRABLE)
@@ -142,8 +224,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
         getOrCreateTagBuilder(KlaxonItemTags.INNATE_UNBREAKING_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
+    }
 
-        // equipment category tags
+    private void buildEquipmentCategoryTags() {
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .forceAddTag(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL)
@@ -167,8 +250,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_LEGGINGS);
         getOrCreateTagBuilder(ItemTags.FOOT_ARMOR)
                 .add(KlaxonItems.STEEL_BOOTS);
+    }
 
-        // blast processor behaviors
+    private void buildBlastProcessorBehaviorTags() {
         getOrCreateTagBuilder(KlaxonItemTags.BEDLIKE_EXPLODABLES)
                 .add(Items.WHITE_BED)
                 .add(Items.ORANGE_BED)

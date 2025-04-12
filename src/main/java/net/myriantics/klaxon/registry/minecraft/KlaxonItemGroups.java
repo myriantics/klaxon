@@ -39,8 +39,7 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
-                entries.add(KlaxonBlocks.MOLTEN_RUBBER_SHEET_BLOCK);
+                entries.add(KlaxonBlocks.ROLLED_RUBBER_BLOCK);
 
                 entries.add(KlaxonBlocks.STEEL_DOOR);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_DOOR);

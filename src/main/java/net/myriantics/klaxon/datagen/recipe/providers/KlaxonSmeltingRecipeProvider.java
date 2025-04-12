@@ -36,7 +36,7 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
         addRubberMeltingRecipe(exporter, Ingredient.ofItems(KlaxonItems.RUBBER_GLOB), KlaxonItems.MOLTEN_RUBBER_GLOB);
         addRubberMeltingRecipe(exporter, Ingredient.ofItems(KlaxonItems.RUBBER_SHEET), KlaxonItems.MOLTEN_RUBBER_SHEET);
         addRubberMeltingRecipe(exporter, Ingredient.ofItems(KlaxonBlocks.RUBBER_BLOCK), KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
-        addRubberMeltingRecipe(exporter, Ingredient.ofItems(KlaxonBlocks.RUBBER_SHEET_BLOCK), KlaxonBlocks.MOLTEN_RUBBER_SHEET_BLOCK);
+        addRubberMeltingRecipe(exporter, Ingredient.ofItems(KlaxonBlocks.ROLLED_RUBBER_BLOCK), KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
     }
 
     private void buildCookingRecipes(RecipeExporter exporter) {

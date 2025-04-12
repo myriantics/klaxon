@@ -1,13 +1,14 @@
 package net.myriantics.klaxon.registry.minecraft;
 
-import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.sound.BlockSoundGroup;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.block.customblocks.decor.MoltenRubberBlock;
 import net.myriantics.klaxon.block.customblocks.decor.OxidizablePillarBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.decor.SteelDoorBlock;
@@ -67,15 +68,23 @@ public class KlaxonBlocks {
 
     // rubber
     public static final Block RUBBER_BLOCK = registerBlock("rubber_block",
-            new Block(AbstractBlock.Settings.copy(Blocks.CRIMSON_HYPHAE)));
-    public static final Block RUBBER_SHEET_BLOCK = registerBlock("rubber_sheet_block",
+            new Block(AbstractBlock.Settings.copy(Blocks.SHROOMLIGHT)
+                    .sounds(BlockSoundGroup.SHROOMLIGHT)
+                    .mapColor(MapColor.DARK_CRIMSON)
+                    .strength(2.0f)
+                    .luminance((state) -> 0)));
+    public static final Block ROLLED_RUBBER_BLOCK = registerBlock("rolled_rubber_block",
             new PillarBlock(AbstractBlock.Settings.copy(RUBBER_BLOCK)));
 
     // molten rubber
     public static final Block MOLTEN_RUBBER_BLOCK = registerBlock("molten_rubber_block",
-            new Block(AbstractBlock.Settings.copy(RUBBER_BLOCK)));
-    public static final Block MOLTEN_RUBBER_SHEET_BLOCK = registerBlock("molten_rubber_sheet_block",
-            new PillarBlock(AbstractBlock.Settings.copy(MOLTEN_RUBBER_BLOCK)));
+            new MoltenRubberBlock(AbstractBlock.Settings.copy(RUBBER_BLOCK)
+                    .luminance(state -> 3)
+                    .emissiveLighting(Blocks::always)
+                    .allowsSpawning((state, world, pos, entityType) -> entityType.isFireImmune())
+                    .postProcess(Blocks::always)
+                    .mapColor(MapColor.DARK_RED)
+                    .strength(1.0F)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

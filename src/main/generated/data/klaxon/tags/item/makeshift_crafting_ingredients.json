@@ -3,6 +3,9 @@
     "klaxon:crude_steel_plate",
     "klaxon:crude_steel_ingot",
     "klaxon:crude_steel_block",
-    "klaxon:crude_steel_nugget"
+    "klaxon:crude_steel_nugget",
+    "klaxon:molten_rubber_sheet",
+    "klaxon:molten_rubber_glob",
+    "klaxon:molten_rubber_block"
   ]
 }

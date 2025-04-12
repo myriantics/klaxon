@@ -52,8 +52,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
         registerPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
 
-        registerPlatingBlock(generator, KlaxonBlocks.RUBBER_SHEET_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.MOLTEN_RUBBER_SHEET_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.ROLLED_RUBBER_BLOCK);
     }
 
     private void registerMachineBlockStateModels(BlockStateModelGenerator generator) {

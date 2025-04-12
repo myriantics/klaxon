@@ -36,4 +36,9 @@ public class OxidizablePillarBlock extends PillarBlock implements Oxidizable {
     public OxidationLevel getDegradationLevel() {
         return this.oxidationLevel;
     }
+
+    @Override
+    public MapCodec<? extends PillarBlock> getCodec() {
+        return CODEC;
+    }
 }

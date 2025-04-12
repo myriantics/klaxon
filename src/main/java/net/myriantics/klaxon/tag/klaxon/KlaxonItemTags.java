@@ -21,6 +21,18 @@ public class KlaxonItemTags {
             createTag("crude_inclusive_steel_plates");
     public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_BLOCKS =
             createTag("crude_inclusive_steel_blocks");
+    public static final TagKey<Item> MOLTEN_INCLUSIVE_RUBBER_GLOBS =
+            createTag("molten_inclusive_rubber_globs");
+    public static final TagKey<Item> MOLTEN_INCLUSIVE_RUBBER_SHEETS =
+            createTag("molten_inclusive_rubber_sheets");
+    public static final TagKey<Item> MOLTEN_INCLUSIVE_RUBBER_BLOCKS =
+            createTag("molten_inclusive_rubber_blocks");
+
+    // crafting tags
+    public static final TagKey<Item> OVERWORLD_RUBBER_EXTRACTABLE_LOGS =
+            createTag("overworld_rubber_extractable_logs");
+    public static final TagKey<Item> NETHER_RUBBER_EXTRACTABLE_LOGS =
+            createTag("nether_rubber_extractable_logs");
 
     // anvil related tags
     public static final TagKey<Item> INFINITELY_REPAIRABLE =

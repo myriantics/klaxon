@@ -65,6 +65,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_BLOCK);
         getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.COLD_BLOCKS)
+                .forceAddTag(BlockTags.ICE)
+                .forceAddTag(BlockTags.SNOW);
 
         // machine category tags
         getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)
