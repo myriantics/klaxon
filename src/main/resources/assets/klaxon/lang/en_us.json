@@ -63,11 +63,22 @@
   "death.attack.hammer_bonking.item": "%1$s was bonked by %2$s using %3$s",
   "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s",
 
-  "tag.item.klaxon.shield_disabling_melee_weapons": "Shield-Disabling Melee Weapons",
   "tag.item.klaxon.crude_inclusive_steel_blocks": "Crude-Inclusive Steel Blocks",
   "tag.item.klaxon.crude_inclusive_steel_ingots": "Crude-Inclusive Steel Ingots",
   "tag.item.klaxon.crude_inclusive_steel_nuggets": "Crude-Inclusive Steel Nuggets",
   "tag.item.klaxon.crude_inclusive_steel_plates": "Crude-Inclusive Steel Plates",
+  "tag.item.klaxon.molten_inclusive_rubber_blocks": "Molten-Inclusive Rubber Blocks",
+  "tag.item.klaxon.molten_inclusive_rubber_globs": "Molten-Inclusive Rubber Globs",
+  "tag.item.klaxon.molten_inclusive_rubber_sheets": "Molten-Inclusive Rubber Sheets",
+
+  "tag.item.klaxon.overworld_rubber_extractable_logs": "Overworld Rubber Extractable Logs",
+  "tag.item.klaxon.nether_rubber_extractable_logs": "Nether Rubber Extractable Logs",
+
+  "tag.item.klaxon.bedlike_explodables": "Bedlike Explodables",
+
+  "tag.item.klaxon.makeshift_crafted_equipment": "Makeshift Crafted Equipment",
+  "tag.item.klaxon.root_advancement_granting_items": "KLAXON Prelude Root Advancement Granting Items",
+
   "tag.item.klaxon.heavy_equipment": "Heavy Equipment",
   "tag.item.klaxon.infinitely_repairable": "Infinitely Repairable Items",
   "tag.item.klaxon.ferromagnetic_items": "Ferromagnetic Items",
@@ -86,6 +97,7 @@
   "tag.block.klaxon.hammer_interaction_base": "Hammer Interaction Base Blocks",
   "tag.block.klaxon.hammer_mineable": "Hammer Mineable Blocks",
   "tag.block.klaxon.hammer_instabreak": "Hammer Instabreakable Blocks",
+  "tag.block.klaxon.cold_blocks": "Cold Blocks",
 
   "tag.fluid.klaxon.cold_fluids": "Cold Fluids",
 

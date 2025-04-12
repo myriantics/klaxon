@@ -14,6 +14,7 @@ import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.Map;
 
@@ -42,6 +43,20 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 },
                 new ItemStack(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR),
                 CraftingRecipeCategory.REDSTONE,
+                null
+        );
+
+        addShapedCraftingRecipe(exporter, Map.of(
+                '#', Ingredient.ofItems(Blocks.SMOOTH_STONE),
+                'S', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'X', Ingredient.ofItems(Blocks.FURNACE)),
+                new String[]{
+                        "SSS",
+                        "SXS",
+                        "###"
+                },
+                new ItemStack(Blocks.BLAST_FURNACE),
+                CraftingRecipeCategory.MISC,
                 null
         );
     }
