@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks;
+package net.myriantics.klaxon.block.customblocks.decor;
 
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoubleBlockHalf;

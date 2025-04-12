@@ -11,7 +11,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
-import static net.myriantics.klaxon.block.customblocks.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
+import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
 
 public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
     private final Ingredient item;

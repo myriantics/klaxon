@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.blast_processor.deepslate;
+package net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

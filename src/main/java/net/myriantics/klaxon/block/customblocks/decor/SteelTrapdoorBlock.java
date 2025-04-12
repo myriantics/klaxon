@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks;
+package net.myriantics.klaxon.block.customblocks.decor;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSetType;
@@ -7,7 +7,6 @@ import net.minecraft.block.TrapdoorBlock;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.mixin.BlockSetTypeInvoker;
 
 public class SteelTrapdoorBlock extends TrapdoorBlock {
     public SteelTrapdoorBlock(BlockSetType type, Settings settings) {

@@ -44,13 +44,17 @@ public class KlaxonItems {
     public static final Item STEEL_NUGGET = registerReallySimpleItem("steel_nugget");
     public static final Item CRUDE_STEEL_INGOT = registerReallySimpleItem("crude_steel_ingot");
     public static final Item CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
+    public static final Item RUBBER_GLOB = registerReallySimpleItem("rubber_glob");
+    public static final Item MOLTEN_RUBBER_GLOB = registerReallySimpleItem("molten_rubber_glob");
 
-    // plates
+    // plates / sheets
     public static final Item STEEL_PLATE = registerReallySimpleItem("steel_plate");
     public static final Item CRUDE_STEEL_PLATE = registerReallySimpleItem("crude_steel_plate");
     public static final Item IRON_PLATE = registerReallySimpleItem("iron_plate");
     public static final Item GOLD_PLATE = registerReallySimpleItem("gold_plate");
     public static final Item COPPER_PLATE = registerReallySimpleItem("copper_plate");
+    public static final Item RUBBER_SHEET = registerReallySimpleItem("rubber_sheet");
+    public static final Item MOLTEN_RUBBER_SHEET = registerReallySimpleItem("molten_rubber_sheet");
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);
