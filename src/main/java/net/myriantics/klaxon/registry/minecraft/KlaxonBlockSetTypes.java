@@ -1,50 +1,47 @@
 package net.myriantics.klaxon.registry.minecraft;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.type.BlockSetTypeBuilder;
 import net.minecraft.block.BlockSetType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvents;
-import net.myriantics.klaxon.mixin.BlockSetTypeInvoker;
+import net.myriantics.klaxon.KlaxonCommon;
 
 public class KlaxonBlockSetTypes {
-    public static final BlockSetType STEEL = register(
-            new BlockSetType(
-                    "iron",
-                    false,
-                    false,
-                    false,
-                    BlockSetType.ActivationRule.MOBS,
-                    BlockSoundGroup.METAL,
-                    SoundEvents.BLOCK_IRON_DOOR_CLOSE,
-                    SoundEvents.BLOCK_IRON_DOOR_OPEN,
-                    SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE,
-                    SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN,
-                    SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF,
-                    SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON,
-                    SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF,
-                    SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON
-            )
+    public static final BlockSetType STEEL = register("steel",
+            new BlockSetTypeBuilder()
+                    .openableByHand(false)
+                    .openableByWindCharge(false)
+                    .buttonActivatedByArrows(false)
+                    .pressurePlateActivationRule(BlockSetType.ActivationRule.MOBS)
+                    .soundGroup(BlockSoundGroup.METAL)
+                    .doorCloseSound(SoundEvents.BLOCK_IRON_DOOR_CLOSE)
+                    .doorOpenSound(SoundEvents.BLOCK_IRON_DOOR_OPEN)
+                    .trapdoorCloseSound(SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE)
+                    .trapdoorOpenSound(SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN)
+                    .pressurePlateClickOffSound(SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF)
+                    .pressurePlateClickOnSound(SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON)
+                    .buttonClickOffSound(SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF)
+                    .buttonClickOnSound(SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON)
     );
 
-    public static final BlockSetType CRUDE_STEEL = register(
-            new BlockSetType(
-                    "crude_steel",
-                    true,
-                    true,
-                    false,
-                    BlockSetType.ActivationRule.EVERYTHING,
-                    BlockSoundGroup.METAL,
-                    SoundEvents.BLOCK_IRON_DOOR_CLOSE,
-                    SoundEvents.BLOCK_IRON_DOOR_OPEN,
-                    SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE,
-                    SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN,
-                    SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF,
-                    SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON,
-                    SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF,
-                    SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON
-            )
+    public static final BlockSetType CRUDE_STEEL = register("crude_steel",
+            new BlockSetTypeBuilder()
+                    .openableByHand(true)
+                    .openableByWindCharge(true)
+                    .buttonActivatedByArrows(false)
+                    .pressurePlateActivationRule(BlockSetType.ActivationRule.EVERYTHING)
+                    .soundGroup(BlockSoundGroup.METAL)
+                    .doorCloseSound(SoundEvents.BLOCK_IRON_DOOR_CLOSE)
+                    .doorOpenSound(SoundEvents.BLOCK_IRON_DOOR_OPEN)
+                    .trapdoorCloseSound(SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE)
+                    .trapdoorOpenSound(SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN)
+                    .pressurePlateClickOffSound(SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF)
+                    .pressurePlateClickOnSound(SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON)
+                    .buttonClickOffSound(SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF)
+                    .buttonClickOnSound(SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON)
     );
 
-    public static BlockSetType register(BlockSetType type) {
-        return BlockSetTypeInvoker.klaxon$register(type);
+    public static BlockSetType register(String name, BlockSetTypeBuilder builder) {
+        return builder.register(KlaxonCommon.locate(name));
     }
 }

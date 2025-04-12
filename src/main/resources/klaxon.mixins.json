@@ -6,7 +6,6 @@
     "AbstractBlockStateMixin",
     "AnvilScreenHandlerMixin",
     "ArmorItemMixin",
-    "BlockSetTypeInvoker",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
     "FireworkRocketEntityInvoker",

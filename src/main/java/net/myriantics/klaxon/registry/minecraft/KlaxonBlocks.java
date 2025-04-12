@@ -56,13 +56,13 @@ public class KlaxonBlocks {
             new OxidizablePillarBlock(Oxidizable.OxidationLevel.WEATHERED, AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER)));
     public static final Block OXIDIZED_COPPER_PLATING_BLOCK = registerBlock("oxidized_copper_plating_block",
             new OxidizablePillarBlock(Oxidizable.OxidationLevel.OXIDIZED, AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER)));
-    public static final Block WAXED_COPPER_PLATING_BLOCK = registerBlock("copper_plating_block",
+    public static final Block WAXED_COPPER_PLATING_BLOCK = registerBlock("waxed_copper_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)));
-    public static final Block WAXED_EXPOSED_COPPER_PLATING_BLOCK = registerBlock("exposed_copper_plating_block",
+    public static final Block WAXED_EXPOSED_COPPER_PLATING_BLOCK = registerBlock("waxed_exposed_copper_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.EXPOSED_COPPER)));
-    public static final Block WAXED_WEATHERED_COPPER_PLATING_BLOCK = registerBlock("weathered_copper_plating_block",
+    public static final Block WAXED_WEATHERED_COPPER_PLATING_BLOCK = registerBlock("waxed_weathered_copper_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER)));
-    public static final Block WAXED_OXIDIZED_COPPER_PLATING_BLOCK = registerBlock("oxidized_copper_plating_block",
+    public static final Block WAXED_OXIDIZED_COPPER_PLATING_BLOCK = registerBlock("waxed_oxidized_copper_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER)));
 
     // rubber
