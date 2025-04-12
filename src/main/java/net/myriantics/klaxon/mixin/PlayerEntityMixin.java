@@ -3,8 +3,11 @@ package net.myriantics.klaxon.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
+import net.minecraft.item.ItemStack;
+import net.myriantics.klaxon.component.ability.ShieldPenetrationComponent;
+import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
+import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -21,7 +24,7 @@ public abstract class PlayerEntityMixin {
     // bl6 tells if the attack was successful
 
     // this is how it was in 1.20.1 idk if thats how it works now lol
-    
+
     @ModifyVariable(
             method = "attack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;")
@@ -29,9 +32,19 @@ public abstract class PlayerEntityMixin {
     // ordinal 2 selects boolean #3 (bl3)
     // Switches the player's attacking damage type to Hammer Walloping if they crit with a hammer, otherwise uses Hammer Bonking if they do a regular hit.
     private DamageSource klaxon$attackDamageTypeOverride(DamageSource value, @Local(ordinal = 2) boolean willCrit) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        ItemStack weaponStack = player.getWeaponStack();
 
-        if (value.getAttacker() instanceof PlayerEntity player && player.getMainHandStack().isOf(KlaxonItems.STEEL_HAMMER)) {
-            value = HammerItem.getDamageType(player, willCrit);
+        // check for overridden damage type on weapon stack - if so, apply the override
+        DamageTypeOverrideComponent damageTypeOverride = DamageTypeOverrideComponent.get(weaponStack);
+        if (damageTypeOverride != null) {
+            value = KlaxonDamageTypes.getAttackingDamageSource(player, damageTypeOverride.damageType());
+        }
+
+        // test for shield penetration component - check if it should run based on critical hit status
+        ShieldPenetrationComponent shieldPenetration = ShieldPenetrationComponent.get(weaponStack);
+        if (shieldPenetration != null && shieldPenetration.shouldFire(willCrit)) {
+            value = KlaxonDamageTypes.getAttackingDamageSource(player, shieldPenetration.damageType());
         }
 
         return value;

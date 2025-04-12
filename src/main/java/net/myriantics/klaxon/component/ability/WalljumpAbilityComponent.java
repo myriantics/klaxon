@@ -6,16 +6,14 @@ import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -23,13 +21,11 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
-import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
@@ -40,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.block.FacingBlock.FACING;
 
+// When present on an item, allows it to be used to perform a walljump by attacking the ground with positive Y velocity
 public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldUpdateObservers) {
 
     public static final Codec<WalljumpAbilityComponent> CODEC = RecordCodecBuilder.create(instance -> {
@@ -55,8 +52,12 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
             WalljumpAbilityComponent::new
     );
 
-    public static @Nullable WalljumpAbilityComponent read(ItemStack stack) {
+    public static @Nullable WalljumpAbilityComponent get(ItemStack stack) {
         return stack.getComponents().get(KlaxonDataComponentTypes.WALLJUMP_ABILITY);
+    }
+
+    public static void set(ItemStack stack, WalljumpAbilityComponent component) {
+        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.WALLJUMP_ABILITY, component).build());
     }
 
     // rising edge block hit - uses MinecraftClientMixin and HammerWalljumpTriggerPacket
@@ -145,6 +146,18 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
         return n > 0;
     }
 
+    // called in ItemMixin
+    // present to prevent you from demolishing your world when walljumping around in creative
+    public static boolean allowsMining(PlayerEntity miner) {
+        KlaxonCommon.LOGGER.info("Walljump Ability Component: " + WalljumpAbilityComponent.get(miner.getWeaponStack()));
+        if (miner.isCreative()) {
+            // mining is allowed if there's no walljump ability component
+            return WalljumpAbilityComponent.get(miner.getWeaponStack()) == null;
+        }
+
+        return true;
+    }
+
     public static boolean canWallJump(PlayerEntity player, ItemStack walljumpStack, BlockState state) {
         return canWalljumpWithEntity(player, walljumpStack, state) || canStandardWallJump(player, walljumpStack, state);
     }
@@ -155,7 +168,7 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
                 // prevents spammy bs when descending and unintentional hammer walljump procs
                 && player.getVelocity().getY() > 0
                 // make sure they're actually holding a walljumpable item
-                && read(wallJumpStack) != null
+                && get(wallJumpStack) != null
                 // allows players to not walljump if they don't want to
                 && !player.isSneaking()
                 // you cant walljump when you're in a boat or on a horse
@@ -172,7 +185,7 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
                 // make sure vehicle is suitable for walljump
                 && player.getVehicle().getType().isIn(KlaxonEntityTypeTags.WALLJUMP_MOVABLE_ENTITIES)
                 // make sure you can actually walljump
-                && read(wallJumpStack) != null
+                && get(wallJumpStack) != null
                 // still can't walljump in spectator
                 && !player.isSpectator()
                 // block still has to be suitable

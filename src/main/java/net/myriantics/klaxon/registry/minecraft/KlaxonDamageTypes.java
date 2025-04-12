@@ -20,11 +20,8 @@ public class KlaxonDamageTypes {
         return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(KlaxonCommon.MOD_ID, name));
     }
 
-    public static DamageSource hammerBonking(Entity attacker) {
-        return new DamageSource(attacker.getWorld().getDamageSources().registry.entryOf(HAMMER_BONKING), attacker);
-    }
-    public static DamageSource hammerWalloping(Entity attacker) {
-        return new DamageSource(attacker.getWorld().getDamageSources().registry.entryOf(HAMMER_WALLOPING), attacker);
+    public static DamageSource getAttackingDamageSource(Entity attacker, RegistryKey<DamageType> damageType) {
+        return new DamageSource(attacker.getWorld().getDamageSources().registry.entryOf(damageType), attacker);
     }
 
     public static void registerModDamageTypes() {

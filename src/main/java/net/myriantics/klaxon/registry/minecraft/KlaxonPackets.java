@@ -49,7 +49,7 @@ public class KlaxonPackets {
             context.server().execute(() -> {
                 ServerPlayerEntity player = context.player();
 
-                WalljumpAbilityComponent component = WalljumpAbilityComponent.read(player.getMainHandStack());
+                WalljumpAbilityComponent component = WalljumpAbilityComponent.get(player.getMainHandStack());
 
                 if (component != null) {
                     // run the walljump ability :D

@@ -9,6 +9,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.component.ability.ShieldPenetrationComponent;
 import net.myriantics.klaxon.util.EntityWeightHelper;
 import net.myriantics.klaxon.util.StatusEffectHelper;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
@@ -26,32 +27,35 @@ public abstract class LivingEntityMixin {
 
     @Shadow protected abstract void takeShieldHit(LivingEntity attacker);
 
-    @Shadow public abstract ItemStack eatFood(World world, ItemStack stack, FoodComponent foodComponent);
-
-    // Allows hammer walloping damage to disable shields and deal damage through them - only activated on crit
+    // Allows shield penetrating items to disable shields and deal damage through them
     @ModifyExpressionValue(
             method = "damage",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;blockedByShield(Lnet/minecraft/entity/damage/DamageSource;)Z")
     )
-    public boolean klaxon$hammerWallopingOverride(boolean original, @Local(argsOnly = true) DamageSource damageSource, @Local(argsOnly = true) float amount) {
-        // if its already blocked by shield dont mess with it - walloping passes through this because it's tagged as bypasses_shield
-        if (original) return true;
+    public boolean klaxon$shieldPenetrationOverride(boolean original, @Local(argsOnly = true) DamageSource damageSource, @Local(argsOnly = true) float amount) {
+        ItemStack weaponStack = damageSource.getWeaponStack();
 
-        if (damageSource.isOf(KlaxonDamageTypes.HAMMER_WALLOPING) && damageSource.getSource() instanceof PlayerEntity attacker) {
-            damageShield(amount);
-            takeShieldHit(attacker);
+        // make sure there's a weapon stack
+        if (weaponStack != null && damageSource.getAttacker() instanceof LivingEntity attacker) {
+            // make sure there is actually a shield penetration component
+            ShieldPenetrationComponent shieldPenetrationComponent = ShieldPenetrationComponent.get(weaponStack);
+            if (shieldPenetrationComponent != null) {
+                damageShield(amount);
+                takeShieldHit(attacker);
 
-            // we have to call this independently because the hammer itself doesn't disable shields
-            // it has to be walloping damage to pierce through a shield
-            if (((Object)this) instanceof PlayerEntity player) {
-                player.disableShield();
+                // we have to call this independently because the hammer itself doesn't disable shields
+                // it has to be walloping damage to pierce through a shield
+                if (((Object)this) instanceof PlayerEntity player) {
+                    player.disableShield();
+                }
+
+                // we have our own custom processing, we don't need to run the regular shield disabling stuff
+                return false;
             }
-
-            // we have our own custom processing, we don't need to run the regular shield disabling stuff
-            return false;
         }
-        // if it's not walloping
-        return false;
+
+        // no need to retain the original since any positives are filtered out at the start
+        return original;
     }
 
     @Inject(

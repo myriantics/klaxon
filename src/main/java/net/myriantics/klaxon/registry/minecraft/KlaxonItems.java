@@ -1,10 +1,13 @@
 package net.myriantics.klaxon.registry.minecraft;
 
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.component.ability.ShieldPenetrationComponent;
+import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
@@ -19,7 +22,9 @@ public class KlaxonItems {
 
     // equipment
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer", new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings().attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, HammerItem.STEEL_HAMMER_BASE_ATTACK_DAMAGE, HammerItem.STEEL_HAMMER_ATTACK_SPEED))
-            .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))));
+            .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
+            .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new DamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
+            .component(KlaxonDataComponentTypes.SHIELD_PENETRATION, new ShieldPenetrationComponent(KlaxonDamageTypes.HAMMER_WALLOPING, true))));
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()));
     public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate",

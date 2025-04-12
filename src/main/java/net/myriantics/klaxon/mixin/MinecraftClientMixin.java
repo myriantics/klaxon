@@ -30,7 +30,7 @@ public abstract class MinecraftClientMixin {
         if (interactionManager != null && player != null && WalljumpAbilityComponent.canWallJump(player, player.getMainHandStack(), player.getWorld().getBlockState(hitResult.getBlockPos()))) {
 
             // run walljump on client side
-            WalljumpAbilityComponent.read(player.getMainHandStack()).processHammerWalljump(player, player.getWorld(), hitResult.getBlockPos(), hitResult.getSide());
+            WalljumpAbilityComponent.get(player.getMainHandStack()).processHammerWalljump(player, player.getWorld(), hitResult.getBlockPos(), hitResult.getSide());
 
             // send packet that triggers hammer walljump on the server side
             ClientPlayNetworking.send(new HammerWalljumpTriggerPacket(hitResult.getBlockPos(), hitResult.getSide()));
