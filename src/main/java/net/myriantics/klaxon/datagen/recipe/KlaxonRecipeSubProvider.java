@@ -45,7 +45,7 @@ public abstract class KlaxonRecipeSubProvider {
     public void add3x3UnpackingRecipe(Ingredient input, ItemConvertible output,
                                       @Nullable CraftingRecipeCategory category, @Nullable String group,
                                       final ResourceCondition... conditions) {
-        addShapelessCraftingRecipe(DefaultedList.copyOf(input), new ItemStack(output, 9), category, group, conditions);
+        addShapelessCraftingRecipe(DefaultedList.copyOf(Ingredient.EMPTY, input), new ItemStack(output, 9), category, group, conditions);
     }
 
     public void add3x3PackingRecipe(Ingredient input, ItemStack output,
@@ -63,7 +63,7 @@ public abstract class KlaxonRecipeSubProvider {
     public void add2x2UnpackingRecipe(Ingredient input, ItemConvertible output,
                                       @Nullable CraftingRecipeCategory category, @Nullable String group,
                                       final ResourceCondition... conditions) {
-        addShapelessCraftingRecipe(DefaultedList.copyOf(input), new ItemStack(output, 4), category, group, conditions);
+        addShapelessCraftingRecipe(DefaultedList.copyOf(Ingredient.EMPTY, input), new ItemStack(output, 4), category, group, conditions);
     }
 
     public void add2x2PackingRecipe(Ingredient input, ItemStack output,

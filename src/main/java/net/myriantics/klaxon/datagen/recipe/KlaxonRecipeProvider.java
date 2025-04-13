@@ -19,19 +19,12 @@ import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+// structure for this kinda yoinked from energized power
 public class KlaxonRecipeProvider extends FabricRecipeProvider {
-    private final HashMap<RecipeType<?>, ArrayList<Identifier>> spentRecipeIdentifiersByRecipeType;
+    private final HashMap<Identifier, Integer> recipeIdOccurrencesMap = new HashMap<>();
 
     public KlaxonRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
         super(output, registriesFuture);
-
-        HashMap<RecipeType<?>, ArrayList<Identifier>> interimMap = new java.util.HashMap<>(Map.of());
-
-        for (RecipeType<?> type : Registries.RECIPE_TYPE) {
-            interimMap.put(type, new ArrayList<>());
-        }
-
-        this.spentRecipeIdentifiersByRecipeType = interimMap;
     }
 
     @Override
@@ -58,44 +51,29 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     public void acceptRecipeWithConditions(RecipeExporter exporter, Identifier recipeId, Recipe<?> recipe, final ResourceCondition... conditions) {
-        // get all the spent identifiers for the recipe type
-        if (spentRecipeIdentifiersByRecipeType.containsKey(recipe.getType())) {
-            // iterate through them all to check if theyre the same as the active recipe's id
-            for (Identifier potentiallySpentIdentifier : spentRecipeIdentifiersByRecipeType.get(recipe.getType())) {
-                // if there is a match, attach a discriminator to the end of the recipe id
-                if (potentiallySpentIdentifier.equals(recipeId)) {
-                    int discriminator = 1;
 
-                    for (Identifier discriminatorDetectorIdentifier : spentRecipeIdentifiersByRecipeType.get(recipe.getType())) {
-                        String path = recipeId.getPath();
+        Identifier proposedId = null;
 
-                        // this might cause a problem if some item has a name like "skibid_i"
-                        // but i dont care lol
-                        // it'd just become leetspeak anyways
-                        // like skibid_1 yk?
-                        // thatd be epic
-                        if (path.charAt(path.length() - 2) == '_') {
-                            // give the raw path without any numbers
-                            path = path.substring(0, path.length() - 2);
-                        }
-
-                        Identifier proposedRecipeId = recipeId.withPath(path + "_" + discriminator);
-
-                        // if a valid open recipe slot is found, set recipeId to that
-                        if (!discriminatorDetectorIdentifier.equals(proposedRecipeId)) {
-                            recipeId = proposedRecipeId;
-                            KlaxonCommon.LOGGER.info("Accommodated for duplicate recipe ID " + recipeId);
-                        }
-
-                        // if the recipe was a dupe, increase the discriminator number
-                        discriminator++;
-                    }
-                }
+        // iterate through them all to check if theyre the same as the active recipe's id
+        for (Identifier potentiallySpentIdentifier : recipeIdOccurrencesMap.keySet()) {
+            // if there is a match, attach a discriminator to the end of the recipe id
+            if (potentiallySpentIdentifier.equals(recipeId)) {
+                proposedId = recipeId.withPath(recipeId.getPath() + "_" + recipeIdOccurrencesMap.get(potentiallySpentIdentifier));
+                break;
             }
         }
 
-        // add the new recipe id to the map for that recipe type
-        spentRecipeIdentifiersByRecipeType.get(recipe.getType()).add(recipeId);
+        if (proposedId == null) {
+            // if no duplicate recipe was found, add a new entry with the associated number of 1
+            recipeIdOccurrencesMap.put(recipeId, 1);
+        } else {
+            // notify the dev of the recipe accomodation :)
+            KlaxonCommon.LOGGER.info("Accommodated for duplicate recipe: " + recipeId);
+            // if a duplicate recipe was found, increment the counter in the map
+            recipeIdOccurrencesMap.put(recipeId, recipeIdOccurrencesMap.get(recipeId) + 1);
+            // make sure to update the recipe id to include the discriminator
+            recipeId = proposedId;
+        }
 
         // if the recipe has resource conditions, apply them
         if (conditions.length > 0) {
