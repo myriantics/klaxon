@@ -1,9 +1,6 @@
 {
   "values": [
-    "klaxon:crude_steel_block",
-    "klaxon:crude_steel_trapdoor",
-    "klaxon:crude_steel_door",
-    "klaxon:crude_steel_plating_block",
+    "#c:crude_steel",
     "klaxon:copper_plating_block"
   ]
 }

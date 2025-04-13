@@ -29,6 +29,8 @@ public class KlaxonModelProvider extends FabricModelProvider {
     private void registerSimpleBlockStateModels(BlockStateModelGenerator generator) {
         generator.registerSimpleCubeAll(KlaxonBlocks.STEEL_BLOCK);
         generator.registerSimpleCubeAll(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+        generator.registerSimpleCubeAll(KlaxonBlocks.RUBBER_BLOCK);
+        generator.registerSimpleCubeAll(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
     }
 
     private void registerMiscBlockStateModels(BlockStateModelGenerator generator) {

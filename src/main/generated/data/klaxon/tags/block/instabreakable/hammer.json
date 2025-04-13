@@ -1,21 +1,10 @@
 {
   "values": [
-    {
-      "id": "#c:glass_blocks",
-      "required": false
-    },
-    {
-      "id": "#c:glass_panes",
-      "required": false
-    },
-    {
-      "id": "#c:buds",
-      "required": false
-    },
-    {
-      "id": "#minecraft:ice",
-      "required": false
-    },
+    "#c:glass_blocks",
+    "#c:glass_panes",
+    "#c:buds",
+    "#c:clusters",
+    "#minecraft:ice",
     "minecraft:redstone_lamp",
     "minecraft:sea_lantern",
     "minecraft:glowstone"

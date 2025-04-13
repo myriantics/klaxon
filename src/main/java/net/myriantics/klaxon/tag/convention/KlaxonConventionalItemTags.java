@@ -53,10 +53,6 @@ public class KlaxonConventionalItemTags {
         return createConventionalItemTag("storage_blocks/" + name);
     }
 
-    private static TagKey<Item> createConventionalPlateStorageBlockTag(String name) {
-        return createConventionalItemTag("storage_blocks/plates/" + name);
-    }
-
     private static TagKey<Item> createConventionalPlateTag(String name) {
         return createConventionalItemTag("plates/" + name);
     }

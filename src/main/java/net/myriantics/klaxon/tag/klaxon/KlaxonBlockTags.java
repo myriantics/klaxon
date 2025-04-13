@@ -24,20 +24,24 @@ public class KlaxonBlockTags {
             createMineableTag("wrench");
     public static final TagKey<Block> WRENCH_INSTABREAKABLE =
             createInstabreakableTag("wrench");
+
+    // tool material tags
+    public static final TagKey<Block> NEEDS_STEEL_TOOL =
+            createTag("needs_steel_tool");
     public static final TagKey<Block> INCORRECT_FOR_STEEL_TOOL =
             createTag("incorrect_for_steel_tool");
 
     // behavior tags
-    public static final TagKey<Block> WRENCHABLE_BLOCKS =
-            createTag("wrenchable_blocks");
     public static final TagKey<Block> FERROMAGNETIC_BLOCKS =
             createTag("ferromagnetic_blocks");
     public static final TagKey<Block> COLD_BLOCKS =
             createTag("cold_blocks");
 
-    // advancement tags
+    // category tags
     public static final TagKey<Block> BLAST_PROCESSORS =
             createTag("blast_processors");
+    public static final TagKey<Block> MACHINES =
+            createTag("machines");
 
     private static TagKey<Block> createInstabreakableTag(String name) {
         return createTag("instabreakable/" + name);

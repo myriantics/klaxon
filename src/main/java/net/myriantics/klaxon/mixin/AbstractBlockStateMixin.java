@@ -23,10 +23,16 @@ public abstract class AbstractBlockStateMixin {
     private float klaxon$hammerInstabreakOverride(float original,
                                                   @Local(argsOnly = true) PlayerEntity player) {
         ItemStack miningToolStack = player.getWeaponStack();
+        BlockState state = asBlockState();
 
-        // check if the tool is an instabreaking tool and if the block is valid for instabreaking
-        if (miningToolStack.getItem() instanceof InstabreakMiningToolItem instabreakTool
-                && instabreakTool.isCorrectForInstabreak(miningToolStack, asBlockState())) {
+        if (
+                // check if the tool is an instabreaking tool
+                miningToolStack.getItem() instanceof InstabreakMiningToolItem instabreakTool
+                // check if block is valid for instabreaking
+                && instabreakTool.isCorrectForInstabreak(miningToolStack, state)
+                // make sure block is suitable for tool to mine
+                && !state.isIn(instabreakTool.getMaterial().getInverseTag())
+        ) {
             // if it can instabreak, set it to a value over 1.0 so that it instabreaks
             return Integer.MAX_VALUE;
         }

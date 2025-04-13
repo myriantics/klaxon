@@ -47,13 +47,17 @@ public class KlaxonItemTags {
             // used in EnchantmentHelper
             createTag("innate_unbreaking_equipment");
 
-    // gear modifier tags
+    // behavior tags
     public static final TagKey<Item> HEAVY_EQUIPMENT =
             createTag("heavy_equipment");
     public static final TagKey<Item> FERROMAGNETIC_ITEMS =
             createTag("ferromagnetic_items");
     public static final TagKey<Item> FERROMAGNETIC_ITEM_BLACKLIST =
             createTag("ferromagnetic_item_blacklist");
+    public static final TagKey<Item> WRENCHABLE_BLOCK_WHITELIST =
+            createTag("wrenchable_block_blacklist");
+    public static final TagKey<Item> WRENCHABLE_BLOCK_BLACKLIST =
+            createTag("wrenchable_block_blacklist");
 
     // gear categories
     public static final TagKey<Item> STEEL_ARMOR =
