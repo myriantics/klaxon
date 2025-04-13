@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class HammerItem extends InstabreakMiningToolItem {
-    public static final float STEEL_HAMMER_BASE_ATTACK_DAMAGE = 5.0F;
-    public static final float STEEL_HAMMER_ATTACK_SPEED = -3.1F;
 
     public HammerItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, KlaxonBlockTags.HAMMER_MINEABLE, settings.maxCount(1));
@@ -79,15 +77,6 @@ public class HammerItem extends InstabreakMiningToolItem {
     @Override
     public boolean isCorrectForInstabreak(ItemStack stack, BlockState state) {
         return state.isIn(KlaxonBlockTags.HAMMER_INSTABREAKABLE);
-    }
-
-    @Override
-    public float getMiningSpeed(ItemStack stack, BlockState state) {
-        if (state.isIn(KlaxonBlockTags.HAMMER_MINEABLE)) {
-            return 6.0F;
-        } else {
-            return super.getMiningSpeed(stack, state);
-        }
     }
 
     @Override

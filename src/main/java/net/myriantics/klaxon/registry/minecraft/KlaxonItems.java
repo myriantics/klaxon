@@ -27,21 +27,23 @@ public class KlaxonItems {
     // tools
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer",
             new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings()
-                    .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, HammerItem.STEEL_HAMMER_BASE_ATTACK_DAMAGE, HammerItem.STEEL_HAMMER_ATTACK_SPEED))
+                    .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 3.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
                     .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new DamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
                     .component(KlaxonDataComponentTypes.SHIELD_PENETRATION, new ShieldPenetrationComponent(KlaxonDamageTypes.HAMMER_WALLOPING, true))));
     public static final Item STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
             new CableShearsItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+                    .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 1.0f, -2.6f))
                     .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
-                    .attributeModifiers(CableShearsItem.createAttributeModifiers())
             ));
     public static final Item STEEL_CLEAVER = registerSimpleItem("steel_cleaver",
             new CleaverItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+                    .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0f, -3.4f))
                     .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+                    .attributeModifiers(WrenchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 0f, -2.4f))
                     .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
             ));
 
