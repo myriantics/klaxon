@@ -5,11 +5,10 @@ import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
+import net.minecraft.util.ActionResult;
 import net.myriantics.klaxon.api.InstabreakMiningToolItem;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
-import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 public class CableShearsItem extends InstabreakMiningToolItem {
 
@@ -37,5 +36,10 @@ public class CableShearsItem extends InstabreakMiningToolItem {
     @Override
     public boolean isCorrectForInstabreak(ItemStack stack, BlockState state) {
         return state.isIn(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE);
+    }
+
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        return Items.SHEARS.useOnBlock(context);
     }
 }
