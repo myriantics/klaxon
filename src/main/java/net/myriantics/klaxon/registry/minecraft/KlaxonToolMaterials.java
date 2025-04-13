@@ -9,7 +9,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 public class KlaxonToolMaterials {
-    public static final ToolMaterial STEEL = registerToolMaterial(512, 6.0f, 4.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS));
+    public static final ToolMaterial STEEL = registerToolMaterial(512, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS));
 
     private static ToolMaterial registerToolMaterial(
             int durability,
