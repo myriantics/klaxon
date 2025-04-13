@@ -35,7 +35,7 @@ public abstract class MobEntityMixin {
 
             // replace damage type with shield penetrating variant if present
             ShieldPenetrationComponent shieldPenetrationComponent = ShieldPenetrationComponent.get(weaponStack);
-            if (shieldPenetrationComponent != null && shieldPenetrationComponent.shouldFire(attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS))) {
+            if (shieldPenetrationComponent != null && shieldPenetrationComponent.shouldFire(attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS), true)) {
                 original = KlaxonDamageTypes.getAttackingDamageSource(attacker, shieldPenetrationComponent.damageType());
             }
         }

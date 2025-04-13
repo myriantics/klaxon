@@ -9,6 +9,8 @@
     "#minecraft:candle_cakes",
     "#minecraft:all_signs",
     "#minecraft:beehives",
+    "#minecraft:candles",
+    "minecraft:honeycomb_block",
     "minecraft:glow_lichen",
     "minecraft:cake"
   ]

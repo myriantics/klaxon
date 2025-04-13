@@ -23,6 +23,9 @@
   "block.klaxon.crude_steel_trapdoor": "Crude Steel Trapdoor",
 
   "item.klaxon.steel_hammer": "Steel Hammer",
+  "item.klaxon.steel_cable_shears": "Steel Cable Shears",
+  "item.klaxon.steel_cleaver": "Steel Cleaver",
+  "item.klaxon.steel_wrench": "Steel Wrench",
   "item.klaxon.steel_helmet": "Steel Helmet",
   "item.klaxon.steel_chestplate": "Steel Chestplate",
   "item.klaxon.steel_leggings": "Steel Leggings",
@@ -59,9 +62,11 @@
   "entity.klaxon.gold_plate": "Gold Plate",
 
   "death.attack.hammer_bonking": "%1$s was bonked by %2$s",
-  "death.attack.hammer_walloping": "%1$s was walloped by %2$s",
   "death.attack.hammer_bonking.item": "%1$s was bonked by %2$s using %3$s",
+  "death.attack.hammer_walloping": "%1$s was walloped by %2$s",
   "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s",
+  "death.attack.cleaving": "%1$s was cleaved in two by %2$s",
+  "death.attack.cleaving.item": "%1$s was cleaved in two by %2$s using %3$s",
 
   "tag.item.klaxon.crude_inclusive_steel_blocks": "Crude-Inclusive Steel Blocks",
   "tag.item.klaxon.crude_inclusive_steel_ingots": "Crude-Inclusive Steel Ingots",

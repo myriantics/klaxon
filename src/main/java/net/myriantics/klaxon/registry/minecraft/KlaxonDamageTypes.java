@@ -12,9 +12,10 @@ public class KlaxonDamageTypes {
 
     public static final RegistryKey<DamageType> HAMMER_BONKING =
             createDamageType("hammer_bonking");
-
     public static final RegistryKey<DamageType> HAMMER_WALLOPING =
             createDamageType("hammer_walloping");
+    public static final RegistryKey<DamageType> CLEAVING =
+            createDamageType("cleaving");
 
     private static RegistryKey<DamageType> createDamageType(String name) {
         return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(KlaxonCommon.MOD_ID, name));

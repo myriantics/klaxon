@@ -31,7 +31,7 @@ public abstract class PlayerEntityMixin {
     )
     // ordinal 2 selects boolean #3 (bl3)
     // Switches the player's attacking damage type to Hammer Walloping if they crit with a hammer, otherwise uses Hammer Bonking if they do a regular hit.
-    private DamageSource klaxon$attackDamageTypeOverride(DamageSource value, @Local(ordinal = 2) boolean willCrit) {
+    private DamageSource klaxon$attackDamageTypeOverride(DamageSource value, @Local(ordinal = 0) boolean fullyCharged, @Local(ordinal = 2) boolean willCrit) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         ItemStack weaponStack = player.getWeaponStack();
 
@@ -43,7 +43,7 @@ public abstract class PlayerEntityMixin {
 
         // test for shield penetration component - check if it should run based on critical hit status
         ShieldPenetrationComponent shieldPenetration = ShieldPenetrationComponent.get(weaponStack);
-        if (shieldPenetration != null && shieldPenetration.shouldFire(willCrit)) {
+        if (shieldPenetration != null && shieldPenetration.shouldFire(willCrit, fullyCharged)) {
             value = KlaxonDamageTypes.getAttackingDamageSource(player, shieldPenetration.damageType());
         }
 
