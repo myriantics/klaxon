@@ -19,7 +19,6 @@ import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-// structure for this kinda yoinked from energized power
 public class KlaxonRecipeProvider extends FabricRecipeProvider {
     private final HashMap<RecipeType<?>, ArrayList<Identifier>> spentRecipeIdentifiersByRecipeType;
 
@@ -37,15 +36,15 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(RecipeExporter exporter) {
-        new KlaxonHammeringRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonBlastProcessingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonCraftingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonMakeshiftCraftingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonItemExplosionPowerRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonSmeltingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonOreProcessingRecipeProvider(this).generateRecipes(exporter);
-        new KlaxonRecipeOverrideProvider(this).generateRecipes(exporter);
-        new KlaxonBlastProcessorBehaviorRecipeProvider(this).generateRecipes(exporter);
+        new KlaxonHammeringRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonBlastProcessingRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonCraftingRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonMakeshiftCraftingRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonItemExplosionPowerRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonSmeltingRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonOreProcessingRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonRecipeOverrideProvider(this, exporter).generateRecipes();
+        new KlaxonBlastProcessorBehaviorRecipeProvider(this, exporter).generateRecipes();
     }
 
     public Identifier computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {

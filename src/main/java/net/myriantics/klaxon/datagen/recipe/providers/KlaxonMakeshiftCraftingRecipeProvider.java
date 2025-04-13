@@ -6,6 +6,7 @@ import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.collection.DefaultedList;
+import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
@@ -15,17 +16,18 @@ import java.util.List;
 import java.util.Map;
 
 public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvider {
-    public KlaxonMakeshiftCraftingRecipeProvider(KlaxonRecipeProvider provider) {
-        super(provider);
+    public KlaxonMakeshiftCraftingRecipeProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
+        super(provider, exporter);
     }
 
     @Override
-    public void generateRecipes(RecipeExporter exporter) {
-        buildEquipmentCraftingRecipes(exporter);
+    public void generateRecipes() {
+        buildShapedCraftingRecipes();
+        buildShapelessCraftingRecipes();
     }
 
-    private void buildEquipmentCraftingRecipes(RecipeExporter exporter) {
-        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+    private void buildShapedCraftingRecipes() {
+        addMakeshiftShapedCraftingRecipe(Map.of(
                         'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
                         'S', Ingredient.ofItems(Items.STICK),
@@ -41,7 +43,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 null
         );
 
-        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+        addMakeshiftShapedCraftingRecipe(Map.of(
                         'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)),
                 new String[]{
@@ -54,7 +56,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 null
         );
 
-        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+        addMakeshiftShapedCraftingRecipe(Map.of(
                         'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
                         'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
@@ -70,7 +72,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 null
         );
 
-        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+        addMakeshiftShapedCraftingRecipe(Map.of(
                         'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)
                 ),
@@ -85,7 +87,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 null
         );
 
-        addMakeshiftShapedCraftingRecipe(exporter, Map.of(
+        addMakeshiftShapedCraftingRecipe(Map.of(
                         'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS)
                 ),
@@ -98,8 +100,10 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
+    }
 
-        addMakeshiftShapelessCraftingRecipe(exporter,
+    private void buildShapelessCraftingRecipes() {
+        addMakeshiftShapelessCraftingRecipe(
                 DefaultedList.copyOf(Ingredient.EMPTY,
                         Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
                         Ingredient.ofItems(Items.FLINT)),

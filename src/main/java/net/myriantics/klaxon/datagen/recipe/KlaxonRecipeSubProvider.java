@@ -11,6 +11,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
@@ -30,26 +31,24 @@ import static net.minecraft.data.server.recipe.RecipeProvider.getItemPath;
 public abstract class KlaxonRecipeSubProvider {
 
     public final KlaxonRecipeProvider provider;
+    public final RecipeExporter exporter;
 
-    public KlaxonRecipeSubProvider(KlaxonRecipeProvider provider) {
+    public KlaxonRecipeSubProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
         this.provider = provider;
+        this.exporter = exporter;
     }
 
-    public void generateRecipes(RecipeExporter exporter) {
-        KlaxonCommon.LOGGER.error("Override this lol");
-    }
+    public abstract void generateRecipes();
 
     // recipe adding code below (to be used by subclasses)
 
-    public void add3x3UnpackingRecipe(RecipeExporter exporter,
-                                      Ingredient input, ItemConvertible output,
+    public void add3x3UnpackingRecipe(Ingredient input, ItemConvertible output,
                                       @Nullable CraftingRecipeCategory category, @Nullable String group,
                                       final ResourceCondition... conditions) {
-        addShapelessCraftingRecipe(exporter, DefaultedList.copyOf(Ingredient.EMPTY, input), new ItemStack(output, 9), category, group, conditions);
+        addShapelessCraftingRecipe(DefaultedList.copyOf(input), new ItemStack(output, 9), category, group, conditions);
     }
 
-    public void add3x3PackingRecipe(RecipeExporter exporter,
-                                    Ingredient input, ItemStack output,
+    public void add3x3PackingRecipe(Ingredient input, ItemStack output,
                                     @Nullable CraftingRecipeCategory category, @Nullable String group,
                                     final ResourceCondition... conditions) {
         String[] pattern = {
@@ -58,18 +57,16 @@ public abstract class KlaxonRecipeSubProvider {
                 "xxx"
         };
 
-        addShapedCraftingRecipe(exporter, Map.of('x', input), pattern, output, category, group, conditions);
+        addShapedCraftingRecipe(Map.of('x', input), pattern, output, category, group, conditions);
     }
 
-    public void add2x2UnpackingRecipe(RecipeExporter exporter,
-                                      Ingredient input, ItemConvertible output,
+    public void add2x2UnpackingRecipe(Ingredient input, ItemConvertible output,
                                       @Nullable CraftingRecipeCategory category, @Nullable String group,
                                       final ResourceCondition... conditions) {
-        addShapelessCraftingRecipe(exporter, DefaultedList.copyOf(Ingredient.EMPTY, input), new ItemStack(output, 4), category, group, conditions);
+        addShapelessCraftingRecipe(DefaultedList.copyOf(input), new ItemStack(output, 4), category, group, conditions);
     }
 
-    public void add2x2PackingRecipe(RecipeExporter exporter,
-                                    Ingredient input, ItemStack output,
+    public void add2x2PackingRecipe(Ingredient input, ItemStack output,
                                     @Nullable CraftingRecipeCategory category, @Nullable String group,
                                     final ResourceCondition... conditions) {
         String[] pattern = {
@@ -77,39 +74,37 @@ public abstract class KlaxonRecipeSubProvider {
                 "xx"
         };
 
-        addShapedCraftingRecipe(exporter, Map.of('x', input), pattern, output, category, group, conditions);
+        addShapedCraftingRecipe(Map.of('x', input), pattern, output, category, group, conditions);
     }
 
-    public void addFoodProcessingCookingRecipe(RecipeExporter exporter,
-                                               Ingredient input, ItemStack output,
+    public void addFoodProcessingCookingRecipe(Ingredient input, ItemStack output,
                                                float experience, int cookingTime,
                                                @Nullable String group,
                                                final ResourceCondition... conditions) {
-        addSmokingSmeltingRecipe(exporter,
+        addSmokingSmeltingRecipe(
                 input, output, experience, (int) (cookingTime * 0.5),
                 CookingRecipeCategory.FOOD, group, conditions);
-        addSmeltingRecipe(exporter, input, output, experience, cookingTime, CookingRecipeCategory.FOOD, group, conditions);
+        addSmeltingRecipe(input, output, experience, cookingTime, CookingRecipeCategory.FOOD, group, conditions);
     }
 
-    public void addOreProcessingCookingRecipe(RecipeExporter exporter,
-                                              Ingredient input, ItemStack output,
+    public void addOreProcessingCookingRecipe(Ingredient input, ItemStack output,
                                               float experience, int cookingTime,
                                               @Nullable CookingRecipeCategory category, @Nullable String group,
                                               final ResourceCondition... conditions) {
-        addBlastingSmeltingRecipe(exporter,
+        addBlastingSmeltingRecipe(
                 input, output, experience, (int) (cookingTime * 0.5),
                 category, group, conditions);
-        addSmeltingRecipe(exporter, input, output, experience, cookingTime, category, group, conditions);
+        addSmeltingRecipe(input, output, experience, cookingTime, category, group, conditions);
     }
 
-    public void addSmeltingRecipe(RecipeExporter exporter,
-                                  Ingredient input, ItemStack output,
+    public void addSmeltingRecipe(Ingredient input, ItemStack output,
                                   float experience, int cookingTime,
                                   @Nullable CookingRecipeCategory category, @Nullable String group,
                                   final ResourceCondition... conditions) {
+        String outputPath = getItemPath(output.getItem());
 
         Identifier recipeId = provider.computeRecipeIdentifier("cooking/smelting",
-                getItemPath(output.getItem()),
+                outputPath,
                 conditions
         );
 
@@ -118,7 +113,7 @@ public abstract class KlaxonRecipeSubProvider {
         }
 
         if (group == null) {
-            group = getItemPath(output.getItem());
+            group = outputPath;
         }
 
         SmeltingRecipe recipe = new SmeltingRecipe(group, category, input, output, experience, cookingTime);
@@ -126,14 +121,14 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addSmokingSmeltingRecipe(RecipeExporter exporter,
-                                         Ingredient input, ItemStack output,
+    public void addSmokingSmeltingRecipe(Ingredient input, ItemStack output,
                                          float experience, int cookingTime,
                                          @Nullable CookingRecipeCategory category, @Nullable String group,
                                          final ResourceCondition... conditions) {
+        String outputPath = getItemPath(output.getItem());
 
         Identifier recipeId = provider.computeRecipeIdentifier("cooking/smoking",
-                getItemPath(output.getItem()),
+                outputPath,
                 conditions
         );
 
@@ -142,7 +137,7 @@ public abstract class KlaxonRecipeSubProvider {
         }
 
         if (group == null) {
-            group = getItemPath(output.getItem());
+            group = outputPath;
         }
 
         BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
@@ -150,14 +145,14 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addBlastingSmeltingRecipe(RecipeExporter exporter,
-                                          Ingredient input, ItemStack output,
+    public void addBlastingSmeltingRecipe(Ingredient input, ItemStack output,
                                           float experience, int cookingTime,
                                           @Nullable CookingRecipeCategory category, @Nullable String group,
                                           final ResourceCondition... conditions) {
+        String outputPath = getItemPath(output.getItem());
 
         Identifier recipeId = provider.computeRecipeIdentifier("cooking/blasting",
-                getItemPath(output.getItem()),
+                outputPath,
                 conditions
         );
 
@@ -166,7 +161,7 @@ public abstract class KlaxonRecipeSubProvider {
         }
 
         if (group == null) {
-            group = getItemPath(output.getItem());
+            group = outputPath;
         }
 
         BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
@@ -174,12 +169,13 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addShapelessCraftingRecipe(RecipeExporter exporter,
-                                           DefaultedList<Ingredient> input, ItemStack output,
+    public void addShapelessCraftingRecipe(DefaultedList<Ingredient> input, ItemStack output,
                                            @Nullable CraftingRecipeCategory category, @Nullable String group,
                                            final ResourceCondition... conditions) {
+        String outputPath = getItemPath(output.getItem());
+
         Identifier recipeId = provider.computeRecipeIdentifier("crafting/shapeless",
-                getItemPath(output.getItem()),
+                outputPath,
                 conditions);
 
         if (category == null) {
@@ -187,7 +183,7 @@ public abstract class KlaxonRecipeSubProvider {
         }
 
         if (group == null) {
-            group = getItemPath(output.getItem());
+            group = outputPath;
         }
 
         ShapelessRecipe recipe = new ShapelessRecipe(group, category, output, input);
@@ -195,13 +191,14 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addMakeshiftShapelessCraftingRecipe(RecipeExporter exporter,
-                                                    DefaultedList<Ingredient> input, ItemStack output,
+    public void addMakeshiftShapelessCraftingRecipe(DefaultedList<Ingredient> input, ItemStack output,
                                                     List<Ingredient> constantIngredients,
                                                     @Nullable CraftingRecipeCategory category, @Nullable String group,
                                                     final ResourceCondition... conditions) {
+        String outputPath = getItemPath(output.getItem());
+
         Identifier recipeId = provider.computeRecipeIdentifier("crafting/makeshift_shapeless",
-                getItemPath(output.getItem()),
+                outputPath,
                 conditions);
 
         if (category == null) {
@@ -209,7 +206,7 @@ public abstract class KlaxonRecipeSubProvider {
         }
 
         if (group == null) {
-            group = getItemPath(output.getItem());
+            group = outputPath;
         }
 
         MakeshiftShapelessCraftingRecipe recipe = new MakeshiftShapelessCraftingRecipe(group, category, output, input, constantIngredients);
@@ -218,13 +215,13 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
 
-    public void addShapedCraftingRecipe(RecipeExporter exporter,
-                                        Map<Character, Ingredient> key, String[] pattern, ItemStack output,
+    public void addShapedCraftingRecipe(Map<Character, Ingredient> key, String[] pattern, ItemStack output,
                                         @Nullable CraftingRecipeCategory category, @Nullable String group,
                                         final ResourceCondition... conditions) {
+        String outputPath = getItemPath(output.getItem());
 
         Identifier recipeId = provider.computeRecipeIdentifier("crafting/shaped",
-                getItemPath(output.getItem()),
+                outputPath,
                 conditions);
 
         if (category == null) {
@@ -232,7 +229,7 @@ public abstract class KlaxonRecipeSubProvider {
         }
 
         if (group == null) {
-            group = getItemPath(output.getItem());
+            group = outputPath;
         }
 
         ShapedRecipe recipe = new ShapedRecipe(group, category, RawShapedRecipe.create(key, Arrays.stream(pattern).toList()), output);
@@ -240,13 +237,13 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addMakeshiftShapedCraftingRecipe(RecipeExporter exporter,
-                                                 Map<Character, Ingredient> key, String[] pattern, List<Ingredient> constantIngredients, ItemStack output,
+    public void addMakeshiftShapedCraftingRecipe(Map<Character, Ingredient> key, String[] pattern, List<Ingredient> constantIngredients, ItemStack output,
                                                  @Nullable CraftingRecipeCategory category, @Nullable String group,
                                                  final ResourceCondition... conditions) {
+        String outputPath = getItemPath(output.getItem());
 
         Identifier recipeId = provider.computeRecipeIdentifier("crafting/makeshift_shaped",
-                getItemPath(output.getItem()),
+                outputPath,
                 conditions);
 
         if (category == null) {
@@ -254,7 +251,7 @@ public abstract class KlaxonRecipeSubProvider {
         }
 
         if (group == null) {
-            group = getItemPath(output.getItem());
+            group = outputPath;
         }
 
         ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(group, category, RawShapedRecipe.create(key, Arrays.stream(pattern).toList()), constantIngredients,  output, false);
@@ -262,27 +259,19 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addItemExplosionPowerRecipe(RecipeExporter exporter, Ingredient input,
+    public void addItemExplosionPowerRecipe(NamedIngredient input,
                                             double explosionPower, boolean producesFire, boolean isHidden,  final ResourceCondition... conditions) {
 
-        ItemStack[] stacks = input.getMatchingStacks();
-        String path;
-        if (stacks.length > 0) {
-            path = Registries.ITEM.getId(stacks[0].getItem()).getPath();
-        } else {
-            path = "some_tag";
-        }
-
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID,
-                path,
+                input.getName(),
                 conditions);
 
-        ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input, explosionPower, producesFire, isHidden);
+        ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input.toIngredient(), explosionPower, producesFire, isHidden);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addHammeringRecipe(RecipeExporter exporter, Ingredient input, ItemStack output, final ResourceCondition... conditions) {
+    public void addHammeringRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.HAMMERING_RECIPE_ID,
                 getItemPath(output.getItem()),
                 conditions);
@@ -292,7 +281,7 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addBlastProcessingRecipe(RecipeExporter exporter, Ingredient input,
+    public void addBlastProcessingRecipe(Ingredient input,
                                          double explosionPowerMin, double explosionPowerMax,
                                          ItemStack output, final ResourceCondition... conditions) {
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
@@ -304,28 +293,18 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addBlastProcessorBehaviorRecipe(RecipeExporter exporter, Ingredient ingredient,
+    public void addBlastProcessorBehaviorRecipe(NamedIngredient ingredient,
                                                 Identifier behaviorIdentifier, final ResourceCondition... conditions) {
-
-        // i apologise for this janky shit code. good thing it only has to run on dev machines amirite haha
-        ItemStack[] stacks = ingredient.getMatchingStacks();
-        String path;
-        if (stacks.length > 0) {
-            path = Registries.ITEM.getId(stacks[0].getItem()).getPath();
-        } else {
-            path = "some_tag";
-        }
-
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID,
-                path,
+                ingredient.getName(),
                 conditions);
 
-        BlastProcessorBehaviorRecipe recipe = new BlastProcessorBehaviorRecipe(ingredient, behaviorIdentifier);
+        BlastProcessorBehaviorRecipe recipe = new BlastProcessorBehaviorRecipe(ingredient.toIngredient(), behaviorIdentifier);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addOverrideRecipe(RecipeExporter exporter, Identifier id) {
+    public void addOverrideRecipe(Identifier id) {
         provider.acceptOverrideRecipe(exporter, id);
     }
 }

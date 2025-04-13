@@ -6,17 +6,17 @@ import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 
 public class KlaxonRecipeOverrideProvider extends KlaxonRecipeSubProvider {
-    public KlaxonRecipeOverrideProvider(KlaxonRecipeProvider provider) {
-        super(provider);
+    public KlaxonRecipeOverrideProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
+        super(provider, exporter);
     }
 
     @Override
-    public void generateRecipes(RecipeExporter exporter) {
-        buildOverrideRecipes(exporter);
+    public void generateRecipes() {
+        buildOverrideRecipes();
     }
 
-    private void buildOverrideRecipes(RecipeExporter exporter) {
-        addOverrideRecipe(exporter, Identifier.ofVanilla("flint_and_steel"));
-        addOverrideRecipe(exporter, Identifier.ofVanilla("blast_furnace"));
+    private void buildOverrideRecipes() {
+        addOverrideRecipe(Identifier.ofVanilla("flint_and_steel"));
+        addOverrideRecipe(Identifier.ofVanilla("blast_furnace"));
     }
 }
