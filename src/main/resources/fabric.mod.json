@@ -26,6 +26,9 @@
 		],
 		"emi": [
 			"net.myriantics.klaxon.compat.emi.KlaxonEmiPlugin"
+		],
+		"jade": [
+			"net.myriantics.klaxon.compat.jade.KlaxonJadePlugin"
 		]
 	},
 	"mixins": [
@@ -38,6 +41,7 @@
 		"fabric-api": ">=0.109.0"
 	},
 	"suggests": {
-		"EMI": "emi"
+		"EMI": "emi",
+		"Jade": "jade"
 	}
 }

@@ -16,6 +16,12 @@ repositories {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com"
 	}
+	maven {
+		url = "https://www.cursemaven.com"
+		content {
+			includeGroup("curse.maven")
+		}
+	}
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -39,7 +45,10 @@ dependencies {
 	// emi
 	modCompileOnly "dev.emi:emi-fabric:${project.emi_version}:api"
 	modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
-	
+
+	// jade
+	modImplementation "curse.maven:jade-324717:${project.jade_id}"
+
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
 
