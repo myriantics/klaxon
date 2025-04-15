@@ -31,12 +31,12 @@ public class KlaxonItems {
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
                     .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new DamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
                     .component(KlaxonDataComponentTypes.SHIELD_PENETRATION, new ShieldPenetrationComponent(KlaxonDamageTypes.HAMMER_WALLOPING, true, true))));
-    public static final Item STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
+    public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
             new CableShearsItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 1.0f, -2.8f))
                     .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
             ));
-    public static final Item STEEL_CLEAVER = registerSimpleItem("steel_cleaver",
+    public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
             new CleaverItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 6.0f, -3.2f))
                     .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))

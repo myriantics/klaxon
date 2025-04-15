@@ -49,10 +49,10 @@ public class KlaxonModelProvider extends FabricModelProvider {
         registerPlatingBlock(generator, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK, KlaxonBlocks.COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
 
         registerPlatingBlock(generator, KlaxonBlocks.ROLLED_RUBBER_BLOCK);
     }
@@ -88,6 +88,10 @@ public class KlaxonModelProvider extends FabricModelProvider {
         );
     }
 
+    private void registerPlatingBlock(BlockStateModelGenerator generator, Block platingBlock, Block textureBlock) {
+        generator.registerAxisRotated(platingBlock, TexturedModel.CUBE_COLUMN);
+    }
+
     private void registerPlatingBlock(BlockStateModelGenerator generator, Block platingBlock) {
         generator.registerAxisRotated(platingBlock, TexturedModel.CUBE_COLUMN);
     }
@@ -95,14 +99,12 @@ public class KlaxonModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
 
-        // remove any items that have custom model processing here
-
         // generate all simple item models for stuff defined in list in klaxonitems so i dont have to poll the registry
-        generateSimpleItemModels(itemModelGenerator, KlaxonItems.simpleItems);
+        generateSimpleItemModels(itemModelGenerator);
     }
 
-    private void generateSimpleItemModels(ItemModelGenerator itemModelGenerator, ArrayList<Item> simpleItems) {
-        for (Item item : simpleItems) {
+    private void generateSimpleItemModels(ItemModelGenerator itemModelGenerator) {
+        for (Item item : KlaxonItems.simpleItems) {
             itemModelGenerator.register(item, Models.GENERATED);
         }
     }
