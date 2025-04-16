@@ -7,10 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
@@ -21,9 +19,7 @@ import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCra
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static net.minecraft.data.server.recipe.RecipeProvider.getItemPath;
 
@@ -41,6 +37,24 @@ public abstract class KlaxonRecipeSubProvider {
     public abstract void generateRecipes();
 
     // recipe adding code below (to be used by subclasses)
+
+    public void addMirroredMakeshiftShapedCraftingRecipe(Map<Character, Ingredient> key, String[] pattern, List<Ingredient> constantIngredients, ItemStack output,
+                                                @Nullable CraftingRecipeCategory category, @Nullable String group,
+                                                final ResourceCondition... conditions) {
+        String[] inversePattern = getInvertedPattern(pattern);
+
+        addMakeshiftShapedCraftingRecipe(key, pattern, constantIngredients, output, category, group, conditions);
+        addMakeshiftShapedCraftingRecipe(key, inversePattern, constantIngredients, output, category, group, conditions);
+    }
+
+    public void addMirroredShapedCraftingRecipe(Map<Character, Ingredient> key, String[] pattern, ItemStack output,
+                                                @Nullable CraftingRecipeCategory category, @Nullable String group,
+                                                final ResourceCondition... conditions) {
+        String[] inversePattern = getInvertedPattern(pattern);
+
+        addShapedCraftingRecipe(key, pattern, output, category, group, conditions);
+        addShapedCraftingRecipe(key, inversePattern, output, category, group, conditions);
+    }
 
     public void add3x3UnpackingRecipe(Ingredient input, ItemConvertible output,
                                       @Nullable CraftingRecipeCategory category, @Nullable String group,
@@ -306,5 +320,18 @@ public abstract class KlaxonRecipeSubProvider {
 
     public void addOverrideRecipe(Identifier id) {
         provider.acceptOverrideRecipe(exporter, id);
+    }
+
+    private String[] getInvertedPattern(String[] pattern) {
+        String[] invertedPattern = pattern.clone();
+        for (int i = 0; i < pattern.length; i++) {
+            StringBuilder flippedRow = new StringBuilder();
+            for (Character character : pattern[i].toCharArray()) {
+                flippedRow.insert(0, character);
+            }
+            invertedPattern[i] = flippedRow.toString();
+        }
+
+        return invertedPattern;
     }
 }

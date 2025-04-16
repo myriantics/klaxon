@@ -30,14 +30,14 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
         addMakeshiftShapedCraftingRecipe(Map.of(
                         'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
-                        'S', Ingredient.ofItems(Items.STICK),
-                        'L', Ingredient.ofItems(Items.LEATHER)),
+                        'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_ITEMS),
+                        'S', Ingredient.ofItems(Items.STICK)),
                 new String[]{
                         "BIB",
                         " S ",
-                        "LSL"
+                        "GSG"
                 },
-                List.of(Ingredient.ofItems(Items.STICK), Ingredient.ofItems(Items.LEATHER)),
+                List.of(Ingredient.ofItems(Items.STICK)),
                 new ItemStack(KlaxonItems.STEEL_HAMMER),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
@@ -100,6 +100,21 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
+
+        addMirroredMakeshiftShapedCraftingRecipe(Map.of(
+                'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_ITEMS),
+                'S', Ingredient.ofItems(Items.STICK)
+        ),
+                new String[]{
+                        "PP",
+                        "PP",
+                        "SG"
+                },
+                List.of(Ingredient.ofItems(Items.STICK)),
+                new ItemStack(KlaxonItems.STEEL_CLEAVER),
+                CraftingRecipeCategory.EQUIPMENT,
+                null);
     }
 
     private void buildShapelessCraftingRecipes() {

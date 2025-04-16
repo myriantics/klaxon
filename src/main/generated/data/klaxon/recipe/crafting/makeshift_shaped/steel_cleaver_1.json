@@ -6,29 +6,26 @@
       "item": "minecraft:stick"
     }
   ],
-  "group": "steel_hammer",
+  "group": "steel_cleaver",
   "key": {
-    "B": {
-      "tag": "klaxon:crude_inclusive_steel_blocks"
-    },
     "G": {
       "tag": "klaxon:gear_grip_items"
     },
-    "I": {
-      "tag": "klaxon:crude_inclusive_steel_ingots"
+    "P": {
+      "tag": "klaxon:crude_inclusive_steel_plates"
     },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "BIB",
-    " S ",
-    "GSG"
+    "PP",
+    "PP",
+    "GS"
   ],
   "result": {
     "count": 1,
-    "id": "klaxon:steel_hammer"
+    "id": "klaxon:steel_cleaver"
   },
   "show_notification": false
 }

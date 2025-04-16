@@ -33,6 +33,8 @@ public class KlaxonItemTags {
             createTag("overworld_rubber_extractable_logs");
     public static final TagKey<Item> NETHER_RUBBER_EXTRACTABLE_LOGS =
             createTag("nether_rubber_extractable_logs");
+    public static final TagKey<Item> GEAR_GRIP_ITEMS =
+            createTag("gear_grip_items");
 
     // anvil related tags
     public static final TagKey<Item> INFINITELY_REPAIRABLE =
