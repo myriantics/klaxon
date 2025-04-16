@@ -1,31 +1,23 @@
 {
   "type": "klaxon:makeshift_shaped",
   "category": "equipment",
-  "constant_ingredients": [
-    {
-      "item": "minecraft:stick"
-    }
-  ],
-  "group": "steel_cleaver",
+  "constant_ingredients": [],
+  "group": "steel_cable_shears",
   "key": {
     "G": {
       "tag": "klaxon:gear_grip_materials"
     },
     "P": {
       "tag": "klaxon:crude_inclusive_steel_plates"
-    },
-    "S": {
-      "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "PP",
-    "PP",
-    "SG"
+    "PG",
+    "GP"
   ],
   "result": {
     "count": 1,
-    "id": "klaxon:steel_cleaver"
+    "id": "klaxon:steel_cable_shears"
   },
   "show_notification": false
 }

@@ -44,13 +44,13 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // cable shears
         getOrCreateTagBuilder(KlaxonBlockTags.CABLE_SHEARS_MINEABLE)
                 .forceAddTag(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE)
+                .forceAddTag(BlockTags.WOOL_CARPETS)
                 .add(Blocks.COBWEB);
         getOrCreateTagBuilder(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE)
                 .forceAddTag(KlaxonConventionalBlockTags.VINES)
                 .forceAddTag(ConventionalBlockTags.CHAINS)
                 .forceAddTag(ConventionalBlockTags.ROPES)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
-                .forceAddTag(BlockTags.WOOL_CARPETS)
                 .forceAddTag(BlockTags.WOOL);
 
         // cleaver
@@ -64,21 +64,19 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.SCULK)
                 .forceAddTag(KlaxonConventionalBlockTags.VINES)
                 .forceAddTag(ConventionalBlockTags.ROPES)
-                .forceAddTag(BlockTags.SWORD_EFFICIENT)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
                 .forceAddTag(BlockTags.CANDLE_CAKES)
                 .forceAddTag(BlockTags.ALL_SIGNS)
                 .forceAddTag(BlockTags.BEEHIVES)
                 .forceAddTag(BlockTags.CANDLES)
+                .add(Blocks.BAMBOO)
                 .add(Blocks.HONEYCOMB_BLOCK)
                 .add(Blocks.GLOW_LICHEN)
                 .add(Blocks.CAKE);
 
         // wrench
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_MINEABLE)
-                .forceAddTag(ConventionalBlockTags.PLAYER_WORKSTATIONS_FURNACES)
-                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
-                .add(Blocks.SMOKER);
+                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
                 .forceAddTag(BlockTags.RAILS)
                 .add(Blocks.BLAST_FURNACE)

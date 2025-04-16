@@ -1,5 +1,7 @@
 package net.myriantics.klaxon.registry.minecraft;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.Ingredient;
@@ -29,23 +31,20 @@ public class KlaxonItems {
             new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
-                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new DamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
-                    .component(KlaxonDataComponentTypes.SHIELD_PENETRATION, new ShieldPenetrationComponent(KlaxonDamageTypes.HAMMER_WALLOPING, true, true))));
+                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new DamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_WALLOPING))
+            ));
     public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
-            new CableShearsItem(KlaxonToolMaterials.STEEL, new Item.Settings()
-                    .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 1.0f, -2.8f))
-                    .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
+            new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
+                    .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1.0f, -2.8f))
             ));
     public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
-            new CleaverItem(KlaxonToolMaterials.STEEL, new Item.Settings()
-                    .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 6.0f, -3.2f))
-                    .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
+            new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
+                    .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .component(KlaxonDataComponentTypes.SHIELD_PENETRATION, new ShieldPenetrationComponent(KlaxonDamageTypes.CLEAVING, false, true))
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(WrenchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 0f, -2.6f))
-                    .component(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)))
             ));
 
     // armor

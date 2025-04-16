@@ -1,7 +1,5 @@
 {
   "values": [
-    "#c:player_workstations/furnaces",
-    "#klaxon:instabreakable/wrench",
-    "minecraft:smoker"
+    "#klaxon:instabreakable/wrench"
   ]
 }

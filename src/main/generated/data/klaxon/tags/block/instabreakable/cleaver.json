@@ -4,12 +4,12 @@
     "#c:sculk",
     "#c:vines",
     "#c:ropes",
-    "#minecraft:sword_efficient",
     "#minecraft:ceiling_hanging_signs",
     "#minecraft:candle_cakes",
     "#minecraft:all_signs",
     "#minecraft:beehives",
     "#minecraft:candles",
+    "minecraft:bamboo",
     "minecraft:honeycomb_block",
     "minecraft:glow_lichen",
     "minecraft:cake"

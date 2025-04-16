@@ -9,7 +9,7 @@
   "group": "steel_cleaver",
   "key": {
     "G": {
-      "tag": "klaxon:gear_grip_items"
+      "tag": "klaxon:gear_grip_materials"
     },
     "P": {
       "tag": "klaxon:crude_inclusive_steel_plates"

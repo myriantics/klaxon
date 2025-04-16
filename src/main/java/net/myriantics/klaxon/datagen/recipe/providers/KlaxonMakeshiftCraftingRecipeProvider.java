@@ -6,7 +6,6 @@ import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.collection.DefaultedList;
-import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
@@ -30,7 +29,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
         addMakeshiftShapedCraftingRecipe(Map.of(
                         'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
-                        'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_ITEMS),
+                        'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
                         'S', Ingredient.ofItems(Items.STICK)),
                 new String[]{
                         "BIB",
@@ -103,9 +102,9 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
 
         addMirroredMakeshiftShapedCraftingRecipe(Map.of(
                 'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
-                'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_ITEMS),
+                'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
                 'S', Ingredient.ofItems(Items.STICK)
-        ),
+                ),
                 new String[]{
                         "PP",
                         "PP",
@@ -114,7 +113,22 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 List.of(Ingredient.ofItems(Items.STICK)),
                 new ItemStack(KlaxonItems.STEEL_CLEAVER),
                 CraftingRecipeCategory.EQUIPMENT,
-                null);
+                null
+        );
+
+        addMirroredMakeshiftShapedCraftingRecipe(Map.of(
+                'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS)
+                ),
+                new String[] {
+                        "GP",
+                        "PG"
+                },
+                List.of(),
+                new ItemStack(KlaxonItems.STEEL_CABLE_SHEARS),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
     }
 
     private void buildShapelessCraftingRecipes() {
