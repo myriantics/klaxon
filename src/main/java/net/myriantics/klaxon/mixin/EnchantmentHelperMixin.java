@@ -6,8 +6,10 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
+import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.item.equipment.tools.CleaverItem;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.DurabilityHelper;
@@ -15,6 +17,8 @@ import org.apache.commons.lang3.mutable.MutableFloat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+import java.util.Optional;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class EnchantmentHelperMixin {
@@ -40,10 +44,18 @@ public abstract class EnchantmentHelperMixin {
             method = "getLevel",
             at = @At(value = "RETURN")
     )
-    private static int klaxon$innateLootingOverride(int original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) RegistryEntry<Enchantment> enchantment) {
-        // hardcoded because i cant be bothered rn
-        if (enchantment.getKey().isPresent() && enchantment.getKey().get().isOf(Enchantments.LOOTING.getRegistryRef()) && stack.getItem() instanceof CleaverItem) {
-            return original + 1;
+    private static int klaxon$innateEnchantmentsOverride(int original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) RegistryEntry<Enchantment> enchantment) {
+        // yoink component from item
+        InnateItemEnchantmentsComponent component = InnateItemEnchantmentsComponent.get(stack);
+
+        // check that component exists and enchant has registry key
+        if (component != null && enchantment.getKey().isPresent()) {
+            RegistryKey<Enchantment> key = enchantment.getKey().get();
+
+            // if enchantment is present in innate component, we can append our value to original value
+            if (component.innateEnchantments().containsKey(key)) {
+                return original + component.innateEnchantments().getInt(key);
+            }
         }
 
         return original;

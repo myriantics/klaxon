@@ -6,9 +6,10 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.component.ability.ShieldPenetrationComponent;
+import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 
 import java.util.function.UnaryOperator;
@@ -22,10 +23,10 @@ public class KlaxonDataComponentTypes {
                 return builder;
             });
 
-    public static final ComponentType<ShieldPenetrationComponent> SHIELD_PENETRATION = register("shield_penetration",
+    public static final ComponentType<ShieldBreachingComponent> SHIELD_BREACHING = register("shield_breaching",
             builder -> {
-                builder.codec(ShieldPenetrationComponent.CODEC);
-                builder.packetCodec(ShieldPenetrationComponent.PACKET_CODEC);
+                builder.codec(ShieldBreachingComponent.CODEC);
+                builder.packetCodec(ShieldBreachingComponent.PACKET_CODEC);
                 return builder;
             });
 
@@ -40,6 +41,13 @@ public class KlaxonDataComponentTypes {
             builder -> {
                 builder.codec(RepairIngredientOverrideComponent.CODEC);
                 builder.packetCodec(RepairIngredientOverrideComponent.PACKET_CODEC);
+                return builder;
+            });
+
+    public static final ComponentType<InnateItemEnchantmentsComponent> INNATE_ENCHANTMENTS = register("innate_enchantments",
+            builder -> {
+                builder.codec(InnateItemEnchantmentsComponent.CODEC);
+                builder.packetCodec(InnateItemEnchantmentsComponent.PACKET_CODEC);
                 return builder;
             });
 

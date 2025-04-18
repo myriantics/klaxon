@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
-import net.myriantics.klaxon.component.ability.ShieldPenetrationComponent;
+import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
@@ -34,9 +34,9 @@ public abstract class MobEntityMixin {
             }
 
             // replace damage type with shield penetrating variant if present
-            ShieldPenetrationComponent shieldPenetrationComponent = ShieldPenetrationComponent.get(weaponStack);
-            if (shieldPenetrationComponent != null && shieldPenetrationComponent.shouldFire(attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS), true)) {
-                original = KlaxonDamageTypes.getAttackingDamageSource(attacker, shieldPenetrationComponent.damageType());
+            ShieldBreachingComponent shieldBreachingComponent = ShieldBreachingComponent.get(weaponStack);
+            if (shieldBreachingComponent != null && shieldBreachingComponent.shouldFire(attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS), true)) {
+                original = KlaxonDamageTypes.getAttackingDamageSource(attacker, shieldBreachingComponent.damageType());
             }
         }
 
