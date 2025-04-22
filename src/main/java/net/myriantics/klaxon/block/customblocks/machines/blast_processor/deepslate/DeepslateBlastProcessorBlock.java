@@ -103,7 +103,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         Storage<ItemVariant> storage = ItemStorage.SIDED.find(world, pos, state, world.getBlockEntity(pos), interactionSide);
 
         // if no storage is detected, we succeed because yeah
-        if (storage == null) return ItemActionResult.SUCCESS;
+        if (storage == null || world.isClient()) return ItemActionResult.SUCCESS;
 
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
@@ -115,7 +115,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                 tx.commit();
             } else {
                 tx.abort();
-                // make sure to open the screen if the insertion fails
+                // make sure to open the screen if the insertion fails - on server
                 player.openHandledScreen((DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos));
             }
         }
