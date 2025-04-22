@@ -212,6 +212,10 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
         getOrCreateTagBuilder(KlaxonItemTags.INNATE_UNBREAKING_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
+        getOrCreateTagBuilder(ItemTags.BREAKS_DECORATED_POTS)
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(KlaxonItems.STEEL_CLEAVER)
+                .add(KlaxonItems.STEEL_WRENCH);
     }
 
     private void buildAnvilRelatedTags() {
@@ -237,9 +241,15 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_LEGGINGS)
                 .add(KlaxonItems.STEEL_BOOTS);
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
-                .add(KlaxonItems.STEEL_HAMMER);
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(KlaxonItems.STEEL_CLEAVER)
+                .add(KlaxonItems.STEEL_WRENCH)
+                .add(KlaxonItems.STEEL_CABLE_SHEARS);
         getOrCreateTagBuilder(ConventionalItemTags.MELEE_WEAPON_TOOLS)
-                .add(KlaxonItems.STEEL_HAMMER);
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(KlaxonItems.STEEL_CLEAVER)
+                .add(KlaxonItems.STEEL_WRENCH)
+                .add(KlaxonItems.STEEL_CABLE_SHEARS);
         getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
         getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)

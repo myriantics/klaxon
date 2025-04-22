@@ -75,14 +75,14 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
 
         float attackCooldownProgress = player.getAttackCooldownProgress(0.5f);
 
-        boolean canWalljumpWithEntity = canWalljumpWithEntity(player, walljumpStack, targetBlockState);
+        boolean canWalljumpWithMount = canWalljumpWithMount(player, walljumpStack, targetBlockState);
 
         // validate that player has sufficient attack cooldown and satisfies conditions for walljump
-        if (attackCooldownProgress > 0.8 && (canWalljumpWithEntity || canStandardWallJump(player, walljumpStack, targetBlockState))) {
+        if (attackCooldownProgress > 0.8 && (canWalljumpWithMount || canStandardWallJump(player, walljumpStack, targetBlockState))) {
 
             world.addBlockBreakParticles(pos, targetBlockState);
 
-            Entity movedEntity = canWalljumpWithEntity ? player.getVehicle() : player;
+            Entity movedEntity = canWalljumpWithMount ? player.getVehicle() : player;
 
             // velocity needs to be multiplied by 8 because minecarts don't play well with velocity
             // you know that one spongebob meme where they go over the little bump in the rollercoaster
@@ -116,7 +116,6 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
 
             // damage it wheee
             walljumpStack.damage(1, player, EquipmentSlot.MAINHAND);
-
         }
     }
 
@@ -158,7 +157,7 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
     }
 
     public static boolean canWallJump(PlayerEntity player, ItemStack walljumpStack, BlockState state) {
-        return canWalljumpWithEntity(player, walljumpStack, state) || canStandardWallJump(player, walljumpStack, state);
+        return canWalljumpWithMount(player, walljumpStack, state) || canStandardWallJump(player, walljumpStack, state);
     }
 
     public static boolean canStandardWallJump(PlayerEntity player, ItemStack wallJumpStack, BlockState state) {
@@ -178,7 +177,7 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
                 && (state.calcBlockBreakingDelta(player, null, null) < 1 || player.isCreative() || !player.getAbilities().allowModifyWorld);
     }
 
-    public static boolean canWalljumpWithEntity(PlayerEntity player, ItemStack wallJumpStack, BlockState state) {
+    public static boolean canWalljumpWithMount(PlayerEntity player, ItemStack wallJumpStack, BlockState state) {
         // make sure there is a vehicle
         return player.getVehicle() != null
                 // make sure vehicle is suitable for walljump
