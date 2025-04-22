@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractBlockStateMixin",
+    "AnvilScreenHandlerInvoker",
     "AnvilScreenHandlerMixin",
     "ArmorItemMixin",
     "EnchantmentHelperMixin",

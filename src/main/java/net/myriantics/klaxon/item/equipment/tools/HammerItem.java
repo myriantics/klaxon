@@ -14,18 +14,21 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.screen.AnvilScreenHandler;
+import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.TypeFilter;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.InstabreakMiningToolItem;
+import net.myriantics.klaxon.mixin.AnvilScreenHandlerInvoker;
 import net.myriantics.klaxon.registry.minecraft.*;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -57,20 +60,8 @@ public class HammerItem extends InstabreakMiningToolItem {
     }
 
     @Override
-    public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        // only damage the item if it's not tall grass or something that shouldn't reduce durability
-        if (!world.isClient && state.getHardness(world, pos) > 0) {
-            damageItem(stack, miner, state.isIn(KlaxonBlockTags.HAMMER_MINEABLE));
-        }
-        return stack.isSuitableFor(state) || super.postMine(stack, world, state, pos, miner);
-    }
-
-    @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        World world = attacker.getWorld();
-        if (!world.isClient) {
-            damageItem(stack, attacker, true);
-        }
+        damageItem(stack, attacker, true);
         return super.postHit(stack, target, attacker);
     }
 
@@ -81,7 +72,6 @@ public class HammerItem extends InstabreakMiningToolItem {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
         Vec3d clickedPos = context.getHitPos();
@@ -104,57 +94,90 @@ public class HammerItem extends InstabreakMiningToolItem {
             boolean recipeSuccessPresent = false;
 
             // run recipe and dropping code for each selected dropped item
-            for (ItemEntity iteratedDroppedItem : selectedItems) {
+            for (ItemEntity targetItemEntity : selectedItems) {
 
-                ItemStack targetStack = iteratedDroppedItem.getStack().copy();
-                Position outputPos = iteratedDroppedItem.getPos();
+                // break one item off of the target entity stack
+                ItemStack targetStack = targetItemEntity.getStack().copy().split(1);
+                Position outputPos = targetItemEntity.getPos();
 
                 // dont run recipe stuff on the client
-                if (!world.isClient()) {
+                if (player instanceof ServerPlayerEntity serverPlayer) {
 
-                    RecipeInput dummyInventory = new RecipeInput() {
-                        @Override
-                        public ItemStack getStackInSlot(int slot) {
-                            return new SimpleInventory(targetStack).getStack(slot);
-                        }
+                    // initialize output stack
+                    ItemStack outputStack = ItemStack.EMPTY.copy();
 
-                        @Override
-                        public int getSize() {
-                            return 1;
-                        }
-                    };
+                    // high five emoji from the emoji movie
+                    Hand usedHand = context.getHand();
+                    Hand oppositeHand = EquipmentSlotHelper.getOppositeHand(usedHand);
 
-                    Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
-                    if(match.isPresent()) {
-                        // indicate that at least one craft was successful
-                        recipeSuccessPresent = true;
+                    ItemStack appliedStack = player.getStackInHand(oppositeHand).copy();
 
-                        // spawn the dropped output item
-                        ItemScatterer.spawn(
-                                world,
-                                outputPos.getX(),
-                                outputPos.getY(),
-                                outputPos.getZ(),
-                                match.get().value().craft(dummyInventory, world.getRegistryManager()));
+                    // check if there's something to apply before attempting to do an anvil interaction
+                    if (!appliedStack.isEmpty()) {
+                        // get results of anvil interaction
+                        AnvilScreenHandler screenHandler = processAnvilInteraction(serverPlayer, (ServerWorld) world, context.getBlockPos(), targetStack, appliedStack);
+                        ItemStack anvilOutputStack = screenHandler.getStacks().get(screenHandler.getResultSlotIndex());
 
-                        // decrement target dropped item's stack because a match was present, so the item was used up in crafting
-                        targetStack.decrement(1);
-                        if (targetStack.getCount() == 0) {
-                            iteratedDroppedItem.remove(Entity.RemovalReason.DISCARDED);
-                        } else {
-                            iteratedDroppedItem.setStack(targetStack);
+                        // item in targeted entity will be replaced with anviled version
+                        targetItemEntity.setStack(anvilOutputStack);
+
+                        // update exp costs and everything - this is done after other calculations because shits fucky
+                        ((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeOnTakeOutput(player, anvilOutputStack);
+
+                        // now we can decrement the applied stack once the calculations have been done
+                        serverPlayer.setStackInHand(oppositeHand, screenHandler.getStacks().get(1));
+                    }
+
+                    // only try hammering recipe if output stack is empty
+                    if (outputStack.isEmpty()) {
+                        RecipeInput dummyInventory = new RecipeInput() {
+                            @Override
+                            public ItemStack getStackInSlot(int slot) {
+                                return new SimpleInventory(targetStack).getStack(slot);
+                            }
+
+                            @Override
+                            public int getSize() {
+                                return 1;
+                            }
+                        };
+
+                        Optional<RecipeEntry<HammeringRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.HAMMERING, dummyInventory, world);
+
+                        if (match.isPresent()) {
+                            outputStack = match.get().value().craft(dummyInventory, world.getRegistryManager());
+
+                            // indicate that at least one craft was successful
+                            recipeSuccessPresent = true;
+                            // decrement target dropped item's stack because a match was present, so the item was used up in crafting
+                            targetStack.decrement(1);
+                            if (targetStack.getCount() == 0) {
+                                targetItemEntity.remove(Entity.RemovalReason.DISCARDED);
+                            } else {
+                                targetItemEntity.setStack(targetStack);
+                            }
                         }
                     }
 
+                    // spawn the dropped output item
+                    ItemScatterer.spawn(
+                            world,
+                            outputPos.getX(),
+                            outputPos.getY(),
+                            outputPos.getZ(),
+                            outputStack
+                    );
+
+
                 } else {
                     // spawn hammering particle effects
-                    spawnHammeringParticleEffects(world, targetStack, 5, iteratedDroppedItem);
+                    spawnHammeringParticleEffects(world, targetStack, 5, targetItemEntity);
                 }
             }
 
             if (!world.isClient()) {
                 // pop the hammering advancement
-                KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, UsageType.RECIPE_SUCCESS);
+                if (recipeSuccessPresent) KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, UsageType.RECIPE_SUCCESS);
                 // trip sculk sensors
                 world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, clickedPos);
             }
@@ -166,21 +189,12 @@ public class HammerItem extends InstabreakMiningToolItem {
         return ActionResult.PASS;
     }
 
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
     public static boolean canProcessHammerRecipe(PlayerEntity player) {
         // has conditions so that player has control - as well as item hitboxes not blocking block selection constantly
         return player.isOnGround() && player.isSneaking();
     }
 
     private static void damageItem(ItemStack stack, LivingEntity attacker, boolean usedProperly) {
-        if (attacker.getWorld().isClient) {
-            return;
-        }
-
         stack.damage(usedProperly ? 1 : 2, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
     }
 
@@ -201,6 +215,32 @@ public class HammerItem extends InstabreakMiningToolItem {
             vec3d2 = vec3d2.add(source.getX(), source.getEyeY(), source.getZ());
             source.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
         }
+    }
+
+    private AnvilScreenHandler processAnvilInteraction(ServerPlayerEntity player, ServerWorld world, BlockPos pos, ItemStack targetStack, ItemStack appliedStack) {
+        // we don't need to do any further processing if there are no items to apply
+
+        KlaxonCommon.LOGGER.info("Tried to process Anvil Recipe with stqck: " + targetStack.getItem());
+
+        AnvilScreenHandler screenHandler = new AnvilScreenHandler(player.currentScreenHandler.syncId, player.getInventory(), ScreenHandlerContext.create(world, pos));
+        // define target stack as stack to be worked on
+        screenHandler.setStackInSlot(0, 0, targetStack);
+        // define stack opposite to hammer as stack to be applied
+        screenHandler.setStackInSlot(1, 0, appliedStack);
+        // make sure we update result
+        screenHandler.updateResult();
+
+        // yoink the output slot
+        Slot outputSlot = screenHandler.getSlot(2);
+
+        // if we can't take output, no need to continue
+        if (!((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeCanTakeOutput(player, outputSlot.hasStack())) return screenHandler;
+
+        KlaxonCommon.LOGGER.info("Valid Anvil Recipe Detected - Proceeding");
+
+        KlaxonCommon.LOGGER.info("Output Slot Stack Contents: " + outputSlot.getStack().toString());
+
+        return screenHandler;
     }
 
     public enum UsageType implements StringIdentifiable {

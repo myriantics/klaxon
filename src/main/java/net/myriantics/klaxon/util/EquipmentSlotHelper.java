@@ -16,4 +16,8 @@ public abstract class EquipmentSlotHelper {
         }
     return EquipmentSlot.MAINHAND;
     }
+
+    public static Hand getOppositeHand(Hand hand) {
+        return hand.equals(Hand.MAIN_HAND) ? Hand.OFF_HAND : Hand.MAIN_HAND;
+    }
 }
