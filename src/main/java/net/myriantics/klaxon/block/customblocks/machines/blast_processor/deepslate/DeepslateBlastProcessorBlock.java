@@ -1,6 +1,11 @@
 package net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate;
 
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -95,31 +100,27 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         ItemStack handStack = player.getStackInHand(hand);
         Direction interactionSide = hit.getSide();
 
+        Storage<ItemVariant> storage = ItemStorage.SIDED.find(world, pos, state, world.getBlockEntity(pos), interactionSide);
+
+        // if no storage is detected, we succeed because yeah
+        if (storage == null) return ItemActionResult.SUCCESS;
+
         // trying to make this viable alongside crystal and cart
         // kit would include tnt, blast processors, and redstone blocks or smthn
-        if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            int[] slots = canFastInput(player, state, interactionSide) ? blastProcessor.getAvailableSlots(interactionSide) : new int[] {};
+        try (Transaction tx = Transaction.openOuter()) {
+            ItemStack insertedStack = player.isCreative() ? handStack.copy() : handStack;
 
-            if (slots != null) {
-                for (int slot : slots) {
-                    if (blastProcessor.canInsert(slot, handStack, interactionSide)) {
-                        ItemStack transferStack;
-                        if (!player.isCreative()) {
-                            transferStack = handStack.split(blastProcessor.getMaxCountPerStack());
-                        } else {
-                            transferStack = handStack.copy();
-                        }
-                        blastProcessor.setStack(slot, transferStack);
-                        blastProcessor.markDirty();
-                        return ItemActionResult.SUCCESS;
-                    }
-                }
-            }
-
-            if (!world.isClient) {
-                player.openHandledScreen(blastProcessor);
+            // if we've inserted any items, we've succeeded!
+            if (canFastInput(player, state, interactionSide) && storage.insert(ItemVariant.of(insertedStack), 1, tx) > 0) {
+                tx.commit();
+            } else {
+                tx.abort();
+                // make sure to open the screen if the insertion fails
+                player.openHandledScreen((DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos));
             }
         }
+
+
         return ItemActionResult.SUCCESS;
     }
 
