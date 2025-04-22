@@ -3,7 +3,9 @@ package net.myriantics.klaxon.compat.emi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
+import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.item.Items;
@@ -18,6 +20,7 @@ import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.KlaxonEMIAnvilRecipe;
+import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
@@ -32,9 +35,8 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
-        RecipeManager manager = registry.getRecipeManager();
-
         registerCategories(registry);
+        registerWorkstations(registry);
         registerRecipes(registry);
     }
 
@@ -42,9 +44,14 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addCategory(KlaxonEmiRecipeCategories.HAMMERING);
         registry.addCategory(KlaxonEmiRecipeCategories.BLAST_PROCESSING);
         registry.addCategory(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER);
+    }
 
+    private void registerWorkstations(EmiRegistry registry) {
         registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
+
+        // Steel Hammer can mimic AnvilScreenHandler functionality
+        registry.addWorkstation(VanillaEmiRecipeCategories.ANVIL_REPAIRING, EmiStack.of(KlaxonItems.STEEL_HAMMER));
     }
 
     private void registerRecipes(EmiRegistry registry) {

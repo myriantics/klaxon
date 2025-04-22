@@ -176,8 +176,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     private void buildAdvancementRelatedTags() {
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT)
-                .add(KlaxonItems.STEEL_HAMMER)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(KlaxonItems.STEEL_CLEAVER)
+                .add(KlaxonItems.STEEL_WRENCH)
+                .add(KlaxonItems.STEEL_CABLE_SHEARS)
                 .add(Items.FLINT_AND_STEEL);
         getOrCreateTagBuilder(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)

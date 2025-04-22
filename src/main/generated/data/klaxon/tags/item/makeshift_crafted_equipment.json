@@ -1,7 +1,10 @@
 {
   "values": [
-    "klaxon:steel_hammer",
     "#klaxon:steel_armor",
+    "klaxon:steel_hammer",
+    "klaxon:steel_cleaver",
+    "klaxon:steel_wrench",
+    "klaxon:steel_cable_shears",
     "minecraft:flint_and_steel"
   ]
 }

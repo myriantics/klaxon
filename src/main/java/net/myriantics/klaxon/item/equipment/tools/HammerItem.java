@@ -118,14 +118,17 @@ public class HammerItem extends InstabreakMiningToolItem {
                         AnvilScreenHandler screenHandler = processAnvilInteraction(serverPlayer, (ServerWorld) world, context.getBlockPos(), targetStack, appliedStack);
                         ItemStack anvilOutputStack = screenHandler.getStacks().get(screenHandler.getResultSlotIndex());
 
-                        // item in targeted entity will be replaced with anviled version
-                        targetItemEntity.setStack(anvilOutputStack);
+                        // only do this if we're sure the interaction actually had an output
+                        if (!anvilOutputStack.isEmpty()) {
+                            // item in targeted entity will be replaced with anviled version
+                            targetItemEntity.setStack(anvilOutputStack);
 
-                        // update exp costs and everything - this is done after other calculations because shits fucky
-                        ((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeOnTakeOutput(player, anvilOutputStack);
+                            // update exp costs and everything - this is done after other calculations because shits fucky
+                            ((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeOnTakeOutput(player, anvilOutputStack);
 
-                        // now we can decrement the applied stack once the calculations have been done
-                        serverPlayer.setStackInHand(oppositeHand, screenHandler.getStacks().get(1));
+                            // now we can decrement the applied stack once the calculations have been done
+                            serverPlayer.setStackInHand(oppositeHand, screenHandler.getStacks().get(1));
+                        }
                     }
 
                     // only try hammering recipe if output stack is empty
@@ -220,7 +223,7 @@ public class HammerItem extends InstabreakMiningToolItem {
     private AnvilScreenHandler processAnvilInteraction(ServerPlayerEntity player, ServerWorld world, BlockPos pos, ItemStack targetStack, ItemStack appliedStack) {
         // we don't need to do any further processing if there are no items to apply
 
-        KlaxonCommon.LOGGER.info("Tried to process Anvil Recipe with stqck: " + targetStack.getItem());
+        // KlaxonCommon.LOGGER.info("Tried to process Anvil Recipe with stqck: " + targetStack.getItem());
 
         AnvilScreenHandler screenHandler = new AnvilScreenHandler(player.currentScreenHandler.syncId, player.getInventory(), ScreenHandlerContext.create(world, pos));
         // define target stack as stack to be worked on
@@ -236,9 +239,8 @@ public class HammerItem extends InstabreakMiningToolItem {
         // if we can't take output, no need to continue
         if (!((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeCanTakeOutput(player, outputSlot.hasStack())) return screenHandler;
 
-        KlaxonCommon.LOGGER.info("Valid Anvil Recipe Detected - Proceeding");
-
-        KlaxonCommon.LOGGER.info("Output Slot Stack Contents: " + outputSlot.getStack().toString());
+        // KlaxonCommon.LOGGER.info("Valid Anvil Recipe Detected - Proceeding");
+        // KlaxonCommon.LOGGER.info("Output Slot Stack Contents: " + outputSlot.getStack().toString());
 
         return screenHandler;
     }
