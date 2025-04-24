@@ -22,7 +22,8 @@
     "ItemRendererAccessor",
     "ItemRendererMixin",
     "MinecraftClientMixin",
-    "ModelLoaderMixin"
+    "ModelLoaderMixin",
+    "SplashTextResourceSupplierMixin"
   ],
   "server": [
   ],
