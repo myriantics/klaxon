@@ -16,6 +16,8 @@ public class KlaxonDamageTypes {
             createDamageType("hammer_walloping");
     public static final RegistryKey<DamageType> CLEAVING =
             createDamageType("cleaving");
+    public static final RegistryKey<DamageType> FLINT_AND_STEEELING =
+            createDamageType("flint_and_steeeling");
 
     private static RegistryKey<DamageType> createDamageType(String name) {
         return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(KlaxonCommon.MOD_ID, name));

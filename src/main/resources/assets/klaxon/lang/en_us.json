@@ -67,6 +67,8 @@
   "death.attack.hammer_walloping.item": "%1$s was walloped by %2$s using %3$s",
   "death.attack.cleaving": "%1$s was cleaved in two by %2$s",
   "death.attack.cleaving.item": "%1$s was cleaved in two by %2$s using %3$s",
+  "death.attack.flint_and_steeeling": "%1$s was flint and steeeled by %2$s",
+  "death.attack.flint_and_steeeling.item": "%1$s was flint and steeeled by %2$s using %3$s",
 
   "tag.item.klaxon.crude_inclusive_steel_blocks": "Crude-Inclusive Steel Blocks",
   "tag.item.klaxon.crude_inclusive_steel_ingots": "Crude-Inclusive Steel Ingots",
