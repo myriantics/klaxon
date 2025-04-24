@@ -13,8 +13,9 @@ public class KlaxonDefaultItemComponentModifications {
     public static void modify(DefaultItemComponentEvents.ModifyContext context) {
         context.modify(Items.FLINT_AND_STEEL, builder -> {
             builder.add(
-                    KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE,
-                    new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS)))
+                            KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE,
+                            new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS))
+                    )
                     .add(
                             KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE,
                             new DamageTypeOverrideComponent(KlaxonDamageTypes.FLINT_AND_STEEELING)
