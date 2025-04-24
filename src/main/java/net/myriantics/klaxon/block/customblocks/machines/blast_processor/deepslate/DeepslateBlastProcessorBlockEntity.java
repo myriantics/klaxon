@@ -8,8 +8,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -279,5 +281,18 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
         }
 
         return blastProcessorBehavior;
+    }
+
+    @Override
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
+        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+        Inventories.readNbt(nbt, this.inventory, registryLookup);
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        Inventories.writeNbt(nbt, this.inventory, registryLookup);
     }
 }
