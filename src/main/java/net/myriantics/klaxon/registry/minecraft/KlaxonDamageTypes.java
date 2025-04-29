@@ -19,6 +19,12 @@ public class KlaxonDamageTypes {
     public static final RegistryKey<DamageType> FLINT_AND_STEEELING =
             createDamageType("flint_and_steeeling");
 
+    // to be added - will be used with Coring Drill
+    public static final RegistryKey<DamageType> MINCING =
+            createDamageType("mincing");
+    public static final RegistryKey<DamageType> LOBOTOMY =
+            createDamageType("lobotomy");
+
     private static RegistryKey<DamageType> createDamageType(String name) {
         return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(KlaxonCommon.MOD_ID, name));
     }
@@ -27,7 +33,7 @@ public class KlaxonDamageTypes {
         return new DamageSource(attacker.getWorld().getDamageSources().registry.entryOf(damageType), attacker);
     }
 
-    public static void registerModDamageTypes() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Damage Types!");
     }
 }

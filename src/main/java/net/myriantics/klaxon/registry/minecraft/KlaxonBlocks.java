@@ -96,7 +96,7 @@ public class KlaxonBlocks {
                 new BlockItem(block, new Item.Settings()));
     }
 
-    public static void registerModBlocks() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Blocks!");
     }
 

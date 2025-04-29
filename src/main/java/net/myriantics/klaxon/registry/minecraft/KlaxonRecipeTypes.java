@@ -66,7 +66,7 @@ public class KlaxonRecipeTypes {
         });
     }
 
-    public static void registerRecipeTypes() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Recipe Types!");
     }
 }

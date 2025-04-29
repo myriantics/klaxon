@@ -122,6 +122,8 @@
   "klaxon.emi.text.hammering.sneak_use": "Sneak + Use In World",
   "klaxon.emi.text.hammering.sneak_use_compact": "Sneak + Use",
 
+  "klaxon.attribute.name.generic.weight": "Entity Weight",
+
   "container.klaxon.item_explosion_power.title": "Item Explosion Power",
 
   "container.klaxon.hammering.title": "Hammering",

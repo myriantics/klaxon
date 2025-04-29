@@ -1,20 +1,16 @@
 package net.myriantics.klaxon.registry.minecraft;
 
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Pair;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
-import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.CleaverItem;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
@@ -99,7 +95,7 @@ public class KlaxonItems {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);
     }
 
-    public static void registerModItems() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Items!");
     }
 }

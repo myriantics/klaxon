@@ -13,7 +13,7 @@ public class KlaxonRegistryKeys {
         return RegistryKey.ofRegistry(KlaxonCommon.locate(id));
     }
 
-    public static void registerRegistryKeys() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Registry Keys!");
     }
 }

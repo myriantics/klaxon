@@ -43,7 +43,7 @@ public class KlaxonBlastProcessorCatalystBehaviors {
         return Registry.register(KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS, id, behavior);
     }
 
-    public static void registerBlastProcessorBehaviors() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Blast Processor Behaviors!");
     }
 }

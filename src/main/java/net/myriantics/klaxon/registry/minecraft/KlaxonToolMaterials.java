@@ -52,7 +52,7 @@ public class KlaxonToolMaterials {
         };
     }
 
-    public static void registerToolMaterials() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Tool Materials!");
     }
 }

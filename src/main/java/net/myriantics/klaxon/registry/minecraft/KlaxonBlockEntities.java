@@ -13,7 +13,7 @@ public class KlaxonBlockEntities {
                     BlockEntityType.Builder.create(DeepslateBlastProcessorBlockEntity::new,
                             KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR).build());
 
-    public static void registerBlockEntities() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Block Entities!");
     }
 

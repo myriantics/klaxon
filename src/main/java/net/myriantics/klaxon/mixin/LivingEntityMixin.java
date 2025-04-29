@@ -1,21 +1,21 @@
 package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import net.myriantics.klaxon.util.EntityWeightHelper;
-import net.myriantics.klaxon.util.StatusEffectHelper;
+import net.myriantics.klaxon.registry.minecraft.KlaxonEntityAttributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
@@ -29,7 +29,7 @@ public abstract class LivingEntityMixin {
             method = "damage",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;blockedByShield(Lnet/minecraft/entity/damage/DamageSource;)Z")
     )
-    public boolean klaxon$shieldPenetrationOverride(boolean original, @Local(argsOnly = true) DamageSource damageSource, @Local(argsOnly = true) float amount) {
+    public boolean klaxon$shieldBreachingOverride(boolean original, @Local(argsOnly = true) DamageSource damageSource, @Local(argsOnly = true) float amount) {
         ItemStack weaponStack = damageSource.getWeaponStack();
 
         // make sure there's a weapon stack
@@ -55,19 +55,14 @@ public abstract class LivingEntityMixin {
         return original;
     }
 
-    @Inject(
-            method = "onEquipStack",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;emitGameEvent(Lnet/minecraft/registry/entry/RegistryEntry;)V")
+    @ModifyReturnValue(
+            method = "createLivingAttributes",
+            at = @At(value = "RETURN")
     )
-    public void klaxon$updateHeavyEquipmentEffect(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack, CallbackInfo ci) {
-        EntityWeightHelper.updateEntityWeightStatusEffect((LivingEntity) (Object) this, slot, newStack);
-    }
-
-    @Inject(
-            method = "clearStatusEffects",
-            at = @At(value = "RETURN", ordinal = 1)
-    )
-    public void klaxon$recomputeEffectsOverride(CallbackInfoReturnable<Boolean> cir) {
-        StatusEffectHelper.recomputePersistentEffects((LivingEntity) (Object) this);
+    private static DefaultAttributeContainer.Builder klaxon$appendKlaxonLivingAttributes(DefaultAttributeContainer.Builder original) {
+        for (RegistryEntry<EntityAttribute> attribute : KlaxonEntityAttributes.getKlaxonGenericLivingEntityAttributes()) {
+            original.add(attribute);
+        }
+        return original;
     }
 }

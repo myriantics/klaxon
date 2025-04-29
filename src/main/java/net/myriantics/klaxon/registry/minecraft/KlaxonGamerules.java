@@ -14,7 +14,7 @@ public class KlaxonGamerules {
         return GameRuleRegistry.register(name, category, GameRuleFactory.createBooleanRule(defaultValue));
     }
 
-    public static void registerGamerules() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's GameRules!");
     }
 }

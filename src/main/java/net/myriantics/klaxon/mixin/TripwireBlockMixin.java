@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(TripwireBlock.class)
-public class TripwireBlockMixin {
+public abstract class TripwireBlockMixin {
 
     @ModifyExpressionValue(
             method = "onBreak",

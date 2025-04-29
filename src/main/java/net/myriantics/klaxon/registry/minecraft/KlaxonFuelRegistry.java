@@ -5,7 +5,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 
 public class KlaxonFuelRegistry {
 
-    public static void registerFuelItems() {
+    public static void init() {
         FuelRegistry registry = FuelRegistry.INSTANCE;
 
         registry.add(KlaxonItems.FRACTURED_COAL_CHUNKS, 400);

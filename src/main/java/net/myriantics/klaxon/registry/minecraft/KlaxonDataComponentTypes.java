@@ -58,7 +58,7 @@ public class KlaxonDataComponentTypes {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());
     }
 
-    public static void registerKlaxonComponents() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Data Component Types!");
     }
 }

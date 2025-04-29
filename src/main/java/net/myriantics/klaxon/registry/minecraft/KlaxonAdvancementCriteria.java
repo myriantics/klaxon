@@ -18,7 +18,7 @@ public class KlaxonAdvancementCriteria {
         return Registry.register(Registries.CRITERION, KlaxonCommon.locate(name), criterion);
     }
 
-    public static void registerAdvancementCriteria() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Advancement Criteria!");
     }
 }

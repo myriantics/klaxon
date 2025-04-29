@@ -17,7 +17,7 @@ public class KlaxonScreenHandlers {
         Registry.register(Registries.SCREEN_HANDLER, Identifier.tryParse(name), type);
     }
 
-    public static void registerModScreenHandlers() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's ScreenHandlers!");
 
         createScreenHandler(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.asItem().toString(), BLAST_PROCESSOR_SCREEN_HANDLER);

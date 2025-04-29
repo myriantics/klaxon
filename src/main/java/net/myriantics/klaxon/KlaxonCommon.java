@@ -5,7 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
-import net.myriantics.klaxon.item.equipment.armor.KlaxonArmorMaterials;
+import net.myriantics.klaxon.registry.minecraft.KlaxonArmorMaterials;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
@@ -24,10 +24,11 @@ public class KlaxonCommon implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		KlaxonBlocks.registerModBlocks();
-		KlaxonBlockEntities.registerBlockEntities();
-		KlaxonArmorMaterials.registerArmorMaterials();
-		KlaxonItems.registerModItems();
+		KlaxonEntityAttributes.init();
+		KlaxonBlocks.init();
+		KlaxonBlockEntities.init();
+		KlaxonArmorMaterials.init();
+		KlaxonItems.init();
 
 		// if it's datagen, run my hacky hack of hacks
 		if (isDatagenEnabled()) {
@@ -35,24 +36,24 @@ public class KlaxonCommon implements ModInitializer {
 		}
 
 		// KlaxonEntities.registerModEntities();
-		KlaxonRegistryKeys.registerRegistryKeys();
-		KlaxonRegistries.registerRegistries();
-		KlaxonRecipeTypes.registerRecipeTypes();
-		KlaxonDamageTypes.registerModDamageTypes();
-		KlaxonPackets.registerModPackets();
-		KlaxonPackets.registerC2SPacketRecievers();
-		KlaxonScreenHandlers.registerModScreenHandlers();
-		KlaxonItemGroups.registerKlaxonItemGroups();
-		KlaxonBlastProcessorCatalystBehaviors.registerBlastProcessorBehaviors();
-		KlaxonDataComponentTypes.registerKlaxonComponents();
-		KlaxonAdvancementCriteria.registerAdvancementCriteria();
-		KlaxonStatusEffects.registerStatusEffects();
-		KlaxonToolMaterials.registerToolMaterials();
-		KlaxonGamerules.registerGamerules();
-		KlaxonFuelRegistry.registerFuelItems();
-		KlaxonOxidationRegistry.registerOxidationStages();
-		KlaxonEventListeners.registerListeners();
-		KlaxonDispenserBehaviors.registerDispenserBehaviors();
+		KlaxonRegistryKeys.init();
+		KlaxonRegistries.init();
+		KlaxonRecipeTypes.init();
+		KlaxonDamageTypes.init();
+		KlaxonPackets.init();
+		KlaxonPackets.initC2SRecievers();
+		KlaxonScreenHandlers.init();
+		KlaxonItemGroups.init();
+		KlaxonBlastProcessorCatalystBehaviors.init();
+		KlaxonDataComponentTypes.init();
+		KlaxonAdvancementCriteria.init();
+		KlaxonStatusEffects.init();
+		KlaxonToolMaterials.init();
+		KlaxonGamerules.init();
+		KlaxonFuelRegistry.init();
+		KlaxonOxidationRegistry.init();
+		KlaxonEventListeners.init();
+		KlaxonDispenserBehaviors.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

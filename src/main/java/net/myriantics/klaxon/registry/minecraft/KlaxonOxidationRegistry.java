@@ -5,7 +5,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 
 public class KlaxonOxidationRegistry {
 
-    public static void registerOxidationStages() {
+    public static void init() {
         OxidizableBlocksRegistry.registerOxidizableBlockPair(KlaxonBlocks.COPPER_PLATING_BLOCK, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
         OxidizableBlocksRegistry.registerOxidizableBlockPair(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
         OxidizableBlocksRegistry.registerOxidizableBlockPair(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);

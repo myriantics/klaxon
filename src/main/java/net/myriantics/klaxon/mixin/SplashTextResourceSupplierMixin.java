@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.List;
 
 @Mixin(SplashTextResourceSupplier.class)
-public class SplashTextResourceSupplierMixin {
+public abstract class SplashTextResourceSupplierMixin {
 
     @ModifyReturnValue(
             method = "prepare(Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)Ljava/util/List;",
@@ -16,7 +16,6 @@ public class SplashTextResourceSupplierMixin {
     )
     private List<String> klaxon$appendSplashTexts(List<String> original) {
         original.add("We Love The Company!");
-        original.add("Not a One-Trick Pony!");
         original.add("Klaxons blaring!");
         original.add("Bioluminescent");
 

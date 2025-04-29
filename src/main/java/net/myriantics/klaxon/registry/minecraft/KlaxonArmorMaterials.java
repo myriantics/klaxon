@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.item.equipment.armor;
+package net.myriantics.klaxon.registry.minecraft;
 
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
@@ -11,7 +11,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.EnumMap;
@@ -64,7 +63,7 @@ public class KlaxonArmorMaterials {
         );
     }
 
-    public static void registerArmorMaterials() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Armor Materials!");
     }
 }

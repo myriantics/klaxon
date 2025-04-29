@@ -16,7 +16,7 @@ public class KlaxonPackets {
     public static final Identifier BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID = KlaxonCommon.locate("blast_processor_screen_sync_s2c");
     public static final Identifier HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID = KlaxonCommon.locate("hammer_walljump_trigger_packet_c2s");
 
-    public static void registerModPackets() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Packets!");
 
         // s2c
@@ -44,7 +44,7 @@ public class KlaxonPackets {
     }
 
     // server only
-    public static void registerC2SPacketRecievers() {
+    public static void initC2SRecievers() {
         ServerPlayNetworking.registerGlobalReceiver(HammerWalljumpTriggerPacket.ID, ((payload, context) -> {
             context.server().execute(() -> {
                 ServerPlayerEntity player = context.player();

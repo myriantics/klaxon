@@ -124,7 +124,7 @@ public class KlaxonItemGroups {
         return RegistryKey.of(RegistryKeys.ITEM_GROUP, KlaxonCommon.locate(name + "_item_group"));
     }
 
-    public static void registerKlaxonItemGroups() {
+    public static void init() {
         register(KLAXON_BUILDING_BLOCKS_ID, KLAXON_BUILDING_BLOCKS);
         register(KLAXON_EQUIPMENT_ID, KLAXON_EQUIPMENT);
         register(KLAXON_MACHINES_ID, KLAXON_MACHINES);

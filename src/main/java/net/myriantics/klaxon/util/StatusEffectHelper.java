@@ -16,8 +16,4 @@ public abstract class StatusEffectHelper {
         return 0;
     }
 
-    public static void recomputePersistentEffects(LivingEntity livingEntity) {
-        EntityWeightHelper.updateEntityWeightStatusEffect(livingEntity, null, null);
-    }
-
 }

@@ -11,6 +11,8 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 public class KlaxonDefaultItemComponentModifications {
     public static void modify(DefaultItemComponentEvents.ModifyContext context) {
+
+        // make flint and steel repairable with steel nuggets
         context.modify(Items.FLINT_AND_STEEL, builder -> {
             builder.add(
                             KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE,

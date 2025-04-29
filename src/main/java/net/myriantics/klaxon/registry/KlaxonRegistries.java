@@ -10,7 +10,7 @@ public class KlaxonRegistries {
     public static final Registry<BlastProcessorCatalystBehavior> BLAST_PROCESSOR_BEHAVIORS =
             FabricRegistryBuilder.createSimple(KlaxonRegistryKeys.BLAST_PROCESSOR_BEHAVIORS).attribute(RegistryAttribute.SYNCED).buildAndRegister();
 
-    public static void registerRegistries() {
+    public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Registries!");
     }
 }
