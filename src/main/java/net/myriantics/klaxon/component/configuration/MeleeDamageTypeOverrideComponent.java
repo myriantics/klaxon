@@ -13,23 +13,23 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
 // Overrides the default damage type for the weapon with a new one.
-public record DamageTypeOverrideComponent(RegistryKey<DamageType> damageType) {
-    public static final Codec<DamageTypeOverrideComponent> CODEC = RecordCodecBuilder.create(instance -> {
+public record MeleeDamageTypeOverrideComponent(RegistryKey<DamageType> damageType) {
+    public static final Codec<MeleeDamageTypeOverrideComponent> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-                RegistryKey.createCodec(RegistryKeys.DAMAGE_TYPE).fieldOf("damage_type").forGetter(DamageTypeOverrideComponent::damageType)
-        ).apply(instance, DamageTypeOverrideComponent::new);
+                RegistryKey.createCodec(RegistryKeys.DAMAGE_TYPE).fieldOf("damage_type").forGetter(MeleeDamageTypeOverrideComponent::damageType)
+        ).apply(instance, MeleeDamageTypeOverrideComponent::new);
     });
 
-    public static final PacketCodec<RegistryByteBuf, DamageTypeOverrideComponent> PACKET_CODEC = PacketCodec.tuple(
-            RegistryKey.createPacketCodec(RegistryKeys.DAMAGE_TYPE), DamageTypeOverrideComponent::damageType,
-            DamageTypeOverrideComponent::new
+    public static final PacketCodec<RegistryByteBuf, MeleeDamageTypeOverrideComponent> PACKET_CODEC = PacketCodec.tuple(
+            RegistryKey.createPacketCodec(RegistryKeys.DAMAGE_TYPE), MeleeDamageTypeOverrideComponent::damageType,
+            MeleeDamageTypeOverrideComponent::new
     );
 
-    public static @Nullable DamageTypeOverrideComponent get(ItemStack stack) {
+    public static @Nullable MeleeDamageTypeOverrideComponent get(ItemStack stack) {
         return stack.getComponents().get(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE);
     }
 
-    public static void set(ItemStack stack, DamageTypeOverrideComponent component) {
+    public static void set(ItemStack stack, MeleeDamageTypeOverrideComponent component) {
         stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, component).build());
     }
 }

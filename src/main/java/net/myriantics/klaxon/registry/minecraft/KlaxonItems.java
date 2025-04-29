@@ -8,7 +8,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Pair;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
+import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
@@ -28,7 +28,7 @@ public class KlaxonItems {
             new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
-                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new DamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_WALLOPING))
+                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_WALLOPING))
             ));
     public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
             new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()

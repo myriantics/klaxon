@@ -7,7 +7,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
+import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
@@ -30,10 +30,10 @@ public class KlaxonDataComponentTypes {
                 return builder;
             });
 
-    public static final ComponentType<DamageTypeOverrideComponent> DAMAGE_TYPE_OVERRIDE = register("damage_type_override",
+    public static final ComponentType<MeleeDamageTypeOverrideComponent> DAMAGE_TYPE_OVERRIDE = register("melee_damage_type_override",
             builder -> {
-                builder.codec(DamageTypeOverrideComponent.CODEC);
-                builder.packetCodec(DamageTypeOverrideComponent.PACKET_CODEC);
+                builder.codec(MeleeDamageTypeOverrideComponent.CODEC);
+                builder.packetCodec(MeleeDamageTypeOverrideComponent.PACKET_CODEC);
                 return builder;
             });
 

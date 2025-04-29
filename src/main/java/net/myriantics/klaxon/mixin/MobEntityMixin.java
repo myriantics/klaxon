@@ -7,7 +7,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
+import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +28,7 @@ public abstract class MobEntityMixin {
             ItemStack weaponStack = attacker.getWeaponStack();
 
             // replace damage type if present
-            DamageTypeOverrideComponent damageTypeOverrideComponent = DamageTypeOverrideComponent.get(weaponStack);
+            MeleeDamageTypeOverrideComponent damageTypeOverrideComponent = MeleeDamageTypeOverrideComponent.get(weaponStack);
             if (damageTypeOverrideComponent != null) {
                 original = KlaxonDamageTypes.getAttackingDamageSource(attacker, damageTypeOverrideComponent.damageType());
             }

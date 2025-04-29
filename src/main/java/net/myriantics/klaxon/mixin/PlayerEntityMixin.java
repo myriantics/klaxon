@@ -5,7 +5,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import net.myriantics.klaxon.component.configuration.DamageTypeOverrideComponent;
+import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +35,7 @@ public abstract class PlayerEntityMixin {
         ItemStack weaponStack = player.getWeaponStack();
 
         // check for overridden damage type on weapon stack - if so, apply the override
-        DamageTypeOverrideComponent damageTypeOverride = DamageTypeOverrideComponent.get(weaponStack);
+        MeleeDamageTypeOverrideComponent damageTypeOverride = MeleeDamageTypeOverrideComponent.get(weaponStack);
         if (damageTypeOverride != null) {
             value = KlaxonDamageTypes.getAttackingDamageSource(player, damageTypeOverride.damageType());
         }
