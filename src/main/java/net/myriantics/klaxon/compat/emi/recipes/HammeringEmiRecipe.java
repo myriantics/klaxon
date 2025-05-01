@@ -22,7 +22,7 @@ public class HammeringEmiRecipe implements EmiRecipe {
 
     public HammeringEmiRecipe(RecipeEntry<HammeringRecipe> recipe) {
         this.id = recipe.id();
-        this.input = List.of(EmiIngredient.of(recipe.value().getIngredient()));
+        this.input = List.of(EmiIngredient.of(recipe.value().getInputIngredient()));
         this.output = List.of(EmiStack.of(recipe.value().getResult(null)));
     }
 

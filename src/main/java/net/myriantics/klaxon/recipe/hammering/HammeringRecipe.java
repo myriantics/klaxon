@@ -10,11 +10,11 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
 public class HammeringRecipe implements Recipe<RecipeInput>{
     private final Ingredient inputA;
-    private final ItemStack result;
+    private final ItemStack output;
 
-    public HammeringRecipe(Ingredient inputA, ItemStack result ) {
+    public HammeringRecipe(Ingredient inputA, ItemStack output) {
         this.inputA = inputA;
-        this.result = result;
+        this.output = output;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class HammeringRecipe implements Recipe<RecipeInput>{
 
     @Override
     public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return this.result.copy();
+        return this.output.copy();
     }
 
     @Override
@@ -34,11 +34,7 @@ public class HammeringRecipe implements Recipe<RecipeInput>{
 
     @Override
     public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
-        return this.result.copy();
-    }
-
-    public Ingredient getIngredient() {
-        return inputA;
+        return this.output.copy();
     }
 
     @Override
@@ -54,5 +50,13 @@ public class HammeringRecipe implements Recipe<RecipeInput>{
     @Override
     public RecipeType<?> getType() {
         return KlaxonRecipeTypes.HAMMERING;
+    }
+
+    public Ingredient getInputIngredient() {
+        return inputA;
+    }
+
+    public ItemStack getOutputStack() {
+        return output;
     }
 }

@@ -30,7 +30,7 @@ public abstract class PlayerEntityMixin {
     )
     // ordinal 2 selects boolean #3 (bl3)
     // Switches the player's attacking damage type to Hammer Walloping if they crit with a hammer, otherwise uses Hammer Bonking if they do a regular hit.
-    private DamageSource klaxon$attackDamageTypeOverride(DamageSource value, @Local(ordinal = 0) boolean fullyCharged, @Local(ordinal = 2) boolean willCrit) {
+    private DamageSource klaxon$applyMeleeDamageTypeComponentOverrides(DamageSource value, @Local(ordinal = 0) boolean fullyCharged, @Local(ordinal = 2) boolean willCrit) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         ItemStack weaponStack = player.getWeaponStack();
 

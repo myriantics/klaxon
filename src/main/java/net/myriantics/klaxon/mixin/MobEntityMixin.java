@@ -21,7 +21,7 @@ public abstract class MobEntityMixin {
             method = "tryAttack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSources;mobAttack(Lnet/minecraft/entity/LivingEntity;)Lnet/minecraft/entity/damage/DamageSource;",
                     ordinal = 0))
-    private DamageSource klaxon$applyDamageTypeComponentTransformations(DamageSource original, @Local(ordinal = 0, argsOnly = true) Entity target) {
+    private DamageSource klaxon$applyMeleeDamageTypeComponentOverrides(DamageSource original, @Local(ordinal = 0, argsOnly = true) Entity target) {
 
         // yoink
         if (original.getAttacker() instanceof MobEntity attacker) {

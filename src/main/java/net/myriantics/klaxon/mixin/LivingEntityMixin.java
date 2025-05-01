@@ -55,6 +55,8 @@ public abstract class LivingEntityMixin {
         return original;
     }
 
+
+    // register KLAXON's custom entity attributes as tracked, so the game actually works :)
     @ModifyReturnValue(
             method = "createLivingAttributes",
             at = @At(value = "RETURN")

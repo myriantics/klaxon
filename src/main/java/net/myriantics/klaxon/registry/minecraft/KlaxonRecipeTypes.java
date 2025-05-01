@@ -10,6 +10,8 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeSerializer;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeSerializer;
+import net.myriantics.klaxon.recipe.cooling.CoolingRecipe;
+import net.myriantics.klaxon.recipe.cooling.CoolingRecipeSerializer;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipeSerializer;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
@@ -38,6 +40,12 @@ public class KlaxonRecipeTypes {
             registerSerializer(HAMMERING_RECIPE_ID, new HammeringRecipeSerializer());
     public static RecipeType<HammeringRecipe> HAMMERING =
             registerRecipeType(HAMMERING_RECIPE_ID);
+
+    public static final String COOLING_RECIPE_ID = "cooling";
+    public static RecipeSerializer<CoolingRecipe> COOLING_RECIPE_SERIALIZER =
+            registerSerializer(COOLING_RECIPE_ID, new CoolingRecipeSerializer());
+    public static RecipeType<CoolingRecipe> COOLING =
+            registerRecipeType(COOLING_RECIPE_ID);
 
     public static final String ITEM_EXPLOSION_POWER_RECIPE_ID = "item_explosion_power";
     public static RecipeSerializer<ItemExplosionPowerRecipe> ITEM_EXPLOSION_POWER_RECIPE_SERIALIZER =

@@ -13,11 +13,11 @@ public class HammeringRecipeSerializer implements RecipeSerializer<HammeringReci
     }
 
     private final MapCodec<HammeringRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance -> {
-        return recipeInstance.group(Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input").forGetter((recipe) -> {
-            return recipe.getIngredient();
-                }), ItemStack.OPTIONAL_CODEC.fieldOf("output").forGetter((recipe) -> {
-            return recipe.getResult(null);
-                })).apply(recipeInstance, HammeringRecipe::new);
+        return recipeInstance.group(
+                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input_ingredient").forGetter(HammeringRecipe::getInputIngredient),
+                ItemStack.OPTIONAL_CODEC.fieldOf("output_stack").forGetter(HammeringRecipe::getOutputStack)
+                )
+                .apply(recipeInstance, HammeringRecipe::new);
     }));
 
     private final PacketCodec<RegistryByteBuf, HammeringRecipe> PACKET_CODEC = PacketCodec.ofStatic(
@@ -32,7 +32,7 @@ public class HammeringRecipeSerializer implements RecipeSerializer<HammeringReci
     }
 
     private static void write(RegistryByteBuf buf, HammeringRecipe recipe) {
-        Ingredient.PACKET_CODEC.encode(buf, recipe.getIngredient());
+        Ingredient.PACKET_CODEC.encode(buf, recipe.getInputIngredient());
         ItemStack.OPTIONAL_PACKET_CODEC.encode(buf, recipe.getResult(null));
     }
 
