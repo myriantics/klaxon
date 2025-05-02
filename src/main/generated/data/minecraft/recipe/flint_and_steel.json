@@ -8,8 +8,8 @@
     }
   ],
   "type": "klaxon:hammering",
-  "input": {
+  "input_ingredient": {
     "item": "minecraft:dirt"
   },
-  "output": {}
+  "output_stack": {}
 }

@@ -1,9 +1,9 @@
 {
   "type": "klaxon:hammering",
-  "input": {
+  "input_ingredient": {
     "item": "minecraft:blaze_rod"
   },
-  "output": {
+  "output_stack": {
     "count": 4,
     "id": "minecraft:blaze_powder"
   }

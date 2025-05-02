@@ -1,9 +1,9 @@
 {
   "type": "klaxon:hammering",
-  "input": {
+  "input_ingredient": {
     "item": "klaxon:molten_rubber_glob"
   },
-  "output": {
+  "output_stack": {
     "count": 1,
     "id": "klaxon:molten_rubber_sheet"
   }

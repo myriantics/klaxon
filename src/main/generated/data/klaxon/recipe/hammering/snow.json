@@ -1,9 +1,9 @@
 {
   "type": "klaxon:hammering",
-  "input": {
+  "input_ingredient": {
     "item": "minecraft:snowball"
   },
-  "output": {
+  "output_stack": {
     "count": 1,
     "id": "minecraft:snow"
   }

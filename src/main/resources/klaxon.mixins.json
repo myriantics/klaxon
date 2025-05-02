@@ -9,6 +9,7 @@
     "ArmorItemMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
+    "EntityMixin",
     "FireworkRocketEntityInvoker",
     "ItemMixin",
     "LivingEntityMixin",

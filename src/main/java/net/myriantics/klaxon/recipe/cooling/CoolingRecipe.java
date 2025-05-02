@@ -14,11 +14,11 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
 public class CoolingRecipe implements Recipe<RecipeInput> {
     private final Ingredient inputIngredient;
-    private final RegistryEntry<Item> outputItem;
+    private final ItemStack outputStack;
 
-    public CoolingRecipe(Ingredient inputIngredient, RegistryEntry<Item> output) {
+    public CoolingRecipe(Ingredient inputIngredient, ItemStack output) {
         this.inputIngredient = inputIngredient;
-        this.outputItem = output;
+        this.outputStack = output;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CoolingRecipe implements Recipe<RecipeInput> {
     public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
         ItemStack inputStack = input.getStackInSlot(0);
 
-        ItemStack outputStack = new ItemStack(outputItem, inputStack.getCount());
+        ItemStack outputStack = new ItemStack(this.outputStack.getItem(), inputStack.getCount());
         // components persist between the stacks because sure, why not
         // it converts the whole stack at a time so there's no reason to not do this
         outputStack.applyComponentsFrom(inputStack.getComponents());
@@ -45,7 +45,7 @@ public class CoolingRecipe implements Recipe<RecipeInput> {
 
     @Override
     public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
-        return new ItemStack(outputItem);
+        return outputStack;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CoolingRecipe implements Recipe<RecipeInput> {
         return inputIngredient;
     }
 
-    public RegistryEntry<Item> getOutputItem() {
-        return outputItem;
+    public ItemStack getOutputStack() {
+        return outputStack;
     }
 }

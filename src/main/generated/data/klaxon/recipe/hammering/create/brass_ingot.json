@@ -8,10 +8,10 @@
     }
   ],
   "type": "klaxon:hammering",
-  "input": {
+  "input_ingredient": {
     "item": "create:gold_sheet"
   },
-  "output": {
+  "output_stack": {
     "count": 1,
     "id": "create:brass_ingot"
   }

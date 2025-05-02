@@ -19,12 +19,10 @@ public class CoolingRecipeSerializer implements RecipeSerializer<CoolingRecipe> 
     public CoolingRecipeSerializer() {
     }
 
-    public static final PacketCodec<ByteBuf, RegistryEntry<Item>> ITEM_PACKET_CODEC = PacketCodecs.codec(ItemStack.ITEM_CODEC);
-
     private static final MapCodec<CoolingRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance -> {
         return recipeInstance.group(
                 Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input_ingredient").forGetter(CoolingRecipe::getInputIngredient),
-                ItemStack.ITEM_CODEC.fieldOf("output_item").forGetter(CoolingRecipe::getOutputItem)
+                ItemStack.UNCOUNTED_CODEC.fieldOf("output_item").forGetter(CoolingRecipe::getOutputStack)
                 )
                 .apply(recipeInstance, CoolingRecipe::new);
     }));
@@ -45,13 +43,13 @@ public class CoolingRecipeSerializer implements RecipeSerializer<CoolingRecipe> 
 
     private static CoolingRecipe read(RegistryByteBuf buf) {
         Ingredient inputIngredient = Ingredient.PACKET_CODEC.decode(buf);
-        RegistryEntry<Item> outputItem = ITEM_PACKET_CODEC.decode(buf);
+        ItemStack outputItem = ItemStack.PACKET_CODEC.decode(buf);
 
         return new CoolingRecipe(inputIngredient, outputItem);
     }
 
     private static void write(RegistryByteBuf buf, CoolingRecipe recipe) {
         Ingredient.PACKET_CODEC.encode(buf, recipe.getInputIngredient());
-        ITEM_PACKET_CODEC.encode(buf, recipe.getOutputItem());
+        ItemStack.PACKET_CODEC.encode(buf, recipe.getOutputStack());
     }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:cooling",
+  "input_ingredient": {
+    "item": "klaxon:molten_rubber_sheet"
+  },
+  "output_item": {
+    "id": "klaxon:rubber_sheet"
+  }
+}

@@ -2,15 +2,18 @@ package net.myriantics.klaxon.datagen.recipe;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
+import net.myriantics.klaxon.recipe.cooling.CoolingRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
@@ -291,6 +294,16 @@ public abstract class KlaxonRecipeSubProvider {
                 conditions);
 
         HammeringRecipe recipe = new HammeringRecipe(input, output);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addItemCoolingRecipe(Ingredient input, ItemConvertible output, final ResourceCondition... conditions) {
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.COOLING_RECIPE_ID,
+                getItemPath(output.asItem()),
+                conditions);
+
+        CoolingRecipe recipe = new CoolingRecipe(input, new ItemStack(output));
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
