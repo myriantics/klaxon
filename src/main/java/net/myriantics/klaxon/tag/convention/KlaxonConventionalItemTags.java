@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.tag.convention;
 
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -41,6 +42,13 @@ public class KlaxonConventionalItemTags {
     public static final TagKey<Item> RUBBER_SHEETS = createConventionalSheetTag("rubber");
     public static final TagKey<Item> MOLTEN_RUBBER_SHEETS = createConventionalSheetTag("molten_rubber");
 
+    // tools
+    public static final TagKey<Item> CLEAVERS = createConventionalToolTag("cleavers");
+    public static final TagKey<Item> KNIVES = createConventionalToolTag("knives");
+    public static final TagKey<Item> HAMMERS = createConventionalToolTag("hammers");
+    public static final TagKey<Item> WRENCHES = createConventionalToolTag("wrenches");
+    public static final TagKey<Item> SHEARS = createConventionalToolTag("shears");
+
     private static TagKey<Item> createConventionalNuggetTag(String name) {
         return createConventionalItemTag("nuggets/" + name);
     }
@@ -63,6 +71,10 @@ public class KlaxonConventionalItemTags {
 
     private static TagKey<Item> createConventionalGlobTag(String name) {
         return createConventionalItemTag("globs/" + name);
+    }
+
+    private static TagKey<Item> createConventionalToolTag(String name) {
+        return createConventionalItemTag("tools/" + name);
     }
 
     private static TagKey<Item> createConventionalItemTag(String name) {

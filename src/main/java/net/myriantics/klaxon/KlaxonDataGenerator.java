@@ -16,6 +16,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
+		pack.addProvider(KlaxonDamageTypeProviderImpl::new);
 		pack.addProvider(KlaxonModelProvider::new);
 		pack.addProvider(KlaxonItemTagProvider::new);
 		pack.addProvider(KlaxonBlockTagProvider::new);
@@ -26,7 +27,6 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(KlaxonAdvancementProvider::new);
 		pack.addProvider(KlaxonStatusEffectTagProvider::new);
 		pack.addProvider(KlaxonFluidTagProvider::new);
-		pack.addProvider(KlaxonDamageTypeProviderImpl::new);
 		// pack.addProvider(KlaxonEnUsLanguageProvider::new);
 	}
 }

@@ -42,7 +42,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         // build mechanics tags
         buildMechanicsTags();
         buildAnvilRelatedTags();
-        buildBlastProcessorBehaviorTags();
+        buildBlastProcessorCatalystBehaviorTags();
 
         // build categorical tags
         buildEquipmentCategoryTags();
@@ -253,6 +253,16 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CLEAVER)
                 .add(KlaxonItems.STEEL_WRENCH)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.CLEAVERS)
+                .add(KlaxonItems.STEEL_CLEAVER);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.KNIVES)
+                .forceAddTag(KlaxonConventionalItemTags.CLEAVERS);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.HAMMERS)
+                .add(KlaxonItems.STEEL_HAMMER);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCHES)
+                .add(KlaxonItems.STEEL_WRENCH);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEARS)
+                .add(KlaxonItems.STEEL_CABLE_SHEARS);
         getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
         getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)
@@ -265,7 +275,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_BOOTS);
     }
 
-    private void buildBlastProcessorBehaviorTags() {
+    private void buildBlastProcessorCatalystBehaviorTags() {
         getOrCreateTagBuilder(KlaxonItemTags.BEDLIKE_EXPLODABLES)
                 .add(Items.WHITE_BED)
                 .add(Items.ORANGE_BED)
