@@ -15,7 +15,7 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonEntityAttributes;
 public class SteelArmorItem extends ArmorItem {
 
     public static final float WEIGHT_MODIFIER = 0.5f;
-    public static final float MOVEMENT_SPEED_MULTIPLIER = -0.08f;
+    public static final float MOVEMENT_SPEED_MULTIPLIER = -0.04f;
 
     public static final Identifier MOVEMENT_SPEED_MULTIPLIER_ID = KlaxonCommon.locate("steel_armor_movement_speed_multiplier_id");
     public static final Identifier WEIGHT_MODIFIER_ID = KlaxonCommon.locate("steel_armor_weight_modifier_id");

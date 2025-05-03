@@ -26,7 +26,6 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.InstabreakMiningToolItem;
 import net.myriantics.klaxon.mixin.AnvilScreenHandlerInvoker;
 import net.myriantics.klaxon.registry.minecraft.*;
@@ -61,7 +60,7 @@ public class HammerItem extends InstabreakMiningToolItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        damageItem(stack, attacker, true);
+        damageItem(stack, attacker);
         return super.postHit(stack, target, attacker);
     }
 
@@ -80,7 +79,7 @@ public class HammerItem extends InstabreakMiningToolItem {
         // check if player is actually in the position to hammer stuff before doing anything
         if (player != null && canProcessHammerRecipe(player)) {
 
-            List<ItemEntity> selectedItems = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), Box.of(clickedPos, 0.5, 0.5, 0.5), (e) -> true);
+            List<ItemEntity> selectedItems = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), Box.of(clickedPos, 0.8, 0.8, 0.8), (e) -> true);
 
             // if there aren't any dropped items in the targeted area, don't do anything
             if (selectedItems.isEmpty()) {
@@ -89,7 +88,7 @@ public class HammerItem extends InstabreakMiningToolItem {
 
             // play sound and damage item only after we're sure there are items selected
             world.playSound(player, BlockPos.ofFloored(clickedPos), SoundEvents.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 2, 2f);
-            damageItem(handStack, player, true);
+            damageItem(handStack, player);
 
             boolean recipeSuccessPresent = false;
 
@@ -97,7 +96,7 @@ public class HammerItem extends InstabreakMiningToolItem {
             for (ItemEntity targetItemEntity : selectedItems) {
 
                 // break one item off of the target entity stack
-                ItemStack targetStack = targetItemEntity.getStack().copy().split(1);
+                ItemStack targetStack = targetItemEntity.getStack().copy();
                 Position outputPos = targetItemEntity.getPos();
 
                 // dont run recipe stuff on the client
@@ -197,8 +196,8 @@ public class HammerItem extends InstabreakMiningToolItem {
         return player.isOnGround() && player.isSneaking();
     }
 
-    private static void damageItem(ItemStack stack, LivingEntity attacker, boolean usedProperly) {
-        stack.damage(usedProperly ? 1 : 2, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
+    private static void damageItem(ItemStack stack, LivingEntity attacker) {
+        stack.damage(1, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
     }
 
     // yoinked from living entity
@@ -227,9 +226,9 @@ public class HammerItem extends InstabreakMiningToolItem {
 
         AnvilScreenHandler screenHandler = new AnvilScreenHandler(player.currentScreenHandler.syncId, player.getInventory(), ScreenHandlerContext.create(world, pos));
         // define target stack as stack to be worked on
-        screenHandler.setStackInSlot(0, 0, targetStack);
+        screenHandler.setStackInSlot(0, 0, targetStack.copy().split(1));
         // define stack opposite to hammer as stack to be applied
-        screenHandler.setStackInSlot(1, 0, appliedStack);
+        screenHandler.setStackInSlot(1, 0, appliedStack.copy().split(1));
         // make sure we update result
         screenHandler.updateResult();
 

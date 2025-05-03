@@ -29,7 +29,7 @@ public abstract class EntityWeightHelper {
         // Initial weight value is obtained from entity dimensions
         double weight = calculateEntityWeightFromDimensions(entity);
 
-        KlaxonCommon.LOGGER.info("Targeted " + entity.getName() + " has dimension weight value of: " + weight);
+        // KlaxonCommon.LOGGER.info("Targeted " + entity.getName() + " has dimension weight value of: " + weight);
 
         // If a compatible Entity is provided, attribute modifiers are appended.
         if (entity instanceof LivingEntity livingEntity) {
