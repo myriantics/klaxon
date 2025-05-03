@@ -1,24 +1,22 @@
 package net.myriantics.klaxon.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
-import net.myriantics.klaxon.item.equipment.tools.CleaverItem;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.DurabilityHelper;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
-import java.util.Optional;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class EnchantmentHelperMixin {
@@ -40,22 +38,46 @@ public abstract class EnchantmentHelperMixin {
         return stack.isIn(KlaxonItemTags.INNATE_UNBREAKING_EQUIPMENT) ? DurabilityHelper.applyInnateUnbreaking(stack, serverWorld, originalDamage) : originalDamage;
     }
 
-    @ModifyReturnValue(
+    @ModifyExpressionValue(
             method = "getLevel",
-            at = @At(value = "RETURN")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getOrDefault(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;")
     )
-    private static int klaxon$innateEnchantmentsOverride(int original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) RegistryEntry<Enchantment> enchantment) {
-        // yoink component from item
-        InnateItemEnchantmentsComponent component = InnateItemEnchantmentsComponent.get(stack);
+    private static Object klaxon$innateEnchantmentsOverride(Object original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) RegistryEntry<Enchantment> enchantment) {
+        if (original instanceof ItemEnchantmentsComponent component && !component.getEnchantments().isEmpty()) return original;
 
-        // check that component exists and enchant has registry key
-        if (component != null && enchantment.getKey().isPresent()) {
-            RegistryKey<Enchantment> key = enchantment.getKey().get();
+        InnateItemEnchantmentsComponent innate = InnateItemEnchantmentsComponent.get(stack);
+        if (innate != null) {
+            return innate.component();
+        }
 
-            // if enchantment is present in innate component, we can append our value to original value
-            if (component.innateEnchantments().containsKey(key)) {
-                return original + component.innateEnchantments().getInt(key);
-            }
+        return original;
+    }
+
+    @ModifyExpressionValue(
+            method = "forEachEnchantment(Lnet/minecraft/item/ItemStack;Lnet/minecraft/enchantment/EnchantmentHelper$Consumer;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getOrDefault(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;")
+    )
+    private static Object klaxon$forEachEnchantmentOverride1(Object original, @Local(argsOnly = true) ItemStack stack) {
+        if (original instanceof ItemEnchantmentsComponent component && !component.getEnchantments().isEmpty()) return original;
+
+        InnateItemEnchantmentsComponent innate = InnateItemEnchantmentsComponent.get(stack);
+        if (innate != null) {
+            return innate.component();
+        }
+
+        return original;
+    }
+
+    @ModifyExpressionValue(
+            method = "forEachEnchantment(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EquipmentSlot;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/enchantment/EnchantmentHelper$ContextAwareConsumer;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;get(Lnet/minecraft/component/ComponentType;)Ljava/lang/Object;")
+    )
+    private static Object klaxon$forEachEnchantmentOverride2(Object original, @Local(argsOnly = true) ItemStack stack) {
+        if (original instanceof ItemEnchantmentsComponent component && !component.getEnchantments().isEmpty()) return original;
+
+        InnateItemEnchantmentsComponent innate = InnateItemEnchantmentsComponent.get(stack);
+        if (innate != null) {
+            return innate.component();
         }
 
         return original;

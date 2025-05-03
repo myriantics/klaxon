@@ -7,43 +7,38 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.registry.BuiltinRegistries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryFixedCodec;
 import net.minecraft.util.Pair;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 //todo: This doesn't work with enchantment effects such as sharpness because it uses a different system. FIX SOON!!!
-public record InnateItemEnchantmentsComponent(Object2IntOpenHashMap<RegistryKey<Enchantment>> innateEnchantments) {
-    private static final Codec<RegistryKey<Enchantment>> ENCHANTMENT_KEY_CODEC = RegistryKey.createCodec(RegistryKeys.ENCHANTMENT);
-    private static final Codec<Integer> ENCHANTMENT_LEVEL_CODEC = Codec.intRange(0, 255);
-    private static final Codec<Object2IntOpenHashMap<RegistryKey<Enchantment>>> INLINE_CODEC = Codec.unboundedMap(
-                    ENCHANTMENT_KEY_CODEC, ENCHANTMENT_LEVEL_CODEC
-            )
-            .xmap(Object2IntOpenHashMap::new, Function.identity());
-    private static final Codec<InnateItemEnchantmentsComponent> BASE_CODEC = RecordCodecBuilder.create(
+public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent component) {
+
+    public static final Codec<InnateItemEnchantmentsComponent> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                            INLINE_CODEC.fieldOf("levels").forGetter(InnateItemEnchantmentsComponent::innateEnchantments)
-                            // might add tooltip functionality eventually. maybe when i break this off into an api mod
-                            //Codec.BOOL.optionalFieldOf("show_in_tooltip", true).forGetter(component -> component.showInTooltip)
+                            ItemEnchantmentsComponent.CODEC.fieldOf("enchantments").forGetter(InnateItemEnchantmentsComponent::component)
                     )
                     .apply(instance, InnateItemEnchantmentsComponent::new)
     );
 
-    private static final PacketCodec<ByteBuf, RegistryKey<Enchantment>> ENCHANTMENT_KEY_PACKET_CODEC = RegistryKey.createPacketCodec(RegistryKeys.ENCHANTMENT);
-
-    public static final Codec<InnateItemEnchantmentsComponent> CODEC = Codec.withAlternative(BASE_CODEC, INLINE_CODEC, InnateItemEnchantmentsComponent::new);
-    public static final PacketCodec<ByteBuf, InnateItemEnchantmentsComponent> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.map(Object2IntOpenHashMap::new, ENCHANTMENT_KEY_PACKET_CODEC, PacketCodecs.VAR_INT),
-            InnateItemEnchantmentsComponent::innateEnchantments,
+    public static final PacketCodec<RegistryByteBuf, InnateItemEnchantmentsComponent> PACKET_CODEC = PacketCodec.tuple(
+            ItemEnchantmentsComponent.PACKET_CODEC,
+            InnateItemEnchantmentsComponent::component,
             InnateItemEnchantmentsComponent::new
     );
 
@@ -58,11 +53,16 @@ public record InnateItemEnchantmentsComponent(Object2IntOpenHashMap<RegistryKey<
     // i love getting errors i dont understand and then clicking the magic button to get them to hush
     @SafeVarargs
     public static InnateItemEnchantmentsComponent create(Pair<RegistryKey<Enchantment>, Integer>... pairs) {
-        Object2IntOpenHashMap<RegistryKey<Enchantment>> enchantments = new Object2IntOpenHashMap<>();
+        ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
         for (Pair<RegistryKey<Enchantment>, Integer> pair : pairs) {
-            enchantments.put(pair.getLeft(), pair.getRight().intValue());
+            // tyvm to hisui on The Fabric Project Discord for providing a reference to help work this out. Least convoluted system haha.
+            Optional<RegistryEntry.Reference<Enchantment>> entry = BuiltinRegistries.createWrapperLookup().createRegistryLookup().getOptionalEntry(RegistryKeys.ENCHANTMENT, pair.getLeft());
+            // the ide wants me to replace this with functional style, but this is more readable than whatever that crap is, so it's staying
+            if (entry.isPresent()) {
+                builder.add(entry.get(), pair.getRight());
+            }
         }
 
-        return new InnateItemEnchantmentsComponent(enchantments);
+        return new InnateItemEnchantmentsComponent(builder.build().withShowInTooltip(false));
     }
 }
