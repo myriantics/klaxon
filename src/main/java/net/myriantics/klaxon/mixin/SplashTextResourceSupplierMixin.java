@@ -18,7 +18,7 @@ public abstract class SplashTextResourceSupplierMixin {
         original.add("We Love The Company!");
         original.add("Klaxons blaring!");
         original.add("Bioluminescent");
-
+        original.add("The Fire Is Blazing");
         return original;
     }
 }
