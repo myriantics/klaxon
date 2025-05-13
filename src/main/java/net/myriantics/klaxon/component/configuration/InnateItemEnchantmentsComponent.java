@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Function;
 
-//todo: This doesn't work with enchantment effects such as sharpness because it uses a different system. FIX SOON!!!
 public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent component) {
 
     public static final Codec<InnateItemEnchantmentsComponent> CODEC = RecordCodecBuilder.create(
