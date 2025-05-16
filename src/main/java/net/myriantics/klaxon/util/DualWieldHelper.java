@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.util;
 
+import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -12,6 +13,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
+import net.minecraft.util.StringIdentifiable;
 import net.myriantics.klaxon.networking.packets.EntityDualWieldToggleC2SPacket;
 import net.myriantics.klaxon.networking.packets.EntityDualWieldToggleS2CPacket;
 
@@ -26,6 +28,9 @@ public abstract class DualWieldHelper {
     public static void syncDualWielding(LivingEntity entity) {
         boolean isDualWielding = ((LivingEntityMixinAccess) entity).klaxon$isDualWielding();
 
+        // Entities should disable dualwielding on their own, whether it be clientside or serverside. This is here to prevent useless packet spam.
+        if (!isDualWielding) return;
+
         if (entity.getWorld() instanceof ClientWorld) {
             ClientPlayNetworking.send(new EntityDualWieldToggleC2SPacket(isDualWielding));
         } else if (entity.getWorld() instanceof ServerWorld) {
@@ -35,10 +40,17 @@ public abstract class DualWieldHelper {
         }
     }
 
-    public enum DualWieldType {
+    public enum DualWieldType implements StringIdentifiable {
         USE,
         SUSTAINED_USE,
         ATTACK,
-        INACTIVE
+        INACTIVE;
+
+        private static final Codec<DualWieldType> CODEC = StringIdentifiable.createCodec(DualWieldType::values);
+
+        @Override
+        public String asString() {
+            return this.toString().toLowerCase();
+        }
     }
 }
