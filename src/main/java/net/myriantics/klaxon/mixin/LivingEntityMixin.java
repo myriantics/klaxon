@@ -3,6 +3,7 @@ package net.myriantics.klaxon.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -12,9 +13,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonEntityAttributes;
+import net.myriantics.klaxon.util.DualWieldHelper;
 import net.myriantics.klaxon.util.LivingEntityMixinAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +23,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements LivingEntityMixinAccess {
@@ -82,8 +85,9 @@ public abstract class LivingEntityMixin implements LivingEntityMixinAccess {
             method = "swingHand(Lnet/minecraft/util/Hand;Z)V",
             at = @At(value = "HEAD")
     )
-    private void klaxon$processDualWieldAnimationShit(Hand hand, boolean fromServerPlayer, CallbackInfo ci) {
-
+    private void klaxon$resetDualWielding(Hand hand, boolean fromServerPlayer, CallbackInfo ci) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        DualWieldHelper.syncDualWielding(self);
     }
 
     @Inject(
@@ -96,9 +100,16 @@ public abstract class LivingEntityMixin implements LivingEntityMixinAccess {
         // prevents choppy animation when players use dual wield items
         // if (self instanceof PlayerEntity player && player.getAttackCooldownProgress(0.5f) < 9) return;
 
-
         if (self instanceof PlayerEntity player && player.getAttackCooldownProgress(0.5f) < 1) return;
 
+        klaxon$setDualWielding(false);
+    }
+
+    @Inject(
+            method = "checkHandStackSwap",
+            at = @At(value = "HEAD")
+    )
+    private void klaxon$handStackSwapCheck(Map<EquipmentSlot, ItemStack> equipmentChanges, CallbackInfo ci) {
         klaxon$setDualWielding(false);
     }
 

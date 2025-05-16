@@ -20,15 +20,25 @@ import net.myriantics.klaxon.networking.packets.EntityDualWieldToggleS2CPacket;
  */
 public abstract class DualWieldHelper {
     public static void setDualWielding(LivingEntity entity, boolean dualWielding) {
-        // modify entity at source first
         if (entity instanceof LivingEntityMixinAccess access) access.klaxon$setDualWielding(dualWielding);
+    }
+
+    public static void syncDualWielding(LivingEntity entity) {
+        boolean isDualWielding = ((LivingEntityMixinAccess) entity).klaxon$isDualWielding();
 
         if (entity.getWorld() instanceof ClientWorld) {
-            ClientPlayNetworking.send(new EntityDualWieldToggleC2SPacket(dualWielding));
+            ClientPlayNetworking.send(new EntityDualWieldToggleC2SPacket(isDualWielding));
         } else if (entity.getWorld() instanceof ServerWorld) {
             for (ServerPlayerEntity player : PlayerLookup.tracking(entity)) {
-                if (!entity.equals(player)) ServerPlayNetworking.send(player, new EntityDualWieldToggleS2CPacket(entity.getId(), dualWielding));
+                if (!entity.equals(player)) ServerPlayNetworking.send(player, new EntityDualWieldToggleS2CPacket(entity.getId(), isDualWielding));
             }
         }
+    }
+
+    public enum DualWieldType {
+        USE,
+        SUSTAINED_USE,
+        ATTACK,
+        INACTIVE
     }
 }
