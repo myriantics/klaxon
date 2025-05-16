@@ -87,7 +87,7 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
             // velocity needs to be multiplied by 8 because minecarts don't play well with velocity
             // you know that one spongebob meme where they go over the little bump in the rollercoaster
             // thats this easter egg without this change
-            boolean walljumpSucceeded = processWallJumpPhysics(player, movedEntity, velocityMultiplier);
+            boolean walljumpSucceeded = processWallJumpPhysics(player, movedEntity);
 
             world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
 
@@ -116,18 +116,40 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
 
             // damage it wheee
             walljumpStack.damage(1, player, EquipmentSlot.MAINHAND);
+            if (get(player.getOffHandStack()) != null) player.getOffHandStack().damage(1, player, EquipmentSlot.OFFHAND);
         }
     }
 
+    private float calculateWalljumpStrength(PlayerEntity sourcePlayer, Entity launchedEntity) {
+        float walljumpStrength = 0.6f;
+
+        walljumpStrength *= sourcePlayer.getAttackCooldownProgress(0.5f);
+        walljumpStrength *= AbilityModifierCalculator.calculateHammerWalljumpMultiplier(sourcePlayer, launchedEntity);
+
+        float totalMultiplier = this.velocityMultiplier;
+
+        WalljumpAbilityComponent offhand = get(sourcePlayer.getOffHandStack());
+
+        // if we've got a walljump component in offhand, add its velocity multiplier to base - divided by 2 so it's not crazy op.
+        if (offhand != null) {
+            totalMultiplier += offhand.velocityMultiplier / 2;
+        }
+
+        // commit total multiplier to walljump strength value
+        walljumpStrength *= totalMultiplier;
+
+        return walljumpStrength;
+    }
+
     // yoinked from trident riptide physics - edited to suit my needs
-    private static boolean processWallJumpPhysics(PlayerEntity sourcePlayer, Entity launchedEntity, float multiplier) {
+    private boolean processWallJumpPhysics(PlayerEntity sourcePlayer, Entity launchedEntity) {
         float playerYaw = sourcePlayer.getYaw();
         float playerPitch = sourcePlayer.getPitch();
         float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
         float k = MathHelper.sin(playerPitch * 0.017453292F);
         float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
         float m = MathHelper.sqrt(h * h + k * k + l * l);
-        float n = 0.6F * sourcePlayer.getAttackCooldownProgress(0.5f) * AbilityModifierCalculator.calculateHammerWalljumpMultiplier(sourcePlayer) * multiplier;
+        float n = calculateWalljumpStrength(sourcePlayer, launchedEntity);
         h *= n / m;
         k *= n / m;
         l *= n / m;

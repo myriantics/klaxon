@@ -4,26 +4,34 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.packet.s2c.play.EntityAnimationS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
+import net.myriantics.klaxon.networking.packets.EntityDualWieldToggleC2SPacket;
+import net.myriantics.klaxon.networking.packets.EntityDualWieldToggleS2CPacket;
 import net.myriantics.klaxon.networking.packets.HammerWalljumpTriggerPacket;
+import net.myriantics.klaxon.util.LivingEntityMixinAccess;
 
 public class KlaxonPackets {
-    public static final Identifier BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID = KlaxonCommon.locate("blast_processor_screen_sync_s2c");
-    public static final Identifier HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID = KlaxonCommon.locate("hammer_walljump_trigger_packet_c2s");
+    public static final Identifier BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID = locateS2C("blast_processor_screen_sync");
+    public static final Identifier HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID = locateC2S("hammer_walljump_trigger_packet");
+    public static final Identifier DUAL_WIELD_TOGGLE_BIDIRECTIONAL_PACKET = locateBidirectional("dual_wield_toggle");
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Packets!");
 
         // s2c
         PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(EntityDualWieldToggleS2CPacket.ID, EntityDualWieldToggleS2CPacket.PACKET_CODEC);
 
         // c2s
         PayloadTypeRegistry.playC2S().register(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(EntityDualWieldToggleC2SPacket.ID, EntityDualWieldToggleC2SPacket.PACKET_CODEC);
     }
 
     // client only
@@ -41,6 +49,16 @@ public class KlaxonPackets {
                 }
             });
         }));
+
+        ClientPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleS2CPacket.ID, ((payload, context) -> {
+            context.client().execute(() -> {
+                MinecraftClient client = context.client();
+
+                if (client.world != null && client.world.getEntityById(payload.entityId()) instanceof LivingEntityMixinAccess access) {
+                    access.klaxon$setDualWielding(payload.isDualWielding());
+                }
+            });
+        }));
     }
 
     // server only
@@ -54,8 +72,34 @@ public class KlaxonPackets {
                 if (component != null) {
                     // run the walljump ability :D
                     component.processHammerWalljump(player, player.getWorld(), payload.pos(), payload.direction());
+
+                    if (WalljumpAbilityComponent.get(player.getOffHandStack()) != null) {
+                        ((ServerChunkManager) player.getWorld().getChunkManager()).sendToNearbyPlayers(player, new EntityAnimationS2CPacket(player, EntityAnimationS2CPacket.SWING_OFF_HAND));
+                    }
                 }
             });
         }));
+
+        ServerPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleC2SPacket.ID, ((payload, context) -> {
+            context.server().execute(() -> {
+                ServerPlayerEntity player = context.player();
+
+                if (player instanceof LivingEntityMixinAccess access) {
+                    access.klaxon$setDualWielding(payload.isDualWielding());
+                }
+            });
+        }));
+    }
+
+    private static Identifier locateS2C(String name) {
+        return KlaxonCommon.locate(name + "_s2c");
+    }
+
+    private static Identifier locateC2S(String name) {
+        return KlaxonCommon.locate(name + "_c2s");
+    }
+
+    private static Identifier locateBidirectional(String name) {
+        return KlaxonCommon.locate(name + "_bidirectional");
     }
 }

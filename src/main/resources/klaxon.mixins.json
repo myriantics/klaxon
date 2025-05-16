@@ -20,6 +20,8 @@
     "WindChargeEntityInvoker"
   ],
   "client": [
+    "BipedEntityModelMixin",
+    "HeldItemRendererMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
     "MinecraftClientMixin",
