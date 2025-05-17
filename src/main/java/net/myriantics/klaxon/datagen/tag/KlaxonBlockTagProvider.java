@@ -8,6 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
+import net.myriantics.klaxon.tag.compat.KlaxonCompatBlockTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
@@ -32,10 +33,12 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .add(Blocks.BEACON);
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
+                .forceAddTag(KlaxonCompatBlockTags.BRICK_BREAKABLE)
                 .forceAddTag(ConventionalBlockTags.GLASS_BLOCKS)
                 .forceAddTag(ConventionalBlockTags.GLASS_PANES)
                 .forceAddTag(ConventionalBlockTags.BUDS)
                 .forceAddTag(ConventionalBlockTags.CLUSTERS)
+                .forceAddTag(ConventionalBlockTags.SKULLS)
                 .forceAddTag(BlockTags.ICE)
                 .add(Blocks.REDSTONE_LAMP)
                 .add(Blocks.SEA_LANTERN)
@@ -64,6 +67,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.SCULK)
                 .forceAddTag(KlaxonConventionalBlockTags.VINES)
                 .forceAddTag(ConventionalBlockTags.ROPES)
+                .forceAddTag(ConventionalBlockTags.SKULLS)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
                 .forceAddTag(BlockTags.CANDLE_CAKES)
                 .forceAddTag(BlockTags.ALL_SIGNS)

@@ -1,9 +1,11 @@
 {
   "values": [
+    "#supplementaries:brick_breakable",
     "#c:glass_blocks",
     "#c:glass_panes",
     "#c:buds",
     "#c:clusters",
+    "#c:skulls",
     "#minecraft:ice",
     "minecraft:redstone_lamp",
     "minecraft:sea_lantern",
