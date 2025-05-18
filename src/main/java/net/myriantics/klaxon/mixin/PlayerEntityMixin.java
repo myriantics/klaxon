@@ -1,9 +1,15 @@
 package net.myriantics.klaxon.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
@@ -30,7 +36,7 @@ public abstract class PlayerEntityMixin {
     )
     // ordinal 2 selects boolean #3 (bl3)
     // Switches the player's attacking damage type to Hammer Walloping if they crit with a hammer, otherwise uses Hammer Bonking if they do a regular hit.
-    private DamageSource klaxon$applyMeleeDamageTypeComponentOverrides(DamageSource value, @Local(ordinal = 0) boolean fullyCharged, @Local(ordinal = 2) boolean willCrit) {
+    private DamageSource klaxon$applyMeleeDamageTypeComponentOverrides(DamageSource value, @Local(ordinal = 0) boolean fullyCharged, @Local(ordinal = 2) boolean willCrit, @Local(ordinal = 1) boolean knockbackHit) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         ItemStack weaponStack = player.getWeaponStack();
 
@@ -46,6 +52,29 @@ public abstract class PlayerEntityMixin {
             value = KlaxonDamageTypes.getAttackingDamageSource(player, shieldPenetration.damageType());
         }
 
+        // check for knockback modifier component
+        KnockbackModifierComponent knockbackModifier = KnockbackModifierComponent.get(weaponStack);
+        if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit) && knockbackModifier.damageType() != null) {
+            value = KlaxonDamageTypes.getAttackingDamageSource(player, knockbackModifier.damageType());
+        }
+
         return value;
+    }
+
+    @WrapOperation(
+            method = "attack",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;takeKnockback(DDD)V", ordinal = 0)
+    )
+    private void klaxon$modifyKnockbackStrength(LivingEntity instance, double strength, double x, double z, Operation<Void> original, @Local(ordinal = 1) boolean knockbackHit) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        ItemStack weaponStack = player.getWeaponStack();
+
+        // apply knockback modifier effects
+        KnockbackModifierComponent knockbackModifier = KnockbackModifierComponent.get(weaponStack);
+        if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit)) {
+            strength *= knockbackModifier.multiplier();
+        }
+
+        original.call(instance, strength, x, z);
     }
 }

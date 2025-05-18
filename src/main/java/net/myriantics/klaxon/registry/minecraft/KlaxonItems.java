@@ -7,6 +7,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Pair;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
@@ -29,7 +30,8 @@ public class KlaxonItems {
             new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
-                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_WALLOPING))
+                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
+                    .component(KlaxonDataComponentTypes.KNOCKBACK_MODIFIER, new KnockbackModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING, true))
             ));
     public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
             new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
@@ -44,7 +46,8 @@ public class KlaxonItems {
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(WrenchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 0f, -2.6f))
-            ));
+                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.WRENCH_BASHING)))
+            );
 
     // armor
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",

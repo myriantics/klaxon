@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
+import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonEntityAttributes;
 import net.myriantics.klaxon.util.DualWieldHelper;
@@ -34,8 +35,6 @@ public abstract class LivingEntityMixin implements LivingEntityMixinAccess {
     @Shadow public abstract void damageShield(float amount);
 
     @Shadow protected abstract void takeShieldHit(LivingEntity attacker);
-
-    @Shadow protected abstract Vec3d applyClimbingSpeed(Vec3d motion);
 
     // Allows shield penetrating items to disable shields and deal damage through them
     @ModifyExpressionValue(
@@ -67,7 +66,6 @@ public abstract class LivingEntityMixin implements LivingEntityMixinAccess {
         // no need to retain the original since any positives are filtered out at the start
         return original;
     }
-
 
     // register KLAXON's custom entity attributes as tracked, so the game actually works :)
     @ModifyReturnValue(

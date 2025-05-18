@@ -20,5 +20,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         getOrCreateTagBuilder(DamageTypeTags.BYPASSES_SHIELD)
                 .addOptional(KlaxonDamageTypes.CLEAVING);
+
+        getOrCreateTagBuilder(DamageTypeTags.NO_KNOCKBACK)
+                .addOptional(KlaxonDamageTypes.WRENCH_BASHING);
     }
 }

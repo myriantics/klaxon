@@ -6,6 +6,7 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
@@ -27,6 +28,13 @@ public class KlaxonDataComponentTypes {
             builder -> {
                 builder.codec(ShieldBreachingComponent.CODEC);
                 builder.packetCodec(ShieldBreachingComponent.PACKET_CODEC);
+                return builder;
+            });
+
+    public static final ComponentType<KnockbackModifierComponent> KNOCKBACK_MODIFIER = register("knockback_modifier",
+            builder -> {
+                builder.codec(KnockbackModifierComponent.CODEC);
+                builder.packetCodec(KnockbackModifierComponent.PACKET_CODEC);
                 return builder;
             });
 
