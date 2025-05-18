@@ -2,43 +2,36 @@ package net.myriantics.klaxon.component.configuration;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.BuiltinRegistries;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryFixedCodec;
-import net.minecraft.util.Pair;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
-public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent component) {
+public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent component, Map<RegistryKey<Enchantment>, Integer> levelsFromKey) {
 
     public static final Codec<InnateItemEnchantmentsComponent> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                             ItemEnchantmentsComponent.CODEC.fieldOf("enchantments").forGetter(InnateItemEnchantmentsComponent::component)
                     )
-                    .apply(instance, InnateItemEnchantmentsComponent::new)
+                    .apply(instance, InnateItemEnchantmentsComponent::ofItemEnchantmentsComponent)
     );
 
     public static final PacketCodec<RegistryByteBuf, InnateItemEnchantmentsComponent> PACKET_CODEC = PacketCodec.tuple(
             ItemEnchantmentsComponent.PACKET_CODEC,
             InnateItemEnchantmentsComponent::component,
-            InnateItemEnchantmentsComponent::new
+            InnateItemEnchantmentsComponent::ofItemEnchantmentsComponent
     );
 
     public static @Nullable InnateItemEnchantmentsComponent get(ItemStack stack) {
@@ -49,19 +42,25 @@ public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent componen
         stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, component).build());
     }
 
-    // i love getting errors i dont understand and then clicking the magic button to get them to hush
-    @SafeVarargs
-    public static InnateItemEnchantmentsComponent create(Pair<RegistryKey<Enchantment>, Integer>... pairs) {
+    public static InnateItemEnchantmentsComponent ofItemEnchantmentsComponent(ItemEnchantmentsComponent component) {
+        Map<RegistryKey<Enchantment>, Integer> levels2 = new HashMap<>();
+        for (RegistryEntry<Enchantment> entry : component.getEnchantments()) {
+            if (entry.getKey().isPresent()) levels2.put(entry.getKey().get(), component.getLevel(entry));
+        }
+        return new InnateItemEnchantmentsComponent(component, levels2);
+    }
+
+    public static InnateItemEnchantmentsComponent create(Map<RegistryKey<Enchantment>, Integer> pairs) {
         ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
-        for (Pair<RegistryKey<Enchantment>, Integer> pair : pairs) {
+        for (RegistryKey<Enchantment> key : pairs.keySet()) {
             // tyvm to hisui on The Fabric Project Discord for providing a reference to help work this out. Least convoluted system haha.
-            Optional<RegistryEntry.Reference<Enchantment>> entry = BuiltinRegistries.createWrapperLookup().createRegistryLookup().getOptionalEntry(RegistryKeys.ENCHANTMENT, pair.getLeft());
+            Optional<RegistryEntry.Reference<Enchantment>> entry = BuiltinRegistries.createWrapperLookup().createRegistryLookup().getOptionalEntry(RegistryKeys.ENCHANTMENT, key);
             // the ide wants me to replace this with functional style, but this is more readable than whatever that crap is, so it's staying
             if (entry.isPresent()) {
-                builder.add(entry.get(), pair.getRight());
+                builder.add(entry.get(), pairs.get(key));
             }
         }
 
-        return new InnateItemEnchantmentsComponent(builder.build().withShowInTooltip(false));
+        return InnateItemEnchantmentsComponent.ofItemEnchantmentsComponent(builder.build().withShowInTooltip(false));
     }
 }

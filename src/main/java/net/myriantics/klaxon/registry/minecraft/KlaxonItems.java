@@ -18,6 +18,7 @@ import net.myriantics.klaxon.item.equipment.tools.CableShearsItem;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class KlaxonItems {
 
@@ -38,7 +39,7 @@ public class KlaxonItems {
             new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
                     .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(KlaxonDamageTypes.CLEAVING, false, true))
-                    .component(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, InnateItemEnchantmentsComponent.create(new Pair<>(Enchantments.LOOTING, 1)))
+                    .component(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, InnateItemEnchantmentsComponent.create(Map.of(Enchantments.LOOTING, 1)))
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()

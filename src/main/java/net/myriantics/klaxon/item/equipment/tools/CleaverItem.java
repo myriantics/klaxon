@@ -6,8 +6,11 @@ import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.myriantics.klaxon.api.InstabreakMiningToolItem;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
@@ -38,5 +41,10 @@ public class CleaverItem extends InstabreakMiningToolItem {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         return Items.DIAMOND_AXE.useOnBlock(context);
+    }
+
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return !miner.isCreative();
     }
 }
