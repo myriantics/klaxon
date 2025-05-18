@@ -3,7 +3,6 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
@@ -33,7 +32,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .add(Blocks.BEACON);
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
-                .forceAddTag(KlaxonCompatBlockTags.BRICK_BREAKABLE)
+                .addOptionalTag(KlaxonCompatBlockTags.BRICK_BREAKABLE)
                 .forceAddTag(ConventionalBlockTags.GLASS_BLOCKS)
                 .forceAddTag(ConventionalBlockTags.GLASS_PANES)
                 .forceAddTag(ConventionalBlockTags.BUDS)
@@ -99,6 +98,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.IRON_PLATING_BLOCK)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
                 .add(KlaxonBlocks.COPPER_PLATING_BLOCK);
+
+        // hoe
+        getOrCreateTagBuilder(BlockTags.HOE_MINEABLE)
+                .forceAddTag(KlaxonConventionalBlockTags.RUBBER);
     }
 
     private void buildCategoricalTags() {
@@ -112,7 +115,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.RUBBER_STORAGE_BLOCKS)
                 .add(KlaxonBlocks.RUBBER_BLOCK)
-                .add(KlaxonBlocks.ROLLED_RUBBER_BLOCK);
+                .add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.SCULK)
                 .add(Blocks.SCULK_VEIN)
                 .add(Blocks.SCULK)
@@ -131,7 +134,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.RUBBER)
                 .add(KlaxonBlocks.RUBBER_BLOCK)
                 .add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK)
-                .add(KlaxonBlocks.ROLLED_RUBBER_BLOCK);
+                .add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.STEEL)
                 .add(KlaxonBlocks.STEEL_BLOCK)
                 .add(KlaxonBlocks.STEEL_PLATING_BLOCK)

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "klaxon:block/rubber_sheet_block_top",
+    "side": "klaxon:block/rubber_sheet_block_side"
+  }
+}

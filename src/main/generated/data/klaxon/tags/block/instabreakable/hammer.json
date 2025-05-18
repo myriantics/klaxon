@@ -1,6 +1,9 @@
 {
   "values": [
-    "#supplementaries:brick_breakable",
+    {
+      "id": "#supplementaries:brick_breakable",
+      "required": false
+    },
     "#c:glass_blocks",
     "#c:glass_panes",
     "#c:buds",
