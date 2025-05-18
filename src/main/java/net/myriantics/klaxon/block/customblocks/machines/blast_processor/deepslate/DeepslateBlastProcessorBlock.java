@@ -111,7 +111,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
             ItemStack insertedStack = player.isCreative() ? handStack.copy() : handStack;
 
             // if we've inserted any items, we've succeeded!
-            if (canFastInput(player, state, interactionSide) && storage.insert(ItemVariant.of(insertedStack), 1, tx) > 0) {
+            if (canFastInput(player, state, interactionSide) && storage.insert(ItemVariant.of(insertedStack.split(1)), 1, tx) > 0) {
                 tx.commit();
             } else {
                 tx.abort();

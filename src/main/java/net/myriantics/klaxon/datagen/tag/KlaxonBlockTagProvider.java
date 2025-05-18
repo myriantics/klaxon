@@ -68,6 +68,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.ROPES)
                 .forceAddTag(ConventionalBlockTags.SKULLS)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
+                .forceAddTag(BlockTags.WART_BLOCKS)
                 .forceAddTag(BlockTags.CANDLE_CAKES)
                 .forceAddTag(BlockTags.ALL_SIGNS)
                 .forceAddTag(BlockTags.BEEHIVES)

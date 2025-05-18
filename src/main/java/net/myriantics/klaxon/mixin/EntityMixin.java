@@ -43,7 +43,6 @@ public abstract class EntityMixin {
         // we don't need to run cooling visual effects on the client - at least not right now
         if (!world.isClient() && self instanceof ItemEntity itemEntity && ItemCoolingHelper.test(world, itemEntity.getStack())) {
             Optional<ItemStack> potentialOutput = ItemCoolingHelper.getCooledStack(world, itemEntity.getStack());
-            KlaxonCommon.LOGGER.info("Selected Output Stack: " + potentialOutput);
             potentialOutput.ifPresent(itemEntity::setStack);
         }
     }
@@ -63,7 +62,7 @@ public abstract class EntityMixin {
     @WrapOperation(
             method = "move",
             // intentionally apply to both operators
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;setFireTicks(I)V")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;setFireTicks(I)V", ordinal = 0)
     )
     private void klaxon$coolableItemsDontPassivelyCool(Entity instance, int fireTicks, Operation<Void> original) {
         // stop fucking passively cooling my shit man
