@@ -33,17 +33,17 @@ public class KlaxonItems {
                     .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
                     .component(KlaxonDataComponentTypes.KNOCKBACK_MODIFIER, new KnockbackModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING, true))
             ));
-    public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
+    public static final Item STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
             new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
                     .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1.0f, -2.8f))
             ));
-    public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
+    public static final Item STEEL_CLEAVER = registerSimpleItem("steel_cleaver",
             new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
                     .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(KlaxonDamageTypes.CLEAVING, false, true))
                     .component(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, InnateItemEnchantmentsComponent.create(Map.of(Enchantments.LOOTING, 1)))
             ));
-    public static final Item STEEL_WRENCH = registerItem("steel_wrench",
+    public static final Item STEEL_WRENCH = registerSimpleItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(WrenchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 0f, -2.6f))
                     .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.WRENCH_BASHING)))

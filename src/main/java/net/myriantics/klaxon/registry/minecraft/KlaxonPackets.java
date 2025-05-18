@@ -72,10 +72,6 @@ public class KlaxonPackets {
                 if (component != null) {
                     // run the walljump ability :D
                     component.processHammerWalljump(player, player.getWorld(), payload.pos(), payload.direction());
-
-                    if (WalljumpAbilityComponent.get(player.getOffHandStack()) != null) {
-                        ((ServerChunkManager) player.getWorld().getChunkManager()).sendToNearbyPlayers(player, new EntityAnimationS2CPacket(player, EntityAnimationS2CPacket.SWING_OFF_HAND));
-                    }
                 }
             });
         }));

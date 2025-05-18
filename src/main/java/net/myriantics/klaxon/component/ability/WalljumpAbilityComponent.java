@@ -78,7 +78,7 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
         boolean canWalljumpWithMount = canWalljumpWithMount(player, walljumpStack, targetBlockState);
 
         // validate that player has sufficient attack cooldown and satisfies conditions for walljump
-        if (attackCooldownProgress > 0.8 && (canWalljumpWithMount || canStandardWallJump(player, walljumpStack, targetBlockState))) {
+        if (attackCooldownProgress > (world.isClient() ? 0.8 : 0.7) && (!world.isClient() || canWalljumpWithMount || canStandardWallJump(player, walljumpStack, targetBlockState))) {
 
             world.addBlockBreakParticles(pos, targetBlockState);
 
