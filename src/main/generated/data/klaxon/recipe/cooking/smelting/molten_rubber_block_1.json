@@ -1,11 +1,11 @@
 {
-  "type": "minecraft:blasting",
+  "type": "minecraft:smelting",
   "category": "misc",
-  "cookingtime": 100,
+  "cookingtime": 200,
   "experience": 1.0,
   "group": "molten_rubber_block",
   "ingredient": {
-    "item": "klaxon:rubber_block"
+    "item": "klaxon:rubber_sheet_block"
   },
   "result": {
     "id": "klaxon:molten_rubber_block"

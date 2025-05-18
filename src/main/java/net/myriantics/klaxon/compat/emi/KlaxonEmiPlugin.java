@@ -64,13 +64,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
     private void registerMiscRecipes(EmiRegistry registry) {
         registry.addRecipe(new KlaxonEMIAnvilRecipe(EmiStack.of(Items.FLINT_AND_STEEL), EmiIngredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS), "flint_and_steel"));
-        registry.addRecipe(EmiWorldInteractionRecipe.builder()
-                .id(KlaxonCommon.locate("/molten_rubber_block/cooling"))
-                .supportsRecipeTree(true)
-                .leftInput(EmiIngredient.of(Ingredient.ofItems(KlaxonBlocks.MOLTEN_RUBBER_BLOCK)))
-                .rightInput(EmiIngredient.of(Ingredient.ofItems(Items.PACKED_ICE)), true)
-                .output(EmiStack.of(KlaxonBlocks.RUBBER_BLOCK))
-                .build());
     }
 
     public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
@@ -96,10 +89,11 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             BlastProcessorBehaviorRecipe recipe = entry.value();
 
             BlastProcessorCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(recipe.getBehaviorId());
-            BlastProcessorCatalystBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
 
             // only add the recipe if the behavior actually passes in the data
-            if (data != null) {
+            if (behavior != null && behavior.getEmiData()!= null) {
+                BlastProcessorCatalystBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
+
                 registry.addRecipe(new ItemExplosionPowerEmiInfoRecipe(
                         recipe.getIngredient(),
                         data.explosionPowerMin(),

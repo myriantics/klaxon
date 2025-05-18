@@ -44,6 +44,6 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     private void addRubberMeltingRecipe(Ingredient ingredient, ItemConvertible output) {
-        addBlastingSmeltingRecipe(ingredient, new ItemStack(output), 1.0f, 200, null, null);
+        addOreProcessingCookingRecipe(ingredient, new ItemStack(output), 1.0f, 200, null, null);
     }
 }

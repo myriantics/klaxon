@@ -53,9 +53,12 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         for (RecipeEntry<BlastProcessorBehaviorRecipe> behaviorRecipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
 
             BlastProcessorCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorRecipe.value().getBehaviorId());
+
+            if (behavior == null) continue;
+
             BlastProcessorCatalystBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
 
-            if (data != null && explosionPowerMin <= data.explosionPowerMin() && data.explosionPowerMax() <= explosionPowerMax) {
+            if (data != null && data.explosionPowerMax() >= explosionPowerMin && data.explosionPowerMax() <= explosionPowerMax) {
                 catalystStacks.add(EmiIngredient.of(behaviorRecipe.value().getIngredient()));
             }
         }
