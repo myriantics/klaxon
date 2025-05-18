@@ -80,7 +80,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.asItem());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_BLOCKS)
                 .add(KlaxonBlocks.RUBBER_BLOCK.asItem())
-                .add(KlaxonBlocks.ROLLED_RUBBER_BLOCK.asItem());
+                .add(KlaxonBlocks.RUBBER_SHEET_BLOCK.asItem());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS)
                 .add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK.asItem());
     }

@@ -13,11 +13,26 @@ public class KlaxonJadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         HarvestToolProvider.registerHandler(SimpleToolHandler.create(
-                KlaxonCommon.locate("instabreak_tools"),
+                KlaxonCommon.locate("hammers"),
                 List.of(
-                        KlaxonItems.STEEL_HAMMER,
-                        KlaxonItems.STEEL_CLEAVER,
-                        KlaxonItems.STEEL_WRENCH,
+                        KlaxonItems.STEEL_HAMMER
+                )
+        ));
+        HarvestToolProvider.registerHandler(SimpleToolHandler.create(
+                KlaxonCommon.locate("cleavers"),
+                List.of(
+                        KlaxonItems.STEEL_CLEAVER
+                )
+        ));
+        HarvestToolProvider.registerHandler(SimpleToolHandler.create(
+                KlaxonCommon.locate("wrenches"),
+                List.of(
+                        KlaxonItems.STEEL_WRENCH
+                )
+        ));
+        HarvestToolProvider.registerHandler(SimpleToolHandler.create(
+                KlaxonCommon.locate("cable_shears"),
+                List.of(
                         KlaxonItems.STEEL_CABLE_SHEARS
                 )
         ));

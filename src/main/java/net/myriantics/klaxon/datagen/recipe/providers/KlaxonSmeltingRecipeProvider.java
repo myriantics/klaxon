@@ -5,7 +5,6 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
@@ -37,7 +36,7 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
         addRubberMeltingRecipe(Ingredient.ofItems(KlaxonItems.RUBBER_GLOB), KlaxonItems.MOLTEN_RUBBER_GLOB);
         addRubberMeltingRecipe(Ingredient.ofItems(KlaxonItems.RUBBER_SHEET), KlaxonItems.MOLTEN_RUBBER_SHEET);
         addRubberMeltingRecipe(Ingredient.ofItems(KlaxonBlocks.RUBBER_BLOCK), KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
-        addRubberMeltingRecipe(Ingredient.ofItems(KlaxonBlocks.ROLLED_RUBBER_BLOCK), KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
+        addRubberMeltingRecipe(Ingredient.ofItems(KlaxonBlocks.RUBBER_SHEET_BLOCK), KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
     }
 
     private void buildCookingRecipes() {

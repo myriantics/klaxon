@@ -73,7 +73,7 @@ public class KlaxonBlocks {
                     .mapColor(MapColor.DARK_CRIMSON)
                     .strength(2.0f)
                     .luminance((state) -> 0)));
-    public static final Block ROLLED_RUBBER_BLOCK = registerBlock("rolled_rubber_block",
+    public static final Block RUBBER_SHEET_BLOCK = registerBlock("rubber_sheet_block",
             new PillarBlock(AbstractBlock.Settings.copy(RUBBER_BLOCK)));
 
     // molten rubber

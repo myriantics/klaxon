@@ -12,8 +12,6 @@ import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 
-import java.util.ArrayList;
-
 public class KlaxonModelProvider extends FabricModelProvider {
     public KlaxonModelProvider(FabricDataOutput output) {
         super(output);
@@ -54,7 +52,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
         registerPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
 
-        registerPlatingBlock(generator, KlaxonBlocks.ROLLED_RUBBER_BLOCK);
+        registerPlatingBlock(generator, KlaxonBlocks.RUBBER_SHEET_BLOCK);
     }
 
     private void registerMachineBlockStateModels(BlockStateModelGenerator generator) {
