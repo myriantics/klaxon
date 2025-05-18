@@ -11,11 +11,13 @@
     "EnchantmentMixin",
     "EntityMixin",
     "FireworkRocketEntityInvoker",
+    "ItemEntityMixin",
     "ItemMixin",
     "LivingEntityMixin",
     "MobEntityMixin",
     "ObserverBlockInvoker",
     "PlayerEntityMixin",
+    "PotionEntityMixin",
     "TripwireBlockMixin",
     "WindChargeEntityInvoker"
   ],

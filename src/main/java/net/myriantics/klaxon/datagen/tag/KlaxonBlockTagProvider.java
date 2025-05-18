@@ -166,7 +166,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
         getOrCreateTagBuilder(KlaxonBlockTags.COLD_BLOCKS)
                 .forceAddTag(BlockTags.ICE)
-                .forceAddTag(BlockTags.SNOW);
+                .forceAddTag(BlockTags.SNOW)
+                .add(Blocks.POWDER_SNOW);
     }
 
     private void buildToolRequirementTags() {

@@ -28,16 +28,20 @@ import java.util.Optional;
 public abstract class EntityMixin {
     @Shadow private World world;
 
+    @Shadow private int fireTicks;
+
     @Inject(
-            method = "extinguish",
-            at = @At(value = "HEAD")
+            method = "setFireTicks",
+            at = @At(value = "TAIL")
     )
-    private void klaxon$processItemCoolingRecipe(CallbackInfo ci) {
+    private void klaxon$processItemCoolingRecipe(int fireTicks, CallbackInfo ci) {
+        // if the method call doesn't extinguish the entity, we don't care about it
+        if (this.fireTicks > 0) return;
+
         Entity self = (Entity)(Object) this;
 
         // we don't need to run cooling visual effects on the client - at least not right now
         if (!world.isClient() && self instanceof ItemEntity itemEntity && ItemCoolingHelper.test(world, itemEntity.getStack())) {
-
             Optional<ItemStack> potentialOutput = ItemCoolingHelper.getCooledStack(world, itemEntity.getStack());
             KlaxonCommon.LOGGER.info("Selected Output Stack: " + potentialOutput);
             potentialOutput.ifPresent(itemEntity::setStack);
@@ -54,6 +58,18 @@ public abstract class EntityMixin {
         // report items that can be cooled as on fire so that extinguish() is called
         // dont do this on the client because otherwise the items will render as on fire.
         return original || (!world.isClient() && self instanceof ItemEntity itemEntity && ItemCoolingHelper.test(world, itemEntity.getStack()));
+    }
+
+    @WrapOperation(
+            method = "move",
+            // intentionally apply to both operators
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;setFireTicks(I)V")
+    )
+    private void klaxon$coolableItemsDontPassivelyCool(Entity instance, int fireTicks, Operation<Void> original) {
+        // stop fucking passively cooling my shit man
+        // not cool
+        if (instance instanceof ItemEntity itemEntity && ItemCoolingHelper.test(world, itemEntity.getStack())) return;
+        original.call(instance, fireTicks);
     }
 
     @WrapOperation(

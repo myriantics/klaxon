@@ -125,8 +125,8 @@ public class HammerItem extends InstabreakMiningToolItem {
                             // update exp costs and everything - this is done after other calculations because shits fucky
                             ((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeOnTakeOutput(player, anvilOutputStack);
 
-                            // now we can decrement the applied stack once the calculations have been done
-                            serverPlayer.setStackInHand(oppositeHand, screenHandler.getStacks().get(1));
+                            // now we can decrement the applied stack once the calculations have been done - only decrements when not in creative
+                            if (!serverPlayer.isCreative()) serverPlayer.setStackInHand(oppositeHand, screenHandler.getStacks().get(1));
                         }
                     }
 
@@ -226,9 +226,9 @@ public class HammerItem extends InstabreakMiningToolItem {
 
         AnvilScreenHandler screenHandler = new AnvilScreenHandler(player.currentScreenHandler.syncId, player.getInventory(), ScreenHandlerContext.create(world, pos));
         // define target stack as stack to be worked on
-        screenHandler.setStackInSlot(0, 0, targetStack.copy().split(1));
+        screenHandler.setStackInSlot(0, 0, targetStack.copy());
         // define stack opposite to hammer as stack to be applied
-        screenHandler.setStackInSlot(1, 0, appliedStack.copy().split(1));
+        screenHandler.setStackInSlot(1, 0, appliedStack.copy());
         // make sure we update result
         screenHandler.updateResult();
 
