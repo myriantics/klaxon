@@ -125,6 +125,9 @@
   "klaxon.emi.text.tool_usage.use": "Use Tool Near Dropped Item",
   "klaxon.emi.text.tool_usage.use_compact": "Use Tool on Item",
 
+  "klaxon.jade.text.tooltip.blast_processor.explosion_power": "Explosion Power: %s",
+  "config.jade.plugin_klaxon.deepslate_blast_processor": "Explosion Power: ",
+
   "klaxon.attribute.name.generic.weight": "Entity Weight",
 
   "container.klaxon.item_explosion_power.title": "Item Explosion Power",
