@@ -1,10 +1,13 @@
 {
-  "type": "klaxon:hammering",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
     "item": "minecraft:iron_ingot"
   },
   "output_stack": {
     "count": 1,
     "id": "klaxon:iron_plate"
+  },
+  "required_tool": {
+    "tag": "klaxon:recipe_processing_hammers"
   }
 }

@@ -2,24 +2,24 @@ package net.myriantics.klaxon.datagen.recipe;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.cooling.CoolingRecipe;
+import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
-import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -289,11 +289,22 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addHammeringRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.HAMMERING_RECIPE_ID,
+        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS), input, output, conditions);
+    }
+
+    public void addWirecuttingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
+        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS), input, output, conditions);
+    }
+
+    public void addToolUsageRecipe(NamedIngredient requiredTool, Ingredient input, ItemStack output, final ResourceCondition... conditions) {
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.TOOL_USAGE_RECIPE_ID,
                 getItemPath(output.getItem()),
                 conditions);
 
-        HammeringRecipe recipe = new HammeringRecipe(input, output);
+        // append used tool to recipe path for readability
+        recipeId = recipeId.withPath(requiredTool.getName() + "/" + recipeId.getPath());
+
+        ToolUsageRecipe recipe = new ToolUsageRecipe(requiredTool.toIngredient(), input, output);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

@@ -7,9 +7,15 @@
       }
     }
   ],
-  "type": "klaxon:hammering",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
-    "item": "minecraft:dirt"
+    "item": "minecraft:end_rod"
   },
-  "output_stack": {}
+  "output_stack": {
+    "count": 1,
+    "id": "minecraft:sheep_spawn_egg"
+  },
+  "required_tool": {
+    "item": "minecraft:piston"
+  }
 }

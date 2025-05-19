@@ -1,10 +1,13 @@
 {
-  "type": "klaxon:hammering",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
     "item": "klaxon:molten_rubber_glob"
   },
   "output_stack": {
     "count": 1,
     "id": "klaxon:molten_rubber_sheet"
+  },
+  "required_tool": {
+    "tag": "klaxon:recipe_processing_hammers"
   }
 }

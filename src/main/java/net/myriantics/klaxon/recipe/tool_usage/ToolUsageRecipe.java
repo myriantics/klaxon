@@ -1,25 +1,26 @@
-package net.myriantics.klaxon.recipe.hammering;
+package net.myriantics.klaxon.recipe.tool_usage;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
-public class HammeringRecipe implements Recipe<RecipeInput>{
-    private final Ingredient inputA;
+public class ToolUsageRecipe implements Recipe<RecipeInput> {
+    private final Ingredient requiredTool;
+    private final Ingredient inputIngredient;
     private final ItemStack output;
 
-    public HammeringRecipe(Ingredient inputA, ItemStack output) {
-        this.inputA = inputA;
+    public ToolUsageRecipe(Ingredient requiredTool, Ingredient inputIngredient, ItemStack output) {
+        this.requiredTool = requiredTool;
+        this.inputIngredient = inputIngredient;
         this.output = output;
     }
 
     @Override
     public boolean matches(RecipeInput inventory, World world) {
-        return inputA.test(inventory.getStackInSlot(0));
+        return requiredTool.test(inventory.getStackInSlot(0)) && inputIngredient.test(inventory.getStackInSlot(1));
     }
 
     @Override
@@ -39,21 +40,25 @@ public class HammeringRecipe implements Recipe<RecipeInput>{
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(KlaxonItems.STEEL_HAMMER);
+        return requiredTool.getMatchingStacks()[0];
     }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.HAMMERING_RECIPE_SERIALIZER;
+        return KlaxonRecipeTypes.TOOL_USAGE_RECIPE_SERIALIZER;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return KlaxonRecipeTypes.HAMMERING;
+        return KlaxonRecipeTypes.TOOL_USAGE;
+    }
+
+    public Ingredient getRequiredTool() {
+        return requiredTool;
     }
 
     public Ingredient getInputIngredient() {
-        return inputA;
+        return inputIngredient;
     }
 
     public ItemStack getOutputStack() {

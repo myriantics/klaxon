@@ -12,6 +12,7 @@ import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComp
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
+import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 
 import java.util.function.UnaryOperator;
 
@@ -59,8 +60,12 @@ public class KlaxonDataComponentTypes {
                 return builder;
             });
 
-    public static final ComponentType<Boolean> UNENCHANTABLE = register("unenchantable",
-            builder -> builder.codec(Codec.BOOL).packetCodec(PacketCodecs.BOOL));
+    public static final ComponentType<ToolUseRecipeConfigComponent> TOOL_USE_RECIPE_CONFIG = register("tool_use_recipe_config",
+            builder -> {
+                builder.codec(ToolUseRecipeConfigComponent.CODEC);
+                builder.packetCodec(ToolUseRecipeConfigComponent.PACKET_CODEC);
+                return builder;
+            });
 
     private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());

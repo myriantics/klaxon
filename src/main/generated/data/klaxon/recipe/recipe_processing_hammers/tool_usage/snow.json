@@ -1,10 +1,13 @@
 {
-  "type": "klaxon:hammering",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
     "item": "minecraft:snowball"
   },
   "output_stack": {
     "count": 1,
     "id": "minecraft:snow"
+  },
+  "required_tool": {
+    "tag": "klaxon:recipe_processing_hammers"
   }
 }

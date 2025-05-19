@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:klaxon_prelude/use_hammer_on_dropped_item",
+  "parent": "minecraft:klaxon_prelude/use_hammer_to_make_plate",
   "criteria": {
     "makeshift_crafting_full_repair": {
       "conditions": {

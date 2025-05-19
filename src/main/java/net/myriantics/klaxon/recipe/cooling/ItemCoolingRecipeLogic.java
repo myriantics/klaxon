@@ -2,15 +2,12 @@ package net.myriantics.klaxon.recipe.cooling;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.resource.LifecycledResourceManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
 import java.util.HashSet;
@@ -18,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 
 // Inspiration taken from AE2's Item Transformation system
-public abstract class ItemCoolingHelper {
+public abstract class ItemCoolingRecipeLogic {
     private static Set<Item> COOLABLE_ITEM_CACHE = new HashSet<>();
 
     public static boolean test(World world, ItemStack stack) {

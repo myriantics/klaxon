@@ -9,26 +9,27 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
-import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
-import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class HammeringEmiRecipe implements EmiRecipe {
+public class ToolUsageEmiRecipe implements EmiRecipe {
     private final Identifier id;
+    private final List<EmiIngredient> requiredTool;
     private final List<EmiIngredient> input;
     private final List<EmiStack> output;
 
-    public HammeringEmiRecipe(RecipeEntry<HammeringRecipe> recipe) {
+    public ToolUsageEmiRecipe(RecipeEntry<ToolUsageRecipe> recipe) {
         this.id = recipe.id();
+        this.requiredTool = List.of(EmiIngredient.of(recipe.value().getRequiredTool()));
         this.input = List.of(EmiIngredient.of(recipe.value().getInputIngredient()));
         this.output = List.of(EmiStack.of(recipe.value().getResult(null)));
     }
 
     @Override
     public EmiRecipeCategory getCategory() {
-        return KlaxonEmiRecipeCategories.HAMMERING;
+        return KlaxonEmiRecipeCategories.TOOL_USAGE;
     }
 
     @Override
@@ -58,19 +59,19 @@ public class HammeringEmiRecipe implements EmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addSlot(input.get(0), 0, 9).appendTooltip(Text.translatable("klaxon.emi.text.hammering.dropped_item"));
+        widgets.addSlot(input.get(0), 0, 9).appendTooltip(Text.translatable("klaxon.emi.text.tool_usage.dropped_item"));
 
-        widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Text.translatable("klaxon.emi.text.hammering.hammer")).appendTooltip(Text.translatable("klaxon.emi.text.hammering.sneak_use"));
+        widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Text.translatable("klaxon.emi.text.tool_usage.tool")).appendTooltip(Text.translatable("klaxon.emi.text.tool_usage.use"));
 
         widgets.addSlot(output.get(0), 58, 9).recipeContext(this);
 
         // todo: add dropped item animation here (maybe an accompanying hammer swinging one as well)
 
-        widgets.addText(Text.translatable("klaxon.emi.text.hammering.sneak_use_compact"), 0, 38, 4210752, false);
+        widgets.addText(Text.translatable("klaxon.emi.text.tool_usage.use_compact"), 0, 38, 4210752, false);
     }
 
     @Override
     public List<EmiIngredient> getCatalysts() {
-        return List.of(EmiStack.of(KlaxonItems.STEEL_HAMMER));
+        return requiredTool;
     }
 }

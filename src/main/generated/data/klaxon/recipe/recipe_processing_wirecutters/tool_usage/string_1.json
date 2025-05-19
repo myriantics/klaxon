@@ -1,0 +1,13 @@
+{
+  "type": "klaxon:tool_usage",
+  "input_ingredient": {
+    "tag": "minecraft:wool_carpets"
+  },
+  "output_stack": {
+    "count": 1,
+    "id": "minecraft:string"
+  },
+  "required_tool": {
+    "tag": "klaxon:recipe_processing_wirecutters"
+  }
+}

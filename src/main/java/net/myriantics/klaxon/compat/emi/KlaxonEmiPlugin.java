@@ -3,21 +3,18 @@ package net.myriantics.klaxon.compat.emi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.EmiRecipeCategory;
-import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
-import net.myriantics.klaxon.compat.emi.recipes.HammeringEmiRecipe;
+import net.myriantics.klaxon.compat.emi.recipes.ToolUsageEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.KlaxonEMIAnvilRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
@@ -41,7 +38,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerCategories(EmiRegistry registry) {
-        registry.addCategory(KlaxonEmiRecipeCategories.HAMMERING);
+        registry.addCategory(KlaxonEmiRecipeCategories.TOOL_USAGE);
         registry.addCategory(KlaxonEmiRecipeCategories.BLAST_PROCESSING);
         registry.addCategory(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER);
     }
@@ -55,7 +52,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerRecipes(EmiRegistry registry) {
-        addAll(registry, KlaxonRecipeTypes.HAMMERING, HammeringEmiRecipe::new);
+        addAll(registry, KlaxonRecipeTypes.TOOL_USAGE, ToolUsageEmiRecipe::new);
         addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
         addBlastProcessorBehaviorItemExplosionPowerRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));

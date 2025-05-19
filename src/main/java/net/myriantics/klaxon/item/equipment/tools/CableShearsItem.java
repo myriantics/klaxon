@@ -8,10 +8,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.InstabreakMiningToolItem;
+import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
+import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 public class CableShearsItem extends InstabreakMiningToolItem {
@@ -22,7 +25,9 @@ public class CableShearsItem extends InstabreakMiningToolItem {
     public static final float BASE_ATTACK_SPEED = -2.6F;
 
     public CableShearsItem(ToolMaterial material, Settings settings) {
-        super(material, KlaxonBlockTags.CABLE_SHEARS_MINEABLE, settings);
+        super(material, KlaxonBlockTags.CABLE_SHEARS_MINEABLE, settings
+                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.ENTITY_SHEEP_SHEAR))
+        );
     }
 
     public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {

@@ -9,13 +9,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.recipe.cooling.ItemCoolingHelper;
+import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeLogic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,8 +37,8 @@ public abstract class EntityMixin {
         Entity self = (Entity)(Object) this;
 
         // we don't need to run cooling visual effects on the client - at least not right now
-        if (!world.isClient() && self instanceof ItemEntity itemEntity && ItemCoolingHelper.test(world, itemEntity.getStack())) {
-            Optional<ItemStack> potentialOutput = ItemCoolingHelper.getCooledStack(world, itemEntity.getStack());
+        if (!world.isClient() && self instanceof ItemEntity itemEntity && ItemCoolingRecipeLogic.test(world, itemEntity.getStack())) {
+            Optional<ItemStack> potentialOutput = ItemCoolingRecipeLogic.getCooledStack(world, itemEntity.getStack());
             potentialOutput.ifPresent(itemEntity::setStack);
         }
     }
@@ -56,7 +52,7 @@ public abstract class EntityMixin {
 
         // report items that can be cooled as on fire so that extinguish() is called
         // dont do this on the client because otherwise the items will render as on fire.
-        return original || (!world.isClient() && self instanceof ItemEntity itemEntity && ItemCoolingHelper.test(world, itemEntity.getStack()));
+        return original || (!world.isClient() && self instanceof ItemEntity itemEntity && ItemCoolingRecipeLogic.test(world, itemEntity.getStack()));
     }
 
     @WrapOperation(
@@ -67,7 +63,7 @@ public abstract class EntityMixin {
     private void klaxon$coolableItemsDontPassivelyCool(Entity instance, int fireTicks, Operation<Void> original) {
         // stop fucking passively cooling my shit man
         // not cool
-        if (instance instanceof ItemEntity itemEntity && ItemCoolingHelper.test(world, itemEntity.getStack())) return;
+        if (instance instanceof ItemEntity itemEntity && ItemCoolingRecipeLogic.test(world, itemEntity.getStack())) return;
         original.call(instance, fireTicks);
     }
 

@@ -6,14 +6,17 @@ import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.criterion.BlockActivationCriterion;
 import net.myriantics.klaxon.advancement.criterion.AnvilRepairCriterion;
 import net.myriantics.klaxon.advancement.criterion.HammerUseCriterion;
+import net.myriantics.klaxon.advancement.criterion.ToolUsageRecipeCraftCriterion;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
+import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -67,16 +70,16 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 .parent(watchBlastProcessorCraft)
                 .display(
                         KlaxonItems.CRUDE_STEEL_PLATE,
-                        Text.translatable("advancements.klaxon_prelude.use_hammer_on_dropped_item.title"),
-                        Text.translatable("advancements.klaxon_prelude.use_hammer_on_dropped_item.description"),
+                        Text.translatable("advancements.klaxon_prelude.use_hammer_to_make_plate.title"),
+                        Text.translatable("advancements.klaxon_prelude.use_hammer_to_make_plate.description"),
                         null,
                         AdvancementFrame.TASK,
                         true,
                         true,
                         false
                 )
-                .criterion("use_hammer_on_dropped_item", HammerUseCriterion.Conditions.createRecipeSuccess())
-                .build(consumer, getKlaxonPreludeIdString("use_hammer_on_dropped_item"));
+                .criterion("use_hammer_to_make_plate", ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.fromTag(KlaxonConventionalItemTags.PLATES)))
+                .build(consumer, getKlaxonPreludeIdString("use_hammer_to_make_plate"));
         AdvancementEntry successfullyHammerWalljump = Advancement.Builder.create()
                 .parent(watchBlastProcessorCraft)
                 .display(
@@ -154,4 +157,6 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
     private static String getKlaxonPreludeIdString(String path) {
         return "klaxon_prelude/" + path;
     }
+
+
 }

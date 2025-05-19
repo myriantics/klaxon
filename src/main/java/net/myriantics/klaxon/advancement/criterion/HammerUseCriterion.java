@@ -32,10 +32,6 @@ public class HammerUseCriterion extends AbstractCriterion<HammerUseCriterion.Con
                 .apply(instance, HammerUseCriterion.Conditions::new)
         );
 
-        public static AdvancementCriterion<HammerUseCriterion.Conditions> createRecipeSuccess() {
-            return KlaxonAdvancementCriteria.HAMMER_USE_CRITERION.create(new HammerUseCriterion.Conditions(Optional.empty(), HammerItem.UsageType.RECIPE_SUCCESS));
-        }
-
         public static AdvancementCriterion<HammerUseCriterion.Conditions> createWalljump(boolean succeeded) {
             return KlaxonAdvancementCriteria.HAMMER_USE_CRITERION.create(new HammerUseCriterion.Conditions(Optional.empty(), succeeded ? HammerItem.UsageType.WALLJUMP_SUCCEEDED : HammerItem.UsageType.WALLJUMP_FAILED));
         }

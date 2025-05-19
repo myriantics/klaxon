@@ -13,6 +13,7 @@
     "FireworkRocketEntityInvoker",
     "ItemEntityMixin",
     "ItemMixin",
+    "ItemStackMixin",
     "LivingEntityMixin",
     "MobEntityMixin",
     "ObserverBlockInvoker",

@@ -9,12 +9,11 @@ import net.fabricmc.fabric.impl.resource.conditions.conditions.TrueResourceCondi
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.*;
 import net.minecraft.recipe.*;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.recipe.providers.*;
-import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -39,6 +38,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         new KlaxonRecipeOverrideProvider(this, exporter).generateRecipes();
         new KlaxonBlastProcessorBehaviorRecipeProvider(this, exporter).generateRecipes();
         new KlaxonItemCoolingRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonWirecuttingRecipeProvider(this, exporter).generateRecipes();
     }
 
     public Identifier computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {
@@ -85,9 +85,9 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     }
 
     public void acceptOverrideRecipe(RecipeExporter exporter, Identifier id) {
-        // accept a blank recipe with the "never loads" resource condition
+        // accept a REALLY FUNNY recipe with the "never loads" resource condition
         withConditions(exporter, new NotResourceCondition(new TrueResourceCondition()))
-                .accept(id, new HammeringRecipe(Ingredient.ofItems(Items.DIRT), ItemStack.EMPTY), null);
+                .accept(id, new ToolUsageRecipe(Ingredient.ofItems(Items.PISTON), Ingredient.ofItems(Items.END_ROD), new ItemStack(Items.SHEEP_SPAWN_EGG)), null);
     }
 
     // gotcha stinker

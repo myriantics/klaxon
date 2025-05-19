@@ -12,8 +12,8 @@ import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehav
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeSerializer;
 import net.myriantics.klaxon.recipe.cooling.CoolingRecipe;
 import net.myriantics.klaxon.recipe.cooling.CoolingRecipeSerializer;
-import net.myriantics.klaxon.recipe.hammering.HammeringRecipe;
-import net.myriantics.klaxon.recipe.hammering.HammeringRecipeSerializer;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeSerializer;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
@@ -35,11 +35,11 @@ public class KlaxonRecipeTypes {
     public static RecipeType<BlastProcessorBehaviorRecipe> BLAST_PROCESSOR_BEHAVIOR =
             registerRecipeType(BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID);
 
-    public static final String HAMMERING_RECIPE_ID = "hammering";
-    public static RecipeSerializer<HammeringRecipe> HAMMERING_RECIPE_SERIALIZER =
-            registerSerializer(HAMMERING_RECIPE_ID, new HammeringRecipeSerializer());
-    public static RecipeType<HammeringRecipe> HAMMERING =
-            registerRecipeType(HAMMERING_RECIPE_ID);
+    public static final String TOOL_USAGE_RECIPE_ID = "tool_usage";
+    public static RecipeSerializer<ToolUsageRecipe> TOOL_USAGE_RECIPE_SERIALIZER =
+            registerSerializer(TOOL_USAGE_RECIPE_ID, new ToolUsageRecipeSerializer());
+    public static RecipeType<ToolUsageRecipe> TOOL_USAGE =
+            registerRecipeType(TOOL_USAGE_RECIPE_ID);
 
     public static final String COOLING_RECIPE_ID = "cooling";
     public static RecipeSerializer<CoolingRecipe> COOLING_RECIPE_SERIALIZER =

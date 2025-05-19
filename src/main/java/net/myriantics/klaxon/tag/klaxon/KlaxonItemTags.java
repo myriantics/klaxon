@@ -60,6 +60,10 @@ public class KlaxonItemTags {
             createTag("wrenchable_block_blacklist");
     public static final TagKey<Item> WRENCHABLE_BLOCK_BLACKLIST =
             createTag("wrenchable_block_blacklist");
+    public static final TagKey<Item> RECIPE_PROCESSING_HAMMERS =
+            createTag("recipe_processing_hammers");
+    public static final TagKey<Item> RECIPE_PROCESSING_WIRECUTTERS =
+            createTag("recipe_processing_wirecutters");
 
     // gear categories
     public static final TagKey<Item> STEEL_ARMOR =

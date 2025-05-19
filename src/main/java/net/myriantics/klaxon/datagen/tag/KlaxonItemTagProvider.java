@@ -219,6 +219,10 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(KlaxonItems.STEEL_CLEAVER)
                 .add(KlaxonItems.STEEL_WRENCH);
+        getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS)
+                .add(KlaxonItems.STEEL_HAMMER);
+        getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS)
+                .add(KlaxonItems.STEEL_CABLE_SHEARS);
     }
 
     private void buildAnvilRelatedTags() {

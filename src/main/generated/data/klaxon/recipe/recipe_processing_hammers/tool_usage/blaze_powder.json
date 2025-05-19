@@ -1,10 +1,13 @@
 {
-  "type": "klaxon:hammering",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
     "item": "minecraft:blaze_rod"
   },
   "output_stack": {
     "count": 4,
     "id": "minecraft:blaze_powder"
+  },
+  "required_tool": {
+    "tag": "klaxon:recipe_processing_hammers"
   }
 }

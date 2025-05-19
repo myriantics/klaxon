@@ -7,12 +7,15 @@
       ]
     }
   ],
-  "type": "klaxon:hammering",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
-    "item": "create:gold_sheet"
+    "item": "create:brass_ingot"
   },
   "output_stack": {
     "count": 1,
-    "id": "create:brass_ingot"
+    "id": "create:brass_sheet"
+  },
+  "required_tool": {
+    "tag": "klaxon:recipe_processing_hammers"
   }
 }
