@@ -2,6 +2,7 @@ package net.myriantics.klaxon.block.customblocks.decor;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Degradable;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.MagmaBlock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +28,7 @@ public class MoltenRubberBlock extends MagmaBlock {
         BlockPos pos = ctx.getBlockPos();
 
         for (Direction dir : NeighborUpdater.UPDATE_ORDER) {
-            if (testForColdness(world, pos.offset(dir))) {
+            if (testForColdness(world, pos.offset(dir), dir)) {
                 world.syncWorldEvent(WorldEvents.LAVA_EXTINGUISHED, pos, 0);
                 return KlaxonBlocks.RUBBER_BLOCK.getDefaultState();
             }
@@ -38,7 +39,7 @@ public class MoltenRubberBlock extends MagmaBlock {
 
     @Override
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!world.isClient() && testForColdness(world, neighborPos)) {
+        if (!world.isClient() && testForColdness(world, neighborPos, direction)) {
             world.syncWorldEvent(WorldEvents.LAVA_EXTINGUISHED, pos, 0);
             return KlaxonBlocks.RUBBER_BLOCK.getDefaultState();
         }
@@ -46,7 +47,7 @@ public class MoltenRubberBlock extends MagmaBlock {
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    private boolean testForColdness(WorldAccess world, BlockPos pos) {
-        return world.getBlockState(pos).isIn(KlaxonBlockTags.COLD_BLOCKS) || world.getFluidState(pos).isIn(KlaxonFluidTags.COLD_FLUIDS);
+    private boolean testForColdness(WorldAccess world, BlockPos pos, Direction direction) {
+        return world.getBlockState(pos).isIn(KlaxonBlockTags.COLD_BLOCKS) || (!direction.equals(Direction.DOWN) && world.getFluidState(pos).isIn(KlaxonFluidTags.COLD_FLUIDS));
     }
 }
