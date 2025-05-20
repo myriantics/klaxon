@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "chain",
+  "key": {
+    "I": {
+      "tag": "c:ingots/crude_steel"
+    },
+    "N": {
+      "tag": "c:nuggets/crude_steel"
+    }
+  },
+  "pattern": [
+    "N",
+    "I",
+    "N"
+  ],
+  "result": {
+    "count": 6,
+    "id": "minecraft:chain"
+  }
+}

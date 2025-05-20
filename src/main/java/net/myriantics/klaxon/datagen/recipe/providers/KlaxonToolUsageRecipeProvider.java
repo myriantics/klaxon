@@ -45,7 +45,7 @@ public class KlaxonToolUsageRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     private void buildWirecuttingRecipes() {
-        addWirecuttingRecipe(Ingredient.ofItems(Blocks.IRON_BARS), new ItemStack(Blocks.CHAIN, 3));
+        addWirecuttingRecipe(Ingredient.ofItems(Blocks.IRON_BARS), new ItemStack(Blocks.CHAIN, 2));
     }
 
     private void buildShearingRecipes() {

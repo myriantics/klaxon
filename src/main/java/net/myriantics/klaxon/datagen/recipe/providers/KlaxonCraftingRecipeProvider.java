@@ -108,6 +108,30 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingRecipeCategory.REDSTONE,
                 null
         );
+        addShapedCraftingRecipe(Map.of(
+                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
+                'N', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_NUGGETS)),
+                new String[] {
+                        "N",
+                        "I",
+                        "N"
+                },
+                new ItemStack(Blocks.CHAIN, 12),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                'I', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS),
+                'N', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)),
+                new String[] {
+                        "N",
+                        "I",
+                        "N"
+                },
+                new ItemStack(Blocks.CHAIN, 6),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
     }
 
     private void buildMaterialCraftingRecipes() {
