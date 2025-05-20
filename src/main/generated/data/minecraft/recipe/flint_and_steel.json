@@ -17,5 +17,6 @@
   },
   "required_tool": {
     "item": "minecraft:piston"
-  }
+  },
+  "sound_override": {}
 }

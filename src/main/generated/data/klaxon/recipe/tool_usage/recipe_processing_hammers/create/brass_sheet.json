@@ -17,5 +17,8 @@
   },
   "required_tool": {
     "tag": "klaxon:recipe_processing_hammers"
+  },
+  "sound_override": {
+    "sound_id": "minecraft:block.anvil.land"
   }
 }

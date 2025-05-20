@@ -1,13 +1,16 @@
 {
   "type": "klaxon:tool_usage",
   "input_ingredient": {
-    "tag": "minecraft:wool_carpets"
+    "item": "minecraft:iron_bars"
   },
   "output_stack": {
-    "count": 1,
-    "id": "minecraft:string"
+    "count": 3,
+    "id": "minecraft:chain"
   },
   "required_tool": {
     "tag": "klaxon:recipe_processing_wirecutters"
+  },
+  "sound_override": {
+    "sound_id": "minecraft:block.chain.break"
   }
 }

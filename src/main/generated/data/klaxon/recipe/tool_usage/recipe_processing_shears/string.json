@@ -8,6 +8,9 @@
     "id": "minecraft:string"
   },
   "required_tool": {
-    "tag": "klaxon:recipe_processing_wirecutters"
+    "tag": "klaxon:recipe_processing_shears"
+  },
+  "sound_override": {
+    "sound_id": "minecraft:entity.sheep.shear"
   }
 }

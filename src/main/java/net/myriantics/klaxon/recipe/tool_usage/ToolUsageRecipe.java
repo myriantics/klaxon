@@ -4,18 +4,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+
+import java.util.Optional;
 
 public class ToolUsageRecipe implements Recipe<RecipeInput> {
     private final Ingredient requiredTool;
     private final Ingredient inputIngredient;
     private final ItemStack output;
+    private final SoundEvent soundOverride;
 
     public ToolUsageRecipe(Ingredient requiredTool, Ingredient inputIngredient, ItemStack output) {
+        this(requiredTool, inputIngredient, output, null);
+    }
+
+    public ToolUsageRecipe(Ingredient requiredTool, Ingredient inputIngredient, ItemStack output, SoundEvent soundOverride) {
         this.requiredTool = requiredTool;
         this.inputIngredient = inputIngredient;
         this.output = output;
+        this.soundOverride = soundOverride;
     }
 
     @Override
@@ -63,5 +72,9 @@ public class ToolUsageRecipe implements Recipe<RecipeInput> {
 
     public ItemStack getOutputStack() {
         return output;
+    }
+
+    public SoundEvent getSoundOverride() {
+        return this.soundOverride;
     }
 }

@@ -1,13 +1,16 @@
 {
   "type": "klaxon:tool_usage",
   "input_ingredient": {
-    "item": "minecraft:copper_ingot"
+    "item": "minecraft:blaze_rod"
   },
   "output_stack": {
-    "count": 1,
-    "id": "klaxon:copper_plate"
+    "count": 4,
+    "id": "minecraft:blaze_powder"
   },
   "required_tool": {
     "tag": "klaxon:recipe_processing_hammers"
+  },
+  "sound_override": {
+    "sound_id": "minecraft:block.anvil.land"
   }
 }

@@ -1,13 +1,16 @@
 {
   "type": "klaxon:tool_usage",
   "input_ingredient": {
-    "item": "minecraft:iron_ingot"
+    "item": "minecraft:gold_ingot"
   },
   "output_stack": {
     "count": 1,
-    "id": "klaxon:iron_plate"
+    "id": "klaxon:gold_plate"
   },
   "required_tool": {
     "tag": "klaxon:recipe_processing_hammers"
+  },
+  "sound_override": {
+    "sound_id": "minecraft:block.anvil.land"
   }
 }

@@ -1,13 +1,16 @@
 {
   "type": "klaxon:tool_usage",
   "input_ingredient": {
-    "item": "klaxon:crude_steel_ingot"
+    "item": "klaxon:molten_rubber_glob"
   },
   "output_stack": {
     "count": 1,
-    "id": "klaxon:crude_steel_plate"
+    "id": "klaxon:molten_rubber_sheet"
   },
   "required_tool": {
     "tag": "klaxon:recipe_processing_hammers"
+  },
+  "sound_override": {
+    "sound_id": "minecraft:block.anvil.land"
   }
 }

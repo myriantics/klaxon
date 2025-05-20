@@ -28,7 +28,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(RecipeExporter exporter) {
-        new KlaxonHammeringRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonToolUsageRecipeProvider(this, exporter).generateRecipes();
         new KlaxonBlastProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonCraftingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonMakeshiftCraftingRecipeProvider(this, exporter).generateRecipes();
@@ -38,7 +38,6 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         new KlaxonRecipeOverrideProvider(this, exporter).generateRecipes();
         new KlaxonBlastProcessorBehaviorRecipeProvider(this, exporter).generateRecipes();
         new KlaxonItemCoolingRecipeProvider(this, exporter).generateRecipes();
-        new KlaxonWirecuttingRecipeProvider(this, exporter).generateRecipes();
     }
 
     public Identifier computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {

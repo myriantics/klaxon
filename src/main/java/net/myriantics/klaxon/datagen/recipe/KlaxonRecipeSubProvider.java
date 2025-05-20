@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.NamedIngredient;
@@ -289,22 +291,27 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addHammeringRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS), input, output, conditions);
+        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS), input, output, SoundEvents.BLOCK_ANVIL_LAND, conditions);
     }
 
     public void addWirecuttingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS), input, output, conditions);
+        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS), input, output, SoundEvents.BLOCK_CHAIN_BREAK, conditions);
+    }
+
+    public void addShearingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
+        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_SHEARS), input, output, SoundEvents.ENTITY_SHEEP_SHEAR, conditions);
     }
 
     public void addToolUsageRecipe(NamedIngredient requiredTool, Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.TOOL_USAGE_RECIPE_ID,
+        addToolUsageRecipe(requiredTool, input, output, null, conditions);
+    }
+
+    public void addToolUsageRecipe(NamedIngredient requiredTool, Ingredient input, ItemStack output, SoundEvent soundOverride, final ResourceCondition... conditions) {
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.TOOL_USAGE_RECIPE_ID + "/" + requiredTool.getName(),
                 getItemPath(output.getItem()),
                 conditions);
 
-        // append used tool to recipe path for readability
-        recipeId = recipeId.withPath(requiredTool.getName() + "/" + recipeId.getPath());
-
-        ToolUsageRecipe recipe = new ToolUsageRecipe(requiredTool.toIngredient(), input, output);
+        ToolUsageRecipe recipe = new ToolUsageRecipe(requiredTool.toIngredient(), input, output, soundOverride);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

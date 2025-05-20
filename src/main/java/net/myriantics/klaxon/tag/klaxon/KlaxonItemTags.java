@@ -64,6 +64,8 @@ public class KlaxonItemTags {
             createTag("recipe_processing_hammers");
     public static final TagKey<Item> RECIPE_PROCESSING_WIRECUTTERS =
             createTag("recipe_processing_wirecutters");
+    public static final TagKey<Item> RECIPE_PROCESSING_SHEARS =
+            createTag("recipe_processing_shears");
 
     // gear categories
     public static final TagKey<Item> STEEL_ARMOR =

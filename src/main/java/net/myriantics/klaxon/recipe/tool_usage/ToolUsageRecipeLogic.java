@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -104,12 +105,18 @@ public abstract class ToolUsageRecipeLogic {
                 ItemStack targetStack = targetItemEntity.getStack().copy();
                 Position outputPos = targetItemEntity.getPos();
 
+                SoundEvent recipeSoundOverride = null;
+
                 // necessary so that the client knows if it's completed a recipe or not - client stops looking as soon as it gets a success
                 if (world.isClient()) {
                     RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
-                    if (!recipeSuccess) {
-                        recipeSuccess = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world).isPresent();
+
+                    Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+                    if (match.isPresent()) {
+                        if (!recipeSuccess) recipeSuccess = true;
                         spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
+                        SoundEvent soundEvent = match.get().value().getSoundOverride();
+                        recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
                     }
                 }
 
@@ -141,12 +148,17 @@ public abstract class ToolUsageRecipeLogic {
                                 outputPos.getZ(),
                                 outputStack
                         );
+
+                        SoundEvent soundEvent = match.get().value().getSoundOverride();
+
+                        // make sure to get the sound override - ignore empty ones
+                        recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
                     }
                 }
-            }
 
-            // both client and server know if a recipe was successful
-            if (recipeSuccess) world.playSound(player, BlockPos.ofFloored(clickedPos), component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
+                // both client and server know if a recipe was successful - also play sound for every item processed in an interaction because it sounds better and signifies that more items were processed
+                if (recipeSuccess) world.playSound(player, BlockPos.ofFloored(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
+            }
 
             if (world instanceof ServerWorld serverWorld) {
                 // trip sculk sensors

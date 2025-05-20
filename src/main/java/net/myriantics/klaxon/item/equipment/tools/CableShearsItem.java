@@ -26,7 +26,7 @@ public class CableShearsItem extends InstabreakMiningToolItem {
 
     public CableShearsItem(ToolMaterial material, Settings settings) {
         super(material, KlaxonBlockTags.CABLE_SHEARS_MINEABLE, settings
-                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.ENTITY_SHEEP_SHEAR))
+                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_CHAIN_BREAK))
         );
     }
 
