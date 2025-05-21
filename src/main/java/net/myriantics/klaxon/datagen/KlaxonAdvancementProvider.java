@@ -80,6 +80,20 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .criterion("use_hammer_to_make_plate", ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.fromTag(KlaxonConventionalItemTags.PLATES)))
                 .build(consumer, getKlaxonPreludeIdString("use_hammer_to_make_plate"));
+        AdvancementEntry obtainAnyRubberGlob = Advancement.Builder.create()
+                .parent(watchBlastProcessorCraft)
+                .display(
+                        KlaxonItems.RUBBER_GLOB,
+                        Text.translatable("advancements.klaxon_prelude.obtain_any_rubber_glob.title"),
+                        Text.translatable("advancements.klaxon_prelude.obtain_any_rubber_glob.description"),
+                        null,
+                        AdvancementFrame.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .criterion("obtain_rubber_glob",  InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_GLOBS)))
+                .build(consumer, getKlaxonPreludeIdString("obtain_rubber_glob"));
         AdvancementEntry successfullyHammerWalljump = Advancement.Builder.create()
                 .parent(watchBlastProcessorCraft)
                 .display(
