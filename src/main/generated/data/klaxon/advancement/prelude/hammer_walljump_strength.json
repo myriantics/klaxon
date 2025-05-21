@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:klaxon_prelude/successful_hammer_walljump",
+  "parent": "klaxon:prelude/hammer_walljump",
   "criteria": {
-    "successful_hammer_walljump": {
+    "hammer_walljump_strength": {
       "conditions": {
         "usageType": "strength_walljump_succeeded"
       },
@@ -9,25 +9,27 @@
     }
   },
   "display": {
+    "announce_to_chat": false,
     "description": {
-      "translate": "advancements.klaxon_prelude.hammer_walljump_strength.description"
+      "translate": "advancements.klaxon.prelude.hammer_walljump_strength.description"
     },
     "frame": "challenge",
     "icon": {
       "count": 1,
       "id": "minecraft:blaze_powder"
     },
+    "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon_prelude.hammer_walljump_strength.title"
+      "translate": "advancements.klaxon.prelude.hammer_walljump_strength.title"
     }
   },
   "requirements": [
     [
-      "successful_hammer_walljump"
+      "hammer_walljump_strength"
     ]
   ],
   "rewards": {
-    "experience": 200
+    "experience": 400
   },
   "sends_telemetry_event": true
 }

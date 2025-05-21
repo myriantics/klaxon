@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:klaxon_prelude/successful_hammer_walljump",
+  "parent": "klaxon:prelude/hammer_walljump",
   "criteria": {
-    "minecart_walljump": {
+    "hammer_walljump_minecart": {
       "conditions": {
         "usageType": "minecart_walljump_success"
       },
@@ -9,8 +9,9 @@
     }
   },
   "display": {
+    "announce_to_chat": false,
     "description": {
-      "translate": "advancements.klaxon_prelude.hammer_walljump_minecart.description"
+      "translate": "advancements.klaxon.prelude.hammer_walljump_minecart.description"
     },
     "frame": "challenge",
     "hidden": true,
@@ -18,13 +19,14 @@
       "count": 1,
       "id": "minecraft:cauldron"
     },
+    "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon_prelude.hammer_walljump_minecart.title"
+      "translate": "advancements.klaxon.prelude.hammer_walljump_minecart.title"
     }
   },
   "requirements": [
     [
-      "minecart_walljump"
+      "hammer_walljump_minecart"
     ]
   ],
   "rewards": {

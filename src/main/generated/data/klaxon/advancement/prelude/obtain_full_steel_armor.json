@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:klaxon_prelude/use_hammer_to_make_plate",
+  "parent": "klaxon:prelude/use_hammer_to_make_metal_plate",
   "criteria": {
-    "steel_armor": {
+    "obtain_full_steel_armor": {
       "conditions": {
         "items": [
           {
@@ -22,21 +22,23 @@
     }
   },
   "display": {
+    "announce_to_chat": false,
     "description": {
-      "translate": "advancements.klaxon_prelude.wear_full_steel_armor.description"
+      "translate": "advancements.klaxon.prelude.obtain_full_steel_armor.description"
     },
     "frame": "goal",
     "icon": {
       "count": 1,
       "id": "klaxon:steel_chestplate"
     },
+    "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon_prelude.wear_full_steel_armor.title"
+      "translate": "advancements.klaxon.prelude.obtain_full_steel_armor.title"
     }
   },
   "requirements": [
     [
-      "steel_armor"
+      "obtain_full_steel_armor"
     ]
   ],
   "sends_telemetry_event": true

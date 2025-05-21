@@ -3,7 +3,7 @@ package net.myriantics.klaxon;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.myriantics.klaxon.datagen.*;
-import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
+import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.tag.*;

@@ -1,6 +1,6 @@
 {
   "criteria": {
-    "blast_processor_obtain": {
+    "root": {
       "conditions": {
         "items": [
           {
@@ -13,9 +13,9 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "klaxon:textures/gui/advancements/backgrounds/klaxon_prelude.png",
+    "background": "klaxon:textures/gui/advancements/backgrounds/prelude.png",
     "description": {
-      "translate": "advancements.klaxon_prelude.root.description"
+      "translate": "advancements.klaxon.prelude.root.description"
     },
     "icon": {
       "count": 1,
@@ -23,12 +23,12 @@
     },
     "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon_prelude.root.title"
+      "translate": "advancements.klaxon.prelude.root.title"
     }
   },
   "requirements": [
     [
-      "blast_processor_obtain"
+      "root"
     ]
   ],
   "sends_telemetry_event": true

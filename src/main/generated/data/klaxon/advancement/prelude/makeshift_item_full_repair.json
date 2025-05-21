@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:klaxon_prelude/use_hammer_to_make_plate",
+  "parent": "klaxon:prelude/use_hammer_to_make_metal_plate",
   "criteria": {
-    "makeshift_crafting_full_repair": {
+    "makeshift_item_full_repair": {
       "conditions": {
         "accepted_items": {
           "tag": "klaxon:makeshift_crafted_equipment"
@@ -12,20 +12,22 @@
     }
   },
   "display": {
+    "announce_to_chat": false,
     "description": {
-      "translate": "advancements.klaxon_prelude.makeshift_item_full_repair.description"
+      "translate": "advancements.klaxon.prelude.makeshift_item_full_repair.description"
     },
     "icon": {
       "count": 1,
       "id": "minecraft:anvil"
     },
+    "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon_prelude.makeshift_item_full_repair.title"
+      "translate": "advancements.klaxon.prelude.makeshift_item_full_repair.title"
     }
   },
   "requirements": [
     [
-      "makeshift_crafting_full_repair"
+      "makeshift_item_full_repair"
     ]
   ],
   "sends_telemetry_event": true

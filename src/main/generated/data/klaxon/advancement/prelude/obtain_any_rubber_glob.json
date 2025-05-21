@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:klaxon_prelude/watch_blast_processor_craft",
+  "parent": "klaxon:prelude/watch_blast_processor_craft",
   "criteria": {
-    "obtain_rubber_glob": {
+    "obtain_any_rubber_glob": {
       "conditions": {
         "items": [
           {
@@ -13,20 +13,22 @@
     }
   },
   "display": {
+    "announce_to_chat": false,
     "description": {
-      "translate": "advancements.klaxon_prelude.obtain_any_rubber_glob.description"
+      "translate": "advancements.klaxon.prelude.obtain_any_rubber_glob.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:rubber_glob"
     },
+    "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon_prelude.obtain_any_rubber_glob.title"
+      "translate": "advancements.klaxon.prelude.obtain_any_rubber_glob.title"
     }
   },
   "requirements": [
     [
-      "obtain_rubber_glob"
+      "obtain_any_rubber_glob"
     ]
   ],
   "sends_telemetry_event": true

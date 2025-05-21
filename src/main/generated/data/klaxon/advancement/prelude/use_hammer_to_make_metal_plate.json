@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:klaxon_prelude/watch_blast_processor_craft",
+  "parent": "klaxon:prelude/watch_blast_processor_craft",
   "criteria": {
-    "use_hammer_to_make_plate": {
+    "use_hammer_to_make_metal_plate": {
       "conditions": {
         "required_tool": {
           "tag": "klaxon:recipe_processing_hammers"
@@ -14,20 +14,22 @@
     }
   },
   "display": {
+    "announce_to_chat": false,
     "description": {
-      "translate": "advancements.klaxon_prelude.use_hammer_to_make_plate.description"
+      "translate": "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:crude_steel_plate"
     },
+    "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon_prelude.use_hammer_to_make_plate.title"
+      "translate": "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.title"
     }
   },
   "requirements": [
     [
-      "use_hammer_to_make_plate"
+      "use_hammer_to_make_metal_plate"
     ]
   ],
   "sends_telemetry_event": true
