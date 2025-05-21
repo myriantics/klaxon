@@ -97,13 +97,13 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
                     updateAdjacentMonitoringObservers(world, pos, targetBlockState);
                 }
 
-                KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, walljumpSucceeded ? HammerItem.UsageType.WALLJUMP_SUCCEEDED : HammerItem.UsageType.WALLJUMP_FAILED);
+                KlaxonAdvancementTriggers.triggerWalljumpAbility((ServerPlayerEntity) player, walljumpSucceeded ? HammerItem.UsageType.WALLJUMP_SUCCEEDED : HammerItem.UsageType.WALLJUMP_FAILED);
                 // if player overpowered steel armor with strength proc this
                 if (walljumpSucceeded && EntityWeightHelper.isHeavy(player)) {
-                    KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, HammerItem.UsageType.STRENGTH_WALLJUMP_SUCCEEDED);
+                    KlaxonAdvancementTriggers.triggerWalljumpAbility((ServerPlayerEntity) player, HammerItem.UsageType.STRENGTH_WALLJUMP_SUCCEEDED);
                 }
                 if (walljumpSucceeded && movedEntity.getType().isIn(ConventionalEntityTypeTags.MINECARTS)) {
-                    KlaxonAdvancementTriggers.triggerHammerUse((ServerPlayerEntity) player, HammerItem.UsageType.MINECART_WALLJUMP_SUCCESS);
+                    KlaxonAdvancementTriggers.triggerWalljumpAbility((ServerPlayerEntity) player, HammerItem.UsageType.MINECART_WALLJUMP_SUCCESS);
                 }
             }
 

@@ -31,7 +31,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
-import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
+import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.NotNull;
@@ -152,7 +152,7 @@ public abstract class ToolUsageRecipeLogic {
                         ItemStack outputStack = match.get().value().craft(dummyInventory, serverWorld.getRegistryManager());
 
                         // make sure to proc advancement trigger before spawning item
-                        KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.trigger((ServerPlayerEntity) player, toolStack, outputStack);
+                        KlaxonAdvancementTriggers.triggerToolUsageCraft((ServerPlayerEntity) player, toolStack, outputStack);
 
                         // dump item out in-world
                         ItemScatterer.spawn(

@@ -43,6 +43,10 @@ public class ToolUsageRecipeCraftCriterion extends AbstractCriterion<ToolUsageRe
             return KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.create(new Conditions(Optional.empty(), Ingredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS), resultIngredient));
         }
 
+        public static AdvancementCriterion<ToolUsageRecipeCraftCriterion.Conditions> createShearing(Ingredient resultIngredient) {
+            return KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.create(new Conditions(Optional.empty(), Ingredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_SHEARS), resultIngredient));
+        }
+
         boolean matches(ItemStack toolStack, ItemStack resultStack) {
             if (this.resultIngredient.isEmpty()) {
                 return requiredTool.test(toolStack);

@@ -5,7 +5,7 @@
       "conditions": {
         "usageType": "strength_walljump_succeeded"
       },
-      "trigger": "klaxon:hammer_right_click_use"
+      "trigger": "klaxon:walljump_ability"
     }
   },
   "display": {

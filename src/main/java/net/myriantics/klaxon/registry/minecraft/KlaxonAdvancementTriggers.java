@@ -12,7 +12,10 @@ public abstract class KlaxonAdvancementTriggers {
     public static void triggerBlockActivation(ServerPlayerEntity serverPlayer, BlockState state) {
         KlaxonAdvancementCriteria.BLOCK_ACTIVATION_CRITERION.trigger(serverPlayer, state);
     }
-    public static void triggerHammerUse(ServerPlayerEntity serverPlayer, HammerItem.UsageType usageType) {
-        KlaxonAdvancementCriteria.HAMMER_USE_CRITERION.trigger(serverPlayer, usageType);
+    public static void triggerWalljumpAbility(ServerPlayerEntity serverPlayer, HammerItem.UsageType usageType) {
+        KlaxonAdvancementCriteria.WALLJUMP_ABILITY_CRITERION.trigger(serverPlayer, usageType);
+    }
+    public static void triggerToolUsageCraft(ServerPlayerEntity serverPlayer, ItemStack toolStack, ItemStack craftedStack) {
+        KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.trigger(serverPlayer, toolStack, craftedStack);
     }
 }

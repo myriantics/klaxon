@@ -6,14 +6,14 @@ import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.criterion.BlockActivationCriterion;
 import net.myriantics.klaxon.advancement.criterion.AnvilRepairCriterion;
-import net.myriantics.klaxon.advancement.criterion.HammerUseCriterion;
+import net.myriantics.klaxon.advancement.criterion.WalljumpAbilityCriterion;
 import net.myriantics.klaxon.advancement.criterion.ToolUsageRecipeCraftCriterion;
 
 public class KlaxonAdvancementCriteria {
 
     public static final BlockActivationCriterion BLOCK_ACTIVATION_CRITERION = register("block_activation", new BlockActivationCriterion());
     public static final AnvilRepairCriterion ANVIL_REPAIR_CRITERION = register("makeshift_equipment_repair", new AnvilRepairCriterion());
-    public static final HammerUseCriterion HAMMER_USE_CRITERION = register("hammer_right_click_use", new HammerUseCriterion());
+    public static final WalljumpAbilityCriterion WALLJUMP_ABILITY_CRITERION = register("walljump_ability", new WalljumpAbilityCriterion());
     public static final ToolUsageRecipeCraftCriterion TOOL_USAGE_RECIPE_CRITERION = register("tool_usage_recipe", new ToolUsageRecipeCraftCriterion());
 
     private static <T extends Criterion<?>> T register(String name, T criterion) {

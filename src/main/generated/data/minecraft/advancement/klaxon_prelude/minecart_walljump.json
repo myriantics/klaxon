@@ -5,7 +5,7 @@
       "conditions": {
         "usageType": "minecart_walljump_success"
       },
-      "trigger": "klaxon:hammer_right_click_use"
+      "trigger": "klaxon:walljump_ability"
     }
   },
   "display": {

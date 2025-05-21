@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.criterion.BlockActivationCriterion;
 import net.myriantics.klaxon.advancement.criterion.AnvilRepairCriterion;
-import net.myriantics.klaxon.advancement.criterion.HammerUseCriterion;
+import net.myriantics.klaxon.advancement.criterion.WalljumpAbilityCriterion;
 import net.myriantics.klaxon.advancement.criterion.ToolUsageRecipeCraftCriterion;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
@@ -106,7 +106,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false
                 )
-                .criterion("successful_hammer_walljump", HammerUseCriterion.Conditions.createWalljump(true))
+                .criterion("successful_hammer_walljump", WalljumpAbilityCriterion.Conditions.createWalljump(true))
                 .build(consumer, getKlaxonPreludeIdString("successful_hammer_walljump"));
         AdvancementEntry strengthHammerWalljump = Advancement.Builder.create()
                 .parent(successfullyHammerWalljump)
@@ -120,7 +120,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false
                 )
-                .criterion("successful_hammer_walljump", HammerUseCriterion.Conditions.createStrengthWalljump())
+                .criterion("successful_hammer_walljump", WalljumpAbilityCriterion.Conditions.createStrengthWalljump())
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(consumer, getKlaxonPreludeIdString("successful_strength_hammer_walljump"));
         AdvancementEntry minecartWalljump = Advancement.Builder.create()
@@ -135,7 +135,7 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true
                 )
-                .criterion("minecart_walljump", HammerUseCriterion.Conditions.createMinecartWalljump())
+                .criterion("minecart_walljump", WalljumpAbilityCriterion.Conditions.createMinecartWalljump())
                 .rewards(AdvancementRewards.Builder.experience(400))
                 .build(consumer, getKlaxonPreludeIdString("minecart_walljump"));
         AdvancementEntry steelArmorJuggernaut = Advancement.Builder.create()

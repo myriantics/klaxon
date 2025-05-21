@@ -26,6 +26,8 @@ public abstract class AnvilScreenHandlerMixin {
 
     @Shadow @Final private Property levelCost;
 
+    @Shadow private int repairItemUsage;
+
     @ModifyExpressionValue(
             method = "updateResult",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;canRepair(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z")
@@ -122,7 +124,7 @@ public abstract class AnvilScreenHandlerMixin {
 
     @Inject(
             method = "onTakeOutput",
-            at = @At(value = "HEAD")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;decrement(I)V")
     )
     public void klaxon$repairAdvancementHook(PlayerEntity player, ItemStack stack, CallbackInfo ci) {
         if (player instanceof ServerPlayerEntity serverPlayer) {
