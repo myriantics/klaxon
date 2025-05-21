@@ -30,8 +30,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.advancement.criterion.ToolUsageRecipeCraftCriterion;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
@@ -47,6 +45,8 @@ import java.util.Set;
 // Inspiration taken from AE2's Item Transformation system
 public abstract class ToolUsageRecipeLogic {
     private static Set<Item> VALID_RECIPE_TOOL_CACHE = new HashSet<>();
+    public static final int MAX_SOUNDS_PER_ACTION = 4;
+    public static final int MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION = 16;
 
     public static boolean test(World world, ItemStack stack) {
         return getUsableTools(world).contains(stack.getItem());
@@ -91,7 +91,13 @@ public abstract class ToolUsageRecipeLogic {
         ToolUseRecipeConfigComponent component = ToolUseRecipeConfigComponent.get(toolStack);
         if (component == null) component = new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_STONE_BREAK);
 
+        // defines if tool can cosmetically hit items, making sound and particles but not sculk vibrations
+        boolean canCosmeticUse = component.canCosmeticUse();
+
         boolean recipeSuccess = false;
+        // this is in place to prevent hammering from taking up the whole sound cap
+        int totalPlayedSounds = 0;
+        int totalParticleSpawnActions = 0;
 
         if (isPlayerValid(player)) {
             List<ItemEntity> selectedItems = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), Box.of(clickedPos, 0.8, 0.8, 0.8), (e) -> true);
@@ -107,16 +113,23 @@ public abstract class ToolUsageRecipeLogic {
 
                 SoundEvent recipeSoundOverride = null;
 
-                // necessary so that the client knows if it's completed a recipe or not - client stops looking as soon as it gets a success
+                // necessary so that the client knows if it's completed a recipe or not
                 if (world.isClient()) {
                     RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
 
                     Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+
+                    // change recipe success indicator and recipe sound override
                     if (match.isPresent()) {
-                        if (!recipeSuccess) recipeSuccess = true;
-                        spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
+                        recipeSuccess = true;
                         SoundEvent soundEvent = match.get().value().getSoundOverride();
                         recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
+                    }
+
+                    // spawn particles if recipe was successful or cosmetic usage is enabled
+                    if ((match.isPresent() || canCosmeticUse) && totalParticleSpawnActions < MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION) {
+                        spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
+                        totalParticleSpawnActions++;
                     }
                 }
 
@@ -157,23 +170,25 @@ public abstract class ToolUsageRecipeLogic {
                 }
 
                 // both client and server know if a recipe was successful - also play sound for every item processed in an interaction because it sounds better and signifies that more items were processed
-                if (recipeSuccess) world.playSound(player, BlockPos.ofFloored(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
+                // this caps out at 4 sounds because otherwise people are going to take up the whole sound cap with it
+                if ((recipeSuccess || canCosmeticUse) && totalPlayedSounds < MAX_SOUNDS_PER_ACTION) {
+                    world.playSound(player, BlockPos.ofFloored(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
+                    totalPlayedSounds++;
+                }
             }
 
             if (world instanceof ServerWorld serverWorld) {
-                // trip sculk sensors
-                serverWorld.emitGameEvent(player, GameEvent.ITEM_INTERACT_FINISH, clickedPos);
-
-                // proc tool usage recipe advancements
                 if (recipeSuccess) {
-                    // play sound and damage tool
+                    // trip sculk sensors and damage tool
+                    serverWorld.emitGameEvent(player, GameEvent.ITEM_INTERACT_FINISH, clickedPos);
                     if (player != null) toolStack.damage(1, player, EquipmentSlotHelper.convert(usedHand));
                 }
             }
         }
 
         // if we succeeded at any recipes, we win. also preserve original action result if we do nothing.
-        return recipeSuccess ? ActionResult.SUCCESS : original;
+        // if cosmetic usage is enabled, we also succeed because yeah
+        return recipeSuccess || canCosmeticUse ? ActionResult.SUCCESS : original;
     }
 
     private static @NotNull RecipeInput getRecipeInput(ItemStack targetStack, ItemStack toolStack) {

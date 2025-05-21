@@ -7,20 +7,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.sound.SoundEvent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
-public record ToolUseRecipeConfigComponent(SoundEvent usageSound) {
+public record ToolUseRecipeConfigComponent(SoundEvent usageSound, boolean canCosmeticUse) {
+    public ToolUseRecipeConfigComponent(SoundEvent usageSound) {
+        this(usageSound, false);
+    }
+
     public static final Codec<ToolUseRecipeConfigComponent> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-                SoundEvent.CODEC.fieldOf("usage_sound").forGetter(ToolUseRecipeConfigComponent::usageSound)
+                SoundEvent.CODEC.fieldOf("usage_sound").forGetter(ToolUseRecipeConfigComponent::usageSound),
+                Codec.BOOL.fieldOf("action_requires_recipe").forGetter(ToolUseRecipeConfigComponent::canCosmeticUse)
         ).apply(instance, ToolUseRecipeConfigComponent::new);
     });
 
     public static final PacketCodec<RegistryByteBuf, ToolUseRecipeConfigComponent> PACKET_CODEC = PacketCodec.tuple(
             SoundEvent.PACKET_CODEC, ToolUseRecipeConfigComponent::usageSound,
+            PacketCodecs.BOOL, ToolUseRecipeConfigComponent::canCosmeticUse,
             ToolUseRecipeConfigComponent::new
     );
 

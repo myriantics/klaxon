@@ -14,6 +14,8 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
@@ -33,7 +35,7 @@ public class HammerItem extends InstabreakMiningToolItem {
 
     public HammerItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, KlaxonBlockTags.HAMMER_MINEABLE, settings
-                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_ANVIL_LAND))
+                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_ANVIL_LAND, true))
         );
     }
 
@@ -70,6 +72,7 @@ public class HammerItem extends InstabreakMiningToolItem {
         Vec3d clickedPos = context.getHitPos();
         ItemStack toolStack = context.getStack();
         Hand usedHand = context.getHand();
+        Hand oppositeHand = EquipmentSlotHelper.getOppositeHand(usedHand);
 
         boolean didAnvilMimicrySucceed = false;
 
@@ -83,35 +86,33 @@ public class HammerItem extends InstabreakMiningToolItem {
                 return ActionResult.PASS;
             }
 
+
             // damage item only after we're sure there are items selected
             damageItem(toolStack, player);
+
+            // used to limit particle spam
+            int totalParticleSpawnActionsRun = 0;
 
             // run recipe and dropping code for each selected dropped item
             for (ItemEntity targetItemEntity : selectedItems) {
 
                 // break one item off of the target entity stack
                 ItemStack targetStack = targetItemEntity.getStack().copy();
-                Position outputPos = targetItemEntity.getPos();
 
-                // dont run recipe stuff on the client
-                if (player instanceof ServerPlayerEntity serverPlayer) {
+                ItemStack appliedStack = player.getStackInHand(oppositeHand).copy();
 
-                    // initialize output stack
-                    ItemStack outputStack = ItemStack.EMPTY.copy();
+                // check if there's something to apply before attempting to do an anvil interaction
+                if (!appliedStack.isEmpty()) {
+                    // get results of anvil interaction
+                    AnvilScreenHandler screenHandler = processAnvilInteraction(player, world, context.getBlockPos(), targetStack, appliedStack);
+                    ItemStack anvilOutputStack = screenHandler.getStacks().get(screenHandler.getResultSlotIndex());
 
-                    // high five emoji from the emoji movie
-                    Hand oppositeHand = EquipmentSlotHelper.getOppositeHand(usedHand);
+                    // only do this if we're sure the interaction actually had an output
+                    if (!anvilOutputStack.isEmpty()) {
+                        didAnvilMimicrySucceed = true;
 
-                    ItemStack appliedStack = player.getStackInHand(oppositeHand).copy();
-
-                    // check if there's something to apply before attempting to do an anvil interaction
-                    if (!appliedStack.isEmpty()) {
-                        // get results of anvil interaction
-                        AnvilScreenHandler screenHandler = processAnvilInteraction(serverPlayer, (ServerWorld) world, context.getBlockPos(), targetStack, appliedStack);
-                        ItemStack anvilOutputStack = screenHandler.getStacks().get(screenHandler.getResultSlotIndex());
-
-                        // only do this if we're sure the interaction actually had an output
-                        if (!anvilOutputStack.isEmpty()) {
+                        // dont run recipe stuff on the client
+                        if (player instanceof ServerPlayerEntity serverPlayer)  {
                             // item in targeted entity will be replaced with anviled version
                             targetItemEntity.setStack(anvilOutputStack);
 
@@ -120,23 +121,15 @@ public class HammerItem extends InstabreakMiningToolItem {
 
                             // now we can decrement the applied stack once the calculations have been done - only decrements when not in creative
                             if (!serverPlayer.isCreative()) serverPlayer.setStackInHand(oppositeHand, screenHandler.getStacks().get(1));
-
-                            didAnvilMimicrySucceed = true;
+                        } else {
+                            // protect against spawning too many particles
+                            if (totalParticleSpawnActionsRun < ToolUsageRecipeLogic.MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION) {
+                                // spawn hammering particle effects
+                                ToolUsageRecipeLogic.spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
+                                totalParticleSpawnActionsRun++;
+                            }
                         }
                     }
-
-                    // spawn the dropped output item
-                    ItemScatterer.spawn(
-                            world,
-                            outputPos.getX(),
-                            outputPos.getY(),
-                            outputPos.getZ(),
-                            outputStack
-                    );
-
-                } else {
-                    // spawn hammering particle effects
-                    ToolUsageRecipeLogic.spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
                 }
             }
 
@@ -146,18 +139,16 @@ public class HammerItem extends InstabreakMiningToolItem {
 
                 if (didAnvilMimicrySucceed) toolStack.damage(4, player, EquipmentSlotHelper.convert(context.getHand()));
             }
-
-            return ActionResult.SUCCESS;
         }
 
-        return ActionResult.PASS;
+        return didAnvilMimicrySucceed ? ActionResult.SUCCESS : ActionResult.PASS;
     }
 
     private static void damageItem(ItemStack stack, LivingEntity attacker) {
         stack.damage(1, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
     }
 
-    private AnvilScreenHandler processAnvilInteraction(ServerPlayerEntity player, ServerWorld world, BlockPos pos, ItemStack targetStack, ItemStack appliedStack) {
+    private AnvilScreenHandler processAnvilInteraction(PlayerEntity player, World world, BlockPos pos, ItemStack targetStack, ItemStack appliedStack) {
         // we don't need to do any further processing if there are no items to apply
 
         // KlaxonCommon.LOGGER.info("Tried to process Anvil Recipe with stqck: " + targetStack.getItem());
@@ -175,9 +166,6 @@ public class HammerItem extends InstabreakMiningToolItem {
 
         // if we can't take output, no need to continue
         if (!((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeCanTakeOutput(player, outputSlot.hasStack())) return screenHandler;
-
-        // KlaxonCommon.LOGGER.info("Valid Anvil Recipe Detected - Proceeding");
-        // KlaxonCommon.LOGGER.info("Output Slot Stack Contents: " + outputSlot.getStack().toString());
 
         return screenHandler;
     }

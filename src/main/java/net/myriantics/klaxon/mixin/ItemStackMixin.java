@@ -14,15 +14,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ItemStack.class)
-public class ItemStackMixin {
+public abstract class ItemStackMixin {
     @ModifyExpressionValue(
             method = "useOnBlock",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;useOnBlock(Lnet/minecraft/item/ItemUsageContext;)Lnet/minecraft/util/ActionResult;")
     )
     public ActionResult klaxon$runToolUsageRecipe(ActionResult original, @Local(argsOnly = true) ItemUsageContext context) {
 
-        // only try to run code if action hasn't failed
-        if (!original.equals(ActionResult.FAIL)) {
+        // only try to run code if no action was performed
+        if (original.equals(ActionResult.PASS)) {
             ItemStack self = (ItemStack) (Object) this;
             World world = context.getWorld();
 
