@@ -4,6 +4,7 @@
     "#c:chains",
     "#c:ropes",
     "#minecraft:ceiling_hanging_signs",
-    "#minecraft:wool"
+    "#minecraft:wool",
+    "minecraft:iron_bars"
   ]
 }

@@ -53,7 +53,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.CHAINS)
                 .forceAddTag(ConventionalBlockTags.ROPES)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
-                .forceAddTag(BlockTags.WOOL);
+                .forceAddTag(BlockTags.WOOL)
+                .add(Blocks.IRON_BARS);
 
         // cleaver
         getOrCreateTagBuilder(KlaxonBlockTags.CLEAVER_MINEABLE)

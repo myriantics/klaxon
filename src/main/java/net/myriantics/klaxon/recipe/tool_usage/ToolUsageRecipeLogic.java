@@ -112,6 +112,7 @@ public abstract class ToolUsageRecipeLogic {
                 Position outputPos = targetItemEntity.getPos();
 
                 SoundEvent recipeSoundOverride = null;
+                boolean targetRecipeSuccess = false;
 
                 // necessary so that the client knows if it's completed a recipe or not
                 if (world.isClient()) {
@@ -121,7 +122,7 @@ public abstract class ToolUsageRecipeLogic {
 
                     // change recipe success indicator and recipe sound override
                     if (match.isPresent()) {
-                        recipeSuccess = true;
+                        targetRecipeSuccess = true;
                         SoundEvent soundEvent = match.get().value().getSoundOverride();
                         recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
                     }
@@ -139,7 +140,7 @@ public abstract class ToolUsageRecipeLogic {
                     Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
 
                     if (match.isPresent()) {
-                        recipeSuccess = true;
+                        targetRecipeSuccess = true;
 
                         targetStack.decrement(1);
                         if (targetStack.getCount() == 0) {
@@ -171,10 +172,13 @@ public abstract class ToolUsageRecipeLogic {
 
                 // both client and server know if a recipe was successful - also play sound for every item processed in an interaction because it sounds better and signifies that more items were processed
                 // this caps out at 4 sounds because otherwise people are going to take up the whole sound cap with it
-                if ((recipeSuccess || canCosmeticUse) && totalPlayedSounds < MAX_SOUNDS_PER_ACTION) {
+                if ((targetRecipeSuccess || canCosmeticUse) && totalPlayedSounds < MAX_SOUNDS_PER_ACTION) {
                     world.playSound(player, BlockPos.ofFloored(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
                     totalPlayedSounds++;
                 }
+
+                // commit recipe success status after all calculations
+                recipeSuccess = recipeSuccess || targetRecipeSuccess;
             }
 
             if (world instanceof ServerWorld serverWorld) {

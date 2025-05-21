@@ -49,7 +49,21 @@ public class KlaxonToolUsageRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     private void buildShearingRecipes() {
-        addShearingRecipe(Ingredient.fromTag(ItemTags.WOOL), new ItemStack(Items.STRING, 2));
-        addShearingRecipe(Ingredient.fromTag(ItemTags.WOOL_CARPETS), new ItemStack(Items.STRING, 1));
+        addShearingRecipe(Ingredient.ofItems(Blocks.WHITE_WOOL), new ItemStack(Blocks.WHITE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.ORANGE_WOOL), new ItemStack(Blocks.ORANGE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.MAGENTA_WOOL), new ItemStack(Blocks.MAGENTA_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.LIGHT_BLUE_WOOL), new ItemStack(Blocks.LIGHT_BLUE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.YELLOW_WOOL), new ItemStack(Blocks.YELLOW_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.LIME_WOOL), new ItemStack(Blocks.LIME_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.PINK_WOOL), new ItemStack(Blocks.PINK_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.GRAY_WOOL), new ItemStack(Blocks.GRAY_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.LIGHT_GRAY_WOOL), new ItemStack(Blocks.LIGHT_GRAY_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.CYAN_WOOL), new ItemStack(Blocks.CYAN_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.PURPLE_WOOL), new ItemStack(Blocks.PURPLE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.BLUE_WOOL), new ItemStack(Blocks.BLUE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.BROWN_WOOL), new ItemStack(Blocks.BROWN_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.GREEN_WOOL), new ItemStack(Blocks.GREEN_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.RED_WOOL), new ItemStack(Blocks.RED_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Blocks.BLACK_WOOL), new ItemStack(Blocks.BLACK_CARPET, 6));
     }
 }

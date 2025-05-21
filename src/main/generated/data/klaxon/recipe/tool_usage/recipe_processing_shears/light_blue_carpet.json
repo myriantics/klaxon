@@ -1,11 +1,11 @@
 {
   "type": "klaxon:tool_usage",
   "input_ingredient": {
-    "tag": "minecraft:wool"
+    "item": "minecraft:light_blue_wool"
   },
   "output_stack": {
-    "count": 2,
-    "id": "minecraft:string"
+    "count": 6,
+    "id": "minecraft:light_blue_carpet"
   },
   "required_tool": {
     "tag": "klaxon:recipe_processing_shears"

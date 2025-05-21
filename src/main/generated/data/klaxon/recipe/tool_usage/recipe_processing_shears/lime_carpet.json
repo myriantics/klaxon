@@ -1,0 +1,16 @@
+{
+  "type": "klaxon:tool_usage",
+  "input_ingredient": {
+    "item": "minecraft:lime_wool"
+  },
+  "output_stack": {
+    "count": 6,
+    "id": "minecraft:lime_carpet"
+  },
+  "required_tool": {
+    "tag": "klaxon:recipe_processing_shears"
+  },
+  "sound_override": {
+    "sound_id": "minecraft:entity.sheep.shear"
+  }
+}
