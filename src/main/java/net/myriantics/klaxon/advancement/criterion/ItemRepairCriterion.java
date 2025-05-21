@@ -15,11 +15,11 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
 
 import java.util.Optional;
 
-public class AnvilRepairCriterion extends AbstractCriterion<AnvilRepairCriterion.Conditions> {
+public class ItemRepairCriterion extends AbstractCriterion<ItemRepairCriterion.Conditions> {
 
     @Override
-    public Codec<AnvilRepairCriterion.Conditions> getConditionsCodec() {
-        return AnvilRepairCriterion.Conditions.CODEC;
+    public Codec<ItemRepairCriterion.Conditions> getConditionsCodec() {
+        return ItemRepairCriterion.Conditions.CODEC;
     }
 
     public void trigger(ServerPlayerEntity player, ItemStack stack) {
@@ -27,17 +27,21 @@ public class AnvilRepairCriterion extends AbstractCriterion<AnvilRepairCriterion
     }
 
     public static record Conditions(Optional<LootContextPredicate> player, Ingredient acceptedItems, double advancementMaxDamageProportion) implements AbstractCriterion.Conditions {
-        public static final Codec<AnvilRepairCriterion.Conditions> CODEC = RecordCodecBuilder.create(
+        public static final Codec<ItemRepairCriterion.Conditions> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
-                        EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(AnvilRepairCriterion.Conditions::player),
-                        Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("accepted_items").forGetter(AnvilRepairCriterion.Conditions::acceptedItems),
-                        Codec.DOUBLE.fieldOf("max_damage_proportion").forGetter(AnvilRepairCriterion.Conditions::advancementMaxDamageProportion)
+                        EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(ItemRepairCriterion.Conditions::player),
+                        Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("accepted_items").forGetter(ItemRepairCriterion.Conditions::acceptedItems),
+                        Codec.DOUBLE.fieldOf("max_damage_proportion").forGetter(ItemRepairCriterion.Conditions::advancementMaxDamageProportion)
                         )
-                        .apply(instance, AnvilRepairCriterion.Conditions::new)
+                        .apply(instance, ItemRepairCriterion.Conditions::new)
         );
 
-        public static AdvancementCriterion<AnvilRepairCriterion.Conditions> createFromTag(TagKey<Item> itemTag, double durabilityMinProportion) {
-            return KlaxonAdvancementCriteria.ANVIL_REPAIR_CRITERION.create(new AnvilRepairCriterion.Conditions(Optional.empty(), Ingredient.fromTag(itemTag), durabilityMinProportion));
+        public static AdvancementCriterion<ItemRepairCriterion.Conditions> createFullRepairFromTag(TagKey<Item> itemTag) {
+            return createFromTag(itemTag, 0.0);
+        }
+
+        public static AdvancementCriterion<ItemRepairCriterion.Conditions> createFromTag(TagKey<Item> itemTag, double durabilityMinProportion) {
+            return KlaxonAdvancementCriteria.ANVIL_REPAIR_CRITERION.create(new ItemRepairCriterion.Conditions(Optional.empty(), Ingredient.fromTag(itemTag), durabilityMinProportion));
         }
 
         boolean matches(ItemStack stack) {

@@ -19,6 +19,7 @@
     "ObserverBlockInvoker",
     "PlayerEntityMixin",
     "PotionEntityMixin",
+    "CraftingResultSlotMixin",
     "TripwireBlockMixin",
     "WindChargeEntityInvoker"
   ],

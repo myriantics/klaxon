@@ -1,16 +1,12 @@
 package net.myriantics.klaxon.datagen.advancement.providers;
 
 import net.minecraft.advancement.*;
-import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.text.Text;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.advancement.criterion.AnvilRepairCriterion;
+import net.myriantics.klaxon.advancement.criterion.ItemRepairCriterion;
 import net.myriantics.klaxon.advancement.criterion.BlockActivationCriterion;
 import net.myriantics.klaxon.advancement.criterion.ToolUsageRecipeCraftCriterion;
 import net.myriantics.klaxon.advancement.criterion.WalljumpAbilityCriterion;
@@ -48,6 +44,6 @@ public class KlaxonPreludeAdvancementProvider extends KlaxonAdvancementSubProvid
         AdvancementEntry strengthWalljump = addChallenge(hammerWalljump, "hammer_walljump_strength", Items.BLAZE_POWDER, false, WalljumpAbilityCriterion.Conditions.createStrengthWalljump(), AdvancementRewards.Builder.experience(400));
         AdvancementEntry minecartWalljump = addChallenge(hammerWalljump, "hammer_walljump_minecart", Blocks.CAULDRON, true, WalljumpAbilityCriterion.Conditions.createMinecartWalljump(), AdvancementRewards.Builder.experience(400));
         AdvancementEntry obtainFullSteelArmor = addGoal(hammerCraftMetalPlate, "obtain_full_steel_armor", KlaxonItems.STEEL_CHESTPLATE, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_HELMET, KlaxonItems.STEEL_CHESTPLATE, KlaxonItems.STEEL_LEGGINGS, KlaxonItems.STEEL_BOOTS));
-        AdvancementEntry makeshiftItemFullRepair = addTask(hammerCraftMetalPlate, "makeshift_item_full_repair", Blocks.ANVIL, AnvilRepairCriterion.Conditions.createFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT, 0.0));
+        AdvancementEntry makeshiftItemFullRepair = addTask(hammerCraftMetalPlate, "makeshift_item_full_repair", Blocks.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
     }
 }

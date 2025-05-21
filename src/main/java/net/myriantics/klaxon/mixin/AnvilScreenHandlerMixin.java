@@ -6,9 +6,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.AnvilScreenHandler;
-import net.minecraft.screen.Property;
+import net.minecraft.screen.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
@@ -22,7 +22,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AnvilScreenHandler.class)
-public abstract class AnvilScreenHandlerMixin {
+public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
+
+    public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
+        super(type, syncId, playerInventory, context);
+    }
 
     @Shadow @Final private Property levelCost;
 
@@ -124,11 +128,14 @@ public abstract class AnvilScreenHandlerMixin {
 
     @Inject(
             method = "onTakeOutput",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;decrement(I)V")
+            at = @At(value = "HEAD")
     )
     public void klaxon$repairAdvancementHook(PlayerEntity player, ItemStack stack, CallbackInfo ci) {
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            KlaxonAdvancementTriggers.triggerAnvilRepair(serverPlayer, stack);
+            // check that we have actually done a repairing recipe before firing advancement
+            if (repairItemUsage > 0 || input.getStack(0).getItem().equals(input.getStack(1).getItem())) {
+                KlaxonAdvancementTriggers.triggerItemRepair(serverPlayer, stack);
+            }
         }
     }
 }

@@ -22,7 +22,6 @@
     }
   },
   "display": {
-    "announce_to_chat": false,
     "description": {
       "translate": "advancements.klaxon.prelude.obtain_full_steel_armor.description"
     },
@@ -31,7 +30,6 @@
       "count": 1,
       "id": "klaxon:steel_chestplate"
     },
-    "show_toast": false,
     "title": {
       "translate": "advancements.klaxon.prelude.obtain_full_steel_armor.title"
     }

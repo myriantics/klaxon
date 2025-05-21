@@ -9,7 +9,6 @@
     }
   },
   "display": {
-    "announce_to_chat": false,
     "description": {
       "translate": "advancements.klaxon.prelude.hammer_walljump_minecart.description"
     },
@@ -19,7 +18,6 @@
       "count": 1,
       "id": "minecraft:cauldron"
     },
-    "show_toast": false,
     "title": {
       "translate": "advancements.klaxon.prelude.hammer_walljump_minecart.title"
     }

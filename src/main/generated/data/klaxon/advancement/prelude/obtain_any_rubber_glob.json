@@ -13,7 +13,6 @@
     }
   },
   "display": {
-    "announce_to_chat": false,
     "description": {
       "translate": "advancements.klaxon.prelude.obtain_any_rubber_glob.description"
     },
@@ -21,7 +20,6 @@
       "count": 1,
       "id": "klaxon:rubber_glob"
     },
-    "show_toast": false,
     "title": {
       "translate": "advancements.klaxon.prelude.obtain_any_rubber_glob.title"
     }

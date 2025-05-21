@@ -6,7 +6,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 
 public abstract class KlaxonAdvancementTriggers {
-    public static void triggerAnvilRepair(ServerPlayerEntity serverPlayer, ItemStack stack) {
+    public static void triggerItemRepair(ServerPlayerEntity serverPlayer, ItemStack stack) {
         KlaxonAdvancementCriteria.ANVIL_REPAIR_CRITERION.trigger(serverPlayer, stack);
     }
     public static void triggerBlockActivation(ServerPlayerEntity serverPlayer, BlockState state) {

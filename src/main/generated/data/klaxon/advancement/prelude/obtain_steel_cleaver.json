@@ -13,7 +13,6 @@
     }
   },
   "display": {
-    "announce_to_chat": false,
     "description": {
       "translate": "advancements.klaxon.prelude.obtain_steel_cleaver.description"
     },
@@ -21,7 +20,6 @@
       "count": 1,
       "id": "klaxon:steel_cleaver"
     },
-    "show_toast": false,
     "title": {
       "translate": "advancements.klaxon.prelude.obtain_steel_cleaver.title"
     }

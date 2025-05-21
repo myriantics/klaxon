@@ -14,7 +14,6 @@
     }
   },
   "display": {
-    "announce_to_chat": false,
     "description": {
       "translate": "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.description"
     },
@@ -22,7 +21,6 @@
       "count": 1,
       "id": "klaxon:crude_steel_plate"
     },
-    "show_toast": false,
     "title": {
       "translate": "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.title"
     }

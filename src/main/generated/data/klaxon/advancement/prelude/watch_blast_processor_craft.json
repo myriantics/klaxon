@@ -9,7 +9,6 @@
     }
   },
   "display": {
-    "announce_to_chat": false,
     "description": {
       "translate": "advancements.klaxon.prelude.watch_blast_processor_craft.description"
     },
@@ -17,7 +16,6 @@
       "count": 1,
       "id": "klaxon:fractured_raw_iron"
     },
-    "show_toast": false,
     "title": {
       "translate": "advancements.klaxon.prelude.watch_blast_processor_craft.title"
     }
