@@ -3,8 +3,13 @@ package net.myriantics.klaxon.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.*;
+import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.advancement.criterion.PlayerHurtEntityCriterion;
 import net.minecraft.item.Items;
+import net.minecraft.predicate.DamagePredicate;
+import net.minecraft.predicate.TagPredicate;
+import net.minecraft.predicate.entity.DamageSourcePredicate;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.RegistryWrapper;
@@ -18,6 +23,7 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -80,6 +86,20 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .criterion("use_hammer_to_make_plate", ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.fromTag(KlaxonConventionalItemTags.PLATES)))
                 .build(consumer, getKlaxonPreludeIdString("use_hammer_to_make_plate"));
+        AdvancementEntry dealCleavingDamage = Advancement.Builder.create()
+                .parent(successfullyHammerDroppedItem)
+                .display(
+                        KlaxonItems.STEEL_CLEAVER,
+                        Text.translatable("advancements.klaxon_prelude.deal_cleaving_damage.title"),
+                        Text.translatable("advancements.klaxon_prelude.deal_cleaving_damage.description"),
+                        null,
+                        AdvancementFrame.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .criterion("deal_cleaving_damage", InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_CLEAVER))
+                .build(consumer, getKlaxonPreludeIdString("deal_cleaving_damage"));
         AdvancementEntry obtainAnyRubberGlob = Advancement.Builder.create()
                 .parent(watchBlastProcessorCraft)
                 .display(

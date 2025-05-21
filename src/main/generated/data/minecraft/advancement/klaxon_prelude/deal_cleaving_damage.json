@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:klaxon_prelude/use_hammer_to_make_plate",
+  "criteria": {
+    "deal_cleaving_damage": {
+      "conditions": {
+        "items": [
+          {
+            "items": "klaxon:steel_cleaver"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon_prelude.deal_cleaving_damage.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_cleaver"
+    },
+    "title": {
+      "translate": "advancements.klaxon_prelude.deal_cleaving_damage.title"
+    }
+  },
+  "requirements": [
+    [
+      "deal_cleaving_damage"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

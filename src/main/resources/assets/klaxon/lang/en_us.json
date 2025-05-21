@@ -160,10 +160,9 @@
   "effect.klaxon.heavy": "Heavy",
   "effect.klaxon.heavy.description": "Modifies the function of KLAXON's weight-dependent abilities such as the Hammer WallJump",
 
-  "advancements.klaxon_prelude.drink_coffee.title": "9:05 Sharp",
-  "advancements.klaxon_prelude.drink_coffee.description": "Drink some Coffee",
-
   "gamerule.shouldBlastProcessorExplosionModifyWorld": "Blast Processor Explosions should modify world",
   "advancements.klaxon_prelude.obtain_any_rubber_glob.title": "Biggering",
-  "advancements.klaxon_prelude.obtain_any_rubber_glob.description": "Obtain Rubber by blast processing a log"
+  "advancements.klaxon_prelude.obtain_any_rubber_glob.description": "Obtain Rubber by blast processing a valid log",
+  "advancements.klaxon_prelude.deal_cleaving_damage.title": "THIS is a knife!",
+  "advancements.klaxon_prelude.deal_cleaving_damage.description": "Obtain a Steel Cleaver"
 }
