@@ -35,8 +35,8 @@ public record ShieldBreachingComponent(RegistryKey<DamageType> damageType, boole
         return stack.getComponents().get(KlaxonDataComponentTypes.SHIELD_BREACHING);
     }
 
-    public static void set(ItemStack stack, ShieldBreachingComponent component) {
-        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.SHIELD_BREACHING, component).build());
+    public void set(ItemStack stack) {
+        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.SHIELD_BREACHING, this).build());
     }
 
     public boolean shouldFire(boolean critical, boolean fullyCharged) {

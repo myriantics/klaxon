@@ -56,8 +56,8 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
         return stack.getComponents().get(KlaxonDataComponentTypes.WALLJUMP_ABILITY);
     }
 
-    public static void set(ItemStack stack, WalljumpAbilityComponent component) {
-        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.WALLJUMP_ABILITY, component).build());
+    public void set(ItemStack stack) {
+        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.WALLJUMP_ABILITY, this).build());
     }
 
     // rising edge block hit - uses MinecraftClientMixin and HammerWalljumpTriggerPacket

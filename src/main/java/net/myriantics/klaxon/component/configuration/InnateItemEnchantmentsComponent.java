@@ -38,8 +38,8 @@ public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent componen
         return stack.getComponents().get(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS);
     }
 
-    public static void set(ItemStack stack, InnateItemEnchantmentsComponent component) {
-        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, component).build());
+    public void set(ItemStack stack) {
+        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, this).build());
     }
 
     public static InnateItemEnchantmentsComponent ofItemEnchantmentsComponent(ItemEnchantmentsComponent component) {

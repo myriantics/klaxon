@@ -26,7 +26,7 @@ public record RepairIngredientOverrideComponent(Ingredient repairMaterial) {
         return stack.getComponents().get(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE);
     }
 
-    public static void set(ItemStack stack, RepairIngredientOverrideComponent component) {
-        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, component).build());
+    public void set(ItemStack stack) {
+        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, this).build());
     }
 }
