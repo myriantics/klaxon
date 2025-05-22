@@ -1,19 +1,20 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolItem;
+import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
-import net.myriantics.klaxon.api.InstabreakMiningToolItem;
+import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
+import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
-public class WrenchItem extends InstabreakMiningToolItem {
+public class WrenchItem extends MiningToolItem {
     public WrenchItem(ToolMaterial material, Settings settings) {
-        super(material, KlaxonBlockTags.WRENCH_MINEABLE, settings);
+        super(material, KlaxonBlockTags.WRENCH_MINEABLE, settings
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakToolComponent(KlaxonBlockTags.WRENCH_INSTABREAKABLE))
+        );
     }
 
     public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
@@ -28,10 +29,5 @@ public class WrenchItem extends InstabreakMiningToolItem {
                         new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
                         AttributeModifierSlot.MAINHAND
                 ).build();
-    }
-
-    @Override
-    public boolean isCorrectForInstabreak(ItemStack stack, BlockState state) {
-        return state.isIn(KlaxonBlockTags.WRENCH_INSTABREAKABLE);
     }
 }

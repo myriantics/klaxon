@@ -4,20 +4,17 @@ import net.minecraft.block.BlockState;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ToolComponent;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.myriantics.klaxon.api.InstabreakMiningToolItem;
+import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
-public class CableShearsItem extends InstabreakMiningToolItem {
+public class CableShearsItem extends MiningToolItem {
 
     public static final ToolComponent SHEARS_TOOL_COMPONENT = ShearsItem.createToolComponent();
 
@@ -27,6 +24,7 @@ public class CableShearsItem extends InstabreakMiningToolItem {
     public CableShearsItem(ToolMaterial material, Settings settings) {
         super(material, KlaxonBlockTags.CABLE_SHEARS_MINEABLE, settings
                 .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_CHAIN_BREAK))
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakToolComponent(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE))
         );
     }
 
@@ -42,11 +40,6 @@ public class CableShearsItem extends InstabreakMiningToolItem {
                         new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
                         AttributeModifierSlot.MAINHAND
                 ).build();
-    }
-
-    @Override
-    public boolean isCorrectForInstabreak(ItemStack stack, BlockState state) {
-        return state.isIn(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE);
     }
 
     // I... am Shears.

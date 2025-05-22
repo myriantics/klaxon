@@ -6,9 +6,8 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.myriantics.klaxon.api.InstabreakMiningToolItem;
-import net.myriantics.klaxon.item.equipment.tools.HammerItem;
-import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.minecraft.item.MiningToolItem;
+import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,12 +25,14 @@ public abstract class AbstractBlockStateMixin {
         BlockState state = asBlockState();
 
         if (
-                // check if the tool is an instabreaking tool
-                miningToolStack.getItem() instanceof InstabreakMiningToolItem instabreakTool
+                // make sure used item is a tool
+                miningToolStack.getItem() instanceof MiningToolItem miningToolItem
+                // check if the tool has instabreaking component
+                && InstabreakToolComponent.get(miningToolStack) instanceof InstabreakToolComponent instabreakComponent
                 // check if block is valid for instabreaking
-                && instabreakTool.isCorrectForInstabreak(miningToolStack, state)
+                && instabreakComponent.isCorrectForInstabreak(state)
                 // make sure block is suitable for tool to mine
-                && !state.isIn(instabreakTool.getMaterial().getInverseTag())
+                && !state.isIn(miningToolItem.getMaterial().getInverseTag())
         ) {
             // if it can instabreak, set it to a value over 1.0 so that it instabreaks
             return Integer.MAX_VALUE;

@@ -6,6 +6,7 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
 import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
@@ -60,10 +61,17 @@ public class KlaxonDataComponentTypes {
                 return builder;
             });
 
-    public static final ComponentType<ToolUseRecipeConfigComponent> TOOL_USE_RECIPE_CONFIG = register("tool_use_recipe_config",
+    public static final ComponentType<ToolUseRecipeConfigComponent> TOOL_USE_RECIPE_CONFIG = register("tool_usage_config",
             builder -> {
                 builder.codec(ToolUseRecipeConfigComponent.CODEC);
                 builder.packetCodec(ToolUseRecipeConfigComponent.PACKET_CODEC);
+                return builder;
+            });
+
+    public static final ComponentType<InstabreakToolComponent> INSTABREAK_TOOL_COMPONENT = register("instabreak_tool",
+            builder -> {
+                builder.codec(InstabreakToolComponent.CODEC);
+                builder.packetCodec(InstabreakToolComponent.PACKET_CODEC);
                 return builder;
             });
 

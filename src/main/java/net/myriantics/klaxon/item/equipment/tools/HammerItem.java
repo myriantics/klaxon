@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.*;
@@ -13,15 +12,12 @@ import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.api.InstabreakMiningToolItem;
+import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.mixin.AnvilScreenHandlerInvoker;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
@@ -31,11 +27,12 @@ import net.myriantics.klaxon.util.EquipmentSlotHelper;
 
 import java.util.List;
 
-public class HammerItem extends InstabreakMiningToolItem {
+public class HammerItem extends MiningToolItem {
 
     public HammerItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, KlaxonBlockTags.HAMMER_MINEABLE, settings
                 .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_ANVIL_LAND, true))
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakToolComponent(KlaxonBlockTags.HAMMER_INSTABREAKABLE))
         );
     }
 
@@ -58,11 +55,6 @@ public class HammerItem extends InstabreakMiningToolItem {
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         damageItem(stack, attacker);
         return super.postHit(stack, target, attacker);
-    }
-
-    @Override
-    public boolean isCorrectForInstabreak(ItemStack stack, BlockState state) {
-        return state.isIn(KlaxonBlockTags.HAMMER_INSTABREAKABLE);
     }
 
     @Override

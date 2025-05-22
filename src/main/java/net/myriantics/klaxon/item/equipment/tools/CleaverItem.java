@@ -3,7 +3,6 @@ package net.myriantics.klaxon.item.equipment.tools;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,12 +10,15 @@ import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.InstabreakMiningToolItem;
+import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
+import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
-public class CleaverItem extends InstabreakMiningToolItem {
+public class CleaverItem extends MiningToolItem {
     public CleaverItem(ToolMaterial material, Settings settings) {
-        super(material, KlaxonBlockTags.CLEAVER_MINEABLE, settings);
+        super(material, KlaxonBlockTags.CLEAVER_MINEABLE, settings
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakToolComponent(KlaxonBlockTags.CLEAVER_INSTABREAKABLE))
+        );
     }
 
     public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
@@ -31,11 +33,6 @@ public class CleaverItem extends InstabreakMiningToolItem {
                         new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
                         AttributeModifierSlot.MAINHAND
                 ).build();
-    }
-
-    @Override
-    public boolean isCorrectForInstabreak(ItemStack stack, BlockState state) {
-        return state.isIn(KlaxonBlockTags.CLEAVER_INSTABREAKABLE);
     }
 
     @Override
