@@ -10,14 +10,14 @@ import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
+import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 public class CleaverItem extends MiningToolItem {
     public CleaverItem(ToolMaterial material, Settings settings) {
         super(material, KlaxonBlockTags.CLEAVER_MINEABLE, settings
-                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakToolComponent(KlaxonBlockTags.CLEAVER_INSTABREAKABLE))
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.CLEAVER_INSTABREAKABLE))
         );
     }
 

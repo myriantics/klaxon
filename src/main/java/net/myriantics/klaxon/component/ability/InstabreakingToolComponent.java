@@ -14,19 +14,19 @@ import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
-public record InstabreakToolComponent(TagKey<Block> instabreakableBlocks) {
-    public static Codec<InstabreakToolComponent> CODEC = RecordCodecBuilder.create(instance -> {
+public record InstabreakingToolComponent(TagKey<Block> instabreakableBlocks) {
+    public static Codec<InstabreakingToolComponent> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-                TagKey.codec(RegistryKeys.BLOCK).fieldOf("instabreakable_blocks").forGetter(InstabreakToolComponent::instabreakableBlocks)
-        ).apply(instance, InstabreakToolComponent::new);
+                TagKey.codec(RegistryKeys.BLOCK).fieldOf("instabreakable_blocks").forGetter(InstabreakingToolComponent::instabreakableBlocks)
+        ).apply(instance, InstabreakingToolComponent::new);
     });
 
-    public static PacketCodec<RegistryByteBuf, InstabreakToolComponent> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.codec(TagKey.codec(RegistryKeys.BLOCK)), InstabreakToolComponent::instabreakableBlocks,
-            InstabreakToolComponent::new
+    public static PacketCodec<RegistryByteBuf, InstabreakingToolComponent> PACKET_CODEC = PacketCodec.tuple(
+            PacketCodecs.codec(TagKey.codec(RegistryKeys.BLOCK)), InstabreakingToolComponent::instabreakableBlocks,
+            InstabreakingToolComponent::new
     );
 
-    public @Nullable static InstabreakToolComponent get(ItemStack stack) {
+    public @Nullable static InstabreakingToolComponent get(ItemStack stack) {
         return stack.getComponents().get(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT);
     }
 

@@ -4,10 +4,12 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ToolComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MiningToolItem;
-import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
+import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,13 +28,13 @@ public abstract class AbstractBlockStateMixin {
 
         if (
                 // make sure used item is a tool
-                miningToolStack.getItem() instanceof MiningToolItem miningToolItem
+                miningToolStack.get(DataComponentTypes.TOOL) instanceof ToolComponent toolComponent
                 // check if the tool has instabreaking component
-                && InstabreakToolComponent.get(miningToolStack) instanceof InstabreakToolComponent instabreakComponent
+                && InstabreakingToolComponent.get(miningToolStack) instanceof InstabreakingToolComponent instabreakingComponent
                 // check if block is valid for instabreaking
-                && instabreakComponent.isCorrectForInstabreak(state)
+                && instabreakingComponent.isCorrectForInstabreak(state)
                 // make sure block is suitable for tool to mine
-                && !state.isIn(miningToolItem.getMaterial().getInverseTag())
+                && toolComponent.getSpeed(state) > toolComponent.defaultMiningSpeed()
         ) {
             // if it can instabreak, set it to a value over 1.0 so that it instabreaks
             return Integer.MAX_VALUE;

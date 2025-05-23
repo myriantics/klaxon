@@ -17,7 +17,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.component.ability.InstabreakToolComponent;
+import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.mixin.AnvilScreenHandlerInvoker;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
@@ -32,7 +32,7 @@ public class HammerItem extends MiningToolItem {
     public HammerItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, KlaxonBlockTags.HAMMER_MINEABLE, settings
                 .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_ANVIL_LAND, true))
-                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakToolComponent(KlaxonBlockTags.HAMMER_INSTABREAKABLE))
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.HAMMER_INSTABREAKABLE))
         );
     }
 

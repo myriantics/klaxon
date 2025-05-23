@@ -46,20 +46,19 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // cable shears
         getOrCreateTagBuilder(KlaxonBlockTags.CABLE_SHEARS_MINEABLE)
                 .forceAddTag(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE)
-                .forceAddTag(BlockTags.WOOL_CARPETS)
                 .add(Blocks.COBWEB);
         getOrCreateTagBuilder(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE)
                 .forceAddTag(KlaxonConventionalBlockTags.VINES)
                 .forceAddTag(ConventionalBlockTags.CHAINS)
                 .forceAddTag(ConventionalBlockTags.ROPES)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
+                .forceAddTag(BlockTags.WOOL_CARPETS)
                 .forceAddTag(BlockTags.WOOL)
                 .add(Blocks.IRON_BARS);
 
         // cleaver
         getOrCreateTagBuilder(KlaxonBlockTags.CLEAVER_MINEABLE)
                 .forceAddTag(KlaxonBlockTags.CLEAVER_INSTABREAKABLE)
-                .forceAddTag(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE)
                 .forceAddTag(BlockTags.AXE_MINEABLE)
                 .add(Blocks.COBWEB);
         getOrCreateTagBuilder(KlaxonBlockTags.CLEAVER_INSTABREAKABLE)
