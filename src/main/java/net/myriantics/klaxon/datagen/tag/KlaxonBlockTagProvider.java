@@ -170,6 +170,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE)
                 .forceAddTag(BlockTags.SNOW)
                 .add(Blocks.POWDER_SNOW);
+        getOrCreateTagBuilder(KlaxonBlockTags.WRENCHABLE_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
+                .add(Blocks.REDSTONE_LAMP);
     }
 
     private void buildToolRequirementTags() {

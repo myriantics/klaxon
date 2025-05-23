@@ -32,6 +32,10 @@ public class KlaxonBlockTags {
             createTag("incorrect_for_steel_tool");
 
     // behavior tags
+    public static final TagKey<Block> WRENCHABLE_BLOCKS =
+            createTag("wrenchable_blocks");
+    public static final TagKey<Block> WRENCHABLE_BLOCK_DENYLIST =
+            createTag("wrenchable_block_denylist");
     public static final TagKey<Block> FERROMAGNETIC_BLOCKS =
             createTag("ferromagnetic_blocks");
     public static final TagKey<Block> COLD_BLOCKS =

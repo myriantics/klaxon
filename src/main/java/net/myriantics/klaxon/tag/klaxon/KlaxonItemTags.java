@@ -56,10 +56,6 @@ public class KlaxonItemTags {
             createTag("ferromagnetic_items");
     public static final TagKey<Item> FERROMAGNETIC_ITEM_BLACKLIST =
             createTag("ferromagnetic_item_blacklist");
-    public static final TagKey<Item> WRENCHABLE_BLOCK_WHITELIST =
-            createTag("wrenchable_block_blacklist");
-    public static final TagKey<Item> WRENCHABLE_BLOCK_BLACKLIST =
-            createTag("wrenchable_block_blacklist");
     public static final TagKey<Item> RECIPE_PROCESSING_HAMMERS =
             createTag("recipe_processing_hammers");
     public static final TagKey<Item> RECIPE_PROCESSING_WIRECUTTERS =
