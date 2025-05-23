@@ -88,6 +88,9 @@ public abstract class ToolUsageRecipeLogic {
         // if we're not provided an action result, default to pass
         if (original == null) original = ActionResult.PASS;
 
+        // make sure player is valid for recipe processing before doing anything
+        if (!isPlayerValid(player)) return original;
+
         ToolUseRecipeConfigComponent component = ToolUseRecipeConfigComponent.get(toolStack);
         if (component == null) component = new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_STONE_BREAK);
 
@@ -99,94 +102,92 @@ public abstract class ToolUsageRecipeLogic {
         int totalPlayedSounds = 0;
         int totalParticleSpawnActions = 0;
 
-        if (isPlayerValid(player)) {
-            List<ItemEntity> selectedItems = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), Box.of(clickedPos, 0.8, 0.8, 0.8), (e) -> true);
+        List<ItemEntity> selectedItems = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), Box.of(clickedPos, 0.8, 0.8, 0.8), (e) -> true);
 
-            // if there aren't any dropped items in the targeted area, don't do anything
-            if (selectedItems.isEmpty()) {
-                return ActionResult.PASS;
-            }
+        // if there aren't any dropped items in the targeted area, don't do anything
+        if (selectedItems.isEmpty()) {
+            return original;
+        }
 
-            for (ItemEntity targetItemEntity : selectedItems) {
-                ItemStack targetStack = targetItemEntity.getStack().copy();
-                Position outputPos = targetItemEntity.getPos();
+        for (ItemEntity targetItemEntity : selectedItems) {
+            ItemStack targetStack = targetItemEntity.getStack().copy();
+            Position outputPos = targetItemEntity.getPos();
 
-                SoundEvent recipeSoundOverride = null;
-                boolean targetRecipeSuccess = false;
+            SoundEvent recipeSoundOverride = null;
+            boolean targetRecipeSuccess = false;
 
-                // necessary so that the client knows if it's completed a recipe or not
-                if (world.isClient()) {
-                    RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
+            // necessary so that the client knows if it's completed a recipe or not
+            if (world.isClient()) {
+                RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
 
-                    Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+                Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
 
-                    // change recipe success indicator and recipe sound override
-                    if (match.isPresent()) {
-                        targetRecipeSuccess = true;
-                        SoundEvent soundEvent = match.get().value().getSoundOverride();
-                        recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
-                    }
-
-                    // spawn particles if recipe was successful or cosmetic usage is enabled
-                    if ((match.isPresent() || canCosmeticUse) && totalParticleSpawnActions < MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION) {
-                        spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
-                        totalParticleSpawnActions++;
-                    }
+                // change recipe success indicator and recipe sound override
+                if (match.isPresent()) {
+                    targetRecipeSuccess = true;
+                    SoundEvent soundEvent = match.get().value().getSoundOverride();
+                    recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
                 }
 
-                if (world instanceof ServerWorld serverWorld) {
-                    RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
-
-                    Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
-
-                    if (match.isPresent()) {
-                        targetRecipeSuccess = true;
-
-                        targetStack.decrement(1);
-                        if (targetStack.getCount() == 0) {
-                            targetItemEntity.discard();
-                        } else {
-                            targetItemEntity.setStack(targetStack);
-                        }
-
-                        ItemStack outputStack = match.get().value().craft(dummyInventory, serverWorld.getRegistryManager());
-
-                        // make sure to proc advancement trigger before spawning item
-                        KlaxonAdvancementTriggers.triggerToolUsageCraft((ServerPlayerEntity) player, toolStack, outputStack);
-
-                        // dump item out in-world
-                        ItemScatterer.spawn(
-                                world,
-                                outputPos.getX(),
-                                outputPos.getY(),
-                                outputPos.getZ(),
-                                outputStack
-                        );
-
-                        SoundEvent soundEvent = match.get().value().getSoundOverride();
-
-                        // make sure to get the sound override - ignore empty ones
-                        recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
-                    }
+                // spawn particles if recipe was successful or cosmetic usage is enabled
+                if ((match.isPresent() || canCosmeticUse) && totalParticleSpawnActions < MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION) {
+                    spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
+                    totalParticleSpawnActions++;
                 }
-
-                // both client and server know if a recipe was successful - also play sound for every item processed in an interaction because it sounds better and signifies that more items were processed
-                // this caps out at 4 sounds because otherwise people are going to take up the whole sound cap with it
-                if ((targetRecipeSuccess || canCosmeticUse) && totalPlayedSounds < MAX_SOUNDS_PER_ACTION) {
-                    world.playSound(player, BlockPos.ofFloored(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
-                    totalPlayedSounds++;
-                }
-
-                // commit recipe success status after all calculations
-                recipeSuccess = recipeSuccess || targetRecipeSuccess;
             }
 
             if (world instanceof ServerWorld serverWorld) {
-                if (recipeSuccess) {
-                    // trip sculk sensors and damage tool
-                    serverWorld.emitGameEvent(player, GameEvent.ITEM_INTERACT_FINISH, clickedPos);
-                    if (player != null) toolStack.damage(1, player, EquipmentSlotHelper.convert(usedHand));
+                RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
+
+                Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+
+                if (match.isPresent()) {
+                    targetRecipeSuccess = true;
+
+                    targetStack.decrement(1);
+                    if (targetStack.getCount() == 0) {
+                        targetItemEntity.discard();
+                    } else {
+                        targetItemEntity.setStack(targetStack);
+                    }
+
+                    ItemStack outputStack = match.get().value().craft(dummyInventory, serverWorld.getRegistryManager());
+
+                    // make sure to proc advancement trigger before spawning item
+                    KlaxonAdvancementTriggers.triggerToolUsageCraft((ServerPlayerEntity) player, toolStack, outputStack);
+
+                    // dump item out in-world
+                    ItemScatterer.spawn(
+                            world,
+                            outputPos.getX(),
+                            outputPos.getY(),
+                            outputPos.getZ(),
+                            outputStack
+                    );
+
+                    SoundEvent soundEvent = match.get().value().getSoundOverride();
+
+                    // make sure to get the sound override - ignore empty ones
+                    recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
                 }
+            }
+
+            // both client and server know if a recipe was successful - also play sound for every item processed in an interaction because it sounds better and signifies that more items were processed
+            // this caps out at 4 sounds because otherwise people are going to take up the whole sound cap with it
+            if ((targetRecipeSuccess || canCosmeticUse) && totalPlayedSounds < MAX_SOUNDS_PER_ACTION) {
+                world.playSound(player, BlockPos.ofFloored(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
+                totalPlayedSounds++;
+            }
+
+            // commit recipe success status after all calculations
+            recipeSuccess = recipeSuccess || targetRecipeSuccess;
+        }
+
+        if (world instanceof ServerWorld serverWorld) {
+            if (recipeSuccess) {
+                // trip sculk sensors and damage tool
+                serverWorld.emitGameEvent(player, GameEvent.ITEM_INTERACT_FINISH, clickedPos);
+                if (player != null) toolStack.damage(1, player, EquipmentSlotHelper.convert(usedHand));
             }
         }
 
