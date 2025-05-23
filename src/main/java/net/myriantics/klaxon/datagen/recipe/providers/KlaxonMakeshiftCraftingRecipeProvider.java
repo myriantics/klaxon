@@ -100,7 +100,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 null
         );
 
-        addMirroredMakeshiftShapedCraftingRecipe(Map.of(
+        addMakeshiftShapedCraftingRecipe(Map.of(
                 'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                 'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
                 'S', Ingredient.ofItems(Items.STICK)
@@ -116,7 +116,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 null
         );
 
-        addMirroredMakeshiftShapedCraftingRecipe(Map.of(
+        addMakeshiftShapedCraftingRecipe(Map.of(
                 'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                 'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS)
                 ),

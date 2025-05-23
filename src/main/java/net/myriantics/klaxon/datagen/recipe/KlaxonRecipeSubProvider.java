@@ -43,24 +43,6 @@ public abstract class KlaxonRecipeSubProvider {
 
     // recipe adding code below (to be used by subclasses)
 
-    public void addMirroredMakeshiftShapedCraftingRecipe(Map<Character, Ingredient> key, String[] pattern, List<Ingredient> constantIngredients, ItemStack output,
-                                                @Nullable CraftingRecipeCategory category, @Nullable String group,
-                                                final ResourceCondition... conditions) {
-        String[] inversePattern = getInvertedPattern(pattern);
-
-        addMakeshiftShapedCraftingRecipe(key, pattern, constantIngredients, output, category, group, conditions);
-        addMakeshiftShapedCraftingRecipe(key, inversePattern, constantIngredients, output, category, group, conditions);
-    }
-
-    public void addMirroredShapedCraftingRecipe(Map<Character, Ingredient> key, String[] pattern, ItemStack output,
-                                                @Nullable CraftingRecipeCategory category, @Nullable String group,
-                                                final ResourceCondition... conditions) {
-        String[] inversePattern = getInvertedPattern(pattern);
-
-        addShapedCraftingRecipe(key, pattern, output, category, group, conditions);
-        addShapedCraftingRecipe(key, inversePattern, output, category, group, conditions);
-    }
-
     public void add3x3UnpackingRecipe(Ingredient input, ItemConvertible output,
                                       @Nullable CraftingRecipeCategory category, @Nullable String group,
                                       final ResourceCondition... conditions) {
