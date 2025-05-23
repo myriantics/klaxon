@@ -99,6 +99,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
 
         // generate all simple item models for stuff defined in list in klaxonitems so i dont have to poll the registry
         generateSimpleItemModels(itemModelGenerator);
+        itemModelGenerator.register(KlaxonItems.STEEL_CABLE_SHEARS, Models.GENERATED);
     }
 
     private void generateSimpleItemModels(ItemModelGenerator itemModelGenerator) {
