@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
+import net.myriantics.klaxon.registry.custom.KlaxonEventListeners;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorScreen;
 import net.myriantics.klaxon.registry.minecraft.KlaxonPackets;
@@ -21,5 +22,7 @@ public class KlaxonClient implements ClientModInitializer {
         HandledScreens.register(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);
 
         KlaxonPackets.registerS2CPacketRecievers();
+
+        KlaxonEventListeners.initClient();
     }
 }
