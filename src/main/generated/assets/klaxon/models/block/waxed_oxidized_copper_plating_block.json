@@ -1,7 +1,3 @@
 {
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "klaxon:block/waxed_oxidized_copper_plating_block_top",
-    "side": "klaxon:block/waxed_oxidized_copper_plating_block_side"
-  }
+  "parent": "klaxon:block/oxidized_copper_plating_block"
 }

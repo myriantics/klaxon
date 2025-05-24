@@ -7,8 +7,10 @@
     "AnvilScreenHandlerInvoker",
     "AnvilScreenHandlerMixin",
     "ArmorItemMixin",
+    "CraftingResultSlotMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
+    "EnchantmentsPredicateMixin",
     "EntityMixin",
     "FireworkRocketEntityInvoker",
     "ItemEntityMixin",
@@ -19,7 +21,6 @@
     "ObserverBlockInvoker",
     "PlayerEntityMixin",
     "PotionEntityMixin",
-    "CraftingResultSlotMixin",
     "TripwireBlockMixin",
     "WindChargeEntityInvoker"
   ],

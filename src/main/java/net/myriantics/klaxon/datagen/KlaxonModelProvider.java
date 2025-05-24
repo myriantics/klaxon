@@ -47,10 +47,10 @@ public class KlaxonModelProvider extends FabricModelProvider {
         registerPlatingBlock(generator, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK, KlaxonBlocks.COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
+        registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK, KlaxonBlocks.COPPER_PLATING_BLOCK);
+        registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
+        registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
+        registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
 
         registerPlatingBlock(generator, KlaxonBlocks.RUBBER_SHEET_BLOCK);
     }
@@ -86,8 +86,12 @@ public class KlaxonModelProvider extends FabricModelProvider {
         );
     }
 
-    private void registerPlatingBlock(BlockStateModelGenerator generator, Block platingBlock, Block textureBlock) {
-        generator.registerAxisRotated(platingBlock, TexturedModel.CUBE_COLUMN);
+    private void registerOxidizedPlatingBlock(BlockStateModelGenerator generator, Block platingBlock, Block modelBlock) {
+        Identifier modelIdentifier = ModelIds.getBlockModelId(modelBlock);
+        Identifier platingIdentifier = ModelIds.getBlockModelId(platingBlock);
+        generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(platingBlock, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier)).coordinate(BlockStateModelGenerator.createAxisRotatedVariantMap()));
+        generator.modelCollector.accept(platingIdentifier, new SimpleModelSupplier(modelIdentifier));
+        generator.registerParentedItemModel(platingBlock, platingIdentifier);
     }
 
     private void registerPlatingBlock(BlockStateModelGenerator generator, Block platingBlock) {
