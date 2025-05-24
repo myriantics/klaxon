@@ -21,6 +21,7 @@
     "ObserverBlockInvoker",
     "PlayerEntityMixin",
     "PotionEntityMixin",
+    "ShearsToolHandlerMixin",
     "TripwireBlockMixin",
     "WindChargeEntityInvoker"
   ],
