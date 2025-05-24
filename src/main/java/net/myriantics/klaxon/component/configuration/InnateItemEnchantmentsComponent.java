@@ -11,16 +11,20 @@ import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,10 +34,11 @@ public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent bakedEnc
     }
 
     private static DynamicRegistryManager manager = null;
+    private static final Map<RegistryKey<Enchantment>, RegistryEntry<Enchantment>> shitfuck = new HashMap<>();
 
     public static final Codec<InnateItemEnchantmentsComponent> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                            Codec.unboundedMap(RegistryKey.createCodec(RegistryKeys.ENCHANTMENT), Codec.INT).fieldOf("enchantments").forGetter(InnateItemEnchantmentsComponent::prebakedLevels)
+                            Codec.unboundedMap(RegistryKey.createCodec(RegistryKeys.ENCHANTMENT), Codec.intRange(0, 255)).fieldOf("enchantments").forGetter(InnateItemEnchantmentsComponent::prebakedLevels)
                     )
                     .apply(instance, InnateItemEnchantmentsComponent::new)
     );
@@ -63,8 +68,13 @@ public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent bakedEnc
         if (manager != null) {
             ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
             for (RegistryKey<Enchantment> key : prebakedLevels.keySet()) {
-                RegistryEntry.Reference<Enchantment> entry = manager.getOptional(RegistryKeys.ENCHANTMENT).orElseThrow().entryOf(key);
-                // the ide wants me to replace this with functional style, but this is more readable than whatever that crap is, so it's staying
+                RegistryEntry<Enchantment> entry = shitfuck.get(key);
+
+                if (entry == null) {
+                    entry = manager.get(RegistryKeys.ENCHANTMENT).entryOf(key);
+                    shitfuck.put(key, entry);
+                }
+
                 builder.add(entry, prebakedLevels.get(key));
             }
 
