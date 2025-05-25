@@ -3,15 +3,22 @@ package net.myriantics.klaxon.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.math.random.Random;
 import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class EnchantmentHelperMixin {
@@ -32,7 +39,7 @@ public abstract class EnchantmentHelperMixin {
     private static int klaxon$innateEnchantmentsOverride(int original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) RegistryEntry<Enchantment> enchantment) {
         InnateItemEnchantmentsComponent innate = InnateItemEnchantmentsComponent.get(stack);
         if (innate != null) {
-            return innate.getLevel(enchantment);
+            return original + innate.getLevel(enchantment);
         }
 
         return original;
@@ -43,11 +50,17 @@ public abstract class EnchantmentHelperMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getOrDefault(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;")
     )
     private static Object klaxon$forEachEnchantmentOverride1(Object original, @Local(argsOnly = true) ItemStack stack) {
-        if (original instanceof ItemEnchantmentsComponent component && !component.getEnchantments().isEmpty()) return original;
-
         InnateItemEnchantmentsComponent innate = InnateItemEnchantmentsComponent.get(stack);
         if (innate != null) {
-            return innate.enchantments();
+            if (original instanceof ItemEnchantmentsComponent component && !component.isEmpty()) {
+                ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(component);
+                for (RegistryEntry<Enchantment> entry : innate.enchantments().getEnchantments()) {
+                    builder.set(entry, innate.getLevel(entry) + component.getLevel(entry));
+                }
+                return builder.build();
+            } else {
+                return innate.enchantments();
+            }
         }
 
         return original;
@@ -58,11 +71,17 @@ public abstract class EnchantmentHelperMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;get(Lnet/minecraft/component/ComponentType;)Ljava/lang/Object;")
     )
     private static Object klaxon$forEachEnchantmentOverride2(Object original, @Local(argsOnly = true) ItemStack stack) {
-        if (original instanceof ItemEnchantmentsComponent component && !component.getEnchantments().isEmpty()) return original;
-
         InnateItemEnchantmentsComponent innate = InnateItemEnchantmentsComponent.get(stack);
         if (innate != null) {
-            return innate.enchantments();
+            if (original instanceof ItemEnchantmentsComponent component && !component.isEmpty()) {
+                ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(component);
+                for (RegistryEntry<Enchantment> entry : innate.enchantments().getEnchantments()) {
+                    builder.set(entry, innate.getLevel(entry) + component.getLevel(entry));
+                }
+                return builder.build();
+            } else {
+                return innate.enchantments();
+            }
         }
 
         return original;

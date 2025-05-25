@@ -50,9 +50,9 @@ public record PrebakedInnateItemEnchantmentsComponent(Map<RegistryKey<Enchantmen
             }
 
             mapBuilder.add(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, new InnateItemEnchantmentsComponent(builder.build().withShowInTooltip(false)));
-        } else  {
-            KlaxonCommon.LOGGER.warn("Failed to bake components due to missing manager!");
-        }
+        }/* else {
+            // KlaxonCommon.LOGGER.warn("Failed to bake components due to missing manager!");
+        }  */
         return mapBuilder.build();
     }
 
