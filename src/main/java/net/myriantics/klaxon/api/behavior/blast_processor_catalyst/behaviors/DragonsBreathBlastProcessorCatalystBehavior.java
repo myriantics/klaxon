@@ -14,6 +14,7 @@ import net.minecraft.world.WorldEvents;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
 public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
@@ -43,7 +44,7 @@ public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProces
     }
 
     @Override
-    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
+    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput recipeInventory) {
         return new ItemExplosionPowerData(1.5, false);
     }
 
@@ -58,7 +59,7 @@ public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProces
     }
 
     @Override
-    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
+    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystRecipeInput recipeInventory) {
         return false;
     }
 }

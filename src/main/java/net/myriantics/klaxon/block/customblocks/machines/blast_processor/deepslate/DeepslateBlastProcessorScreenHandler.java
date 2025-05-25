@@ -9,6 +9,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -16,10 +17,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingOutputState;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.registry.minecraft.KlaxonScreenHandlers;
 
@@ -40,7 +42,6 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     public double explosionPowerMin;
     public double explosionPowerMax;
     public boolean producesFire;
-    public BlastProcessingOutputState outputState;
 
     // client constructor
         public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, BlastProcessorScreenSyncPacket packetData) {
@@ -49,8 +50,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
             setRecipeData(packetData.explosionPower(),
                     packetData.explosionPowerMin(),
                     packetData.explosionPowerMax(),
-                    packetData.producesFire(),
-                    packetData.outputState());
+                    packetData.producesFire());
     }
 
 
@@ -67,22 +67,13 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
 
         if (!player.getWorld().isClient) {
             this.context.run((world, pos) -> {
-                RecipeInput recipeInventory = new RecipeInput() {
-                    @Override
-                    public ItemStack getStackInSlot(int slot) {
-                        return ingredientInventory.getStack(slot);
-                    }
+                ExplosiveCatalystRecipeInput catalystInput = new ExplosiveCatalystRecipeInput(blockEntityInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-                    @Override
-                    public int getSize() {
-                        return ingredientInventory.size();
-                    }
-                };
+                BlastProcessorCatalystBehavior blastProcessorBehavior = DeepslateBlastProcessorBlockEntity.computeBehavior(world, catalystInput);
+                this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), catalystInput);
 
-                BlastProcessorCatalystBehavior blastProcessorBehavior = DeepslateBlastProcessorBlockEntity.computeBehavior(world, recipeInventory);
-
-                this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInventory);
-                this.blastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInventory, powerData);
+                BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
+                this.blastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInput);
             });
         }
 
@@ -156,31 +147,19 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
 
     public void updateResult(World world, BlockPos pos, PlayerEntity player, SimpleInventory resultInventory) {
 
+        ExplosiveCatalystRecipeInput catalystInput = new ExplosiveCatalystRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-        RecipeInput recipeInventory = new RecipeInput() {
-            @Override
-            public ItemStack getStackInSlot(int slot) {
-                return ingredientInventory.getStack(slot);
-            }
-
-            @Override
-            public int getSize() {
-                return ingredientInventory.size();
-            }
-        };
-
-        BlastProcessorCatalystBehavior blastProcessorBehavior = DeepslateBlastProcessorBlockEntity.computeBehavior(world, recipeInventory);
+        BlastProcessorCatalystBehavior blastProcessorBehavior = DeepslateBlastProcessorBlockEntity.computeBehavior(world, catalystInput);
 
         if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
-                this.blastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, blastProcessor, recipeInventory, powerData);
+                this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, blastProcessor, catalystInput);
+                this.blastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData));
             }
             ServerPlayNetworking.send(serverPlayer, new BlastProcessorScreenSyncPacket(
                     blastProcessingData.explosionPowerMin(),
                     blastProcessingData.explosionPowerMax(),
                     blastProcessingData.result(),
-                    blastProcessingData.outputState(),
                     powerData.explosionPower(),
                     powerData.producesFire()
                     )
@@ -199,7 +178,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     public ItemStack quickMove(PlayerEntity player, int sourceSlotIndex) {
         Slot slot = this.slots.get(sourceSlotIndex);
 
-        if (slot != null && slot.hasStack()) {
+        if (slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
             if (sourceSlotIndex < this.ingredientInventory.size()) {
                 // machine inventory to player inventory
@@ -232,12 +211,11 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     }
 
     @Environment(EnvType.CLIENT)
-    public void setRecipeData(double explosionPower, double explosionPowerMin, double explosionPowerMax, boolean producesFire, BlastProcessingOutputState outputState) {
+    public void setRecipeData(double explosionPower, double explosionPowerMin, double explosionPowerMax, boolean producesFire) {
         this.explosionPower = explosionPower;
         this.explosionPowerMin = explosionPowerMin;
         this.explosionPowerMax = explosionPowerMax;
         this.producesFire = producesFire;
-        this.outputState = outputState;
     }
 
     public BlastProcessingRecipeData getBlastProcessingData() {

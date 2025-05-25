@@ -6,21 +6,18 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
-import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
-
-public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
-    private final Ingredient item;
+public class ItemExplosionPowerRecipe implements Recipe<ExplosiveCatalystRecipeInput> {
+    private final Ingredient ingredient;
     private final double explosionPower;
     private final boolean producesFire;
     private final boolean isHidden;
 
     public ItemExplosionPowerRecipe(Ingredient input, double explosionPower, boolean producesFire, boolean isHidden) {
-        this.item = input;
+        this.ingredient = input;
         this.explosionPower = explosionPower;
         this.producesFire = producesFire;
         this.isHidden = isHidden;
@@ -29,13 +26,13 @@ public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
     // to whom it may concern: CHECK WHAT INDEX YOU'RE TRYING TO PULL FROM
     // GAH
     @Override
-    public boolean matches(RecipeInput input, World world) {
-        return item.test(input.getStackInSlot(CATALYST_INDEX));
+    public boolean matches(ExplosiveCatalystRecipeInput input, World world) {
+        return ingredient.test(input.catalystStack());
     }
 
     @Override
-    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return explosionPower > 0 ? ItemStack.EMPTY : input.getStackInSlot(0);
+    public ItemStack craft(ExplosiveCatalystRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+        return input.catalystStack();
     }
 
     @Override
@@ -48,8 +45,8 @@ public class ItemExplosionPowerRecipe implements Recipe<RecipeInput> {
         return null;
     }
 
-    public Ingredient getItem() {
-        return item;
+    public Ingredient getIngredient() {
+        return ingredient;
     }
 
     public double getExplosionPower() {

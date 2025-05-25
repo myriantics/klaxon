@@ -15,7 +15,7 @@ public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<Item
 
     private final MapCodec<ItemExplosionPowerRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance) -> {
         return recipeInstance.group(Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter((recipe) ->  {
-            return recipe.getItem();
+            return recipe.getIngredient();
         }), PrimitiveCodec.DOUBLE.fieldOf("explosionPower").forGetter((recipe) -> {
             return recipe.getExplosionPower();
         }), PrimitiveCodec.BOOL.fieldOf("producesFire").forGetter((recipe) -> {
@@ -30,7 +30,7 @@ public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<Item
     );
 
     private static void write(RegistryByteBuf buf, ItemExplosionPowerRecipe recipe) {
-        Ingredient.PACKET_CODEC.encode(buf, recipe.getItem());
+        Ingredient.PACKET_CODEC.encode(buf, recipe.getIngredient());
         PacketCodecs.DOUBLE.encode(buf, recipe.getExplosionPower());
         PacketCodecs.BOOL.encode(buf, recipe.producesFire());
         PacketCodecs.BOOL.encode(buf, recipe.isHidden());

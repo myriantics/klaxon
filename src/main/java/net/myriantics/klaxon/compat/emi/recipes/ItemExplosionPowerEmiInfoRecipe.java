@@ -18,7 +18,7 @@ public class ItemExplosionPowerEmiInfoRecipe extends EmiInfoRecipe {
 
     public ItemExplosionPowerEmiInfoRecipe(RecipeEntry<ItemExplosionPowerRecipe> recipe) {
         super(
-                List.of(EmiIngredient.of(recipe.value().getItem())), List.of(
+                List.of(EmiIngredient.of(recipe.value().getIngredient())), List.of(
                 Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power").append(Text.literal("" + recipe.value().getExplosionPower()))),
                 recipe.id()
         );

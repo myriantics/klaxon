@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class FireworkStarBlastProcessorCatalystBehavior extends ItemBlastProcess
     }
 
     @Override
-    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {
+    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput craftingInventory) {
         ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
         FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);

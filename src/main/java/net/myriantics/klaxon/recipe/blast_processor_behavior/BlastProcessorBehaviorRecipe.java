@@ -5,14 +5,14 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
-public class BlastProcessorBehaviorRecipe implements Recipe<RecipeInput> {
+public class BlastProcessorBehaviorRecipe implements Recipe<ExplosiveCatalystRecipeInput> {
 
     private final Ingredient ingredient;
 
@@ -32,12 +32,12 @@ public class BlastProcessorBehaviorRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public boolean matches(RecipeInput input, World world) {
-        return ingredient.test(input.getStackInSlot(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
+    public boolean matches(ExplosiveCatalystRecipeInput input, World world) {
+        return ingredient.test(input.catalystStack());
     }
 
     @Override
-    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack craft(ExplosiveCatalystRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
         return getResult(lookup).copy();
     }
 

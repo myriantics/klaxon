@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -23,7 +22,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlockEntities;
@@ -164,24 +165,14 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
 
             if (!this.isEmpty()) {
 
-                RecipeInput recipeInventory = new RecipeInput() {
-                    @Override
-                    public ItemStack getStackInSlot(int slot) {
-                        return inventory.get(slot);
-                    }
-
-                    @Override
-                    public int getSize() {
-                        return size();
-                    }
-                };
+                ExplosiveCatalystRecipeInput recipeInventory = new ExplosiveCatalystRecipeInput(this);
 
                 // compute blast processor behavior
                 BlastProcessorCatalystBehavior blastProcessorBehavior = computeBehavior(world, recipeInventory);
 
                 // get recipe data
                 ItemExplosionPowerData powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
-                BlastProcessingRecipeData processingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, recipeInventory, powerData);
+                BlastProcessingRecipeData processingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), powerData));
 
                 // do explosion effect
                 blastProcessorBehavior.onExplosion(world, pos, this, powerData);
@@ -255,12 +246,11 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
         return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
                 blastProcessingRecipeData.explosionPowerMax(),
                 blastProcessingRecipeData.result(),
-                blastProcessingRecipeData.outputState(),
                 itemExplosionPowerData.explosionPower(),
                 itemExplosionPowerData.producesFire());
     }
 
-    public static BlastProcessorCatalystBehavior computeBehavior(World world, RecipeInput recipeInventory) {
+    public static BlastProcessorCatalystBehavior computeBehavior(World world, ExplosiveCatalystRecipeInput recipeInventory) {
         // get blast processor behavior from recipe
         Optional<RecipeEntry<BlastProcessorBehaviorRecipe>> behaviorRecipe = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR, recipeInventory, world);
 

@@ -6,9 +6,8 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 import net.myriantics.klaxon.registry.minecraft.KlaxonPackets;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingOutputState;
 
-public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double explosionPowerMax, ItemStack result, BlastProcessingOutputState outputState, double explosionPower, boolean producesFire) implements CustomPayload {
+public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double explosionPowerMax, ItemStack result, double explosionPower, boolean producesFire) implements CustomPayload {
 
     public static final CustomPayload.Id<BlastProcessorScreenSyncPacket> ID = new CustomPayload.Id<>(KlaxonPackets.BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID);
 
@@ -17,7 +16,6 @@ public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double ex
             PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMin,
             PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMax,
             ItemStack.OPTIONAL_PACKET_CODEC, BlastProcessorScreenSyncPacket::result,
-            PacketCodecs.indexed((index) -> BlastProcessingOutputState.values()[index], Enum::ordinal), BlastProcessorScreenSyncPacket::outputState,
             PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPower,
             PacketCodecs.BOOL, BlastProcessorScreenSyncPacket::producesFire,
             BlastProcessorScreenSyncPacket::new

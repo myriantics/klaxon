@@ -15,6 +15,7 @@ import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProc
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProce
     }
 
     @Override
-    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput craftingInventory) {
+    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput craftingInventory) {
         ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
         FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
@@ -59,7 +60,7 @@ public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProce
     }
 
     @Override
-    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
+    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystRecipeInput recipeInventory) {
         return false;
     }
 

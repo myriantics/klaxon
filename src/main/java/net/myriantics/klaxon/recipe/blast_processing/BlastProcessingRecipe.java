@@ -10,7 +10,7 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
 import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
-public class BlastProcessingRecipe implements Recipe<RecipeInput> {
+public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput> {
     private final Ingredient ingredientItem;
     private final double explosionPowerMin;
     private final double explosionPowerMax;
@@ -24,13 +24,20 @@ public class BlastProcessingRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public boolean matches(RecipeInput inventory, World world) {
+    public boolean matches(BlastProcessingRecipeInput inventory, World world) {
         return ingredientItem.test(inventory.getStackInSlot(INGREDIENT_INDEX));
     }
 
     @Override
-    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return this.result.copy();
+    public ItemStack craft(BlastProcessingRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+        double explosionPower = input.getPowerData().explosionPower();
+
+        // check if explosion power exists and is within bounds
+        if (explosionPower > 0 && explosionPower >= explosionPowerMin && explosionPower <= explosionPowerMax) {
+            return result.copy();
+        }
+
+        return ItemStack.EMPTY;
     }
 
     @Override

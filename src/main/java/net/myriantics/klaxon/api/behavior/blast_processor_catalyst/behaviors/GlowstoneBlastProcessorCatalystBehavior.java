@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
 public class GlowstoneBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
@@ -18,7 +19,7 @@ public class GlowstoneBlastProcessorCatalystBehavior extends ItemBlastProcessorC
     }
 
     @Override
-    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
+    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput recipeInventory) {
         // if respawn anchor doesn't work in dimension, explode
         if (!world.getDimension().respawnAnchorWorks()) {
             return new ItemExplosionPowerData(explosionPower, true);

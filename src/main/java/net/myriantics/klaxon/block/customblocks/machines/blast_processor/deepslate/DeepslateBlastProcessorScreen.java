@@ -46,7 +46,6 @@ public class DeepslateBlastProcessorScreen extends HandledScreen<DeepslateBlastP
         context.drawText(textRenderer, "" + handler.explosionPowerMax, getOffsetX(63), getOffsetY(22), 16777215, false);
         context.drawText(textRenderer, "" + handler.explosionPower, getOffsetX(63), getOffsetY(40), 16777215, false);
         context.drawText(textRenderer, "" + handler.explosionPowerMin, getOffsetX(63), getOffsetY(58), 16777215, false);
-        context.drawText(textRenderer, handler.outputState.toString(), getOffsetX(90), getOffsetY(73), 4210752, false);
     }
 
     private int getOffsetX(int guiX) {

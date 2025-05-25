@@ -12,6 +12,7 @@ import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProc
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mixin.WindChargeEntityInvoker;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
 public class WindChargeBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
@@ -20,7 +21,7 @@ public class WindChargeBlastProcessorCatalystBehavior extends ItemBlastProcessor
     }
 
     @Override
-    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory) {
+    public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput recipeInventory) {
         // wind charges don't do any damage
         return new ItemExplosionPowerData(0, false);
     }
@@ -42,7 +43,7 @@ public class WindChargeBlastProcessorCatalystBehavior extends ItemBlastProcessor
     }
 
     @Override
-    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory) {
+    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystRecipeInput recipeInventory) {
         return false;
     }
 

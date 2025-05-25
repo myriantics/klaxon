@@ -7,7 +7,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
+import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 
 public interface BlastProcessorCatalystBehavior {
@@ -16,13 +18,13 @@ public interface BlastProcessorCatalystBehavior {
 
     void ejectItems(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ItemExplosionPowerData powerData);
 
-    ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory);
+    ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput recipeInventory);
 
-    BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, RecipeInput recipeInventory, ItemExplosionPowerData powerData);
+    BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory);
 
     BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData();
 
-    boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, RecipeInput recipeInventory);
+    boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystRecipeInput recipeInventory);
 
     default boolean isIn(TagKey<BlastProcessorCatalystBehavior> tagKey) {
         return getRegistryEntry().isIn(tagKey);

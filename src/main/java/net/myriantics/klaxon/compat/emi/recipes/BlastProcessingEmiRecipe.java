@@ -46,7 +46,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         DefaultedList<EmiIngredient> catalystStacks = DefaultedList.ofSize(catalystData.size());
 
         for (ItemExplosionPowerRecipe catalystRecipe : catalystData) {
-            catalystStacks.add(EmiIngredient.of(catalystRecipe.getItem()));
+            catalystStacks.add(EmiIngredient.of(catalystRecipe.getIngredient()));
         }
 
         // crude ass code but it works haha

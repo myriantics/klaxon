@@ -71,13 +71,13 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addRecipe(new KlaxonEMIAnvilRecipe(EmiStack.of(Items.FLINT_AND_STEEL), EmiIngredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS), "flint_and_steel"));
     }
 
-    public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
+    public <C extends Recipe<V>, T extends RecipeEntry<C>, V extends RecipeInput> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
         for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
             registry.addRecipe(constructor.apply(recipeEntry));
         }
     }
 
-    public <C extends Recipe<RecipeInput>, T extends RecipeEntry<C>> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
+    public <C extends Recipe<V>, T extends RecipeEntry<C>, V extends RecipeInput> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
         for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
 
             // dont show hidden recipes

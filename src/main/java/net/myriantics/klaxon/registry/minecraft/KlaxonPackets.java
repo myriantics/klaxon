@@ -44,8 +44,7 @@ public class KlaxonPackets {
                     screenHandler.setRecipeData(payload.explosionPower(),
                             payload.explosionPowerMin(),
                             payload.explosionPowerMax(),
-                            payload.producesFire(),
-                            payload.outputState());
+                            payload.producesFire());
                 }
             });
         }));
