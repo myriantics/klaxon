@@ -13,6 +13,7 @@ import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideCom
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Item.class)
@@ -55,8 +56,10 @@ public abstract class ItemMixin {
             at = @At(value = "RETURN")
     )
     public ComponentMap klaxon$bakeInnateEnchantmentComponent(ComponentMap original) {
-        if (original.get(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS) instanceof PrebakedInnateItemEnchantmentsComponent component) {
-            return ComponentMap.builder().addAll(original).addAll(component.bake()).build();
+        if (!original.contains(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS) && original.get(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS) instanceof PrebakedInnateItemEnchantmentsComponent component) {
+            ComponentMap computed = ComponentMap.builder().addAll(original).addAll(component.bake()).build();
+            this.components = computed;
+            return computed;
         }
 
         return original;

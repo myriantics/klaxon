@@ -23,7 +23,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

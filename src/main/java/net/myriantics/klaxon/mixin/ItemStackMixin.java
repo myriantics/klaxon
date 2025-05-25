@@ -2,6 +2,7 @@ package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.serialization.DataResult;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.ComponentChanges;

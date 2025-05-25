@@ -13,7 +13,6 @@
     "EnchantmentsPredicateMixin",
     "EntityMixin",
     "FireworkRocketEntityInvoker",
-    "ItemEnchantmentsComponentInvoker",
     "ItemEntityMixin",
     "ItemMixin",
     "ItemStackMixin",

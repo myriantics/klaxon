@@ -19,11 +19,9 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
-import net.myriantics.klaxon.mixin.ItemEnchantmentsComponentInvoker;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent enchantments) implements TooltipAppender {
@@ -52,9 +50,7 @@ public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent enchantm
 
     @Override
     public void appendTooltip(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type) {
-        RegistryEntryList<Enchantment> registryEntryList = ItemEnchantmentsComponentInvoker.klaxon$getTooltipOrderList(context.getRegistryLookup(), RegistryKeys.ENCHANTMENT, EnchantmentTags.TOOLTIP_ORDER);
-
-        for (RegistryEntry<Enchantment> registryEntry : registryEntryList) {
+        for (RegistryEntry<Enchantment> registryEntry : enchantments.getEnchantments()) {
             int i = enchantments.getLevel(registryEntry);
             if (i > 0) {
                 MutableText text = Text.translatable("klaxon.text.innate_enchantment_prefix", Enchantment.getName(registryEntry, i));
