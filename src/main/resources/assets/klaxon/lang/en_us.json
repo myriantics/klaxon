@@ -105,6 +105,8 @@
   "tag.item.klaxon.recipe_processing_wirecutters": "Recipe Processing Wirecutters",
   "tag.item.klaxon.recipe_processing_shears": "Recipe Processing Shears",
 
+  "klaxon.text.innate_enchantment_prefix":  "Innate %1$s",
+
   "tag.entity.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
 
   "tag.block.klaxon.hammer_mineable": "Hammer Mineable Blocks",

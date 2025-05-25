@@ -7,11 +7,8 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
+import net.myriantics.klaxon.component.configuration.*;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
-import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
-import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 
 import java.util.function.UnaryOperator;
 
@@ -56,6 +53,13 @@ public class KlaxonDataComponentTypes {
             builder -> {
                 builder.codec(InnateItemEnchantmentsComponent.CODEC);
                 builder.packetCodec(InnateItemEnchantmentsComponent.PACKET_CODEC);
+                return builder;
+            });
+
+    public static final ComponentType<PrebakedInnateItemEnchantmentsComponent> PREBAKED_INNATE_ENCHANTMENTS = register("prebaked_innate_enchantments",
+            builder -> {
+                builder.codec(PrebakedInnateItemEnchantmentsComponent.CODEC);
+                builder.packetCodec(PrebakedInnateItemEnchantmentsComponent.PACKET_CODEC);
                 return builder;
             });
 

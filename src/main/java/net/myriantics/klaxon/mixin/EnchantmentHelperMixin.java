@@ -58,7 +58,7 @@ public abstract class EnchantmentHelperMixin {
 
         InnateItemEnchantmentsComponent innate = InnateItemEnchantmentsComponent.get(stack);
         if (innate != null) {
-            return innate.bakedEnchantments();
+            return innate.enchantments();
         }
 
         return original;
@@ -73,7 +73,7 @@ public abstract class EnchantmentHelperMixin {
 
         InnateItemEnchantmentsComponent innate = InnateItemEnchantmentsComponent.get(stack);
         if (innate != null) {
-            return innate.bakedEnchantments();
+            return innate.enchantments();
         }
 
         return original;

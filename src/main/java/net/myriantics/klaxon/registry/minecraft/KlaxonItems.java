@@ -12,6 +12,7 @@ import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
+import net.myriantics.klaxon.component.configuration.PrebakedInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.CleaverItem;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
@@ -41,7 +42,7 @@ public class KlaxonItems {
             new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
                     .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(KlaxonDamageTypes.CLEAVING, false, true))
-                    .component(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, new InnateItemEnchantmentsComponent(Map.of(Enchantments.LOOTING, 1)))
+                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.LOOTING, 1)))
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()

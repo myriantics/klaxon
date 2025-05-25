@@ -1,20 +1,13 @@
 package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.item.ItemStack;
 import net.minecraft.predicate.item.EnchantmentPredicate;
 import net.minecraft.predicate.item.EnchantmentsPredicate;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.List;
 
 @Mixin(EnchantmentsPredicate.class)
 public abstract class EnchantmentsPredicateMixin {
@@ -27,7 +20,7 @@ public abstract class EnchantmentsPredicateMixin {
         InnateItemEnchantmentsComponent component = InnateItemEnchantmentsComponent.get(stack);
 
         if (component != null) {
-            return original || looped.test(component.bakedEnchantments());
+            return original || looped.test(component.enchantments());
         }
 
         return original;
