@@ -13,8 +13,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
-import net.myriantics.klaxon.recipe.cooling.CoolingRecipe;
-import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
+import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
@@ -303,7 +302,7 @@ public abstract class KlaxonRecipeSubProvider {
                 getItemPath(output.asItem()),
                 conditions);
 
-        CoolingRecipe recipe = new CoolingRecipe(input, new ItemStack(output));
+        ItemCoolingRecipe recipe = new ItemCoolingRecipe(input, new ItemStack(output));
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

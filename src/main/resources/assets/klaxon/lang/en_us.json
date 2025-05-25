@@ -125,6 +125,7 @@
   "klaxon.emi.text.tool_usage.tool": "Tool needed to perform recipe",
   "klaxon.emi.text.tool_usage.use": "Use Tool Near Dropped Item",
   "klaxon.emi.text.tool_usage.use_compact": "Use Tool on Item",
+  "klaxon.emi.text.item_cooling.description": "Drop item into anything that extinguishes fire.",
 
   "klaxon.jade.text.tooltip.blast_processor.explosion_power": "Explosion Power: %s",
   "config.jade.plugin_klaxon.deepslate_blast_processor": "Explosion Power: ",
@@ -133,6 +134,7 @@
 
   "container.klaxon.item_explosion_power.title": "Item Explosion Power",
   "container.klaxon.tool_usage.title": "Tool Usage",
+  "container.klaxon.item_cooling.title": "Item Cooling",
   "container.klaxon.blast_processing.title": "Blast Processing",
 
   "itemGroup.klaxon.building_blocks": "KLAXON's Building Blocks",
@@ -145,7 +147,7 @@
   "advancements.klaxon.prelude.watch_blast_processor_craft.title": "Divide!",
   "advancements.klaxon.prelude.watch_blast_processor_craft.description": "Watch a Blast Processor craft something",
   "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.title": "KADOOSH!",
-  "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.description": "Hammer out any Plate",
+  "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.description": "Hammer out a Metal Plate",
   "advancements.klaxon.prelude.obtain_full_steel_armor.title": "Juggernaut",
   "advancements.klaxon.prelude.obtain_full_steel_armor.description": "Obtain a full set of Steel Armor",
   "advancements.klaxon.prelude.makeshift_item_full_repair.title": "Tip-Top Condition",

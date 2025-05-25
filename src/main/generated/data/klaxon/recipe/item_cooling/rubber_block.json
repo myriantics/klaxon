@@ -1,5 +1,5 @@
 {
-  "type": "klaxon:cooling",
+  "type": "klaxon:item_cooling",
   "input_ingredient": {
     "item": "klaxon:molten_rubber_block"
   },

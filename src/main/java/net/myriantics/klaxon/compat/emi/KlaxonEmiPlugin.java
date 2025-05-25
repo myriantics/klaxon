@@ -6,17 +6,16 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.item.Items;
+import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
-import net.myriantics.klaxon.compat.emi.recipes.BlastProcessingEmiRecipe;
-import net.myriantics.klaxon.compat.emi.recipes.ToolUsageEmiRecipe;
-import net.myriantics.klaxon.compat.emi.recipes.ItemExplosionPowerEmiInfoRecipe;
-import net.myriantics.klaxon.compat.emi.recipes.KlaxonEMIAnvilRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
@@ -41,11 +40,17 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addCategory(KlaxonEmiRecipeCategories.TOOL_USAGE);
         registry.addCategory(KlaxonEmiRecipeCategories.BLAST_PROCESSING);
         registry.addCategory(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER);
+        registry.addCategory(KlaxonEmiRecipeCategories.ITEM_COOLING);
     }
 
     private void registerWorkstations(EmiRegistry registry) {
         registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
+
+        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(PotionContentsComponent.createStack(Items.SPLASH_POTION, Potions.WATER)));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.POWDER_SNOW_BUCKET));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.WATER_BUCKET));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.CAULDRON));
 
         // Steel Hammer can mimic AnvilScreenHandler functionality
         registry.addWorkstation(VanillaEmiRecipeCategories.ANVIL_REPAIRING, EmiStack.of(KlaxonItems.STEEL_HAMMER));
@@ -57,6 +62,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         addBlastProcessorBehaviorItemExplosionPowerRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
+        addAll(registry, KlaxonRecipeTypes.ITEM_COOLING, ItemCoolingEmiRecipe::new);
     }
 
     private void registerMiscRecipes(EmiRegistry registry) {

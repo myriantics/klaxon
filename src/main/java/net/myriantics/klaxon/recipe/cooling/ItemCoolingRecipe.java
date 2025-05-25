@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.recipe.cooling;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
@@ -8,15 +7,14 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 
-public class CoolingRecipe implements Recipe<RecipeInput> {
+public class ItemCoolingRecipe implements Recipe<RecipeInput> {
     private final Ingredient inputIngredient;
     private final ItemStack outputStack;
 
-    public CoolingRecipe(Ingredient inputIngredient, ItemStack output) {
+    public ItemCoolingRecipe(Ingredient inputIngredient, ItemStack output) {
         this.inputIngredient = inputIngredient;
         this.outputStack = output;
     }
@@ -55,7 +53,7 @@ public class CoolingRecipe implements Recipe<RecipeInput> {
 
     @Override
     public RecipeType<?> getType() {
-        return KlaxonRecipeTypes.COOLING;
+        return KlaxonRecipeTypes.ITEM_COOLING;
     }
 
     public Ingredient getInputIngredient() {

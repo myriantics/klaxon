@@ -26,7 +26,7 @@ public abstract class ItemCoolingRecipeLogic {
         if (COOLABLE_ITEM_CACHE.isEmpty()) {
 
             Set<Item> newCache = new HashSet<>();
-            for (RecipeEntry<CoolingRecipe> entry : world.getRecipeManager().listAllOfType(KlaxonRecipeTypes.COOLING)) {
+            for (RecipeEntry<ItemCoolingRecipe> entry : world.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_COOLING)) {
                 // add all the compatible items to the new cache
                 for (ItemStack stack : entry.value().getInputIngredient().getMatchingStacks()) {
                     newCache.add(stack.getItem());
@@ -58,8 +58,8 @@ public abstract class ItemCoolingRecipeLogic {
             }
         };
 
-        Optional<RecipeEntry<CoolingRecipe>> match =
-                world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.COOLING, input, world);
+        Optional<RecipeEntry<ItemCoolingRecipe>> match =
+                world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.ITEM_COOLING, input, world);
 
         // if we have a recipe match, overwrite the output
         if (match.isPresent()) {
