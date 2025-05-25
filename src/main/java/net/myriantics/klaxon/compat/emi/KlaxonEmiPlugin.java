@@ -54,6 +54,8 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
         // Steel Hammer can mimic AnvilScreenHandler functionality
         registry.addWorkstation(VanillaEmiRecipeCategories.ANVIL_REPAIRING, EmiStack.of(KlaxonItems.STEEL_HAMMER));
+        // Blast Processors can mimic Blasting Smelting functionality when using a catalyst that produces Fire
+        registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
     }
 
     private void registerRecipes(EmiRegistry registry) {

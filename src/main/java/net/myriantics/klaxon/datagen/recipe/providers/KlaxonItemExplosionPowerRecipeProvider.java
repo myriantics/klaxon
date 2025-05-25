@@ -21,7 +21,7 @@ public class KlaxonItemExplosionPowerRecipeProvider extends KlaxonRecipeSubProvi
 
     private void buildItemExplosionPowerRecipes() {
         addItemExplosionPowerRecipe(NamedIngredient.ofItems(Items.END_CRYSTAL), 6.0, false, false);
-        addItemExplosionPowerRecipe(NamedIngredient.ofItems(Items.FIRE_CHARGE), 0.5, true, false);
+        addItemExplosionPowerRecipe(NamedIngredient.ofItems(Items.FIRE_CHARGE), 0.4, true, false);
         addItemExplosionPowerRecipe(NamedIngredient.ofItems(Items.GUNPOWDER), 0.3, false, false);
         addItemExplosionPowerRecipe(NamedIngredient.ofItems(Items.TNT), 4.0, false, false);
         addItemExplosionPowerRecipe(NamedIngredient.ofItems(Items.TNT_MINECART), 5.0, false, false);

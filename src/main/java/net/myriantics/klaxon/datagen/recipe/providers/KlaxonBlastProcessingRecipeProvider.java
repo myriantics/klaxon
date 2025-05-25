@@ -31,7 +31,7 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
         addBlastProcessingRecipe(Ingredient.ofItems(Items.POLISHED_BLACKSTONE_BRICKS), 0.1, 0.3, new ItemStack(Items.CRACKED_POLISHED_BLACKSTONE_BRICKS));
         addBlastProcessingRecipe(Ingredient.ofItems(Items.STONE_BRICKS), 0.1, 0.3, new ItemStack(Items.CRACKED_STONE_BRICKS));
         addBlastProcessingRecipe(Ingredient.ofItems(Items.COAL), 0.1, 0.3, new ItemStack(KlaxonItems.FRACTURED_COAL_CHUNKS));
-        addBlastProcessingRecipe(Ingredient.fromTag(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS), 0.5, 1.0, new ItemStack(KlaxonItems.RUBBER_GLOB));
+        addBlastProcessingRecipe(Ingredient.fromTag(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS), 0.4, 1.0, new ItemStack(KlaxonItems.RUBBER_GLOB, 3));
         addBlastProcessingRecipe(Ingredient.fromTag(KlaxonItemTags.NETHER_RUBBER_EXTRACTABLE_LOGS), 0.8, 1.5, new ItemStack(KlaxonItems.MOLTEN_RUBBER_GLOB, 3));
 
         // create compat

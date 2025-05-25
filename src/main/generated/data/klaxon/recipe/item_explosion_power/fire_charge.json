@@ -1,6 +1,6 @@
 {
   "type": "klaxon:item_explosion_power",
-  "explosionPower": 0.5,
+  "explosionPower": 0.4,
   "ingredient": {
     "item": "minecraft:fire_charge"
   },

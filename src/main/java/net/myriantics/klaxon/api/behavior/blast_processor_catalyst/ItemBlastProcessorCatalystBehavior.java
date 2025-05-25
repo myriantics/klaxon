@@ -4,9 +4,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.BlastingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -81,8 +84,10 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
 
         switch (recipeData.outputState()) {
             case MISSING_FUEL, MISSING_RECIPE -> {
-                for (ItemStack ejectedStack : blastProcessor.getItems()) {
-                    ItemDispenserBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
+                if (powerData.explosionPower() <= 0) {
+                    for (ItemStack ejectedStack : blastProcessor.getItems()) {
+                        ItemDispenserBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
+                    }
                 }
             }
             case OVERPOWERED, UNDERPOWERED -> {
@@ -91,7 +96,18 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
                 Position itemOutputPos = blastProcessor.getItemOutputLocation(facing);
                 double advancementGrantRange = 17.0;
 
-                ItemDispenserBehavior.spawnItem(world, recipeData.result().copy(), 8, facing, itemOutputPos);
+                ItemStack outputStack = recipeData.result().copy();
+
+                // if the catalyst produces fire, try to smelt output stack as if it were in a blast furnace
+                if (powerData.producesFire()) {
+                    SingleStackRecipeInput blastingRecipeInput = new SingleStackRecipeInput(outputStack);
+                    Optional<RecipeEntry<BlastingRecipe>> blastingRecipe = world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, blastingRecipeInput, world);
+                    if (blastingRecipe.isPresent()) {
+                        outputStack = blastingRecipe.get().value().craft(blastingRecipeInput, world.getRegistryManager()).copyWithCount(outputStack.getCount());
+                    }
+                }
+
+                ItemDispenserBehavior.spawnItem(world, outputStack, 8, facing, itemOutputPos);
 
                 // proc blast processor crafting advancement
                 for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of((Vec3d) itemOutputPos, advancementGrantRange, advancementGrantRange, advancementGrantRange))) {
