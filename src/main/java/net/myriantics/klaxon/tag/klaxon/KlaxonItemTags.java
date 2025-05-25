@@ -45,9 +45,6 @@ public class KlaxonItemTags {
             createTag("unenchantable");
     public static final TagKey<Item> STEEL_REPAIRABLE_FLINT_AND_STEEL =
             createTag("steel_repairable_flint_and_steel");
-    public static final TagKey<Item> INNATE_UNBREAKING_EQUIPMENT =
-            // used in EnchantmentHelper
-            createTag("innate_unbreaking_equipment");
 
     // behavior tags
     public static final TagKey<Item> HEAVY_EQUIPMENT =

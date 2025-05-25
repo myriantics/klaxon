@@ -213,8 +213,6 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.FRACTURED_RAW_GOLD)
                 .add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
-        getOrCreateTagBuilder(KlaxonItemTags.INNATE_UNBREAKING_EQUIPMENT)
-                .forceAddTag(KlaxonItemTags.STEEL_EQUIPMENT);
         getOrCreateTagBuilder(ItemTags.BREAKS_DECORATED_POTS)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(KlaxonItems.STEEL_CLEAVER)
