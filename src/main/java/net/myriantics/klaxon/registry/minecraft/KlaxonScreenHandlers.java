@@ -7,7 +7,7 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
-import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
+import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 
 public class KlaxonScreenHandlers {
     public static final ExtendedScreenHandlerType<DeepslateBlastProcessorScreenHandler, BlastProcessorScreenSyncPacket> BLAST_PROCESSOR_SCREEN_HANDLER

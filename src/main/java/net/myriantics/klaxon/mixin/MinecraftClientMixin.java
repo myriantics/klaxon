@@ -8,7 +8,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.util.hit.BlockHitResult;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.networking.packets.HammerWalljumpTriggerPacket;
+import net.myriantics.klaxon.networking.c2s.HammerWalljumpTriggerPacket;
 import net.myriantics.klaxon.util.DualWieldHelper;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;

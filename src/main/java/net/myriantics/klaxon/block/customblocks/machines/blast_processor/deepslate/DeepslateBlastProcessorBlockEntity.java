@@ -28,7 +28,7 @@ import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipe
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlockEntities;
-import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
+import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
@@ -212,28 +212,29 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
         super.markDirty();
     }
 
-    public Position getExplosionOutputLocation(Direction direction) {
-        return getItemOutputLocation(direction, 0.6);
+    public Position getExplosionOutputLocation(Direction facing) {
+        return getItemOutputLocation(facing, 0.6);
     }
 
-    public Position getItemOutputLocation(Direction direction) {
-        return getItemOutputLocation(direction, 0.7);
+    public Position getItemOutputLocation(Direction facing) {
+        return getItemOutputLocation(facing, 0.7);
     }
 
-    public Position getItemOutputLocation(Direction direction, double offset) {
+    private Position getItemOutputLocation(@Nullable Direction direction, double offset) {
         Position centerPos = pos.toCenterPos();
         double x = centerPos.getX();
-        double y = centerPos.getY();
+        double y = centerPos.getY() - 0.3125;
         double z = centerPos.getZ();
 
-        switch (direction) {
-            case UP -> y += 0.7;
-            case DOWN -> y -= 0.7;
-            case NORTH -> z -= 0.7;
-            case SOUTH -> z += 0.7;
-            case EAST -> x += 0.7;
-            case WEST -> x -= 0.7;
+        if (direction != null) {
+            switch (direction) {
+                case NORTH -> z -= offset;
+                case SOUTH -> z += offset;
+                case EAST -> x += offset;
+                case WEST -> x -= offset;
+            }
         }
+
 
         return new Vec3d(x, y, z);
     }

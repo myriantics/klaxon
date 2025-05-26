@@ -5,6 +5,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -14,8 +15,10 @@ import net.minecraft.world.WorldEvents;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
+import net.myriantics.klaxon.registry.custom.KlaxonWorldEvents;
 
 public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
     public DragonsBreathBlastProcessorCatalystBehavior(Identifier id) {
@@ -26,17 +29,22 @@ public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProces
     public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
         Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
 
-        if (!world.isClient()) {
+        if (world instanceof ServerWorld serverWorld) {
 
-            AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ());
+            AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(world, outputPos.getX(), outputPos.getY() - 0.25, outputPos.getZ());
+
+            float radius = (float) powerData.explosionPower() / 3;
+            float finalRadius = (float) powerData.explosionPower() / 2;
 
             areaEffectCloudEntity.setParticleType(ParticleTypes.DRAGON_BREATH);
-            areaEffectCloudEntity.setRadius(1.0F);
+            areaEffectCloudEntity.setRadius(radius);
+            //areaEffectCloudEntity.setRadius((float) (powerData.explosionPower() / 5));
             areaEffectCloudEntity.setDuration(80);
-            areaEffectCloudEntity.setRadiusGrowth((0.6F - areaEffectCloudEntity.getRadius()) / areaEffectCloudEntity.getDuration());
+            //areaEffectCloudEntity.setRadiusGrowth((5f - areaEffectCloudEntity.getRadius()) / areaEffectCloudEntity.getDuration());
+            areaEffectCloudEntity.setRadiusGrowth((finalRadius - radius) / areaEffectCloudEntity.getDuration());
             areaEffectCloudEntity.addEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 1, 1));
 
-            world.syncWorldEvent(WorldEvents.DRAGON_BREATH_CLOUD_SPAWNS, pos, 1);
+            KlaxonServerPlayNetworkHandler.syncWorldEvent(serverWorld, pos, KlaxonWorldEvents.DRAGONS_BREATH_EXPLOSIVE_CATALYST_CLOUD_SPAWNS, 1);
             world.spawnEntity(areaEffectCloudEntity);
 
             blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);

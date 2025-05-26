@@ -4,18 +4,14 @@ import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
-import net.myriantics.klaxon.networking.packets.EntityDualWieldToggleC2SPacket;
-import net.myriantics.klaxon.networking.packets.EntityDualWieldToggleS2CPacket;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
+import net.myriantics.klaxon.networking.c2s.EntityDualWieldToggleC2SPacket;
+import net.myriantics.klaxon.networking.s2c.EntityDualWieldToggleS2CPacket;
 
 /**
  * Deals with cosmetic hand swinging when dual-wielding certain items.
@@ -33,10 +29,8 @@ public abstract class DualWieldHelper {
 
         if (entity.getWorld() instanceof ClientWorld) {
             ClientPlayNetworking.send(new EntityDualWieldToggleC2SPacket(isDualWielding));
-        } else if (entity.getWorld() instanceof ServerWorld) {
-            for (ServerPlayerEntity player : PlayerLookup.tracking(entity)) {
-                if (!entity.equals(player)) ServerPlayNetworking.send(player, new EntityDualWieldToggleS2CPacket(entity.getId(), isDualWielding));
-            }
+        } else if (entity.getWorld() instanceof ServerWorld serverWorld) {
+            KlaxonServerPlayNetworkHandler.sendToTracking(serverWorld, entity, new EntityDualWieldToggleS2CPacket(entity.getId(), isDualWielding));
         }
     }
 

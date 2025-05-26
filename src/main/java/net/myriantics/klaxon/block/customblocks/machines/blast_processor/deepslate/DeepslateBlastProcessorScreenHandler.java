@@ -8,8 +8,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -20,7 +18,7 @@ import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcesso
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.util.PermissionsHelper;
-import net.myriantics.klaxon.networking.packets.BlastProcessorScreenSyncPacket;
+import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.registry.minecraft.KlaxonScreenHandlers;

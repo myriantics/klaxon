@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.networking.packets;
+package net.myriantics.klaxon.networking.s2c;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
