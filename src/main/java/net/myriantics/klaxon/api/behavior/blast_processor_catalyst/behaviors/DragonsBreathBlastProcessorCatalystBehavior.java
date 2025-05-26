@@ -26,7 +26,7 @@ public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProces
     }
 
     @Override
-    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
+    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean shouldModifyWorld) {
         Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
 
         if (world instanceof ServerWorld serverWorld) {

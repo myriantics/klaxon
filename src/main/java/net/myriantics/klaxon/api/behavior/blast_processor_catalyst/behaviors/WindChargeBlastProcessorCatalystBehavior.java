@@ -1,7 +1,10 @@
 package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 
+import net.minecraft.entity.projectile.AbstractWindChargeEntity;
 import net.minecraft.entity.projectile.WindChargeEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +30,7 @@ public class WindChargeBlastProcessorCatalystBehavior extends ItemBlastProcessor
     }
 
     @Override
-    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
+    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean shouldModifyWorld) {
         Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
         WindChargeEntity windCharge = new WindChargeEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), Vec3d.ZERO);
         WindChargeEntityInvoker windChargeInvoker = ((WindChargeEntityInvoker) windCharge);
@@ -35,7 +38,25 @@ public class WindChargeBlastProcessorCatalystBehavior extends ItemBlastProcessor
         world.spawnEntity(windCharge);
 
         // explode
-        windChargeInvoker.invokeCreateExplosion(new Vec3d(outputPos.getX(), outputPos.getY(), outputPos.getZ()));
+        if (shouldModifyWorld) {
+            windChargeInvoker.invokeCreateExplosion(new Vec3d(outputPos.getX(), outputPos.getY(), outputPos.getZ()));
+        } else {
+            world.createExplosion(
+                            windCharge,
+                            null,
+                            AbstractWindChargeEntity.EXPLOSION_BEHAVIOR,
+                            outputPos.getX(),
+                            outputPos.getY(),
+                            outputPos.getZ(),
+                            1.2F,
+                            false,
+                            // replace ExplosionSourceType.TRIGGER to prevent world griefing
+                            World.ExplosionSourceType.NONE,
+                            ParticleTypes.GUST_EMITTER_SMALL,
+                            ParticleTypes.GUST_EMITTER_LARGE,
+                            SoundEvents.ENTITY_WIND_CHARGE_WIND_BURST
+                    );
+        }
 
         // remove stack and discard
         blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);

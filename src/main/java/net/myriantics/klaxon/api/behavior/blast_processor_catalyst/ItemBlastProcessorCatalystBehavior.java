@@ -46,16 +46,13 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
     }
 
     @Override
-    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
+    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean shouldModifyWorld) {
         if (world instanceof ServerWorld serverWorld) {
             BlockState activeBlockState = world.getBlockState(pos);
             if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
                 if (powerData.explosionPower() > 0.0) {
                     Direction direction = activeBlockState.get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
                     Position position = blastProcessor.getExplosionOutputLocation(direction);
-
-                    // make sure we're actually allowed to modify world
-                    boolean shouldModifyWorld = serverWorld.getGameRules().getBoolean(KlaxonGamerules.SHOULD_BLAST_PROCESSOR_EXPLOSION_MODIFY_WORLD);
 
                     blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
                     serverWorld.createExplosion(null, null,

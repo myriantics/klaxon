@@ -30,33 +30,41 @@ public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProce
     public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput craftingInventory) {
         ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
-        FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
-        List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
+        if (stack.get(DataComponentTypes.FIREWORKS) instanceof FireworksComponent component) {
+            List<FireworkExplosionComponent> list = component.explosions();
 
-        double explosionPower = 0.3;
-        if (!list.isEmpty()) {
-            explosionPower += (list.size() * 0.5);
+            double explosionPower = 0.3;
+            if (!list.isEmpty()) {
+                explosionPower += (list.size() * 0.5);
+            }
+
+            explosionPower = Math.min(explosionPower, 10.0);
+
+            return new ItemExplosionPowerData(explosionPower, false);
         }
 
-        explosionPower = Math.min(explosionPower, 10.0);
-
-
-        return new ItemExplosionPowerData(explosionPower, false);
+        return super.getExplosionPowerData(world, pos, blastProcessor, craftingInventory);
     }
 
     @Override
-    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData) {
-        Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
-        FireworkRocketEntity fireworkRocket = new FireworkRocketEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).copy());
+    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemExplosionPowerData powerData, boolean shouldModifyWorld) {
+        ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
-        // explode using firework rocket entity code - summons dummy firework and detonates it
-        world.spawnEntity(fireworkRocket);
+        if (stack.get(DataComponentTypes.FIREWORKS) instanceof FireworksComponent) {
+            Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
+            FireworkRocketEntity fireworkRocket = new FireworkRocketEntity(world, outputPos.getX(), outputPos.getY(), outputPos.getZ(), stack);
 
-        // clear the stack from inventory
-        blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+            // explode using firework rocket entity code - summons dummy firework and detonates it
+            world.spawnEntity(fireworkRocket);
 
-        // TIL you can't have an invoker method be the same name as the original method. The more you know!
-        ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplodeAndRemove();
+            // clear the stack from inventory
+            blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+
+            // TIL you can't have an invoker method be the same name as the original method. The more you know!
+            ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplodeAndRemove();
+        }
+
+        super.onExplosion(world, pos, blastProcessor, powerData, shouldModifyWorld);
     }
 
     @Override

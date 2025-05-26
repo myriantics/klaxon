@@ -25,15 +25,19 @@ public class FireworkStarBlastProcessorCatalystBehavior extends ItemBlastProcess
     public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput craftingInventory) {
         ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
-        FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
-        List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
+        if (stack.get(DataComponentTypes.FIREWORK_EXPLOSION) instanceof FireworkExplosionComponent component)  {
+            FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
+            List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
 
-        double explosionPower = 0.3;
-        if (!list.isEmpty()) {
-            explosionPower += 0.5;
+            double explosionPower = 0.3;
+            if (!list.isEmpty()) {
+                explosionPower += 0.5;
+            }
+
+            return new ItemExplosionPowerData(explosionPower, false);
         }
 
-        return new ItemExplosionPowerData(explosionPower, false);
+        return super.getExplosionPowerData(world, pos, blastProcessor, craftingInventory);
     }
 
     @Override
