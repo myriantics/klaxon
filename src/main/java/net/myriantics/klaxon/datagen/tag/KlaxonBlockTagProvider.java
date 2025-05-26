@@ -65,6 +65,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.RUBBER)
                 .forceAddTag(KlaxonConventionalBlockTags.SCULK)
                 .forceAddTag(KlaxonConventionalBlockTags.VINES)
+                .forceAddTag(ConventionalBlockTags.PUMPKINS)
                 .forceAddTag(ConventionalBlockTags.ROPES)
                 .forceAddTag(ConventionalBlockTags.SKULLS)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
@@ -74,6 +75,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.BEEHIVES)
                 .forceAddTag(BlockTags.CANDLES)
                 .add(Blocks.SHROOMLIGHT)
+                .add(Blocks.MELON)
                 .add(Blocks.BAMBOO)
                 .add(Blocks.HONEYCOMB_BLOCK)
                 .add(Blocks.GLOW_LICHEN)
@@ -170,9 +172,18 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE)
                 .forceAddTag(BlockTags.SNOW)
                 .add(Blocks.POWDER_SNOW);
-        getOrCreateTagBuilder(KlaxonBlockTags.WRENCHABLE_BLOCKS)
+        getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_PICKUPABLE)
                 .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
-                .add(Blocks.REDSTONE_LAMP);
+                .add(Blocks.REDSTONE_LAMP)
+                .add(Blocks.REPEATER)
+                .add(Blocks.COMPARATOR);
+        getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_INTERACTION_DENYLIST)
+                .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED);
+        getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATABLE)
+                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
+                .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
+                .add(Blocks.DISPENSER)
+                .add(Blocks.DROPPER);
     }
 
     private void buildToolRequirementTags() {
