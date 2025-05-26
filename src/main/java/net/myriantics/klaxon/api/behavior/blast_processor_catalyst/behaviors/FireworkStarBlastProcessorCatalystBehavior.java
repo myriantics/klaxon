@@ -26,25 +26,18 @@ public class FireworkStarBlastProcessorCatalystBehavior extends ItemBlastProcess
         ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
         if (stack.get(DataComponentTypes.FIREWORK_EXPLOSION) instanceof FireworkExplosionComponent component)  {
-            FireworksComponent fireworksComponent = stack.get(DataComponentTypes.FIREWORKS);
-            List<FireworkExplosionComponent> list =  fireworksComponent != null ? fireworksComponent.explosions() : List.of();
-
-            double explosionPower = 0.3;
-            if (!list.isEmpty()) {
-                explosionPower += 0.5;
-            }
-
-            return new ItemExplosionPowerData(explosionPower, false);
+            // creeper-shaped fireworks boost explosion. will add different behaviors to KLAXON-specific firework shapes sometime in future.
+            return new ItemExplosionPowerData(component.shape().equals(FireworkExplosionComponent.Type.CREEPER) ? 1.2 : 0.5, false);
+        } else {
+            return new ItemExplosionPowerData(0.3, false);
         }
-
-        return super.getExplosionPowerData(world, pos, blastProcessor, craftingInventory);
     }
 
     @Override
     public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
         return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
                 0.3,
-                0.8,
+                1.2,
                 Text.empty(),
                 getId().getPath()
         );

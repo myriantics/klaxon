@@ -34,8 +34,8 @@ public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProce
             List<FireworkExplosionComponent> list = component.explosions();
 
             double explosionPower = 0.3;
-            if (!list.isEmpty()) {
-                explosionPower += (list.size() * 0.5);
+            for (FireworkExplosionComponent explosion : list) {
+                explosionPower += explosion.shape().equals(FireworkExplosionComponent.Type.CREEPER) ? 0.5 : 0.2;
             }
 
             explosionPower = Math.min(explosionPower, 10.0);
@@ -62,9 +62,9 @@ public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProce
 
             // TIL you can't have an invoker method be the same name as the original method. The more you know!
             ((FireworkRocketEntityInvoker) fireworkRocket).invokeExplodeAndRemove();
+        } else {
+            super.onExplosion(world, pos, blastProcessor, powerData, shouldModifyWorld);
         }
-
-        super.onExplosion(world, pos, blastProcessor, powerData, shouldModifyWorld);
     }
 
     @Override
