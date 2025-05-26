@@ -23,7 +23,7 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
             BlockState targetState = serverWorld.getBlockState(targetPos);
 
             if (!targetState.isIn(KlaxonBlockTags.WRENCH_INTERACTION_DENYLIST) && targetState.isIn(KlaxonBlockTags.WRENCH_ROTATABLE)) {
-                ActionResult result = WrenchItem.rotateBlock(serverWorld, targetPos, targetState, facing, null, 0f);
+                ActionResult result = WrenchItem.rotateBlock(serverWorld, targetPos, targetState, facing, null, null);
                 if (result.isAccepted()) {
                     setSuccess(true);
                 }
