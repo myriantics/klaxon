@@ -11,6 +11,7 @@ import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideCom
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.minecraft.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.Map;
@@ -37,7 +38,7 @@ public class KlaxonDefaultItemComponentModifications {
         context.modify(Items.SHEARS, builder -> {
             builder.add(
                     KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG,
-                    new ToolUseRecipeConfigComponent(SoundEvents.ENTITY_SHEEP_SHEAR)
+                    new ToolUseRecipeConfigComponent(KlaxonSoundEvents.ITEM_SHEARS_USAGE)
             );
         });
     }

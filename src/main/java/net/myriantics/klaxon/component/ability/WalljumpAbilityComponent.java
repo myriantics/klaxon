@@ -17,7 +17,6 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -28,6 +27,7 @@ import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
 import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.minecraft.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.util.AbilityModifierCalculator;
 import net.myriantics.klaxon.util.EntityWeightHelper;
@@ -89,7 +89,7 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
             // thats this easter egg without this change
             boolean walljumpSucceeded = processWallJumpPhysics(player, movedEntity);
 
-            world.playSound(player, pos, SoundEvents.ENTITY_IRON_GOLEM_HURT, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
+            world.playSound(player, pos, walljumpSucceeded ? KlaxonSoundEvents.ITEM_HAMMER_WALLJUMP_SUCCESS : KlaxonSoundEvents.ITEM_HAMMER_WALLJUMP_FAIL_HEAVY, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
 
             if (!world.isClient()) {
                 // update observers monitoring target block - doesn't work in adventure

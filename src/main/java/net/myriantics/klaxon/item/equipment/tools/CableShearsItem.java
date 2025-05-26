@@ -12,6 +12,7 @@ import net.minecraft.util.ActionResult;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.minecraft.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 public class CableShearsItem extends MiningToolItem {
@@ -23,7 +24,7 @@ public class CableShearsItem extends MiningToolItem {
 
     public CableShearsItem(ToolMaterial material, Settings settings) {
         super(material, KlaxonBlockTags.CABLE_SHEARS_MINEABLE, settings
-                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_CHAIN_BREAK))
+                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(KlaxonSoundEvents.ITEM_CABLE_SHEARS_USAGE))
                 .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE))
         );
     }

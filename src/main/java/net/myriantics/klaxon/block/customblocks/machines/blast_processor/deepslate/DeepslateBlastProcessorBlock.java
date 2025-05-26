@@ -27,6 +27,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.registry.minecraft.KlaxonSoundEvents;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
@@ -230,7 +231,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     private static void playItemInputSound(World world, BlockPos pos, BlockState state) {
         Random random = world.getRandom();
 
-        world.playSound(null, pos, SoundEvents.BLOCK_DEEPSLATE_PLACE, SoundCategory.BLOCKS, random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F);
+        world.playSound(null, pos, KlaxonSoundEvents.BLOCK_DEEPSLATE_BLAST_PROCESSOR_INSERT, SoundCategory.BLOCKS, random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F);
 
         // trip sculk sensors
         world.emitGameEvent(GameEvent.BLOCK_CLOSE, pos, GameEvent.Emitter.of(state));
