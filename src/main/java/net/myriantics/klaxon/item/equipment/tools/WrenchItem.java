@@ -3,11 +3,9 @@ package net.myriantics.klaxon.item.equipment.tools;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.block.enums.Orientation;
 import net.minecraft.block.enums.RailShape;
-import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
@@ -29,7 +27,6 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
-import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -63,9 +60,9 @@ public class WrenchItem extends MiningToolItem {
         BlockState targetState = world.getBlockState(targetPos);
         PlayerEntity player = context.getPlayer();
 
-        if (player != null && !targetState.isIn(KlaxonBlockTags.WRENCH_INTERACTION_DENYLIST)) {
+        if (player != null) {
 
-            if (player.isSneaking() && targetState.isIn(KlaxonBlockTags.WRENCH_PICKUPABLE)) {
+            if (player.isSneaking() && targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST) && !targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST)) {
 
                 if (world instanceof ServerWorld serverWorld) {
                     List<ItemStack> outputStacks = Block.getDroppedStacks(targetState, serverWorld, targetPos, serverWorld.getBlockEntity(targetPos));
@@ -73,7 +70,6 @@ public class WrenchItem extends MiningToolItem {
                         for (ItemStack stack : outputStacks) {
                             // don't insert the stack if player is already creative - unless it's valuable, then do
                             if (!player.isCreative() || stack.contains(DataComponentTypes.CONTAINER) || stack.contains(DataComponentTypes.CONTAINER_LOOT)) {
-
                                 // dump the rest of the stack into the world if it doesn't fit into player's inventory
                                 if (!player.getInventory().insertStack(stack) && !stack.isEmpty()) Block.dropStack(serverWorld, targetPos, stack);
                             }
@@ -88,7 +84,7 @@ public class WrenchItem extends MiningToolItem {
                 return ActionResult.SUCCESS;
             }
 
-            if (targetState.isIn(KlaxonBlockTags.WRENCH_ROTATABLE)) {
+            if (targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST) && !targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)) {
                 ActionResult result = rotateBlock(world, targetPos, targetState, context.getSide(), context.getHorizontalPlayerFacing(), context.getHitPos());
                 if (result.isAccepted()) {
                     Vec3d cords = targetPos.toCenterPos();

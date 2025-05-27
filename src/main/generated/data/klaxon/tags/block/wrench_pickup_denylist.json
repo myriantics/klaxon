@@ -1,8 +1,6 @@
 {
   "values": [
     "#c:relocation_not_supported",
-    "#minecraft:trapdoors",
-    "#minecraft:doors",
     "minecraft:piston_head"
   ]
 }

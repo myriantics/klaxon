@@ -29,6 +29,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
         addDrop(KlaxonBlocks.IRON_PLATING_BLOCK);
         addDrop(KlaxonBlocks.GOLD_PLATING_BLOCK);
+
         addDrop(KlaxonBlocks.COPPER_PLATING_BLOCK);
         addDrop(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
         addDrop(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
@@ -37,12 +38,13 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
         addDrop(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
         addDrop(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+
         addDrop(KlaxonBlocks.RUBBER_SHEET_BLOCK);
 
         // decor
-        doorDrops(KlaxonBlocks.STEEL_DOOR);
+        addDrop(KlaxonBlocks.STEEL_DOOR, this::doorDrops);
         addDrop(KlaxonBlocks.STEEL_TRAPDOOR);
-        doorDrops(KlaxonBlocks.CRUDE_STEEL_DOOR);
+        addDrop(KlaxonBlocks.CRUDE_STEEL_DOOR, this::doorDrops);
         addDrop(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
     }
 }

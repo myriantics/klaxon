@@ -3,10 +3,8 @@ package net.myriantics.klaxon.api.behavior.dispenser;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.FallibleItemDispenserBehavior;
-import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +20,7 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
             BlockPos targetPos = pointer.pos().offset(facing);
             BlockState targetState = serverWorld.getBlockState(targetPos);
 
-            if (!targetState.isIn(KlaxonBlockTags.WRENCH_INTERACTION_DENYLIST) && targetState.isIn(KlaxonBlockTags.WRENCH_ROTATABLE)) {
+            if (!targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST) && targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)) {
                 ActionResult result = WrenchItem.rotateBlock(serverWorld, targetPos, targetState, facing, null, null);
                 if (result.isAccepted()) {
                     serverWorld.updateComparators(pointer.pos(), pointer.state().getBlock());
