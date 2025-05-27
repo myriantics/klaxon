@@ -1,9 +1,14 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
 import net.minecraft.block.AbstractRailBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.enums.ChestType;
 import net.minecraft.block.enums.Orientation;
 import net.minecraft.block.enums.RailShape;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -27,6 +32,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 public class WrenchItem extends MiningToolItem {
@@ -59,19 +65,25 @@ public class WrenchItem extends MiningToolItem {
 
         if (player != null && !targetState.isIn(KlaxonBlockTags.WRENCH_INTERACTION_DENYLIST)) {
 
-            ItemStack wrenchStack = context.getStack();
-
             if (player.isSneaking() && targetState.isIn(KlaxonBlockTags.WRENCH_PICKUPABLE)) {
 
                 if (world instanceof ServerWorld serverWorld) {
-                    ItemStack blockStack = new ItemStack(targetState.getBlock().asItem());
+                    List<ItemStack> outputStacks = Block.getDroppedStacks(targetState, serverWorld, targetPos, serverWorld.getBlockEntity(targetPos));
+                    if (!outputStacks.isEmpty()) {
+                        for (ItemStack stack : outputStacks) {
+                            // don't insert the stack if player is already creative - unless it's valuable, then do
+                            if (!player.isCreative() || stack.contains(DataComponentTypes.CONTAINER) || stack.contains(DataComponentTypes.CONTAINER_LOOT)) {
 
-                    if (!blockStack.isEmpty()) {
-                        // dont clog creative player's inventory
-                        if (player.isCreative() || player.getInventory().insertStack(blockStack)) serverWorld.removeBlock(targetPos, false);
+                                // dump the rest of the stack into the world if it doesn't fit into player's inventory
+                                if (!player.getInventory().insertStack(stack) && !stack.isEmpty()) Block.dropStack(serverWorld, targetPos, stack);
+                            }
+                        }
                     }
+
+                    // drop is false here because we already handled the drops
+                    // only break on server because sound plays twice on client otherwise
+                    world.breakBlock(targetPos, false, player);
                 }
-                world.breakBlock(targetPos, true, player);
 
                 return ActionResult.SUCCESS;
             }
@@ -81,7 +93,6 @@ public class WrenchItem extends MiningToolItem {
                 if (result.isAccepted()) {
                     Vec3d cords = targetPos.toCenterPos();
                     world.playSound(cords.getX(), cords.getY(), cords.getZ(), targetState.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 0.7f + 0.3f * world.getRandom().nextFloat(), 1.0f, true);
-                    wrenchStack.damage(1, player, EquipmentSlotHelper.convert(context.getHand()));
                     return ActionResult.SUCCESS;
                 }
             }
@@ -91,6 +102,14 @@ public class WrenchItem extends MiningToolItem {
     }
 
     public static ActionResult rotateBlock(World world, BlockPos targetPos, BlockState targetState, Direction clickedFace, @Nullable Direction playerFacing, @Nullable Vec3d clickedPos) {
+        Optional<Boolean> optionalExtended = targetState.getOrEmpty(Properties.EXTENDED);
+        Optional<ChestType> optionalChestType = targetState.getOrEmpty(Properties.CHEST_TYPE);
+
+        // no rotating extended pistons or other bs
+        if (optionalChestType.isPresent() && !optionalChestType.get().equals(ChestType.SINGLE)) return ActionResult.FAIL;
+        if (optionalExtended.isPresent() && optionalExtended.get()) return ActionResult.FAIL;
+        if (targetState.contains(Properties.SHORT)) return ActionResult.FAIL;
+
         Optional<Direction> optionalFacing = targetState.getOrEmpty(Properties.FACING);
         Optional<Direction> optionalHorizontalFacing = targetState.getOrEmpty(Properties.HORIZONTAL_FACING);
         Optional<Direction.Axis> optionalAxis = targetState.getOrEmpty(Properties.AXIS);
@@ -98,6 +117,7 @@ public class WrenchItem extends MiningToolItem {
         Optional<Orientation> optionalOrientation = targetState.getOrEmpty(Properties.ORIENTATION);
         Optional<RailShape> optionalRailShape = targetState.getOrEmpty(Properties.RAIL_SHAPE);
         Optional<RailShape> optionalStraightRailShape = targetState.getOrEmpty(Properties.STRAIGHT_RAIL_SHAPE);
+
 
         boolean hasPlayer = playerFacing != null;
 
@@ -123,31 +143,30 @@ public class WrenchItem extends MiningToolItem {
 
         if (newState == null && optionalFacing.isPresent()) {
             Direction facing = optionalFacing.get();
+            Direction newFacing = null;
 
-            if (facing.equals(clickedFace)) {
-                return ActionResult.FAIL;
-            } else if (facing.getAxis().equals(clickedAxis)) {
-                newState = targetState.with(Properties.FACING, clickedFace);
+            if (facing.getAxis().equals(clickedAxis)) {
+                newFacing = facing.getOpposite();
             } else {
-                newState = targetState.with(Properties.FACING, facing.rotateClockwise(clickedFace.getAxis()));
+                newFacing = facing.rotateClockwise(clickedFace.getAxis());
             }
+
+            if (newFacing != null) newState = targetState.with(Properties.FACING, newFacing);
         }
 
         // Rotate blocks that have the Horizontal Facing block state
         if (newState == null && optionalHorizontalFacing.isPresent()) {
-            Direction facing = optionalHorizontalFacing.get();
-            Direction newDirection;
+            Direction horizontalFacing = optionalHorizontalFacing.get();
+            Direction newHorizontalFacing;
 
-            if (facing.equals(clickedFace)) {
-                return ActionResult.FAIL;
-            } else if (facing.getAxis().equals(clickedAxis)) {
-                newDirection = clickedFace;
+            if (horizontalFacing.getAxis().equals(clickedAxis)) {
+                newHorizontalFacing = horizontalFacing.getOpposite();
             } else {
-                newDirection = facing.rotateClockwise(clickedFace.getAxis());
-                if (newDirection.getAxis().equals(Direction.Axis.Y)) return ActionResult.FAIL;
+                newHorizontalFacing = horizontalFacing.rotateClockwise(clickedFace.getAxis());
+                if (newHorizontalFacing.getAxis().equals(Direction.Axis.Y)) return ActionResult.FAIL;
             }
 
-            newState = targetState.with(Properties.HORIZONTAL_FACING, newDirection);
+            newState = targetState.with(Properties.HORIZONTAL_FACING, newHorizontalFacing);
         }
 
         // Rotate blocks with the Axis block state
@@ -217,7 +236,11 @@ public class WrenchItem extends MiningToolItem {
             RailShape newShape = null;
 
             // run player logic on rails
-            if (hasPlayer && clickedPos != null) newShape = playerRotateCurvingRail(world, railShape, playerFacing, targetPos, clickedPos);
+            if (hasPlayer && clickedPos != null) {
+                newShape = playerRotateCurvingRail(world, railShape, playerFacing, targetPos, clickedPos);
+            } else {
+
+            }
 
             /*
             if (railAxis == null) {
@@ -262,7 +285,7 @@ public class WrenchItem extends MiningToolItem {
         if (newState != null) {
             if (!world.isClient() && !newState.equals(targetState)) {
                 world.setBlockState(targetPos, newState);
-                world.updateComparators(targetPos, targetState.getBlock());
+                if (hasPlayer) world.updateComparators(targetPos.offset(clickedFace), newState.getBlock());
             }
 
             return ActionResult.SUCCESS;
@@ -317,20 +340,35 @@ public class WrenchItem extends MiningToolItem {
 
     private static @Nullable RailShape playerRotateCurvingRail(World world, RailShape railShape, Direction lookDirection, BlockPos railPos, Vec3d hitPos) {
         Vec3d railCenterPos = railPos.toCenterPos();
-        Direction clickDirection = Direction.getFacing(new Vec3d(hitPos.getX() - railCenterPos.getX(), 0, hitPos.getZ() - railCenterPos.getZ()));
+
         Direction.Axis railAxis = railShapeToAxis(railShape);
-        Direction.Axis clickAxis = clickDirection.getAxis();
         Direction.Axis lookAxis = lookDirection.getAxis();
 
         RailShape newShape = null;
 
-        if (railShape.isAscending() || railAxis == null || clickAxis.equals(railAxis)) {
-            // if the rail is already curved, straighten out rail
-            // if player is looking the same direction that was clicked, straighten out the rail
-            // also try to toggle ascending rails
-            newShape = axisToRailShape(lookAxis);
-            if (newShape == null || newShape.equals(railShape)) newShape = tryAscend(world, railShape, railPos, lookDirection.getDirection());
-        } else {
+        // try to toggle ascension / descension first
+        if (railShape.isAscending() || lookAxis.equals(railAxis)) {
+            RailShape toggled = tryAscend(world, railShape, railPos, lookDirection.getDirection());
+            // make sure that we've changed something before committing
+            if (toggled != null && !toggled.equals(railShape)) newShape = toggled;
+        }
+
+        // if the rail is curved, straighten it out
+        if (newShape == null && (!lookAxis.equals(railAxis))) {
+            RailShape straightened = axisToRailShape(lookAxis);
+            // make sure that we've changed something before committing
+            if (straightened != null && !straightened.equals(newShape)) newShape = straightened;
+        }
+
+        // only try to rotate straight rails when no other operations have been performed
+        if (newShape == null && railAxis != null) {
+            // we're already going to rotate it, so broaden search to either side of the rail
+            Direction clickDirection =
+                    Direction.getFacing(railAxis.equals(Direction.Axis.X)
+                    ? new Vec3d(0, 0, hitPos.getZ() - railCenterPos.getZ())
+                    : new Vec3d(hitPos.getX() - railCenterPos.getX(), 0, 0)
+            );
+
             // if player clicks on the axis perpendicular to looking axis, rotate rail.
             switch (clickDirection) {
                 case NORTH -> {

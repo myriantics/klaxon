@@ -1,8 +1,11 @@
 {
   "values": [
     "#klaxon:instabreakable/wrench",
+    "klaxon:deepslate_blast_processor",
     "minecraft:redstone_lamp",
     "minecraft:repeater",
-    "minecraft:comparator"
+    "minecraft:comparator",
+    "minecraft:dispenser",
+    "minecraft:dropper"
   ]
 }

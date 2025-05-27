@@ -1,8 +1,13 @@
 {
   "values": [
+    "#minecraft:shulker_boxes",
     "#minecraft:rails",
+    "#c:metal_doors",
+    "#c:metal_trapdoors",
+    "#c:scaffoldings",
+    "#c:grates",
+    "#c:levers",
     "minecraft:blast_furnace",
-    "minecraft:shulker_box",
     "minecraft:sticky_piston",
     "minecraft:piston_head",
     "minecraft:piston",

@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
@@ -49,6 +50,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.COBWEB);
         getOrCreateTagBuilder(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE)
                 .forceAddTag(KlaxonConventionalBlockTags.VINES)
+                .forceAddTag(KlaxonConventionalBlockTags.GRATES)
                 .forceAddTag(ConventionalBlockTags.CHAINS)
                 .forceAddTag(ConventionalBlockTags.ROPES)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
@@ -83,11 +85,18 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         // wrench
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_MINEABLE)
-                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE);
+                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
+                .forceAddTag(BlockTags.TRAPDOORS)
+                .forceAddTag(BlockTags.DOORS);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
+                .forceAddTag(BlockTags.SHULKER_BOXES)
                 .forceAddTag(BlockTags.RAILS)
+                .forceAddTag(KlaxonConventionalBlockTags.METAL_DOORS)
+                .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS)
+                .forceAddTag(KlaxonConventionalBlockTags.SCAFFOLDINGS)
+                .forceAddTag(KlaxonConventionalBlockTags.GRATES)
+                .forceAddTag(KlaxonConventionalBlockTags.LEVERS)
                 .add(Blocks.BLAST_FURNACE)
-                .add(Blocks.SHULKER_BOX)
                 .add(Blocks.STICKY_PISTON)
                 .add(Blocks.PISTON_HEAD)
                 .add(Blocks.PISTON)
@@ -151,11 +160,46 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.CRUDE_STEEL_DOOR);
 
         getOrCreateTagBuilder(BlockTags.DOORS)
-                .add(KlaxonBlocks.STEEL_DOOR)
-                .add(KlaxonBlocks.CRUDE_STEEL_DOOR);
+                .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS);
         getOrCreateTagBuilder(BlockTags.TRAPDOORS)
+                .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS);
+
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.METAL_DOORS)
+                .add(KlaxonBlocks.STEEL_DOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
+                .add(Blocks.COPPER_DOOR)
+                .add(Blocks.EXPOSED_COPPER_DOOR)
+                .add(Blocks.WEATHERED_COPPER_DOOR)
+                .add(Blocks.OXIDIZED_COPPER_DOOR)
+                .add(Blocks.WAXED_COPPER_DOOR)
+                .add(Blocks.WAXED_EXPOSED_COPPER_DOOR)
+                .add(Blocks.WAXED_WEATHERED_COPPER_DOOR)
+                .add(Blocks.WAXED_OXIDIZED_COPPER_DOOR);
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.METAL_TRAPDOORS)
                 .add(KlaxonBlocks.STEEL_TRAPDOOR)
-                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
+                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
+                .add(Blocks.COPPER_TRAPDOOR)
+                .add(Blocks.EXPOSED_COPPER_TRAPDOOR)
+                .add(Blocks.WEATHERED_COPPER_TRAPDOOR)
+                .add(Blocks.OXIDIZED_COPPER_TRAPDOOR)
+                .add(Blocks.WAXED_COPPER_TRAPDOOR)
+                .add(Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR)
+                .add(Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR)
+                .add(Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR);
+
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.SCAFFOLDINGS)
+                .add(Blocks.SCAFFOLDING);
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.GRATES)
+                .add(Blocks.COPPER_GRATE)
+                .add(Blocks.EXPOSED_COPPER_GRATE)
+                .add(Blocks.WEATHERED_COPPER_GRATE)
+                .add(Blocks.OXIDIZED_COPPER_GRATE)
+                .add(Blocks.WAXED_COPPER_GRATE)
+                .add(Blocks.WAXED_EXPOSED_COPPER_GRATE)
+                .add(Blocks.WAXED_WEATHERED_COPPER_GRATE)
+                .add(Blocks.WAXED_OXIDIZED_COPPER_GRATE);
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.LEVERS)
+                .add(Blocks.LEVER);
 
         getOrCreateTagBuilder(KlaxonBlockTags.MACHINES)
                 .forceAddTag(KlaxonBlockTags.BLAST_PROCESSORS);
@@ -178,10 +222,14 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_INTERACTION_DENYLIST)
-                .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED);
+                .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
+                .add(Blocks.PISTON_HEAD);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATABLE)
                 .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
+                .add(Blocks.REDSTONE_LAMP)
+                .add(Blocks.REPEATER)
+                .add(Blocks.COMPARATOR)
                 .add(Blocks.DISPENSER)
                 .add(Blocks.DROPPER);
     }
