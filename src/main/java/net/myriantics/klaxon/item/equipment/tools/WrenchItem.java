@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
-import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.ChestType;
@@ -27,6 +26,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.util.KlaxonRailHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -195,7 +195,7 @@ public class WrenchItem extends MiningToolItem {
         if (newState == null && optionalStraightRailShape.isPresent()) {
             Direction direction = hasPlayer ? playerFacing : clickedFace;
             RailShape railShape = optionalStraightRailShape.get();
-            Direction.Axis railAxis = railShapeToAxis(railShape);
+            Direction.Axis railAxis = KlaxonRailHelper.railShapeToAxis(railShape);
             RailShape newShape = null;
 
             if (railAxis == null) {
@@ -205,17 +205,17 @@ public class WrenchItem extends MiningToolItem {
                 // if we're coming from the same direction that the rail's already facing, try to switch between ascending and flat rails
                 Direction.AxisDirection ascensionDirection = hasPlayer ? direction.getDirection() : direction.getDirection().getOpposite();
                 // swap it if it's a dispenser to allow tracks to be routed on top of dispenser - more useful than setting the dispenser at the bottom of the track, blocking any carts.
-                RailShape toggled = tryAscend(world, railShape, targetPos, ascensionDirection);
+                RailShape toggled = KlaxonRailHelper.tryToggleAscending(world, railShape, targetPos, ascensionDirection);
 
                 if (toggled != null) newShape = toggled;
             } else {
                 // if the rail is being rotated from a horizontal axis, rotate rail to be on that axis
-                RailShape rotated = axisToRailShape(direction.getAxis());
+                RailShape rotated = KlaxonRailHelper.axisToRailShape(direction.getAxis());
 
                 // if a dispenser is wrenching from top or bottom, flip the rail's orientation
                 if (rotated == null) {
-                    Direction.Axis axis = flipHorizontalAxis(railAxis);
-                    if(axis != null) rotated = axisToRailShape(axis);
+                    Direction.Axis axis = KlaxonRailHelper.flipHorizontalAxis(railAxis);
+                    if(axis != null) rotated = KlaxonRailHelper.axisToRailShape(axis);
                 }
 
                 if (rotated != null) newShape = rotated;
@@ -228,52 +228,15 @@ public class WrenchItem extends MiningToolItem {
         if (newState == null && optionalRailShape.isPresent()) {
             Direction direction = hasPlayer ? playerFacing : clickedFace;
             RailShape railShape = optionalRailShape.get();
-            Direction.Axis railAxis = railShapeToAxis(railShape);
-            RailShape newShape = null;
+            RailShape newShape;
 
-            // run player logic on rails
             if (hasPlayer && clickedPos != null) {
+                // run player logic on rails
                 newShape = playerRotateCurvingRail(world, railShape, playerFacing, targetPos, clickedPos);
             } else {
-
+                // run dispenser logic on rails
+                newShape = dispenserRotateCurvingRails(world, targetPos, railShape, direction);
             }
-
-            /*
-            if (railAxis == null) {
-                // process curved rails
-                // try to straighten any curved rails to the axis player is facing
-                RailShape straightened = axisToRailShape(direction.getAxis());
-                if (straightened != null) {
-                    // commit player interaction
-                    newShape = straightened;
-                } else {
-                    // don't bother doing dispenser logic if there's a player
-                    if (hasPlayer) return ActionResult.FAIL;
-                    // compute then commit dispenser interaction
-                    // todo: add dispenser curved rail rotation code
-                }
-            } else if (direction.getAxis().equals(railAxis)) {
-                // if our direction is the same direction as a straight rail, try to make it ascending
-
-                // swap it if it's a dispenser to allow tracks to be routed on top of dispenser - more useful than setting the dispenser at the bottom of the track, blocking any carts.
-                Direction.AxisDirection ascensionDirection = hasPlayer ? direction.getDirection() : direction.getDirection().getOpposite();
-
-                RailShape toggled = tryAscend(world, railShape, targetPos, ascensionDirection);
-
-                if (toggled != null) newShape = toggled;
-            } else {
-                // try to rotate or flip a rail
-                RailShape rotated = null;
-                if (hasPlayer) {
-                    // if we've got a player, try to rotate the rail based on their look direction
-                    rotated = playerRotateCurvingRail(railShape, direction, targetPos, clickedPos);
-                } else {
-                    // if we've got a dispenser, just flip the orientation of the rail
-                }
-
-                if (rotated != null) newShape = rotated;
-            }
-             */
 
             if (newShape != null) newState = targetState.with(Properties.RAIL_SHAPE, newShape);
         }
@@ -290,68 +253,64 @@ public class WrenchItem extends MiningToolItem {
         return ActionResult.PASS;
     }
 
-    private static @Nullable RailShape tryAscend(World world, RailShape railShape, BlockPos railPos, Direction.AxisDirection ascensionDirection) {
-        Direction.Axis railAxis = railShapeToAxis(railShape);
-        if (railAxis == null) return null;
-        // check to see if block can support ascending rails before doing it - won't stop you from correcting a wrongly ascending one, though
-        if (railShape.isAscending() || AbstractRailBlock.hasTopRim(world, railPos.offset(Direction.from(railAxis, ascensionDirection)))) {
-            return toggleAscent(railShape, ascensionDirection);
-        }
+    private static @Nullable RailShape dispenserRotateCurvingRails(World world, BlockPos railPos , RailShape railShape, Direction dispenserFacing) {
+        Direction.Axis railAxis = KlaxonRailHelper.railShapeToAxis(railShape);
+        Direction.Axis perpendicularRailAxis = railAxis != null ? (railAxis.equals(Direction.Axis.Z) ? Direction.Axis.X : Direction.Axis.Z ) : null;
+        Direction.Axis dispenserAxis = dispenserFacing.getAxis();
 
-        return null;
-    }
+        RailShape newShape = null;
 
-    private static Direction.Axis flipHorizontalAxis(Direction.Axis axis) {
-        switch (axis) {
-            case X -> {
-                return Direction.Axis.Z;
-            }
-            case Z -> {
-                return Direction.Axis.X;
-            }
-        }
+        switch (dispenserFacing) {
+            case DOWN, UP -> {
+                // start off with making the rail flat if needed
+                if (railShape.isAscending()) {
+                    RailShape toggled = KlaxonRailHelper.tryToggleAscending(world, railShape, railPos, dispenserFacing.getOpposite().getDirection());
+                    if (toggled != null && !toggled.equals(railShape)) newShape = toggled;
+                }
 
-        return null;
-    }
+                if (newShape == null) {
+                    RailShape rotated = KlaxonRailHelper.rotateCurvingRail(railShape, dispenserFacing, railAxis);
 
-    private static @Nullable RailShape toggleAscent(RailShape railShape, Direction.AxisDirection direction) {
-        switch (railShape) {
-            case NORTH_SOUTH -> {
-                return direction.equals(Direction.AxisDirection.POSITIVE) ? RailShape.ASCENDING_SOUTH : RailShape.ASCENDING_NORTH;
+                    if (rotated != null) newShape = rotated;
+                }
             }
-            case EAST_WEST -> {
-                return direction.equals(Direction.AxisDirection.POSITIVE) ? RailShape.ASCENDING_EAST : RailShape.ASCENDING_WEST;
-            }
-            case ASCENDING_EAST, ASCENDING_WEST -> {
-                return RailShape.EAST_WEST;
-            }
-            case ASCENDING_NORTH, ASCENDING_SOUTH -> {
-                return RailShape.NORTH_SOUTH;
+            case NORTH, SOUTH, WEST, EAST -> {
+                // start off with trying to make it ascending
+                if (dispenserAxis.equals(railAxis)) {
+                    RailShape toggled = KlaxonRailHelper.tryToggleAscending(world, railShape, railPos, dispenserFacing.getOpposite().getDirection());
+                    if (toggled != null && !toggled.equals(railShape)) newShape = toggled;
+                }
+
+                // then try to correct rail to dispenser direction
+                if (newShape == null && !dispenserAxis.equals(railAxis)) {
+                    RailShape straightened = KlaxonRailHelper.axisToRailShape(dispenserAxis);
+                    if (straightened != null && !straightened.equals(railShape)) newShape = straightened;
+                }
             }
         }
 
-        return null;
+        return newShape;
     }
 
 
     private static @Nullable RailShape playerRotateCurvingRail(World world, RailShape railShape, Direction lookDirection, BlockPos railPos, Vec3d hitPos) {
         Vec3d railCenterPos = railPos.toCenterPos();
 
-        Direction.Axis railAxis = railShapeToAxis(railShape);
+        Direction.Axis railAxis = KlaxonRailHelper.railShapeToAxis(railShape);
         Direction.Axis lookAxis = lookDirection.getAxis();
 
         RailShape newShape = null;
 
         // try to toggle ascension / descension first
         if (railShape.isAscending() || lookAxis.equals(railAxis)) {
-            RailShape toggled = tryAscend(world, railShape, railPos, lookDirection.getDirection());
+            RailShape toggled = KlaxonRailHelper.tryToggleAscending(world, railShape, railPos, lookDirection.getDirection());
             // make sure that we've changed something before committing
             if (toggled != null && !toggled.equals(railShape)) newShape = toggled;
         }
 
         // if the rail is curved, straighten it out
         if (newShape == null && (!lookAxis.equals(railAxis))) {
-            RailShape straightened = axisToRailShape(lookAxis);
+            RailShape straightened = KlaxonRailHelper.axisToRailShape(lookAxis);
             // make sure that we've changed something before committing
             if (straightened != null && !straightened.equals(newShape)) newShape = straightened;
         }
@@ -385,29 +344,4 @@ public class WrenchItem extends MiningToolItem {
         return newShape;
     }
 
-    private static @Nullable RailShape axisToRailShape(Direction.Axis axis) {
-        switch (axis) {
-            case X -> {
-                return RailShape.EAST_WEST;
-            }
-            case Z -> {
-                return RailShape.NORTH_SOUTH;
-            }
-        }
-
-        return null;
-    }
-
-    private static @Nullable Direction.Axis railShapeToAxis(RailShape railShape) {
-        switch (railShape) {
-            case NORTH_SOUTH, ASCENDING_NORTH, ASCENDING_SOUTH -> {
-                return Direction.Axis.Z;
-            }
-            case EAST_WEST, ASCENDING_EAST, ASCENDING_WEST -> {
-                return Direction.Axis.X;
-            }
-        }
-
-        return null;
-    }
 }

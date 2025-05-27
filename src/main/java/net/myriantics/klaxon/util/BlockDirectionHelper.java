@@ -3,6 +3,9 @@ package net.myriantics.klaxon.util;
 import net.minecraft.util.math.Direction;
 
 public abstract class BlockDirectionHelper {
+    public static Direction[] HORIZONTAL = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
+    public static Direction[] ALL = Direction.values();
+
     public static Direction getUp(Direction blockDirection) {
         return Direction.UP;
     }
