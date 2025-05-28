@@ -11,29 +11,29 @@
       }
     ]
   ],
-  "group": "steel_hammer",
+  "group": "steel_wrench",
   "key": {
-    "B": {
-      "tag": "klaxon:crude_inclusive_steel_blocks"
-    },
     "G": {
       "tag": "klaxon:gear_grip_materials"
     },
     "I": {
       "tag": "klaxon:crude_inclusive_steel_ingots"
     },
+    "P": {
+      "tag": "klaxon:crude_inclusive_steel_plates"
+    },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "BIB",
-    " S ",
-    "GSG"
+    " PP",
+    " II",
+    "SG "
   ],
   "result": {
     "count": 1,
-    "id": "klaxon:steel_hammer"
+    "id": "klaxon:steel_wrench"
   },
   "show_notification": false
 }

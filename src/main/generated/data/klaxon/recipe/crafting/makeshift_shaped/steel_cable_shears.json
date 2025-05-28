@@ -1,7 +1,11 @@
 {
   "type": "klaxon:makeshift_shaped",
   "category": "equipment",
-  "constant_ingredients": [],
+  "constant_ingredients": [
+    {
+      "item": "minecraft:leather"
+    }
+  ],
   "group": "steel_cable_shears",
   "key": {
     "G": {

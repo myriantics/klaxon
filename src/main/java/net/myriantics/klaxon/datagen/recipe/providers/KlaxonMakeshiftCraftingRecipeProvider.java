@@ -26,21 +26,6 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
     }
 
     private void buildShapedCraftingRecipes() {
-        addMakeshiftShapedCraftingRecipe(Map.of(
-                        'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS),
-                        'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
-                        'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
-                        'S', Ingredient.ofItems(Items.STICK)),
-                new String[]{
-                        "BIB",
-                        " S ",
-                        "GSG"
-                },
-                List.of(Ingredient.ofItems(Items.STICK)),
-                new ItemStack(KlaxonItems.STEEL_HAMMER),
-                CraftingRecipeCategory.EQUIPMENT,
-                null
-        );
 
         addMakeshiftShapedCraftingRecipe(Map.of(
                         'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
@@ -101,6 +86,21 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
         );
 
         addMakeshiftShapedCraftingRecipe(Map.of(
+                        'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS),
+                        'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
+                        'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
+                        'S', Ingredient.ofItems(Items.STICK)),
+                new String[]{
+                        "BIB",
+                        " S ",
+                        "GSG"
+                },
+                List.of(Ingredient.ofItems(Items.STICK, Items.LEATHER)),
+                new ItemStack(KlaxonItems.STEEL_HAMMER),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
+        addMakeshiftShapedCraftingRecipe(Map.of(
                 'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                 'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
                 'S', Ingredient.ofItems(Items.STICK)
@@ -110,12 +110,11 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                         "PP",
                         "SG"
                 },
-                List.of(Ingredient.ofItems(Items.STICK)),
+                List.of(Ingredient.ofItems(Items.STICK, Items.LEATHER)),
                 new ItemStack(KlaxonItems.STEEL_CLEAVER),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
-
         addMakeshiftShapedCraftingRecipe(Map.of(
                 'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                 'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS)
@@ -124,8 +123,24 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                         "GP",
                         "PG"
                 },
-                List.of(),
+                List.of(Ingredient.ofItems(Items.LEATHER)),
                 new ItemStack(KlaxonItems.STEEL_CABLE_SHEARS),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
+        addMakeshiftShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                        'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
+                        'G', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
+                        'S', Ingredient.ofItems(Items.STICK)
+                ),
+                new String[] {
+                        " PP",
+                        " II",
+                        "SG "
+                },
+                List.of(Ingredient.ofItems(Items.STICK, Items.LEATHER)),
+                new ItemStack(KlaxonItems.STEEL_WRENCH),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );

@@ -2,9 +2,14 @@
   "type": "klaxon:makeshift_shaped",
   "category": "equipment",
   "constant_ingredients": [
-    {
-      "item": "minecraft:stick"
-    }
+    [
+      {
+        "item": "minecraft:stick"
+      },
+      {
+        "item": "minecraft:leather"
+      }
+    ]
   ],
   "group": "steel_cleaver",
   "key": {
