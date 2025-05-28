@@ -13,6 +13,7 @@ public class KlaxonAdvancementCriteria {
     public static final WalljumpAbilityCriterion WALLJUMP_ABILITY_CRITERION = register("walljump_ability", new WalljumpAbilityCriterion());
     public static final ToolUsageRecipeCraftCriterion TOOL_USAGE_RECIPE_CRITERION = register("tool_usage_recipe", new ToolUsageRecipeCraftCriterion());
     public static final WrenchUsageCriterion WRENCH_USAGE_CRITERION = register("wrench_usage", new WrenchUsageCriterion());
+    public static final InstabreakToolInstabreakCriterion INSTABREAK_TOOL_INSTABREAK_CRITERION = register("instabreak_tool_instabreak", new InstabreakToolInstabreakCriterion());
 
     private static <T extends Criterion<?>> T register(String name, T criterion) {
         return Registry.register(Registries.CRITERION, KlaxonCommon.locate(name), criterion);

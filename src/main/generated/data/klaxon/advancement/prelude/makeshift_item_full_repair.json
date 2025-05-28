@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/use_hammer_to_make_metal_plate",
+  "parent": "klaxon:prelude/watch_blast_processor_craft",
   "criteria": {
     "makeshift_item_full_repair": {
       "conditions": {

@@ -51,6 +51,10 @@ public class KlaxonBlockTags {
     public static final TagKey<Block> MACHINES =
             createTag("machines");
 
+    // advancement tags
+    public static final TagKey<Block> BREAKING_AND_ENTERING_ADVANCEMENT_VALID_BLOCKS =
+            createTag("breaking_and_entering_advancement_valid_blocks");
+
     private static TagKey<Block> createInstabreakableTag(String name) {
         return createTag("instabreakable/" + name);
     }

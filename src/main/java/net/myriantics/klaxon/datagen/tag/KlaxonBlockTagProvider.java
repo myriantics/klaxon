@@ -24,6 +24,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         buildBehaviorTags();
         buildCategoricalTags();
         buildToolRequirementTags();
+        buildAdvancementTags();
     }
 
     private void buildMiningTags() {
@@ -252,5 +253,12 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL)
                 .forceAddTag(BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
 
+    }
+
+    private void buildAdvancementTags()  {
+        getOrCreateTagBuilder(KlaxonBlockTags.BREAKING_AND_ENTERING_ADVANCEMENT_VALID_BLOCKS)
+                .forceAddTag(KlaxonConventionalBlockTags.GRATES)
+                .forceAddTag(ConventionalBlockTags.CHAINS)
+                .add(Blocks.IRON_BARS);
     }
 }

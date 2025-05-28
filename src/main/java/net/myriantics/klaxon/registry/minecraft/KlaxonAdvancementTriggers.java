@@ -22,4 +22,7 @@ public abstract class KlaxonAdvancementTriggers {
     public static void triggerWrenchUsage(ServerPlayerEntity serverPlayer, WrenchItem.UsageType usageType, BlockState targetState) {
         KlaxonAdvancementCriteria.WRENCH_USAGE_CRITERION.trigger(serverPlayer, usageType, targetState);
     }
+    public static void triggerInstabreakToolInstabreak(ServerPlayerEntity serverPlayer, ItemStack instabreakingTool, BlockState instabrokenState) {
+        KlaxonAdvancementCriteria.INSTABREAK_TOOL_INSTABREAK_CRITERION.trigger(serverPlayer, instabreakingTool, instabrokenState);
+    }
 }

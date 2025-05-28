@@ -9,7 +9,9 @@ import net.minecraft.component.type.ToolComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MiningToolItem;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
+import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,6 +38,8 @@ public abstract class AbstractBlockStateMixin {
                 // make sure block is suitable for tool to mine
                 && toolComponent.getSpeed(state) > toolComponent.defaultMiningSpeed()
         ) {
+            // pop advancement if needed
+            if (player instanceof ServerPlayerEntity serverPlayer) KlaxonAdvancementTriggers.triggerInstabreakToolInstabreak(serverPlayer, miningToolStack, state);
             // if it can instabreak, set it to a value over 1.0 so that it instabreaks
             return Integer.MAX_VALUE;
         }
