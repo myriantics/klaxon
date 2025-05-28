@@ -65,7 +65,7 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
                             ParticleTypes.EXPLOSION,
                             ParticleTypes.EXPLOSION_EMITTER,
                             SoundEvents.ENTITY_GENERIC_EXPLODE);
-                    serverWorld.updateNeighbors(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+                    serverWorld.updateNeighbors(pos, activeBlockState.getBlock());
                 }
             }
         }

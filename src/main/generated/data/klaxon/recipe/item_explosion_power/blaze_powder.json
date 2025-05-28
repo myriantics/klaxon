@@ -1,9 +1,9 @@
 {
   "type": "klaxon:item_explosion_power",
-  "explosionPower": 0.8,
+  "explosionPower": 0.5,
   "ingredient": {
-    "item": "minecraft:gunpowder"
+    "item": "minecraft:blaze_powder"
   },
   "isHidden": false,
-  "producesFire": false
+  "producesFire": true
 }

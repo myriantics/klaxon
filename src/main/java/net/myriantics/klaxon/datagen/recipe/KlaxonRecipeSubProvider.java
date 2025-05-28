@@ -12,6 +12,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.NamedIngredient;
+import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
@@ -257,6 +258,13 @@ public abstract class KlaxonRecipeSubProvider {
         ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(group, category, RawShapedRecipe.create(key, Arrays.stream(pattern).toList()), constantIngredients,  output, false);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addItemExplosionPowerRecipeWithBehavior(NamedIngredient input, Identifier behaviorId,
+                                                        double explosionPower, boolean producesFire, boolean isHidden,
+                                                        final ResourceCondition... conditions) {
+        addItemExplosionPowerRecipe(input, explosionPower, producesFire, isHidden, conditions);
+        addBlastProcessorBehaviorRecipe(input, behaviorId, conditions);
     }
 
     public void addItemExplosionPowerRecipe(NamedIngredient input,

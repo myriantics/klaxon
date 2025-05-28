@@ -11,28 +11,28 @@ import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipe
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
 public class GlowstoneBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
-    private final double explosionPower;
-
-    public GlowstoneBlastProcessorCatalystBehavior(Identifier id, double explosionPower) {
+    public GlowstoneBlastProcessorCatalystBehavior(Identifier id) {
         super(id);
-        this.explosionPower = explosionPower;
     }
 
     @Override
     public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput recipeInventory) {
+        ItemExplosionPowerData base = super.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
+
         // if respawn anchor doesn't work in dimension, explode
         if (!world.getDimension().respawnAnchorWorks()) {
-            return new ItemExplosionPowerData(explosionPower, true);
+            return new ItemExplosionPowerData(base.explosionPower(), base.producesFire());
         }
 
-        return super.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
+        // if respawn anchor does work, tough luck. fail.
+        return new ItemExplosionPowerData(0, false);
     }
 
     @Override
     public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
         return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
                 0.0,
-                explosionPower,
+                5.0,
                 Text.translatable("klaxon.emi.text.explosion_power_info.glowstone_behavior_info"),
                 getId().getPath()
         );

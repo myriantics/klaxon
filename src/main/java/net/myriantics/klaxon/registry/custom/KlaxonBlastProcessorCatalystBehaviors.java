@@ -15,8 +15,10 @@ public class KlaxonBlastProcessorCatalystBehaviors {
     public static final Identifier BEDLIKE_EXPLODABLE_ID = locateBehaviorId("bedlike_explodable");
     public static final Identifier WIND_CHARGE_ID = locateBehaviorId("wind_charge");
     public static final Identifier DRAGONS_BREATH_ID = locateBehaviorId("dragons_breath");
-    public static final Identifier GLOWSTONE_DUST_ID = locateBehaviorId("glowstone_dust");
-    public static final Identifier GLOWSTONE_BLOCK_ID = locateBehaviorId("glowstone_block");
+    public static final Identifier GLOWSTONE_ID = locateBehaviorId("glowstone");
+    public static final Identifier TNT_MINECART_ID = locateBehaviorId("tnt_minecart");
+    public static final Identifier END_CRYSTAL_ID = locateBehaviorId("end_crystal");
+    public static final Identifier CREEPER_HEAD_ID = locateBehaviorId("creeper_head");
 
     public static final BlastProcessorCatalystBehavior DEFAULT = registerBehavior(DEFAULT_ID,
             new ItemBlastProcessorCatalystBehavior(DEFAULT_ID));
@@ -30,10 +32,14 @@ public class KlaxonBlastProcessorCatalystBehaviors {
             new WindChargeBlastProcessorCatalystBehavior(WIND_CHARGE_ID));
     public static final BlastProcessorCatalystBehavior DRAGONS_BREATH = registerBehavior(DRAGONS_BREATH_ID,
             new DragonsBreathBlastProcessorCatalystBehavior(DRAGONS_BREATH_ID));
-    public static final BlastProcessorCatalystBehavior GLOWSTONE_DUST = registerBehavior(GLOWSTONE_DUST_ID,
-            new GlowstoneBlastProcessorCatalystBehavior(GLOWSTONE_DUST_ID, 0.8));
-    public static final BlastProcessorCatalystBehavior GLOWSTONE_BLOCK = registerBehavior(GLOWSTONE_BLOCK_ID,
-            new GlowstoneBlastProcessorCatalystBehavior(GLOWSTONE_BLOCK_ID, 3.2));
+    public static final BlastProcessorCatalystBehavior GLOWSTONE_DUST = registerBehavior(GLOWSTONE_ID,
+            new GlowstoneBlastProcessorCatalystBehavior(GLOWSTONE_ID));
+    public static final BlastProcessorCatalystBehavior TNT_MINECART = registerBehavior(TNT_MINECART_ID,
+            new TntMinecartBlastProcessorCatalystBehavior(TNT_MINECART_ID));
+    public static final BlastProcessorCatalystBehavior END_CRYSTAL = registerBehavior(END_CRYSTAL_ID,
+            new EndCrystalBlastProcessorCatalystBehavior(END_CRYSTAL_ID));
+    public static final BlastProcessorCatalystBehavior CREEPER_HEAD = registerBehavior(CREEPER_HEAD_ID,
+            new CreeperHeadBlastProcessorCatalystBehavior(CREEPER_HEAD_ID));
 
     private static Identifier locateBehaviorId(String name) {
         return KlaxonCommon.locate(name + "_behavior");

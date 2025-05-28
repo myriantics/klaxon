@@ -38,9 +38,7 @@ public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProces
 
             areaEffectCloudEntity.setParticleType(ParticleTypes.DRAGON_BREATH);
             areaEffectCloudEntity.setRadius(radius);
-            //areaEffectCloudEntity.setRadius((float) (powerData.explosionPower() / 5));
             areaEffectCloudEntity.setDuration(80);
-            //areaEffectCloudEntity.setRadiusGrowth((5f - areaEffectCloudEntity.getRadius()) / areaEffectCloudEntity.getDuration());
             areaEffectCloudEntity.setRadiusGrowth((finalRadius - radius) / areaEffectCloudEntity.getDuration());
             areaEffectCloudEntity.addEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 1, 1));
 
@@ -53,17 +51,7 @@ public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProces
 
     @Override
     public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput recipeInventory) {
-        return new ItemExplosionPowerData(1.5, false);
-    }
-
-    @Override
-    public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
-        return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                1.5,
-                1.5,
-                Text.translatable("klaxon.emi.text.explosion_power_info.dragons_breath_behavior_info"),
-                getId().getPath()
-        );
+        return new ItemExplosionPowerData(2.5, false);
     }
 
     @Override

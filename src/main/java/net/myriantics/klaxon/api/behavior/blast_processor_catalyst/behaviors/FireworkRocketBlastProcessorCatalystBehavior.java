@@ -1,23 +1,28 @@
 package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 
+import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
 import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
+import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
@@ -28,22 +33,34 @@ public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProce
 
     @Override
     public ItemExplosionPowerData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystRecipeInput craftingInventory) {
-        ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+        ItemExplosionPowerData base = super.getExplosionPowerData(world, pos, blastProcessor, craftingInventory);
+        ItemStack stack = craftingInventory.catalystStack();
 
         if (stack.get(DataComponentTypes.FIREWORKS) instanceof FireworksComponent component) {
-            List<FireworkExplosionComponent> list = component.explosions();
+            boolean producesFire = base.producesFire();
+            double explosionPower = base.explosionPower();
 
-            double explosionPower = 0.3;
-            for (FireworkExplosionComponent explosion : list) {
-                explosionPower += explosion.shape().equals(FireworkExplosionComponent.Type.CREEPER) ? 0.5 : 0.2;
+            // add explosion power for the flight duration
+            ItemExplosionPowerData gunpowderData = super.getExplosionPowerData(world, pos, blastProcessor, new ExplosiveCatalystRecipeInput(new ItemStack(Items.GUNPOWDER)));
+            producesFire = producesFire || gunpowderData.producesFire();
+            explosionPower += component.flightDuration() * gunpowderData.explosionPower();
+
+            for (FireworkExplosionComponent explosionComponent : component.explosions()) {
+                ItemStack starStack = new ItemStack(Items.FIREWORK_STAR);
+                starStack.applyComponentsFrom(ComponentMap.builder().add(DataComponentTypes.FIREWORK_EXPLOSION, explosionComponent).build());
+                ItemExplosionPowerData fireworkStarData = KlaxonBlastProcessorCatalystBehaviors.FIREWORK_STAR.getExplosionPowerData(world, pos, blastProcessor, new ExplosiveCatalystRecipeInput(starStack));
+
+                producesFire = producesFire || fireworkStarData.producesFire();
+                explosionPower += fireworkStarData.explosionPower();
             }
 
-            explosionPower = Math.min(explosionPower, 10.0);
+            // each recipe produces 3 rockets, so our actual value is 1/3 of what was calculated - then round to the nearest tenth.
+            explosionPower /= 3;
 
-            return new ItemExplosionPowerData(explosionPower, false);
+            return new ItemExplosionPowerData(explosionPower, producesFire);
         }
 
-        return super.getExplosionPowerData(world, pos, blastProcessor, craftingInventory);
+        return base;
     }
 
     @Override

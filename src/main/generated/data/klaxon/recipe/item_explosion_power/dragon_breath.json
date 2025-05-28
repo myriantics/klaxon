@@ -1,8 +1,8 @@
 {
   "type": "klaxon:item_explosion_power",
-  "explosionPower": 0.8,
+  "explosionPower": 2.5,
   "ingredient": {
-    "item": "minecraft:gunpowder"
+    "item": "minecraft:dragon_breath"
   },
   "isHidden": false,
   "producesFire": false

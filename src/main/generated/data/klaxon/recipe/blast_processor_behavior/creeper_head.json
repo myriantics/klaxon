@@ -1,0 +1,7 @@
+{
+  "type": "klaxon:blast_processor_behavior",
+  "behavior_id": "klaxon:creeper_head_behavior",
+  "ingredient": {
+    "item": "minecraft:creeper_head"
+  }
+}

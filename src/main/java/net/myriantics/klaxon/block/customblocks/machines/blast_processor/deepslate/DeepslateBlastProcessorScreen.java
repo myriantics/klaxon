@@ -43,9 +43,13 @@ public class DeepslateBlastProcessorScreen extends HandledScreen<DeepslateBlastP
     }
 
     private void updateRecipeDataDisplay(DrawContext context) {
-        context.drawText(textRenderer, "" + handler.explosionPowerMax, getOffsetX(63), getOffsetY(22), 16777215, false);
-        context.drawText(textRenderer, "" + handler.explosionPower, getOffsetX(63), getOffsetY(40), 16777215, false);
-        context.drawText(textRenderer, "" + handler.explosionPowerMin, getOffsetX(63), getOffsetY(58), 16777215, false);
+        String explosionPowerMin = Double.valueOf(handler.explosionPowerMin).toString();
+        String explosionPower = Double.valueOf(handler.explosionPower).toString();
+        String explosionPowerMax = Double.valueOf(handler.explosionPowerMax).toString();
+
+        context.drawText(textRenderer, explosionPowerMin.substring(0, explosionPowerMin.indexOf('.') + 2), getOffsetX(63), getOffsetY(22), 16777215, false);
+        context.drawText(textRenderer, explosionPower.substring(0, explosionPower.indexOf('.') + 2), getOffsetX(63), getOffsetY(40), 16777215, false);
+        context.drawText(textRenderer, explosionPowerMax.substring(0, explosionPowerMax.indexOf('.') + 2), getOffsetX(63), getOffsetY(58), 16777215, false);
     }
 
     private int getOffsetX(int guiX) {

@@ -1,9 +1,9 @@
 {
   "type": "klaxon:item_explosion_power",
-  "explosionPower": 0.8,
+  "explosionPower": 5.0,
   "ingredient": {
-    "item": "minecraft:gunpowder"
+    "tag": "klaxon:bedlike_explodables"
   },
   "isHidden": false,
-  "producesFire": false
+  "producesFire": true
 }
