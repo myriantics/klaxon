@@ -42,7 +42,7 @@ public class KlaxonBlastProcessorCatalystBehaviors {
             new CreeperHeadBlastProcessorCatalystBehavior(CREEPER_HEAD_ID));
 
     private static Identifier locateBehaviorId(String name) {
-        return KlaxonCommon.locate(name + "_behavior");
+        return KlaxonCommon.locate(name);
     }
 
     private static BlastProcessorCatalystBehavior registerBehavior(Identifier id, BlastProcessorCatalystBehavior behavior) {

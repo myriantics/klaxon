@@ -22,7 +22,6 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.registry.minecraft.KlaxonGamerules;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -144,8 +143,8 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
     }
 
     @Override
-    public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
-        return null;
+    public boolean isVariable() {
+        return false;
     }
 
     // defaults to showing recipe with the lowest explosion power, but will switch to higher explosion power recipe if lowest is invalid

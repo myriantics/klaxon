@@ -1,6 +1,6 @@
 {
   "type": "klaxon:blast_processor_behavior",
-  "behavior_id": "klaxon:firework_star_behavior",
+  "behavior_id": "klaxon:firework_star",
   "ingredient": {
     "item": "minecraft:firework_star"
   }

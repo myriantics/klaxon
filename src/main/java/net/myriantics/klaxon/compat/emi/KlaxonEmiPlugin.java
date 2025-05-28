@@ -11,6 +11,10 @@ import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
@@ -21,6 +25,7 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -61,7 +66,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private void registerRecipes(EmiRegistry registry) {
         addAll(registry, KlaxonRecipeTypes.TOOL_USAGE, ToolUsageEmiRecipe::new);
         addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
-        addBlastProcessorBehaviorItemExplosionPowerRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.ITEM_COOLING, ItemCoolingEmiRecipe::new);
@@ -83,30 +87,38 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             // dont show hidden recipes
             if (recipeEntry.value() instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
                 if (!itemExplosionPowerRecipe.isHidden()) {
-                    registry.addRecipe(constructor.apply(recipeEntry));
+                    boolean behaviorSearchFailed = true;
+                    // crude code to apply more advanced descriptions to recipes if needed
+                    for (RecipeEntry<BlastProcessorBehaviorRecipe> behaviorRecipeEntry : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
+                        if (behaviorRecipeEntry.value().getIngredient().equals(itemExplosionPowerRecipe.getIngredient())) {
+                            Identifier behaviorId = behaviorRecipeEntry.value().getBehaviorId();
+                            BlastProcessorCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
+                            if (behavior != null && behavior.isVariable()) {
+                                registry.addRecipe(new ItemExplosionPowerEmiInfoRecipe(new RecipeEntry<>(recipeEntry.id(), itemExplosionPowerRecipe), minFromBehaviorId(behaviorId), maxFromBehaviorId(behaviorId), descriptionFromBehaviorId(behaviorId)));
+                            } else {
+                                registry.addRecipe(new ItemExplosionPowerEmiInfoRecipe(new RecipeEntry<>(recipeEntry.id(), itemExplosionPowerRecipe), descriptionFromBehaviorId(behaviorId)));
+                            }
+                            behaviorSearchFailed = false;
+                        }
+                    }
+
+                    // if we couldn't find a matching behavior recipe, add regular one to registry
+                    if (behaviorSearchFailed) registry.addRecipe(constructor.apply(recipeEntry));
                 }
             }
         }
     }
 
-    public void addBlastProcessorBehaviorItemExplosionPowerRecipes(EmiRegistry registry) {
-        for (RecipeEntry<BlastProcessorBehaviorRecipe> entry : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
-            BlastProcessorBehaviorRecipe recipe = entry.value();
-
-            BlastProcessorCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(recipe.getBehaviorId());
-
-            // only add the recipe if the behavior actually passes in the data
-            if (behavior != null && behavior.getEmiData()!= null) {
-                BlastProcessorCatalystBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
-
-                registry.addRecipe(new ItemExplosionPowerEmiInfoRecipe(
-                        recipe.getIngredient(),
-                        data.explosionPowerMin(),
-                        data.explosionPowerMax(),
-                        data.infoText(),
-                        entry.id())
-                );
-            }
-        }
+    private static Text maxFromBehaviorId(Identifier behaviorId) {
+        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.getPath() + ".max");
     }
+
+    private static Text minFromBehaviorId(Identifier behaviorId) {
+        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.getPath() + ".min");
+    }
+
+    private static Text descriptionFromBehaviorId(Identifier behaviorId) {
+        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.getPath() + ".description");
+    }
+
 }

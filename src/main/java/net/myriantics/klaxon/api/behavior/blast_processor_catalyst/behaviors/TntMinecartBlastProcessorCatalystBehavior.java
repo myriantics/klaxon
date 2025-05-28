@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,5 +20,10 @@ public class TntMinecartBlastProcessorCatalystBehavior extends ItemBlastProcesso
         int redstoneStrength = world.getReceivedStrongRedstonePower(pos);
 
         return new ItemExplosionPowerData(base.explosionPower() + (double) redstoneStrength / 5, base.producesFire());
+    }
+
+    @Override
+    public boolean isVariable() {
+        return true;
     }
 }

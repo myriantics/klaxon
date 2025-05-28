@@ -2,9 +2,6 @@ package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -60,5 +57,10 @@ public class CreeperHeadBlastProcessorCatalystBehavior extends ItemBlastProcesso
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isVariable() {
+        return false;
     }
 }

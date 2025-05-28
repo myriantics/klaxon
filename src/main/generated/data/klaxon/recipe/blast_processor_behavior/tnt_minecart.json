@@ -1,6 +1,6 @@
 {
   "type": "klaxon:blast_processor_behavior",
-  "behavior_id": "klaxon:tnt_minecart_behavior",
+  "behavior_id": "klaxon:tnt_minecart",
   "ingredient": {
     "item": "minecraft:tnt_minecart"
   }

@@ -1,7 +1,5 @@
 package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,5 +23,10 @@ public class BedlikeExplodableBlastProcessorCatalystBehavior extends ItemBlastPr
         }
 
         return new ItemExplosionPowerData(0, false);
+    }
+
+    @Override
+    public boolean isVariable() {
+        return false;
     }
 }

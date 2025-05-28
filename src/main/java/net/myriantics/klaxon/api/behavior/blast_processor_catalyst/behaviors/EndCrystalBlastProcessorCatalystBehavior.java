@@ -3,6 +3,7 @@ package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -31,5 +32,10 @@ public class EndCrystalBlastProcessorCatalystBehavior extends ItemBlastProcessor
 
     private boolean isStateValid(World world, BlockPos pos) {
         return world.getBlockState(pos).isOf(Blocks.BEDROCK);
+    }
+
+    @Override
+    public boolean isVariable() {
+        return false;
     }
 }

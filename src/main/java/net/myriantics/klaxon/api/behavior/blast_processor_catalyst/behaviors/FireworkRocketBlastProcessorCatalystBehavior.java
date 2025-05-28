@@ -7,13 +7,11 @@ import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
@@ -21,9 +19,6 @@ import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
-
-import java.text.DecimalFormat;
-import java.util.List;
 
 public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
 
@@ -90,12 +85,7 @@ public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProce
     }
 
     @Override
-    public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
-        return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                0.3,
-                10.0,
-                Text.translatable("klaxon.emi.text.explosion_power_info.firework_behavior_info"),
-                getId().getPath()
-        );
+    public boolean isVariable() {
+        return true;
     }
 }

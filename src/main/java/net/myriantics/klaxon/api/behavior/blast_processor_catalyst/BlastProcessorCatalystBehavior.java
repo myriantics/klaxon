@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.api.behavior.blast_processor_catalyst;
 
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
@@ -22,9 +21,9 @@ public interface BlastProcessorCatalystBehavior {
 
     BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory);
 
-    BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData();
-
     boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystRecipeInput recipeInventory);
+
+    boolean isVariable();
 
     default boolean isIn(TagKey<BlastProcessorCatalystBehavior> tagKey) {
         return getRegistryEntry().isIn(tagKey);

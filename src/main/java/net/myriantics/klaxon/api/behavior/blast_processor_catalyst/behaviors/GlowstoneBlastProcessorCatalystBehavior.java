@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -29,12 +28,7 @@ public class GlowstoneBlastProcessorCatalystBehavior extends ItemBlastProcessorC
     }
 
     @Override
-    public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
-        return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                0.0,
-                5.0,
-                Text.translatable("klaxon.emi.text.explosion_power_info.glowstone_behavior_info"),
-                getId().getPath()
-        );
+    public boolean isVariable() {
+        return false;
     }
 }

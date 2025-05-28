@@ -1,6 +1,6 @@
 {
   "type": "klaxon:blast_processor_behavior",
-  "behavior_id": "klaxon:end_crystal_behavior",
+  "behavior_id": "klaxon:end_crystal",
   "ingredient": {
     "item": "minecraft:end_crystal"
   }

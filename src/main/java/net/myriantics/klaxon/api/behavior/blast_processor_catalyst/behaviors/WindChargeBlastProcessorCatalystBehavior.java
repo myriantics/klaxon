@@ -3,7 +3,6 @@ package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 import net.minecraft.entity.projectile.AbstractWindChargeEntity;
 import net.minecraft.entity.projectile.WindChargeEntity;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -69,12 +68,7 @@ public class WindChargeBlastProcessorCatalystBehavior extends ItemBlastProcessor
     }
 
     @Override
-    public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
-        return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                0.0,
-                0.0,
-                Text.translatable("klaxon.emi.text.explosion_power_info.wind_charge_behavior_info"),
-                getId().getPath()
-        );
+    public boolean isVariable() {
+        return false;
     }
 }

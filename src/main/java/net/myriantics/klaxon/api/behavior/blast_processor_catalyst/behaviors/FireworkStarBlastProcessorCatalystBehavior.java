@@ -2,21 +2,16 @@ package net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors;
 
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
-import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-
-import java.util.List;
 
 public class FireworkStarBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
     public FireworkStarBlastProcessorCatalystBehavior(Identifier id) {
@@ -60,12 +55,7 @@ public class FireworkStarBlastProcessorCatalystBehavior extends ItemBlastProcess
     }
 
     @Override
-    public BlastProcessorBehaviorItemExplosionPowerEmiDataCompound getEmiData() {
-        return new BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(
-                0.3,
-                1.2,
-                Text.empty(),
-                getId().getPath()
-        );
+    public boolean isVariable() {
+        return true;
     }
 }

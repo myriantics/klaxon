@@ -56,9 +56,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
             if (behavior == null) continue;
 
-            BlastProcessorCatalystBehavior.BlastProcessorBehaviorItemExplosionPowerEmiDataCompound data = behavior.getEmiData();
-
-            if (data != null && data.explosionPowerMax() >= explosionPowerMin && data.explosionPowerMax() <= explosionPowerMax) {
+            if (behavior.isVariable()) {
                 catalystStacks.add(EmiIngredient.of(behaviorRecipe.value().getIngredient()));
             }
         }

@@ -1,6 +1,6 @@
 {
   "type": "klaxon:blast_processor_behavior",
-  "behavior_id": "klaxon:bedlike_explodable_behavior",
+  "behavior_id": "klaxon:bedlike_explodable",
   "ingredient": {
     "tag": "klaxon:bedlike_explodables"
   }
