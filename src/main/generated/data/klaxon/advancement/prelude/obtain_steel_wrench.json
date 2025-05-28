@@ -1,0 +1,33 @@
+{
+  "parent": "klaxon:prelude/use_hammer_to_make_metal_plate",
+  "criteria": {
+    "obtain_steel_wrench": {
+      "conditions": {
+        "items": [
+          {
+            "items": "klaxon:steel_wrench"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.prelude.obtain_steel_wrench.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_wrench"
+    },
+    "title": {
+      "translate": "advancements.klaxon.prelude.obtain_steel_wrench.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_steel_wrench"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

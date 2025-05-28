@@ -1,0 +1,30 @@
+{
+  "parent": "klaxon:prelude/obtain_steel_wrench",
+  "criteria": {
+    "rotate_rail_with_wrench": {
+      "conditions": {
+        "usage_type": "rotation",
+        "valid_blocks": "#minecraft:rails"
+      },
+      "trigger": "klaxon:wrench_usage"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.prelude.rotate_rail_with_wrench.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:rail"
+    },
+    "title": {
+      "translate": "advancements.klaxon.prelude.rotate_rail_with_wrench.title"
+    }
+  },
+  "requirements": [
+    [
+      "rotate_rail_with_wrench"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

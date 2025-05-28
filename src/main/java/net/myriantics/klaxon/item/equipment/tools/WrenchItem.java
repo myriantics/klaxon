@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.ChestType;
@@ -15,15 +16,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
+import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.KlaxonRailHelper;
@@ -79,6 +83,7 @@ public class WrenchItem extends MiningToolItem {
                     // drop is false here because we already handled the drops
                     // only break on server because sound plays twice on client otherwise
                     world.breakBlock(targetPos, false, player);
+                    KlaxonAdvancementTriggers.triggerWrenchUsage((ServerPlayerEntity) player, UsageType.PICKUP, targetState);
                 }
 
                 return ActionResult.SUCCESS;
@@ -89,6 +94,7 @@ public class WrenchItem extends MiningToolItem {
                 if (result.isAccepted()) {
                     Vec3d cords = targetPos.toCenterPos();
                     world.playSound(cords.getX(), cords.getY(), cords.getZ(), targetState.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 0.7f + 0.3f * world.getRandom().nextFloat(), 1.0f, true);
+                    if (player instanceof ServerPlayerEntity serverPlayer) KlaxonAdvancementTriggers.triggerWrenchUsage(serverPlayer, UsageType.ROTATION, targetState);
                     return ActionResult.SUCCESS;
                 }
             }
@@ -344,4 +350,16 @@ public class WrenchItem extends MiningToolItem {
         return newShape;
     }
 
+    public enum UsageType implements StringIdentifiable {
+        ROTATION,
+        PICKUP;
+
+
+        public static Codec<UsageType> CODEC = StringIdentifiable.createCodec(UsageType::values);
+
+        @Override
+        public String asString() {
+            return toString().toLowerCase();
+        }
+    }
 }
