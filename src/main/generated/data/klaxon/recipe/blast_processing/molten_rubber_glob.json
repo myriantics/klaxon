@@ -1,7 +1,7 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 1.5,
-  "explosionPowerMin": 0.8,
+  "explosionPowerMax": 2.5,
+  "explosionPowerMin": 1.2,
   "ingredientItem": {
     "tag": "klaxon:nether_rubber_extractable_logs"
   },

@@ -1,7 +1,7 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 0.4,
-  "explosionPowerMin": 0.1,
+  "explosionPowerMax": 1.4,
+  "explosionPowerMin": 0.4,
   "ingredientItem": {
     "item": "minecraft:raw_gold"
   },

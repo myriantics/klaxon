@@ -1,7 +1,7 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 0.3,
-  "explosionPowerMin": 0.1,
+  "explosionPowerMax": 0.8,
+  "explosionPowerMin": 0.3,
   "ingredientItem": {
     "item": "minecraft:polished_blackstone_bricks"
   },

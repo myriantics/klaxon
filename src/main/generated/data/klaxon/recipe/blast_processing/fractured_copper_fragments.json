@@ -1,7 +1,7 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 0.5,
-  "explosionPowerMin": 0.2,
+  "explosionPowerMax": 1.7,
+  "explosionPowerMin": 0.5,
   "ingredientItem": {
     "item": "minecraft:copper_ingot"
   },

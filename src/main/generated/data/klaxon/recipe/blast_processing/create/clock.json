@@ -8,7 +8,7 @@
     }
   ],
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 0.4,
+  "explosionPowerMax": 1.0,
   "explosionPowerMin": 0.2,
   "ingredientItem": {
     "item": "create:precision_mechanism"

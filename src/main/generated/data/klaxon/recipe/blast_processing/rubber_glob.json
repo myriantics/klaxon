@@ -1,7 +1,7 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 1.0,
-  "explosionPowerMin": 0.4,
+  "explosionPowerMax": 1.9,
+  "explosionPowerMin": 0.8,
   "ingredientItem": {
     "tag": "klaxon:overworld_rubber_extractable_logs"
   },
