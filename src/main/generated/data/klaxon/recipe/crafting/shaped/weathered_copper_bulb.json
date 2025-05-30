@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "weathered_copper_bulb",
+  "key": {
+    "B": {
+      "item": "minecraft:blaze_rod"
+    },
+    "P": {
+      "item": "klaxon:weathered_copper_plating_block"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    " P ",
+    "PBP",
+    " R "
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:weathered_copper_bulb"
+  }
+}

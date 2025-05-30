@@ -30,6 +30,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         buildMaterialCraftingRecipes();
         buildCompressionCraftingRecipes();
         buildDecorationCraftingRecipes();
+        buildRedstoneCraftingRecipes();
     }
 
     private void buildMachineCraftingRecipes() {
@@ -56,58 +57,13 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         "###"
                 },
                 new ItemStack(Blocks.BLAST_FURNACE),
-                CraftingRecipeCategory.MISC,
+                CraftingRecipeCategory.REDSTONE,
                 null
         );
     }
 
     private void buildDecorationCraftingRecipes() {
-        addShapedCraftingRecipe(Map.of(
-                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
-                new String[] {
-                        "PP",
-                        "PP",
-                        "II"
-                },
-                new ItemStack(KlaxonBlocks.STEEL_DOOR, 3),
-                CraftingRecipeCategory.REDSTONE,
-                null
-        );
-        addShapedCraftingRecipe(Map.of(
-                'P', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)),
-                new String[] {
-                        "PP",
-                        "PP",
-                        "II"
-                },
-                new ItemStack(KlaxonBlocks.CRUDE_STEEL_DOOR, 3),
-                CraftingRecipeCategory.REDSTONE,
-                null
-        );
-        addShapedCraftingRecipe(Map.of(
-                'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
-                new String[] {
-                        "PP",
-                        "II"
-                },
-                new ItemStack(KlaxonBlocks.STEEL_TRAPDOOR, 2),
-                CraftingRecipeCategory.REDSTONE,
-                null
-        );
-        addShapedCraftingRecipe(Map.of(
-                'P', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES),
-                'I', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)),
-                new String[] {
-                        "PP",
-                        "II"
-                },
-                new ItemStack(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR, 2),
-                CraftingRecipeCategory.REDSTONE,
-                null
-        );
+        // chains
         addShapedCraftingRecipe(Map.of(
                 'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
                 'N', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_NUGGETS)),
@@ -130,6 +86,110 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 },
                 new ItemStack(Blocks.CHAIN, 6),
                 CraftingRecipeCategory.BUILDING,
+                null
+        );
+    }
+
+    private void buildRedstoneCraftingRecipes() {
+        // steel doors / trapdoors
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
+                        'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
+                new String[] {
+                        "PP",
+                        "PP",
+                        "II"
+                },
+                new ItemStack(KlaxonBlocks.STEEL_DOOR, 3),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES),
+                        'I', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)),
+                new String[] {
+                        "PP",
+                        "PP",
+                        "II"
+                },
+                new ItemStack(KlaxonBlocks.CRUDE_STEEL_DOOR, 3),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
+                        'I', Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS)),
+                new String[] {
+                        "PP",
+                        "II"
+                },
+                new ItemStack(KlaxonBlocks.STEEL_TRAPDOOR, 2),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES),
+                        'I', Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)),
+                new String[] {
+                        "PP",
+                        "II"
+                },
+                new ItemStack(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR, 2),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+
+        // more efficient copper bulbs
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonBlocks.COPPER_PLATING_BLOCK),
+                        'B', Ingredient.ofItems(Items.BLAZE_ROD),
+                        'R', Ingredient.ofItems(Items.REDSTONE)),
+                new String[]{
+                        " P ",
+                        "PBP",
+                        " R "
+                },
+                new ItemStack(Blocks.COPPER_BULB, 4),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK),
+                        'B', Ingredient.ofItems(Items.BLAZE_ROD),
+                        'R', Ingredient.ofItems(Items.REDSTONE)),
+                new String[]{
+                        " P ",
+                        "PBP",
+                        " R "
+                },
+                new ItemStack(Blocks.EXPOSED_COPPER_BULB, 4),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK),
+                        'B', Ingredient.ofItems(Items.BLAZE_ROD),
+                        'R', Ingredient.ofItems(Items.REDSTONE)),
+                new String[]{
+                        " P ",
+                        "PBP",
+                        " R "
+                },
+                new ItemStack(Blocks.WEATHERED_COPPER_BULB, 4),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK),
+                        'B', Ingredient.ofItems(Items.BLAZE_ROD),
+                        'R', Ingredient.ofItems(Items.REDSTONE)),
+                new String[]{
+                        " P ",
+                        "PBP",
+                        " R "
+                },
+                new ItemStack(Blocks.OXIDIZED_COPPER_BULB, 4),
+                CraftingRecipeCategory.REDSTONE,
                 null
         );
     }

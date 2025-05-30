@@ -104,6 +104,7 @@
   "tag.item.klaxon.recipe_processing_hammers": "Recipe Processing Hammers",
   "tag.item.klaxon.recipe_processing_wirecutters": "Recipe Processing Wirecutters",
   "tag.item.klaxon.recipe_processing_shears": "Recipe Processing Shears",
+  "tag.item.klaxon.tool/cable_shears": "Cable Shears",
 
   "klaxon.text.innate_enchantment_prefix":  "Innate %1$s",
   "klaxon.text.blast_processor_creeper_name":  "a Blast Processor mimicking a Charged Creeper. Expensive death right there.",
