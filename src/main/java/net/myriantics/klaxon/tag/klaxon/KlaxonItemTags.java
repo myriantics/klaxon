@@ -66,7 +66,7 @@ public abstract class KlaxonItemTags {
     public static final TagKey<Item> STEEL_EQUIPMENT =
             createTag("steel_equipment");
     public static final TagKey<Item> CABLE_SHEARS =
-            createTag("cable_shears");
+            createToolTag("cable_shears");
 
     // advancement-related tags
     public static final TagKey<Item> KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS =

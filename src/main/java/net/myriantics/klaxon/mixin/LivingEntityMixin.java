@@ -111,6 +111,22 @@ public abstract class LivingEntityMixin implements LivingEntityMixinAccess {
         klaxon$setDualWielding(false);
     }
 
+    @Inject(
+            method = "clearActiveItem",
+            at = @At(value = "HEAD")
+    )
+    private void klaxon$clearActiveItemResetDualWielding(CallbackInfo ci) {
+        klaxon$setDualWielding(false);
+    }
+
+    @Inject(
+            method = "stopUsingItem",
+            at = @At(value = "HEAD")
+    )
+    private void klaxon$stopUsingItemResetDualWielding(CallbackInfo ci) {
+        klaxon$setDualWielding(false);
+    }
+
     @Override
     public boolean klaxon$isDualWielding() {
         return isDualWielding;
