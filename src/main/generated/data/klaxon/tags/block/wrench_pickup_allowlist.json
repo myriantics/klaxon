@@ -1,6 +1,7 @@
 {
   "values": [
     "#klaxon:instabreakable/wrench",
+    "#c:grates",
     "minecraft:redstone_torch",
     "minecraft:repeater",
     "minecraft:comparator",

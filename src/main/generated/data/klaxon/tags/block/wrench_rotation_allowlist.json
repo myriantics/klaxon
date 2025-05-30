@@ -1,8 +1,5 @@
 {
   "values": [
-    "#klaxon:instabreakable/wrench",
-    "klaxon:deepslate_blast_processor",
-    "minecraft:dispenser",
-    "minecraft:dropper"
+    "#klaxon:instabreakable/wrench"
   ]
 }

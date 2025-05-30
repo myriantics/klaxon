@@ -24,7 +24,6 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         buildBehaviorTags();
         buildCategoricalTags();
         buildToolRequirementTags();
-        buildAdvancementTags();
     }
 
     private void buildMiningTags() {
@@ -94,8 +93,17 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_DOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.SCAFFOLDINGS)
-                .forceAddTag(KlaxonConventionalBlockTags.GRATES)
                 .forceAddTag(KlaxonConventionalBlockTags.LEVERS)
+                .add(Blocks.DAYLIGHT_DETECTOR)
+                .add(Blocks.HOPPER)
+                .add(Blocks.COPPER_BULB)
+                .add(Blocks.EXPOSED_COPPER_BULB)
+                .add(Blocks.WEATHERED_COPPER_BULB)
+                .add(Blocks.OXIDIZED_COPPER_BULB)
+                .add(Blocks.WAXED_COPPER_BULB)
+                .add(Blocks.WAXED_EXPOSED_COPPER_BULB)
+                .add(Blocks.WAXED_WEATHERED_COPPER_BULB)
+                .add(Blocks.WAXED_OXIDIZED_COPPER_BULB)
                 .add(Blocks.REDSTONE_LAMP)
                 .add(Blocks.BLAST_FURNACE)
                 .add(Blocks.STICKY_PISTON)
@@ -127,8 +135,11 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE)
                 .forceAddTag(BlockTags.SNOW)
                 .add(Blocks.POWDER_SNOW);
+
+        // wrench
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST)
                 .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
+                .forceAddTag(KlaxonConventionalBlockTags.GRATES)
                 .add(Blocks.REDSTONE_TORCH)
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR)
@@ -137,10 +148,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .add(Blocks.PISTON_HEAD);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)
-                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
-                .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
-                .add(Blocks.DISPENSER)
-                .add(Blocks.DROPPER);
+                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .forceAddTag(BlockTags.TRAPDOORS)
@@ -253,12 +261,5 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL)
                 .forceAddTag(BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
 
-    }
-
-    private void buildAdvancementTags()  {
-        getOrCreateTagBuilder(KlaxonBlockTags.BREAKING_AND_ENTERING_ADVANCEMENT_VALID_BLOCKS)
-                .forceAddTag(KlaxonConventionalBlockTags.GRATES)
-                .forceAddTag(ConventionalBlockTags.CHAINS)
-                .add(Blocks.IRON_BARS);
     }
 }
