@@ -22,8 +22,15 @@
     "PlayerEntityMixin",
     "PotionEntityMixin",
     "ShearsToolHandlerMixin",
-    "TripwireBlockMixin",
-    "WindChargeEntityInvoker"
+    "WindChargeEntityInvoker",
+    "cable_shears_because_no_tag.BeehiveBlockMixin",
+    "cable_shears_because_no_tag.BoggedEntityMixin",
+    "cable_shears_because_no_tag.MooshroomEntityMixin",
+    "cable_shears_because_no_tag.PumpkinBlockMixin",
+    "cable_shears_because_no_tag.SheepEntityMixin",
+    "cable_shears_because_no_tag.SnowGolemEntityMixin",
+    "cable_shears_because_no_tag.TripwireBlockMixin",
+    "cable_shears_because_no_tag.WolfEntityMixin"
   ],
   "client": [
     "BipedEntityModelMixin",

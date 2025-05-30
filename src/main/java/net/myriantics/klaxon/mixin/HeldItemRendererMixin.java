@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 
 @Mixin(HeldItemRenderer.class)
-public class HeldItemRendererMixin {
+public abstract class HeldItemRendererMixin {
 
     @Shadow private float prevEquipProgressOffHand;
 

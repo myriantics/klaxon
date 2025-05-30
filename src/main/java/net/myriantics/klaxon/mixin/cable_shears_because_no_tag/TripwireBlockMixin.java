@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin;
+package net.myriantics.klaxon.mixin.cable_shears_because_no_tag;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -6,6 +6,8 @@ import net.minecraft.block.TripwireBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.item.equipment.tools.CableShearsItem;
+import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -19,6 +21,6 @@ public abstract class TripwireBlockMixin {
     public boolean klaxon$cableShearsOverride(boolean original, @Local(argsOnly = true) PlayerEntity player) {
         ItemStack miningToolStack = player.getMainHandStack();
 
-        return original || miningToolStack.getItem() instanceof CableShearsItem;
+        return original || miningToolStack.isIn(KlaxonItemTags.CABLE_SHEARS);
     }
 }

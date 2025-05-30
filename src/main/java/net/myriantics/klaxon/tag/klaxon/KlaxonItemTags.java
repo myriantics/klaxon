@@ -5,7 +5,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.KlaxonCommon;
 
-public class KlaxonItemTags {
+public abstract class KlaxonItemTags {
     // makeshift tags
     public static final TagKey<Item> MAKESHIFT_CRAFTING_INGREDIENTS =
             createTag("makeshift_crafting_ingredients");
@@ -65,6 +65,8 @@ public class KlaxonItemTags {
             createTag("steel_armor");
     public static final TagKey<Item> STEEL_EQUIPMENT =
             createTag("steel_equipment");
+    public static final TagKey<Item> CABLE_SHEARS =
+            createTag("cable_shears");
 
     // advancement-related tags
     public static final TagKey<Item> KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS =
@@ -75,6 +77,10 @@ public class KlaxonItemTags {
     // blast processor behavior tags
     public static final TagKey<Item> BEDLIKE_EXPLODABLES =
             createTag("bedlike_explodables");
+
+    private static TagKey<Item> createToolTag(String name) {
+        return createTag("tools/" + name);
+    }
 
     private static TagKey<Item> createTag(String name) {
         return TagKey.of(RegistryKeys.ITEM, KlaxonCommon.locate(name));

@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CraftingResultSlot.class)
-public class CraftingResultSlotMixin {
+public abstract class CraftingResultSlotMixin {
 
 
     @Shadow @Final private PlayerEntity player;

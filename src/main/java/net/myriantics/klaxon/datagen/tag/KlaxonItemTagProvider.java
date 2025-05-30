@@ -267,6 +267,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCHES)
                 .add(KlaxonItems.STEEL_WRENCH);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEARS)
+                .forceAddTag(KlaxonItemTags.CABLE_SHEARS);
+        getOrCreateTagBuilder(KlaxonItemTags.CABLE_SHEARS)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
         getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
