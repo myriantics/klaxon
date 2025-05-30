@@ -155,7 +155,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .add(Blocks.PISTON_HEAD);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)
-                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE);
+                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
+                .add(Blocks.REPEATER)
+                .add(Blocks.COMPARATOR);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .forceAddTag(BlockTags.TRAPDOORS)

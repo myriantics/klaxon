@@ -12,6 +12,8 @@ import net.minecraft.util.math.Direction;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
+import java.util.Optional;
+
 public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
     @Override
     protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
@@ -21,8 +23,9 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
             BlockState targetState = serverWorld.getBlockState(targetPos);
 
             if (!targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST) && targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)) {
-                ActionResult result = WrenchItem.rotateBlock(serverWorld, targetPos, targetState, facing, null, null);
-                if (result.isAccepted()) {
+                Optional<BlockState> rotatedState = WrenchItem.getRotatedState(serverWorld, targetPos, targetState, facing, null, null);
+                if (rotatedState.isPresent()) {
+                    serverWorld.setBlockState(targetPos, rotatedState.get());
                     serverWorld.updateComparators(pointer.pos(), pointer.state().getBlock());
                     setSuccess(true);
                 }

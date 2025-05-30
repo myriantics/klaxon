@@ -12,7 +12,7 @@ import java.util.List;
 
 @Pseudo
 @Mixin(ShearsToolHandler.class)
-public class ShearsToolHandlerMixin {
+public abstract class ShearsToolHandlerMixin {
     @ModifyExpressionValue(
             method = "<init>",
             at = @At(value = "INVOKE", target = "Ljava/util/List;of(Ljava/lang/Object;)Ljava/util/List;")
