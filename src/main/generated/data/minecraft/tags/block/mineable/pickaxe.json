@@ -5,6 +5,13 @@
     "klaxon:deepslate_blast_processor",
     "klaxon:iron_plating_block",
     "klaxon:gold_plating_block",
-    "klaxon:copper_plating_block"
+    "klaxon:copper_plating_block",
+    "klaxon:exposed_copper_plating_block",
+    "klaxon:weathered_copper_plating_block",
+    "klaxon:oxidized_copper_plating_block",
+    "klaxon:waxed_copper_plating_block",
+    "klaxon:waxed_exposed_copper_plating_block",
+    "klaxon:waxed_weathered_copper_plating_block",
+    "klaxon:waxed_oxidized_copper_plating_block"
   ]
 }

@@ -71,7 +71,7 @@ public class KlaxonBlocks {
             new Block(AbstractBlock.Settings.copy(Blocks.SHROOMLIGHT)
                     .sounds(BlockSoundGroup.SHROOMLIGHT)
                     .mapColor(MapColor.DARK_CRIMSON)
-                    .strength(2.0f)
+                    .strength(3.0f)
                     .luminance((state) -> 0)));
     public static final Block RUBBER_SHEET_BLOCK = registerBlock("rubber_sheet_block",
             new PillarBlock(AbstractBlock.Settings.copy(RUBBER_BLOCK)));
@@ -84,7 +84,7 @@ public class KlaxonBlocks {
                     .allowsSpawning((state, world, pos, entityType) -> entityType.isFireImmune())
                     .postProcess(Blocks::always)
                     .mapColor(MapColor.DARK_RED)
-                    .strength(1.0F)));
+                    .strength(1.5F)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

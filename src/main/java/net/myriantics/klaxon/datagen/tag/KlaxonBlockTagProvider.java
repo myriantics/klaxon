@@ -119,10 +119,17 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .add(KlaxonBlocks.IRON_PLATING_BLOCK)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
-                .add(KlaxonBlocks.COPPER_PLATING_BLOCK);
+                .add(KlaxonBlocks.COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
 
         // hoe
-        getOrCreateTagBuilder(BlockTags.HOE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .forceAddTag(KlaxonConventionalBlockTags.RUBBER);
     }
 
@@ -253,7 +260,14 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
                 .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL)
-                .add(KlaxonBlocks.COPPER_PLATING_BLOCK);
+                .add(KlaxonBlocks.COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
 
         // steel tools mirror diamond tools
         getOrCreateTagBuilder(KlaxonBlockTags.NEEDS_STEEL_TOOL)
