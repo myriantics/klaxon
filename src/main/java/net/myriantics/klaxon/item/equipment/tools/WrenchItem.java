@@ -6,16 +6,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.block.enums.Orientation;
 import net.minecraft.block.enums.RailShape;
+import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.MiningToolItem;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -31,6 +29,7 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.KlaxonRailHelper;
+import net.myriantics.klaxon.util.PermissionsHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -63,10 +62,11 @@ public class WrenchItem extends MiningToolItem {
         BlockPos targetPos = context.getBlockPos();
         BlockState targetState = world.getBlockState(targetPos);
         PlayerEntity player = context.getPlayer();
+        ItemStack wrenchStack = context.getStack();
 
         if (player != null) {
-
-            if (player.isSneaking() && targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST) && !targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST)) {
+            // Wrench pickup ability requires both CAN_PLACE_ON and CAN_DESTROY components to work in Adventure Mode
+            if (player.isSneaking() && targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST) && !targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST) && (PermissionsHelper.canModifyWorld(player) || wrenchStack.canBreak(new CachedBlockPosition(world, targetPos, false)))) {
 
                 if (world instanceof ServerWorld serverWorld) {
                     List<ItemStack> outputStacks = Block.getDroppedStacks(targetState, serverWorld, targetPos, serverWorld.getBlockEntity(targetPos));
@@ -89,6 +89,7 @@ public class WrenchItem extends MiningToolItem {
                 return ActionResult.SUCCESS;
             }
 
+            // Only requires CAN_PLACE_ON in adventure mode
             if (targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST) && !targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)) {
                 Optional<BlockState> rotatedState = getRotatedState(world, targetPos, targetState, context.getSide(), context.getHorizontalPlayerFacing(), context.getHitPos());
 
