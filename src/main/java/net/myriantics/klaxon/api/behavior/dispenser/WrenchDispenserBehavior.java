@@ -26,6 +26,7 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
                 Optional<BlockState> rotatedState = WrenchItem.getRotatedState(serverWorld, targetPos, targetState, facing, null, null);
                 if (rotatedState.isPresent()) {
                     serverWorld.setBlockState(targetPos, rotatedState.get());
+                    serverWorld.updateNeighbor(targetPos, pointer.state().getBlock(), pointer.pos());
                     serverWorld.updateComparators(pointer.pos(), pointer.state().getBlock());
                     setSuccess(true);
                 }

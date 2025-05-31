@@ -3,6 +3,7 @@
     "#c:relocation_not_supported",
     "#minecraft:trapdoors",
     "#minecraft:doors",
+    "minecraft:lever",
     "minecraft:piston_head"
   ]
 }

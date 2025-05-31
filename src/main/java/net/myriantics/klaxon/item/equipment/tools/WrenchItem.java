@@ -99,7 +99,8 @@ public class WrenchItem extends MiningToolItem {
                     if (player instanceof ServerPlayerEntity serverPlayer) {
                         KlaxonAdvancementTriggers.triggerWrenchUsage(serverPlayer, UsageType.ROTATION, targetState);
                         world.setBlockState(targetPos, rotatedState.get());
-                        world.updateComparators(targetPos.offset(context.getSide()), rotatedState.get().getBlock());
+                        world.updateNeighbor(targetPos, rotatedState.get().getBlock(), targetPos);
+                        world.updateComparators(targetPos, rotatedState.get().getBlock());
                     }
                     return ActionResult.SUCCESS;
                 }

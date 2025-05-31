@@ -1,7 +1,5 @@
 {
   "values": [
-    "#klaxon:instabreakable/wrench",
-    "minecraft:repeater",
-    "minecraft:comparator"
+    "#klaxon:instabreakable/wrench"
   ]
 }

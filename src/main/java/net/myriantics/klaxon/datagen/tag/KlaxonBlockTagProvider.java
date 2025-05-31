@@ -75,6 +75,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ALL_SIGNS)
                 .forceAddTag(BlockTags.BEEHIVES)
                 .forceAddTag(BlockTags.CANDLES)
+                .add(Blocks.MOSS_BLOCK)
+                .add(Blocks.MOSS_CARPET)
+                .add(Blocks.AZALEA)
+                .add(Blocks.FLOWERING_AZALEA)
                 .add(Blocks.SHROOMLIGHT)
                 .add(Blocks.MELON)
                 .add(Blocks.BAMBOO)
@@ -155,13 +159,12 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .add(Blocks.PISTON_HEAD);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)
-                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
-                .add(Blocks.REPEATER)
-                .add(Blocks.COMPARATOR);
+                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .forceAddTag(BlockTags.TRAPDOORS)
                 .forceAddTag(BlockTags.DOORS)
+                .add(Blocks.LEVER)
                 .add(Blocks.PISTON_HEAD);
     }
 
