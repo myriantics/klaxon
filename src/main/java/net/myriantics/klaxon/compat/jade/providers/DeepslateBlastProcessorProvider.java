@@ -11,6 +11,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,7 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
         if (blockAccessor.getBlockEntity() instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
             ExplosiveCatalystRecipeInput recipeInventory = new ExplosiveCatalystRecipeInput(blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-            BlastProcessorCatalystBehavior behavior = DeepslateBlastProcessorBlockEntity.computeBehavior(blockAccessor.getLevel(), recipeInventory);
+            BlastProcessorCatalystBehavior behavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(blockAccessor.getLevel(), recipeInventory);
 
             return behavior.getExplosionPowerData(blockAccessor.getLevel(), blockAccessor.getPosition(), blastProcessor, recipeInventory).explosionPower();
         }

@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
@@ -67,7 +68,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
             this.context.run((world, pos) -> {
                 ExplosiveCatalystRecipeInput catalystInput = new ExplosiveCatalystRecipeInput(blockEntityInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-                BlastProcessorCatalystBehavior blastProcessorBehavior = DeepslateBlastProcessorBlockEntity.computeBehavior(world, catalystInput);
+                BlastProcessorCatalystBehavior blastProcessorBehavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, catalystInput);
                 this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), catalystInput);
 
                 BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
@@ -147,7 +148,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
 
         ExplosiveCatalystRecipeInput catalystInput = new ExplosiveCatalystRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-        BlastProcessorCatalystBehavior blastProcessorBehavior = DeepslateBlastProcessorBlockEntity.computeBehavior(world, catalystInput);
+        BlastProcessorCatalystBehavior blastProcessorBehavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, catalystInput);
 
         if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {

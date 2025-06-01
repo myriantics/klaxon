@@ -4,12 +4,12 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworkExplosionComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
@@ -30,12 +30,14 @@ public class FireworkStarBlastProcessorCatalystBehavior extends ItemBlastProcess
             // augment based on shape - only ones with explosive catalysts do something
             switch (component.shape()) {
                 case LARGE_BALL ->  {
-                    ItemExplosionPowerData fireChargeData = super.getExplosionPowerData(world, pos, blastProcessor, new ExplosiveCatalystRecipeInput(new ItemStack(Items.FIRE_CHARGE)));
+                    ExplosiveCatalystRecipeInput fireChargeRecipeInput = new ExplosiveCatalystRecipeInput(new ItemStack(Items.FIRE_CHARGE));
+                    ItemExplosionPowerData fireChargeData = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, fireChargeRecipeInput).getExplosionPowerData(world, pos, blastProcessor, fireChargeRecipeInput);
                     explosionPower += fireChargeData.explosionPower();
                     producesFire = producesFire || fireChargeData.producesFire();
                 }
                 case CREEPER -> {
-                    ItemExplosionPowerData creeperHeadData = super.getExplosionPowerData(world, pos, blastProcessor, new ExplosiveCatalystRecipeInput(new ItemStack(Items.CREEPER_HEAD)));
+                    ExplosiveCatalystRecipeInput creeperHeadRecipeInput = new ExplosiveCatalystRecipeInput(new ItemStack(Items.CREEPER_HEAD));
+                    ItemExplosionPowerData creeperHeadData = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, creeperHeadRecipeInput).getExplosionPowerData(world, pos, blastProcessor, creeperHeadRecipeInput);
                     explosionPower += creeperHeadData.explosionPower();
                     producesFire = producesFire || creeperHeadData.producesFire();
                 }
@@ -43,7 +45,8 @@ public class FireworkStarBlastProcessorCatalystBehavior extends ItemBlastProcess
 
             // glowstone dust
             if (component.hasTwinkle()) {
-                ItemExplosionPowerData glowstoneDustData = super.getExplosionPowerData(world, pos, blastProcessor, new ExplosiveCatalystRecipeInput(new ItemStack(Items.GLOWSTONE_DUST)));
+                ExplosiveCatalystRecipeInput glowstoneDustRecipeInput = new ExplosiveCatalystRecipeInput(new ItemStack(Items.GLOWSTONE_DUST));
+                ItemExplosionPowerData glowstoneDustData = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, glowstoneDustRecipeInput).getExplosionPowerData(world, pos, blastProcessor, glowstoneDustRecipeInput);
                 explosionPower += glowstoneDustData.explosionPower();
                 producesFire = producesFire || glowstoneDustData.producesFire();
             }

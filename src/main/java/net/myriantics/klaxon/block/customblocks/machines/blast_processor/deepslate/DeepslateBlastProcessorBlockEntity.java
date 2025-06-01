@@ -9,35 +9,27 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
-import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlockEntities;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.registry.minecraft.KlaxonGamerules;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.*;
 
@@ -169,7 +161,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 ExplosiveCatalystRecipeInput recipeInventory = new ExplosiveCatalystRecipeInput(this);
 
                 // compute blast processor behavior
-                BlastProcessorCatalystBehavior blastProcessorBehavior = computeBehavior(world, recipeInventory);
+                BlastProcessorCatalystBehavior blastProcessorBehavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, recipeInventory);
 
                 // get recipe data
                 ItemExplosionPowerData powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
@@ -252,26 +244,7 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
                 itemExplosionPowerData.producesFire());
     }
 
-    public static BlastProcessorCatalystBehavior computeBehavior(World world, ExplosiveCatalystRecipeInput recipeInventory) {
-        // get blast processor behavior from recipe
-        Optional<RecipeEntry<BlastProcessorBehaviorRecipe>> behaviorRecipe = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR, recipeInventory, world);
 
-        // initialize as the default behavior
-        BlastProcessorCatalystBehavior blastProcessorBehavior = KlaxonBlastProcessorCatalystBehaviors.DEFAULT;
-
-        // replace with new behavior if valid
-        if (behaviorRecipe.isPresent()) {
-            Identifier behaviorId = behaviorRecipe.get().value().getBehaviorId();
-
-            BlastProcessorCatalystBehavior interimBehavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
-
-            if (interimBehavior != null) {
-                blastProcessorBehavior = interimBehavior;
-            }
-        }
-
-        return blastProcessorBehavior;
-    }
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {

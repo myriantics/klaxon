@@ -7,7 +7,6 @@ import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
@@ -16,9 +15,9 @@ import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProc
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mixin.FireworkRocketEntityInvoker;
+import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
 
 public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
 
@@ -35,16 +34,24 @@ public class FireworkRocketBlastProcessorCatalystBehavior extends ItemBlastProce
             boolean producesFire = base.producesFire();
             double explosionPower = base.explosionPower();
 
+            // compute explosion power data from gunpowder
+            ExplosiveCatalystRecipeInput gunpowderRecipeInput = new ExplosiveCatalystRecipeInput(new ItemStack(Items.GUNPOWDER));
+            ItemExplosionPowerData gunpowderData = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, gunpowderRecipeInput).getExplosionPowerData(world, pos, blastProcessor, gunpowderRecipeInput);
+
             // add explosion power for the flight duration
-            ItemExplosionPowerData gunpowderData = super.getExplosionPowerData(world, pos, blastProcessor, new ExplosiveCatalystRecipeInput(new ItemStack(Items.GUNPOWDER)));
             producesFire = producesFire || gunpowderData.producesFire();
             explosionPower += component.flightDuration() * gunpowderData.explosionPower();
 
             for (FireworkExplosionComponent explosionComponent : component.explosions()) {
+                // prepare firework star stack with selected component
                 ItemStack starStack = new ItemStack(Items.FIREWORK_STAR);
                 starStack.applyComponentsFrom(ComponentMap.builder().add(DataComponentTypes.FIREWORK_EXPLOSION, explosionComponent).build());
-                ItemExplosionPowerData fireworkStarData = KlaxonBlastProcessorCatalystBehaviors.FIREWORK_STAR.getExplosionPowerData(world, pos, blastProcessor, new ExplosiveCatalystRecipeInput(starStack));
 
+                // get explosion power data from star stack
+                ExplosiveCatalystRecipeInput fireworkStarRecipeInput = new ExplosiveCatalystRecipeInput(starStack);
+                ItemExplosionPowerData fireworkStarData = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, fireworkStarRecipeInput).getExplosionPowerData(world, pos, blastProcessor, fireworkStarRecipeInput);
+
+                // append values to stats
                 producesFire = producesFire || fireworkStarData.producesFire();
                 explosionPower += fireworkStarData.explosionPower();
             }
