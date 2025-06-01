@@ -5,7 +5,7 @@
   "experience": 3.0,
   "group": "steel_nugget",
   "ingredient": {
-    "item": "minecraft:flint_and_steel"
+    "item": "klaxon:steel_cleaver"
   },
   "result": {
     "id": "klaxon:steel_nugget"

@@ -5,7 +5,7 @@
   "experience": 3.0,
   "group": "steel_nugget",
   "ingredient": {
-    "item": "klaxon:steel_cable_shears"
+    "item": "klaxon:steel_leggings"
   },
   "result": {
     "id": "klaxon:steel_nugget"

@@ -25,6 +25,9 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
 
     private void buildGearRecyclingRecipes() {
         addBlastingSmeltingRecipe(Ingredient.ofItems(KlaxonItems.STEEL_HAMMER), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
+        addBlastingSmeltingRecipe(Ingredient.ofItems(KlaxonItems.STEEL_CLEAVER), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
+        addBlastingSmeltingRecipe(Ingredient.ofItems(KlaxonItems.STEEL_CABLE_SHEARS), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
+        addBlastingSmeltingRecipe(Ingredient.ofItems(KlaxonItems.STEEL_WRENCH), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
         addBlastingSmeltingRecipe(Ingredient.ofItems(Items.FLINT_AND_STEEL), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
         addBlastingSmeltingRecipe(Ingredient.ofItems(KlaxonItems.STEEL_HELMET), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);
         addBlastingSmeltingRecipe(Ingredient.ofItems(KlaxonItems.STEEL_CHESTPLATE), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, 150, null, null);

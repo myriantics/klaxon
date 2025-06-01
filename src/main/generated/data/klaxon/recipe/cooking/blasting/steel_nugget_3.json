@@ -5,7 +5,7 @@
   "experience": 3.0,
   "group": "steel_nugget",
   "ingredient": {
-    "item": "klaxon:steel_chestplate"
+    "item": "klaxon:steel_wrench"
   },
   "result": {
     "id": "klaxon:steel_nugget"
