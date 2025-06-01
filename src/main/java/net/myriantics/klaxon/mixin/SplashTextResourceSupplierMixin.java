@@ -15,10 +15,11 @@ public abstract class SplashTextResourceSupplierMixin {
             at = @At(value = "RETURN")
     )
     private List<String> klaxon$appendSplashTexts(List<String> original) {
-        original.add("We Love The Company!");
+        // original.add("We Love The Company!");
         original.add("Klaxons blaring!");
-        original.add("Bioluminescent");
+        // original.add("Bioluminescent");
         original.add("The gang's all here and the mood is electric!");
+        original.add("Steel, Iron, Nuts and Bolts");
         return original;
     }
 }
