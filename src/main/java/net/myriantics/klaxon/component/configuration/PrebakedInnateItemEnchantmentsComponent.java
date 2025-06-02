@@ -56,6 +56,10 @@ public record PrebakedInnateItemEnchantmentsComponent(Map<RegistryKey<Enchantmen
         return mapBuilder.build();
     }
 
+    public static DynamicRegistryManager getRegistryManager() {
+        return manager;
+    }
+
     public static void updateRegistryLookup(DynamicRegistryManager manager) {
         PrebakedInnateItemEnchantmentsComponent.manager = manager;
     }

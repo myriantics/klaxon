@@ -3,17 +3,16 @@ package net.myriantics.klaxon.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.PrebakedInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Item.class)
@@ -21,6 +20,9 @@ public abstract class ItemMixin {
 
     @Mutable
     @Shadow @Final private ComponentMap components;
+
+    @Unique
+    private DynamicRegistryManager lastUsedRegistryManager;
 
     @ModifyReturnValue(
             method = "canRepair",
@@ -56,9 +58,24 @@ public abstract class ItemMixin {
             at = @At(value = "RETURN")
     )
     public ComponentMap klaxon$bakeInnateEnchantmentComponent(ComponentMap original) {
-        if (!original.contains(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS) && original.get(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS) instanceof PrebakedInnateItemEnchantmentsComponent component) {
+        if (
+                // make sure that a registry manager has loaded so that we can actually bake some components
+                PrebakedInnateItemEnchantmentsComponent.getRegistryManager() != null
+                // make sure we actually have prebaked innate enchantments to bake before checking anything else
+                && original.get(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS) instanceof PrebakedInnateItemEnchantmentsComponent component
+                        && (
+                        // This condition is very important - without it, items won't refresh their baked innate enchantments when swapping worlds - causing certain innate enchantments such as looting and silk touch to not function.
+                        // basically just checking that our baked component is up-to-date
+                        !PrebakedInnateItemEnchantmentsComponent.getRegistryManager().equals(lastUsedRegistryManager)
+                        // if an item has an innate enchantments component as a default component, that's because we've already baked it - we shouldn't overwrite it.
+                        || !original.contains(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS)
+                )
+        ) {
             ComponentMap computed = ComponentMap.builder().addAll(original).addAll(component.bake()).build();
             this.components = computed;
+
+            // indicate what registry manager we last used
+            this.lastUsedRegistryManager = PrebakedInnateItemEnchantmentsComponent.getRegistryManager();
             return computed;
         }
 
