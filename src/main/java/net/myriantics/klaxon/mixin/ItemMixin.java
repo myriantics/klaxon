@@ -2,16 +2,11 @@ package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.component.configuration.PrebakedInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 

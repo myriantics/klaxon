@@ -5,15 +5,12 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Pair;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
+import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.component.configuration.InnateItemEnchantmentsComponent;
-import net.myriantics.klaxon.component.configuration.PrebakedInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.CleaverItem;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
@@ -32,44 +29,44 @@ public class KlaxonItems {
             new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
-                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
-                    .component(KlaxonDataComponentTypes.KNOCKBACK_MODIFIER, new KnockbackModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING, true))
-                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
+                    .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING, true))
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
             new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
                     .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1.0f, -2.8f))
-                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
             new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
                     .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(KlaxonDamageTypes.CLEAVING, false, true))
-                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.LOOTING, 1, Enchantments.UNBREAKING, 4)))
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.LOOTING, 1, Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()
                     .attributeModifiers(WrenchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 0f, -2.6f))
-                    .component(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.WRENCH_BASHING))
-                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.WRENCH_BASHING))
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
 
     // armor
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.CHESTPLATE, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_LEGGINGS = registerSimpleItem("steel_leggings",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.LEGGINGS, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.BOOTS, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS, new PrebakedInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
 
     // raw ores / blends

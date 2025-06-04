@@ -26,10 +26,10 @@ public record MeleeDamageTypeOverrideComponent(RegistryKey<DamageType> damageTyp
     );
 
     public static @Nullable MeleeDamageTypeOverrideComponent get(ItemStack stack) {
-        return stack.getComponents().get(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE);
+        return stack.getComponents().get(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE);
     }
 
     public void set(ItemStack stack) {
-        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.DAMAGE_TYPE_OVERRIDE, this).build());
+        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, this).build());
     }
 }

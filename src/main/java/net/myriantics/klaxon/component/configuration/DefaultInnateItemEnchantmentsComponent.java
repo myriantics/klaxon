@@ -3,17 +3,10 @@ package net.myriantics.klaxon.component.configuration;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -27,22 +20,19 @@ import net.minecraft.server.MinecraftServer;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mixin.ItemAccessor;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public record PrebakedInnateItemEnchantmentsComponent(Map<RegistryKey<Enchantment>, Integer> prebaked) {
-    public static Codec<PrebakedInnateItemEnchantmentsComponent> CODEC = RecordCodecBuilder.create(instance ->
+public record DefaultInnateItemEnchantmentsComponent(Map<RegistryKey<Enchantment>, Integer> prebaked) {
+    public static Codec<DefaultInnateItemEnchantmentsComponent> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    Codec.unboundedMap(RegistryKey.createCodec(RegistryKeys.ENCHANTMENT), Codec.intRange(0, 255)).fieldOf("levels").forGetter(PrebakedInnateItemEnchantmentsComponent::prebaked)
-            ).apply(instance, PrebakedInnateItemEnchantmentsComponent::new));
+                    Codec.unboundedMap(RegistryKey.createCodec(RegistryKeys.ENCHANTMENT), Codec.intRange(0, 255)).fieldOf("levels").forGetter(DefaultInnateItemEnchantmentsComponent::prebaked)
+            ).apply(instance, DefaultInnateItemEnchantmentsComponent::new));
 
-    public static PacketCodec<RegistryByteBuf, PrebakedInnateItemEnchantmentsComponent> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.map(Object2IntOpenHashMap::new, RegistryKey.createPacketCodec(RegistryKeys.ENCHANTMENT), PacketCodecs.INTEGER), PrebakedInnateItemEnchantmentsComponent::prebaked,
-            PrebakedInnateItemEnchantmentsComponent::new
+    public static PacketCodec<RegistryByteBuf, DefaultInnateItemEnchantmentsComponent> PACKET_CODEC = PacketCodec.tuple(
+            PacketCodecs.map(Object2IntOpenHashMap::new, RegistryKey.createPacketCodec(RegistryKeys.ENCHANTMENT), PacketCodecs.INTEGER), DefaultInnateItemEnchantmentsComponent::prebaked,
+            DefaultInnateItemEnchantmentsComponent::new
     );
 
     public Optional<ComponentMap> bake(DynamicRegistryManager manager) {
@@ -83,7 +73,7 @@ public record PrebakedInnateItemEnchantmentsComponent(Map<RegistryKey<Enchantmen
             ComponentMap original = item.getComponents();
 
             // only make a change if item has prebaked innate enchantments as a default component
-            if (original.get(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS) instanceof PrebakedInnateItemEnchantmentsComponent component) {
+            if (original.get(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS) instanceof DefaultInnateItemEnchantmentsComponent component) {
                 Optional<ComponentMap> baked = component.bake(manager);
 
                 // only perform operations if component baking was successful

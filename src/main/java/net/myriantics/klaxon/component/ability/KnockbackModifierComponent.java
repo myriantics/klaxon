@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -35,11 +34,11 @@ public record KnockbackModifierComponent(float multiplier, RegistryKey<DamageTyp
     );
 
     public static @Nullable KnockbackModifierComponent get(ItemStack stack) {
-        return stack.getComponents().get(KlaxonDataComponentTypes.KNOCKBACK_MODIFIER);
+        return stack.getComponents().get(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER);
     }
 
     public void set(ItemStack stack) {
-        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.KNOCKBACK_MODIFIER, this).build());
+        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, this).build());
     }
 
     public boolean shouldFire(boolean knockbackHit) {
