@@ -20,11 +20,11 @@ public class KlaxonEventListeners {
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(ToolUsageRecipeLogic::onDatapackReload);
         CommonLifecycleEvents.TAGS_LOADED.register(ToolUsageRecipeLogic::onTagsLoaded);
         ServerLifecycleEvents.SERVER_STARTED.register(PrebakedInnateItemEnchantmentsComponent::onServerStarted);
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(PrebakedInnateItemEnchantmentsComponent::onDataPackReload);
 
         KlaxonCommon.LOGGER.info("Registered KLAXON's Event Listeners!");
     }
 
     public static void initClient() {
-        ClientPlayConnectionEvents.JOIN.register(PrebakedInnateItemEnchantmentsComponent::onClientFinishJoinWorld);
     }
 }

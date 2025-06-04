@@ -12,20 +12,27 @@ import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.resource.LifecycledResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.mixin.ItemAccessor;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public record PrebakedInnateItemEnchantmentsComponent(Map<RegistryKey<Enchantment>, Integer> prebaked) {
     public static Codec<PrebakedInnateItemEnchantmentsComponent> CODEC = RecordCodecBuilder.create(instance ->
@@ -38,37 +45,66 @@ public record PrebakedInnateItemEnchantmentsComponent(Map<RegistryKey<Enchantmen
             PrebakedInnateItemEnchantmentsComponent::new
     );
 
-    private static DynamicRegistryManager manager = null;
-
-    public ComponentMap bake() {
+    public Optional<ComponentMap> bake(DynamicRegistryManager manager) {
         ComponentMap.Builder mapBuilder = ComponentMap.builder();
         if (manager != null) {
-            ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
+            ItemEnchantmentsComponent.Builder enchantmentBuilder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
             for (RegistryKey<Enchantment> key : prebaked.keySet()) {
-                RegistryEntry<Enchantment> entry = manager.get(RegistryKeys.ENCHANTMENT).entryOf(key);
-                builder.add(entry, prebaked.get(key));
+                Optional<RegistryEntry.Reference<Enchantment>> entry = manager.get(RegistryKeys.ENCHANTMENT).getEntry(key);
+
+                // only add enchantment entry to the builder if there actually is one
+                if (entry.isPresent()) {
+                    enchantmentBuilder.add(entry.get(), prebaked.get(key));
+                } else {
+                    KlaxonCommon.LOGGER.error("Invalid key {} passed into Default Innate Enchantment. Skipping.", key.toString());
+                }
             }
 
-            mapBuilder.add(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, new InnateItemEnchantmentsComponent(builder.build().withShowInTooltip(false)));
-        }/* else {
-            // KlaxonCommon.LOGGER.warn("Failed to bake components due to missing manager!");
-        }  */
-        return mapBuilder.build();
+            InnateItemEnchantmentsComponent component = new InnateItemEnchantmentsComponent(enchantmentBuilder.build().withShowInTooltip(false));
+
+            if (!component.enchantments().isEmpty()) {
+                mapBuilder.add(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS, component);
+                return Optional.ofNullable(mapBuilder.build());
+            } else {
+                // if we don't have any enchantments, fail.
+                return Optional.empty();
+            }
+        }
+
+        // manager is null? fail - empty
+        return Optional.empty();
     }
 
-    public static DynamicRegistryManager getRegistryManager() {
-        return manager;
+    // returns how many items had components baked
+    private static int bakeAll(DynamicRegistryManager manager) {
+        int operationsPerformed = 0;
+
+        for (Item item : Registries.ITEM) {
+            ComponentMap original = item.getComponents();
+
+            // only make a change if item has prebaked innate enchantments as a default component
+            if (original.get(KlaxonDataComponentTypes.PREBAKED_INNATE_ENCHANTMENTS) instanceof PrebakedInnateItemEnchantmentsComponent component) {
+                Optional<ComponentMap> baked = component.bake(manager);
+
+                // only perform operations if component baking was successful
+                if (baked.isPresent()) {
+                    // create a new component map with all the old components + the new one, then commit it to the item.
+                    ((ItemAccessor) item).klaxon$setComponentMap(ComponentMap.builder().addAll(original).addAll(baked.get()).build());
+                    operationsPerformed++;
+                }
+            }
+        }
+
+        return operationsPerformed;
     }
 
-    public static void updateRegistryLookup(DynamicRegistryManager manager) {
-        PrebakedInnateItemEnchantmentsComponent.manager = manager;
-    }
-
-    public static void onClientFinishJoinWorld(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
-        if (client.world != null) updateRegistryLookup(client.world.getRegistryManager());
-    }
-
+    // we don't mirror this on the client because it's not necessary - also it caused an issue with the stored registryentries of default innate enchantments resetting everytime the creative inventory screen was opened... super fucked...
     public static void onServerStarted(MinecraftServer minecraftServer) {
-        updateRegistryLookup(minecraftServer.getReloadableRegistries().getRegistryManager());
+        KlaxonCommon.LOGGER.info("Baked Innate Enchantment Components on {} Items!", bakeAll(minecraftServer.getReloadableRegistries().getRegistryManager()));
+    }
+
+    // enchantments are datapackable, so do this
+    public static void onDataPackReload(MinecraftServer minecraftServer, LifecycledResourceManager lifecycledResourceManager, boolean b) {
+        KlaxonCommon.LOGGER.info("Reloaded Innate Enchantment Components on {} Items!", bakeAll(minecraftServer.getReloadableRegistries().getRegistryManager()));
     }
 }
