@@ -3,7 +3,7 @@
   "explosionPowerMax": 1.4,
   "explosionPowerMin": 0.3,
   "ingredientItem": {
-    "item": "minecraft:coal"
+    "tag": "minecraft:coals"
   },
   "output": {
     "count": 1,
