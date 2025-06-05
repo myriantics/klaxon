@@ -19,7 +19,7 @@ public class KlaxonAttributeModifierComponentModifications {
         EquipmentSlot slot = armorItem.getSlotType();
 
         // apply steel armor modifiers if it's steel armor
-        if (material.equals(KlaxonArmorMaterials.STEEL)) {
+        if (material.equals(KlaxonArmorMaterials.STEEL_PLATE)) {
             original = SteelArmorItem.appendAttributeModifiers(original, AttributeModifierSlot.forEquipmentSlot(slot));
         }
 

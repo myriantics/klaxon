@@ -10,7 +10,9 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.custom.KlaxonAttributeModifierComponentModifications;
+import net.myriantics.klaxon.registry.minecraft.KlaxonArmorMaterials;
 import net.myriantics.klaxon.registry.minecraft.KlaxonEntityAttributes;
+import net.myriantics.klaxon.registry.minecraft.KlaxonToolMaterials;
 
 public class SteelArmorItem extends ArmorItem {
 
@@ -21,7 +23,7 @@ public class SteelArmorItem extends ArmorItem {
     public static final Identifier WEIGHT_MODIFIER_ID = KlaxonCommon.locate("steel_armor_weight_modifier_id");
 
     public SteelArmorItem(RegistryEntry<ArmorMaterial> material, Type type, Settings settings) {
-        super(material, type, settings.maxDamage(type.getMaxDamage(15)).maxCount(1));
+        super(material, type, settings.maxDamage(type.getMaxDamage(32)).maxCount(1));
     }
 
     public static AttributeModifiersComponent appendAttributeModifiers(AttributeModifiersComponent attributeModifiers, AttributeModifierSlot slot) {

@@ -53,19 +53,19 @@ public class KlaxonItems {
 
     // armor
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.HELMET, new Item.Settings()
+            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new Item.Settings()
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.CHESTPLATE, new Item.Settings()
+            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new Item.Settings()
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_LEGGINGS = registerSimpleItem("steel_leggings",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.LEGGINGS, new Item.Settings()
+            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new Item.Settings()
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL, ArmorItem.Type.BOOTS, new Item.Settings()
+            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new Item.Settings()
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
 

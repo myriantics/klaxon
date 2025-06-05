@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry.custom;
 
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
@@ -11,6 +12,7 @@ import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponen
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.minecraft.KlaxonSoundEvents;
+import net.myriantics.klaxon.registry.minecraft.KlaxonToolMaterials;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.Map;
@@ -31,6 +33,10 @@ public class KlaxonDefaultItemComponentModifications {
                     .add(
                             KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS,
                             new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4))
+                    )
+                    .add(
+                            DataComponentTypes.MAX_DAMAGE,
+                            KlaxonToolMaterials.STEEL_NUGGET.getDurability()
                     );
         });
 
