@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,7 +13,6 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -225,6 +223,11 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
             }
 
             updateBlockState(world, pos, appendedState);
+
+            // updates stuff like tnt minecarts
+            if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor)  {
+                blastProcessor.updateScreenHandlerIfPresent();
+            }
         }
     }
 

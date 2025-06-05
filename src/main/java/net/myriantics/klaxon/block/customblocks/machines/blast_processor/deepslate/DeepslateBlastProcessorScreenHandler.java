@@ -152,17 +152,24 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
 
         if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, blastProcessor, catalystInput);
-                this.blastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData));
+                ItemExplosionPowerData newPowerData = blastProcessorBehavior.getExplosionPowerData(world, pos, blastProcessor, catalystInput);
+                BlastProcessingRecipeData newBlastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
+
+                // Make sure we've changed something before sending an update packet
+                if (!newPowerData.equals(powerData) || !newBlastProcessingData.equals(this.blastProcessingData)) {
+                    this.powerData = newPowerData;
+                    this.blastProcessingData = newBlastProcessingData;
+
+                    ServerPlayNetworking.send(serverPlayer, new BlastProcessorScreenSyncPacket(
+                                    blastProcessingData.explosionPowerMin(),
+                                    blastProcessingData.explosionPowerMax(),
+                                    blastProcessingData.result(),
+                                    powerData.explosionPower(),
+                                    powerData.producesFire()
+                            )
+                    );
+                }
             }
-            ServerPlayNetworking.send(serverPlayer, new BlastProcessorScreenSyncPacket(
-                    blastProcessingData.explosionPowerMin(),
-                    blastProcessingData.explosionPowerMax(),
-                    blastProcessingData.result(),
-                    powerData.explosionPower(),
-                    powerData.producesFire()
-                    )
-            );
         }
 
         resultInventory.setStack(0, blastProcessingData.result());

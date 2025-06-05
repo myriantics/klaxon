@@ -61,6 +61,12 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
         return screenHandler;
     }
 
+    // used to make blast processor screenhandler update on neighbor update
+    public void updateScreenHandlerIfPresent() {
+        // only do this if we have a screenhandler and the player actually is looking at it
+        if (screenHandler != null && screenHandler.player.currentScreenHandler.equals(screenHandler)) screenHandler.onContentChanged(this);
+    }
+
     @Override
     public Text getDisplayName() {
         return Text.translatable(getCachedState().getBlock().getTranslationKey());
