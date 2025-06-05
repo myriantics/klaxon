@@ -55,6 +55,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
                 .forceAddTag(BlockTags.WOOL_CARPETS)
                 .forceAddTag(BlockTags.WOOL)
+                .forceAddTag(BlockTags.LEAVES)
                 .add(Blocks.IRON_BARS);
 
         // cleaver
@@ -75,6 +76,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ALL_SIGNS)
                 .forceAddTag(BlockTags.BEEHIVES)
                 .forceAddTag(BlockTags.CANDLES)
+                .forceAddTag(BlockTags.LEAVES)
+                .add(Blocks.OCHRE_FROGLIGHT)
+                .add(Blocks.PEARLESCENT_FROGLIGHT)
+                .add(Blocks.VERDANT_FROGLIGHT)
                 .add(Blocks.MOSS_BLOCK)
                 .add(Blocks.MOSS_CARPET)
                 .add(Blocks.AZALEA)

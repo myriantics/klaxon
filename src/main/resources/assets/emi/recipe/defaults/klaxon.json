@@ -47,7 +47,7 @@
     "klaxon:tool_usage/recipe_processing_hammers/molten_rubber_sheet",
     "klaxon:tool_usage/recipe_processing_hammers/steel_plate",
     "klaxon:tool_usage/recipe_processing_hammers/crude_steel_plate",
-    "emi:/world/waxing/klaxon/weathered_copper_plating_block"
-
+    "emi:/world/waxing/klaxon/weathered_copper_plating_block",
+    "klaxon:crafting/makeshift_shapeless/flint_and_steel"
   ]
 }

@@ -198,7 +198,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         addShapelessCraftingRecipe(DefaultedList.copyOf(Ingredient.EMPTY,
                         Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
                         Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
-                        Ingredient.ofItems(KlaxonItems.FRACTURED_COAL_CHUNKS),
+                        Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
                         Ingredient.ofItems(KlaxonItems.FRACTURED_COAL_CHUNKS)),
                 new ItemStack(KlaxonItems.CRUDE_STEEL_MIXTURE, 3),
                 null, null);
