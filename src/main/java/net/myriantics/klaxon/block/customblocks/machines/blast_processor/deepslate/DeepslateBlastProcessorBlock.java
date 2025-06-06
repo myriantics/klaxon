@@ -136,7 +136,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            return (blastProcessor.getStack(CATALYST_INDEX).isEmpty() ? 0 : 8) + (blastProcessor.getStack(INGREDIENT_INDEX).isEmpty() ? 0 : 7);
+            return (blastProcessor.getStack(CATALYST_INDEX).isEmpty() ? 0 : 7) + (blastProcessor.getStack(INGREDIENT_INDEX).isEmpty() ? 0 : 8);
         }
         return 0;
     }
