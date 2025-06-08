@@ -8,7 +8,7 @@ public class KlaxonFuelRegistry {
     public static void init() {
         FuelRegistry registry = FuelRegistry.INSTANCE;
 
-        registry.add(KlaxonItems.FRACTURED_COAL_CHUNKS, 400);
+        registry.add(KlaxonItems.FRACTURED_COAL, 400);
 
         KlaxonCommon.LOGGER.info("Registered KLAXON's Furnace Fuels!");
     }

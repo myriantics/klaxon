@@ -196,14 +196,15 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
 
     private void buildMaterialCraftingRecipes() {
         addShapelessCraftingRecipe(DefaultedList.copyOf(Ingredient.EMPTY,
-                        Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
-                        Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
-                        Ingredient.ofItems(KlaxonItems.FRACTURED_IRON_FRAGMENTS),
-                        Ingredient.ofItems(KlaxonItems.FRACTURED_COAL_CHUNKS)),
+                        Ingredient.fromTag(KlaxonItemTags.FRACTURED_IRON),
+                        Ingredient.fromTag(KlaxonItemTags.FRACTURED_IRON),
+                        Ingredient.fromTag(KlaxonItemTags.FRACTURED_IRON),
+                        Ingredient.fromTag(KlaxonItemTags.FRACTURED_COALS)),
                 new ItemStack(KlaxonItems.CRUDE_STEEL_MIXTURE, 3),
                 null, null);
 
-        add2x2PackingRecipe(Ingredient.ofItems(KlaxonItems.FRACTURED_COAL_CHUNKS), new ItemStack(Items.COAL), null, null);
+        add2x2PackingRecipe(Ingredient.ofItems(KlaxonItems.FRACTURED_COAL), new ItemStack(Items.COAL), null, null);
+        add2x2PackingRecipe(Ingredient.ofItems(KlaxonItems.FRACTURED_CHARCOAL), new ItemStack(Items.CHARCOAL), null, null);
     }
 
     private void buildCompressionCraftingRecipes() {

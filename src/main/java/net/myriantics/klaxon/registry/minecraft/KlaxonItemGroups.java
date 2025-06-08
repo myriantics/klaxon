@@ -114,10 +114,11 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonItems.CRUDE_STEEL_MIXTURE);
 
                 // fractured items
-                entries.add(KlaxonItems.FRACTURED_IRON_FRAGMENTS);
-                entries.add(KlaxonItems.FRACTURED_COPPER_FRAGMENTS);
-                entries.add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS);
-                entries.add(KlaxonItems.FRACTURED_COAL_CHUNKS);
+                entries.add(KlaxonItems.FRACTURED_IRON);
+                entries.add(KlaxonItems.FRACTURED_COPPER);
+                entries.add(KlaxonItems.FRACTURED_GOLD);
+                entries.add(KlaxonItems.FRACTURED_COAL);
+                entries.add(KlaxonItems.FRACTURED_CHARCOAL);
                 entries.add(KlaxonItems.FRACTURED_RAW_IRON);
                 entries.add(KlaxonItems.FRACTURED_RAW_COPPER);
                 entries.add(KlaxonItems.FRACTURED_RAW_GOLD);

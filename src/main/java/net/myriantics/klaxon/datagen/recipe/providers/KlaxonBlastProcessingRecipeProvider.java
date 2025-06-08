@@ -6,7 +6,6 @@ import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.tag.ItemTags;
 import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
@@ -36,7 +35,8 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
         addBlastProcessingRecipe(Ingredient.ofItems(Blocks.INFESTED_STONE_BRICKS), 0.1, 0.3, new ItemStack(Blocks.INFESTED_CRACKED_STONE_BRICKS));
 
         // misc
-        addBlastProcessingRecipe(Ingredient.fromTag(ItemTags.COALS), 0.3, 1.4, new ItemStack(KlaxonItems.FRACTURED_COAL_CHUNKS));
+        addBlastProcessingRecipe(Ingredient.ofItems(Items.COAL), 0.3, 1.4, new ItemStack(KlaxonItems.FRACTURED_COAL));
+        addBlastProcessingRecipe(Ingredient.ofItems(Items.CHARCOAL), 0.2, 1.2, new ItemStack(KlaxonItems.FRACTURED_CHARCOAL));
 
         // rubber extraction
         addBlastProcessingRecipe(Ingredient.fromTag(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS), 0.8, 1.9, new ItemStack(KlaxonItems.RUBBER_GLOB, 5));

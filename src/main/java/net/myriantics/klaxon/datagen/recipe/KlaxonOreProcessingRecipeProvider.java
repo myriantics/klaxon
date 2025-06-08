@@ -6,7 +6,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 
 public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
@@ -21,9 +20,9 @@ public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
     }
 
     private void buildFracturedOreProcessingRecipes() {
-        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_IRON, Items.RAW_IRON, KlaxonItems.FRACTURED_IRON_FRAGMENTS, Items.IRON_INGOT);
-        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_GOLD, Items.RAW_GOLD, KlaxonItems.FRACTURED_GOLD_FRAGMENTS, Items.GOLD_INGOT);
-        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_COPPER, Items.RAW_COPPER, KlaxonItems.FRACTURED_COPPER_FRAGMENTS, Items.COPPER_INGOT);
+        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_IRON, Items.RAW_IRON, KlaxonItems.FRACTURED_IRON, Items.IRON_INGOT);
+        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_GOLD, Items.RAW_GOLD, KlaxonItems.FRACTURED_GOLD, Items.GOLD_INGOT);
+        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_COPPER, Items.RAW_COPPER, KlaxonItems.FRACTURED_COPPER, Items.COPPER_INGOT);
     }
 
     public void addFracturedOreProcessingRecipes(Item fracturedRawOreItem, Item rawOreItem, Item fracturedOreFragmentsItem, Item oreIngotItem,

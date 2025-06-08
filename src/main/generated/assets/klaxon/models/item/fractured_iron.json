@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "klaxon:item/fractured_gold_fragments"
+    "layer0": "klaxon:item/fractured_iron"
   }
 }

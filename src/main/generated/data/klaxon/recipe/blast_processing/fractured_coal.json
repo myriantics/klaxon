@@ -3,10 +3,10 @@
   "explosionPowerMax": 1.4,
   "explosionPowerMin": 0.3,
   "ingredientItem": {
-    "tag": "minecraft:coals"
+    "item": "minecraft:coal"
   },
   "output": {
     "count": 1,
-    "id": "klaxon:fractured_coal_chunks"
+    "id": "klaxon:fractured_coal"
   }
 }

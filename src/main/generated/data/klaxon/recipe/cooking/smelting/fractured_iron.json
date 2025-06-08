@@ -5,9 +5,9 @@
   "experience": 1.0,
   "group": "fractured_ores",
   "ingredient": {
-    "item": "klaxon:fractured_raw_copper"
+    "item": "klaxon:fractured_raw_iron"
   },
   "result": {
-    "id": "klaxon:fractured_copper_fragments"
+    "id": "klaxon:fractured_iron"
   }
 }

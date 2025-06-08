@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosionPowerMax": 1.2,
+  "explosionPowerMin": 0.2,
+  "ingredientItem": {
+    "item": "minecraft:charcoal"
+  },
+  "output": {
+    "count": 1,
+    "id": "klaxon:fractured_charcoal"
+  }
+}

@@ -4,16 +4,16 @@
   "group": "crude_steel_mixture",
   "ingredients": [
     {
-      "item": "klaxon:fractured_iron_fragments"
+      "tag": "klaxon:fractured_materials/iron"
     },
     {
-      "item": "klaxon:fractured_iron_fragments"
+      "tag": "klaxon:fractured_materials/iron"
     },
     {
-      "item": "klaxon:fractured_iron_fragments"
+      "tag": "klaxon:fractured_materials/iron"
     },
     {
-      "item": "klaxon:fractured_coal_chunks"
+      "tag": "klaxon:fractured_materials/coal"
     }
   ],
   "result": {

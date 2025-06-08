@@ -3,10 +3,10 @@
   "explosionPowerMax": 1.7,
   "explosionPowerMin": 0.5,
   "ingredientItem": {
-    "item": "minecraft:copper_ingot"
+    "item": "minecraft:iron_ingot"
   },
   "output": {
     "count": 1,
-    "id": "klaxon:fractured_copper_fragments"
+    "id": "klaxon:fractured_iron"
   }
 }

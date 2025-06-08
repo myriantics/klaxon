@@ -51,9 +51,9 @@ public class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(KlaxonItems.FRACTURED_RAW_IRON, "Fractured Raw Iron");
         translationBuilder.add(KlaxonItems.FRACTURED_RAW_GOLD, "Fractured Raw Gold");
         translationBuilder.add(KlaxonItems.FRACTURED_RAW_COPPER, "Fractured Raw Copper");
-        translationBuilder.add(KlaxonItems.FRACTURED_IRON_FRAGMENTS, "Fractured Iron Fragments");
-        translationBuilder.add(KlaxonItems.FRACTURED_COPPER_FRAGMENTS, "Fractured Gold Fragments");
-        translationBuilder.add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS, "Fractured Copper Fragments");
+        translationBuilder.add(KlaxonItems.FRACTURED_IRON, "Fractured Iron Fragments");
+        translationBuilder.add(KlaxonItems.FRACTURED_COPPER, "Fractured Gold Fragments");
+        translationBuilder.add(KlaxonItems.FRACTURED_GOLD, "Fractured Copper Fragments");
 
         // alloy blends
         translationBuilder.add(KlaxonItems.CRUDE_STEEL_MIXTURE, "Crude Steel Mixture");

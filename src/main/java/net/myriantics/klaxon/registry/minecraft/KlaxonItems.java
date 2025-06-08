@@ -69,14 +69,17 @@ public class KlaxonItems {
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
 
-    // raw ores / blends
+    // fractured materials
     public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");
     public static final Item FRACTURED_RAW_COPPER = registerReallySimpleItem("fractured_raw_copper");
     public static final Item FRACTURED_RAW_GOLD = registerReallySimpleItem("fractured_raw_gold");
-    public static final Item FRACTURED_IRON_FRAGMENTS = registerReallySimpleItem("fractured_iron_fragments");
-    public static final Item FRACTURED_COPPER_FRAGMENTS = registerReallySimpleItem("fractured_copper_fragments");
-    public static final Item FRACTURED_GOLD_FRAGMENTS = registerReallySimpleItem("fractured_gold_fragments");
-    public static final Item FRACTURED_COAL_CHUNKS = registerReallySimpleItem("fractured_coal_chunks");
+    public static final Item FRACTURED_IRON = registerReallySimpleItem("fractured_iron");
+    public static final Item FRACTURED_COPPER = registerReallySimpleItem("fractured_copper");
+    public static final Item FRACTURED_GOLD = registerReallySimpleItem("fractured_gold");
+    public static final Item FRACTURED_COAL = registerReallySimpleItem("fractured_coal");
+    public static final Item FRACTURED_CHARCOAL = registerReallySimpleItem("fractured_charcoal");
+
+    // alloy blends
     public static final Item CRUDE_STEEL_MIXTURE = registerReallySimpleItem("crude_steel_mixture");
 
     // raw materials

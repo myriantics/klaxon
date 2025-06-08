@@ -4,6 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 
 public abstract class KlaxonItemTags {
     // makeshift tags
@@ -77,6 +78,22 @@ public abstract class KlaxonItemTags {
     // blast processor behavior tags
     public static final TagKey<Item> BEDLIKE_EXPLODABLES =
             createTag("bedlike_explodables");
+
+    // category tags
+    public static final TagKey<Item> FRACTURED_MATERIALS = createTag("fractured_materials");
+
+    // fractured materials
+    public static final TagKey<Item> FRACTURED_COALS = createFracturedMaterialTag("coal");
+    public static final TagKey<Item> FRACTURED_IRON = createFracturedMaterialTag("iron");
+    public static final TagKey<Item> FRACTURED_GOLD = createFracturedMaterialTag("gold");
+    public static final TagKey<Item> FRACTURED_COPPER = createFracturedMaterialTag("copper");
+    public static final TagKey<Item> FRACTURED_RAW_IRON = createFracturedMaterialTag("raw_iron");
+    public static final TagKey<Item> FRACTURED_RAW_GOLD = createFracturedMaterialTag("raw_gold");
+    public static final TagKey<Item> FRACTURED_RAW_COPPER = createFracturedMaterialTag("raw_copper");
+
+    private static TagKey<Item> createFracturedMaterialTag(String name) {
+        return createTag("fractured_materials/" + name);
+    }
 
     private static TagKey<Item> createToolTag(String name) {
         return createTag("tools/" + name);

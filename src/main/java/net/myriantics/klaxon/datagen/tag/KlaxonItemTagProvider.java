@@ -28,6 +28,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         buildMaterialNuggetTags();
         buildMaterialPlateTags();
         buildMaterialSheetTags();
+        buildFracturedMaterialTags();
 
         // build makeshift crafting tags
         buildMakeshiftCraftingIngredientTags();
@@ -138,6 +139,25 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.GOLD_PLATE);
     }
 
+    private void buildFracturedMaterialTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_MATERIALS);
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_COALS)
+                .add(KlaxonItems.FRACTURED_COAL)
+                .add(KlaxonItems.FRACTURED_CHARCOAL);
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_IRON)
+                .add(KlaxonItems.FRACTURED_IRON);
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_GOLD)
+                .add(KlaxonItems.FRACTURED_GOLD);
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_COPPER)
+                .add(KlaxonItems.FRACTURED_COPPER);
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_RAW_IRON)
+                .add(KlaxonItems.FRACTURED_RAW_IRON);
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_RAW_GOLD)
+                .add(KlaxonItems.FRACTURED_RAW_GOLD);
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_RAW_COPPER)
+                .add(KlaxonItems.FRACTURED_RAW_COPPER);
+    }
+
     private void buildMaterialSheetTags() {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEETS)
                 .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS)
@@ -211,7 +231,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ItemTags.PIGLIN_LOVED)
                 .add(KlaxonItems.GOLD_PLATE)
                 .add(KlaxonItems.FRACTURED_RAW_GOLD)
-                .add(KlaxonItems.FRACTURED_GOLD_FRAGMENTS)
+                .add(KlaxonItems.FRACTURED_GOLD)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK.asItem());
         getOrCreateTagBuilder(ItemTags.BREAKS_DECORATED_POTS)
                 .add(KlaxonItems.STEEL_HAMMER)

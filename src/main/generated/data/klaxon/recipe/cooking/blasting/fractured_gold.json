@@ -1,13 +1,13 @@
 {
-  "type": "minecraft:smelting",
+  "type": "minecraft:blasting",
   "category": "misc",
-  "cookingtime": 150,
+  "cookingtime": 75,
   "experience": 1.0,
   "group": "fractured_ores",
   "ingredient": {
     "item": "klaxon:fractured_raw_gold"
   },
   "result": {
-    "id": "klaxon:fractured_gold_fragments"
+    "id": "klaxon:fractured_gold"
   }
 }

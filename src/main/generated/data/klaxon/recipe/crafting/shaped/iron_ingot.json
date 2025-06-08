@@ -4,7 +4,7 @@
   "group": "iron_ingot",
   "key": {
     "x": {
-      "item": "klaxon:fractured_iron_fragments"
+      "item": "klaxon:fractured_iron"
     }
   },
   "pattern": [
