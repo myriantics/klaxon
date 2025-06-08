@@ -140,7 +140,14 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildFracturedMaterialTags() {
-        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_MATERIALS);
+        getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_MATERIALS)
+                .forceAddTag(KlaxonItemTags.FRACTURED_COALS)
+                .forceAddTag(KlaxonItemTags.FRACTURED_COPPER)
+                .forceAddTag(KlaxonItemTags.FRACTURED_GOLD)
+                .forceAddTag(KlaxonItemTags.FRACTURED_IRON)
+                .forceAddTag(KlaxonItemTags.FRACTURED_RAW_COPPER)
+                .forceAddTag(KlaxonItemTags.FRACTURED_RAW_GOLD)
+                .forceAddTag(KlaxonItemTags.FRACTURED_RAW_IRON);
         getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_COALS)
                 .add(KlaxonItems.FRACTURED_COAL)
                 .add(KlaxonItems.FRACTURED_CHARCOAL);

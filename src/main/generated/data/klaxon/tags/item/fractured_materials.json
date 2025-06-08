@@ -1,3 +1,11 @@
 {
-  "values": []
+  "values": [
+    "#klaxon:fractured_materials/coal",
+    "#klaxon:fractured_materials/copper",
+    "#klaxon:fractured_materials/gold",
+    "#klaxon:fractured_materials/iron",
+    "#klaxon:fractured_materials/raw_copper",
+    "#klaxon:fractured_materials/raw_gold",
+    "#klaxon:fractured_materials/raw_iron"
+  ]
 }

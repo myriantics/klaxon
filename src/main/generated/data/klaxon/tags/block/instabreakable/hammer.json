@@ -12,6 +12,7 @@
     "#minecraft:ice",
     "minecraft:redstone_lamp",
     "minecraft:sea_lantern",
-    "minecraft:glowstone"
+    "minecraft:glowstone",
+    "minecraft:cocoa"
   ]
 }

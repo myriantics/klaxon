@@ -41,7 +41,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE)
                 .add(Blocks.REDSTONE_LAMP)
                 .add(Blocks.SEA_LANTERN)
-                .add(Blocks.GLOWSTONE);
+                .add(Blocks.GLOWSTONE)
+                .add(Blocks.COCOA);
 
         // cable shears
         getOrCreateTagBuilder(KlaxonBlockTags.CABLE_SHEARS_MINEABLE)
@@ -77,6 +78,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.BEEHIVES)
                 .forceAddTag(BlockTags.CANDLES)
                 .forceAddTag(BlockTags.LEAVES)
+                .add(Blocks.COCOA)
                 .add(Blocks.OCHRE_FROGLIGHT)
                 .add(Blocks.PEARLESCENT_FROGLIGHT)
                 .add(Blocks.VERDANT_FROGLIGHT)
