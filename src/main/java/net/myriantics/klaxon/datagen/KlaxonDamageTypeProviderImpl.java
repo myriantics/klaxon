@@ -5,11 +5,9 @@ import net.minecraft.entity.damage.DamageScaling;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.*;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonDamageTypeProvider;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -40,8 +38,8 @@ public class KlaxonDamageTypeProviderImpl extends KlaxonDamageTypeProvider {
                 DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER,
                 0.3f
         ));
-        accept(damageTypeMap, KlaxonDamageTypes.WRENCH_BASHING, new DamageType(
-                KlaxonDamageTypes.WRENCH_BASHING.getValue().getPath(),
+        accept(damageTypeMap, KlaxonDamageTypes.WRENCH_OVERTUNING, new DamageType(
+                KlaxonDamageTypes.WRENCH_OVERTUNING.getValue().getPath(),
                 DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER,
                 0.4f
         ));

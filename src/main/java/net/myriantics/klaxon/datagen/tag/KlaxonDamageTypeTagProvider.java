@@ -22,6 +22,6 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .addOptional(KlaxonDamageTypes.CLEAVING);
 
         getOrCreateTagBuilder(DamageTypeTags.NO_KNOCKBACK)
-                .addOptional(KlaxonDamageTypes.WRENCH_BASHING);
+                .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING);
     }
 }

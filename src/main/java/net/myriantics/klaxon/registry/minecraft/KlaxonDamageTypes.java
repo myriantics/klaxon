@@ -18,8 +18,8 @@ public class KlaxonDamageTypes {
             createDamageType("cleaving");
     public static final RegistryKey<DamageType> FLINT_AND_STEEELING =
             createDamageType("flint_and_steeeling");
-    public static final RegistryKey<DamageType> WRENCH_BASHING =
-            createDamageType("wrench_bashing");
+    public static final RegistryKey<DamageType> WRENCH_OVERTUNING =
+            createDamageType("wrench_overtuning");
 
     // to be added - will be used with Coring Drill
     public static final RegistryKey<DamageType> MINCING =

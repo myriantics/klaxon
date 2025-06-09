@@ -61,17 +61,6 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
                 ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
                 world.updateComparators(pos, this);
             }
-
-        } else if (newState.getBlock() instanceof DeepslateBlastProcessorBlock) {
-            // if something was input into hatch
-            if (!newState.get(HATCH_OPEN) && state.get(HATCH_OPEN)) {
-                playItemInputSound(world, pos, newState);
-            }
-
-            // if something was input into fuel
-            if (newState.get(FUELED) && !state.get(FUELED)) {
-                playItemInputSound(world, pos, state);
-            }
         }
         super.onStateReplaced(state, world, pos, newState, moved);
     }
@@ -111,6 +100,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
 
             // if we've inserted any items, we've succeeded!
             if (canFastInput(player, state, interactionSide) && storage.insert(ItemVariant.of(insertedStack.split(1)), 1, tx) > 0) {
+                playItemInputSound(world, pos, state);
                 tx.commit();
             } else {
                 tx.abort();
