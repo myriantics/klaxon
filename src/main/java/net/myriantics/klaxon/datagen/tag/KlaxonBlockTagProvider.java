@@ -24,6 +24,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         buildBehaviorTags();
         buildCategoricalTags();
         buildToolRequirementTags();
+        buildCompatTags();
     }
 
     private void buildMiningTags() {
@@ -105,6 +106,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.SCAFFOLDINGS)
                 .forceAddTag(KlaxonConventionalBlockTags.LEVERS)
+                .addOptionalTag(KlaxonCompatBlockTags.WRENCH_PICKUP)
                 .add(Blocks.DAYLIGHT_DETECTOR)
                 .add(Blocks.HOPPER)
                 .add(Blocks.COPPER_BULB)
@@ -287,5 +289,13 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL)
                 .forceAddTag(BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
 
+    }
+
+    private void buildCompatTags() {
+        getOrCreateTagBuilder(KlaxonCompatBlockTags.IGNITE_FLINT_BLOCKS)
+                .add(KlaxonBlocks.STEEL_BLOCK)
+                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK)
+                .add(KlaxonBlocks.STEEL_PLATING_BLOCK)
+                .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
     }
 }

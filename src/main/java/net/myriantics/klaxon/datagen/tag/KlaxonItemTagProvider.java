@@ -8,6 +8,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
+import net.myriantics.klaxon.tag.compat.KlaxonCompatItemTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -47,6 +48,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // build categorical tags
         buildEquipmentCategoryTags();
+
+        // build compat tags
+        buildCompatTags();
     }
 
     private void buildMaterialIngotTags() {
@@ -285,18 +289,31 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CLEAVER)
                 .add(KlaxonItems.STEEL_WRENCH)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
+
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.CLEAVER)
+                .add(KlaxonItems.STEEL_CLEAVER);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CLEAVERS)
                 .add(KlaxonItems.STEEL_CLEAVER);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.KNIFE)
+                .add(KlaxonItems.STEEL_CLEAVER);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.KNIVES)
-                .forceAddTag(KlaxonConventionalItemTags.CLEAVERS);
+                .add(KlaxonItems.STEEL_CLEAVER);
+
         getOrCreateTagBuilder(KlaxonConventionalItemTags.HAMMERS)
                 .add(KlaxonItems.STEEL_HAMMER);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.HAMMER)
+                .add(KlaxonItems.STEEL_HAMMER);
+
         getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCHES)
                 .add(KlaxonItems.STEEL_WRENCH);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCH)
+                .add(KlaxonItems.STEEL_WRENCH);
+
         getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEARS)
                 .forceAddTag(KlaxonItemTags.CABLE_SHEARS);
         getOrCreateTagBuilder(KlaxonItemTags.CABLE_SHEARS)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
+
         getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
         getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)
@@ -327,5 +344,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.GREEN_BED)
                 .add(Items.RED_BED)
                 .add(Items.BLACK_BED);
+    }
+
+    private void buildCompatTags() {
+        getOrCreateTagBuilder(KlaxonCompatItemTags.PEDESTAL_DOWNRIGHT)
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(KlaxonItems.STEEL_CLEAVER);
     }
 }

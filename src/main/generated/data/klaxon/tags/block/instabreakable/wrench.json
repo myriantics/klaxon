@@ -6,6 +6,10 @@
     "#c:metal_trapdoors",
     "#c:scaffoldings",
     "#c:levers",
+    {
+      "id": "#create:wrench_pickup",
+      "required": false
+    },
     "minecraft:daylight_detector",
     "minecraft:hopper",
     "minecraft:copper_bulb",
