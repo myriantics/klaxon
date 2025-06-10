@@ -198,7 +198,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(ItemTags.WARPED_STEMS);
         getOrCreateTagBuilder(KlaxonItemTags.GEAR_GRIP_MATERIALS)
                 .add(Items.LEATHER)
-                .forceAddTag(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_SHEETS);
+                .add(KlaxonItems.RUBBER_SHEET);
     }
 
     private void buildAdvancementRelatedTags() {

@@ -95,7 +95,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                         " S ",
                         "GSG"
                 },
-                List.of(Ingredient.ofItems(Items.STICK, Items.LEATHER)),
+                List.of(Ingredient.ofItems(Items.STICK), Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS)),
                 new ItemStack(KlaxonItems.STEEL_HAMMER),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
@@ -110,7 +110,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                         "PP",
                         "SG"
                 },
-                List.of(Ingredient.ofItems(Items.STICK, Items.LEATHER)),
+                List.of(Ingredient.ofItems(Items.STICK), Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS)),
                 new ItemStack(KlaxonItems.STEEL_CLEAVER),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
@@ -123,7 +123,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                         "GP",
                         "PG"
                 },
-                List.of(Ingredient.ofItems(Items.LEATHER)),
+                List.of(Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS)),
                 new ItemStack(KlaxonItems.STEEL_CABLE_SHEARS),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
@@ -139,7 +139,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                         " II",
                         "SG "
                 },
-                List.of(Ingredient.ofItems(Items.STICK, Items.LEATHER)),
+                List.of(Ingredient.ofItems(Items.STICK), Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS)),
                 new ItemStack(KlaxonItems.STEEL_WRENCH),
                 CraftingRecipeCategory.EQUIPMENT,
                 null

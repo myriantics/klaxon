@@ -2,14 +2,12 @@
   "type": "klaxon:makeshift_shaped",
   "category": "equipment",
   "constant_ingredients": [
-    [
-      {
-        "item": "minecraft:stick"
-      },
-      {
-        "item": "minecraft:leather"
-      }
-    ]
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "tag": "klaxon:gear_grip_materials"
+    }
   ],
   "group": "steel_hammer",
   "key": {

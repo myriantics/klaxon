@@ -3,7 +3,7 @@
   "category": "equipment",
   "constant_ingredients": [
     {
-      "item": "minecraft:leather"
+      "tag": "klaxon:gear_grip_materials"
     }
   ],
   "group": "steel_cable_shears",
