@@ -42,7 +42,7 @@ public class ItemExplosionPowerRecipe implements Recipe<ExplosiveCatalystRecipeI
 
     @Override
     public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     public Ingredient getIngredient() {
