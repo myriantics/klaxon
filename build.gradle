@@ -108,7 +108,7 @@ publishing {
 wiki {
 	docs {
 		// The name of the object (examplemod) should match the registered wiki project ID (if it exists).
-		examplemod {
+		klaxon {
 			// The path to the folder containing the documentation metadata file (sinytra-wiki.json)
 			root = file('docs/klaxon')
 		}

@@ -1,6 +1,5 @@
 {
-  "blocks": "Blocks",
-  "items": "Items",
-  "component": "Items",
-  "introduction.mdx": "Introduction"
+  "introduction.mdx": "Introduction",
+  "players": "For Players",
+  "developers": "For Developers"
 }
