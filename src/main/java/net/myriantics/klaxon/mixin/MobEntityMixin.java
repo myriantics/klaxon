@@ -10,6 +10,7 @@ import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
+import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -37,6 +38,7 @@ public abstract class MobEntityMixin {
             ShieldBreachingComponent shieldBreachingComponent = ShieldBreachingComponent.get(weaponStack);
             if (shieldBreachingComponent != null && shieldBreachingComponent.shouldFire(attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS), true)) {
                 original = KlaxonDamageTypes.getAttackingDamageSource(attacker, shieldBreachingComponent.damageType());
+                ((DamageSourceMixinAccess) original).klaxon$setShieldBreachingComponent(shieldBreachingComponent);
             }
         }
 

@@ -12,10 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
-import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
-import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonEntityAttributes;
+import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 import net.myriantics.klaxon.util.DualWieldHelper;
 import net.myriantics.klaxon.util.LivingEntityMixinAccess;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,25 +40,19 @@ public abstract class LivingEntityMixin implements LivingEntityMixinAccess {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;blockedByShield(Lnet/minecraft/entity/damage/DamageSource;)Z")
     )
     public boolean klaxon$shieldBreachingOverride(boolean original, @Local(argsOnly = true) DamageSource damageSource, @Local(argsOnly = true) float amount) {
-        ItemStack weaponStack = damageSource.getWeaponStack();
 
-        // make sure there's a weapon stack
-        if (weaponStack != null && damageSource.getAttacker() instanceof LivingEntity attacker) {
-            // make sure there is actually a shield penetration component
-            ShieldBreachingComponent shieldBreachingComponent = ShieldBreachingComponent.get(weaponStack);
-            if (shieldBreachingComponent != null) {
-                damageShield(amount);
-                takeShieldHit(attacker);
+        // make sure shield would've blocked attack
+        if (original
+                // make sure attack is actually shield breaching
+                && ((DamageSourceMixinAccess) damageSource).klaxon$getShieldBreachingComponent() != null
+                && damageSource.getAttacker() instanceof LivingEntity attacker
+        ) {
+            damageShield(amount);
+            takeShieldHit(attacker);
+            if (((Object) this) instanceof PlayerEntity player) player.disableShield();
 
-                // we have to call this independently because the hammer itself doesn't disable shields
-                // it has to be walloping damage to pierce through a shield
-                if (((Object)this) instanceof PlayerEntity player) {
-                    player.disableShield();
-                }
-
-                // we have our own custom processing, we don't need to run the regular shield disabling stuff
-                return false;
-            }
+            // we have our own custom processing, we don't need to run the regular shield disabling stuff
+            return false;
         }
 
         // no need to retain the original since any positives are filtered out at the start

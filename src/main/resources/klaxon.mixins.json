@@ -9,6 +9,7 @@
     "ArmorItemMixin",
     "ClientPlayerInteractionManagerMixin",
     "CraftingResultSlotMixin",
+    "DamageSourceMixin",
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
     "EnchantmentsPredicateMixin",

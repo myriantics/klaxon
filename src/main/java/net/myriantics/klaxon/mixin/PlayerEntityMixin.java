@@ -13,6 +13,7 @@ import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
+import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -47,9 +48,10 @@ public abstract class PlayerEntityMixin {
         }
 
         // test for shield penetration component - check if it should run based on critical hit status
-        ShieldBreachingComponent shieldPenetration = ShieldBreachingComponent.get(weaponStack);
-        if (shieldPenetration != null && shieldPenetration.shouldFire(willCrit, fullyCharged)) {
-            value = KlaxonDamageTypes.getAttackingDamageSource(player, shieldPenetration.damageType());
+        ShieldBreachingComponent shieldBreaching = ShieldBreachingComponent.get(weaponStack);
+        if (shieldBreaching != null && shieldBreaching.shouldFire(willCrit, fullyCharged)) {
+            value = KlaxonDamageTypes.getAttackingDamageSource(player, shieldBreaching.damageType());
+            ((DamageSourceMixinAccess) value).klaxon$setShieldBreachingComponent(shieldBreaching);
         }
 
         // check for knockback modifier component
