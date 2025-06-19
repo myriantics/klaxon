@@ -42,7 +42,8 @@ public class KlaxonItems {
     public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
             new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
                     .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
-                    .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(KlaxonDamageTypes.CLEAVING, false, true))
+                    .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.CLEAVING))
+                    .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), false, true))
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.LOOTING, 1, Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
