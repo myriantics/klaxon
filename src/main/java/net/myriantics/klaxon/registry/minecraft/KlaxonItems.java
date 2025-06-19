@@ -19,6 +19,7 @@ import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 
 public class KlaxonItems {
 
@@ -30,7 +31,7 @@ public class KlaxonItems {
                     .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
                     .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
-                    .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING, true))
+                    .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackModifierComponent(2.0f, true, KlaxonDamageTypes.HAMMER_WALLOPING))
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",

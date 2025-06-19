@@ -10,22 +10,29 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.dynamic.Codecs;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 // When present on a weapon, allows it to penetrate through shields when performing a critical hit.
 // Replaces default damage type with the one specified
-public record ShieldBreachingComponent(RegistryKey<DamageType> damageType, boolean requiresCritical, boolean requiresFullyCharged) {
+public record ShieldBreachingComponent(Optional<RegistryKey<DamageType>> damageType, boolean requiresCritical, boolean requiresFullyCharged) {
+    public ShieldBreachingComponent(RegistryKey<DamageType> damageType, boolean requiresCritical, boolean requiresFullyCharged) {
+        this(Optional.of(damageType), requiresCritical, requiresFullyCharged);
+    }
+
     public static final Codec<ShieldBreachingComponent> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-                RegistryKey.createCodec(RegistryKeys.DAMAGE_TYPE).fieldOf("damage_type").forGetter(ShieldBreachingComponent::damageType),
+                Codecs.optional(RegistryKey.createCodec(RegistryKeys.DAMAGE_TYPE)).fieldOf("damage_type").forGetter(ShieldBreachingComponent::damageType),
                 Codec.BOOL.fieldOf("requires_critical").forGetter(ShieldBreachingComponent::requiresCritical),
                 Codec.BOOL.fieldOf("requires_fully_charged").forGetter(ShieldBreachingComponent::requiresFullyCharged)
         ).apply(instance, ShieldBreachingComponent::new);
     });
 
     public static final PacketCodec<RegistryByteBuf, ShieldBreachingComponent> PACKET_CODEC = PacketCodec.tuple(
-            RegistryKey.createPacketCodec(RegistryKeys.DAMAGE_TYPE), ShieldBreachingComponent::damageType,
+            PacketCodecs.optional(RegistryKey.createPacketCodec(RegistryKeys.DAMAGE_TYPE)), ShieldBreachingComponent::damageType,
             PacketCodecs.BOOL, ShieldBreachingComponent::requiresCritical,
             PacketCodecs.BOOL, ShieldBreachingComponent::requiresFullyCharged,
             ShieldBreachingComponent::new

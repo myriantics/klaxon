@@ -37,7 +37,7 @@ public abstract class MobEntityMixin {
             // replace damage type with shield penetrating variant if present
             ShieldBreachingComponent shieldBreachingComponent = ShieldBreachingComponent.get(weaponStack);
             if (shieldBreachingComponent != null && shieldBreachingComponent.shouldFire(attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS), true)) {
-                original = KlaxonDamageTypes.getAttackingDamageSource(attacker, shieldBreachingComponent.damageType());
+                if (shieldBreachingComponent.damageType().isPresent()) KlaxonDamageTypes.modifyDamageSourceType(original, shieldBreachingComponent.damageType().get());
                 ((DamageSourceMixinAccess) original).klaxon$setShieldBreachingComponent(shieldBreachingComponent);
             }
         }

@@ -5,8 +5,12 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.util.DamageSourceMixinAccess;
+
+import java.util.Optional;
 
 public class KlaxonDamageTypes {
 
@@ -33,6 +37,19 @@ public class KlaxonDamageTypes {
 
     public static DamageSource getAttackingDamageSource(Entity attacker, RegistryKey<DamageType> damageType) {
         return new DamageSource(attacker.getWorld().getDamageSources().registry.entryOf(damageType), attacker);
+    }
+
+    /**
+     * Utility method to swap out damage types of damage sources.
+     *
+     * @param damageSource The damage source that you're overwriting the damage type of.
+     * @param damageType   The damage type key to write to the damage source. Nothing happens if key is invalid.
+     */
+    public static void modifyDamageSourceType(DamageSource damageSource, RegistryKey<DamageType> damageType) {
+        if (damageSource.getSource() instanceof Entity attacker) {
+            Optional<RegistryEntry.Reference<DamageType>> entry = attacker.getWorld().getDamageSources().registry.getEntry(damageType);
+            if (entry.isPresent()) ((DamageSourceMixinAccess) damageSource).klaxon$setDamageType(entry.get());
+        }
     }
 
     public static void init() {

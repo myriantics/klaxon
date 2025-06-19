@@ -36,31 +36,31 @@ public abstract class PlayerEntityMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;")
     )
     // ordinal 2 selects boolean #3 (bl3)
-    // Switches the player's attacking damage type to Hammer Walloping if they crit with a hammer, otherwise uses Hammer Bonking if they do a regular hit.
-    private DamageSource klaxon$applyMeleeDamageTypeComponentOverrides(DamageSource value, @Local(ordinal = 0) boolean fullyCharged, @Local(ordinal = 2) boolean willCrit, @Local(ordinal = 1) boolean knockbackHit) {
+    // Changes melee damage type of attacking player based on item components.
+    private DamageSource klaxon$applyMeleeDamageTypeComponentOverrides(DamageSource original, @Local(ordinal = 0) boolean fullyCharged, @Local(ordinal = 2) boolean willCrit, @Local(ordinal = 1) boolean knockbackHit) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         ItemStack weaponStack = player.getWeaponStack();
 
         // check for overridden damage type on weapon stack - if so, apply the override
         MeleeDamageTypeOverrideComponent damageTypeOverride = MeleeDamageTypeOverrideComponent.get(weaponStack);
         if (damageTypeOverride != null) {
-            value = KlaxonDamageTypes.getAttackingDamageSource(player, damageTypeOverride.damageType());
+            KlaxonDamageTypes.modifyDamageSourceType(original, damageTypeOverride.damageType());
         }
 
         // test for shield penetration component - check if it should run based on critical hit status
         ShieldBreachingComponent shieldBreaching = ShieldBreachingComponent.get(weaponStack);
         if (shieldBreaching != null && shieldBreaching.shouldFire(willCrit, fullyCharged)) {
-            value = KlaxonDamageTypes.getAttackingDamageSource(player, shieldBreaching.damageType());
-            ((DamageSourceMixinAccess) value).klaxon$setShieldBreachingComponent(shieldBreaching);
+            if (shieldBreaching.damageType().isPresent()) KlaxonDamageTypes.modifyDamageSourceType(original, shieldBreaching.damageType().get());
+            ((DamageSourceMixinAccess) original).klaxon$setShieldBreachingComponent(shieldBreaching);
         }
 
-        // check for knockback modifier component
+        // check for knockback modifier component - change damage type if present
         KnockbackModifierComponent knockbackModifier = KnockbackModifierComponent.get(weaponStack);
-        if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit) && knockbackModifier.damageType() != null) {
-            value = KlaxonDamageTypes.getAttackingDamageSource(player, knockbackModifier.damageType());
+        if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit)) {
+            if (knockbackModifier.damageType().isPresent()) KlaxonDamageTypes.modifyDamageSourceType(original, knockbackModifier.damageType().get());
         }
 
-        return value;
+        return original;
     }
 
     @WrapOperation(
