@@ -81,21 +81,6 @@ public abstract class LivingEntityMixin implements LivingEntityMixinAccess {
     }
 
     @Inject(
-            method = "tickHandSwing",
-            at = @At(value = "HEAD")
-    )
-    private void klaxon$untickDualWieldAnimation(CallbackInfo ci) {
-        LivingEntity self = (LivingEntity) (Object) this;
-
-        // prevents choppy animation when players use dual wield items
-        // if (self instanceof PlayerEntity player && player.getAttackCooldownProgress(0.5f) < 9) return;
-
-        if (self instanceof PlayerEntity player && player.getAttackCooldownProgress(0.5f) < 1) return;
-
-        klaxon$setDualWielding(false);
-    }
-
-    @Inject(
             method = "checkHandStackSwap",
             at = @At(value = "HEAD")
     )

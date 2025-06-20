@@ -27,7 +27,7 @@ public abstract class DualWieldHelper {
         // Entities should disable dualwielding on their own, whether it be clientside or serverside. This is here to prevent useless packet spam.
         if (!isDualWielding) return;
 
-        if (entity.getWorld() instanceof ClientWorld) {
+        if (entity.getWorld().isClient()) {
             ClientPlayNetworking.send(new EntityDualWieldToggleC2SPacket(isDualWielding));
         } else if (entity.getWorld() instanceof ServerWorld serverWorld) {
             KlaxonServerPlayNetworkHandler.sendToTracking(serverWorld, entity, new EntityDualWieldToggleS2CPacket(entity.getId(), isDualWielding));
