@@ -94,7 +94,7 @@ public record DefaultInnateItemEnchantmentsComponent(Map<RegistryKey<Enchantment
     }
 
     // enchantments are datapackable, so do this
-    public static void onDataPackReload(MinecraftServer minecraftServer, LifecycledResourceManager lifecycledResourceManager, boolean b) {
-        KlaxonCommon.LOGGER.info("Reloaded Innate Enchantment Components on {} Items!", bakeAll(minecraftServer.getReloadableRegistries().getRegistryManager()));
+    public static void onDataPackReload(MinecraftServer minecraftServer, LifecycledResourceManager lifecycledResourceManager, boolean success) {
+        if (success) KlaxonCommon.LOGGER.info("Reloaded Innate Enchantment Components on {} Items!", bakeAll(minecraftServer.getReloadableRegistries().getRegistryManager()));
     }
 }
