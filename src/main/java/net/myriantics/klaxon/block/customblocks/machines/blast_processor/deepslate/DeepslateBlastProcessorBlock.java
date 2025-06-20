@@ -88,27 +88,30 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
         ItemStack handStack = player.getStackInHand(hand);
         Direction interactionSide = hit.getSide();
 
-        Storage<ItemVariant> storage = ItemStorage.SIDED.find(world, pos, state, world.getBlockEntity(pos), interactionSide);
+        // make sure we've got a deepslate blast processor block entity
+        if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
+            Storage<ItemVariant> storage = ItemStorage.SIDED.find(world, pos, state, blastProcessor, interactionSide);
 
-        // if no storage is detected, we succeed because yeah
-        if (storage == null || world.isClient()) return ItemActionResult.SUCCESS;
+            // if no storage is found or we're on the client, we succeed because no further processing is needed
+            if (storage == null || world.isClient()) return ItemActionResult.SUCCESS;
 
-        // trying to make this viable alongside crystal and cart
-        // kit would include tnt, blast processors, and redstone blocks or smthn
-        try (Transaction tx = Transaction.openOuter()) {
-            ItemStack insertedStack = player.isCreative() ? handStack.copy() : handStack;
+            // try to fastinput hand stack - if this fails, try to open GUI.
+            try (Transaction tx = Transaction.openOuter()) {
+                ItemStack insertedStack = player.isCreative() ? handStack.copy() : handStack;
 
-            // if we've inserted any items, we've succeeded!
-            if (canFastInput(player, state, interactionSide) && storage.insert(ItemVariant.of(insertedStack.split(1)), 1, tx) > 0) {
-                playItemInputSound(world, pos, state);
-                tx.commit();
-            } else {
-                tx.abort();
-                // make sure to open the screen if the insertion fails - on server
-                player.openHandledScreen((DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos));
+                // if we've inserted any items, we've succeeded!
+                // check if inventory is locked before performing fastinput
+                if (blastProcessor.checkUnlocked(player) && canFastInput(player, state, interactionSide) && storage.insert(ItemVariant.of(insertedStack.split(1)), 1, tx) > 0) {
+                    playItemInputSound(world, pos, state);
+                    blastProcessor.markDirty();
+                    tx.commit();
+                } else {
+                    tx.abort();
+                    // make sure to open the screen if the insertion fails - on server
+                    player.openHandledScreen(blastProcessor);
+                }
             }
         }
-
 
         return ItemActionResult.SUCCESS;
     }
@@ -213,11 +216,6 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
             }
 
             updateBlockState(world, pos, appendedState);
-
-            // updates stuff like tnt minecarts
-            if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor)  {
-                blastProcessor.updateScreenHandlerIfPresent();
-            }
         }
     }
 

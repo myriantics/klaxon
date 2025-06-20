@@ -2,8 +2,7 @@ package net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepsl
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -14,6 +13,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.collection.ArrayListDeque;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
@@ -33,15 +33,13 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.*;
 
-public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
+public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     public static final int INGREDIENT_INDEX = 0;
     public static final int CATALYST_INDEX = 1;
     private static final int[] INGREDIENT_ITEM_SLOTS = new int[]{INGREDIENT_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
-
-    private DeepslateBlastProcessorScreenHandler screenHandler;
 
     public DeepslateBlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
@@ -53,23 +51,26 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
         return inventory;
     }
 
-    @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        this.screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
+    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
+        ScreenHandler screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
         screenHandler.onContentChanged(this);
         return screenHandler;
     }
 
-    // used to make blast processor screenhandler update on neighbor update
-    public void updateScreenHandlerIfPresent() {
-        // only do this if we have a screenhandler and the player actually is looking at it
-        if (screenHandler != null && screenHandler.player.currentScreenHandler.equals(screenHandler)) screenHandler.onContentChanged(this);
+    @Override
+    protected Text getContainerName() {
+        return Text.translatable(getCachedState().getBlock().getTranslationKey());
     }
 
     @Override
-    public Text getDisplayName() {
-        return Text.translatable(getCachedState().getBlock().getTranslationKey());
+    protected DefaultedList<ItemStack> getHeldStacks() {
+        return inventory;
+    }
+
+    @Override
+    protected void setHeldStacks(DefaultedList<ItemStack> inventory) {
+        this.inventory = inventory;
     }
 
     public int size() {
@@ -204,9 +205,6 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
 
     @Override
     public void markDirty() {
-        if (this.screenHandler != null && this.screenHandler.player.currentScreenHandler.syncId == this.screenHandler.syncId) {
-            screenHandler.onContentChanged(this);
-        }
         updateBlockState(null);
         super.markDirty();
     }
@@ -240,8 +238,20 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
 
     @Override
     public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayerEntity player) {
-        BlastProcessingRecipeData blastProcessingRecipeData = screenHandler.getBlastProcessingData();
-        ItemExplosionPowerData itemExplosionPowerData = screenHandler.getPowerData();
+        ExplosiveCatalystRecipeInput recipeInventory = new ExplosiveCatalystRecipeInput(this);
+
+        // default values if world is null
+        ItemExplosionPowerData itemExplosionPowerData = new ItemExplosionPowerData(0.0, false);
+        BlastProcessingRecipeData blastProcessingRecipeData = new BlastProcessingRecipeData(0.0, 0.0, ItemStack.EMPTY);
+
+        // if we have a world, actually yoink the proper values.
+        if (world != null) {
+            // compute blast processor behavior
+            BlastProcessorCatalystBehavior blastProcessorBehavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, recipeInventory);
+
+            itemExplosionPowerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
+            blastProcessingRecipeData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), itemExplosionPowerData));
+        }
 
         return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
                 blastProcessingRecipeData.explosionPowerMax(),
@@ -256,12 +266,16 @@ public class DeepslateBlastProcessorBlockEntity extends BlockEntity implements E
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(nbt, this.inventory, registryLookup);
+        if (!this.readLootTable(nbt)) {
+            Inventories.readNbt(nbt, this.inventory, registryLookup);
+        }
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, this.inventory, registryLookup);
+        if (!this.writeLootTable(nbt)) {
+            Inventories.writeNbt(nbt, this.inventory, registryLookup);
+        }
     }
 }

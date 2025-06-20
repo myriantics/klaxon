@@ -135,6 +135,8 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
+
+        onContentChanged(blockEntityInventory);
     }
 
     @Override
