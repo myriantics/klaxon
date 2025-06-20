@@ -54,7 +54,6 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
 
 
     // server constructor
-
     public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory blockEntityInventory, ScreenHandlerContext context) {
         super(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, syncId);
         checkSize(blockEntityInventory, 2);
@@ -226,15 +225,11 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         this.producesFire = producesFire;
     }
 
-    public BlastProcessingRecipeData getBlastProcessingData() {
-        return blastProcessingData;
-    }
-
-    public ItemExplosionPowerData getPowerData() {
-        return powerData;
-    }
-
-    public Inventory getIngredientInventory() {
-        return ingredientInventory;
+    @Override
+    public void onClosed(PlayerEntity player) {
+        super.onClosed(player);
+        if (ingredientInventory instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
+            blastProcessor.removeScreenHandler(this);
+        }
     }
 }

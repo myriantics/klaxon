@@ -3,6 +3,7 @@ package net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepsl
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -31,6 +32,8 @@ import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.*;
 
 public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
@@ -40,6 +43,8 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
     private static final int[] INGREDIENT_ITEM_SLOTS = new int[]{INGREDIENT_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MaxItemStackCount = 1;
+
+    private ArrayList<DeepslateBlastProcessorScreenHandler> activeScreenHandlers = new ArrayList<>();
 
     public DeepslateBlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
@@ -53,9 +58,20 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        ScreenHandler screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
+        DeepslateBlastProcessorScreenHandler screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
         screenHandler.onContentChanged(this);
+        activeScreenHandlers.add(screenHandler);
         return screenHandler;
+    }
+
+    public void removeScreenHandler(DeepslateBlastProcessorScreenHandler screenHandler) {
+        activeScreenHandlers.remove(screenHandler);
+    }
+
+    public void updateAllActiveScreenHandlers() {
+        for (DeepslateBlastProcessorScreenHandler screenHandler : activeScreenHandlers) {
+            screenHandler.onContentChanged(this);
+        }
     }
 
     @Override
@@ -157,7 +173,6 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
     }
 
     public void onRedstoneImpulse() {
-
         if (world != null && !world.isClient) {
 
             // default to true so that it shows the particles when dispensing nothing
@@ -205,6 +220,7 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
     @Override
     public void markDirty() {
+        updateAllActiveScreenHandlers();
         updateBlockState(null);
         super.markDirty();
     }
