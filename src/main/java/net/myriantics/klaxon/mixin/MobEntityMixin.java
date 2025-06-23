@@ -2,10 +2,13 @@ package net.myriantics.klaxon.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.component.EnchantmentEffectComponentTypes;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
+import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
@@ -36,7 +39,7 @@ public abstract class MobEntityMixin {
 
             // replace damage type with shield penetrating variant if present
             ShieldBreachingComponent shieldBreachingComponent = ShieldBreachingComponent.get(weaponStack);
-            if (shieldBreachingComponent != null && shieldBreachingComponent.shouldFire(attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS), true)) {
+            if (shieldBreachingComponent != null && shieldBreachingComponent.shouldFire(attacker.getType().isIn(KlaxonEntityTypeTags.HEAVY_HITTERS), true, EnchantmentHelper.hasAnyEnchantmentsWith(weaponStack, EnchantmentEffectComponentTypes.KNOCKBACK))) {
                 if (shieldBreachingComponent.damageType().isPresent()) KlaxonDamageTypes.modifyDamageSourceType(original, shieldBreachingComponent.damageType().get());
                 ((DamageSourceMixinAccess) original).klaxon$setShieldBreachingComponent(shieldBreachingComponent);
             }

@@ -5,11 +5,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
+import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
@@ -49,13 +47,13 @@ public abstract class PlayerEntityMixin {
 
         // test for shield penetration component - check if it should run based on critical hit status
         ShieldBreachingComponent shieldBreaching = ShieldBreachingComponent.get(weaponStack);
-        if (shieldBreaching != null && shieldBreaching.shouldFire(willCrit, fullyCharged)) {
+        if (shieldBreaching != null && shieldBreaching.shouldFire(willCrit, fullyCharged, knockbackHit)) {
             if (shieldBreaching.damageType().isPresent()) KlaxonDamageTypes.modifyDamageSourceType(original, shieldBreaching.damageType().get());
             ((DamageSourceMixinAccess) original).klaxon$setShieldBreachingComponent(shieldBreaching);
         }
 
         // check for knockback modifier component - change damage type if present
-        KnockbackModifierComponent knockbackModifier = KnockbackModifierComponent.get(weaponStack);
+        KnockbackHitModifierComponent knockbackModifier = KnockbackHitModifierComponent.get(weaponStack);
         if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit)) {
             if (knockbackModifier.damageType().isPresent()) KlaxonDamageTypes.modifyDamageSourceType(original, knockbackModifier.damageType().get());
         }
@@ -72,7 +70,7 @@ public abstract class PlayerEntityMixin {
         ItemStack weaponStack = player.getWeaponStack();
 
         // apply knockback modifier effects
-        KnockbackModifierComponent knockbackModifier = KnockbackModifierComponent.get(weaponStack);
+        KnockbackHitModifierComponent knockbackModifier = KnockbackHitModifierComponent.get(weaponStack);
         if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit)) {
             strength *= knockbackModifier.multiplier();
         }

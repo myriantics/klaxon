@@ -5,7 +5,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
-import net.myriantics.klaxon.component.ability.KnockbackModifierComponent;
+import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.*;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
@@ -31,10 +31,10 @@ public class KlaxonDataComponentTypes {
             });
 
     // Modifies the knockback strength of a knockback hit when using the given item.
-    public static final ComponentType<KnockbackModifierComponent> KNOCKBACK_HIT_MODIFIER = register("knockback_hit_modifier",
+    public static final ComponentType<KnockbackHitModifierComponent> KNOCKBACK_HIT_MODIFIER = register("knockback_hit_modifier",
             builder -> {
-                builder.codec(KnockbackModifierComponent.CODEC);
-                builder.packetCodec(KnockbackModifierComponent.PACKET_CODEC);
+                builder.codec(KnockbackHitModifierComponent.CODEC);
+                builder.packetCodec(KnockbackHitModifierComponent.PACKET_CODEC);
                 return builder;
             });
 
