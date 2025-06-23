@@ -19,7 +19,9 @@ public class KlaxonSoundEvents {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");
     }
 
+    // this doesnt actually register anything in order to prevent a crash when our custom sound files are missing
     private static SoundEvent register(String name, SoundEvent soundEvent) {
-        return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), soundEvent);
+        return soundEvent;
+        // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), soundEvent);
     }
 }
