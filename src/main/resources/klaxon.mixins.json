@@ -3,7 +3,6 @@
   "package": "net.myriantics.klaxon.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AbstractBlockMixin",
     "AbstractBlockStateMixin",
     "AnvilScreenHandlerInvoker",
     "AnvilScreenHandlerMixin",
