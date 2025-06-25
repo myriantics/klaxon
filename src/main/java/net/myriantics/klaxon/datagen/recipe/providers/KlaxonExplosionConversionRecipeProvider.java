@@ -20,7 +20,11 @@ public class KlaxonExplosionConversionRecipeProvider extends KlaxonRecipeSubProv
     }
 
     private void buildNetherReactionRecipes() {
+        // misc
         addNetherReactionRecipe(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE, KlaxonBlocks.STEEL_CASING);
+        addNetherReactionRecipe(KlaxonBlockTags.AIR_CONVERTIBLE, Blocks.AIR);
+        addNetherReactionRecipe(KlaxonBlockTags.FIRE_CONVERTIBLE, Blocks.FIRE);
+        addNetherReactionRecipe(KlaxonBlockTags.SHROOMLIGHT_CONVERTIBLE, Blocks.SHROOMLIGHT);
 
         // netherrack
         addNetherReactionRecipe(KlaxonBlockTags.NETHERRACK_CONVERTIBLE, Blocks.NETHERRACK);
@@ -41,7 +45,10 @@ public class KlaxonExplosionConversionRecipeProvider extends KlaxonRecipeSubProv
 
         // crimson stuff
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_NYLIUM_CONVERTIBLE, Blocks.CRIMSON_NYLIUM);
+        addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_FUNGUS_CONVERTIBLE, Blocks.CRIMSON_FUNGUS);
+        addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_ROOTS_CONVERTIBLE, Blocks.CRIMSON_ROOTS);
         addNetherReactionRecipe(KlaxonBlockTags.NETHER_WART_BLOCK_CONVERTIBLE, Blocks.NETHER_WART_BLOCK);
+        addNetherReactionRecipe(KlaxonBlockTags.WEEPING_VINE_CONVERTIBLE, Blocks.WEEPING_VINES_PLANT);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_STEM_CONVERTIBLE, Blocks.CRIMSON_STEM);
         addNetherReactionRecipe(KlaxonBlockTags.STRIPPED_CRIMSON_STEM_CONVERTIBLE, Blocks.STRIPPED_CRIMSON_STEM);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_HYPHAE_CONVERTIBLE, Blocks.CRIMSON_HYPHAE);
@@ -53,9 +60,13 @@ public class KlaxonExplosionConversionRecipeProvider extends KlaxonRecipeSubProv
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_BUTTON_CONVERTIBLE, Blocks.CRIMSON_PRESSURE_PLATE);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_FENCE_CONVERTIBLE, Blocks.CRIMSON_FENCE);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_FENCE_GATE_CONVERTIBLE, Blocks.CRIMSON_FENCE_GATE);
+        addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_DOOR_CONVERTIBLE, Blocks.CRIMSON_DOOR);
+        addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_TRAPDOOR_CONVERTIBLE, Blocks.CRIMSON_TRAPDOOR);
 
         // warped stuff
         addNetherReactionRecipe(KlaxonBlockTags.WARPED_NYLIUM_CONVERTIBLE, Blocks.WARPED_NYLIUM);
+        addNetherReactionRecipe(KlaxonBlockTags.WARPED_FUNGUS_CONVERTIBLE, Blocks.WARPED_FUNGUS);
+        addNetherReactionRecipe(KlaxonBlockTags.TWISTING_VINES_CONVERTIBLE, Blocks.TWISTING_VINES_PLANT);
         addNetherReactionRecipe(KlaxonBlockTags.WARPED_WART_BLOCK_CONVERTIBLE, Blocks.WARPED_WART_BLOCK);
         addNetherReactionRecipe(KlaxonBlockTags.WARPED_STEM_CONVERTIBLE, Blocks.WARPED_STEM);
     }

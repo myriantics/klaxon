@@ -51,6 +51,13 @@ public class KlaxonBlockTags {
     public static final TagKey<Block> STEEL_CASING_CONVERTIBLE =
             createNetherReactionTag("steel_casing");
 
+    public static final TagKey<Block> AIR_CONVERTIBLE =
+            createNetherReactionTag("air");
+    public static final TagKey<Block> FIRE_CONVERTIBLE =
+            createNetherReactionTag("fire");
+    public static final TagKey<Block> SHROOMLIGHT_CONVERTIBLE =
+            createNetherReactionTag("shroomlight");
+
     public static final TagKey<Block> NETHERRACK_CONVERTIBLE =
             createNetherReactionTag("netherrack");
 
@@ -78,8 +85,14 @@ public class KlaxonBlockTags {
 
     public static final TagKey<Block> CRIMSON_NYLIUM_CONVERTIBLE =
             createNetherReactionTag("crimson_nylium");
+    public static final TagKey<Block> CRIMSON_FUNGUS_CONVERTIBLE =
+            createNetherReactionTag("crimson_fungus");
+    public static final TagKey<Block> CRIMSON_ROOTS_CONVERTIBLE =
+            createNetherReactionTag("crimson_roots");
     public static final TagKey<Block> NETHER_WART_BLOCK_CONVERTIBLE =
             createNetherReactionTag("nether_wart_block");
+    public static final TagKey<Block> WEEPING_VINE_CONVERTIBLE =
+            createNetherReactionTag("weeping_vine");
     public static final TagKey<Block> CRIMSON_STEM_CONVERTIBLE =
             createNetherReactionTag("crimson_stem");
     public static final TagKey<Block> STRIPPED_CRIMSON_STEM_CONVERTIBLE =
@@ -109,16 +122,14 @@ public class KlaxonBlockTags {
 
     public static final TagKey<Block> WARPED_NYLIUM_CONVERTIBLE =
             createNetherReactionTag("warped_nylium");
+    public static final TagKey<Block> WARPED_FUNGUS_CONVERTIBLE =
+            createNetherReactionTag("warped_fungus");
+    public static final TagKey<Block> TWISTING_VINES_CONVERTIBLE =
+            createNetherReactionTag("twisting_vines");
     public static final TagKey<Block> WARPED_WART_BLOCK_CONVERTIBLE =
             createNetherReactionTag("warped_wart_block");
     public static final TagKey<Block> WARPED_STEM_CONVERTIBLE =
             createNetherReactionTag("warped_stem");
-    public static final TagKey<Block> STRIPPED_WARPED_STEM_CONVERTIBLE =
-            createNetherReactionTag("stripped_warped_stem");
-    public static final TagKey<Block> WARPED_HYPHAE_CONVERTIBLE =
-            createNetherReactionTag("warped_hyphae");
-    public static final TagKey<Block> STRIPPED_WARPED_HYPHAE_CONVERTIBLE =
-            createNetherReactionTag("stripped_warped_hyphae");
 
     // category tags
     public static final TagKey<Block> BLAST_PROCESSORS =

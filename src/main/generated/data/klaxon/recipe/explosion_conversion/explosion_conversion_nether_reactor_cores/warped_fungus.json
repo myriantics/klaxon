@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:warped_fungus",
+  "valid_blocks": "#klaxon:nether_reaction/warped_fungus_convertible",
+  "valid_conversion_catalysts": "#klaxon:explosion_conversion_nether_reactor_cores"
+}

@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
@@ -184,6 +185,14 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     private void buildNetherReactionTags() {
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE);
+        getOrCreateTagBuilder(KlaxonBlockTags.FIRE_CONVERTIBLE)
+                .add(Blocks.MOSS_CARPET)
+                .add(Blocks.GLOW_LICHEN)
+                .add(Blocks.DEAD_BUSH);
+        getOrCreateTagBuilder(KlaxonBlockTags.SHROOMLIGHT_CONVERTIBLE)
+                .forceAddTag(ConventionalBlockTags.PUMPKINS)
+                .add(Blocks.MELON)
+                .add(Blocks.COCOA);
 
         // netherrack stuff
         getOrCreateTagBuilder(KlaxonBlockTags.NETHERRACK_CONVERTIBLE)
@@ -256,10 +265,23 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // crimson stuff
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_NYLIUM_CONVERTIBLE)
                 .add(Blocks.GRASS_BLOCK)
-                .add(Blocks.PODZOL);
-        getOrCreateTagBuilder(KlaxonBlockTags.NETHER_WART_BLOCK_CONVERTIBLE)
-                .forceAddTag(BlockTags.LEAVES)
+                .add(Blocks.PODZOL)
                 .add(Blocks.MOSS_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_FUNGUS_CONVERTIBLE)
+                .forceAddTag(BlockTags.FLOWERS)
+                .forceAddTag(BlockTags.SAPLINGS)
+                .add(Blocks.SWEET_BERRY_BUSH);
+        getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_ROOTS_CONVERTIBLE)
+                .add(Blocks.SHORT_GRASS)
+                .add(Blocks.TALL_GRASS)
+                .add(Blocks.FERN);
+        getOrCreateTagBuilder(KlaxonBlockTags.NETHER_WART_BLOCK_CONVERTIBLE)
+                .forceAddTag(BlockTags.LEAVES);
+        getOrCreateTagBuilder(KlaxonBlockTags.WEEPING_VINE_CONVERTIBLE)
+                .forceAddTag(BlockTags.CAVE_VINES)
+                .add(Blocks.HANGING_ROOTS)
+                .add(Blocks.VINE)
+                .add(Blocks.GLOW_LICHEN);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_STEM_CONVERTIBLE)
                 .add(Blocks.OAK_LOG)
                 .add(Blocks.SPRUCE_LOG)
@@ -269,7 +291,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.DARK_OAK_LOG)
                 .add(Blocks.MANGROVE_LOG)
                 .add(Blocks.CHERRY_LOG)
-                .add(Blocks.MANGROVE_ROOTS);
+                .add(Blocks.MANGROVE_ROOTS)
+                .add(Blocks.CACTUS);
         getOrCreateTagBuilder(KlaxonBlockTags.STRIPPED_CRIMSON_STEM_CONVERTIBLE)
                 .add(Blocks.STRIPPED_OAK_LOG)
                 .add(Blocks.STRIPPED_SPRUCE_LOG)
@@ -382,6 +405,13 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // warped stuff
         getOrCreateTagBuilder(KlaxonBlockTags.WARPED_NYLIUM_CONVERTIBLE)
                 .add(Blocks.MYCELIUM);
+        getOrCreateTagBuilder(KlaxonBlockTags.WARPED_FUNGUS_CONVERTIBLE)
+                .add(Blocks.RED_MUSHROOM)
+                .add(Blocks.BROWN_MUSHROOM);
+        getOrCreateTagBuilder(KlaxonBlockTags.TWISTING_VINES_CONVERTIBLE)
+                .add(Blocks.BAMBOO_SAPLING)
+                .add(Blocks.BAMBOO)
+                .add(Blocks.SUGAR_CANE);
         getOrCreateTagBuilder(KlaxonBlockTags.WARPED_WART_BLOCK_CONVERTIBLE)
                 .add(Blocks.RED_MUSHROOM_BLOCK)
                 .add(Blocks.BROWN_MUSHROOM_BLOCK);

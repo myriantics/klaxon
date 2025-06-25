@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:twisting_vines_plant",
+  "valid_blocks": "#klaxon:nether_reaction/twisting_vines_convertible",
+  "valid_conversion_catalysts": "#klaxon:explosion_conversion_nether_reactor_cores"
+}

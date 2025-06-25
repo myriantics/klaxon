@@ -4,8 +4,12 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DoorBlock;
+import net.minecraft.block.entity.BrushableBlockEntity;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -95,13 +99,24 @@ public abstract class ExplosionMixin {
             // yoink origin state from the explosion
             Optional<BlockState> conversionCatalystState = Optional.ofNullable(this.klaxon$conversionCatalyst);
 
-            // make sure we have a valid conversion catalyst before changing block state.
-            if (conversionCatalystState.isPresent()) {
+            // check conditions before editing operations
+            if (
+                    // make sure we have a valid conversion catalyst before changing block state.
+                    conversionCatalystState.isPresent()
+            ) {
+                // make sure block entity is either absent or valid, and that blockstate can be moved
+                if ((world.getBlockEntity(pos) == null || world.getBlockEntity(pos) instanceof BrushableBlockEntity) && !instance.isIn(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)) {
+                    // override for door blocks because i cant think of a better way to handle them
+                    if (instance.getBlock() instanceof DoorBlock && instance.get(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER)) {
+                        pos = pos.down();
+                        instance = world.getBlockState(pos);
+                    }
 
-                if (world instanceof ServerWorld serverWorld) {
-                    BlockState newState = ExplosionConversionRecipeLogic.getOutputState(conversionCatalystState.get(), instance, pos, serverWorld);
-                    // make sure we've changed something before setting the blockstate
-                    if (!instance.equals(newState)) serverWorld.setBlockState(pos, newState);
+                    if (world instanceof ServerWorld serverWorld) {
+                        BlockState newState = ExplosionConversionRecipeLogic.getOutputState(conversionCatalystState.get(), instance, pos, serverWorld, explosion);
+                        // make sure we've changed something before setting the blockstate
+                        if (!instance.equals(newState)) serverWorld.setBlockState(pos, newState);
+                    }
                 }
 
                 // we did our own custom processing, no need to call original
