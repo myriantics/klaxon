@@ -27,12 +27,6 @@ public class KlaxonBlocks {
     public static final Block STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
             new SteelTrapdoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_DOOR)));
 
-    // machines
-    public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
-            new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
-    public static final Block HALLNOX_NETHER_REACTOR_CORE = registerBlock("hallnox_nether_reactor_core",
-            new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK).luminance((state) -> 12)));
-
     // crude steel
     public static final Block CRUDE_STEEL_BLOCK = registerBlock("crude_steel_block",
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).pistonBehavior(PistonBehavior.DESTROY).strength(2.5f, 3.0f)));
@@ -43,6 +37,16 @@ public class KlaxonBlocks {
     public static final Block CRUDE_STEEL_TRAPDOOR = registerBlock("crude_steel_trapdoor",
             new SteelTrapdoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_DOOR)));
 
+
+    // machines
+    public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
+            new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
+    public static final Block STEEL_CASING = registerBlock("steel_casing",
+            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK)));
+    public static final Block CRUDE_STEEL_CASING = registerBlock("crude_steel_casing",
+            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_BLOCK)));
+    public static final Block NETHER_REACTOR_CORE = registerBlock("nether_reactor_core",
+            new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_CASING).luminance((state) -> 12)));
     // iron
     public static final Block IRON_PLATING_BLOCK = registerBlock("iron_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));

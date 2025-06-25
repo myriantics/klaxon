@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:stripped_crimson_stem",
+  "valid_blocks": "#klaxon:nether_reaction/stripped_crimson_stem_convertible",
+  "valid_conversion_catalysts": "#klaxon:explosion_conversion_nether_reactor_cores"
+}

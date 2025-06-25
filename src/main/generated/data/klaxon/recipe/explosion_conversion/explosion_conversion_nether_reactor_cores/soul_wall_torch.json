@@ -1,6 +1,6 @@
 {
   "type": "klaxon:explosion_conversion",
-  "output_block": "minecraft:netherrack",
-  "valid_blocks": "#klaxon:nether_reaction/netherrack_convertible",
+  "output_block": "minecraft:soul_wall_torch",
+  "valid_blocks": "#klaxon:nether_reaction/soul_wall_torch_convertible",
   "valid_conversion_catalysts": "#klaxon:explosion_conversion_nether_reactor_cores"
 }

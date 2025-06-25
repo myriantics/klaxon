@@ -1,0 +1,10 @@
+{
+  "values": [
+    "#c:stones",
+    "#c:cobblestones",
+    "#c:sandstone/blocks",
+    "minecraft:infested_deepslate",
+    "minecraft:infested_stone",
+    "minecraft:tuff"
+  ]
+}

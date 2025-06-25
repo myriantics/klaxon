@@ -47,6 +47,79 @@ public class KlaxonBlockTags {
     public static final TagKey<Block> EXPLOSION_CONVERSION_NETHER_REACTOR_CORES =
             createTag("explosion_conversion_nether_reactor_cores");
 
+    // nether reaction tags
+    public static final TagKey<Block> STEEL_CASING_CONVERTIBLE =
+            createNetherReactionTag("steel_casing");
+
+    public static final TagKey<Block> NETHERRACK_CONVERTIBLE =
+            createNetherReactionTag("netherrack");
+
+    public static final TagKey<Block> BLACKSTONE_CONVERTIBLE =
+            createNetherReactionTag("blackstone");
+    public static final TagKey<Block> BLACKSTONE_STAIRS_CONVERTIBLE =
+            createNetherReactionTag("blackstone_stairs");
+    public static final TagKey<Block> BLACKSTONE_SLAB_CONVERTIBLE =
+            createNetherReactionTag("blackstone_slab");
+    public static final TagKey<Block> BLACKSTONE_WALL_CONVERTIBLE =
+            createNetherReactionTag("blackstone_wall");
+
+    public static final TagKey<Block> SOUL_SAND_CONVERTIBLE =
+            createNetherReactionTag("soul_sand");
+    public static final TagKey<Block> SOUL_SOIL_CONVERTIBLE =
+            createNetherReactionTag("soul_soil");
+    public static final TagKey<Block> SOUL_TORCH_CONVERTIBLE =
+            createNetherReactionTag("soul_torch");
+    public static final TagKey<Block> SOUL_WALL_TORCH_CONVERTIBLE =
+            createNetherReactionTag("soul_wall_torch");
+    public static final TagKey<Block> SOUL_LANTERN_CONVERTIBLE =
+            createNetherReactionTag("soul_lantern");
+    public static final TagKey<Block> SOUL_CAMPFIRE_CONVERTIBLE =
+            createNetherReactionTag("soul_campfire");
+
+    public static final TagKey<Block> CRIMSON_NYLIUM_CONVERTIBLE =
+            createNetherReactionTag("crimson_nylium");
+    public static final TagKey<Block> NETHER_WART_BLOCK_CONVERTIBLE =
+            createNetherReactionTag("nether_wart_block");
+    public static final TagKey<Block> CRIMSON_STEM_CONVERTIBLE =
+            createNetherReactionTag("crimson_stem");
+    public static final TagKey<Block> STRIPPED_CRIMSON_STEM_CONVERTIBLE =
+            createNetherReactionTag("stripped_crimson_stem");
+    public static final TagKey<Block> CRIMSON_HYPHAE_CONVERTIBLE =
+            createNetherReactionTag("crimson_hyphae");
+    public static final TagKey<Block> STRIPPED_CRIMSON_HYPHAE_CONVERTIBLE =
+            createNetherReactionTag("stripped_crimson_hyphae");
+    public static final TagKey<Block> CRIMSON_PLANKS_CONVERTIBLE =
+            createNetherReactionTag("crimson_planks");
+    public static final TagKey<Block> CRIMSON_STAIRS_CONVERTIBLE =
+            createNetherReactionTag("crimson_stairs");
+    public static final TagKey<Block> CRIMSON_SLAB_CONVERTIBLE =
+            createNetherReactionTag("crimson_slab");
+    public static final TagKey<Block> CRIMSON_BUTTON_CONVERTIBLE =
+            createNetherReactionTag("crimson_button");
+    public static final TagKey<Block> CRIMSON_PRESSURE_PLATE_CONVERTIBLE =
+            createNetherReactionTag("crimson_pressure_plate");
+    public static final TagKey<Block> CRIMSON_FENCE_CONVERTIBLE =
+            createNetherReactionTag("crimson_fence");
+    public static final TagKey<Block> CRIMSON_FENCE_GATE_CONVERTIBLE =
+            createNetherReactionTag("crimson_fence_gate");
+    public static final TagKey<Block> CRIMSON_DOOR_CONVERTIBLE =
+            createNetherReactionTag("crimson_door");
+    public static final TagKey<Block> CRIMSON_TRAPDOOR_CONVERTIBLE =
+            createNetherReactionTag("crimson_trapdoor");
+
+    public static final TagKey<Block> WARPED_NYLIUM_CONVERTIBLE =
+            createNetherReactionTag("warped_nylium");
+    public static final TagKey<Block> WARPED_WART_BLOCK_CONVERTIBLE =
+            createNetherReactionTag("warped_wart_block");
+    public static final TagKey<Block> WARPED_STEM_CONVERTIBLE =
+            createNetherReactionTag("warped_stem");
+    public static final TagKey<Block> STRIPPED_WARPED_STEM_CONVERTIBLE =
+            createNetherReactionTag("stripped_warped_stem");
+    public static final TagKey<Block> WARPED_HYPHAE_CONVERTIBLE =
+            createNetherReactionTag("warped_hyphae");
+    public static final TagKey<Block> STRIPPED_WARPED_HYPHAE_CONVERTIBLE =
+            createNetherReactionTag("stripped_warped_hyphae");
+
     // category tags
     public static final TagKey<Block> BLAST_PROCESSORS =
             createTag("blast_processors");
@@ -54,8 +127,6 @@ public class KlaxonBlockTags {
             createTag("machines");
 
     // advancement tags
-    public static final TagKey<Block> BREAKING_AND_ENTERING_ADVANCEMENT_VALID_BLOCKS =
-            createTag("breaking_and_entering_advancement_valid_blocks");
 
     private static TagKey<Block> createInstabreakableTag(String name) {
         return createTag("instabreakable/" + name);
@@ -63,6 +134,10 @@ public class KlaxonBlockTags {
 
     private static TagKey<Block> createMineableTag(String name) {
         return createTag("mineable/" + name);
+    }
+
+    private static TagKey<Block> createNetherReactionTag(String name) {
+        return createTag("nether_reaction/" + name + "_convertible");
     }
 
     private static TagKey<Block> createTag(String name) {
