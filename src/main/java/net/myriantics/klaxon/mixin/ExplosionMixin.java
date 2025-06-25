@@ -5,28 +5,34 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import net.myriantics.klaxon.recipe.explosion_conversion.ExplosionConversionRecipe;
 import net.myriantics.klaxon.recipe.explosion_conversion.ExplosionConversionRecipeLogic;
+import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.util.PermissionsHelper;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -40,6 +46,10 @@ public abstract class ExplosionMixin {
     @Shadow @Final private double x;
     @Shadow @Final private double y;
     @Shadow @Final private double z;
+    @Mutable
+    @Shadow @Final private ParticleEffect particle;
+    @Mutable
+    @Shadow @Final private ParticleEffect emitterParticle;
     @Unique
     private BlockState klaxon$conversionCatalyst = null;
 
@@ -51,7 +61,14 @@ public abstract class ExplosionMixin {
         BlockState explosionOriginBlockState = world.getBlockState(BlockPos.ofFloored(x, y, z));
 
         // if the blockstate at the explosion's origin is a valid conversion catalyst, update the stored variable to say so.
-        if (ExplosionConversionRecipeLogic.test(world, explosionOriginBlockState)) this.klaxon$conversionCatalyst = explosionOriginBlockState;
+        if (ExplosionConversionRecipeLogic.test(world, explosionOriginBlockState)) {
+            this.klaxon$conversionCatalyst = explosionOriginBlockState;
+
+            // proc block activation advancement
+            for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of(new Vec3d(x, y, z), 24, 24, 24))) {
+                KlaxonAdvancementTriggers.triggerBlockActivation(serverPlayerEntity, explosionOriginBlockState);
+            }
+        }
     }
 
     @WrapOperation(
