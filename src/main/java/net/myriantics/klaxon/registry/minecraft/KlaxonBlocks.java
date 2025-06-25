@@ -16,10 +16,6 @@ import net.myriantics.klaxon.block.customblocks.decor.SteelTrapdoorBlock;
 
 public class KlaxonBlocks {
 
-    // machines
-    public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
-            new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
-
     // steel
     public static final Block STEEL_BLOCK = registerBlock("steel_block",
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
@@ -29,6 +25,12 @@ public class KlaxonBlocks {
             new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK).nonOpaque()));
     public static final Block STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
             new SteelTrapdoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_DOOR)));
+
+    // machines
+    public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
+            new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
+    public static final Block HALLNOX_NETHER_REACTOR_CORE = registerBlock("hallnox_nether_reactor_core",
+            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK).luminance((state) -> 12)));
 
     // crude steel
     public static final Block CRUDE_STEEL_BLOCK = registerBlock("crude_steel_block",
