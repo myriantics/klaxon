@@ -44,6 +44,8 @@ public class KlaxonBlockTags {
             createTag("ferromagnetic_blocks");
     public static final TagKey<Block> COLD_BLOCKS =
             createTag("cold_blocks");
+    public static final TagKey<Block> EXPLOSION_CONVERSION_NETHER_REACTOR_CORES =
+            createTag("explosion_conversion_nether_reactor_cores");
 
     // category tags
     public static final TagKey<Block> BLAST_PROCESSORS =

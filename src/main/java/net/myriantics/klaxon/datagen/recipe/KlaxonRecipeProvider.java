@@ -37,6 +37,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         new KlaxonOreProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonRecipeOverrideProvider(this, exporter).generateRecipes();
         new KlaxonItemCoolingRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonExplosionConversionRecipeProvider(this, exporter).generateRecipes();
     }
 
     public Identifier computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {

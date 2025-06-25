@@ -155,6 +155,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE)
                 .forceAddTag(BlockTags.SNOW)
                 .add(Blocks.POWDER_SNOW);
+        getOrCreateTagBuilder(KlaxonBlockTags.EXPLOSION_CONVERSION_NETHER_REACTOR_CORES)
+                .add(KlaxonBlocks.HALLNOX_NETHER_REACTOR_CORE);
 
         // wrench
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST)

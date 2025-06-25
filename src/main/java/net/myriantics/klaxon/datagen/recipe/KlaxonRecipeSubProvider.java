@@ -1,12 +1,15 @@
 package net.myriantics.klaxon.datagen.recipe;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.minecraft.block.Block;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
@@ -15,12 +18,14 @@ import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
+import net.myriantics.klaxon.recipe.explosion_conversion.ExplosionConversionRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
@@ -301,6 +306,20 @@ public abstract class KlaxonRecipeSubProvider {
                 conditions);
 
         ToolUsageRecipe recipe = new ToolUsageRecipe(requiredTool.toIngredient(), input, output, soundOverride);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addNetherReactionRecipe(TagKey<Block> validBlockInputs, Block outputBlock, ResourceCondition... conditions) {
+        addExplosionConversionRecipe(KlaxonBlockTags.EXPLOSION_CONVERSION_NETHER_REACTOR_CORES, validBlockInputs, outputBlock, conditions);
+    }
+
+    public void addExplosionConversionRecipe(TagKey<Block> validConversionCatalysts, TagKey<Block> validBlockInputs, Block outputBlock, final ResourceCondition... conditions) {
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.EXPLOSION_CONVERSION_RECIPE_ID + "/" + validConversionCatalysts.id().getPath(),
+                Registries.BLOCK.getId(outputBlock).getPath(),
+                conditions);
+
+        ExplosionConversionRecipe recipe = new ExplosionConversionRecipe(validBlockInputs, validConversionCatalysts, outputBlock);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

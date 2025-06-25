@@ -222,12 +222,12 @@ public abstract class ToolUsageRecipeLogic {
         clearCache();
     }
 
-    public static void onDatapackReload(MinecraftServer minecraftServer, LifecycledResourceManager lifecycledResourceManager, boolean b) {
-        clearCache();
+    public static void onDatapackReload(MinecraftServer minecraftServer, LifecycledResourceManager lifecycledResourceManager, boolean success) {
+        if (success) clearCache();
     }
 
-    public static void onTagsLoaded(DynamicRegistryManager registryManager, boolean b) {
-        clearCache();
+    public static void onTagsLoaded(DynamicRegistryManager registryManager, boolean success) {
+        if (success) clearCache();
     }
 
     public static boolean isPlayerValid(@Nullable PlayerEntity player) {

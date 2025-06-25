@@ -12,12 +12,15 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
+import net.myriantics.klaxon.recipe.explosion_conversion.ExplosionConversionRecipe;
+import net.myriantics.klaxon.recipe.explosion_conversion.ExplosionConversionRecipeLogic;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import org.spongepowered.asm.mixin.Final;
@@ -38,14 +41,17 @@ public abstract class ExplosionMixin {
     @Shadow @Final private double y;
     @Shadow @Final private double z;
     @Unique
-    private BlockState klaxon$conversionCatalyst;
+    private BlockState klaxon$conversionCatalyst = null;
 
     @Inject(
             method = "<init>(Lnet/minecraft/world/World;Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/damage/DamageSource;Lnet/minecraft/world/explosion/ExplosionBehavior;DDDFZLnet/minecraft/world/explosion/Explosion$DestructionType;Lnet/minecraft/particle/ParticleEffect;Lnet/minecraft/particle/ParticleEffect;Lnet/minecraft/registry/entry/RegistryEntry;)V",
             at = @At(value = "TAIL")
     )
     private void klaxon$setOriginState(World world, Entity entity, DamageSource damageSource, ExplosionBehavior behavior, double x, double y, double z, float power, boolean createFire, Explosion.DestructionType destructionType, ParticleEffect particle, ParticleEffect emitterParticle, RegistryEntry<SoundEvent> soundEvent, CallbackInfo ci) {
-        this.klaxon$conversionCatalyst = world.getBlockState(BlockPos.ofFloored(x, y, z));
+        BlockState explosionOriginBlockState = world.getBlockState(BlockPos.ofFloored(x, y, z));
+
+        // if the blockstate at the explosion's origin is a valid conversion catalyst, update the stored variable to say so.
+        if (ExplosionConversionRecipeLogic.test(world, explosionOriginBlockState)) this.klaxon$conversionCatalyst = explosionOriginBlockState;
     }
 
     @WrapOperation(
@@ -67,21 +73,26 @@ public abstract class ExplosionMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;onExploded(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/explosion/Explosion;Ljava/util/function/BiConsumer;)V")
     )
     private void klaxon$hijackBlockDestruction(BlockState instance, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer, Operation<Void> original) {
-        if (world.isClient() || (explosion.getCausingEntity() instanceof PlayerEntity player && PermissionsHelper.canModifyWorld(player))) {
-            // we don't want to override anything if it's on the client or the player doesnt have editing perms.
-            original.call(instance, world, pos, explosion, biConsumer);
-            return;
+        // make sure we're on the server and that the player can edit the world
+        if (!(explosion.getCausingEntity() instanceof PlayerEntity player && PermissionsHelper.canModifyWorld(player))) {
+            // yoink origin state from the explosion
+            Optional<BlockState> conversionCatalystState = Optional.ofNullable(this.klaxon$conversionCatalyst);
+
+            // make sure we have a valid conversion catalyst before changing block state.
+            if (conversionCatalystState.isPresent()) {
+
+                if (world instanceof ServerWorld serverWorld) {
+                    BlockState newState = ExplosionConversionRecipeLogic.getOutputState(conversionCatalystState.get(), instance, pos, serverWorld);
+                    // make sure we've changed something before setting the blockstate
+                    if (!instance.equals(newState)) serverWorld.setBlockState(pos, newState);
+                }
+
+                // we did our own custom processing, no need to call original
+                return;
+            }
         }
 
-        // yoink origin state from the explosion
-        Optional<BlockState> originState = Optional.ofNullable(this.klaxon$conversionCatalyst);
-
-        // make sure we have a valid conversion catalyst before changing block state.
-        if (originState.isPresent() && originState.get().isOf(KlaxonBlocks.HALLNOX_NETHER_REACTOR_CORE)) {
-            world.setBlockState(pos, KlaxonBlocks.STEEL_BLOCK.getDefaultState());
-        } else {
-            // if there's no valid catalyst at the explosion's origin, call the original.
-            original.call(instance, world, pos, explosion, biConsumer);
-        }
+        // if anything failed, call the original method
+        original.call(instance, world, pos, explosion, biConsumer);
     }
 }
