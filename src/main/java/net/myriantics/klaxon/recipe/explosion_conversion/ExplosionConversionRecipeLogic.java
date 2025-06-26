@@ -109,8 +109,8 @@ public abstract class ExplosionConversionRecipeLogic {
                 }
             }
 
-            // makes mangrove trees look better
-            if (newState.contains(Properties.AXIS) && (targetState.isOf(Blocks.MANGROVE_ROOTS) || targetState.isOf(Blocks.MANGROVE_ROOTS))) newState = newState.with(Properties.AXIS, Direction.Axis.Y);
+            // makes mangrove trees & converted cactus patches look better
+            if (newState.contains(Properties.AXIS) && (targetState.isOf(Blocks.MANGROVE_ROOTS) || targetState.isOf(Blocks.MANGROVE_ROOTS) || targetState.isOf(Blocks.CACTUS))) newState = newState.with(Properties.AXIS, Direction.Axis.Y);
         }
 
         // if we still don't have a state to place, use the block's default state while trying to preserve properties.

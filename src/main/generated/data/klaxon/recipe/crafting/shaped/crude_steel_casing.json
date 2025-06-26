@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "steel_casing",
+  "key": {
+    "I": {
+      "item": "klaxon:crude_steel_ingot"
+    },
+    "P": {
+      "item": "klaxon:crude_steel_plate"
+    }
+  },
+  "pattern": [
+    "IPI",
+    "P P",
+    "IPI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:crude_steel_casing"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
-  "group": "deepslate_blast_processor",
+  "group": "blast_processors",
   "key": {
     "D": {
       "item": "minecraft:dispenser"
