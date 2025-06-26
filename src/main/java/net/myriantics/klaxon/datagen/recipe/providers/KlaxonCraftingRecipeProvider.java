@@ -44,7 +44,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 },
                 new ItemStack(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR),
                 CraftingRecipeCategory.REDSTONE,
-                null
+                "blast_processors"
         );
 
         addShapedCraftingRecipe(Map.of(
@@ -59,6 +59,32 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 new ItemStack(Blocks.BLAST_FURNACE),
                 CraftingRecipeCategory.REDSTONE,
                 null
+        );
+
+        addShapedCraftingRecipe(Map.of(
+                'P', Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_PLATE),
+                'I', Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_INGOT)),
+                new String[]{
+                        "IPI",
+                        "P P",
+                        "IPI"
+                },
+                new ItemStack(KlaxonBlocks.CRUDE_STEEL_CASING),
+                CraftingRecipeCategory.REDSTONE,
+                "steel_casing"
+        );
+
+        addShapedCraftingRecipe(Map.of(
+                'P', Ingredient.ofItems(KlaxonItems.STEEL_PLATE),
+                'I', Ingredient.ofItems(KlaxonItems.STEEL_INGOT)),
+                new String[]{
+                        "IPI",
+                        "P P",
+                        "IPI"
+                },
+                new ItemStack(KlaxonBlocks.STEEL_CASING),
+                CraftingRecipeCategory.REDSTONE,
+                "steel_casing"
         );
     }
 

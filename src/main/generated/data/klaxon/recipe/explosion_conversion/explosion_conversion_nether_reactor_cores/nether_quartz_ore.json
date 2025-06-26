@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:nether_quartz_ore",
+  "valid_blocks": "#klaxon:nether_reaction/nether_quartz_ore_convertible",
+  "valid_conversion_catalysts": "#klaxon:explosion_conversion_nether_reactor_cores"
+}

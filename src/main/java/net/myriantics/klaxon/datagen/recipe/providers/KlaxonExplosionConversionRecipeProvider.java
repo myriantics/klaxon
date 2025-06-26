@@ -25,9 +25,12 @@ public class KlaxonExplosionConversionRecipeProvider extends KlaxonRecipeSubProv
         addNetherReactionRecipe(KlaxonBlockTags.AIR_CONVERTIBLE, Blocks.AIR);
         addNetherReactionRecipe(KlaxonBlockTags.FIRE_CONVERTIBLE, Blocks.FIRE);
         addNetherReactionRecipe(KlaxonBlockTags.SHROOMLIGHT_CONVERTIBLE, Blocks.SHROOMLIGHT);
+        addNetherReactionRecipe(KlaxonBlockTags.BONE_BLOCK_CONVERTIBLE, Blocks.BONE_BLOCK);
 
-        // netherrack
+        // netherrack & ores and stuff
         addNetherReactionRecipe(KlaxonBlockTags.NETHERRACK_CONVERTIBLE, Blocks.NETHERRACK);
+        addNetherReactionRecipe(KlaxonBlockTags.NETHER_QUARTZ_ORE_CONVERTIBLE, Blocks.NETHER_QUARTZ_ORE);
+        addNetherReactionRecipe(KlaxonBlockTags.NETHER_GOLD_ORE_CONVERTIBLE, Blocks.NETHER_GOLD_ORE);
 
         // rough blackstone stuff
         addNetherReactionRecipe(KlaxonBlockTags.BLACKSTONE_CONVERTIBLE, Blocks.BLACKSTONE);

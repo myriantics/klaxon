@@ -22,6 +22,8 @@ public abstract class KlaxonItemTags {
             createTag("crude_inclusive_steel_plates");
     public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_BLOCKS =
             createTag("crude_inclusive_steel_blocks");
+    public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_CASING =
+            createTag("crude_inclusive_steel_casings");
     public static final TagKey<Item> MOLTEN_INCLUSIVE_RUBBER_GLOBS =
             createTag("molten_inclusive_rubber_globs");
     public static final TagKey<Item> MOLTEN_INCLUSIVE_RUBBER_SHEETS =

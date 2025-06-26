@@ -27,6 +27,9 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonBlocks.RUBBER_BLOCK);
                 entries.add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
 
+                entries.add(KlaxonBlocks.STEEL_CASING);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_CASING);
+
                 entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
@@ -69,6 +72,7 @@ public class KlaxonItemGroups {
             .displayName(Text.translatable("itemGroup.klaxon.machines"))
             .entries(((displayContext, entries) -> {
                 entries.add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+                entries.add(KlaxonBlocks.NETHER_REACTOR_CORE);
             })).build();
 
     public static final ItemGroup KLAXON_MATERIALS = FabricItemGroup.builder()

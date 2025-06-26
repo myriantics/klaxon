@@ -11,6 +11,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.resource.LifecycledResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -96,6 +97,20 @@ public abstract class ExplosionConversionRecipeLogic {
             for (Property<?> property : targetState.getBlock().getStateManager().getProperties()) {
                 if (newState.contains(property)) newState = copyProperty(targetState, newState, property);
             }
+
+            // override to prevent mushroom stems being malformed when converting to stems - defaults to vertical
+            if (targetState.getBlock() instanceof MushroomBlock && newState.contains(Properties.AXIS)) {
+                if (!targetState.get(MushroomBlock.UP) && !targetState.get(MushroomBlock.DOWN)) {
+                    newState = newState.with(Properties.AXIS, Direction.Axis.Y);
+                } else if (!targetState.get(MushroomBlock.EAST) && !targetState.get(MushroomBlock.WEST)) {
+                    newState = newState.with(Properties.AXIS, Direction.Axis.X);
+                } else if (!targetState.get(MushroomBlock.NORTH) && !targetState.get(MushroomBlock.SOUTH)) {
+                    newState = newState.with(Properties.AXIS, Direction.Axis.Z);
+                }
+            }
+
+            // makes mangrove trees look better
+            if (newState.contains(Properties.AXIS) && (targetState.isOf(Blocks.MANGROVE_ROOTS) || targetState.isOf(Blocks.MANGROVE_ROOTS))) newState = newState.with(Properties.AXIS, Direction.Axis.Y);
         }
 
         // if we still don't have a state to place, use the block's default state while trying to preserve properties.

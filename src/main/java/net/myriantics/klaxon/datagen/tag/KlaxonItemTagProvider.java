@@ -113,6 +113,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES);
+        getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING)
+                .add(KlaxonBlocks.STEEL_CASING.asItem())
+                .add(KlaxonBlocks.CRUDE_STEEL_CASING.asItem());
         getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_GLOBS)
                 .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS)
                 .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS);

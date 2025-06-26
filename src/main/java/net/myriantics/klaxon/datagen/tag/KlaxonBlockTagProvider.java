@@ -193,6 +193,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.PUMPKINS)
                 .add(Blocks.MELON)
                 .add(Blocks.COCOA);
+        getOrCreateTagBuilder(KlaxonBlockTags.BONE_BLOCK_CONVERTIBLE)
+                .add(Blocks.CACTUS);
 
         // netherrack stuff
         getOrCreateTagBuilder(KlaxonBlockTags.NETHERRACK_CONVERTIBLE)
@@ -202,6 +204,16 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.DIRT_PATH)
                 .add(Blocks.COARSE_DIRT)
                 .add(Blocks.ROOTED_DIRT);
+        getOrCreateTagBuilder(KlaxonBlockTags.NETHER_GOLD_ORE_CONVERTIBLE)
+                .forceAddTag(BlockTags.COPPER_ORES)
+                .forceAddTag(BlockTags.IRON_ORES)
+                .forceAddTag(BlockTags.GOLD_ORES)
+                .forceAddTag(BlockTags.LAPIS_ORES);
+        getOrCreateTagBuilder(KlaxonBlockTags.NETHER_QUARTZ_ORE_CONVERTIBLE)
+                .forceAddTag(BlockTags.COAL_ORES)
+                .forceAddTag(BlockTags.REDSTONE_ORES)
+                .forceAddTag(BlockTags.DIAMOND_ORES)
+                .forceAddTag(BlockTags.EMERALD_ORES);
 
         // soul stuff
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_SAND_CONVERTIBLE)
@@ -279,6 +291,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.LEAVES);
         getOrCreateTagBuilder(KlaxonBlockTags.WEEPING_VINE_CONVERTIBLE)
                 .forceAddTag(BlockTags.CAVE_VINES)
+                .forceAddTag(BlockTags.SAPLINGS)
                 .add(Blocks.HANGING_ROOTS)
                 .add(Blocks.VINE)
                 .add(Blocks.GLOW_LICHEN);
@@ -291,8 +304,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.DARK_OAK_LOG)
                 .add(Blocks.MANGROVE_LOG)
                 .add(Blocks.CHERRY_LOG)
-                .add(Blocks.MANGROVE_ROOTS)
-                .add(Blocks.CACTUS);
+                .add(Blocks.MANGROVE_ROOTS);
         getOrCreateTagBuilder(KlaxonBlockTags.STRIPPED_CRIMSON_STEM_CONVERTIBLE)
                 .add(Blocks.STRIPPED_OAK_LOG)
                 .add(Blocks.STRIPPED_SPRUCE_LOG)

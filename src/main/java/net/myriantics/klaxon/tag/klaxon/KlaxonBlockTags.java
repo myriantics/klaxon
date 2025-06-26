@@ -57,6 +57,12 @@ public class KlaxonBlockTags {
             createNetherReactionTag("fire");
     public static final TagKey<Block> SHROOMLIGHT_CONVERTIBLE =
             createNetherReactionTag("shroomlight");
+    public static final TagKey<Block> BONE_BLOCK_CONVERTIBLE =
+            createNetherReactionTag("bone_block");
+    public static final TagKey<Block> NETHER_QUARTZ_ORE_CONVERTIBLE =
+            createNetherReactionTag("nether_quartz_ore");
+    public static final TagKey<Block> NETHER_GOLD_ORE_CONVERTIBLE =
+            createNetherReactionTag("nether_gold_ore");
 
     public static final TagKey<Block> NETHERRACK_CONVERTIBLE =
             createNetherReactionTag("netherrack");
