@@ -17,12 +17,17 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
     public void generate() {
         // machines
         addDrop(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+        addDrop(KlaxonBlocks.NETHER_REACTOR_CORE);
 
         // storage blocks
         addDrop(KlaxonBlocks.STEEL_BLOCK);
         addDrop(KlaxonBlocks.CRUDE_STEEL_BLOCK);
         addDrop(KlaxonBlocks.RUBBER_BLOCK);
         addDrop(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
+
+        // casings & misc
+        addDrop(KlaxonBlocks.STEEL_CASING);
+        addDrop(KlaxonBlocks.CRUDE_STEEL_CASING);
 
         // plate storage blocks
         addDrop(KlaxonBlocks.STEEL_PLATING_BLOCK);

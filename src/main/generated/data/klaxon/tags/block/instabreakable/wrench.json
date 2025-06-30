@@ -10,6 +10,9 @@
       "id": "#create:wrench_pickup",
       "required": false
     },
+    "klaxon:steel_casing",
+    "klaxon:crude_steel_casing",
+    "klaxon:nether_reactor_core",
     "minecraft:daylight_detector",
     "minecraft:hopper",
     "minecraft:copper_bulb",

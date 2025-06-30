@@ -110,6 +110,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.SCAFFOLDINGS)
                 .forceAddTag(KlaxonConventionalBlockTags.LEVERS)
                 .addOptionalTag(KlaxonCompatBlockTags.WRENCH_PICKUP)
+                .add(KlaxonBlocks.STEEL_CASING)
+                .add(KlaxonBlocks.CRUDE_STEEL_CASING)
+                .add(KlaxonBlocks.NETHER_REACTOR_CORE)
                 .add(Blocks.DAYLIGHT_DETECTOR)
                 .add(Blocks.HOPPER)
                 .add(Blocks.COPPER_BULB)
@@ -133,6 +136,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.STEEL)
                 .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
+                .add(KlaxonBlocks.NETHER_REACTOR_CORE)
                 .add(KlaxonBlocks.IRON_PLATING_BLOCK)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
                 .add(KlaxonBlocks.COPPER_PLATING_BLOCK)
@@ -466,12 +470,14 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_BLOCK)
                 .add(KlaxonBlocks.STEEL_PLATING_BLOCK)
                 .add(KlaxonBlocks.STEEL_TRAPDOOR)
-                .add(KlaxonBlocks.STEEL_DOOR);
+                .add(KlaxonBlocks.STEEL_DOOR)
+                .add(KlaxonBlocks.STEEL_CASING);
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.CRUDE_STEEL)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK)
                 .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK)
                 .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
-                .add(KlaxonBlocks.CRUDE_STEEL_DOOR);
+                .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_CASING);
 
         getOrCreateTagBuilder(BlockTags.DOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_DOORS);
@@ -516,7 +522,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.LEVER);
 
         getOrCreateTagBuilder(KlaxonBlockTags.MACHINES)
-                .forceAddTag(KlaxonBlockTags.BLAST_PROCESSORS);
+                .forceAddTag(KlaxonBlockTags.BLAST_PROCESSORS)
+                .add(KlaxonBlocks.NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
     }
@@ -525,7 +532,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .forceAddTag(KlaxonConventionalBlockTags.STEEL)
                 .add(KlaxonBlocks.IRON_PLATING_BLOCK)
-                .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
+                .add(KlaxonBlocks.NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
                 .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL)
                 .add(KlaxonBlocks.COPPER_PLATING_BLOCK)
@@ -550,6 +558,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_BLOCK)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK)
                 .add(KlaxonBlocks.STEEL_PLATING_BLOCK)
-                .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+                .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK)
+                .add(KlaxonBlocks.STEEL_CASING)
+                .add(KlaxonBlocks.CRUDE_STEEL_CASING);
     }
 }
