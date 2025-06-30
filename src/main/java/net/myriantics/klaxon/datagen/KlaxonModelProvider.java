@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
@@ -29,6 +30,8 @@ public class KlaxonModelProvider extends FabricModelProvider {
         generator.registerSimpleCubeAll(KlaxonBlocks.CRUDE_STEEL_BLOCK);
         generator.registerSimpleCubeAll(KlaxonBlocks.RUBBER_BLOCK);
         generator.registerSimpleCubeAll(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
+        generator.registerSimpleCubeAll(KlaxonBlocks.STEEL_CASING);
+        generator.registerSimpleCubeAll(KlaxonBlocks.CRUDE_STEEL_CASING);
     }
 
     private void registerMiscBlockStateModels(BlockStateModelGenerator generator) {
@@ -57,6 +60,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
 
     private void registerMachineBlockStateModels(BlockStateModelGenerator generator) {
         registerDeepslateBlastProcessor(generator);
+        generator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(KlaxonBlocks.NETHER_REACTOR_CORE, KlaxonCommon.locate("block/" + Registries.BLOCK.getId(KlaxonBlocks.NETHER_REACTOR_CORE).getPath())));
     }
 
     private void registerDeepslateBlastProcessor(BlockStateModelGenerator generator) {
