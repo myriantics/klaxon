@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:air",
+  "valid_blocks": "#klaxon:nether_reaction/air_convertible",
+  "valid_conversion_catalysts": "#klaxon:nether_reactor_cores"
+}

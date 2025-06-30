@@ -311,7 +311,7 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addNetherReactionRecipe(TagKey<Block> validBlockInputs, Block outputBlock, ResourceCondition... conditions) {
-        addExplosionConversionRecipe(KlaxonBlockTags.EXPLOSION_CONVERSION_NETHER_REACTOR_CORES, validBlockInputs, outputBlock, conditions);
+        addExplosionConversionRecipe(KlaxonBlockTags.NETHER_REACTOR_CORES, validBlockInputs, outputBlock, conditions);
     }
 
     public void addExplosionConversionRecipe(TagKey<Block> validConversionCatalysts, TagKey<Block> validBlockInputs, Block outputBlock, final ResourceCondition... conditions) {

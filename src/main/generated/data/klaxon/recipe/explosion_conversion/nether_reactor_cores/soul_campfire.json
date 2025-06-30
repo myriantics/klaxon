@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:soul_campfire",
+  "valid_blocks": "#klaxon:nether_reaction/soul_campfire_convertible",
+  "valid_conversion_catalysts": "#klaxon:nether_reactor_cores"
+}

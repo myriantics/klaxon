@@ -1,6 +1,6 @@
 {
   "values": [
     "#klaxon:blast_processors",
-    "klaxon:nether_reactor_core"
+    "#klaxon:nether_reactor_cores"
   ]
 }

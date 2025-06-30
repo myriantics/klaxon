@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:weeping_vines_plant",
+  "valid_blocks": "#klaxon:nether_reaction/weeping_vine_convertible",
+  "valid_conversion_catalysts": "#klaxon:nether_reactor_cores"
+}

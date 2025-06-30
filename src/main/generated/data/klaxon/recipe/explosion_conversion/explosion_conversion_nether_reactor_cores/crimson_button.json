@@ -1,6 +1,0 @@
-{
-  "type": "klaxon:explosion_conversion",
-  "output_block": "minecraft:crimson_button",
-  "valid_blocks": "#klaxon:nether_reaction/crimson_button_convertible",
-  "valid_conversion_catalysts": "#klaxon:explosion_conversion_nether_reactor_cores"
-}

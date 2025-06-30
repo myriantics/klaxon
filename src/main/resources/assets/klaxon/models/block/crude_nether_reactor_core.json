@@ -3,9 +3,9 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"0": "klaxon:block/nether_reactor_core/steel_casing",
+		"0": "klaxon:block/nether_reactor_core/crude_steel_casing",
 		"1": "klaxon:block/nether_reactor_core/hallnox_core",
-		"particle": "klaxon:block/nether_reactor_core/steel_casing"
+		"particle": "klaxon:block/nether_reactor_core/crude_steel_casing"
 	},
 	"elements": [
 		{

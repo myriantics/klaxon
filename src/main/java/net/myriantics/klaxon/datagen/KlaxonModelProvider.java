@@ -61,6 +61,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
     private void registerMachineBlockStateModels(BlockStateModelGenerator generator) {
         registerDeepslateBlastProcessor(generator);
         generator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(KlaxonBlocks.NETHER_REACTOR_CORE, KlaxonCommon.locate("block/" + Registries.BLOCK.getId(KlaxonBlocks.NETHER_REACTOR_CORE).getPath())));
+        generator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, KlaxonCommon.locate("block/" + Registries.BLOCK.getId(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE).getPath())));
     }
 
     private void registerDeepslateBlastProcessor(BlockStateModelGenerator generator) {

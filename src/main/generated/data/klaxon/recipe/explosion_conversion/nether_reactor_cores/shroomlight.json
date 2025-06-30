@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:shroomlight",
+  "valid_blocks": "#klaxon:nether_reaction/shroomlight_convertible",
+  "valid_conversion_catalysts": "#klaxon:nether_reactor_cores"
+}

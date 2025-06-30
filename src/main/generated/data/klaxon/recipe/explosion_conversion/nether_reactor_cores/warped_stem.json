@@ -1,0 +1,6 @@
+{
+  "type": "klaxon:explosion_conversion",
+  "output_block": "minecraft:warped_stem",
+  "valid_blocks": "#klaxon:nether_reaction/warped_stem_convertible",
+  "valid_conversion_catalysts": "#klaxon:nether_reactor_cores"
+}

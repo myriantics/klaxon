@@ -47,6 +47,9 @@ public class KlaxonBlocks {
             new Block(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_BLOCK)));
     public static final Block NETHER_REACTOR_CORE = registerBlock("nether_reactor_core",
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_CASING).luminance((state) -> 12).nonOpaque()));
+    public static final Block CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
+            new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_CASING).luminance((state) -> 10).nonOpaque()));
+
     // iron
     public static final Block IRON_PLATING_BLOCK = registerBlock("iron_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));

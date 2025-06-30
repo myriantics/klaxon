@@ -113,6 +113,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_CASING)
                 .add(KlaxonBlocks.CRUDE_STEEL_CASING)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE)
+                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE)
                 .add(Blocks.DAYLIGHT_DETECTOR)
                 .add(Blocks.HOPPER)
                 .add(Blocks.COPPER_BULB)
@@ -137,6 +138,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE)
+                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE)
                 .add(KlaxonBlocks.IRON_PLATING_BLOCK)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
                 .add(KlaxonBlocks.COPPER_PLATING_BLOCK)
@@ -162,8 +164,6 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE)
                 .forceAddTag(BlockTags.SNOW)
                 .add(Blocks.POWDER_SNOW);
-        getOrCreateTagBuilder(KlaxonBlockTags.EXPLOSION_CONVERSION_NETHER_REACTOR_CORES)
-                .add(KlaxonBlocks.NETHER_REACTOR_CORE);
 
         // wrench
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST)
@@ -189,6 +189,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     private void buildNetherReactionTags() {
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE);
+        getOrCreateTagBuilder(KlaxonBlockTags.AIR_CONVERTIBLE)
+                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(KlaxonBlockTags.FIRE_CONVERTIBLE)
                 .add(Blocks.MOSS_CARPET)
                 .add(Blocks.GLOW_LICHEN)
@@ -523,7 +525,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(KlaxonBlockTags.MACHINES)
                 .forceAddTag(KlaxonBlockTags.BLAST_PROCESSORS)
-                .add(KlaxonBlocks.NETHER_REACTOR_CORE);
+                .forceAddTag(KlaxonBlockTags.NETHER_REACTOR_CORES);
+        getOrCreateTagBuilder(KlaxonBlockTags.NETHER_REACTOR_CORES)
+                .add(KlaxonBlocks.NETHER_REACTOR_CORE)
+                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
     }
@@ -543,7 +548,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK)
                 .add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK)
                 .add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+                .add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK)
+                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
         // steel tools mirror diamond tools
         getOrCreateTagBuilder(KlaxonBlockTags.NEEDS_STEEL_TOOL)

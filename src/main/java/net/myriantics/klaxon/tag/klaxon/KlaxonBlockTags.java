@@ -44,8 +44,6 @@ public class KlaxonBlockTags {
             createTag("ferromagnetic_blocks");
     public static final TagKey<Block> COLD_BLOCKS =
             createTag("cold_blocks");
-    public static final TagKey<Block> EXPLOSION_CONVERSION_NETHER_REACTOR_CORES =
-            createTag("explosion_conversion_nether_reactor_cores");
 
     // nether reaction tags
     public static final TagKey<Block> STEEL_CASING_CONVERTIBLE =
@@ -140,6 +138,8 @@ public class KlaxonBlockTags {
     // category tags
     public static final TagKey<Block> BLAST_PROCESSORS =
             createTag("blast_processors");
+    public static final TagKey<Block> NETHER_REACTOR_CORES =
+            createTag("nether_reactor_cores");
     public static final TagKey<Block> MACHINES =
             createTag("machines");
 
