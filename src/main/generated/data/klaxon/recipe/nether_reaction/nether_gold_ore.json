@@ -1,0 +1,5 @@
+{
+  "type": "klaxon:nether_reaction",
+  "output_block": "minecraft:nether_gold_ore",
+  "valid_blocks": "#klaxon:nether_reaction/nether_gold_ore_convertible"
+}

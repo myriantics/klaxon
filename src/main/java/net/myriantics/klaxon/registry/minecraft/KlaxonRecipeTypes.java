@@ -12,8 +12,8 @@ import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehav
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeSerializer;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeSerializer;
-import net.myriantics.klaxon.recipe.explosion_conversion.ExplosionConversionRecipe;
-import net.myriantics.klaxon.recipe.explosion_conversion.ExplosionConversionRecipeSerializer;
+import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
+import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeSerializer;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeSerializer;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
@@ -43,11 +43,11 @@ public class KlaxonRecipeTypes {
     public static RecipeType<ToolUsageRecipe> TOOL_USAGE =
             registerRecipeType(TOOL_USAGE_RECIPE_ID);
 
-    public static final String EXPLOSION_CONVERSION_RECIPE_ID = "explosion_conversion";
-    public static RecipeSerializer<ExplosionConversionRecipe> EXPLOSION_CONVERSION_RECIPE_SERIALIZER =
-            registerSerializer(EXPLOSION_CONVERSION_RECIPE_ID, new ExplosionConversionRecipeSerializer());
-    public static RecipeType<ExplosionConversionRecipe> EXPLOSION_CONVERSION =
-            registerRecipeType(EXPLOSION_CONVERSION_RECIPE_ID);
+    public static final String NETHER_REACTION_RECIPE_ID = "nether_reaction";
+    public static RecipeSerializer<NetherReactionRecipe> NETHER_REACTION_RECIPE_SERIALIZER =
+            registerSerializer(NETHER_REACTION_RECIPE_ID, new NetherReactionRecipeSerializer());
+    public static RecipeType<NetherReactionRecipe> NETHER_REACTION =
+            registerRecipeType(NETHER_REACTION_RECIPE_ID);
 
     public static final String COOLING_RECIPE_ID = "item_cooling";
     public static RecipeSerializer<ItemCoolingRecipe> COOLING_RECIPE_SERIALIZER =

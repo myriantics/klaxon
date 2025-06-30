@@ -1,0 +1,5 @@
+{
+  "type": "klaxon:nether_reaction",
+  "output_block": "minecraft:netherrack",
+  "valid_blocks": "#klaxon:nether_reaction/netherrack_convertible"
+}

@@ -1,0 +1,5 @@
+{
+  "type": "klaxon:nether_reaction",
+  "output_block": "minecraft:warped_fungus",
+  "valid_blocks": "#klaxon:nether_reaction/warped_fungus_convertible"
+}

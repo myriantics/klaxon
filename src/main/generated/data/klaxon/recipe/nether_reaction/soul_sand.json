@@ -1,0 +1,5 @@
+{
+  "type": "klaxon:nether_reaction",
+  "output_block": "minecraft:soul_sand",
+  "valid_blocks": "#klaxon:nether_reaction/soul_sand_convertible"
+}

@@ -22,14 +22,13 @@ public class KlaxonItemGroups {
             .icon(() -> new ItemStack(KlaxonBlocks.STEEL_BLOCK))
             .displayName(Text.translatable("itemGroup.klaxon.building_blocks"))
             .entries(((displayContext, entries) -> {
+                // storage blocks
                 entries.add(KlaxonBlocks.STEEL_BLOCK);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
                 entries.add(KlaxonBlocks.RUBBER_BLOCK);
                 entries.add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
 
-                entries.add(KlaxonBlocks.STEEL_CASING);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_CASING);
-
+                // plating blocks
                 entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
@@ -44,6 +43,11 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
 
+                // casings
+                entries.add(KlaxonBlocks.STEEL_CASING);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_CASING);
+
+                // misc
                 entries.add(KlaxonBlocks.STEEL_DOOR);
                 entries.add(KlaxonBlocks.CRUDE_STEEL_DOOR);
                 entries.add(KlaxonBlocks.STEEL_TRAPDOOR);
@@ -73,6 +77,7 @@ public class KlaxonItemGroups {
             .entries(((displayContext, entries) -> {
                 entries.add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
                 entries.add(KlaxonBlocks.NETHER_REACTOR_CORE);
+                entries.add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
             })).build();
 
     public static final ItemGroup KLAXON_MATERIALS = FabricItemGroup.builder()
@@ -92,6 +97,10 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonBlocks.GOLD_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.COPPER_PLATING_BLOCK);
                 entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
+
+                // casings and hulls
+                entries.add(KlaxonBlocks.STEEL_CASING);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_CASING);
 
                 // ingots
                 entries.add(KlaxonItems.STEEL_INGOT);

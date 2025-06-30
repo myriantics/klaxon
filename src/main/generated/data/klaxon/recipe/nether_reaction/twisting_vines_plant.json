@@ -1,0 +1,5 @@
+{
+  "type": "klaxon:nether_reaction",
+  "output_block": "minecraft:twisting_vines_plant",
+  "valid_blocks": "#klaxon:nether_reaction/twisting_vines_convertible"
+}

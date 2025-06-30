@@ -1,6 +1,0 @@
-{
-  "type": "klaxon:explosion_conversion",
-  "output_block": "minecraft:bone_block",
-  "valid_blocks": "#klaxon:nether_reaction/bone_block_convertible",
-  "valid_conversion_catalysts": "#klaxon:nether_reactor_cores"
-}

@@ -19,7 +19,8 @@ public abstract class ArmorItemMixin {
 
     @ModifyExpressionValue(
             method = "<init>",
-            at = @At(value = "INVOKE", target = "Lcom/google/common/base/Suppliers;memoize(Lcom/google/common/base/Supplier;)Lcom/google/common/base/Supplier;")
+            at = @At(value = "INVOKE", target = "Lcom/google/common/base/Suppliers;memoize(Lcom/google/common/base/Supplier;)Lcom/google/common/base/Supplier;"),
+            remap = false
     )
     private com.google.common.base.Supplier<AttributeModifiersComponent> klaxon$appendSteelArmorAttributeModifiers(com.google.common.base.Supplier<AttributeModifiersComponent> original, @Local(argsOnly = true) RegistryEntry<ArmorMaterial> material, @Local(argsOnly = true) ArmorItem.Type type) {
         return () -> KlaxonAttributeModifierComponentModifications.applyArmorModifications((ArmorItem)(Object)this, original.get());

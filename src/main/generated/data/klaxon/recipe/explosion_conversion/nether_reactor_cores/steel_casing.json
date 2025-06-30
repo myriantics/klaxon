@@ -1,6 +1,0 @@
-{
-  "type": "klaxon:explosion_conversion",
-  "output_block": "klaxon:steel_casing",
-  "valid_blocks": "#klaxon:nether_reaction/steel_casing_convertible",
-  "valid_conversion_catalysts": "#klaxon:nether_reactor_cores"
-}

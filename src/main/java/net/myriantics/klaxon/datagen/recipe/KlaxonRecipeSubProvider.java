@@ -15,10 +15,9 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.NamedIngredient;
-import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
-import net.myriantics.klaxon.recipe.explosion_conversion.ExplosionConversionRecipe;
+import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
@@ -311,15 +310,11 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addNetherReactionRecipe(TagKey<Block> validBlockInputs, Block outputBlock, ResourceCondition... conditions) {
-        addExplosionConversionRecipe(KlaxonBlockTags.NETHER_REACTOR_CORES, validBlockInputs, outputBlock, conditions);
-    }
-
-    public void addExplosionConversionRecipe(TagKey<Block> validConversionCatalysts, TagKey<Block> validBlockInputs, Block outputBlock, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.EXPLOSION_CONVERSION_RECIPE_ID + "/" + validConversionCatalysts.id().getPath(),
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
                 Registries.BLOCK.getId(outputBlock).getPath(),
                 conditions);
 
-        ExplosionConversionRecipe recipe = new ExplosionConversionRecipe(validBlockInputs, validConversionCatalysts, outputBlock);
+        NetherReactionRecipe recipe = new NetherReactionRecipe(validBlockInputs, outputBlock);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

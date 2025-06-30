@@ -26,7 +26,7 @@
     "PlayerEntityMixin",
     "PotionEntityMixin",
     "ServerPlayerInteractionManagerMixin",
-    "ShearsToolHandlerMixin",
+    "jade.ShearsToolHandlerMixin",
     "WindChargeEntityInvoker",
     "cable_shears_because_no_tag.BeehiveBlockMixin",
     "cable_shears_because_no_tag.BoggedEntityMixin",

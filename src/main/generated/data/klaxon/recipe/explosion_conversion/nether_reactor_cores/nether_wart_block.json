@@ -1,6 +1,0 @@
-{
-  "type": "klaxon:explosion_conversion",
-  "output_block": "minecraft:nether_wart_block",
-  "valid_blocks": "#klaxon:nether_reaction/nether_wart_block_convertible",
-  "valid_conversion_catalysts": "#klaxon:nether_reactor_cores"
-}

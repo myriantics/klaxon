@@ -1,0 +1,5 @@
+{
+  "type": "klaxon:nether_reaction",
+  "output_block": "minecraft:crimson_stairs",
+  "valid_blocks": "#klaxon:nether_reaction/crimson_stairs_convertible"
+}

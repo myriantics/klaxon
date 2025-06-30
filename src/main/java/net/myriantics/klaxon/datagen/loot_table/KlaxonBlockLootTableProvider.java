@@ -18,6 +18,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         // machines
         addDrop(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
         addDrop(KlaxonBlocks.NETHER_REACTOR_CORE);
+        addDrop(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
         // storage blocks
         addDrop(KlaxonBlocks.STEEL_BLOCK);
