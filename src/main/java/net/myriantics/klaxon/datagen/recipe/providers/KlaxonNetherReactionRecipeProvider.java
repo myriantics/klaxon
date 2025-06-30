@@ -1,16 +1,14 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.registry.tag.BlockTags;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
-public class KlaxonExplosionConversionRecipeProvider extends KlaxonRecipeSubProvider {
-    public KlaxonExplosionConversionRecipeProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
+public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider {
+    public KlaxonNetherReactionRecipeProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
         super(provider, exporter);
     }
 
