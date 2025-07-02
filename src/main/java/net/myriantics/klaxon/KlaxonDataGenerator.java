@@ -2,6 +2,8 @@ package net.myriantics.klaxon;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
@@ -27,6 +29,13 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(KlaxonAdvancementProvider::new);
 		pack.addProvider(KlaxonStatusEffectTagProvider::new);
 		pack.addProvider(KlaxonFluidTagProvider::new);
+		pack.addProvider(KlaxonFeatureProvider::new);
 		// pack.addProvider(KlaxonEnUsLanguageProvider::new);
+	}
+
+	@Override
+	public void buildRegistry(RegistryBuilder registryBuilder) {
+		registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, KlaxonFeatureProvider::generateConfiguredFeatures);
+		registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, KlaxonFeatureProvider::generatePlacedFeatures);
 	}
 }

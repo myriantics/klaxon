@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:hallnox_growth",
+  "config": {
+    "replaceable_blocks": {
+      "type": "minecraft:true"
+    }
+  }
+}

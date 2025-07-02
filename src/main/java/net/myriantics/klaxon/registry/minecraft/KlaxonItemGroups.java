@@ -18,42 +18,6 @@ public class KlaxonItemGroups {
     public static final RegistryKey<ItemGroup> KLAXON_MACHINES_ID = locateItemGroupId("machines");
     public static final RegistryKey<ItemGroup> KLAXON_MATERIALS_ID = locateItemGroupId("materials");
 
-    public static final ItemGroup KLAXON_BUILDING_BLOCKS = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(KlaxonBlocks.STEEL_BLOCK))
-            .displayName(Text.translatable("itemGroup.klaxon.building_blocks"))
-            .entries(((displayContext, entries) -> {
-                // storage blocks
-                entries.add(KlaxonBlocks.STEEL_BLOCK);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
-                entries.add(KlaxonBlocks.RUBBER_BLOCK);
-                entries.add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
-
-                // plating blocks
-                entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
-                entries.add(KlaxonBlocks.IRON_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.GOLD_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
-
-                // casings
-                entries.add(KlaxonBlocks.STEEL_CASING);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_CASING);
-
-                // misc
-                entries.add(KlaxonBlocks.STEEL_DOOR);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_DOOR);
-                entries.add(KlaxonBlocks.STEEL_TRAPDOOR);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
-            })).build();
-
     public static final ItemGroup KLAXON_EQUIPMENT = FabricItemGroup.builder()
             .icon(() -> new ItemStack(KlaxonItems.STEEL_HAMMER))
             .displayName(Text.translatable("itemGroup.klaxon.equipment"))
@@ -114,6 +78,9 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonItems.RUBBER_GLOB);
                 entries.add(KlaxonItems.MOLTEN_RUBBER_GLOB);
 
+                // hallnox
+                entries.add(KlaxonBlocks.HALLNOX_POD);
+
                 // plates
                 entries.add(KlaxonItems.IRON_PLATE);
                 entries.add(KlaxonItems.COPPER_PLATE);
@@ -137,15 +104,55 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonItems.FRACTURED_RAW_GOLD);
             })).build();
 
+    public static final ItemGroup KLAXON_BUILDING_BLOCKS = FabricItemGroup.builder()
+            .icon(() -> new ItemStack(KlaxonBlocks.STEEL_BLOCK))
+            .displayName(Text.translatable("itemGroup.klaxon.building_blocks"))
+            .entries(((displayContext, entries) -> {
+                // storage blocks
+                entries.add(KlaxonBlocks.STEEL_BLOCK);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+                entries.add(KlaxonBlocks.RUBBER_BLOCK);
+                entries.add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
+
+                // plating blocks
+                entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
+                entries.add(KlaxonBlocks.IRON_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.GOLD_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+
+                // casings
+                entries.add(KlaxonBlocks.STEEL_CASING);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_CASING);
+
+                // hallnox
+                entries.add(KlaxonBlocks.HALLNOX_POD);
+
+                // misc
+                entries.add(KlaxonBlocks.STEEL_DOOR);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_DOOR);
+                entries.add(KlaxonBlocks.STEEL_TRAPDOOR);
+                entries.add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
+            })).build();
+
+
     private static RegistryKey<ItemGroup> locateItemGroupId(String name) {
         return RegistryKey.of(RegistryKeys.ITEM_GROUP, KlaxonCommon.locate(name + "_item_group"));
     }
 
     public static void init() {
-        register(KLAXON_BUILDING_BLOCKS_ID, KLAXON_BUILDING_BLOCKS);
         register(KLAXON_EQUIPMENT_ID, KLAXON_EQUIPMENT);
         register(KLAXON_MACHINES_ID, KLAXON_MACHINES);
         register(KLAXON_MATERIALS_ID, KLAXON_MATERIALS);
+        register(KLAXON_BUILDING_BLOCKS_ID, KLAXON_BUILDING_BLOCKS);
 
         KlaxonCommon.LOGGER.info("Registered KLAXON's Item Groups!");
     }

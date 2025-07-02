@@ -8,11 +8,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.decor.MoltenRubberBlock;
-import net.myriantics.klaxon.block.customblocks.decor.OxidizablePillarBlock;
+import net.myriantics.klaxon.block.customblocks.decor.*;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.block.customblocks.decor.SteelDoorBlock;
-import net.myriantics.klaxon.block.customblocks.decor.SteelTrapdoorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.nether_reactor_core.NetherReactorCoreBlock;
 
 public class KlaxonBlocks {
@@ -49,6 +46,10 @@ public class KlaxonBlocks {
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_CASING).luminance((state) -> 12).nonOpaque()));
     public static final Block CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_CASING).luminance((state) -> 10).nonOpaque()));
+
+    // hallnox
+    public static final Block HALLNOX_POD = registerBlock("hallnox_pod",
+            new HallnoxPodBlock(KlaxonSaplingGenerators.HALLNOX, AbstractBlock.Settings.copy(Blocks.SHROOMLIGHT)));
 
     // iron
     public static final Block IRON_PLATING_BLOCK = registerBlock("iron_plating_block",
