@@ -16,9 +16,12 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.block.NeighborUpdater;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +29,13 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final DirectionProperty FACING = Properties.FACING;
+
+    private static final VoxelShape UP_SHAPE = Block.createCuboidShape(2.0, 2.0, 2.0, 14.0, 16.0, 14.0);
+    private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 14.0, 14.0);
+    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 14.0);
+    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(2.0, 2.0, 2.0, 16.0, 14.0, 14.0);
+    private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(2.0, 2.0, 2.0, 14.0, 14.0, 16.0);
+    private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(0.0, 2.0, 2.0, 14.0, 14.0, 14.0);
 
     private final int FALLING_DELAY = 2;
 
@@ -48,6 +58,18 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     @Override
     protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return true;
+    }
+
+    @Override
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return switch (state.get(FACING)) {
+            case DOWN -> DOWN_SHAPE;
+            case UP -> UP_SHAPE;
+            case NORTH -> NORTH_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            case EAST -> EAST_SHAPE;
+        };
     }
 
     @Override
@@ -80,13 +102,26 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
             Direction facing = ctx.getSide().getOpposite();
             boolean waterlogged = world.getFluidState(pos).isOf(Fluids.WATER.getStill());
 
-            BlockState newState = original.with(FACING, facing).with(WATERLOGGED, waterlogged);
+            BlockState newState = original.with(WATERLOGGED, waterlogged);
 
-            // make sure placement is valid before doing anything
-            return isSupported(world, pos, facing) ? newState : null;
-        } else {
-            return null;
+            // try placing on clicked side first
+            if (isSupported(world, pos, facing)) return newState.with(FACING, facing);
+
+            Direction playerFacing = ctx.getHorizontalPlayerFacing();
+            // next, try placing on player facing and its opposite.
+            if (!facing.equals(playerFacing) && isSupported(world, pos, playerFacing)) return newState.with(FACING, playerFacing);
+            if (isSupported(world, pos, playerFacing.getOpposite())) return newState.with(FACING, playerFacing.getOpposite());
+
+            // try placing in all possible orientations
+            for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
+                // don't check ones we've already checked
+                if (direction.equals(facing) || direction.equals(playerFacing) || direction.equals(playerFacing.getOpposite())) continue;
+                if (isSupported(world, pos, direction)) return newState.with(FACING, direction);
+            }
         }
+
+        // if all checks fail, we fail to place.
+        return null;
     }
 
     private boolean isSupported(WorldAccess world, BlockPos pos, Direction facing) {
@@ -102,7 +137,7 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
 
         // fall if it can, otherwise break if unsupported
         if (!isSupported(world, pos, facing)) {
-            if (FallingBlock.canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY()) {
+            if (pos.getY() >= world.getBottomY()) {
                 FallingBlockEntity.spawnFromBlock(world, pos, state);
             } else {
                 world.breakBlock(pos, true);
@@ -131,7 +166,7 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (random.nextInt(16) == 0) {
             BlockPos blockPos = pos.down();
-            if (FallingBlock.canFallThrough(world.getBlockState(blockPos))) {
+            if (!isSupported(world, pos, state.get(FACING)) && FallingBlock.canFallThrough(world.getBlockState(blockPos))) {
                 ParticleUtil.spawnParticle(world, pos, random, new BlockStateParticleEffect(ParticleTypes.FALLING_DUST, state));
             }
         }

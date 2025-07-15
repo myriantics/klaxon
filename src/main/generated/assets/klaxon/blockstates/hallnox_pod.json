@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "klaxon:block/hallnox_pod",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "klaxon:block/hallnox_pod",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "klaxon:block/hallnox_pod"
+    },
+    "facing=south": {
+      "model": "klaxon:block/hallnox_pod",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "klaxon:block/hallnox_pod",
+      "x": 270
+    },
+    "facing=west": {
+      "model": "klaxon:block/hallnox_pod",
+      "y": 270
+    }
+  }
+}

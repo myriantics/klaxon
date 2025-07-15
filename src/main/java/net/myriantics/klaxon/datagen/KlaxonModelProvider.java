@@ -55,6 +55,8 @@ public class KlaxonModelProvider extends FabricModelProvider {
         registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
         registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
 
+        registerHallnoxPod(generator);
+
         registerPlatingBlock(generator, KlaxonBlocks.RUBBER_SHEET_BLOCK);
     }
 
@@ -89,6 +91,15 @@ public class KlaxonModelProvider extends FabricModelProvider {
                 )
                 .coordinate(BlockStateModelGenerator.createNorthDefaultHorizontalRotationStates())
         );
+    }
+
+    private void registerHallnoxPod(BlockStateModelGenerator generator) {
+        Identifier modelId = KlaxonCommon.locate("block/hallnox_pod");
+        generator.registerParentedItemModel(KlaxonBlocks.HALLNOX_POD, modelId);
+        generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(KlaxonBlocks.HALLNOX_POD,
+                        BlockStateVariant.create().put(VariantSettings.MODEL, modelId)
+                )
+                .coordinate(BlockStateModelGenerator.createNorthDefaultRotationStates()));
     }
 
     private void registerOxidizedPlatingBlock(BlockStateModelGenerator generator, Block platingBlock, Block modelBlock) {
