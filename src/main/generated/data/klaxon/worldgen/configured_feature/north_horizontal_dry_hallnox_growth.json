@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:horizontal_dry_hallnox_growth",
+  "config": {
+    "horizontal_facing": "north",
+    "replaceable_blocks": {
+      "type": "minecraft:true"
+    }
+  }
+}

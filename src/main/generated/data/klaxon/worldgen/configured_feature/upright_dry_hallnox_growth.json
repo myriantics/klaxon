@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:upright_dry_hallnox_growth",
+  "config": {
+    "max_height": 6,
+    "replaceable_blocks": {
+      "type": "minecraft:true"
+    }
+  }
+}

@@ -22,7 +22,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.block.NeighborUpdater;
+import net.myriantics.klaxon.api.DirectionalSaplingGenerator;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
+import net.myriantics.klaxon.registry.minecraft.KlaxonSaplingGenerators;
 import org.jetbrains.annotations.Nullable;
 
 public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Waterloggable {
@@ -39,8 +41,11 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
 
     private final int FALLING_DELAY = 2;
 
-    public HallnoxPodBlock(SaplingGenerator generator, Settings settings) {
-        super(generator, settings);
+    private final DirectionalSaplingGenerator generator;
+
+    public HallnoxPodBlock(DirectionalSaplingGenerator generator, Settings settings) {
+        super(KlaxonSaplingGenerators.EMPTY, settings);
+        this.generator = generator;
         this.setDefaultState(getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.DOWN));
     }
 
@@ -95,6 +100,15 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
 
         // if we've made changes, update block state
         if (!newState.equals(fallingBlockState)) world.setBlockState(pos, newState);
+    }
+
+    @Override
+    public void generate(ServerWorld world, BlockPos pos, BlockState state, Random random) {
+        if (state.get(STAGE) == 0) {
+            world.setBlockState(pos, state.cycle(STAGE), Block.NO_REDRAW);
+        } else {
+            this.generator.generate(state.get(FACING).getOpposite(), world, world.getChunkManager().getChunkGenerator(), pos, state, random);
+        }
     }
 
     @Override

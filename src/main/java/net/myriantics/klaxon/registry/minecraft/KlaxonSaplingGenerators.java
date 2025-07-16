@@ -4,19 +4,31 @@ import net.minecraft.block.SaplingGenerator;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.DirectionalSaplingGenerator;
+import net.myriantics.klaxon.datagen.KlaxonFeatureProvider;
 
 import java.util.Optional;
 
 public class KlaxonSaplingGenerators {
-    public static final SaplingGenerator HALLNOX = new SaplingGenerator(
-            "hallnox",
-            0.2f,
+    public static final SaplingGenerator EMPTY = new SaplingGenerator(
+            "empty",
+            0.0f,
             Optional.empty(),
             Optional.empty(),
-            Optional.of(RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, KlaxonCommon.locate("hallnox_growth"))),
+            Optional.empty(),
             Optional.empty(),
             Optional.empty(),
             Optional.empty()
+    );
+
+    public static final DirectionalSaplingGenerator HALLNOX = new DirectionalSaplingGenerator(
+            "hallnox",
+            Optional.of(KlaxonFeatureProvider.UPRIGHT_DRY_HALLNOX_GROWTH),
+            Optional.empty(),
+            Optional.of(KlaxonFeatureProvider.NORTH_HORIZONTAL_DRY_HALLNOX_GROWTH),
+            Optional.of(KlaxonFeatureProvider.EAST_HORIZONTAL_DRY_HALLNOX_GROWTH),
+            Optional.of(KlaxonFeatureProvider.SOUTH_HORIZONTAL_DRY_HALLNOX_GROWTH),
+            Optional.of(KlaxonFeatureProvider.WEST_HORIZONTAL_DRY_HALLNOX_GROWTH)
     );
 
     public static void init() {
