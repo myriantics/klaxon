@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.block.NeighborUpdater;
 import net.minecraft.world.gen.blockpredicate.BlockPredicate;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.util.FeatureContext;
@@ -126,7 +127,7 @@ public class UprightDryHallnoxGrowthFeature extends Feature<UprightDryHallnoxGro
         return workingPos.toImmutable();
     }
 
-    private void generateDroop(StructureWorldAccess world, BlockPos frondFinalPos, Random random, UprightDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, Direction direction) {
+    private void generateDroop(StructureWorldAccess world, BlockPos frondFinalPos, Random random, UprightDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, Direction facing) {
         BlockState placedState = KlaxonBlocks.STEEL_CASING.getDefaultState();
 
         BlockPos.Mutable workingPos = frondFinalPos.mutableCopy();
@@ -136,20 +137,27 @@ public class UprightDryHallnoxGrowthFeature extends Feature<UprightDryHallnoxGro
 
             // place droop center
             setBlockStateIfPossible(world, workingPos, placedState, replaceableBlocks);
+            if (yDiff == 1 && random.nextFloat() < 0.8) setBlockStateIfPossible(world, workingPos.offset(facing.getAxis().equals(Direction.Axis.Z) ? facing : facing.getOpposite()), placedState, replaceableBlocks);
 
             // used to make fronds wider
-            Direction.Axis perpendicularAxis = direction.getAxis().equals(Direction.Axis.X) ? Direction.Axis.Z : Direction.Axis.X;
+            Direction.Axis perpendicularAxis = facing.getAxis().equals(Direction.Axis.X) ? Direction.Axis.Z : Direction.Axis.X;
+
+            // don't generate droop sides past a certain point
+            if (yDiff == FROND_MAX_LENGTH - 2) continue;
 
             // place blocks on side of droops
             for (Direction.AxisDirection axisDirection : Direction.AxisDirection.values()) {
-                // if it's placing the last block, generate pods
-                if (yDiff == FROND_MAX_LENGTH - 2) {
-                    float determiner = random.nextFloat();
-                    if (determiner < 0.3) placedState = KlaxonBlocks.HALLNOX_POD.getDefaultState().with(HallnoxPodBlock.FACING, Direction.UP);
-                }
+                Direction placingDirection = Direction.from(perpendicularAxis, axisDirection);
+                BlockPos offsetPos = workingPos.offset(placingDirection, 1);
 
-                BlockPos offsetPos = workingPos.offset(Direction.from(perpendicularAxis, axisDirection), 1);
-                if (random.nextFloat() < 0.9) setBlockStateIfPossible(world, offsetPos, placedState, replaceableBlocks);
+                if (random.nextFloat() < 0.9) {
+                    boolean success = setBlockStateIfPossible(world, offsetPos, placedState, replaceableBlocks);
+
+                    // if we successfully placed one of the ending droop parts, roll for a hallnox pod to spawn
+                    if (success && random.nextFloat() < 0.5) {
+                        setBlockStateIfPossible(world, offsetPos.down(), KlaxonBlocks.HALLNOX_POD.getDefaultState().with(HallnoxPodBlock.FACING, Direction.UP), replaceableBlocks);
+                    }
+                }
             }
         }
     }
