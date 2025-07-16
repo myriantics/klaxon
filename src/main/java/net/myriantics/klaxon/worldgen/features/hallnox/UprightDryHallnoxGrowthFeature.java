@@ -1,0 +1,166 @@
+package net.myriantics.klaxon.worldgen.features.hallnox;
+
+import com.mojang.serialization.Codec;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FacingBlock;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.gen.blockpredicate.BlockPredicate;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.myriantics.klaxon.block.customblocks.decor.HallnoxPodBlock;
+import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
+import net.myriantics.klaxon.util.BlockDirectionHelper;
+
+public class UprightDryHallnoxGrowthFeature extends Feature<UprightDryHallnoxGrowthFeatureConfig> {
+
+    private final int GROWTH_HEIGHT = 6;
+    private final int BASE_HEIGHT = 2;
+    private final int FROND_MAX_LENGTH = 4;
+
+    public UprightDryHallnoxGrowthFeature(Codec<UprightDryHallnoxGrowthFeatureConfig> configCodec) {
+        super(configCodec);
+    }
+
+    @Override
+    public boolean generate(FeatureContext<UprightDryHallnoxGrowthFeatureConfig> context) {
+        StructureWorldAccess structureWorldAccess = context.getWorld();
+        UprightDryHallnoxGrowthFeatureConfig config = context.getConfig();
+        BlockPredicate replaceableBlocks = config.replaceableBlocks();
+        BlockPos originPos = context.getOrigin();
+        Random random = context.getRandom();
+
+        // validate that we can place growth before doing pricier calculations
+        for (int yDiff = 0; yDiff < GROWTH_HEIGHT; yDiff++) {
+            if (!replaceableBlocks.test(structureWorldAccess, originPos.withY(originPos.getY() - yDiff))) return false;
+        }
+
+        generateBase(structureWorldAccess, originPos, random, config, replaceableBlocks);
+        BlockPos stemTopPos = generateStem(structureWorldAccess, originPos, random, config, replaceableBlocks);
+
+        // generate fronds
+        for (Direction direction : BlockDirectionHelper.HORIZONTAL) {
+            BlockPos lastFrondPos = generateFrond(structureWorldAccess, stemTopPos, random, config, replaceableBlocks, direction);
+            generateDroop(structureWorldAccess, lastFrondPos, random, config, replaceableBlocks, direction);
+        }
+
+        // place pod on top
+        setBlockStateIfPossible(structureWorldAccess, stemTopPos.up(), KlaxonBlocks.HALLNOX_POD.getDefaultState().with(HallnoxPodBlock.FACING, Direction.DOWN), replaceableBlocks);
+
+        // generateTop(structureWorldAccess, originPos, random, config);
+
+        return true;
+    }
+
+    private void generateBase(StructureWorldAccess world, BlockPos originPos, Random random, UprightDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks) {
+        BlockPos.Mutable workingPos = new BlockPos.Mutable().set(originPos);
+
+        for (int yDiff = 0; yDiff < BASE_HEIGHT; yDiff++) {
+            workingPos.setY(originPos.getY() + yDiff);
+
+            for (BlockPos selected : BlockPos.iterateInSquare(workingPos, 1, Direction.NORTH, Direction.EAST)) {
+                // blocks aligned with origin pos are guaranteed to place
+                // blocks that share an axis have an 85% chance to place
+                // blocks on corners have a 70& chance to place
+                double placementChance = 0.7;
+                placementChance += selected.getX() == workingPos.getX() ? 0.15 : 0;
+                placementChance += selected.getZ() == workingPos.getZ() ? 0.15 : 0;
+                // make sure block can be replaced and roll for block placement
+                if (random.nextFloat() < placementChance) setBlockState(world, selected, KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState());
+            }
+        }
+    }
+
+    // returns top middle block of stem
+    private BlockPos generateStem(StructureWorldAccess world, BlockPos originPos, Random random, UprightDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks) {
+        BlockPos.Mutable workingPos = new BlockPos.Mutable().set(originPos);
+
+        // only start placing stem from where the base placer left off
+        for (int yDiff = BASE_HEIGHT; yDiff < GROWTH_HEIGHT; yDiff++) {
+            workingPos.setY(originPos.getY() + yDiff);
+
+
+            setBlockStateIfPossible(world, workingPos, KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState(), replaceableBlocks);
+        }
+
+        for (Direction direction : BlockDirectionHelper.HORIZONTAL) {
+            if (random.nextFloat() > 0.7) setBlockStateIfPossible(world, workingPos.offset(direction).down(), KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState(), replaceableBlocks);
+        }
+
+        return workingPos.toImmutable();
+    }
+
+    // returns middle block of generated frond
+    private BlockPos generateFrond(StructureWorldAccess world, BlockPos stemTopPos, Random random, UprightDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, Direction direction) {
+        BlockState wartState = KlaxonBlocks.STEEL_CASING.getDefaultState();
+
+        BlockPos.Mutable workingPos = stemTopPos.mutableCopy();
+
+        for (int horizDiff = 0; horizDiff < FROND_MAX_LENGTH; horizDiff++) {
+            // hacky and awkward but it works
+            switch (direction.getAxis()) {
+                case X -> workingPos.setX(stemTopPos.getX() + (direction.equals(Direction.EAST) ? horizDiff : -horizDiff));
+                case Z -> workingPos.setZ(stemTopPos.getZ() + (direction.equals(Direction.NORTH) ? horizDiff : -horizDiff));
+            }
+
+            Direction.Axis perpendicularAxis = direction.getAxis().equals(Direction.Axis.X) ? Direction.Axis.Z : Direction.Axis.X;
+
+            // place main row as well as line of blocks above it
+            setBlockStateIfPossible(world, workingPos, wartState, replaceableBlocks);
+            setBlockStateIfPossible(world, workingPos.up(), wartState, replaceableBlocks);
+
+            // place blocks to the sides of main frond
+            for (Direction.AxisDirection axisDirection : Direction.AxisDirection.values()) {
+                BlockPos offsetPos = workingPos.offset(Direction.from(perpendicularAxis, axisDirection), 1);
+                if (random.nextFloat() < 0.9) setBlockStateIfPossible(world, offsetPos, wartState, replaceableBlocks);
+
+                // place middle ring
+                if (horizDiff == 1) setBlockStateIfPossible(world, offsetPos.up(), wartState, replaceableBlocks);
+            }
+        }
+
+        // return last mainline block placed in frond
+        return workingPos.toImmutable();
+    }
+
+    private void generateDroop(StructureWorldAccess world, BlockPos frondFinalPos, Random random, UprightDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, Direction direction) {
+        BlockState placedState = KlaxonBlocks.STEEL_CASING.getDefaultState();
+
+        BlockPos.Mutable workingPos = frondFinalPos.mutableCopy();
+
+        for (int yDiff = 0; yDiff < FROND_MAX_LENGTH - 1; yDiff++) {
+            workingPos.setY(frondFinalPos.getY() - yDiff);
+
+            // place droop center
+            setBlockStateIfPossible(world, workingPos, placedState, replaceableBlocks);
+
+            // used to make fronds wider
+            Direction.Axis perpendicularAxis = direction.getAxis().equals(Direction.Axis.X) ? Direction.Axis.Z : Direction.Axis.X;
+
+            // place blocks on side of droops
+            for (Direction.AxisDirection axisDirection : Direction.AxisDirection.values()) {
+                // if it's placing the last block, generate pods
+                if (yDiff == FROND_MAX_LENGTH - 2) {
+                    float determiner = random.nextFloat();
+                    if (determiner < 0.3) placedState = KlaxonBlocks.HALLNOX_POD.getDefaultState().with(HallnoxPodBlock.FACING, Direction.UP);
+                }
+
+                BlockPos offsetPos = workingPos.offset(Direction.from(perpendicularAxis, axisDirection), 1);
+                if (random.nextFloat() < 0.9) setBlockStateIfPossible(world, offsetPos, placedState, replaceableBlocks);
+            }
+        }
+    }
+
+    // returns true if operation was successful - false if it wasn't
+    private boolean setBlockStateIfPossible(StructureWorldAccess world, BlockPos pos, BlockState state, BlockPredicate replaceableBlocks) {
+        if (replaceableBlocks.test(world, pos)) {
+            setBlockState(world, pos, state);
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

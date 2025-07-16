@@ -2,18 +2,15 @@ package net.myriantics.klaxon.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.world.gen.blockpredicate.BlockPredicate;
 import net.minecraft.world.gen.feature.*;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonFeatures;
-import net.myriantics.klaxon.worldgen.features.hallnox.HallnoxGrowthFeatureConfig;
+import net.myriantics.klaxon.worldgen.features.hallnox.UprightDryHallnoxGrowthFeatureConfig;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -38,7 +35,7 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
         registerable.register(
                 configuredFeatureKey("hallnox_growth"),
                 new ConfiguredFeature<>(KlaxonFeatures.HALLNOX_GROWTH,
-                        new HallnoxGrowthFeatureConfig(
+                        new UprightDryHallnoxGrowthFeatureConfig(
                                 BlockPredicate.alwaysTrue()
                         )
                 )

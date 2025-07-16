@@ -88,6 +88,11 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
             newState = newState.with(WATERLOGGED, false);
         }
 
+        // break if we fall on an incompatible block
+        if (!isSupported(world, pos, Direction.DOWN)) {
+            world.breakBlock(pos, true);
+        }
+
         // if we've made changes, update block state
         if (!newState.equals(fallingBlockState)) world.setBlockState(pos, newState);
     }
@@ -160,6 +165,12 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
         if (!world.isClient() && offsetPos.equals(neighborPos)) world.scheduleBlockTick(pos, this, FALLING_DELAY);
 
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    // don't grow when connected to a tree or if it's been sheared
+    @Override
+    public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
+        return super.canGrow(world, random, pos, state);
     }
 
     @Override
