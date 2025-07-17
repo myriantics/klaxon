@@ -1,7 +1,7 @@
 {
-  "type": "klaxon:horizontal_dry_hallnox_growth",
+  "type": "klaxon:horizontal_hallnox_growth",
   "config": {
-    "horizontal_facing": "east",
+    "horizontal_facing": "west",
     "pod_block": {
       "Name": "klaxon:hallnox_pod",
       "Properties": {

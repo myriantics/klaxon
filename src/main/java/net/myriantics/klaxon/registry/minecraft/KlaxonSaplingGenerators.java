@@ -1,8 +1,6 @@
 package net.myriantics.klaxon.registry.minecraft;
 
 import net.minecraft.block.SaplingGenerator;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.DirectionalSaplingGenerator;
 import net.myriantics.klaxon.datagen.KlaxonFeatureProvider;
@@ -24,11 +22,11 @@ public class KlaxonSaplingGenerators {
     public static final DirectionalSaplingGenerator HALLNOX = new DirectionalSaplingGenerator(
             "hallnox",
             Optional.of(KlaxonFeatureProvider.UPRIGHT_DRY_HALLNOX_GROWTH),
-            Optional.of(KlaxonFeatureProvider.UPSIDE_DOWN_HALLNOX_GROWTH),
-            Optional.of(KlaxonFeatureProvider.NORTH_HORIZONTAL_DRY_HALLNOX_GROWTH),
-            Optional.of(KlaxonFeatureProvider.EAST_HORIZONTAL_DRY_HALLNOX_GROWTH),
-            Optional.of(KlaxonFeatureProvider.SOUTH_HORIZONTAL_DRY_HALLNOX_GROWTH),
-            Optional.of(KlaxonFeatureProvider.WEST_HORIZONTAL_DRY_HALLNOX_GROWTH)
+            Optional.of(KlaxonFeatureProvider.DOWNRIGHT_HALLNOX_GROWTH),
+            Optional.of(KlaxonFeatureProvider.NORTH_HORIZONTAL_HALLNOX_GROWTH),
+            Optional.of(KlaxonFeatureProvider.EAST_HORIZONTAL_HALLNOX_GROWTH),
+            Optional.of(KlaxonFeatureProvider.SOUTH_HORIZONTAL_HALLNOX_GROWTH),
+            Optional.of(KlaxonFeatureProvider.WEST_HORIZONTAL_HALLNOX_GROWTH)
     );
 
     public static void init() {

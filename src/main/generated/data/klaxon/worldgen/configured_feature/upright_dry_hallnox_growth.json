@@ -1,8 +1,8 @@
 {
-  "type": "klaxon:upright_dry_hallnox_growth",
+  "type": "klaxon:upright_hallnox_growth",
   "config": {
     "dense_stem_block": {
-      "Name": "klaxon:steel_plating_block",
+      "Name": "klaxon:crude_steel_plating_block",
       "Properties": {
         "axis": "y"
       }
@@ -79,7 +79,7 @@
       ]
     },
     "stem_block": {
-      "Name": "klaxon:crude_steel_plating_block",
+      "Name": "klaxon:steel_plating_block",
       "Properties": {
         "axis": "y"
       }

@@ -3,7 +3,6 @@ package net.myriantics.klaxon.worldgen.features.hallnox;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.PillarBlock;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -12,22 +11,17 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.blockpredicate.BlockPredicate;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.HugeFungusFeatureConfig;
 import net.minecraft.world.gen.feature.util.FeatureContext;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.decor.HallnoxPodBlock;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
-import net.myriantics.klaxon.util.BlockDirectionHelper;
 
-public class HorizontalDryHallnoxGrowthFeature extends Feature<HorizontalDryHallnoxGrowthFeatureConfig> {
-    public HorizontalDryHallnoxGrowthFeature(Codec<HorizontalDryHallnoxGrowthFeatureConfig> configCodec) {
+public class HorizontalHallnoxGrowthFeature extends Feature<HorizontalHallnoxGrowthFeatureConfig> {
+    public HorizontalHallnoxGrowthFeature(Codec<HorizontalHallnoxGrowthFeatureConfig> configCodec) {
         super(configCodec);
     }
 
     @Override
-    public boolean generate(FeatureContext<HorizontalDryHallnoxGrowthFeatureConfig> context) {
+    public boolean generate(FeatureContext<HorizontalHallnoxGrowthFeatureConfig> context) {
         StructureWorldAccess structureWorldAccess = context.getWorld();
-        HorizontalDryHallnoxGrowthFeatureConfig config = context.getConfig();
+        HorizontalHallnoxGrowthFeatureConfig config = context.getConfig();
         BlockState stemBlock = config.stemBlock();
         BlockState wartBlock = config.wartBlock();
         BlockState podBlock = config.podBlock();
@@ -55,7 +49,7 @@ public class HorizontalDryHallnoxGrowthFeature extends Feature<HorizontalDryHall
     }
 
     // returns ending block of stem
-    private BlockPos generateStem(StructureWorldAccess world, BlockPos originPos, Random random, int maxLength, HorizontalDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction facing) {
+    private BlockPos generateStem(StructureWorldAccess world, BlockPos originPos, Random random, int maxLength, HorizontalHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction facing) {
         BlockPos.Mutable workingPos = new BlockPos.Mutable().set(originPos);
         BlockState stemState = config.stemBlock();
         if (stemState.contains(Properties.AXIS)) {
@@ -77,7 +71,7 @@ public class HorizontalDryHallnoxGrowthFeature extends Feature<HorizontalDryHall
     }
 
     // returns last block generated in center line of cap
-    private BlockPos generateCap(StructureWorldAccess world, BlockPos stemFinishPos, Random random, int maxLength, HorizontalDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction facing) {
+    private BlockPos generateCap(StructureWorldAccess world, BlockPos stemFinishPos, Random random, int maxLength, HorizontalHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction facing) {
         BlockPos startingPos = stemFinishPos.offset(facing);
         BlockPos.Mutable workingPos = new BlockPos.Mutable().set(startingPos);
         BlockState wartState = config.wartBlock();
@@ -111,7 +105,7 @@ public class HorizontalDryHallnoxGrowthFeature extends Feature<HorizontalDryHall
         return workingPos;
     }
 
-    private void generateDroop(StructureWorldAccess world, BlockPos originPos, Random random, int maxLength, HorizontalDryHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction facing) {
+    private void generateDroop(StructureWorldAccess world, BlockPos originPos, Random random, int maxLength, HorizontalHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction facing) {
         BlockState wartState = config.wartBlock();
         BlockState podState = config.podBlock();
         if (podState.contains(Properties.FACING)) {
