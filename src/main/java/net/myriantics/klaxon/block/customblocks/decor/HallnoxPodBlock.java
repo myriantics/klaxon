@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.block.customblocks.decor;
 
 import net.minecraft.block.*;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -44,7 +45,7 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     private final DirectionalSaplingGenerator generator;
 
     public HallnoxPodBlock(DirectionalSaplingGenerator generator, Settings settings) {
-        super(KlaxonSaplingGenerators.EMPTY, settings);
+        super(KlaxonSaplingGenerators.EMPTY, settings.pistonBehavior(PistonBehavior.DESTROY));
         this.generator = generator;
         this.setDefaultState(getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.DOWN));
     }
@@ -157,7 +158,9 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
         // fall if it can, otherwise break if unsupported
         if (!isSupported(world, pos, facing)) {
             if (pos.getY() >= world.getBottomY()) {
-                FallingBlockEntity.spawnFromBlock(world, pos, state);
+                FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(world, pos, state);
+                // this is because it's funny :)
+                fallingBlockEntity.setHurtEntities(1.5f, 10);
             } else {
                 world.breakBlock(pos, true);
             }
