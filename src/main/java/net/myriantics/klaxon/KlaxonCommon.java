@@ -24,7 +24,7 @@ public class KlaxonCommon implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		KlaxonFeatures.init();
+		KlaxonWorldgenFeatures.init();
 		KlaxonSaplingGenerators.init();
 		KlaxonEntityAttributes.init();
 		KlaxonBlocks.init();

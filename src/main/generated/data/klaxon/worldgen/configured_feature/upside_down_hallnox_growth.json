@@ -1,7 +1,13 @@
 {
-  "type": "klaxon:horizontal_dry_hallnox_growth",
+  "type": "klaxon:upside_down_hallnox_growth",
   "config": {
-    "horizontal_facing": "west",
+    "dense_stem_block": {
+      "Name": "klaxon:crude_steel_plating_block",
+      "Properties": {
+        "axis": "y"
+      }
+    },
+    "max_depth": 8,
     "pod_block": {
       "Name": "klaxon:hallnox_pod",
       "Properties": {

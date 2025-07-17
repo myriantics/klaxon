@@ -24,7 +24,7 @@ public class KlaxonSaplingGenerators {
     public static final DirectionalSaplingGenerator HALLNOX = new DirectionalSaplingGenerator(
             "hallnox",
             Optional.of(KlaxonFeatureProvider.UPRIGHT_DRY_HALLNOX_GROWTH),
-            Optional.empty(),
+            Optional.of(KlaxonFeatureProvider.UPSIDE_DOWN_HALLNOX_GROWTH),
             Optional.of(KlaxonFeatureProvider.NORTH_HORIZONTAL_DRY_HALLNOX_GROWTH),
             Optional.of(KlaxonFeatureProvider.EAST_HORIZONTAL_DRY_HALLNOX_GROWTH),
             Optional.of(KlaxonFeatureProvider.SOUTH_HORIZONTAL_DRY_HALLNOX_GROWTH),
