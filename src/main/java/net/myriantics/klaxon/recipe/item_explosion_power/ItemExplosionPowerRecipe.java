@@ -8,7 +8,7 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class ItemExplosionPowerRecipe implements Recipe<ExplosiveCatalystRecipeInput> {
     private final Ingredient ingredient;

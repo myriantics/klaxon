@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeInput;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDispenserBehaviors;
+import net.myriantics.klaxon.registry.behavior.KlaxonDispenserBehaviors;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

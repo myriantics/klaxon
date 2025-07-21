@@ -12,7 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
-import net.myriantics.klaxon.registry.minecraft.KlaxonEntityAttributes;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 import net.myriantics.klaxon.util.DualWieldHelper;
 import net.myriantics.klaxon.util.LivingEntityMixinAccess;

@@ -11,7 +11,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
 public record InstabreakingToolComponent(TagKey<Block> instabreakableBlocks) {

@@ -12,11 +12,9 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeInput;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.Optional;
 
 @Mixin(ClientPlayerInteractionManager.class)
 public abstract class ClientPlayerInteractionManagerMixin {

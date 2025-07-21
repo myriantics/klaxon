@@ -4,7 +4,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
+import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider {

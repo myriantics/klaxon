@@ -10,9 +10,9 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlockFamilies;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
-import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
+import net.myriantics.klaxon.registry.block.KlaxonBlockFamilies;
+import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public class KlaxonModelProvider extends FabricModelProvider {
     public KlaxonModelProvider(FabricDataOutput output) {

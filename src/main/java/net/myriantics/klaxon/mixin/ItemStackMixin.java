@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

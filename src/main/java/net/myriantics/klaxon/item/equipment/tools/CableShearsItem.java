@@ -7,12 +7,11 @@ import net.minecraft.component.type.ToolComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
-import net.myriantics.klaxon.registry.minecraft.KlaxonSoundEvents;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 public class CableShearsItem extends MiningToolItem {

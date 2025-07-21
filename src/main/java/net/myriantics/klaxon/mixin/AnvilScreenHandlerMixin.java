@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
-import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;

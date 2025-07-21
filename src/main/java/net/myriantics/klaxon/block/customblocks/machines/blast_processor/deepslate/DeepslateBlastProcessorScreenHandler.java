@@ -22,7 +22,7 @@ import net.myriantics.klaxon.util.PermissionsHelper;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-import net.myriantics.klaxon.registry.minecraft.KlaxonScreenHandlers;
+import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
 
 public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     private final Inventory ingredientInventory;

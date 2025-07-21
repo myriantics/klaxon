@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -14,7 +13,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.dynamic.Codecs;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

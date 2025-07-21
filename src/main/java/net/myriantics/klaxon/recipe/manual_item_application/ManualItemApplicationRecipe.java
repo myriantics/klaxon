@@ -9,7 +9,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class ManualItemApplicationRecipe implements Recipe<ManualItemApplicationRecipeInput> {
     private final Ingredient inputIngredient;

@@ -5,7 +5,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
@@ -16,7 +15,7 @@ import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepsla
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-import net.myriantics.klaxon.registry.custom.KlaxonWorldEvents;
+import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 
 public class DragonsBreathBlastProcessorCatalystBehavior extends ItemBlastProcessorCatalystBehavior {
     public DragonsBreathBlastProcessorCatalystBehavior(Identifier id) {

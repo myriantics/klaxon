@@ -8,7 +8,7 @@ import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.resource.LifecycledResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 import java.util.HashSet;
 import java.util.Optional;

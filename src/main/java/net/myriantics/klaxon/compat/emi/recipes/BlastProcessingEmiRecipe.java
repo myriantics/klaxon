@@ -15,7 +15,7 @@ import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcesso
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import org.jetbrains.annotations.Nullable;

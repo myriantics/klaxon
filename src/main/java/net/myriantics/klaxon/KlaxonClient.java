@@ -7,12 +7,12 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.block.entity.HangingSignBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.SignBlockEntityRenderer;
-import net.myriantics.klaxon.registry.custom.KlaxonEventListeners;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlockEntities;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
+import net.myriantics.klaxon.registry.misc.KlaxonEventListeners;
+import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
+import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorScreen;
-import net.myriantics.klaxon.registry.minecraft.KlaxonPackets;
-import net.myriantics.klaxon.registry.minecraft.KlaxonScreenHandlers;
+import net.myriantics.klaxon.registry.misc.KlaxonPackets;
+import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
 
 public class KlaxonClient implements ClientModInitializer {
     @Override

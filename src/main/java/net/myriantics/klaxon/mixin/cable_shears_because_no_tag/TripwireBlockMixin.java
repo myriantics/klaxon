@@ -5,8 +5,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.TripwireBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.myriantics.klaxon.item.equipment.tools.CableShearsItem;
-import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

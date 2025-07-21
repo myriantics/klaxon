@@ -24,8 +24,8 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.block.NeighborUpdater;
 import net.myriantics.klaxon.api.DirectionalSaplingGenerator;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
-import net.myriantics.klaxon.registry.minecraft.KlaxonSaplingGenerators;
+import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import org.jetbrains.annotations.Nullable;
 
 public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Waterloggable {

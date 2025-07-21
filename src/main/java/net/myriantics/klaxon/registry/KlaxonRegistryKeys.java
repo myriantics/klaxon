@@ -5,7 +5,7 @@ import net.minecraft.registry.RegistryKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 
-public class KlaxonRegistryKeys {
+public abstract class KlaxonRegistryKeys {
     
     public static final RegistryKey<Registry<BlastProcessorCatalystBehavior>> BLAST_PROCESSOR_BEHAVIORS = of("blast_processor_behaviors");
 

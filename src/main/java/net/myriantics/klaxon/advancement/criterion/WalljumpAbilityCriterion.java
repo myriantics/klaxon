@@ -8,7 +8,7 @@ import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
-import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 
 import java.util.Optional;
 

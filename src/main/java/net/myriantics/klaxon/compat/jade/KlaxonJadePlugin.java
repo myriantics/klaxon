@@ -4,13 +4,12 @@ import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.jade.providers.DeepslateBlastProcessorProvider;
-import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 import snownee.jade.addon.harvest.HarvestToolProvider;
 import snownee.jade.addon.harvest.SimpleToolHandler;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
-import snownee.jade.api.JadeIds;
 
 import java.util.ArrayList;
 import java.util.List;

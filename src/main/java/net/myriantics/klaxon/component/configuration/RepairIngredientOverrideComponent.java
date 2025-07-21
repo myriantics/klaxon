@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.Ingredient;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
 public record RepairIngredientOverrideComponent(Ingredient repairMaterial) {

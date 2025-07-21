@@ -11,10 +11,8 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
-import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
-
-import java.util.List;
+import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 // also yoinked from spectrum
 public class KlaxonEmiRecipeCategories {

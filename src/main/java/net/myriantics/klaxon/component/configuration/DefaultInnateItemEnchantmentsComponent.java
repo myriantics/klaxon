@@ -19,7 +19,7 @@ import net.minecraft.resource.LifecycledResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mixin.ItemAccessor;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 
 import java.util.Map;
 import java.util.Optional;

@@ -2,7 +2,6 @@ package net.myriantics.klaxon.recipe.manual_item_application;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,8 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.registry.custom.KlaxonWorldEvents;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 import java.util.HashSet;
 import java.util.Optional;

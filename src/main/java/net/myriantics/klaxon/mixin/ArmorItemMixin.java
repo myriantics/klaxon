@@ -6,13 +6,9 @@ import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.myriantics.klaxon.registry.custom.KlaxonAttributeModifierComponentModifications;
-import org.spongepowered.asm.mixin.Final;
+import net.myriantics.klaxon.registry.item.KlaxonAttributeModifierComponentModifications;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.function.Supplier;
 
 @Mixin(ArmorItem.class)
 public abstract class ArmorItemMixin {

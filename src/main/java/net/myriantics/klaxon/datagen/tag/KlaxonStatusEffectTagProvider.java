@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
-import net.myriantics.klaxon.registry.minecraft.KlaxonStatusEffects;
+import net.myriantics.klaxon.registry.entity.KlaxonStatusEffects;
 import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 
 import java.util.concurrent.CompletableFuture;

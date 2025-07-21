@@ -11,7 +11,7 @@ import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 
 import java.util.Optional;
 

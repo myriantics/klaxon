@@ -25,7 +25,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.registry.minecraft.KlaxonSoundEvents;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.util.BlockDirectionHelper;

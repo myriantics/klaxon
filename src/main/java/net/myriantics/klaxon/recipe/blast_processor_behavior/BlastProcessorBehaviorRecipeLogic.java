@@ -6,8 +6,8 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
-import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.behavior.KlaxonBlastProcessorCatalystBehaviors;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 import java.util.Optional;
 

@@ -12,7 +12,6 @@ import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -21,8 +20,8 @@ import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.mixin.AnvilScreenHandlerInvoker;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDataComponentTypes;
-import net.myriantics.klaxon.registry.minecraft.KlaxonSoundEvents;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 

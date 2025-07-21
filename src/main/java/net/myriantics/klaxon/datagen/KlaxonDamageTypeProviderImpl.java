@@ -6,7 +6,7 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.*;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonDamageTypeProvider;
-import net.myriantics.klaxon.registry.minecraft.KlaxonDamageTypes;
+import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

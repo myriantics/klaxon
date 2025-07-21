@@ -12,7 +12,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
-import net.myriantics.klaxon.registry.minecraft.KlaxonAdvancementCriteria;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

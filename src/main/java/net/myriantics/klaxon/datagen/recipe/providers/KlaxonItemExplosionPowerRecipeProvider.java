@@ -1,14 +1,12 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
-import com.mojang.datafixers.types.templates.Named;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
-import net.myriantics.klaxon.registry.custom.KlaxonBlastProcessorCatalystBehaviors;
+import net.myriantics.klaxon.registry.behavior.KlaxonBlastProcessorCatalystBehaviors;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 public class KlaxonItemExplosionPowerRecipeProvider extends KlaxonRecipeSubProvider {

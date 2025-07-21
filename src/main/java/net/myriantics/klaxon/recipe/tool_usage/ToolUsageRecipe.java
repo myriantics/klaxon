@@ -6,9 +6,7 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
-
-import java.util.Optional;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class ToolUsageRecipe implements Recipe<RecipeInput> {
     private final Ingredient requiredTool;

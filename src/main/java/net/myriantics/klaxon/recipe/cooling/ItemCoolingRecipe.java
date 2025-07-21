@@ -8,7 +8,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class ItemCoolingRecipe implements Recipe<RecipeInput> {
     private final Ingredient inputIngredient;
