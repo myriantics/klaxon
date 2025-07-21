@@ -149,6 +149,8 @@ public class KlaxonItemGroups {
                 entries.add(KlaxonBlocks.HALLNOX_FENCE_GATE);
                 entries.add(KlaxonBlocks.HALLNOX_DOOR);
                 entries.add(KlaxonBlocks.HALLNOX_TRAPDOOR);
+                entries.add(KlaxonBlockItems.HALLNOX_SIGN);
+                entries.add(KlaxonBlockItems.HALLNOX_HANGING_SIGN);
 
                 // misc
                 entries.add(KlaxonBlocks.STEEL_DOOR);

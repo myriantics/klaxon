@@ -28,6 +28,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonSaplingGenerators.init();
 		KlaxonEntityAttributes.init();
 		KlaxonBlocks.init();
+		KlaxonBlockItems.init();
 		KlaxonBlockEntities.init();
 		KlaxonArmorMaterials.init();
 		KlaxonItems.init();

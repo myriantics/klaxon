@@ -4,11 +4,16 @@ import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.SignItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.decor.*;
+import net.myriantics.klaxon.block.customblocks.decor.custom_hanging_sign.CustomHangingSignBlock;
+import net.myriantics.klaxon.block.customblocks.decor.custom_hanging_sign.CustomWallHangingSignBlock;
+import net.myriantics.klaxon.block.customblocks.decor.custom_sign.CustomSignBlock;
+import net.myriantics.klaxon.block.customblocks.decor.custom_sign.CustomWallSignBlock;
 import net.myriantics.klaxon.block.customblocks.functional.HallnoxPodBlock;
 import net.myriantics.klaxon.block.customblocks.functional.MoltenRubberBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
@@ -76,7 +81,8 @@ public class KlaxonBlocks {
             new Block(AbstractBlock.Settings.copy(Blocks.WARPED_PLANKS).mapColor(MapColor.TERRACOTTA_GRAY))
     );
     public static final Block HALLNOX_STAIRS = registerBlock("hallnox_stairs",
-            new StairsBlock(HALLNOX_PLANKS.getDefaultState(), AbstractBlock.Settings.copy(HALLNOX_PLANKS)));
+            new StairsBlock(HALLNOX_PLANKS.getDefaultState(), AbstractBlock.Settings.copy(HALLNOX_PLANKS))
+    );
     public static final Block HALLNOX_SLAB = registerBlock("hallnox_slab",
             new SlabBlock(AbstractBlock.Settings.copy(HALLNOX_PLANKS))
     );
@@ -100,27 +106,27 @@ public class KlaxonBlocks {
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(3.0f, 4.0f))
     );
-    public static final Block HALLNOX_SIGN = registerBlock("hallnox_sign",
-            new SignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_SIGN)
+    public static final Block HALLNOX_SIGN = registerBlockWithoutItem("hallnox_sign",
+            new CustomSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
             )
     );
-    public static final Block HALLNOX_WALL_SIGN = registerBlock("hallnox_wall_sign",
-            new WallSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_SIGN)
+    public static final Block HALLNOX_WALL_SIGN = registerBlockWithoutItem("hallnox_wall_sign",
+            new CustomWallSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
                     .dropsLike(HALLNOX_SIGN)
             )
     );
-    public static final Block HALLNOX_HANGING_SIGN = registerBlock("hallnox_hanging_sign",
-            new HangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_HANGING_SIGN)
+    public static final Block HALLNOX_HANGING_SIGN = registerBlockWithoutItem("hallnox_hanging_sign",
+            new CustomHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_HANGING_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
             )
     );
-    public static final Block HALLNOX_WALL_HANGING_SIGN = registerBlock("hallnox_wall_hanging_sign",
-            new WallHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_HANGING_SIGN)
+    public static final Block HALLNOX_WALL_HANGING_SIGN = registerBlockWithoutItem("hallnox_wall_hanging_sign",
+            new CustomWallHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_HANGING_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
                     .dropsLike(HALLNOX_HANGING_SIGN))
@@ -193,8 +199,11 @@ public class KlaxonBlocks {
     }
 
     private static Item registerBlockItem(String name, Block block) {
-        return Registry.register(Registries.ITEM, KlaxonCommon.locate(name),
-                new BlockItem(block, new Item.Settings()));
+        return registerBlockItem(name, new BlockItem(block, new Item.Settings()));
+    }
+
+    private static Item registerBlockItem(String name, BlockItem blockItem) {
+        return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), blockItem);
     }
 
     public static void init() {

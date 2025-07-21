@@ -10,9 +10,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.custom.KlaxonAttributeModifierComponentModifications;
-import net.myriantics.klaxon.registry.minecraft.KlaxonArmorMaterials;
 import net.myriantics.klaxon.registry.minecraft.KlaxonEntityAttributes;
-import net.myriantics.klaxon.registry.minecraft.KlaxonToolMaterials;
 
 public class SteelArmorItem extends ArmorItem {
 
