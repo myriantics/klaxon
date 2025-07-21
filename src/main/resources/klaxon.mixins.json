@@ -26,7 +26,6 @@
     "PlayerEntityMixin",
     "PotionEntityMixin",
     "ServerPlayerInteractionManagerMixin",
-    "jade.ShearsToolHandlerMixin",
     "WindChargeEntityInvoker",
     "cable_shears_because_no_tag.BeehiveBlockMixin",
     "cable_shears_because_no_tag.BoggedEntityMixin",
@@ -35,7 +34,10 @@
     "cable_shears_because_no_tag.SheepEntityMixin",
     "cable_shears_because_no_tag.SnowGolemEntityMixin",
     "cable_shears_because_no_tag.TripwireBlockMixin",
-    "cable_shears_because_no_tag.WolfEntityMixin"
+    "cable_shears_because_no_tag.WolfEntityMixin",
+    "jade.ShearsToolHandlerMixin",
+    "manual_item_application.DispenserBlockMixin",
+    "manual_item_application.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
     "BipedEntityModelMixin",
@@ -44,7 +46,8 @@
     "ItemRendererMixin",
     "MinecraftClientMixin",
     "ModelLoaderMixin",
-    "SplashTextResourceSupplierMixin"
+    "SplashTextResourceSupplierMixin",
+    "manual_item_application.ClientPlayerInteractionManagerMixin"
   ],
   "server": [
   ],

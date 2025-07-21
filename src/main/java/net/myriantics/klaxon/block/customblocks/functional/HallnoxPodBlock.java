@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.decor;
+package net.myriantics.klaxon.block.customblocks.functional;
 
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;

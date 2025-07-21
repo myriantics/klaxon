@@ -28,6 +28,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         buildToolRequirementTags();
         buildCompatTags();
         buildNetherReactionTags();
+        buildManualItemApplicationTags();
     }
 
     private void buildMiningTags() {
@@ -435,6 +436,13 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.BROWN_MUSHROOM_BLOCK);
         getOrCreateTagBuilder(KlaxonBlockTags.WARPED_STEM_CONVERTIBLE)
                 .add(Blocks.MUSHROOM_STEM);
+    }
+
+    private void buildManualItemApplicationTags() {
+        getOrCreateTagBuilder(KlaxonBlockTags.NETHER_REACTOR_CORE_CONVERTIBLE)
+                .add(KlaxonBlocks.STEEL_CASING);
+        getOrCreateTagBuilder(KlaxonBlockTags.CRUDE_NETHER_REACTOR_CORE_CONVERTIBLE)
+                .add(KlaxonBlocks.CRUDE_STEEL_CASING);
     }
 
     private void buildCategoricalTags() {

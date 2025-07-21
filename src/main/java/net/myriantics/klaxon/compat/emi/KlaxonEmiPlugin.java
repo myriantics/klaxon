@@ -3,6 +3,7 @@ package net.myriantics.klaxon.compat.emi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -11,13 +12,12 @@ import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
+import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
@@ -25,7 +25,6 @@ import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
-import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -69,6 +68,15 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.ITEM_COOLING, ItemCoolingEmiRecipe::new);
+        addAll(registry, KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION, (entry) -> {
+            ManualItemApplicationRecipe recipe = entry.value();
+            return EmiWorldInteractionRecipe.builder()
+                    .id(entry.id())
+                    .leftInput(EmiIngredient.of(recipe.getValidBlockInputs()))
+                    .rightInput(EmiIngredient.of(recipe.getInputIngredient()), false)
+                    .output(EmiStack.of(recipe.getOutputBlock()))
+                    .build();
+        });
     }
 
     private void registerMiscRecipes(EmiRegistry registry) {

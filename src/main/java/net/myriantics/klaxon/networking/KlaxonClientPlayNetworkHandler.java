@@ -50,6 +50,9 @@ public abstract class KlaxonClientPlayNetworkHandler {
                     }
                 }
             }
+            case KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES -> {
+                clientWorld.addBlockBreakParticles(pos, clientWorld.getBlockState(pos));
+            }
         }
     }
 }

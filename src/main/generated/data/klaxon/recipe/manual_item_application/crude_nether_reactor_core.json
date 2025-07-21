@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:manual_item_application",
+  "input": {
+    "item": "klaxon:hallnox_pod"
+  },
+  "output_block": "klaxon:crude_nether_reactor_core",
+  "valid_blocks": "#klaxon:manual_item_application/crude_nether_reactor_core_convertible"
+}

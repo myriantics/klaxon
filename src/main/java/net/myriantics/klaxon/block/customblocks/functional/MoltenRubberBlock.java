@@ -1,8 +1,6 @@
-package net.myriantics.klaxon.block.customblocks.decor;
+package net.myriantics.klaxon.block.customblocks.functional;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Degradable;
-import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.MagmaBlock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.util.math.BlockPos;

@@ -17,6 +17,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
+import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.registry.minecraft.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
@@ -305,6 +306,16 @@ public abstract class KlaxonRecipeSubProvider {
                 conditions);
 
         ToolUsageRecipe recipe = new ToolUsageRecipe(requiredTool.toIngredient(), input, output, soundOverride);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addManualItemApplicationRecipe(TagKey<Block> validBlockInputs, Ingredient ingredient, Block outputBlock, ResourceCondition... conditions) {
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION_RECIPE_ID,
+                Registries.BLOCK.getId(outputBlock).getPath(),
+                conditions);
+
+        ManualItemApplicationRecipe recipe = new ManualItemApplicationRecipe(validBlockInputs, ingredient, outputBlock);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

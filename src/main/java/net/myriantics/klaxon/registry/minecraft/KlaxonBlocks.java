@@ -9,6 +9,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.decor.*;
+import net.myriantics.klaxon.block.customblocks.functional.HallnoxPodBlock;
+import net.myriantics.klaxon.block.customblocks.functional.MoltenRubberBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.nether_reactor_core.NetherReactorCoreBlock;
 

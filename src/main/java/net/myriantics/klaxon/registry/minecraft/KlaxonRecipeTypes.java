@@ -22,6 +22,8 @@ import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCra
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipeSerializer;
+import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
+import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeSerializer;
 
 // recipe code structure yoinked from spectrums github
 public class KlaxonRecipeTypes {
@@ -42,6 +44,12 @@ public class KlaxonRecipeTypes {
             registerSerializer(TOOL_USAGE_RECIPE_ID, new ToolUsageRecipeSerializer());
     public static RecipeType<ToolUsageRecipe> TOOL_USAGE =
             registerRecipeType(TOOL_USAGE_RECIPE_ID);
+
+    public static final String MANUAL_ITEM_APPLICATION_RECIPE_ID = "manual_item_application";
+    public static RecipeSerializer<ManualItemApplicationRecipe> MANUAL_ITEM_APPLICATION_RECIPE_SERIALIZER =
+            registerSerializer(MANUAL_ITEM_APPLICATION_RECIPE_ID, new ManualItemApplicationRecipeSerializer());
+    public static RecipeType<ManualItemApplicationRecipe> MANUAL_ITEM_APPLICATION =
+            registerRecipeType(MANUAL_ITEM_APPLICATION_RECIPE_ID);
 
     public static final String NETHER_REACTION_RECIPE_ID = "nether_reaction";
     public static RecipeSerializer<NetherReactionRecipe> NETHER_REACTION_RECIPE_SERIALIZER =

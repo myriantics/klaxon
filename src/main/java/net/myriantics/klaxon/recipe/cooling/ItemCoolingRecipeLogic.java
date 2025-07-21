@@ -42,8 +42,6 @@ public abstract class ItemCoolingRecipeLogic {
     }
 
     public static Optional<ItemStack> getCooledStack(World world, ItemStack inputStack) {
-
-
         Optional<ItemStack> output = Optional.empty();
 
         RecipeInput input = new RecipeInput() {

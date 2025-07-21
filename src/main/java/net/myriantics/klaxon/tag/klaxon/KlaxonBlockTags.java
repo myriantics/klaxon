@@ -135,6 +135,12 @@ public class KlaxonBlockTags {
     public static final TagKey<Block> WARPED_STEM_CONVERTIBLE =
             createNetherReactionTag("warped_stem");
 
+    // manual item application tags
+    public static final TagKey<Block> NETHER_REACTOR_CORE_CONVERTIBLE =
+            createManualItemApplicationTag("nether_reactor_core");
+    public static final TagKey<Block> CRUDE_NETHER_REACTOR_CORE_CONVERTIBLE =
+            createManualItemApplicationTag("crude_nether_reactor_core");
+
     // category tags
     public static final TagKey<Block> BLAST_PROCESSORS =
             createTag("blast_processors");
@@ -155,6 +161,10 @@ public class KlaxonBlockTags {
 
     private static TagKey<Block> createNetherReactionTag(String name) {
         return createTag("nether_reaction/" + name + "_convertible");
+    }
+
+    private static TagKey<Block> createManualItemApplicationTag(String name) {
+        return createTag("manual_item_application/" + name + "_convertible");
     }
 
     private static TagKey<Block> createTag(String name) {
