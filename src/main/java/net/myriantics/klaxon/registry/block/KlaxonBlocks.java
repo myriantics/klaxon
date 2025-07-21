@@ -26,16 +26,21 @@ public abstract class KlaxonBlocks {
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
     public static final Block STEEL_PLATING_BLOCK = registerBlock("steel_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
+    public static final Block STEEL_CASING = registerBlock("steel_casing",
+            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK)));
     public static final Block STEEL_DOOR = registerBlock("steel_door",
             new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK).nonOpaque()));
     public static final Block STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
             new SteelTrapdoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_DOOR)));
+
 
     // crude steel
     public static final Block CRUDE_STEEL_BLOCK = registerBlock("crude_steel_block",
             new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).pistonBehavior(PistonBehavior.DESTROY).strength(2.5f, 3.0f)));
     public static final Block CRUDE_STEEL_PLATING_BLOCK = registerBlock("crude_steel_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK)));
+    public static final Block CRUDE_STEEL_CASING = registerBlock("crude_steel_casing",
+            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_BLOCK)));
     public static final Block CRUDE_STEEL_DOOR = registerBlock("crude_steel_door",
             new SteelDoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK).nonOpaque()));
     public static final Block CRUDE_STEEL_TRAPDOOR = registerBlock("crude_steel_trapdoor",
@@ -45,10 +50,6 @@ public abstract class KlaxonBlocks {
     // machines
     public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
             new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
-    public static final Block STEEL_CASING = registerBlock("steel_casing",
-            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK)));
-    public static final Block CRUDE_STEEL_CASING = registerBlock("crude_steel_casing",
-            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_BLOCK)));
     public static final Block NETHER_REACTOR_CORE = registerBlock("nether_reactor_core",
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_CASING).luminance((state) -> 12).nonOpaque()));
     public static final Block CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
@@ -59,7 +60,7 @@ public abstract class KlaxonBlocks {
             new HallnoxPodBlock(KlaxonSaplingGenerators.HALLNOX, AbstractBlock.Settings.copy(Blocks.SHROOMLIGHT)
                     .pistonBehavior(PistonBehavior.DESTROY))
     );
-    public static final Block POTTED_HALLNOX_POD = registerBlockWithoutItem("potted_hallnox_pod",
+    public static final Block POTTED_HALLNOX_POD = registerBlock("potted_hallnox_pod",
             Blocks.createFlowerPotBlock(HALLNOX_POD)
     );
     public static final Block HALLNOX_WART_BLOCK = registerBlock("hallnox_wart_block",
@@ -106,26 +107,26 @@ public abstract class KlaxonBlocks {
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(3.0f, 4.0f))
     );
-    public static final Block HALLNOX_SIGN = registerBlockWithoutItem("hallnox_sign",
+    public static final Block HALLNOX_SIGN = registerBlock("hallnox_sign",
             new CustomSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
             )
     );
-    public static final Block HALLNOX_WALL_SIGN = registerBlockWithoutItem("hallnox_wall_sign",
+    public static final Block HALLNOX_WALL_SIGN = registerBlock("hallnox_wall_sign",
             new CustomWallSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
                     .dropsLike(HALLNOX_SIGN)
             )
     );
-    public static final Block HALLNOX_HANGING_SIGN = registerBlockWithoutItem("hallnox_hanging_sign",
+    public static final Block HALLNOX_HANGING_SIGN = registerBlock("hallnox_hanging_sign",
             new CustomHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_HANGING_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
             )
     );
-    public static final Block HALLNOX_WALL_HANGING_SIGN = registerBlockWithoutItem("hallnox_wall_hanging_sign",
+    public static final Block HALLNOX_WALL_HANGING_SIGN = registerBlock("hallnox_wall_hanging_sign",
             new CustomWallHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_HANGING_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
@@ -190,20 +191,7 @@ public abstract class KlaxonBlocks {
                     .strength(1.5F)));
 
     private static Block registerBlock(String name, Block block) {
-        registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, KlaxonCommon.locate(name), block);
-    }
-
-    private static Block registerBlockWithoutItem(String name, Block block) {
-        return Registry.register(Registries.BLOCK, KlaxonCommon.locate(name), block);
-    }
-
-    private static Item registerBlockItem(String name, Block block) {
-        return registerBlockItem(name, new BlockItem(block, new Item.Settings()));
-    }
-
-    private static Item registerBlockItem(String name, BlockItem blockItem) {
-        return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), blockItem);
     }
 
     public static void init() {

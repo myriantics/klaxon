@@ -40,9 +40,9 @@ public abstract class KlaxonItemGroups {
             .icon(() -> new ItemStack(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR))
             .displayName(Text.translatable("itemGroup.klaxon.machines"))
             .entries(((displayContext, entries) -> {
-                entries.add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
-                entries.add(KlaxonBlocks.NETHER_REACTOR_CORE);
-                entries.add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
+                entries.add(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
+                entries.add(KlaxonItems.NETHER_REACTOR_CORE);
+                entries.add(KlaxonItems.CRUDE_NETHER_REACTOR_CORE);
             })).build();
 
     public static final ItemGroup KLAXON_MATERIALS = FabricItemGroup.builder()
@@ -50,22 +50,22 @@ public abstract class KlaxonItemGroups {
             .displayName(Text.translatable("itemGroup.klaxon.materials"))
             .entries(((displayContext, entries) -> {
                 // storage blocks
-                entries.add(KlaxonBlocks.STEEL_BLOCK);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
-                entries.add(KlaxonBlocks.RUBBER_BLOCK);
-                entries.add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
+                entries.add(KlaxonItems.STEEL_BLOCK);
+                entries.add(KlaxonItems.CRUDE_STEEL_BLOCK);
+                entries.add(KlaxonItems.RUBBER_BLOCK);
+                entries.add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
 
                 // plating storage blocks
-                entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.IRON_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.GOLD_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
+                entries.add(KlaxonItems.STEEL_PLATING_BLOCK);
+                entries.add(KlaxonItems.CRUDE_STEEL_PLATING_BLOCK);
+                entries.add(KlaxonItems.IRON_PLATING_BLOCK);
+                entries.add(KlaxonItems.GOLD_PLATING_BLOCK);
+                entries.add(KlaxonItems.COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.RUBBER_SHEET_BLOCK);
 
                 // casings and hulls
-                entries.add(KlaxonBlocks.STEEL_CASING);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_CASING);
+                entries.add(KlaxonItems.STEEL_CASING);
+                entries.add(KlaxonItems.CRUDE_STEEL_CASING);
 
                 // ingots
                 entries.add(KlaxonItems.STEEL_INGOT);
@@ -80,7 +80,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.MOLTEN_RUBBER_GLOB);
 
                 // hallnox
-                entries.add(KlaxonBlocks.HALLNOX_POD);
+                entries.add(KlaxonItems.HALLNOX_POD);
 
                 // plates
                 entries.add(KlaxonItems.IRON_PLATE);
@@ -110,54 +110,54 @@ public abstract class KlaxonItemGroups {
             .displayName(Text.translatable("itemGroup.klaxon.building_blocks"))
             .entries(((displayContext, entries) -> {
                 // storage blocks
-                entries.add(KlaxonBlocks.STEEL_BLOCK);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_BLOCK);
-                entries.add(KlaxonBlocks.RUBBER_BLOCK);
-                entries.add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
+                entries.add(KlaxonItems.STEEL_BLOCK);
+                entries.add(KlaxonItems.CRUDE_STEEL_BLOCK);
+                entries.add(KlaxonItems.RUBBER_BLOCK);
+                entries.add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
 
                 // plating blocks
-                entries.add(KlaxonBlocks.STEEL_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
-                entries.add(KlaxonBlocks.IRON_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.GOLD_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
-                entries.add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.STEEL_PLATING_BLOCK);
+                entries.add(KlaxonItems.CRUDE_STEEL_PLATING_BLOCK);
+                entries.add(KlaxonItems.RUBBER_SHEET_BLOCK);
+                entries.add(KlaxonItems.IRON_PLATING_BLOCK);
+                entries.add(KlaxonItems.GOLD_PLATING_BLOCK);
+                entries.add(KlaxonItems.COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.EXPOSED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.WEATHERED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.OXIDIZED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.WAXED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
+                entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
 
                 // casings
-                entries.add(KlaxonBlocks.STEEL_CASING);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_CASING);
+                entries.add(KlaxonItems.STEEL_CASING);
+                entries.add(KlaxonItems.CRUDE_STEEL_CASING);
 
                 // hallnox
-                entries.add(KlaxonBlocks.HALLNOX_POD);
-                entries.add(KlaxonBlocks.HALLNOX_STEM);
-                entries.add(KlaxonBlocks.STRIPPED_HALLNOX_STEM);
-                entries.add(KlaxonBlocks.HALLNOX_HYPHAE);
-                entries.add(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
-                entries.add(KlaxonBlocks.HALLNOX_PLANKS);
-                entries.add(KlaxonBlocks.HALLNOX_STAIRS);
-                entries.add(KlaxonBlocks.HALLNOX_SLAB);
+                entries.add(KlaxonItems.HALLNOX_POD);
+                entries.add(KlaxonItems.HALLNOX_STEM);
+                entries.add(KlaxonItems.STRIPPED_HALLNOX_STEM);
+                entries.add(KlaxonItems.HALLNOX_HYPHAE);
+                entries.add(KlaxonItems.STRIPPED_HALLNOX_HYPHAE);
+                entries.add(KlaxonItems.HALLNOX_PLANKS);
+                entries.add(KlaxonItems.HALLNOX_STAIRS);
+                entries.add(KlaxonItems.HALLNOX_SLAB);
 
-                entries.add(KlaxonBlocks.HALLNOX_BUTTON);
-                entries.add(KlaxonBlocks.HALLNOX_PRESSURE_PLATE);
-                entries.add(KlaxonBlocks.HALLNOX_FENCE);
-                entries.add(KlaxonBlocks.HALLNOX_FENCE_GATE);
-                entries.add(KlaxonBlocks.HALLNOX_DOOR);
-                entries.add(KlaxonBlocks.HALLNOX_TRAPDOOR);
-                entries.add(KlaxonBlockItems.HALLNOX_SIGN);
-                entries.add(KlaxonBlockItems.HALLNOX_HANGING_SIGN);
+                entries.add(KlaxonItems.HALLNOX_BUTTON);
+                entries.add(KlaxonItems.HALLNOX_PRESSURE_PLATE);
+                entries.add(KlaxonItems.HALLNOX_FENCE);
+                entries.add(KlaxonItems.HALLNOX_FENCE_GATE);
+                entries.add(KlaxonItems.HALLNOX_DOOR);
+                entries.add(KlaxonItems.HALLNOX_TRAPDOOR);
+                entries.add(KlaxonItems.HALLNOX_SIGN);
+                entries.add(KlaxonItems.HALLNOX_HANGING_SIGN);
 
                 // misc
-                entries.add(KlaxonBlocks.STEEL_DOOR);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_DOOR);
-                entries.add(KlaxonBlocks.STEEL_TRAPDOOR);
-                entries.add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
+                entries.add(KlaxonItems.STEEL_DOOR);
+                entries.add(KlaxonItems.CRUDE_STEEL_DOOR);
+                entries.add(KlaxonItems.STEEL_TRAPDOOR);
+                entries.add(KlaxonItems.CRUDE_STEEL_TRAPDOOR);
             })).build();
 
 
