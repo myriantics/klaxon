@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "klaxon:block/hallnox_slab"
+    },
+    "type=double": {
+      "model": "klaxon:block/hallnox_planks"
+    },
+    "type=top": {
+      "model": "klaxon:block/hallnox_slab_top"
+    }
+  }
+}

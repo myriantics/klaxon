@@ -10,6 +10,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBlockStateProperties;
+import net.myriantics.klaxon.registry.minecraft.KlaxonBlockFamilies;
 import net.myriantics.klaxon.registry.minecraft.KlaxonBlocks;
 import net.myriantics.klaxon.registry.minecraft.KlaxonItems;
 
@@ -32,6 +33,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
         generator.registerSimpleCubeAll(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
         generator.registerSimpleCubeAll(KlaxonBlocks.STEEL_CASING);
         generator.registerSimpleCubeAll(KlaxonBlocks.CRUDE_STEEL_CASING);
+        generator.registerSimpleCubeAll(KlaxonBlocks.HALLNOX_WART_BLOCK);
     }
 
     private void registerMiscBlockStateModels(BlockStateModelGenerator generator) {
@@ -39,6 +41,8 @@ public class KlaxonModelProvider extends FabricModelProvider {
         generator.registerDoor(KlaxonBlocks.STEEL_DOOR);
         generator.registerOrientableTrapdoor(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
         generator.registerOrientableTrapdoor(KlaxonBlocks.STEEL_TRAPDOOR);
+        generator.registerHangingSign(KlaxonBlocks.STRIPPED_HALLNOX_STEM, KlaxonBlocks.HALLNOX_HANGING_SIGN, KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
+        generator.registerCubeAllModelTexturePool(KlaxonBlockFamilies.HALLNOX.getBaseBlock()).family(KlaxonBlockFamilies.HALLNOX);
 
         registerPlatingBlock(generator, KlaxonBlocks.STEEL_PLATING_BLOCK);
         registerPlatingBlock(generator, KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);

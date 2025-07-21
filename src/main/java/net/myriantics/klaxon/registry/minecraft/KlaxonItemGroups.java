@@ -135,6 +135,20 @@ public class KlaxonItemGroups {
 
                 // hallnox
                 entries.add(KlaxonBlocks.HALLNOX_POD);
+                entries.add(KlaxonBlocks.HALLNOX_STEM);
+                entries.add(KlaxonBlocks.STRIPPED_HALLNOX_STEM);
+                entries.add(KlaxonBlocks.HALLNOX_HYPHAE);
+                entries.add(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
+                entries.add(KlaxonBlocks.HALLNOX_PLANKS);
+                entries.add(KlaxonBlocks.HALLNOX_STAIRS);
+                entries.add(KlaxonBlocks.HALLNOX_SLAB);
+
+                entries.add(KlaxonBlocks.HALLNOX_BUTTON);
+                entries.add(KlaxonBlocks.HALLNOX_PRESSURE_PLATE);
+                entries.add(KlaxonBlocks.HALLNOX_FENCE);
+                entries.add(KlaxonBlocks.HALLNOX_FENCE_GATE);
+                entries.add(KlaxonBlocks.HALLNOX_DOOR);
+                entries.add(KlaxonBlocks.HALLNOX_TRAPDOOR);
 
                 // misc
                 entries.add(KlaxonBlocks.STEEL_DOOR);

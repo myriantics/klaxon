@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_right_open",
+  "textures": {
+    "bottom": "klaxon:block/hallnox_door_bottom",
+    "top": "klaxon:block/hallnox_door_top"
+  }
+}

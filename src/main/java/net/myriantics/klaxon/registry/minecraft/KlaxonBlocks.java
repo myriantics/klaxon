@@ -51,7 +51,91 @@ public class KlaxonBlocks {
 
     // hallnox
     public static final Block HALLNOX_POD = registerBlock("hallnox_pod",
-            new HallnoxPodBlock(KlaxonSaplingGenerators.HALLNOX, AbstractBlock.Settings.copy(Blocks.SHROOMLIGHT)));
+            new HallnoxPodBlock(KlaxonSaplingGenerators.HALLNOX, AbstractBlock.Settings.copy(Blocks.SHROOMLIGHT)
+                    .pistonBehavior(PistonBehavior.DESTROY))
+    );
+    public static final Block POTTED_HALLNOX_POD = registerBlockWithoutItem("potted_hallnox_pod",
+            Blocks.createFlowerPotBlock(HALLNOX_POD)
+    );
+    public static final Block HALLNOX_WART_BLOCK = registerBlock("hallnox_wart_block",
+            new Block(AbstractBlock.Settings.copy(Blocks.WARPED_WART_BLOCK).mapColor(MapColor.TERRACOTTA_GRAY).strength(1.0f, 2.0f))
+    );
+    public static final Block HALLNOX_STEM = registerBlock("hallnox_stem",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WARPED_STEM).mapColor(MapColor.TERRACOTTA_GRAY).strength(3.0f, 4.0f))
+    );
+    public static final Block STRIPPED_HALLNOX_STEM = registerBlock("stripped_hallnox_stem",
+            new PillarBlock(AbstractBlock.Settings.copy(HALLNOX_STEM))
+    );
+    public static final Block HALLNOX_HYPHAE = registerBlock("hallnox_hyphae",
+            new PillarBlock(AbstractBlock.Settings.copy(HALLNOX_STEM))
+    );
+    public static final Block STRIPPED_HALLNOX_HYPHAE = registerBlock("stripped_hallnox_hyphae",
+            new PillarBlock(AbstractBlock.Settings.copy(HALLNOX_STEM))
+    );
+    public static final Block HALLNOX_PLANKS = registerBlock("hallnox_planks",
+            new Block(AbstractBlock.Settings.copy(Blocks.WARPED_PLANKS).mapColor(MapColor.TERRACOTTA_GRAY))
+    );
+    public static final Block HALLNOX_STAIRS = registerBlock("hallnox_stairs",
+            new StairsBlock(HALLNOX_PLANKS.getDefaultState(), AbstractBlock.Settings.copy(HALLNOX_PLANKS)));
+    public static final Block HALLNOX_SLAB = registerBlock("hallnox_slab",
+            new SlabBlock(AbstractBlock.Settings.copy(HALLNOX_PLANKS))
+    );
+    public static final Block HALLNOX_PRESSURE_PLATE = registerBlock("hallnox_pressure_plate",
+            new PressurePlateBlock(KlaxonBlockSetTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_PRESSURE_PLATE)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(1.0f))
+    );
+    public static final Block HALLNOX_BUTTON = registerBlock("hallnox_button",
+            new ButtonBlock(KlaxonBlockSetTypes.HALLNOX, 40, AbstractBlock.Settings.copy(Blocks.WARPED_BUTTON)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(1.0f))
+    );
+    public static final Block HALLNOX_TRAPDOOR = registerBlock("hallnox_trapdoor",
+            new TrapdoorBlock(KlaxonBlockSetTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_TRAPDOOR)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(3.0f, 4.0f))
+    );
+    public static final Block HALLNOX_DOOR = registerBlock("hallnox_door",
+            new DoorBlock(KlaxonBlockSetTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_DOOR)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(3.0f, 4.0f))
+    );
+    public static final Block HALLNOX_SIGN = registerBlock("hallnox_sign",
+            new SignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_SIGN)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(2.0f, 3.0f)
+            )
+    );
+    public static final Block HALLNOX_WALL_SIGN = registerBlock("hallnox_wall_sign",
+            new WallSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_SIGN)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(2.0f, 3.0f)
+                    .dropsLike(HALLNOX_SIGN)
+            )
+    );
+    public static final Block HALLNOX_HANGING_SIGN = registerBlock("hallnox_hanging_sign",
+            new HangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_HANGING_SIGN)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(2.0f, 3.0f)
+            )
+    );
+    public static final Block HALLNOX_WALL_HANGING_SIGN = registerBlock("hallnox_wall_hanging_sign",
+            new WallHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_HANGING_SIGN)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(2.0f, 3.0f)
+                    .dropsLike(HALLNOX_HANGING_SIGN))
+    );
+    public static final Block HALLNOX_FENCE = registerBlock("hallnox_fence",
+            new FenceBlock(AbstractBlock.Settings.copy(Blocks.WARPED_FENCE)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(3.0f, 4.0f))
+    );
+    public static final Block HALLNOX_FENCE_GATE = registerBlock("hallnox_fence_gate",
+            new FenceGateBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_FENCE)
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .strength(3.0f, 4.0f))
+    );
+
 
     // iron
     public static final Block IRON_PLATING_BLOCK = registerBlock("iron_plating_block",
@@ -101,6 +185,10 @@ public class KlaxonBlocks {
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
+        return Registry.register(Registries.BLOCK, KlaxonCommon.locate(name), block);
+    }
+
+    private static Block registerBlockWithoutItem(String name, Block block) {
         return Registry.register(Registries.BLOCK, KlaxonCommon.locate(name), block);
     }
 
