@@ -157,8 +157,8 @@ public abstract class KlaxonItemGroups {
 
                 // misc
                 entries.add(KlaxonItems.STEEL_DOOR);
-                entries.add(KlaxonItems.CRUDE_STEEL_DOOR);
                 entries.add(KlaxonItems.STEEL_TRAPDOOR);
+                entries.add(KlaxonItems.CRUDE_STEEL_DOOR);
                 entries.add(KlaxonItems.CRUDE_STEEL_TRAPDOOR);
             })).build();
 
