@@ -2,6 +2,7 @@ package net.myriantics.klaxon.mixin.jade;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.item.ItemStack;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.jade.KlaxonJadePlugin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -19,6 +20,12 @@ public abstract class ShearsToolHandlerMixin {
             remap = false
     )
     private static List<ItemStack> klaxon$cableShearsOverride(List<ItemStack> original) {
-        return KlaxonJadePlugin.appendCableShears(original);
+        try {
+            original = KlaxonJadePlugin.appendCableShears(original);
+        } catch (Exception e) {
+            KlaxonCommon.LOGGER.error(e.getMessage());
+        }
+
+        return original;
     }
 }

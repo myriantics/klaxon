@@ -1,6 +1,8 @@
 package net.myriantics.klaxon.compat.jade;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.compat.jade.providers.DeepslateBlastProcessorProvider;
@@ -30,23 +32,11 @@ public class KlaxonJadePlugin implements IWailaPlugin {
                 )
         ));
         HarvestToolProvider.registerHandler(SimpleToolHandler.create(
-                KlaxonCommon.locate("cleaver"),
-                List.of(
-                        KlaxonItems.STEEL_CLEAVER
-                )
-        ));
-        HarvestToolProvider.registerHandler(SimpleToolHandler.create(
-                KlaxonCommon.locate("wrenche"),
+                KlaxonCommon.locate("wrench"),
                 List.of(
                         KlaxonItems.STEEL_WRENCH
                 )
         ));
-        /*HarvestToolProvider.registerHandler(SimpleToolHandler.create(
-                JadeIds.JADE("shears"),
-                List.of(
-                        KlaxonItems.STEEL_CABLE_SHEARS
-                )
-        ));*/
 
         registration.registerBlockComponent(DeepslateBlastProcessorProvider.INSTANCE, DeepslateBlastProcessorBlock.class);
 
@@ -57,6 +47,13 @@ public class KlaxonJadePlugin implements IWailaPlugin {
     public static List<ItemStack> appendCableShears(List<ItemStack> original) {
         List<ItemStack> appendedList = new ArrayList<>(original);
         appendedList.add(KlaxonItems.STEEL_CABLE_SHEARS.getDefaultStack());
+        return List.copyOf(appendedList);
+    }
+
+    // called in HarvestToolProviderMixin
+    public static List<Item> appendCleaver(List<Item> original) {
+        List<Item> appendedList = new ArrayList<>(original);
+        appendedList.add(KlaxonItems.STEEL_CLEAVER);
         return List.copyOf(appendedList);
     }
 }

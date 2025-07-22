@@ -34,13 +34,14 @@
     "cable_shears_because_no_tag.SnowGolemEntityMixin",
     "cable_shears_because_no_tag.TripwireBlockMixin",
     "cable_shears_because_no_tag.WolfEntityMixin",
+    "jade.HarvestToolProviderMixin",
     "jade.ShearsToolHandlerMixin",
     "manual_item_application.DispenserBlockMixin",
     "manual_item_application.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
-    "ClientPlayerInteractionManagerMixin",
     "BipedEntityModelMixin",
+    "ClientPlayerInteractionManagerMixin",
     "HeldItemRendererMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
