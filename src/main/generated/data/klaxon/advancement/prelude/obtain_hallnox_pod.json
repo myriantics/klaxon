@@ -1,0 +1,33 @@
+{
+  "parent": "klaxon:prelude/root",
+  "criteria": {
+    "obtain_hallnox_pod": {
+      "conditions": {
+        "items": [
+          {
+            "items": "klaxon:hallnox_pod"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.prelude.obtain_hallnox_pod.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:hallnox_pod"
+    },
+    "title": {
+      "translate": "advancements.klaxon.prelude.obtain_hallnox_pod.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_hallnox_pod"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

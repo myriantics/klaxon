@@ -35,6 +35,8 @@ public class KlaxonPreludeAdvancementProvider extends KlaxonAdvancementSubProvid
 
     private void generateAdvancements(AdvancementEntry root) {
         AdvancementEntry watchBlastProcessorCraft = addTask(root, "watch_blast_processor_craft", KlaxonItems.FRACTURED_RAW_IRON, BlockActivationCriterion.Conditions.create(KlaxonBlockTags.BLAST_PROCESSORS));
+        AdvancementEntry obtainHallnoxPod = addTask(root, "obtain_hallnox_pod", KlaxonItems.HALLNOX_POD, InventoryChangedCriterion.Conditions.items(KlaxonItems.HALLNOX_POD));
+        AdvancementEntry watchNetherReactorCoreActivate = addTask(obtainHallnoxPod, "watch_nether_reactor_core_activate", KlaxonItems.NETHER_REACTOR_CORE, BlockActivationCriterion.Conditions.create(KlaxonBlockTags.NETHER_REACTOR_CORES));
         AdvancementEntry hammerCraftMetalPlate = addTask(watchBlastProcessorCraft, "use_hammer_to_make_metal_plate", KlaxonItems.CRUDE_STEEL_PLATE, ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.fromTag(KlaxonConventionalItemTags.PLATES)));
         AdvancementEntry obtainSteelCleaver = addTask(hammerCraftMetalPlate, "obtain_steel_cleaver", KlaxonItems.STEEL_CLEAVER, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_CLEAVER));
         AdvancementEntry obtainSteelWrench = addTask(hammerCraftMetalPlate, "obtain_steel_wrench", KlaxonItems.STEEL_WRENCH, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_WRENCH));

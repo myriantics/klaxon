@@ -1,0 +1,29 @@
+{
+  "parent": "klaxon:prelude/obtain_hallnox_pod",
+  "criteria": {
+    "watch_nether_reactor_core_activate": {
+      "conditions": {
+        "block": "#klaxon:nether_reactor_cores"
+      },
+      "trigger": "klaxon:block_activation"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.prelude.watch_nether_reactor_core_activate.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:nether_reactor_core"
+    },
+    "title": {
+      "translate": "advancements.klaxon.prelude.watch_nether_reactor_core_activate.title"
+    }
+  },
+  "requirements": [
+    [
+      "watch_nether_reactor_core_activate"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
