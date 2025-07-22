@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "klaxon:block/stripped_hallnox_hyphae",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "klaxon:block/stripped_hallnox_hyphae"
+    },
+    "axis=z": {
+      "model": "klaxon:block/stripped_hallnox_hyphae",
+      "x": 90
+    }
+  }
+}

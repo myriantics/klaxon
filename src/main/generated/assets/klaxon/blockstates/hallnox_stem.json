@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "klaxon:block/hallnox_stem",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "klaxon:block/hallnox_stem"
+    },
+    "axis=z": {
+      "model": "klaxon:block/hallnox_stem",
+      "x": 90
+    }
+  }
+}

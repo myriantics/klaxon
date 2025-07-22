@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "klaxon:block/hallnox_stem",
+    "side": "klaxon:block/hallnox_stem"
+  }
+}

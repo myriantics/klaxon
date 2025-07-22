@@ -129,7 +129,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
     private void registerHallnoxPod(BlockStateModelGenerator generator) {
         // hallnox pod uses 2d item texture
         generator.registerItemModel(KlaxonItems.HALLNOX_POD);
-        Identifier modelId = KlaxonCommon.locate("block/hallnox_pod");
+        Identifier modelId = ModelIds.getBlockModelId(KlaxonBlocks.HALLNOX_POD);
         generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(KlaxonBlocks.HALLNOX_POD,
                         BlockStateVariant.create().put(VariantSettings.MODEL, modelId)
                 )
