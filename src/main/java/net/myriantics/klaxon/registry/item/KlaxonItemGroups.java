@@ -43,6 +43,8 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
                 entries.add(KlaxonItems.NETHER_REACTOR_CORE);
                 entries.add(KlaxonItems.CRUDE_NETHER_REACTOR_CORE);
+                entries.add(KlaxonItems.STEEL_CASING);
+                entries.add(KlaxonItems.CRUDE_STEEL_CASING);
             })).build();
 
     public static final ItemGroup KLAXON_MATERIALS = FabricItemGroup.builder()
@@ -135,21 +137,20 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.CRUDE_STEEL_CASING);
 
                 // hallnox
-                entries.add(KlaxonItems.HALLNOX_POD);
                 entries.add(KlaxonItems.HALLNOX_STEM);
-                entries.add(KlaxonItems.STRIPPED_HALLNOX_STEM);
                 entries.add(KlaxonItems.HALLNOX_HYPHAE);
+                entries.add(KlaxonItems.STRIPPED_HALLNOX_STEM);
                 entries.add(KlaxonItems.STRIPPED_HALLNOX_HYPHAE);
                 entries.add(KlaxonItems.HALLNOX_PLANKS);
                 entries.add(KlaxonItems.HALLNOX_STAIRS);
                 entries.add(KlaxonItems.HALLNOX_SLAB);
-
-                entries.add(KlaxonItems.HALLNOX_BUTTON);
-                entries.add(KlaxonItems.HALLNOX_PRESSURE_PLATE);
                 entries.add(KlaxonItems.HALLNOX_FENCE);
                 entries.add(KlaxonItems.HALLNOX_FENCE_GATE);
                 entries.add(KlaxonItems.HALLNOX_DOOR);
                 entries.add(KlaxonItems.HALLNOX_TRAPDOOR);
+                entries.add(KlaxonItems.HALLNOX_PRESSURE_PLATE);
+                entries.add(KlaxonItems.HALLNOX_BUTTON);
+                entries.add(KlaxonItems.HALLNOX_POD);
                 entries.add(KlaxonItems.HALLNOX_SIGN);
                 entries.add(KlaxonItems.HALLNOX_HANGING_SIGN);
 
