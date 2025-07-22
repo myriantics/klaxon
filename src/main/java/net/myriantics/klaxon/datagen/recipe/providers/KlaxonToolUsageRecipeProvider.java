@@ -44,25 +44,25 @@ public class KlaxonToolUsageRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     private void buildWirecuttingRecipes() {
-        addWirecuttingRecipe(Ingredient.ofItems(Blocks.IRON_BARS), new ItemStack(Blocks.CHAIN, 2));
+        addWirecuttingRecipe(Ingredient.ofItems(Items.IRON_BARS), new ItemStack(Items.CHAIN, 2));
     }
 
     private void buildShearingRecipes() {
-        addShearingRecipe(Ingredient.ofItems(Blocks.WHITE_WOOL), new ItemStack(Blocks.WHITE_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.ORANGE_WOOL), new ItemStack(Blocks.ORANGE_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.MAGENTA_WOOL), new ItemStack(Blocks.MAGENTA_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.LIGHT_BLUE_WOOL), new ItemStack(Blocks.LIGHT_BLUE_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.YELLOW_WOOL), new ItemStack(Blocks.YELLOW_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.LIME_WOOL), new ItemStack(Blocks.LIME_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.PINK_WOOL), new ItemStack(Blocks.PINK_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.GRAY_WOOL), new ItemStack(Blocks.GRAY_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.LIGHT_GRAY_WOOL), new ItemStack(Blocks.LIGHT_GRAY_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.CYAN_WOOL), new ItemStack(Blocks.CYAN_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.PURPLE_WOOL), new ItemStack(Blocks.PURPLE_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.BLUE_WOOL), new ItemStack(Blocks.BLUE_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.BROWN_WOOL), new ItemStack(Blocks.BROWN_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.GREEN_WOOL), new ItemStack(Blocks.GREEN_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.RED_WOOL), new ItemStack(Blocks.RED_CARPET, 6));
-        addShearingRecipe(Ingredient.ofItems(Blocks.BLACK_WOOL), new ItemStack(Blocks.BLACK_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.WHITE_WOOL), new ItemStack(Items.WHITE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.ORANGE_WOOL), new ItemStack(Items.ORANGE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.MAGENTA_WOOL), new ItemStack(Items.MAGENTA_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.LIGHT_BLUE_WOOL), new ItemStack(Items.LIGHT_BLUE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.YELLOW_WOOL), new ItemStack(Items.YELLOW_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.LIME_WOOL), new ItemStack(Items.LIME_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.PINK_WOOL), new ItemStack(Items.PINK_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.GRAY_WOOL), new ItemStack(Items.GRAY_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.LIGHT_GRAY_WOOL), new ItemStack(Items.LIGHT_GRAY_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.CYAN_WOOL), new ItemStack(Items.CYAN_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.PURPLE_WOOL), new ItemStack(Items.PURPLE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.BLUE_WOOL), new ItemStack(Items.BLUE_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.BROWN_WOOL), new ItemStack(Items.BROWN_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.GREEN_WOOL), new ItemStack(Items.GREEN_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.RED_WOOL), new ItemStack(Items.RED_CARPET, 6));
+        addShearingRecipe(Ingredient.ofItems(Items.BLACK_WOOL), new ItemStack(Items.BLACK_CARPET, 6));
     }
 }

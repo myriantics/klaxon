@@ -9,6 +9,7 @@ import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
+// KlaxonItems inherits this so you can access all the item fields from KlaxonItems.
 public abstract class KlaxonBlockItems {
 
     // steel

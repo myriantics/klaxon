@@ -37,7 +37,7 @@ public abstract class KlaxonItemGroups {
             })).build();
 
     public static final ItemGroup KLAXON_MACHINES = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR))
+            .icon(() -> new ItemStack(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR))
             .displayName(Text.translatable("itemGroup.klaxon.machines"))
             .entries(((displayContext, entries) -> {
                 entries.add(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
@@ -108,7 +108,7 @@ public abstract class KlaxonItemGroups {
             })).build();
 
     public static final ItemGroup KLAXON_BUILDING_BLOCKS = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(KlaxonBlocks.STEEL_BLOCK))
+            .icon(() -> new ItemStack(KlaxonItems.STEEL_BLOCK))
             .displayName(Text.translatable("itemGroup.klaxon.building_blocks"))
             .entries(((displayContext, entries) -> {
                 // storage blocks

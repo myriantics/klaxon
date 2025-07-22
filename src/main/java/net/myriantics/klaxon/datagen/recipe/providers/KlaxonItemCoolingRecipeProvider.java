@@ -20,6 +20,6 @@ public class KlaxonItemCoolingRecipeProvider extends KlaxonRecipeSubProvider {
     private void buildItemCoolingRecipes() {
         addItemCoolingRecipe(Ingredient.ofItems(KlaxonItems.MOLTEN_RUBBER_GLOB), KlaxonItems.RUBBER_GLOB);
         addItemCoolingRecipe(Ingredient.ofItems(KlaxonItems.MOLTEN_RUBBER_SHEET), KlaxonItems.RUBBER_SHEET);
-        addItemCoolingRecipe(Ingredient.ofItems(KlaxonBlocks.MOLTEN_RUBBER_BLOCK), KlaxonBlocks.RUBBER_BLOCK);
+        addItemCoolingRecipe(Ingredient.ofItems(KlaxonItems.MOLTEN_RUBBER_BLOCK), KlaxonItems.RUBBER_BLOCK);
     }
 }

@@ -18,4 +18,17 @@ public abstract class KlaxonBlockFamilies {
             .unlockCriterionName("has_planks")
             .build();
 
+    public static final BlockFamily STEEL = BlockFamilies.register(KlaxonBlocks.STEEL_BLOCK)
+            .door(KlaxonBlocks.STEEL_DOOR)
+            .trapdoor(KlaxonBlocks.STEEL_TRAPDOOR)
+            .group("metal")
+            .unlockCriterionName("has_block")
+            .build();
+
+    public static final BlockFamily CRUDE_STEEL = BlockFamilies.register(KlaxonBlocks.CRUDE_STEEL_BLOCK)
+            .door(KlaxonBlocks.CRUDE_STEEL_DOOR)
+            .trapdoor(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
+            .group("metal")
+            .unlockCriterionName("has_block")
+            .build();
 }

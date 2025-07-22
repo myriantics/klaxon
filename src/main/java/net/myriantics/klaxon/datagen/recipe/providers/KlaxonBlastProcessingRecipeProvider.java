@@ -27,12 +27,12 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
 
     private void buildBlastProcessingRecipes() {
         // brick cracking
-        addBlastProcessingRecipe(Ingredient.ofItems(Blocks.DEEPSLATE_BRICKS), 0.4, 0.9, new ItemStack(Blocks.CRACKED_DEEPSLATE_BRICKS));
-        addBlastProcessingRecipe(Ingredient.ofItems(Blocks.DEEPSLATE_TILES), 0.4, 0.9, new ItemStack(Blocks.CRACKED_DEEPSLATE_TILES));
-        addBlastProcessingRecipe(Ingredient.ofItems(Blocks.NETHER_BRICKS), 0.3, 0.8, new ItemStack(Blocks.CRACKED_NETHER_BRICKS));
-        addBlastProcessingRecipe(Ingredient.ofItems(Blocks.POLISHED_BLACKSTONE_BRICKS), 0.3, 0.8, new ItemStack(Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS));
-        addBlastProcessingRecipe(Ingredient.ofItems(Blocks.STONE_BRICKS), 0.3, 0.8, new ItemStack(Blocks.CRACKED_STONE_BRICKS));
-        addBlastProcessingRecipe(Ingredient.ofItems(Blocks.INFESTED_STONE_BRICKS), 0.1, 0.3, new ItemStack(Blocks.INFESTED_CRACKED_STONE_BRICKS));
+        addBlastProcessingRecipe(Ingredient.ofItems(Items.DEEPSLATE_BRICKS), 0.4, 0.9, new ItemStack(Items.CRACKED_DEEPSLATE_BRICKS));
+        addBlastProcessingRecipe(Ingredient.ofItems(Items.DEEPSLATE_TILES), 0.4, 0.9, new ItemStack(Items.CRACKED_DEEPSLATE_TILES));
+        addBlastProcessingRecipe(Ingredient.ofItems(Items.NETHER_BRICKS), 0.3, 0.8, new ItemStack(Items.CRACKED_NETHER_BRICKS));
+        addBlastProcessingRecipe(Ingredient.ofItems(Items.POLISHED_BLACKSTONE_BRICKS), 0.3, 0.8, new ItemStack(Items.CRACKED_POLISHED_BLACKSTONE_BRICKS));
+        addBlastProcessingRecipe(Ingredient.ofItems(Items.STONE_BRICKS), 0.3, 0.8, new ItemStack(Items.CRACKED_STONE_BRICKS));
+        addBlastProcessingRecipe(Ingredient.ofItems(Items.INFESTED_STONE_BRICKS), 0.1, 0.3, new ItemStack(Items.INFESTED_CRACKED_STONE_BRICKS));
 
         // misc
         addBlastProcessingRecipe(Ingredient.ofItems(Items.COAL), 0.3, 1.4, new ItemStack(KlaxonItems.FRACTURED_COAL));

@@ -32,7 +32,7 @@ public class KlaxonItemExplosionPowerRecipeProvider extends KlaxonRecipeSubProvi
         addItemExplosionPowerRecipeWithBehavior(NamedIngredient.ofItems(Items.END_CRYSTAL), KlaxonBlastProcessorCatalystBehaviors.END_CRYSTAL_ID, 6.0, false, false);
         addItemExplosionPowerRecipeWithBehavior(NamedIngredient.ofItems(Items.TNT_MINECART), KlaxonBlastProcessorCatalystBehaviors.TNT_MINECART_ID, 5.0, false, false);
         addItemExplosionPowerRecipeWithBehavior(NamedIngredient.ofItems(Items.GLOWSTONE_DUST), KlaxonBlastProcessorCatalystBehaviors.GLOWSTONE_ID, 1.3, true, false);
-        addItemExplosionPowerRecipeWithBehavior(NamedIngredient.ofItems(Blocks.GLOWSTONE), KlaxonBlastProcessorCatalystBehaviors.GLOWSTONE_ID, 5.0, true, false);
+        addItemExplosionPowerRecipeWithBehavior(NamedIngredient.ofItems(Items.GLOWSTONE), KlaxonBlastProcessorCatalystBehaviors.GLOWSTONE_ID, 5.0, true, false);
         addItemExplosionPowerRecipeWithBehavior(NamedIngredient.ofItems(Items.DRAGON_BREATH), KlaxonBlastProcessorCatalystBehaviors.DRAGONS_BREATH_ID, 2.5, false, false);
         addItemExplosionPowerRecipeWithBehavior(NamedIngredient.ofItems(Items.WIND_CHARGE), KlaxonBlastProcessorCatalystBehaviors.WIND_CHARGE_ID, 0.0, false, false);
         addItemExplosionPowerRecipeWithBehavior(NamedIngredient.fromTag(KlaxonItemTags.BEDLIKE_EXPLODABLES), KlaxonBlastProcessorCatalystBehaviors.BEDLIKE_EXPLODABLE_ID, 5.0, true, false);
