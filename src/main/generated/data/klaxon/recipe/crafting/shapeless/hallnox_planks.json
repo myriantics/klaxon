@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "hallnox_planks",
+  "ingredients": [
+    {
+      "tag": "klaxon:hallnox_stems"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "klaxon:hallnox_planks"
+  }
+}

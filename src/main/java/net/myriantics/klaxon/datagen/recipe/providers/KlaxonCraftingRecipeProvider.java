@@ -32,6 +32,113 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         buildCompressionCraftingRecipes();
         buildDecorationCraftingRecipes();
         buildRedstoneCraftingRecipes();
+        buildWoodCraftingRecipes();
+    }
+
+    private void buildWoodCraftingRecipes() {
+        add2x2UnpackingRecipe(Ingredient.fromTag(KlaxonItemTags.HALLNOX_STEMS), KlaxonItems.HALLNOX_PLANKS, CraftingRecipeCategory.BUILDING, null);
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS)),
+                new String[]{
+                        "P  ",
+                        "PP ",
+                        "PPP"
+                },
+                new ItemStack(KlaxonItems.HALLNOX_STAIRS, 4),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS)),
+                new String[]{
+                        "PPP"
+                },
+                new ItemStack(KlaxonItems.HALLNOX_SLAB, 6),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS)),
+                new String[]{
+                        "PP"
+                },
+                new ItemStack(KlaxonItems.HALLNOX_PRESSURE_PLATE),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS)),
+                new String[]{
+                        "PP",
+                        "PP",
+                        "PP"
+                },
+                new ItemStack(KlaxonItems.HALLNOX_DOOR, 3),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS)),
+                new String[]{
+                        "PPP",
+                        "PPP",
+                },
+                new ItemStack(KlaxonItems.HALLNOX_TRAPDOOR, 2),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS),
+                        'S', Ingredient.ofItems(Items.STICK)),
+                new String[]{
+                        "PSP",
+                        "PSP",
+                },
+                new ItemStack(KlaxonItems.HALLNOX_FENCE, 3),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS),
+                        'S', Ingredient.ofItems(Items.STICK)),
+                new String[]{
+                        "SPS",
+                        "SPS",
+                },
+                new ItemStack(KlaxonItems.HALLNOX_FENCE_GATE),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS),
+                        'S', Ingredient.ofItems(Items.STICK)),
+                new String[]{
+                        "PPP",
+                        "PPP",
+                        " S "
+                },
+                new ItemStack(KlaxonItems.HALLNOX_SIGN),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'S', Ingredient.ofItems(KlaxonItems.STRIPPED_HALLNOX_STEM),
+                        'C', Ingredient.ofItems(Items.CHAIN)),
+                new String[]{
+                        "C C",
+                        "SSS",
+                        "SSS"
+                },
+                new ItemStack(KlaxonItems.HALLNOX_HANGING_SIGN, 6),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapelessCraftingRecipe(
+                DefaultedList.copyOf(Ingredient.EMPTY, Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS)),
+                new ItemStack(KlaxonItems.HALLNOX_BUTTON),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
     }
 
     private void buildMachineCraftingRecipes() {
@@ -216,6 +323,58 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         " R "
                 },
                 new ItemStack(Items.OXIDIZED_COPPER_BULB, 4),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.WAXED_COPPER_PLATING_BLOCK),
+                        'B', Ingredient.ofItems(Items.BLAZE_ROD),
+                        'R', Ingredient.ofItems(Items.REDSTONE)),
+                new String[]{
+                        " P ",
+                        "PBP",
+                        " R "
+                },
+                new ItemStack(Items.WAXED_COPPER_BULB, 4),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK),
+                        'B', Ingredient.ofItems(Items.BLAZE_ROD),
+                        'R', Ingredient.ofItems(Items.REDSTONE)),
+                new String[]{
+                        " P ",
+                        "PBP",
+                        " R "
+                },
+                new ItemStack(Items.WAXED_EXPOSED_COPPER_BULB, 4),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK),
+                        'B', Ingredient.ofItems(Items.BLAZE_ROD),
+                        'R', Ingredient.ofItems(Items.REDSTONE)),
+                new String[]{
+                        " P ",
+                        "PBP",
+                        " R "
+                },
+                new ItemStack(Items.WAXED_WEATHERED_COPPER_BULB, 4),
+                CraftingRecipeCategory.REDSTONE,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.ofItems(KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK),
+                        'B', Ingredient.ofItems(Items.BLAZE_ROD),
+                        'R', Ingredient.ofItems(Items.REDSTONE)),
+                new String[]{
+                        " P ",
+                        "PBP",
+                        " R "
+                },
+                new ItemStack(Items.WAXED_OXIDIZED_COPPER_BULB, 4),
                 CraftingRecipeCategory.REDSTONE,
                 null
         );

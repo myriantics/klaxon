@@ -67,6 +67,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonEventListeners.init();
 		KlaxonDispenserBehaviors.init();
 		KlaxonStrippedBlocksRegistry.init();
+		KlaxonCompostableRegistry.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "hallnox_button",
+  "ingredients": [
+    {
+      "item": "klaxon:hallnox_planks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:hallnox_button"
+  }
+}

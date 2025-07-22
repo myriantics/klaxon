@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "hallnox_hanging_sign",
+  "key": {
+    "C": {
+      "item": "minecraft:chain"
+    },
+    "S": {
+      "item": "klaxon:stripped_hallnox_stem"
+    }
+  },
+  "pattern": [
+    "C C",
+    "SSS",
+    "SSS"
+  ],
+  "result": {
+    "count": 6,
+    "id": "klaxon:hallnox_hanging_sign"
+  }
+}

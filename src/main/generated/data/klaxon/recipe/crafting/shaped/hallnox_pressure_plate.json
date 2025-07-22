@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "hallnox_pressure_plate",
+  "key": {
+    "P": {
+      "item": "klaxon:hallnox_planks"
+    }
+  },
+  "pattern": [
+    "PP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:hallnox_pressure_plate"
+  }
+}

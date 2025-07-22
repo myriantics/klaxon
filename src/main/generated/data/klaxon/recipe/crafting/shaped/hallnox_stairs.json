@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "hallnox_stairs",
+  "key": {
+    "P": {
+      "item": "klaxon:hallnox_planks"
+    }
+  },
+  "pattern": [
+    "P  ",
+    "PP ",
+    "PPP"
+  ],
+  "result": {
+    "count": 4,
+    "id": "klaxon:hallnox_stairs"
+  }
+}
