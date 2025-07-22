@@ -7,7 +7,6 @@
     "AnvilScreenHandlerInvoker",
     "AnvilScreenHandlerMixin",
     "ArmorItemMixin",
-    "ClientPlayerInteractionManagerMixin",
     "CraftingResultSlotMixin",
     "DamageSourceMixin",
     "EnchantmentHelperMixin",
@@ -40,6 +39,7 @@
     "manual_item_application.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
+    "ClientPlayerInteractionManagerMixin",
     "BipedEntityModelMixin",
     "HeldItemRendererMixin",
     "ItemRendererAccessor",
