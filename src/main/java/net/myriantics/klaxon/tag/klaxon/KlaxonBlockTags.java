@@ -148,6 +148,8 @@ public class KlaxonBlockTags {
             createTag("nether_reactor_cores");
     public static final TagKey<Block> MACHINES =
             createTag("machines");
+    public static final TagKey<Block> HALLNOX_STEMS =
+            createTag("hallnox_stems");
 
     // advancement tags
 

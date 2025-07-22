@@ -2,9 +2,11 @@ package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -30,6 +32,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         buildMaterialPlateTags();
         buildMaterialSheetTags();
         buildFracturedMaterialTags();
+        buildWoodTags();
 
         // build makeshift crafting tags
         buildMakeshiftCraftingIngredientTags();
@@ -51,6 +54,59 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // build compat tags
         buildCompatTags();
+    }
+
+    private void buildWoodTags() {
+        getOrCreateTagBuilder(ConventionalItemTags.STRIPPED_LOGS)
+                .add(KlaxonItems.STRIPPED_HALLNOX_STEM);
+        getOrCreateTagBuilder(ConventionalItemTags.STRIPPED_WOODS)
+                .add(KlaxonItems.STRIPPED_HALLNOX_HYPHAE);
+        getOrCreateTagBuilder(ItemTags.LOGS)
+                .forceAddTag(KlaxonItemTags.HALLNOX_STEMS);
+        getOrCreateTagBuilder(ItemTags.NON_FLAMMABLE_WOOD)
+                .forceAddTag(KlaxonItemTags.HALLNOX_STEMS)
+                .add(KlaxonItems.HALLNOX_PLANKS)
+                .add(KlaxonItems.HALLNOX_SLAB)
+                .add(KlaxonItems.HALLNOX_PRESSURE_PLATE)
+                .add(KlaxonItems.HALLNOX_FENCE)
+                .add(KlaxonItems.HALLNOX_TRAPDOOR)
+                .add(KlaxonItems.HALLNOX_FENCE_GATE)
+                .add(KlaxonItems.HALLNOX_STAIRS)
+                .add(KlaxonItems.HALLNOX_BUTTON)
+                .add(KlaxonItems.HALLNOX_DOOR)
+                .add(KlaxonItems.HALLNOX_SIGN)
+                .add(KlaxonItems.HALLNOX_HANGING_SIGN);
+        getOrCreateTagBuilder(KlaxonItemTags.HALLNOX_STEMS)
+                .add(KlaxonItems.HALLNOX_STEM)
+                .add(KlaxonItems.STRIPPED_HALLNOX_STEM)
+                .add(KlaxonItems.HALLNOX_HYPHAE)
+                .add(KlaxonItems.STRIPPED_HALLNOX_HYPHAE);
+        getOrCreateTagBuilder(ItemTags.PLANKS)
+                .add(KlaxonItems.HALLNOX_PLANKS);
+        getOrCreateTagBuilder(ItemTags.WOODEN_STAIRS)
+                .add(KlaxonItems.HALLNOX_STAIRS);
+        getOrCreateTagBuilder(ItemTags.WOODEN_SLABS)
+                .add(KlaxonItems.HALLNOX_SLAB);
+
+        getOrCreateTagBuilder(ItemTags.WOODEN_BUTTONS)
+                .add(KlaxonItems.HALLNOX_BUTTON);
+        getOrCreateTagBuilder(ItemTags.WOODEN_PRESSURE_PLATES)
+                .add(KlaxonItems.HALLNOX_PRESSURE_PLATE);
+        getOrCreateTagBuilder(ItemTags.WOODEN_DOORS)
+                .add(KlaxonItems.HALLNOX_DOOR);
+        getOrCreateTagBuilder(ItemTags.WOODEN_TRAPDOORS)
+                .add(KlaxonItems.HALLNOX_TRAPDOOR);
+        getOrCreateTagBuilder(ConventionalItemTags.WOODEN_FENCES)
+                .add(KlaxonItems.HALLNOX_FENCE);
+        getOrCreateTagBuilder(ConventionalItemTags.WOODEN_FENCE_GATES)
+                .add(KlaxonItems.HALLNOX_FENCE_GATE);
+        getOrCreateTagBuilder(ItemTags.SIGNS)
+                .add(KlaxonItems.HALLNOX_SIGN);
+        getOrCreateTagBuilder(ItemTags.HANGING_SIGNS)
+                .add(KlaxonItems.HALLNOX_HANGING_SIGN);
+
+        getOrCreateTagBuilder(ItemTags.WART_BLOCKS)
+                .add(KlaxonItems.HALLNOX_WART_BLOCK);
     }
 
     private void buildMaterialIngotTags() {

@@ -1,5 +1,23 @@
 {
   "values": [
-    "#c:rubber"
+    "#c:rubber",
+    "klaxon:hallnox_pod",
+    "klaxon:hallnox_stem",
+    "klaxon:stripped_hallnox_stem",
+    "klaxon:hallnox_hyphae",
+    "klaxon:stripped_hallnox_hyphae",
+    "klaxon:hallnox_planks",
+    "klaxon:hallnox_stairs",
+    "klaxon:hallnox_slab",
+    "klaxon:hallnox_pressure_plate",
+    "klaxon:hallnox_button",
+    "klaxon:hallnox_trapdoor",
+    "klaxon:hallnox_door",
+    "klaxon:hallnox_sign",
+    "klaxon:hallnox_wall_sign",
+    "klaxon:hallnox_hanging_sign",
+    "klaxon:hallnox_wall_hanging_sign",
+    "klaxon:hallnox_fence",
+    "klaxon:hallnox_fence_gate"
   ]
 }

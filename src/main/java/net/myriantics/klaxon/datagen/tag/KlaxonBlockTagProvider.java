@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
@@ -81,6 +82,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.BEEHIVES)
                 .forceAddTag(BlockTags.CANDLES)
                 .forceAddTag(BlockTags.LEAVES)
+                .add(KlaxonBlocks.HALLNOX_POD)
                 .add(Blocks.COCOA)
                 .add(Blocks.OCHRE_FROGLIGHT)
                 .add(Blocks.PEARLESCENT_FROGLIGHT)
@@ -149,9 +151,32 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK)
                 .add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
 
-        // hoe
+        // axe
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
-                .forceAddTag(KlaxonConventionalBlockTags.RUBBER);
+                .forceAddTag(KlaxonConventionalBlockTags.RUBBER)
+                .add(KlaxonBlocks.HALLNOX_POD)
+                .add(KlaxonBlocks.HALLNOX_STEM)
+                .add(KlaxonBlocks.STRIPPED_HALLNOX_STEM)
+                .add(KlaxonBlocks.HALLNOX_HYPHAE)
+                .add(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE)
+                .add(KlaxonBlocks.HALLNOX_PLANKS)
+                .add(KlaxonBlocks.HALLNOX_STAIRS)
+                .add(KlaxonBlocks.HALLNOX_SLAB)
+                .add(KlaxonBlocks.HALLNOX_PRESSURE_PLATE)
+                .add(KlaxonBlocks.HALLNOX_BUTTON)
+                .add(KlaxonBlocks.HALLNOX_TRAPDOOR)
+                .add(KlaxonBlocks.HALLNOX_DOOR)
+                .add(KlaxonBlocks.HALLNOX_SIGN)
+                .add(KlaxonBlocks.HALLNOX_WALL_SIGN)
+                .add(KlaxonBlocks.HALLNOX_HANGING_SIGN)
+                .add(KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN)
+                .add(KlaxonBlocks.HALLNOX_FENCE)
+                .add(KlaxonBlocks.HALLNOX_FENCE_GATE);
+
+        // hoe
+        getOrCreateTagBuilder(BlockTags.HOE_MINEABLE)
+                .add(KlaxonBlocks.HALLNOX_POD)
+                .add(KlaxonBlocks.HALLNOX_WART_BLOCK);
     }
 
     private void buildBehaviorTags() {
@@ -487,10 +512,54 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
                 .add(KlaxonBlocks.CRUDE_STEEL_CASING);
 
+        // fences + doors + trapdoors + pressure plates + buttons + etc...
+        getOrCreateTagBuilder(ConventionalBlockTags.WOODEN_FENCES)
+                .add(KlaxonBlocks.HALLNOX_FENCE);
+        getOrCreateTagBuilder(ConventionalBlockTags.WOODEN_FENCE_GATES)
+                .add(KlaxonBlocks.HALLNOX_FENCE_GATE);
         getOrCreateTagBuilder(BlockTags.DOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_DOORS);
         getOrCreateTagBuilder(BlockTags.TRAPDOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS);
+        getOrCreateTagBuilder(BlockTags.WOODEN_BUTTONS)
+                .add(KlaxonBlocks.HALLNOX_BUTTON);
+        getOrCreateTagBuilder(BlockTags.WOODEN_PRESSURE_PLATES)
+                .add(KlaxonBlocks.HALLNOX_PRESSURE_PLATE);
+        getOrCreateTagBuilder(BlockTags.WOODEN_DOORS)
+                .add(KlaxonBlocks.HALLNOX_DOOR);
+        getOrCreateTagBuilder(BlockTags.WOODEN_TRAPDOORS)
+                .add(KlaxonBlocks.HALLNOX_TRAPDOOR);
+        getOrCreateTagBuilder(BlockTags.STANDING_SIGNS)
+                .add(KlaxonBlocks.HALLNOX_SIGN);
+        getOrCreateTagBuilder(BlockTags.WALL_SIGNS)
+                .add(KlaxonBlocks.HALLNOX_WALL_SIGN);
+        getOrCreateTagBuilder(BlockTags.CEILING_HANGING_SIGNS)
+                .add(KlaxonBlocks.HALLNOX_HANGING_SIGN);
+        getOrCreateTagBuilder(BlockTags.WALL_HANGING_SIGNS)
+                .add(KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
+
+        // planks + stairs + slabs + etc...
+        getOrCreateTagBuilder(BlockTags.PLANKS)
+                .add(KlaxonBlocks.HALLNOX_PLANKS);
+        getOrCreateTagBuilder(BlockTags.WOODEN_STAIRS)
+                .add(KlaxonBlocks.HALLNOX_STAIRS);
+        getOrCreateTagBuilder(BlockTags.WOODEN_SLABS)
+                .add(KlaxonBlocks.HALLNOX_SLAB);
+
+        // logs + wood + leaves...
+        getOrCreateTagBuilder(ConventionalBlockTags.STRIPPED_LOGS)
+                .add(KlaxonBlocks.STRIPPED_HALLNOX_STEM);
+        getOrCreateTagBuilder(ConventionalBlockTags.STRIPPED_WOODS)
+                .add(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
+        getOrCreateTagBuilder(BlockTags.LOGS)
+                .forceAddTag(KlaxonBlockTags.HALLNOX_STEMS);
+        getOrCreateTagBuilder(KlaxonBlockTags.HALLNOX_STEMS)
+                .add(KlaxonBlocks.HALLNOX_STEM)
+                .add(KlaxonBlocks.STRIPPED_HALLNOX_STEM)
+                .add(KlaxonBlocks.HALLNOX_HYPHAE)
+                .add(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
+        getOrCreateTagBuilder(BlockTags.WART_BLOCKS)
+                .add(KlaxonBlocks.HALLNOX_WART_BLOCK);
 
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.METAL_DOORS)
                 .add(KlaxonBlocks.STEEL_DOOR)

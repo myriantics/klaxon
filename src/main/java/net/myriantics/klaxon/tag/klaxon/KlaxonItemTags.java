@@ -92,6 +92,9 @@ public abstract class KlaxonItemTags {
     public static final TagKey<Item> FRACTURED_RAW_GOLD = createFracturedMaterialTag("raw_gold");
     public static final TagKey<Item> FRACTURED_RAW_COPPER = createFracturedMaterialTag("raw_copper");
 
+    // wood tags
+    public static final TagKey<Item> HALLNOX_STEMS = createTag("hallnox_stems");
+
     private static TagKey<Item> createFracturedMaterialTag(String name) {
         return createTag("fractured_materials/" + name);
     }
