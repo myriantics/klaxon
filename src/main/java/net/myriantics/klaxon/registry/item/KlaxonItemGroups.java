@@ -151,6 +151,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.HALLNOX_PRESSURE_PLATE);
                 entries.add(KlaxonItems.HALLNOX_BUTTON);
                 entries.add(KlaxonItems.HALLNOX_POD);
+                entries.add(KlaxonItems.HALLNOX_WART_BLOCK);
                 entries.add(KlaxonItems.HALLNOX_SIGN);
                 entries.add(KlaxonItems.HALLNOX_HANGING_SIGN);
 
