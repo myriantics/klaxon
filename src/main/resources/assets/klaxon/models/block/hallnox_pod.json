@@ -1,20 +1,27 @@
 {
-	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
+	"textures": {
+		"0": "klaxon:block/hallnox_pod/hallnox_pod_top",
+		"1": "klaxon:block/hallnox_pod/hallnox_pod_north",
+		"2": "klaxon:block/hallnox_pod/hallnox_pod_east",
+		"3": "klaxon:block/hallnox_pod/hallnox_pod_south",
+		"4": "klaxon:block/hallnox_pod/hallnox_pod_west",
+		"5": "klaxon:block/hallnox_pod/hallnox_pod_bottom",
+		"particle": "klaxon:block/hallnox_pod/hallnox_pod_top"
+	},
 	"elements": [
 		{
-			"from": [2, 2, 0],
+			"from": [2, 0, 2],
 			"to": [14, 14, 14],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
-			"color": 7,
 			"faces": {
-				"north": {"uv": [0, 0, 12, 12], "rotation": 180, "texture": "#missing"},
-				"east": {"uv": [0, 0, 12, 14], "rotation": 270, "texture": "#missing"},
-				"south": {"uv": [0, 0, 12, 12], "texture": "#missing"},
-				"west": {"uv": [0, 0, 12, 14], "rotation": 90, "texture": "#missing"},
-				"up": {"uv": [0, 0, 12, 14], "rotation": 180, "texture": "#missing"},
-				"down": {"uv": [0, 0, 12, 14], "texture": "#missing"}
+				"north": {"uv": [0, 0, 12, 14], "texture": "#1"},
+				"east": {"uv": [0, 0, 12, 14], "texture": "#2"},
+				"south": {"uv": [0, 0, 12, 14], "texture": "#3"},
+				"west": {"uv": [0, 0, 12, 14], "texture": "#4"},
+				"up": {"uv": [0, 0, 12, 12], "texture": "#0"},
+				"down": {"uv": [0, 0, 12, 12], "texture": "#5"}
 			}
 		}
 	],
@@ -52,5 +59,6 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	}
+	},
+	"format_version": "1.9.0"
 }
