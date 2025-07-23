@@ -513,7 +513,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.CRUDE_STEEL_CASING);
 
         // fences + doors + trapdoors + pressure plates + buttons + etc...
-        getOrCreateTagBuilder(ConventionalBlockTags.WOODEN_FENCES)
+        getOrCreateTagBuilder(BlockTags.WOODEN_FENCES)
                 .add(KlaxonBlocks.HALLNOX_FENCE);
         getOrCreateTagBuilder(ConventionalBlockTags.WOODEN_FENCE_GATES)
                 .add(KlaxonBlocks.HALLNOX_FENCE_GATE);
