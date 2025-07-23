@@ -34,6 +34,7 @@
     "cable_shears_because_no_tag.SnowGolemEntityMixin",
     "cable_shears_because_no_tag.TripwireBlockMixin",
     "cable_shears_because_no_tag.WolfEntityMixin",
+    "hallnox_pod.FallingBlockEntityMixin",
     "jade.HarvestToolProviderMixin",
     "jade.ShearsToolHandlerMixin",
     "manual_item_application.DispenserBlockMixin",

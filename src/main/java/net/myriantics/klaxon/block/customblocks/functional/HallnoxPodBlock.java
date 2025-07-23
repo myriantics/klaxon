@@ -63,7 +63,7 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
 
     @Override
     protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return true;
+        return isSupported(world, pos, state.get(FACING));
     }
 
     @Override
@@ -92,11 +92,6 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
         // no nether water fuckery for you
         if (world.getDimension().ultrawarm()) {
             newState = newState.with(WATERLOGGED, false);
-        }
-
-        // break if we fall on an incompatible block
-        if (!isSupported(world, pos, Direction.DOWN)) {
-            world.breakBlock(pos, true);
         }
 
         // if we've made changes, update block state
@@ -144,7 +139,7 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
         return null;
     }
 
-    private boolean isSupported(WorldAccess world, BlockPos pos, Direction facing) {
+    private boolean isSupported(WorldView world, BlockPos pos, Direction facing) {
         BlockPos neighborPos = pos.offset(facing);
         return world.getBlockState(neighborPos).isSideSolid(world, neighborPos, facing, SideShapeType.RIGID);
     }
@@ -181,7 +176,7 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
         // only schedule block tick if updater is the supporting block
         if (!world.isClient() && offsetPos.equals(neighborPos)) world.scheduleBlockTick(pos, this, FALLING_DELAY);
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return state;
     }
 
     // don't grow when connected to a tree or if it's been sheared
