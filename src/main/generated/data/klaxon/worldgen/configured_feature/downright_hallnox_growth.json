@@ -2,7 +2,7 @@
   "type": "klaxon:downright_hallnox_growth",
   "config": {
     "dense_stem_block": {
-      "Name": "klaxon:hallnox_stem",
+      "Name": "klaxon:hallnox_hyphae",
       "Properties": {
         "axis": "y"
       }
@@ -79,7 +79,7 @@
       ]
     },
     "stem_block": {
-      "Name": "klaxon:hallnox_hyphae",
+      "Name": "klaxon:hallnox_stem",
       "Properties": {
         "axis": "y"
       }

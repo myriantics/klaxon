@@ -129,8 +129,8 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new DownrightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 8,
-                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_HYPHAE.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_POD.getDefaultState()
                         )
