@@ -2,7 +2,7 @@
   "type": "klaxon:downright_hallnox_growth",
   "config": {
     "dense_stem_block": {
-      "Name": "klaxon:crude_steel_plating_block",
+      "Name": "klaxon:hallnox_stem",
       "Properties": {
         "axis": "y"
       }
@@ -79,13 +79,13 @@
       ]
     },
     "stem_block": {
-      "Name": "klaxon:steel_plating_block",
+      "Name": "klaxon:hallnox_hyphae",
       "Properties": {
         "axis": "y"
       }
     },
     "wart_block": {
-      "Name": "klaxon:steel_casing"
+      "Name": "klaxon:hallnox_wart_block"
     }
   }
 }

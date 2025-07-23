@@ -116,9 +116,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new UprightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 6,
-                                KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK.getDefaultState(),
-                                KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState(),
-                                KlaxonBlocks.STEEL_CASING.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_HYPHAE.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_POD.getDefaultState()
                         )
                 )
@@ -129,9 +129,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new DownrightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 8,
-                                KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK.getDefaultState(),
-                                KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState(),
-                                KlaxonBlocks.STEEL_CASING.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_HYPHAE.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_POD.getDefaultState()
                         )
                 )
@@ -142,8 +142,8 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.NORTH,
-                                KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState(),
-                                KlaxonBlocks.STEEL_CASING.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_POD.getDefaultState()
                         )
                 )
@@ -154,8 +154,8 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.EAST,
-                                KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState(),
-                                KlaxonBlocks.STEEL_CASING.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_POD.getDefaultState()
                         )
                 )
@@ -166,8 +166,8 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.WEST,
-                                KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState(),
-                                KlaxonBlocks.STEEL_CASING.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_POD.getDefaultState()
                         )
                 )
@@ -178,8 +178,8 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.SOUTH,
-                                KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState(),
-                                KlaxonBlocks.STEEL_CASING.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
                                 KlaxonBlocks.HALLNOX_POD.getDefaultState()
                         )
                 )

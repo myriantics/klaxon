@@ -73,13 +73,13 @@
       ]
     },
     "stem_block": {
-      "Name": "klaxon:steel_plating_block",
+      "Name": "klaxon:hallnox_stem",
       "Properties": {
         "axis": "y"
       }
     },
     "wart_block": {
-      "Name": "klaxon:steel_casing"
+      "Name": "klaxon:hallnox_wart_block"
     }
   }
 }
