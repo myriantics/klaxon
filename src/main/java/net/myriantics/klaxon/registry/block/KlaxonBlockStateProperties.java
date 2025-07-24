@@ -2,7 +2,7 @@ package net.myriantics.klaxon.registry.block;
 
 import net.minecraft.state.property.BooleanProperty;
 
-public class KlaxonBlockStateProperties {
+public abstract class KlaxonBlockStateProperties {
     public static final BooleanProperty FUELED = BooleanProperty.of("fueled");
     public static final BooleanProperty HATCH_OPEN = BooleanProperty.of("hatch_open");
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");

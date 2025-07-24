@@ -19,4 +19,10 @@ public class NetherReactorCoreBlock extends Block {
     protected int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return 15;
     }
+
+    @Override
+    protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        world.updateComparators(pos, this);
+        super.onStateReplaced(state, world, pos, newState, moved);
+    }
 }

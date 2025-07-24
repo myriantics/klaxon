@@ -88,6 +88,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
         // hallnox
         generator.registerHangingSign(KlaxonBlocks.STRIPPED_HALLNOX_STEM, KlaxonBlocks.HALLNOX_HANGING_SIGN, KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
         generator.registerCubeAllModelTexturePool(KlaxonBlockFamilies.HALLNOX.getBaseBlock()).family(KlaxonBlockFamilies.HALLNOX);
+        generator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(KlaxonBlocks.POTTED_HALLNOX_POD, ModelIds.getBlockModelId(KlaxonBlocks.POTTED_HALLNOX_POD)));
         registerHallnoxPod(generator);
     }
 

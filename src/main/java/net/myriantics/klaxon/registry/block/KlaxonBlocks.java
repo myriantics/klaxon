@@ -2,8 +2,6 @@ package net.myriantics.klaxon.registry.block;
 
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -57,11 +55,16 @@ public abstract class KlaxonBlocks {
 
     // hallnox
     public static final Block HALLNOX_POD = registerBlock("hallnox_pod",
-            new HallnoxPodBlock(KlaxonSaplingGenerators.HALLNOX, AbstractBlock.Settings.copy(Blocks.SHROOMLIGHT)
-                    .pistonBehavior(PistonBehavior.DESTROY))
+            new HallnoxPodBlock(
+                    KlaxonSaplingGenerators.HALLNOX,
+                    AbstractBlock.Settings.copy(Blocks.SHROOMLIGHT).luminance((state) -> 12)
+            )
     );
     public static final Block POTTED_HALLNOX_POD = registerBlock("potted_hallnox_pod",
-            Blocks.createFlowerPotBlock(HALLNOX_POD)
+            new FlowerPotBlock(
+                    HALLNOX_POD,
+                    AbstractBlock.Settings.create().breakInstantly().nonOpaque().pistonBehavior(PistonBehavior.DESTROY).luminance((state) -> 12)
+            )
     );
     public static final Block HALLNOX_WART_BLOCK = registerBlock("hallnox_wart_block",
             new Block(AbstractBlock.Settings.copy(Blocks.WARPED_WART_BLOCK).mapColor(MapColor.TERRACOTTA_GRAY).strength(1.0f, 2.0f))
