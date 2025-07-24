@@ -44,6 +44,8 @@ public class KlaxonBlockTags {
             createTag("ferromagnetic_blocks");
     public static final TagKey<Block> COLD_BLOCKS =
             createTag("cold_blocks");
+    public static final TagKey<Block> HALLNOX_POD_NATURAL_GROWTH_INHIBITING =
+            createTag("hallnox_pod_natural_growth_inhibiting");
 
     // nether reaction tags
     public static final TagKey<Block> STEEL_CASING_CONVERTIBLE =

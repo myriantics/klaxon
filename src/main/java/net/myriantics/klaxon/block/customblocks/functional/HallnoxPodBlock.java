@@ -3,6 +3,7 @@ package net.myriantics.klaxon.block.customblocks.functional;
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -14,6 +15,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -24,14 +26,17 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.block.NeighborUpdater;
 import net.myriantics.klaxon.api.DirectionalSaplingGenerator;
+import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.jetbrains.annotations.Nullable;
 
 public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Waterloggable {
 
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final DirectionProperty FACING = Properties.FACING;
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final BooleanProperty GROWTH_DISABLED = KlaxonBlockStateProperties.GROWTH_DISABLED;
 
     private static final VoxelShape UP_SHAPE = Block.createCuboidShape(2.0, 2.0, 2.0, 14.0, 16.0, 14.0);
     private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 14.0, 14.0);
@@ -45,15 +50,19 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     private final DirectionalSaplingGenerator generator;
 
     public HallnoxPodBlock(DirectionalSaplingGenerator generator, Settings settings) {
-        super(KlaxonSaplingGenerators.EMPTY, settings.pistonBehavior(PistonBehavior.DESTROY));
+        super(KlaxonSaplingGenerators.EMPTY, settings.pistonBehavior(PistonBehavior.DESTROY).ticksRandomly());
         this.generator = generator;
-        this.setDefaultState(getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.DOWN));
+        this.setDefaultState(getDefaultState()
+                .with(FACING, Direction.DOWN)
+                .with(WATERLOGGED, false)
+                .with(GROWTH_DISABLED, false)
+        );
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(WATERLOGGED, FACING);
+        builder.add(FACING, WATERLOGGED, GROWTH_DISABLED);
     }
 
     @Override
@@ -76,6 +85,14 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
             case WEST -> WEST_SHAPE;
             case EAST -> EAST_SHAPE;
         };
+    }
+
+    @Override
+    protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        BlockState supportingState = world.getBlockState(pos.offset(state.get(FACING)));
+        if (!supportingState.isIn(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING) && random.nextInt(12) == 0) {
+            this.generate(world, pos, state, random);
+        }
     }
 
     @Override
@@ -145,20 +162,35 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     }
 
     @Override
+    protected void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
+        if (world instanceof ServerWorld serverWorld) {
+            BlockPos targetPos = hit.getBlockPos();
+            Direction facing = state.get(FACING);
+
+            // try to fall if it's not supported or is not resting on the ground
+            if (!facing.equals(Direction.DOWN) || !isSupported(world, targetPos, facing)) {
+                tryFall(serverWorld, targetPos, state);
+            }
+        }
+    }
+
+    @Override
     protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         super.scheduledTick(state, world, pos, random);
+        if (!isSupported(world, pos, state.get(FACING))) {
+            tryFall(world, pos, state);
+        }
+    }
 
-        Direction facing = state.get(FACING);
-
-        // fall if it can, otherwise break if unsupported
-        if (!isSupported(world, pos, facing)) {
-            if (pos.getY() >= world.getBottomY()) {
-                FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(world, pos, state);
-                // this is because it's funny :)
-                fallingBlockEntity.setHurtEntities(1.5f, 10);
-            } else {
-                world.breakBlock(pos, true);
-            }
+    // fall if possible
+    // if at the bottom of the world, break block
+    private void tryFall(ServerWorld serverWorld, BlockPos blockPos, BlockState blockState) {
+        if (blockPos.getY() >= serverWorld.getBottomY()) {
+            FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(serverWorld, blockPos, blockState);
+            // this is because it's funny :)
+            fallingBlockEntity.setHurtEntities(1.5f, 10);
+        } else {
+            serverWorld.breakBlock(blockPos, true);
         }
     }
 
@@ -182,7 +214,13 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     // don't grow when connected to a tree or if it's been sheared
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return super.canGrow(world, random, pos, state);
+        return !state.get(GROWTH_DISABLED) && super.canGrow(world, random, pos, state);
+    }
+
+    // don't let people waste bonemeal
+    @Override
+    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
+        return !state.get(GROWTH_DISABLED);
     }
 
     @Override

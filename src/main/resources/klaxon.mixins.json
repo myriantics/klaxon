@@ -35,6 +35,7 @@
     "cable_shears_because_no_tag.TripwireBlockMixin",
     "cable_shears_because_no_tag.WolfEntityMixin",
     "hallnox_pod.FallingBlockEntityMixin",
+    "hallnox_pod.ShearsItemMixin",
     "jade.HarvestToolProviderMixin",
     "jade.ShearsToolHandlerMixin",
     "manual_item_application.DispenserBlockMixin",

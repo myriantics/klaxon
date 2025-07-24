@@ -6,6 +6,7 @@
       "Name": "klaxon:hallnox_pod",
       "Properties": {
         "facing": "down",
+        "growth_disabled": "false",
         "stage": "0",
         "waterlogged": "false"
       }
