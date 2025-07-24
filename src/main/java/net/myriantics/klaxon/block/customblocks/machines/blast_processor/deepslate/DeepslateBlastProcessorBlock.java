@@ -39,7 +39,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
     public static final BooleanProperty LIT = Properties.LIT;
     public static final BooleanProperty FUELED = KlaxonBlockStateProperties.FUELED;
     public static final BooleanProperty HATCH_OPEN = KlaxonBlockStateProperties.HATCH_OPEN;
-    public static final BooleanProperty POWERED = KlaxonBlockStateProperties.POWERED;
+    public static final BooleanProperty POWERED = Properties.POWERED;
     public static final DirectionProperty HORIZONTAL_FACING = Properties.HORIZONTAL_FACING;
 
     public DeepslateBlastProcessorBlock(Settings settings) {
