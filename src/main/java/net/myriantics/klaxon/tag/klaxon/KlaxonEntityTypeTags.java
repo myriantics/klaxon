@@ -5,7 +5,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.KlaxonCommon;
 
-public class KlaxonEntityTypeTags {
+public abstract class KlaxonEntityTypeTags {
     // klaxon's tags
     public static final TagKey<EntityType<?>> HEAVY_HITTERS =
             createTag("heavy_hitter_entities");

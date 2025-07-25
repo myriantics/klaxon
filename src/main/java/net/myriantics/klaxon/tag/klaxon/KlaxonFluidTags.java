@@ -6,7 +6,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.KlaxonCommon;
 
-public class KlaxonFluidTags {
+public abstract class KlaxonFluidTags {
 
     public static final TagKey<Fluid> COLD_FLUIDS =
             createTag("cold_fluids");

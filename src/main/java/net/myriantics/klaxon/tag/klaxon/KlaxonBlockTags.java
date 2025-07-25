@@ -5,7 +5,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.KlaxonCommon;
 
-public class KlaxonBlockTags {
+public abstract class KlaxonBlockTags {
 
     // mining-related tags
     public static final TagKey<Block> HAMMER_MINEABLE =

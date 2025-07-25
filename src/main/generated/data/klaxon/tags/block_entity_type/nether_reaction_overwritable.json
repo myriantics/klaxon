@@ -1,0 +1,12 @@
+{
+  "values": [
+    "minecraft:brushable_block",
+    "minecraft:conduit",
+    "minecraft:banner",
+    "minecraft:comparator",
+    "minecraft:daylight_detector",
+    "minecraft:skull",
+    "minecraft:enchanting_table",
+    "minecraft:ender_chest"
+  ]
+}
