@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "stripped_hallnox_hyphae",
+  "key": {
+    "x": {
+      "item": "klaxon:stripped_hallnox_stem"
+    }
+  },
+  "pattern": [
+    "xx",
+    "xx"
+  ],
+  "result": {
+    "count": 3,
+    "id": "klaxon:stripped_hallnox_hyphae"
+  }
+}

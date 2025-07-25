@@ -36,6 +36,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     private void buildWoodCraftingRecipes() {
+        add2x2PackingRecipe(Ingredient.ofItems(KlaxonItems.HALLNOX_STEM), new ItemStack(KlaxonItems.HALLNOX_HYPHAE, 3), CraftingRecipeCategory.BUILDING, null);
+        add2x2PackingRecipe(Ingredient.ofItems(KlaxonItems.STRIPPED_HALLNOX_STEM), new ItemStack(KlaxonItems.STRIPPED_HALLNOX_HYPHAE, 3), CraftingRecipeCategory.BUILDING, null);
         add2x2UnpackingRecipe(Ingredient.fromTag(KlaxonItemTags.HALLNOX_STEMS), KlaxonItems.HALLNOX_PLANKS, CraftingRecipeCategory.BUILDING, null);
         addShapedCraftingRecipe(Map.of(
                         'P', Ingredient.ofItems(KlaxonItems.HALLNOX_PLANKS)),

@@ -25,6 +25,7 @@ import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeLogic;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -81,6 +82,9 @@ public abstract class ExplosionMixin {
     private void klaxon$hijackBlockDestruction(BlockState instance, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer, Operation<Void> original) {
 
         if (klaxon$isNetherReactionExplosion) {
+            // don't convert any nether reactor cores aside from the origin one
+            if (instance.isIn(KlaxonBlockTags.NETHER_REACTOR_CORES) && !pos.equals(BlockPos.ofFloored(x, y, z))) return;
+
             // make sure block entity is either absent or valid, and that blockstate can be moved
             if ((world.getBlockEntity(pos) == null || world.getBlockEntity(pos) instanceof BrushableBlockEntity) && !instance.isIn(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)) {
                 // override for door blocks because i cant think of a better way to handle them
