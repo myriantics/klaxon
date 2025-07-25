@@ -4,7 +4,6 @@ import net.minecraft.entity.projectile.AbstractWindChargeEntity;
 import net.minecraft.entity.projectile.WindChargeEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
@@ -13,7 +12,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
-import net.myriantics.klaxon.mixin.WindChargeEntityInvoker;
+import net.myriantics.klaxon.mixin.blast_processor_behaviors.WindChargeEntityInvoker;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 

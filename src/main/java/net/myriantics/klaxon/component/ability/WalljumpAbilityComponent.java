@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
-import net.myriantics.klaxon.mixin.ObserverBlockInvoker;
+import net.myriantics.klaxon.mixin.item_components.walljump_ability.ObserverBlockInvoker;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;

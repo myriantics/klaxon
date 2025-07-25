@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
-import net.myriantics.klaxon.mixin.AnvilScreenHandlerInvoker;
+import net.myriantics.klaxon.mixin.anvil_emulation.AnvilScreenHandlerInvoker;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;

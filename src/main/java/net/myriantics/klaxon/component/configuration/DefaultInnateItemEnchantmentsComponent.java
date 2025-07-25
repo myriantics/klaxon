@@ -18,7 +18,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.resource.LifecycledResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.mixin.ItemAccessor;
+import net.myriantics.klaxon.mixin.innate_enchantments.ItemAccessor;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 
 import java.util.Map;
