@@ -85,6 +85,7 @@ public abstract class KlaxonBlockItems {
                     new Item.Settings().maxCount(16)
             )
     );
+    public static final Item HALLNOX_BULB = registerBlockItem(KlaxonBlocks.HALLNOX_BULB);
 
     private static Item registerBlockItem(Block block) {
         return registerBlockItem(block, new BlockItem(block, new Item.Settings()));

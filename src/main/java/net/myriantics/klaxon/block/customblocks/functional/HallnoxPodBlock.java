@@ -90,7 +90,7 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     @Override
     protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         BlockState supportingState = world.getBlockState(pos.offset(state.get(FACING)));
-        if (!supportingState.isIn(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING) && random.nextInt(12) == 0) {
+        if (!state.get(GROWTH_DISABLED) && !supportingState.isIn(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING) && random.nextInt(12) == 0) {
             this.generate(world, pos, state, random);
         }
     }

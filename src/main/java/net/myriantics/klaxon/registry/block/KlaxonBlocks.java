@@ -145,6 +145,9 @@ public abstract class KlaxonBlocks {
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(3.0f, 4.0f))
     );
+    public static final Block HALLNOX_BULB = registerBlock("hallnox_bulb",
+            new HallnoxBulbBlock(AbstractBlock.Settings.copy(Blocks.GLASS))
+    );
 
 
     // iron
