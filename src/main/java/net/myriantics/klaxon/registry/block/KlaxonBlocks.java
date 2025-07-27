@@ -49,7 +49,7 @@ public abstract class KlaxonBlocks {
     public static final Block DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
             new DeepslateBlastProcessorBlock(AbstractBlock.Settings.copy(Blocks.POLISHED_DEEPSLATE).luminance(Blocks.createLightLevelFromLitBlockState(15))));
     public static final Block NETHER_REACTOR_CORE = registerBlock("nether_reactor_core",
-            new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_CASING).luminance((state) -> 12).nonOpaque()));
+            new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_CASING).luminance((state) -> 15).nonOpaque()));
     public static final Block CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_CASING).luminance((state) -> 12).nonOpaque()));
 
@@ -146,7 +146,7 @@ public abstract class KlaxonBlocks {
                     .strength(3.0f, 4.0f))
     );
     public static final Block HALLNOX_BULB = registerBlock("hallnox_bulb",
-            new HallnoxBulbBlock(AbstractBlock.Settings.copy(Blocks.GLASS))
+            new HallnoxBulbBlock(AbstractBlock.Settings.copy(Blocks.GLASS).luminance((state) -> 15))
     );
 
 
@@ -203,5 +203,4 @@ public abstract class KlaxonBlocks {
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Blocks!");
     }
-
 }
