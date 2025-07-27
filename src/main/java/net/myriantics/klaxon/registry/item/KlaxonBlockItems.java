@@ -2,6 +2,7 @@ package net.myriantics.klaxon.registry.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.HangingSignItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.SignItem;
 import net.minecraft.registry.Registries;
@@ -71,10 +72,18 @@ public abstract class KlaxonBlockItems {
     public static final Item HALLNOX_FENCE = registerBlockItem(KlaxonBlocks.HALLNOX_FENCE);
     public static final Item HALLNOX_FENCE_GATE = registerBlockItem(KlaxonBlocks.HALLNOX_FENCE_GATE);
     public static final Item HALLNOX_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_SIGN,
-            new SignItem(new Item.Settings(), KlaxonBlocks.HALLNOX_SIGN, KlaxonBlocks.HALLNOX_WALL_SIGN)
+            new SignItem(
+                    new Item.Settings().maxCount(16),
+                    KlaxonBlocks.HALLNOX_SIGN,
+                    KlaxonBlocks.HALLNOX_WALL_SIGN
+            )
     );
     public static final Item HALLNOX_HANGING_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_HANGING_SIGN,
-            new SignItem(new Item.Settings(), KlaxonBlocks.HALLNOX_HANGING_SIGN, KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN)
+            new HangingSignItem(
+                    KlaxonBlocks.HALLNOX_HANGING_SIGN,
+                    KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN,
+                    new Item.Settings().maxCount(16)
+            )
     );
 
     private static Item registerBlockItem(Block block) {
