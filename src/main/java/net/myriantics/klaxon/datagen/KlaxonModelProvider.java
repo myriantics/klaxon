@@ -10,10 +10,13 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.block.customblocks.decor.HallnoxBulbBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlockFamilies;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+
+import java.security.InvalidParameterException;
 
 public class KlaxonModelProvider extends FabricModelProvider {
     public KlaxonModelProvider(FabricDataOutput output) {
@@ -90,6 +93,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
         generator.registerCubeAllModelTexturePool(KlaxonBlockFamilies.HALLNOX.getBaseBlock()).family(KlaxonBlockFamilies.HALLNOX);
         generator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(KlaxonBlocks.POTTED_HALLNOX_POD, ModelIds.getBlockModelId(KlaxonBlocks.POTTED_HALLNOX_POD)));
         registerHallnoxPod(generator);
+        registerHallnoxBulb(generator, (HallnoxBulbBlock) KlaxonBlocks.HALLNOX_BULB);
     }
 
     private void registerMachineBlockStateModels(BlockStateModelGenerator generator) {
@@ -102,16 +106,16 @@ public class KlaxonModelProvider extends FabricModelProvider {
     }
 
     private void registerDeepslateBlastProcessor(BlockStateModelGenerator generator) {
-        BlockStateVariant empty_closed_lit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_empty_closed_lit"));
-        BlockStateVariant empty_closed_unlit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_empty_closed_unlit"));
-        BlockStateVariant empty_open_lit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_empty_open_lit"));
-        BlockStateVariant empty_open_unlit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_empty_open_unlit"));
-        BlockStateVariant fueled_closed_lit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_fueled_closed_lit"));
-        BlockStateVariant fueled_closed_unlit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_fueled_closed_unlit"));
-        BlockStateVariant fueled_open_lit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_fueled_open_lit"));
-        BlockStateVariant fueled_open_unlit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_fueled_open_unlit"));
+        BlockStateVariant empty_closed_lit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_closed_lit"));
+        BlockStateVariant empty_closed_unlit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_closed_unlit"));
+        BlockStateVariant empty_open_lit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_open_lit"));
+        BlockStateVariant empty_open_unlit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_open_unlit"));
+        BlockStateVariant fueled_closed_lit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_closed_lit"));
+        BlockStateVariant fueled_closed_unlit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_closed_unlit"));
+        BlockStateVariant fueled_open_lit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_open_lit"));
+        BlockStateVariant fueled_open_unlit = BlockStateVariant.create().put(VariantSettings.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_open_unlit"));
 
-        generator.registerParentedItemModel(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "_empty_open_unlit"));
+        generator.registerParentedItemModel(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_open_unlit"));
 
         generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .coordinate(BlockStateVariantMap.create(KlaxonBlockStateProperties.FUELED, KlaxonBlockStateProperties.HATCH_OPEN, Properties.LIT)
@@ -125,6 +129,52 @@ public class KlaxonModelProvider extends FabricModelProvider {
                         .register(true, true, false, fueled_open_unlit)
                 )
                 .coordinate(BlockStateModelGenerator.createNorthDefaultHorizontalRotationStates())
+        );
+    }
+
+    private void registerHallnoxBulb(BlockStateModelGenerator generator, HallnoxBulbBlock hallnoxBulb) {
+        Identifier bulbPartId = getNestedBlockSubModelId(hallnoxBulb, "bulb_part");
+        Identifier connectorPartId = getNestedBlockSubModelId(hallnoxBulb, "connector_part");
+
+        generator.registerParentedItemModel(hallnoxBulb, bulbPartId);
+
+        generator.blockStateCollector.accept(
+                MultipartBlockStateSupplier.create(hallnoxBulb)
+                        .with(BlockStateVariant.create().put(VariantSettings.MODEL, bulbPartId))
+                        .with(
+                                When.create().set(HallnoxBulbBlock.UP, true),
+                                BlockStateVariant.create()
+                                        .put(VariantSettings.MODEL, connectorPartId)
+                                        .put(VariantSettings.X, VariantSettings.Rotation.R270)
+                        )                        .with(
+                                When.create().set(HallnoxBulbBlock.DOWN, true),
+                                BlockStateVariant.create()
+                                        .put(VariantSettings.MODEL, connectorPartId)
+                                        .put(VariantSettings.X, VariantSettings.Rotation.R90)
+                        )
+                        .with(
+                                When.create().set(HallnoxBulbBlock.NORTH, true),
+                                BlockStateVariant.create()
+                                        .put(VariantSettings.MODEL, connectorPartId)
+                        )
+                        .with(
+                                When.create().set(HallnoxBulbBlock.EAST, true),
+                                BlockStateVariant.create()
+                                        .put(VariantSettings.MODEL, connectorPartId)
+                                        .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+                        )
+                        .with(
+                                When.create().set(HallnoxBulbBlock.SOUTH, true),
+                                BlockStateVariant.create()
+                                        .put(VariantSettings.MODEL, connectorPartId)
+                                        .put(VariantSettings.Y, VariantSettings.Rotation.R180)
+                        )
+                        .with(
+                                When.create().set(HallnoxBulbBlock.WEST, true),
+                                BlockStateVariant.create()
+                                        .put(VariantSettings.MODEL, connectorPartId)
+                                        .put(VariantSettings.Y, VariantSettings.Rotation.R270)
+                        )
         );
     }
 
@@ -176,8 +226,6 @@ public class KlaxonModelProvider extends FabricModelProvider {
 
     private static Identifier getNestedBlockSubModelId(Block block, String suffix) {
         Identifier identifier = Registries.BLOCK.getId(block);
-        return identifier.withPath((path) -> {
-            return "block/" + identifier.getPath() + "/" + path + suffix;
-        });
+        return identifier.withPath((path) -> "block/" + path + "/" + suffix);
     }
 }
