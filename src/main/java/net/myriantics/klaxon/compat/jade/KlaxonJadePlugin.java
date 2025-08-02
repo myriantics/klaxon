@@ -1,10 +1,13 @@
 package net.myriantics.klaxon.compat.jade;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.block.customblocks.functional.HallnoxPodBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.compat.jade.providers.CropGrowthDisabledProvider;
 import net.myriantics.klaxon.compat.jade.providers.DeepslateBlastProcessorProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import snownee.jade.addon.harvest.HarvestToolProvider;
@@ -39,6 +42,7 @@ public class KlaxonJadePlugin implements IWailaPlugin {
         ));
 
         registration.registerBlockComponent(DeepslateBlastProcessorProvider.INSTANCE, DeepslateBlastProcessorBlock.class);
+        registration.registerBlockComponent(CropGrowthDisabledProvider.INSTANCE, HallnoxPodBlock.class);
 
         IWailaPlugin.super.registerClient(registration);
     }

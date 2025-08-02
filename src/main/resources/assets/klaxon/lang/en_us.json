@@ -178,7 +178,9 @@
   "klaxon.emi.text.item_cooling.description": "Drop item into anything that extinguishes fire.",
 
   "klaxon.jade.text.tooltip.blast_processor.explosion_power": "Explosion Power: %s",
+  "klaxon.jade.text.tooltip.crop_growth_disabled": "Crop Growth Disabled",
   "config.jade.plugin_klaxon.deepslate_blast_processor": "Explosion Power: ",
+  "config.jade.plugin_klaxon.crop_growth_disabled": "Crop Growth Disabled",
 
   "klaxon.attribute.name.generic.weight": "Entity Weight",
 
