@@ -2,12 +2,16 @@ package net.myriantics.klaxon.block.customblocks.functional;
 
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.particle.ParticleUtil;
 import net.minecraft.server.world.ServerWorld;
@@ -16,8 +20,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -28,9 +31,11 @@ import net.minecraft.world.block.NeighborUpdater;
 import net.myriantics.klaxon.api.DirectionalSaplingGenerator;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Waterloggable {
 
@@ -225,11 +230,43 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (random.nextInt(16) == 0) {
+        if (random.nextInt(8) == 0) {
+            Direction facing = state.get(FACING);
+
             BlockPos blockPos = pos.down();
-            if (!isSupported(world, pos, state.get(FACING)) && FallingBlock.canFallThrough(world.getBlockState(blockPos))) {
-                ParticleUtil.spawnParticle(world, pos, random, new BlockStateParticleEffect(ParticleTypes.FALLING_DUST, state));
+            if (!isSupported(world, pos, facing) && FallingBlock.canFallThrough(world.getBlockState(blockPos))) {
+                spawnParticle(world, pos, random, facing);
             }
+        }
+    }
+
+    private void spawnParticle(World world, BlockPos pos, Random random, Direction facing) {
+
+        // make sure we're not emitting particles upwards
+        if (!facing.equals(Direction.UP)) {
+            Vec3d centerPos = pos.toCenterPos();
+            Vec3i facingVector = facing.getVector();
+
+            // make sure drips only originate from proper area on model
+            float bound = (12f/16 - 4f/16) / 2;
+
+            double particleX = centerPos.getX() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
+            double particleY = centerPos.getY() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
+            double particleZ = centerPos.getZ() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
+
+            switch (facing.getAxis()) {
+                case X -> {
+                    particleX = centerPos.getX() + (0.55 * facingVector.getX());
+                }
+                case Y -> {
+                    particleY = centerPos.getY() + (0.65 * facingVector.getY());
+                }
+                case Z -> {
+                    particleZ = centerPos.getZ() + (0.55 * facingVector.getZ());
+                }
+            }
+
+            world.addParticle(KlaxonParticleTypes.HALLNOX_POD_DRIP, particleX, particleY, particleZ, 0.0, 0.0, 0.0);
         }
     }
 }
