@@ -41,7 +41,6 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
 
     private static final float RADIUS = 0.3125f; // 5/16 pixels
     private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(2, 2, 2, 14, 14, 14);
-    private static final VoxelShape CORE_SHAPE = Block.createCuboidShape(4, 4, 4, 12, 12, 12);
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
@@ -72,13 +71,8 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
         return facingsToFusedShape[mask];
     }
 
-    @Override
-    protected VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-        return CORE_SHAPE;
-    }
-
     protected boolean shouldConnect(World world, BlockState targetState, BlockPos targetPos, Direction offsetDir) {
-        return targetState.isSideSolid(world, targetPos, offsetDir, SideShapeType.CENTER) || targetState.getBlock() instanceof HallnoxBulbBlock;
+        return targetState.isSideSolid(world, targetPos, offsetDir.getOpposite(), SideShapeType.CENTER) || targetState.getBlock() instanceof HallnoxBulbBlock;
     }
 
     @Override
