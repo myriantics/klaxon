@@ -20,6 +20,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -150,6 +151,29 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
         // this is a stub implementation in ClientWorld so it's fine
         // trip sculk sensors because it's funny
         world.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(player, targetState));
+
+        return ItemActionResult.SUCCESS;
+    }
+
+    @Override
+    public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
+        BooleanProperty toggledProperty = FACING_PROPERTIES.get(facing.getOpposite());
+
+        // calculations are simpler here because dispensers can only face 6 ways - also can't click on random parts of the block
+        serverWorld.setBlockState(targetPos, targetState.cycle(toggledProperty));
+
+        BlockSoundGroup soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState().getSoundGroup();
+        serverWorld.playSound(
+                null,
+                targetPos,
+                targetState.get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
+                SoundCategory.BLOCKS,
+                0.6f + (0.2f + serverWorld.getRandom().nextFloat()),
+                0.2f + (0.4f + serverWorld.getRandom().nextFloat())
+        );
+
+        // proc sculk sensors
+        serverWorld.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(targetState));
 
         return ItemActionResult.SUCCESS;
     }
