@@ -99,7 +99,7 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState newState = super.getPlacementState(ctx);
 
-        // only run our edits if
+        // silence, intellij warnings
         if (newState != null) {
             World world = ctx.getWorld();
             BlockPos pos = ctx.getBlockPos();
@@ -129,11 +129,6 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable {
                         world.setBlockState(neighborPos, neighborState.with(FACING_PROPERTIES.get(direction.getOpposite()), true));
                     }
                 }
-            } else if (clickedState.getBlock() instanceof HallnoxBulbBlock) {
-                // always connect to hallnox bulbs if it's the target block
-                newState = newState.with(FACING_PROPERTIES.get(offsetDir), true);
-                // we have to do this because onUseWithItem() isn't called when crouching
-                world.setBlockState(pos.offset(offsetDir), clickedState.with(FACING_PROPERTIES.get(offsetDir.getOpposite()), true));
             }
         }
 
