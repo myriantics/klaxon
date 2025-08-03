@@ -174,15 +174,13 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        // only update neighbors on placement if placement was actually successful - don't do it if sneaking
-        if (placer == null || !placer.isSneaking()) {
-            for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
-                BlockPos neighborPos = pos.offset(direction);
-                BlockState neighborState = world.getBlockState(neighborPos);
+        // only update neighbors on placement if placement was actually successful
+        for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
+            BlockPos neighborPos = pos.offset(direction);
+            BlockState neighborState = world.getBlockState(neighborPos);
 
-                if (neighborState.getBlock() instanceof HallnoxBulbBlock && state.get(FACING_PROPERTIES.get(direction))) {
-                    world.setBlockState(neighborPos, neighborState.with(FACING_PROPERTIES.get(direction.getOpposite()), true));
-                }
+            if (neighborState.getBlock() instanceof HallnoxBulbBlock && state.get(FACING_PROPERTIES.get(direction))) {
+                world.setBlockState(neighborPos, neighborState.with(FACING_PROPERTIES.get(direction.getOpposite()), true));
             }
         }
 
@@ -209,17 +207,17 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
 
             // don't autoconnect to anything if holding shift
             BlockState clickedState = world.getBlockState(pos.offset(offsetDir));
-            if (!player.isSneaking()) {
+            if (player.isSneaking()) {
                 // connect to blocks with solid center
                 if (shouldConnect(world, clickedState, pos.offset(clickedFace.getOpposite()), clickedFace.getOpposite())) {
                     newState = newState.with(FACING_PROPERTIES.get(offsetDir), true);
                 }
-
+            } else {
                 // automatically connect to other hallnox bulbs - updates them to connect, too
                 for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
                     BlockPos neighborPos = pos.offset(direction);
                     BlockState neighborState = world.getBlockState(neighborPos);
-                    if (neighborState.getBlock() instanceof HallnoxBulbBlock) {
+                    if (shouldConnect(world, neighborState, neighborPos, direction)) {
                         newState = newState.with(FACING_PROPERTIES.get(direction), true);
                     }
                 }
