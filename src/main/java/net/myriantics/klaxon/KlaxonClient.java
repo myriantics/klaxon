@@ -28,6 +28,7 @@ public class KlaxonClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // block transparency
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_BULB, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_DOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_TRAPDOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.STEEL_DOOR, RenderLayer.getCutout());
