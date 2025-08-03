@@ -175,7 +175,7 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         // only update neighbors on placement if placement was actually successful - don't do it if sneaking
-        if (placer == null || placer.isSneaking()) {
+        if (placer == null || !placer.isSneaking()) {
             for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
                 BlockPos neighborPos = pos.offset(direction);
                 BlockState neighborState = world.getBlockState(neighborPos);
