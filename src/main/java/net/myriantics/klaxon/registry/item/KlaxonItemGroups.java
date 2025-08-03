@@ -155,6 +155,9 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.HALLNOX_SIGN);
                 entries.add(KlaxonItems.HALLNOX_HANGING_SIGN);
 
+                // decor
+                entries.add(KlaxonItems.HALLNOX_BULB);
+
                 // misc
                 entries.add(KlaxonItems.STEEL_DOOR);
                 entries.add(KlaxonItems.STEEL_TRAPDOOR);

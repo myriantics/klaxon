@@ -10,6 +10,7 @@
       "id": "#create:wrench_pickup",
       "required": false
     },
+    "klaxon:hallnox_bulb",
     "klaxon:steel_casing",
     "klaxon:crude_steel_casing",
     "klaxon:nether_reactor_core",

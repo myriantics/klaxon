@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
@@ -221,6 +222,19 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         "N"
                 },
                 new ItemStack(Items.CHAIN, 6),
+                CraftingRecipeCategory.BUILDING,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                'H', Ingredient.ofItems(KlaxonItems.HALLNOX_POD),
+                'P', Ingredient.fromTag(KlaxonConventionalItemTags.PLATES),
+                'G', Ingredient.fromTag(ConventionalItemTags.GLASS_BLOCKS)),
+                new String[] {
+                        "PGP",
+                        "GHG",
+                        "PGP"
+                },
+                new ItemStack(KlaxonItems.HALLNOX_BULB, 4),
                 CraftingRecipeCategory.BUILDING,
                 null
         );

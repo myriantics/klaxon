@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "hallnox_bulb",
+  "key": {
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "H": {
+      "item": "klaxon:hallnox_pod"
+    },
+    "P": {
+      "tag": "c:plates"
+    }
+  },
+  "pattern": [
+    "PGP",
+    "GHG",
+    "PGP"
+  ],
+  "result": {
+    "count": 4,
+    "id": "klaxon:hallnox_bulb"
+  }
+}

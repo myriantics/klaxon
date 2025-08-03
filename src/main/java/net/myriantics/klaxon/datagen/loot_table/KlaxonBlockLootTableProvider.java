@@ -76,5 +76,6 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(KlaxonBlocks.HALLNOX_WART_BLOCK);
         addDrop(KlaxonBlocks.HALLNOX_SIGN);
         addDrop(KlaxonBlocks.HALLNOX_HANGING_SIGN);
+        addDrop(KlaxonBlocks.HALLNOX_BULB);
     }
 }
