@@ -180,6 +180,7 @@
 
   "klaxon.jade.text.tooltip.blast_processor.explosion_power": "Explosion Power: %s",
   "klaxon.jade.text.tooltip.crop_growth_disabled": "Crop Growth Disabled",
+  "klaxon.jade.text.tooltip.natural_crop_growth_inhibited": "Natural Crop Growth Inhibited",
   "config.jade.plugin_klaxon.deepslate_blast_processor": "Explosion Power: ",
   "config.jade.plugin_klaxon.crop_growth_disabled": "Crop Growth Disabled",
 
