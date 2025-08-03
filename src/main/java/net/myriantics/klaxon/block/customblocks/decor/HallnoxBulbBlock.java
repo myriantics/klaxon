@@ -10,6 +10,10 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -18,14 +22,19 @@ import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.block.NeighborUpdater;
+import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.Wrenchable;
+import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import org.jetbrains.annotations.Nullable;
 
-public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable {
+public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, Wrenchable {
 
     public static final MapCodec<HallnoxBulbBlock> CODEC = createCodec(HallnoxBulbBlock::new);
 
@@ -87,6 +96,62 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable {
         }
 
         return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        BlockPos targetPos = hitResult.getBlockPos();
+
+        Vec3d hitPos = hitResult.getPos().subtract(Vec3d.ofCenter(targetPos));
+        Direction togglingDirection = Direction.getFacing(hitPos.getX(), hitPos.getY(), hitPos.getZ());
+
+        BlockPos conjoiningPos = targetPos.offset(togglingDirection);
+        BlockState conjoiningState = world.getBlockState(conjoiningPos);
+
+        BooleanProperty toggledProperty = FACING_PROPERTIES.get(togglingDirection);
+        BooleanProperty conjoiningToggledProperty = FACING_PROPERTIES.get(togglingDirection.getOpposite());
+
+        // don't update block states on the client
+        if (!world.isClient()) {
+            // cycle conjoining bulb connector state if possible
+            if (
+                // make sure conjoining state is also a hallnox bulb
+                    conjoiningState.getBlock() instanceof HallnoxBulbBlock
+                            // make sure the states match
+                            && conjoiningState.get(conjoiningToggledProperty)
+                            .equals(targetState.get(toggledProperty)
+                            )
+            ) {
+                world.setBlockState(
+                        conjoiningPos,
+                        conjoiningState.cycle(conjoiningToggledProperty)
+                );
+            }
+
+            // cycle bulb connector state
+            world.setBlockState(
+                    targetPos,
+                    targetState.cycle(toggledProperty)
+            );
+        }
+
+
+        BlockSoundGroup soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState().getSoundGroup();
+
+        world.playSound(
+                player,
+                targetPos,
+                targetState.get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
+                SoundCategory.BLOCKS,
+                0.6f + (0.2f + world.getRandom().nextFloat()),
+                0.2f + (0.4f + world.getRandom().nextFloat())
+        );
+
+        // this is a stub implementation in ClientWorld so it's fine
+        // trip sculk sensors because it's funny
+        world.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(player, targetState));
+
+        return ItemActionResult.SUCCESS;
     }
 
     @Override
