@@ -21,6 +21,7 @@
     "dual_wielding.LivingEntityMixin",
     "entity_attributes.ArmorItemMixin",
     "entity_attributes.LivingEntityMixin",
+    "hallnox_bulb.BlockItemMixin",
     "hallnox_pod.FallingBlockEntityMixin",
     "hallnox_pod.ShearsItemMixin",
     "innate_enchantments.EnchantmentHelperMixin",

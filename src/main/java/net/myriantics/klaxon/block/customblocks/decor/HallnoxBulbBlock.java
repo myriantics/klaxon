@@ -1,19 +1,16 @@
 package net.myriantics.klaxon.block.customblocks.decor;
 
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -30,7 +27,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.block.NeighborUpdater;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.Wrenchable;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import org.jetbrains.annotations.Nullable;
@@ -75,22 +71,12 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
         return targetState.isSideSolid(world, targetPos, offsetDir.getOpposite(), SideShapeType.CENTER) || targetState.getBlock() instanceof HallnoxBulbBlock;
     }
 
-    @Override
-    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (stack.getItem() instanceof BlockItem blockItem) {
-            Block block = blockItem.getBlock();
-
-            BlockState placementState = block.getPlacementState(new ItemPlacementContext(player, hand, stack, hit));
-
-            if (
-                    placementState != null
-                    && shouldConnect(world, placementState, pos.offset(hit.getSide()), hit.getSide().getOpposite())
-            ) {
-                world.setBlockState(pos, state.with(FACING_PROPERTIES.get(hit.getSide()), true));
-            }
+    // called in hallnox_bulb.BlockItemMixin
+    // makes building easier so you don't have to replace stuff or carry a wrench in order to do a cleaner build
+    public void onAdjacentPlaceOnSideWhileNotCrouching(World world, BlockPos bulbPos, BlockState bulbState, BlockPos placedPos, BlockState placedState, Direction clickedSide) {
+        if (shouldConnect(world, placedState, placedPos, clickedSide)) {
+            world.setBlockState(bulbPos, bulbState.with(FACING_PROPERTIES.get(clickedSide), true));
         }
-
-        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
     }
 
     @Override
