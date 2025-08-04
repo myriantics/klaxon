@@ -11,6 +11,7 @@
     "blast_processor_behaviors.WindChargeEntityInvoker",
     "cable_shears.BeehiveBlockMixin",
     "cable_shears.BoggedEntityMixin",
+    "cable_shears.MatchToolLootConditionMixin",
     "cable_shears.MooshroomEntityMixin",
     "cable_shears.PumpkinBlockMixin",
     "cable_shears.SheepEntityMixin",
