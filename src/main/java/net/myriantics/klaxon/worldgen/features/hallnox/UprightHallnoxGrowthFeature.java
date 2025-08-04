@@ -52,8 +52,6 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
         int baseHeight = maxHeight > 2 ? generateBase(structureWorldAccess, originPos, random, maxHeight, config, replaceableBlocks, featureUsedBlocks) : 0;
         BlockPos stemTopPos = generateStem(structureWorldAccess, originPos, random, baseHeight, maxHeight, config, replaceableBlocks, featureUsedBlocks);
 
-        if (stemTopPos == null) return false;
-
         // generate fronds
         for (Direction direction : BlockDirectionHelper.HORIZONTAL) {
             BlockPos lastFrondPos = generateFrond(structureWorldAccess, stemTopPos, random, frondScale, config, replaceableBlocks, featureUsedBlocks, direction);
@@ -65,8 +63,15 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
             podBlock = podBlock.with(Properties.FACING, Direction.DOWN);
         }
 
-        // place pod on top
-        setBlockStateIfPossible(structureWorldAccess, stemTopPos.up(), podBlock, replaceableBlocks, featureUsedBlocks);
+        // place pod on bottom - if that fails, keep trying until it places.
+        BlockPos.Mutable podPlacementPos = stemTopPos.mutableCopy();
+        while (!setBlockStateIfPossible(structureWorldAccess, podPlacementPos, podBlock, replaceableBlocks, featureUsedBlocks)) {
+            if (podPlacementPos.getY() <= originPos.getY()) {
+                return false;
+            } else {
+                podPlacementPos.setY(podPlacementPos.getY() - 1);
+            }
+        }
 
         return true;
     }
@@ -101,7 +106,7 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
     }
 
     // returns top middle block of stem
-    private @Nullable BlockPos generateStem(StructureWorldAccess world, BlockPos originPos, Random random, int baseHeight, int maxHeight, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
+    private BlockPos generateStem(StructureWorldAccess world, BlockPos originPos, Random random, int baseHeight, int maxHeight, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
         BlockPos.Mutable workingPos = new BlockPos.Mutable().set(originPos);
 
         // prep stem state
@@ -114,7 +119,7 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
         for (int yDiff = baseHeight; yDiff < maxHeight; yDiff++) {
             workingPos.setY(originPos.getY() + yDiff);
 
-            if (!setBlockStateIfPossible(world, workingPos, stemState, replaceableBlocks, featureUsedBlocks)) return null;
+            if (!setBlockStateIfPossible(world, workingPos, stemState, replaceableBlocks, featureUsedBlocks)) return workingPos;
         }
 
         for (Direction direction : BlockDirectionHelper.HORIZONTAL) {
