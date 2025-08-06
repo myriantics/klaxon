@@ -11,11 +11,9 @@ import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
-import net.myriantics.klaxon.item.equipment.tools.CleaverItem;
-import net.myriantics.klaxon.item.equipment.tools.HammerItem;
-import net.myriantics.klaxon.item.equipment.tools.CableShearsItem;
-import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
+import net.myriantics.klaxon.item.equipment.tools.*;
 import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 
 import java.util.ArrayList;
@@ -55,6 +53,8 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
+    public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw", new GrappleClawItem(new Item.Settings()));
+    public static final Item GRAPPLE_WINCH = registerSimpleItem("grapple_winch", new GrappleWinchItem(new Item.Settings()));
 
     // armor
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",

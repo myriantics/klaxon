@@ -15,6 +15,7 @@ import net.myriantics.klaxon.registry.block.KlaxonOxidationRegistry;
 import net.myriantics.klaxon.registry.block.KlaxonStrippedBlocksRegistry;
 import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonStatusEffects;
 import net.myriantics.klaxon.registry.item.*;
 import net.myriantics.klaxon.registry.misc.*;
@@ -69,6 +70,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonStrippedBlocksRegistry.init();
 		KlaxonCompostableRegistry.init();
 		KlaxonParticleTypes.init();
+		KlaxonEntityTypes.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}
