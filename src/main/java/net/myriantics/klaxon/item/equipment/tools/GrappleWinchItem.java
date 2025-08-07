@@ -82,6 +82,11 @@ public class GrappleWinchItem extends RangedWeaponItem {
                     );
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                 }
+            } else {
+                GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
+
+                grappleClaw.setTargetRangeSquared(grappleClaw.getPos().squaredDistanceTo(playerEntity.getPos()));
+                grappleClaw.setRetracting(false);
             }
         }
     }
@@ -98,13 +103,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
             GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
             if (grappleClaw != null) {
-                if (grappleClaw.isAnchored()) {
-                    Vec3d vec = grappleClaw.getPos().subtract(player.getPos()).multiply(0.01);
-                    player.addVelocity(vec);
-                } else if (!world.isClient()) {
-                    Vec3d vec = player.getEyePos().subtract(grappleClaw.getPos()).multiply(0.05);
-                    grappleClaw.addVelocity(vec);
-                }
+                grappleClaw.setRetracting(true);
             }
         }
 
