@@ -20,7 +20,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;setSneaking(Z)V", ordinal = 0)
     )
     public void klaxon$resetGrappleWinchTargetPosition(ClientCommandC2SPacket packet, CallbackInfo ci) {
-        if (player instanceof PlayerEntityGrappleAccess access && player.getVelocity().getY() <= 0) {
+        if (player instanceof PlayerEntityGrappleAccess access && !player.isOnGround()) {
             GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
             if (grappleClaw != null) grappleClaw.resetTargetRangeSquared();
         }

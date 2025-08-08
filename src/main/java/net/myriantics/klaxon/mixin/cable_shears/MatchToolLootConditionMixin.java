@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.condition.MatchToolLootCondition;
 import net.minecraft.predicate.item.ItemPredicate;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,7 +25,7 @@ public abstract class MatchToolLootConditionMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/predicate/item/ItemPredicate;test(Lnet/minecraft/item/ItemStack;)Z")
     )
     private boolean klaxon$testForCableShears(boolean original, @Local ItemStack stack) {
-        if (!original && predicate.isPresent() && predicate.get().test(Items.SHEARS.getDefaultStack())) {
+        if (!original && predicate.isPresent() && predicate.get().test(Items.SHEARS.getDefaultStack()) && stack.isOf(KlaxonItems.STEEL_CABLE_SHEARS)) {
             return true;
         }
 

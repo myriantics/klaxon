@@ -84,7 +84,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                 }
             } else if (grappleClaw != null) {
-                grappleClaw.setTargetRangeSquared(grappleClaw.getPos().squaredDistanceTo(playerEntity.getPos()));
+                grappleClaw.resetTargetRangeSquared();
                 grappleClaw.setRetracting(false);
             }
         }
