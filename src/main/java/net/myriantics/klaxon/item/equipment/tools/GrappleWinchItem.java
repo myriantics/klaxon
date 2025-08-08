@@ -56,15 +56,16 @@ public class GrappleWinchItem extends RangedWeaponItem {
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity playerEntity) {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) playerEntity;
+            @Nullable GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
             ItemStack itemStack = playerEntity.getProjectileType(stack);
-            if (!itemStack.isEmpty() && access.klaxon$getGrappleClaw() == null) {
+            if (!itemStack.isEmpty() && grappleClaw == null) {
                 int i = this.getMaxUseTime(stack, user) - remainingUseTicks;
                 float f = getPullProgress(i);
                 if (!(f < 0.1)) {
                     List<ItemStack> list = load(stack, itemStack, playerEntity);
                     if (world instanceof ServerWorld serverWorld && !list.isEmpty()) {
                         Vec3d eyePos = playerEntity.getEyePos();
-                        GrappleClawEntity grappleClaw = new GrappleClawEntity(serverWorld, playerEntity, eyePos.x, eyePos.y, eyePos.z, itemStack.split(1), stack);
+                        grappleClaw = new GrappleClawEntity(serverWorld, playerEntity, eyePos.x, eyePos.y, eyePos.z, itemStack.split(1), stack);
                         grappleClaw.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
                         access.klaxon$setGrappleClaw(grappleClaw);
                         serverWorld.spawnEntity(grappleClaw);
@@ -82,9 +83,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
                     );
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                 }
-            } else {
-                GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
-
+            } else if (grappleClaw != null) {
                 grappleClaw.setTargetRangeSquared(grappleClaw.getPos().squaredDistanceTo(playerEntity.getPos()));
                 grappleClaw.setRetracting(false);
             }

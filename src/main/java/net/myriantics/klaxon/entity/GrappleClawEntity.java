@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.entity;
 
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -73,6 +72,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         return inGround;
     }
 
+    @Override
+    public void checkDespawn() {
+        super.checkDespawn();
+    }
+
+    public void resetTargetRangeSquared() {
+        if (getOwner() != null) this.setTargetRangeSquared(getPos().squaredDistanceTo(getOwner().getPos()));
+    }
+
     public void setTargetRangeSquared(double targetRangeSquared) {
         this.targetRangeSquared = Math.clamp(targetRangeSquared, 0, MAX_RANGE_SQUARED);
     }
@@ -84,6 +92,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     public void setRetracting(boolean retracting) {
         this.isRetracting = retracting;
+    }
+
+    public boolean getIsRetracting() {
+        return this.isRetracting;
     }
 
     @Override
@@ -106,13 +118,16 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     if (this.isRetracting) {
                         if (getWorld().isClient()) {
                             Vec3d vec = this.getPos().subtract(owner.getPos()).normalize().multiply(0.25);
+                            // player can direct movement with facing direction
+                            Vec3d facingVec = owner.getRotationVec(1.0f).normalize().multiply((double) 2 /20);
 
                             // owner goes towards claw if not sneaking, away if they are sneaking
                             if (!owner.isSneaking()) {
-                                ownerVec = ownerVec.add(vec);
+                                ownerVec = ownerVec.add(vec).add(facingVec);
                             } else if (ownerDistance < targetRangeSquared && vec.getY() >= 0) {
-                                // no free flight
-                                ownerVec = ownerVec.add(0, -vec.getY(), 0);
+                                // no free flight - also
+                                ownerVec = ownerVec.add(0, -vec.getY(), 0).multiply(0.5).add(facingVec.negate());
+                                owner.limitFallDistance();
                             }
 
                         }
@@ -126,17 +141,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                             // cancel gravity
                             vec = vec.add(0, owner.getFinalGravity(), 0);
                             ownerVec = ownerVec.add(vec);
-                        }
-
-                        // allow owner to cancel grapple winch velocity if they're not retracting
-                        if (owner.isSneaking()) {
-                            ownerVec = ownerVec.multiply(Vec3d.ZERO);
-
-                            // don't drop people out of the sky if they crouch midair - also reset target range
-                            if (!owner.isOnGround()) {
-                                owner.setVelocity(owner.getVelocity().multiply(new Vec3d(1, 0, 1)));
-                                targetRangeSquared = ownerDistance;
-                            }
                         }
                     }
                 } else {
