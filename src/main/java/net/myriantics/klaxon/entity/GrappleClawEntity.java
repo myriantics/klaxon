@@ -20,10 +20,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
 
-    private final int MAX_RANGE_BLOCKS = 48;
-    private final double MAX_RANGE_SQUARED = Math.pow(MAX_RANGE_BLOCKS, 2);
+    public static final int MAX_RANGE_BLOCKS = 48;
+    public static final double MAX_RANGE_SQUARED = Math.pow(MAX_RANGE_BLOCKS, 2);
     private double targetRangeSquared = MAX_RANGE_SQUARED;
-    private boolean isRetracting = false;
 
     public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, World world) {
         super(entityType, world);
@@ -90,24 +89,21 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         this.targetRangeSquared = Math.clamp(targetRangeSquared, 0, MAX_RANGE_SQUARED);
     }
 
+    public double getTargetRangeSquared() {
+        return targetRangeSquared;
+    }
+
     @Override
     public float getTargetingMargin() {
         return 0.0f;
     }
 
-    public void setRetracting(boolean retracting) {
-        this.isRetracting = retracting;
-    }
-
-    public boolean getIsRetracting() {
-        return this.isRetracting;
-    }
-
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
-        if (this.getOwner() != null) {
+        if (this.getOwner() instanceof PlayerEntityGrappleAccess access) {
             this.resetTargetRangeSquared();
             this.incrementTargetRangeSquared(80);
+            access.klaxon$setGrappleClawPos(this.getPos());
         }
         super.onBlockHit(blockHitResult);
     }
@@ -118,43 +114,19 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         if (owner != null) {
             double ownerDistance = getPos().squaredDistanceTo(owner.getPos());
 
-            Vec3d ownerVec = new Vec3d(0, 0, 0);
             Vec3d selfVec = new Vec3d(0,0, 0);
 
             if (owner instanceof PlayerEntity player && player instanceof PlayerEntityGrappleAccess access && this.equals(access.klaxon$getGrappleClaw())) {
+                access.klaxon$setGrappleClawPos(this.getPos());
+
                 // limit fall distance to give players more leeway
                 if (owner.getVelocity().getY() > -1 && owner.fallDistance > 1.0F) {
                     owner.fallDistance = 1.0F;
                 }
 
-                if (this.isAnchored()) {
-                    if (this.isRetracting) {
-                        if (getWorld().isClient()) {
-                            Vec3d vec = this.getPos().subtract(owner.getPos()).normalize().multiply(2./20);
-                            // player can direct movement with facing direction
-                            Vec3d facingVec = owner.getRotationVec(1.0f).normalize().multiply(1./20).multiply(player.isSprinting() ? 2 : 1);
-
-                            // owner goes towards claw if not sneaking, away if they are sneaking
-                            if (!owner.isSneaking()) {
-                                ownerVec = ownerVec.add(vec).add(facingVec);
-                            } else if (ownerDistance < targetRangeSquared && vec.getY() >= 0) {
-                                // no free flight - also
-                                ownerVec = ownerVec.add(0, -vec.getY(), 0).multiply(0.5).add(facingVec.negate());
-                            }
-
-                        }
-                    }
-
-                    // apply velocity to player if they go past target range
-                    if (((!isRetracting && ownerDistance >= targetRangeSquared) || (ownerDistance > MAX_RANGE_SQUARED)) && owner instanceof ClientPlayerEntity) {
-                        Vec3d vec = this.getPos().subtract(owner.getPos()).normalize().multiply(0.1);
-                        // cancel gravity
-                        vec = vec.add(0, owner.getFinalGravity(), 0);
-                        ownerVec = ownerVec.add(vec);
-                    }
-                } else {
+                if (!this.isAnchored()) {
                     // retract grapple claw if owner pulls back before landing
-                    if (this.isRetracting) {
+                    if (access.klaxon$isRetracting()) {
                         Vec3d vec = owner.getPos().subtract(this.getPos()).normalize();
                         selfVec = selfVec.add(vec);
                     }
@@ -173,11 +145,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 }
 
                 // put data in actionbar
-                if (getWorld().isClient() && owner instanceof ClientPlayerEntity clientPlayer) clientPlayer.sendMessage(Text.literal("dist: " + ownerDistance), true);
+                if (owner instanceof ClientPlayerEntity clientPlayer) clientPlayer.sendMessage(Text.literal("dist: " + ownerDistance), true);
             }
 
             // commit the total velocity edits
-            owner.addVelocity(ownerVec);
             if (!getWorld().isClient()) this.addVelocity(selfVec);
 
             if (!(getOwner() instanceof PlayerEntity) || !this.removeIfInvalid((PlayerEntity) getOwner())) super.tick();

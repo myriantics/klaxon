@@ -58,6 +58,10 @@ public class GrappleWinchItem extends RangedWeaponItem {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) playerEntity;
             @Nullable GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
             ItemStack itemStack = playerEntity.getProjectileType(stack);
+
+            // update retraction status
+            access.klaxon$setRetracting(false);
+
             if (!itemStack.isEmpty() && grappleClaw == null) {
                 int i = this.getMaxUseTime(stack, user) - remainingUseTicks;
                 float f = getPullProgress(i);
@@ -85,7 +89,6 @@ public class GrappleWinchItem extends RangedWeaponItem {
                 }
             } else if (grappleClaw != null) {
                 grappleClaw.resetTargetRangeSquared();
-                grappleClaw.setRetracting(false);
             }
         }
     }
@@ -102,7 +105,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
             GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
             if (grappleClaw != null) {
-                grappleClaw.setRetracting(true);
+                access.klaxon$setRetracting(true);
             }
         }
 
