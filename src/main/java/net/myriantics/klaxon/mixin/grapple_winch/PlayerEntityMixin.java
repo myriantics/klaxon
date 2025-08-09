@@ -99,9 +99,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 // apply velocity to player if they go past target range
                 // retraction is only capped at the max range
                 // also this is a dope ass spot to use ternary operators omg
-                if (clawDistance >= (klaxon$isRetractingGrappleWinch ? maxRangeSquared : targetRangeSquared)) {
+                if (clawDistance > (klaxon$isRetractingGrappleWinch ? maxRangeSquared : targetRangeSquared)) {
                     Vec3d playerRangeCorrectionVec = playerToClawVec.multiply(0.1);
                     playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, this.getFinalGravity(), 0);
+                    // when i say a limit i mean it haha
+                    if (clawDistance > maxRangeSquared) playerRangeCorrectionVec = playerRangeCorrectionVec.multiply(Math.pow(clawDistance / maxRangeSquared, 3));
                     selfVec = selfVec.add(playerRangeCorrectionVec);
                 }
             }
