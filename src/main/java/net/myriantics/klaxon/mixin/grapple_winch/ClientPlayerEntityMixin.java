@@ -1,24 +1,22 @@
 package net.myriantics.klaxon.mixin.grapple_winch;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.input.Input;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerEntityMixin extends PlayerEntity {
+public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
 
-    public ClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
+        super(world, profile);
     }
 
     @Inject(
@@ -26,8 +24,8 @@ public abstract class ClientPlayerEntityMixin extends PlayerEntity {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V", ordinal = 0)
     )
     public void klaxon$resetGrappleWinchTargetPosition(CallbackInfo ci) {
-        if (this instanceof PlayerEntityGrappleAccess access && !isOnGround()) {
-            GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
+        if (!isOnGround()) {
+            GrappleClawEntity grappleClaw = ((PlayerEntityGrappleAccess) this).klaxon$getGrappleClaw();
             if (grappleClaw != null) grappleClaw.resetTargetRangeSquared();
         }
     }

@@ -1,13 +1,18 @@
 package net.myriantics.klaxon.mixin.grapple_winch;
 
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,6 +24,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     @Unique
     private GrappleClawEntity klaxon$grappleClaw = null;
 
+    // stored separately in order to allow grapple winch to work even if grapple claw is unloaded on client
     @Unique
     private Vec3d klaxon$grappleClawPos = null;
 
@@ -64,19 +70,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             at = @At(value = "HEAD")
     )
     private void klaxon$tickGrappleWinchMovement(CallbackInfo ci) {
+
         // only run player movement logic when we have an active anchored grapple claw
-        if (klaxon$grappleClaw != null) {
+        if (getWorld().isClient() && (klaxon$grappleClaw != null || klaxon$grappleClawPos != null)) {
             Vec3d selfVec = Vec3d.ZERO;
 
             // make sure grapple claw is loaded and anchored
-            if (klaxon$grappleClawPos != null && klaxon$grappleClaw.isAnchored()) {
+            if (klaxon$grappleClawPos != null && (klaxon$grappleClaw == null || klaxon$grappleClaw.isAnchored())) {
                 // get limits and data from claw
                 double clawDistance = getPos().squaredDistanceTo(klaxon$grappleClawPos);
-                double targetRangeSquared = klaxon$grappleClaw.getTargetRangeSquared();
                 double maxRangeSquared = GrappleClawEntity.MAX_RANGE_SQUARED;
+                double targetRangeSquared = klaxon$grappleClaw == null ? maxRangeSquared : klaxon$grappleClaw.getTargetRangeSquared();
 
                 // get movement vectors
-                Vec3d playerToClawVec = klaxon$grappleClaw.getPos().subtract(this.getPos()).normalize();
+                Vec3d playerToClawVec = klaxon$grappleClawPos.subtract(this.getPos()).normalize();
                 Vec3d playerFacingVec = this.getRotationVec(1.0f).normalize();
 
                 // tick retraction movement
@@ -91,8 +98,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                     // owner goes towards claw if not sneaking, away if they are sneaking
                     if (!this.isSneaking()) {
                         selfVec = selfVec.add(playerToClawRetractionVec).add(playerFacingRetractionVec);
-                    } else if (clawDistance < targetRangeSquared && playerToClawRetractionVec.getY() >= 0) {
-                        selfVec = selfVec.add(0, -playerToClawVec.getY(), 0).multiply(0.5).add(playerFacingVec.negate().multiply(0.3, 0.1, 0.3));
+                    } else if (clawDistance < maxRangeSquared && playerToClawRetractionVec.getY() >= 0) {
+                        selfVec = selfVec.add(0, -playerToClawVec.getY(), 0).multiply(0.5).add(playerFacingVec.negate().multiply(0.05, 0, 0.05));
                     }
                 }
 
