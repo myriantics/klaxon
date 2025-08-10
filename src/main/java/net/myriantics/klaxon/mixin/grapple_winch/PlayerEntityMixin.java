@@ -103,15 +103,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                     // transform movement vectors
                     Vec3d playerToClawRetractionVec = playerToClawVec.multiply(2./20);
                     // player can direct movement with facing direction to combat getting stuck under ledges
-                    Vec3d playerFacingRetractionVec = playerFacingVec.multiply(1.5/20).multiply(this.isSprinting() ? 2 : 1);
+                    Vec3d playerFacingRetractionVec = playerFacingVec.multiply(1./20).multiply(this.isSprinting() ? 1.5 : 1);
 
                     // add vectors to self vector
                     // owner goes towards claw if not sneaking, away if they are sneaking
                     if (!this.isSneaking()) {
                         selfVec = selfVec.add(playerToClawRetractionVec).add(playerFacingRetractionVec);
-                    } else if (clawDistance < maxRangeSquared && playerToClawRetractionVec.getY() >= 0) {
-                        selfVec = selfVec.add(0, -playerToClawVec.getY(), 0).multiply(0.5).add(0, getFinalGravity(), 0);
                     }
+                    // no custom logic is needed if the player is sneaking because they will just fall until they hit the max or target range
                 }
 
                 // apply velocity to player if they go past target range
@@ -119,9 +118,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 // also this is a dope ass spot to use ternary operators omg
                 if (clawDistance > (klaxon$isRetractingGrappleWinch ? maxRangeSquared : targetRangeSquared)) {
                     Vec3d playerRangeCorrectionVec = playerToClawVec.multiply(0.1);
-                    playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, this.getFinalGravity(), 0);
                     // when i say a limit i mean it haha
                     if (clawDistance > maxRangeSquared) playerRangeCorrectionVec = playerRangeCorrectionVec.multiply(Math.pow(clawDistance / maxRangeSquared, 3));
+                    playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, this.getFinalGravity(), 0);
                     selfVec = selfVec.add(playerRangeCorrectionVec);
                 }
             }
