@@ -10,12 +10,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.networking.s2c.GrappleClawPositionSyncPacket;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,6 +110,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             this.incrementTargetRangeSquared(80);
             access.klaxon$setFallbackGrappleClawPos(this.getPos());
             if (this.getOwner() instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.playSoundToPlayer(
+                        KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_ANCHOR,
+                        SoundCategory.PLAYERS,
+                        1.0F,
+                        1.0F / (serverPlayer.getWorld().getRandom().nextFloat() * 0.4F + 1.2F));
                 ServerPlayNetworking.send(serverPlayer, new GrappleClawPositionSyncPacket(Optional.ofNullable(this.getPos().toVector3f()), this.getId()));
             }
         }

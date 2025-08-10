@@ -12,6 +12,9 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent ITEM_HAMMER_USAGE = register("item.hammer.usage", SoundEvents.BLOCK_ANVIL_LAND);
     public static final SoundEvent ITEM_CABLE_SHEARS_USAGE = register("item.cable_shears.usage", SoundEvents.BLOCK_CHAIN_BREAK);
     public static final SoundEvent ITEM_SHEARS_USAGE = register("item.shears.usage", SoundEvents.ENTITY_SHEEP_SHEAR);
+    // grapple winch
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_LAUNCH = register("item.grapple_winch.launch", SoundEvents.ITEM_TRIDENT_THROW.value());
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_ANCHOR = register("item.grapple_winch.anchor", SoundEvents.ITEM_TRIDENT_THUNDER.value());
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");

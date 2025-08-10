@@ -17,6 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,10 +75,10 @@ public class GrappleWinchItem extends RangedWeaponItem {
                             playerEntity.getX(),
                             playerEntity.getY(),
                             playerEntity.getZ(),
-                            SoundEvents.ITEM_TRIDENT_THROW,
+                            KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LAUNCH,
                             SoundCategory.PLAYERS,
                             1.0F,
-                            1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F
+                            1.0F / (world.getRandom().nextFloat() * 0.8F + 1.2F) + f * 0.5F
                     );
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                 }
