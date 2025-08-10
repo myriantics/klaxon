@@ -4,8 +4,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.network.packet.s2c.play.WorldEventS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -13,7 +11,6 @@ import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.networking.c2s.EntityDualWieldToggleC2SPacket;
@@ -92,9 +89,9 @@ public abstract class KlaxonPackets {
                     // make sure player has an active grapple claw and that its entity id matches that of the packet's origin one
                     if (true) {
                         if (pos.isEmpty()) {
-                            access.klaxon$setGrappleClawPos(null);
+                            access.klaxon$setFallbackGrappleClawPos(null);
                         } else {
-                            access.klaxon$setGrappleClawPos(new Vec3d(pos.get()));
+                            access.klaxon$setFallbackGrappleClawPos(new Vec3d(pos.get()));
                         }
                     }
                 });

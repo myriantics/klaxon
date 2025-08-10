@@ -1,8 +1,6 @@
 package net.myriantics.klaxon.entity;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -12,11 +10,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.networking.s2c.GrappleClawPositionSyncPacket;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -110,7 +106,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         if (this.getOwner() instanceof PlayerEntityGrappleAccess access) {
             this.resetTargetRangeSquared();
             this.incrementTargetRangeSquared(80);
-            access.klaxon$setGrappleClawPos(this.getPos());
+            access.klaxon$setFallbackGrappleClawPos(this.getPos());
             if (this.getOwner() instanceof ServerPlayerEntity serverPlayer) {
                 ServerPlayNetworking.send(serverPlayer, new GrappleClawPositionSyncPacket(Optional.ofNullable(this.getPos().toVector3f()), this.getId()));
             }
@@ -127,8 +123,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             Vec3d selfVec = new Vec3d(0,0, 0);
 
             if (owner instanceof PlayerEntity player && player instanceof PlayerEntityGrappleAccess access && this.equals(access.klaxon$getGrappleClaw())) {
-                // update grapple claw pos
-                access.klaxon$setGrappleClawPos(this.getPos());
 
                 // limit fall distance to give players more leeway
                 if (owner.getVelocity().getY() > -1 && owner.fallDistance > 1.0F) {
@@ -206,7 +200,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     @Override
     public void remove(RemovalReason reason) {
         if (getOwner() instanceof ServerPlayerEntity serverPlayer) {
-            ((PlayerEntityGrappleAccess) serverPlayer).klaxon$setGrappleClawPos(null);
+            ((PlayerEntityGrappleAccess) serverPlayer).klaxon$setFallbackGrappleClawPos(null);
             ServerPlayNetworking.send(serverPlayer, new GrappleClawPositionSyncPacket(Optional.empty(), getId()));
         }
         clearPlayerGrappleClawIfNeeded();

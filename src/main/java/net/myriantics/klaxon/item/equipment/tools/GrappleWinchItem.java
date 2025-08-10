@@ -1,26 +1,20 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
@@ -62,7 +56,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
             // update retraction status
             access.klaxon$setRetracting(false);
 
-            if (!itemStack.isEmpty() && grappleClaw == null && access.klaxon$getGrappleClawPos() == null) {
+            if (!itemStack.isEmpty() && grappleClaw == null && access.klaxon$getFallbackGrappleClawPos() == null) {
                 int i = this.getMaxUseTime(stack, user) - remainingUseTicks;
                 float f = getPullProgress(i);
                 if (!(f < 0.1)) {
@@ -104,7 +98,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
         if (user instanceof PlayerEntity player) {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
             GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
-            if (grappleClaw != null || access.klaxon$getGrappleClawPos() != null) {
+            if (grappleClaw != null || access.klaxon$getFallbackGrappleClawPos() != null) {
                 access.klaxon$setRetracting(true);
             }
         }

@@ -13,7 +13,7 @@ public interface PlayerEntityGrappleAccess {
 
     void klaxon$setRetracting(boolean isRetracting);
 
-    Vec3d klaxon$getGrappleClawPos();
+    Vec3d klaxon$getFallbackGrappleClawPos();
 
-    void klaxon$setGrappleClawPos(Vec3d grappleClawPos);
+    void klaxon$setFallbackGrappleClawPos(Vec3d grappleClawPos);
 }
