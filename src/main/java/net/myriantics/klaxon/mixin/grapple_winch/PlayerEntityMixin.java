@@ -71,6 +71,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             Vec3d selfVec = Vec3d.ZERO;
 
             // initialize values
+            Vec3d playerToClawVec;
             double clawDistance;
             double maxRangeSquared = GrappleClawEntity.MAX_RANGE_SQUARED;
             double targetRangeSquared;
@@ -78,10 +79,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
 
             // update values based on whether the claw is loaded clientside or not
             if (klaxon$grappleClaw != null) {
+                playerToClawVec = klaxon$grappleClaw.getPos().subtract(this.getPos());
                 clawDistance = getPos().squaredDistanceTo(klaxon$grappleClaw.getPos());
                 targetRangeSquared = klaxon$grappleClaw.getTargetRangeSquared();
                 shouldMove = klaxon$grappleClaw.isAnchored();
             } else if (klaxon$fallbackGrappleClawPos != null) {
+                playerToClawVec = klaxon$fallbackGrappleClawPos.subtract(this.getPos());
                 clawDistance = getPos().squaredDistanceTo(klaxon$fallbackGrappleClawPos);
                 targetRangeSquared = maxRangeSquared;
                 shouldMove = true;
@@ -93,8 +96,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             // make sure grapple claw is loaded and anchored
             if (shouldMove) {
 
-                // get movement vectors
-                Vec3d playerToClawVec = klaxon$fallbackGrappleClawPos.subtract(this.getPos()).normalize();
+                // get movement vectors and normalize them
+                playerToClawVec = playerToClawVec.normalize();
                 Vec3d playerFacingVec = this.getRotationVec(1.0f).normalize();
 
                 // tick retraction movement
