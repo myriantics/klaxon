@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.mixin.grapple_winch;
 
 import net.minecraft.entity.Entity;
-import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +19,7 @@ public abstract class EntityMixin {
     )
     public void klaxon$cancelDamageVelocityIfMidairWithGrappleWinch(CallbackInfo ci) {
         // this is here to fix an issue with players being flung downwards if they get damaged at all when grappling.
-        if (!isOnGround() && this instanceof PlayerEntityGrappleAccess access && (access.klaxon$getGrappleClaw() != null || access.klaxon$getFallbackGrappleClawPos() != null)) {
+        if (!isOnGround() && this instanceof PlayerEntityGrappleAccess access && access.klaxon$hasActiveConnection()) {
             ci.cancel();
         }
     }

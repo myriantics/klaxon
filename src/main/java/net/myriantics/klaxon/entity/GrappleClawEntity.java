@@ -9,16 +9,19 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.networking.s2c.GrappleClawPositionSyncPacket;
+import net.myriantics.klaxon.networking.s2c.GrappleWinchSyncPacket;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
-import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.util.grapple_winch.GrappleWinchClientFallbackData;
+import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -27,10 +30,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     public static final int MAX_RANGE_BLOCKS = 128;
     public static final double MAX_RANGE_SQUARED = Math.pow(MAX_RANGE_BLOCKS, 2);
-    private double targetRangeSquared = MAX_RANGE_SQUARED;
 
     public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, World world) {
         super(entityType, world);
+        if (getOwner() instanceof PlayerEntityGrappleAccess access && !this.equals(access.klaxon$getGrappleClaw())) {
+            this.discard();
+        }
     }
 
     public GrappleClawEntity(World world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
@@ -82,22 +87,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         super.checkDespawn();
     }
 
-    public void resetTargetRangeSquared() {
-        if (getOwner() != null) this.setTargetRangeSquared(getPos().squaredDistanceTo(getOwner().getPos()));
-    }
-
-    public void incrementTargetRangeSquared(double increment) {
-        this.setTargetRangeSquared(targetRangeSquared + increment);
-    }
-
-    public void setTargetRangeSquared(double targetRangeSquared) {
-        this.targetRangeSquared = Math.clamp(targetRangeSquared, 0, MAX_RANGE_SQUARED);
-    }
-
-    public double getTargetRangeSquared() {
-        return targetRangeSquared;
-    }
-
     @Override
     public float getTargetingMargin() {
         return 0.0f;
@@ -105,20 +94,21 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
-        if (this.getOwner() instanceof PlayerEntityGrappleAccess access) {
-            this.resetTargetRangeSquared();
-            this.incrementTargetRangeSquared(80);
-            access.klaxon$setFallbackGrappleClawPos(this.getPos());
-            if (this.getOwner() instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.playSoundToPlayer(
-                        KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_ANCHOR,
-                        SoundCategory.PLAYERS,
-                        1.0F,
-                        1.0F / (serverPlayer.getWorld().getRandom().nextFloat() * 0.4F + 1.2F));
-                ServerPlayNetworking.send(serverPlayer, new GrappleClawPositionSyncPacket(Optional.ofNullable(this.getPos().toVector3f()), this.getId()));
-            }
-        }
         super.onBlockHit(blockHitResult);
+        // we have to call super before this because the isAnchored() check will fail otherwise
+        if (this.getOwner() instanceof ServerPlayerEntity serverPlayer && serverPlayer instanceof PlayerEntityGrappleAccess access && access.klaxon$hasActiveConnection()) {
+            serverPlayer.playSoundToPlayer(
+                    KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_ANCHOR,
+                    SoundCategory.PLAYERS,
+                    1.0F,
+                    1.0F / (serverPlayer.getWorld().getRandom().nextFloat() * 0.4F + 1.2F));
+            ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.of(
+                    new GrappleWinchClientFallbackData(
+                            this.getPos(),
+                            this.isAnchored()
+                    )
+            ), this.getId()));
+        }
     }
 
     @Override
@@ -130,6 +120,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             Vec3d selfVec = new Vec3d(0,0, 0);
 
             if (owner instanceof PlayerEntity player && player instanceof PlayerEntityGrappleAccess access && this.equals(access.klaxon$getGrappleClaw())) {
+
+                double currentWinchCableLength = MAX_RANGE_SQUARED;
 
                 // limit fall distance to give players more leeway
                 if (owner.getVelocity().getY() > -1 && owner.fallDistance > 1.0F) {
@@ -144,16 +136,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     }
 
                     // retract grapple claw if it hits limit
-                    if (ownerDistance >= targetRangeSquared) {
+                    if (ownerDistance >= currentWinchCableLength) {
                         Vec3d vec = owner.getPos().subtract(this.getPos()).normalize().multiply(5f/20);
                         selfVec = selfVec.add(vec);
                     }
                 }
 
                 // players can extend target range by sprinting
-                if (player.isSprinting() && player.isOnGround() && ownerDistance > targetRangeSquared) {
-                    resetTargetRangeSquared();
-                    incrementTargetRangeSquared(80);
+                if (player.isSprinting() && player.isOnGround() && ownerDistance > currentWinchCableLength) {
+                    access.klaxon$resetWinchCableLength();
                 }
 
             }
@@ -193,6 +184,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+    }
+
+    @Override
     public void setOwner(@Nullable Entity entity) {
         super.setOwner(entity);
         setPlayerGrappleClaw(this);
@@ -207,10 +203,25 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     @Override
     public void remove(RemovalReason reason) {
         if (getOwner() instanceof ServerPlayerEntity serverPlayer) {
-            ((PlayerEntityGrappleAccess) serverPlayer).klaxon$setFallbackGrappleClawPos(null);
-            ServerPlayNetworking.send(serverPlayer, new GrappleClawPositionSyncPacket(Optional.empty(), getId()));
+            ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.empty(), getId()));
         }
+        // if (getOwner() instanceof PlayerEntityGrappleAccess access) access.klaxon$resetWinchCableLength();
         clearPlayerGrappleClawIfNeeded();
         super.remove(reason);
+    }
+
+    public static void onLoadedServerside(Entity entity, ServerWorld serverWorld) {
+        if (entity instanceof GrappleClawEntity grappleClaw && grappleClaw.isAnchored()) {
+            Entity owner = grappleClaw.getOwner();
+
+            if (owner instanceof ServerPlayerEntity serverPlayer && owner instanceof PlayerEntityGrappleAccess access) {
+                ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.of(
+                        new GrappleWinchClientFallbackData(
+                                grappleClaw.getPos(),
+                                grappleClaw.isAnchored()
+                        )
+                ), grappleClaw.getId()));
+            }
+        }
     }
 }

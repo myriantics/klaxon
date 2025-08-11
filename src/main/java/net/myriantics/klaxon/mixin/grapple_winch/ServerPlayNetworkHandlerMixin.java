@@ -4,7 +4,7 @@ import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
-import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,8 +21,9 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     public void klaxon$resetGrappleWinchTargetPosition(ClientCommandC2SPacket packet, CallbackInfo ci) {
         if (player instanceof PlayerEntityGrappleAccess access && !player.isOnGround()) {
-            GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
-            if (grappleClaw != null) grappleClaw.resetTargetRangeSquared();
+            if (access.klaxon$hasActiveConnection()) {
+                access.klaxon$resetWinchCableLength();
+            }
         }
     }
 }

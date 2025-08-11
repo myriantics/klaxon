@@ -7,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.s2c.play.WorldEventS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
@@ -16,11 +15,11 @@ import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.networking.c2s.EntityDualWieldToggleC2SPacket;
 import net.myriantics.klaxon.networking.s2c.EntityDualWieldToggleS2CPacket;
 import net.myriantics.klaxon.networking.c2s.HammerWalljumpTriggerPacket;
-import net.myriantics.klaxon.networking.s2c.GrappleClawPositionSyncPacket;
+import net.myriantics.klaxon.networking.s2c.GrappleWinchSyncPacket;
 import net.myriantics.klaxon.networking.s2c.KlaxonWorldEventPacket;
 import net.myriantics.klaxon.util.LivingEntityMixinAccess;
-import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
-import org.joml.Vector3f;
+import net.myriantics.klaxon.util.grapple_winch.GrappleWinchClientFallbackData;
+import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 
 import java.util.Optional;
 
@@ -39,7 +38,7 @@ public abstract class KlaxonPackets {
         PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(EntityDualWieldToggleS2CPacket.ID, EntityDualWieldToggleS2CPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket.PACKET_CODEC);
-        PayloadTypeRegistry.playS2C().register(GrappleClawPositionSyncPacket.ID, GrappleClawPositionSyncPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(GrappleWinchSyncPacket.ID, GrappleWinchSyncPacket.PACKET_CODEC);
 
         // c2s
         PayloadTypeRegistry.playC2S().register(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket.PACKET_CODEC);
@@ -78,22 +77,23 @@ public abstract class KlaxonPackets {
             });
         })));
 
-        ClientPlayNetworking.registerGlobalReceiver(GrappleClawPositionSyncPacket.ID, ((payload, context) -> {
+        ClientPlayNetworking.registerGlobalReceiver(GrappleWinchSyncPacket.ID, ((payload, context) -> {
             MinecraftClient client = context.client();
 
             // this because it wont let me cast to the duck within the execute block... why...
             if (client.player instanceof PlayerEntityGrappleAccess access) {
                 client.execute(() -> {
-                    Optional<Vector3f> pos = payload.pos();
+                    Optional<GrappleWinchClientFallbackData> winchData = payload.winchData();
 
                     // make sure player has an active grapple claw and that its entity id matches that of the packet's origin one
-                    if (true) {
-                        if (pos.isEmpty()) {
-                            access.klaxon$setFallbackGrappleClawPos(null);
-                        } else {
-                            access.klaxon$setFallbackGrappleClawPos(new Vec3d(pos.get()));
-                        }
+                    if (winchData.isEmpty()) {
+                        access.klaxon$setWinchFallbackData(null);
+                    } else {
+                        access.klaxon$setWinchFallbackData(winchData.get());
                     }
+
+                    // this is needed so the player isn't schmoved when this hits
+                    access.klaxon$resetWinchCableLength();
                 });
             }
         }));

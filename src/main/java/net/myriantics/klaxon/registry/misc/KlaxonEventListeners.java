@@ -1,11 +1,13 @@
 package net.myriantics.klaxon.registry.misc;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
+import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeLogic;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
@@ -31,6 +33,8 @@ public abstract class KlaxonEventListeners {
 
         ServerLifecycleEvents.SERVER_STARTED.register(DefaultInnateItemEnchantmentsComponent::onServerStarted);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(DefaultInnateItemEnchantmentsComponent::onDataPackReload);
+
+        ServerEntityEvents.ENTITY_LOAD.register(GrappleClawEntity::onLoadedServerside);
 
         KlaxonCommon.LOGGER.info("Registered KLAXON's Event Listeners!");
     }

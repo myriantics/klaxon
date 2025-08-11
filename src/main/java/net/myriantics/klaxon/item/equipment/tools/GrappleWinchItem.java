@@ -8,7 +8,6 @@ import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -18,7 +17,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
-import net.myriantics.klaxon.util.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -51,20 +50,19 @@ public class GrappleWinchItem extends RangedWeaponItem {
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity playerEntity) {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) playerEntity;
-            @Nullable GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
             ItemStack itemStack = playerEntity.getProjectileType(stack);
 
             // update retraction status
             access.klaxon$setRetracting(false);
 
-            if (!itemStack.isEmpty() && grappleClaw == null && access.klaxon$getFallbackGrappleClawPos() == null) {
+            if (!itemStack.isEmpty() && !access.klaxon$hasActiveConnection()) {
                 int i = this.getMaxUseTime(stack, user) - remainingUseTicks;
                 float f = getPullProgress(i);
                 if (!(f < 0.1)) {
                     List<ItemStack> list = load(stack, itemStack, playerEntity);
                     if (world instanceof ServerWorld serverWorld && !list.isEmpty()) {
                         Vec3d eyePos = playerEntity.getEyePos();
-                        grappleClaw = new GrappleClawEntity(serverWorld, playerEntity, eyePos.x, eyePos.y, eyePos.z, itemStack.split(1), stack);
+                        GrappleClawEntity grappleClaw = new GrappleClawEntity(serverWorld, playerEntity, eyePos.x, eyePos.y, eyePos.z, itemStack.split(1), stack);
                         grappleClaw.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
                         access.klaxon$setGrappleClaw(grappleClaw);
                         serverWorld.spawnEntity(grappleClaw);
@@ -82,8 +80,8 @@ public class GrappleWinchItem extends RangedWeaponItem {
                     );
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                 }
-            } else if (grappleClaw != null) {
-                grappleClaw.resetTargetRangeSquared();
+            } else if (access.klaxon$hasActiveConnection()) {
+                access.klaxon$resetWinchCableLength();
             }
         }
     }
@@ -98,8 +96,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (user instanceof PlayerEntity player) {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
-            GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
-            if (grappleClaw != null || access.klaxon$getFallbackGrappleClawPos() != null) {
+            if (access.klaxon$hasActiveConnection()) {
                 access.klaxon$setRetracting(true);
             }
         }
