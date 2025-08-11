@@ -132,7 +132,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             double currentWinchCableLength = klaxon$getCurrentWinchCableLength();
             boolean shouldMove;
 
-
             // update values based on whether the claw is loaded clientside or not
             if (grappleClaw != null) {
                 playerToClawVec = grappleClaw.getPos().subtract(this.getPos());
@@ -166,8 +165,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                     // owner goes towards claw if not sneaking, away if they are sneaking
                     if (!this.isSneaking()) {
                         selfVec = selfVec.add(playerToClawRetractionVec).add(playerFacingRetractionVec);
+                    } else {
+                        Vec3d correctedFacingVec = playerFacingRetractionVec.multiply(1, playerFacingRetractionVec.getY() > 0 ? 0 : 1, 1).negate().multiply(0.65);
+                        selfVec = selfVec.add(correctedFacingVec);
                     }
-                    // no custom logic is needed if the player is sneaking because they will just fall until they hit the max or target range
                 }
 
                 // apply velocity to player if they go past target range
