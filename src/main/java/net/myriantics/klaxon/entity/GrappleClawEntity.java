@@ -167,6 +167,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         Entity entity = this.getOwner();
         if (entity instanceof PlayerEntityGrappleAccess access && this.equals(access.klaxon$getGrappleClaw())) {
             access.klaxon$setGrappleClaw(null);
+            access.klaxon$setWinchFallbackData(null);
+            if (entity instanceof ServerPlayerEntity serverPlayer) {
+                ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.empty(), getId()));
+            }
         }
     }
 
