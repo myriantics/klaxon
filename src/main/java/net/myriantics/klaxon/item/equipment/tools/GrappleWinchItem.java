@@ -105,18 +105,19 @@ public class GrappleWinchItem extends RangedWeaponItem {
         PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) user;
         ItemStack winchStack = user.getStackInHand(hand);
         ItemStack ammoStack = user.getProjectileType(winchStack);
-        List<ItemStack> list = load(winchStack, ammoStack, user);
+        ChargedProjectilesComponent chargedProjectilesComponent = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
 
-
-        if (access.klaxon$hasActiveConnection()) {
+        // proceed if connection is active or winch has a grapple claw stored
+        if (access.klaxon$hasActiveConnection() || (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty())) {
             user.setCurrentHand(hand);
             return TypedActionResult.consume(winchStack);
         } else if (!ammoStack.isEmpty()) {
+            List<ItemStack> list = load(winchStack, ammoStack, user);
             user.setCurrentHand(hand);
             // load grapple winch if we don't have a grapple claw loaded
             winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
             user.incrementStat(Stats.USED.getOrCreateStat(this));
-            return TypedActionResult.consume(winchStack);
+            return TypedActionResult.success(winchStack);
         } else {
             return TypedActionResult.fail(winchStack);
         }
