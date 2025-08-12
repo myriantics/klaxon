@@ -3,6 +3,8 @@ package net.myriantics.klaxon.entity;
 import com.mojang.serialization.Decoder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +17,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -70,7 +74,29 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     @Override
+    public ActionResult interact(PlayerEntity player, Hand hand) {
+        PlayerEntityGrappleAccess interactorAccess = (PlayerEntityGrappleAccess) player;
+
+        if (!interactorAccess.klaxon$hasActiveConnection() && !(getOwner() instanceof PlayerEntityGrappleAccess ownerAccess && ownerAccess.klaxon$getGrappleClaw().equals(this))) {
+            this.setOwner(player);
+            interactorAccess.klaxon$setGrappleClaw(this);
+            return ActionResult.SUCCESS;
+        }
+
+        return super.interact(player, hand);
+    }
+
+    @Override
     public boolean damage(DamageSource source, float amount) {
+        ItemStack weaponStack = source.getWeaponStack();
+        if (!getWorld().isClient()) {
+            if (weaponStack != null && weaponStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
+                ChargedProjectilesComponent chargedProjectilesComponent = weaponStack.get(DataComponentTypes.CHARGED_PROJECTILES);
+                if (chargedProjectilesComponent == null || chargedProjectilesComponent.isEmpty()) {
+                    weaponStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
+                }
+            }
+        }
         this.kill();
         return super.damage(source, amount);
     }
@@ -256,6 +282,18 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         Entity entity = this.getOwner();
         if (entity instanceof PlayerEntityGrappleAccess access) {
             access.klaxon$setGrappleClaw(grappleClaw);
+            if (getOwner() instanceof ServerPlayerEntity serverPlayer) {
+                if (grappleClaw == null) {
+                    ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.empty(), grappleClaw.getId()));
+                } else {
+                    ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.of(
+                            new GrappleWinchClientFallbackData(
+                                    grappleClaw.getPos(),
+                                    grappleClaw.isAnchored()
+                            )
+                    ), grappleClaw.getId()));
+                }
+            }
         }
     }
 
@@ -314,7 +352,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         if (entity instanceof GrappleClawEntity grappleClaw && grappleClaw.isAnchored()) {
             Entity owner = grappleClaw.getOwner();
 
-            if (owner instanceof ServerPlayerEntity serverPlayer && owner instanceof PlayerEntityGrappleAccess access) {
+            if (owner instanceof ServerPlayerEntity serverPlayer && owner instanceof PlayerEntityGrappleAccess) {
                 ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.of(
                         new GrappleWinchClientFallbackData(
                                 grappleClaw.getPos(),
