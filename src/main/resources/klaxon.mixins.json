@@ -18,6 +18,7 @@
     "cable_shears.SnowGolemEntityMixin",
     "cable_shears.TripwireBlockMixin",
     "cable_shears.WolfEntityMixin",
+    "damageable_and_stackable.ItemStackMixin",
     "dual_wielding.LivingEntityMixin",
     "entity_attributes.ArmorItemMixin",
     "entity_attributes.LivingEntityMixin",

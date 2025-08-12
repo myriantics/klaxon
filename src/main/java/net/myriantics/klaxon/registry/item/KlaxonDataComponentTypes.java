@@ -1,8 +1,11 @@
 package net.myriantics.klaxon.registry.item;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.component.ComponentType;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Unit;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
@@ -85,6 +88,11 @@ public abstract class KlaxonDataComponentTypes {
                 builder.packetCodec(InstabreakingToolComponent.PACKET_CODEC);
                 return builder;
             });
+
+    // Items with this component override the check that disallows both damage and stacking components coexisting.
+    public static final ComponentType<Unit> DAMAGEABLE_AND_STACKABLE = register("damageable_and_stackable",
+            unitBuilder -> unitBuilder.codec(Codec.unit(Unit.INSTANCE)).packetCodec(PacketCodec.unit(Unit.INSTANCE))
+            );
 
     private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());

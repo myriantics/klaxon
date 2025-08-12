@@ -8,6 +8,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Unit;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
@@ -61,6 +62,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             new GrappleClawItem(new Item.Settings()
                     .component(DataComponentTypes.MAX_STACK_SIZE, 16)
                     .component(DataComponentTypes.MAX_DAMAGE, KlaxonToolMaterials.STEEL.getDurability())
+                    .component(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE, Unit.INSTANCE)
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
     public static final Item GRAPPLE_WINCH = registerSimpleItem("grapple_winch",
