@@ -82,6 +82,7 @@ public abstract class KlaxonItemTags {
 
     // category tags
     public static final TagKey<Item> FRACTURED_MATERIALS = createTag("fractured_materials");
+    public static final TagKey<Item> GRAPPLE_CLAWS = createTag("grapple_claws");
 
     // fractured materials
     public static final TagKey<Item> FRACTURED_COALS = createFracturedMaterialTag("coal");

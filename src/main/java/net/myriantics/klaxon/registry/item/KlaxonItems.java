@@ -1,5 +1,8 @@
 package net.myriantics.klaxon.registry.item;
 
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
@@ -16,6 +19,7 @@ import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
 import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -53,8 +57,17 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
-    public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw", new GrappleClawItem(new Item.Settings()));
-    public static final Item GRAPPLE_WINCH = registerSimpleItem("grapple_winch", new GrappleWinchItem(new Item.Settings()));
+    public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
+            new GrappleClawItem(new Item.Settings()
+                    .component(DataComponentTypes.MAX_STACK_SIZE, 16)
+                    .component(DataComponentTypes.MAX_DAMAGE, KlaxonToolMaterials.STEEL.getDurability())
+                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+            ));
+    public static final Item GRAPPLE_WINCH = registerSimpleItem("grapple_winch",
+            new GrappleWinchItem(new Item.Settings()
+                    .maxCount(1)
+                    .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
+            ));
 
     // armor
     public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",

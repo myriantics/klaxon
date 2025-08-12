@@ -326,6 +326,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildEquipmentCategoryTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAWS)
+                .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
+
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.FLINT_AND_STEEL)
