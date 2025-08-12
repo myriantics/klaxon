@@ -150,7 +150,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         World world = this.getWorld();
 
         // only break blocks if we have velocity
-        if (!this.getVelocity().equals(Vec3d.ZERO) && !this.isRemoved()) {
+        if (!this.getVelocity().equals(Vec3d.ZERO) && !this.isRemoved() && !this.isAnchored()) {
             ArrayList<BlockPos> checkedPositions = new ArrayList<>();
 
             VoxelShape clawBoundingBox = VoxelShapes.cuboid(this.getBoundingBox());

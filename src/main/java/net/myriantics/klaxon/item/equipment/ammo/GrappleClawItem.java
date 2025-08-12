@@ -21,4 +21,9 @@ public class GrappleClawItem extends Item implements ProjectileItem {
         grappleClawEntity.pickupType = PersistentProjectileEntity.PickupPermission.DISALLOWED;
         return grappleClawEntity;
     }
+
+    @Override
+    public ProjectileItem.Settings getProjectileSettings() {
+        return ProjectileItem.Settings.builder().power(0.3f).uncertainty(3.0f).build();
+    }
 }
