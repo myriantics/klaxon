@@ -32,6 +32,10 @@ public abstract class KlaxonBlockTags {
             createTag("incorrect_for_steel_tool");
 
     // behavior tags
+    public static final TagKey<Block> GRAPPLE_CLAW_BREAKABLE =
+            createTag("grapple_claw_breakable");
+    public static final TagKey<Block> GRAPPLE_CLAW_VEINMINEABLE =
+            createTag("grapple_claw_veinmineable");
     public static final TagKey<Block> WRENCH_PICKUP_ALLOWLIST =
             createTag("wrench_pickup_allowlist");
     public static final TagKey<Block> WRENCH_PICKUP_DENYLIST =

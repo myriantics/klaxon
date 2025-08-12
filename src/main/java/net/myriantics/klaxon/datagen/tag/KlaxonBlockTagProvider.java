@@ -33,7 +33,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // hammer
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_MINEABLE)
                 .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
-                .add(Blocks.BEACON);
+                .add(Blocks.BEACON)
+                .add(Blocks.PACKED_ICE)
+                .add(Blocks.BLUE_ICE);
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .addOptionalTag(KlaxonCompatBlockTags.BRICK_BREAKABLE)
                 .forceAddTag(ConventionalBlockTags.GLASS_BLOCKS)
@@ -41,8 +43,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.BUDS)
                 .forceAddTag(ConventionalBlockTags.CLUSTERS)
                 .forceAddTag(ConventionalBlockTags.SKULLS)
-                .forceAddTag(BlockTags.ICE)
                 .add(KlaxonBlocks.HALLNOX_BULB)
+                .add(Blocks.ICE)
+                .add(Blocks.FROSTED_ICE)
                 .add(Blocks.REDSTONE_LAMP)
                 .add(Blocks.SEA_LANTERN)
                 .add(Blocks.GLOWSTONE)
@@ -209,10 +212,19 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.DOORS)
                 .add(Blocks.LEVER)
                 .add(Blocks.PISTON_HEAD);
+
+        // hallnox pod
         getOrCreateTagBuilder(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)
                 .add(KlaxonBlocks.HALLNOX_WART_BLOCK)
                 .add(KlaxonBlocks.HALLNOX_STEM)
                 .add(KlaxonBlocks.HALLNOX_HYPHAE);
+
+        // grapple winch
+        getOrCreateTagBuilder(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE)
+                .forceAddTag(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE)
+                .forceAddTag(KlaxonBlockTags.CLEAVER_INSTABREAKABLE);
+        getOrCreateTagBuilder(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE)
+                .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE);
     }
 
     private void buildNetherReactionTags() {

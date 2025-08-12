@@ -1,6 +1,8 @@
 {
   "values": [
     "#klaxon:instabreakable/hammer",
-    "minecraft:beacon"
+    "minecraft:beacon",
+    "minecraft:packed_ice",
+    "minecraft:blue_ice"
   ]
 }
