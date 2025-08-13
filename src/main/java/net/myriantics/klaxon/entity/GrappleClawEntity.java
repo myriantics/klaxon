@@ -36,6 +36,7 @@ import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BoundingBoxHelper;
 import net.myriantics.klaxon.util.grapple_winch.GrappleWinchClientFallbackData;
+import net.myriantics.klaxon.util.grapple_winch.GrappleWinchUtil;
 import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
@@ -157,12 +158,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                         SoundCategory.PLAYERS,
                         1.0F,
                         1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
-                ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.of(
-                        new GrappleWinchClientFallbackData(
-                                this.getPos(),
-                                this.isAnchored()
-                        )
-                ), this.getId()));
+
+                // needs to be here to let client know about grapple claw coords if it lands outside client render distance
+                GrappleWinchUtil.updateClientFallbackData(serverPlayer, this);
             }
         } else {
             this.setVelocity(velocity);
@@ -284,14 +282,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             access.klaxon$setGrappleClaw(grappleClaw);
             if (getOwner() instanceof ServerPlayerEntity serverPlayer) {
                 if (grappleClaw == null) {
-                    ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.empty(), grappleClaw.getId()));
+                    GrappleWinchUtil.clearClientFallbackData(serverPlayer);
                 } else {
-                    ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.of(
-                            new GrappleWinchClientFallbackData(
-                                    grappleClaw.getPos(),
-                                    grappleClaw.isAnchored()
-                            )
-                    ), grappleClaw.getId()));
+                    GrappleWinchUtil.updateClientFallbackData(serverPlayer, grappleClaw);
                 }
             }
         }
@@ -303,7 +296,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             access.klaxon$setGrappleClaw(null);
             access.klaxon$setWinchFallbackData(null);
             if (entity instanceof ServerPlayerEntity serverPlayer) {
-                ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.empty(), getId()));
+                GrappleWinchUtil.clearClientFallbackData(serverPlayer);
             }
         }
     }
@@ -333,15 +326,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     @Override
-    public void onRemoved() {
-        clearPlayerGrappleClawIfNeeded();
-        super.onRemoved();
-    }
-
-    @Override
     public void remove(RemovalReason reason) {
         if (getOwner() instanceof ServerPlayerEntity serverPlayer) {
-            ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.empty(), getId()));
+            GrappleWinchUtil.clearClientFallbackData(serverPlayer);
         }
         // if (getOwner() instanceof PlayerEntityGrappleAccess access) access.klaxon$resetWinchCableLength();
         clearPlayerGrappleClawIfNeeded();

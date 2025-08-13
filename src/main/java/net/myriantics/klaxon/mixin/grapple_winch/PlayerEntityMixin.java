@@ -50,8 +50,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
 
     @Override
     public GrappleClawEntity klaxon$getGrappleClaw() {
-        if (this.klaxon$grappleClaw != null && !this.klaxon$grappleClaw.isRemoved()) {
-            return this.klaxon$grappleClaw;
+        if (this.klaxon$grappleClaw != null && this.klaxon$grappleClaw.isRemoved()) {
+            this.klaxon$grappleClaw = null;
         } else if (this.klaxon$winchConnectionUUID != null && this.getWorld() instanceof ServerWorld serverWorld) {
             Entity winchConnection = serverWorld.getEntity(this.klaxon$winchConnectionUUID);
 
@@ -59,11 +59,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 // update grapple claw if we succeed
                 this.klaxon$grappleClaw = grappleClaw;
             }
-
-            return this.klaxon$grappleClaw;
-        } else {
-            return null;
         }
+
+        return this.klaxon$grappleClaw;
     }
 
     @Override
