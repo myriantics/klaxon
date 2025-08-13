@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin.hammer_model;
+package net.myriantics.klaxon.mixin.advanced_item_models;
 
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.model.BlockStatesLoader;
@@ -26,6 +26,7 @@ public abstract class ModelLoaderMixin {
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 1, shift = At.Shift.AFTER))
     public void klaxon$addHammer(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
         this.loadItemModel(new ModelIdentifier(KlaxonCommon.locate("steel_hammer_3d"), "inventory"));
+        this.loadItemModel(new ModelIdentifier(KlaxonCommon.locate("grapple_winch_3d"), "inventory"));
     }
 }
 

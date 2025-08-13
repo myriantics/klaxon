@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin.hammer_model;
+package net.myriantics.klaxon.mixin.advanced_item_models;
 
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -21,6 +21,9 @@ public abstract class ItemRendererMixin {
     public BakedModel klaxon$useHammerModel(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model) {
         if (stack.isOf(KlaxonItems.STEEL_HAMMER) && renderMode != ModelTransformationMode.GUI && renderMode != ModelTransformationMode.FIXED && renderMode != ModelTransformationMode.GROUND) {
             return ((ItemRendererAccessor) this).klaxon$getModels().getModelManager().getModel(new ModelIdentifier(KlaxonCommon.locate("steel_hammer_3d"), "inventory"));
+        }
+        if (stack.isOf(KlaxonItems.GRAPPLE_WINCH) && renderMode != ModelTransformationMode.GUI && renderMode != ModelTransformationMode.FIXED && renderMode != ModelTransformationMode.GROUND) {
+            return ((ItemRendererAccessor) this).klaxon$getModels().getModelManager().getModel(new ModelIdentifier(KlaxonCommon.locate("grapple_winch_3d"), "inventory"));
         }
         return value;
     }
