@@ -67,6 +67,7 @@
     "dual_wielding.HeldItemRendererMixin",
     "dual_wielding.MinecraftClientMixin",
     "grapple_winch.ClientPlayerEntityMixin",
+    "grapple_winch.PlayerEntityRendererMixin",
     "item_components.walljump_ability.MinecraftClientMixin",
     "manual_item_application.ClientPlayerInteractionManagerMixin",
     "splashes.SplashTextResourceSupplierMixin",
