@@ -23,7 +23,12 @@ public abstract class ItemRendererMixin {
             return ((ItemRendererAccessor) this).klaxon$getModels().getModelManager().getModel(new ModelIdentifier(KlaxonCommon.locate("steel_hammer_3d"), "inventory"));
         }
         if (stack.isOf(KlaxonItems.GRAPPLE_WINCH) && renderMode != ModelTransformationMode.GUI && renderMode != ModelTransformationMode.FIXED && renderMode != ModelTransformationMode.GROUND) {
-            return ((ItemRendererAccessor) this).klaxon$getModels().getModelManager().getModel(new ModelIdentifier(KlaxonCommon.locate("grapple_winch_3d"), "inventory"));
+            // fuck the model system making me do this hacky crap...
+            if (renderMode.equals(ModelTransformationMode.FIRST_PERSON_LEFT_HAND) || renderMode.equals(ModelTransformationMode.THIRD_PERSON_LEFT_HAND)) {
+                return ((ItemRendererAccessor) this).klaxon$getModels().getModelManager().getModel(new ModelIdentifier(KlaxonCommon.locate("grapple_winch_3d_left"), "inventory"));
+            }
+
+            return ((ItemRendererAccessor) this).klaxon$getModels().getModelManager().getModel(new ModelIdentifier(KlaxonCommon.locate("grapple_winch_3d_right"), "inventory"));
         }
         return value;
     }

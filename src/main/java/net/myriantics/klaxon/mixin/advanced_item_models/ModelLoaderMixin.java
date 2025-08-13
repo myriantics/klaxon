@@ -26,7 +26,8 @@ public abstract class ModelLoaderMixin {
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 1, shift = At.Shift.AFTER))
     public void klaxon$addHammer(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
         this.loadItemModel(new ModelIdentifier(KlaxonCommon.locate("steel_hammer_3d"), "inventory"));
-        this.loadItemModel(new ModelIdentifier(KlaxonCommon.locate("grapple_winch_3d"), "inventory"));
+        this.loadItemModel(new ModelIdentifier(KlaxonCommon.locate("grapple_winch_3d_right"), "inventory"));
+        this.loadItemModel(new ModelIdentifier(KlaxonCommon.locate("grapple_winch_3d_left"), "inventory"));
     }
 }
 
