@@ -1,8 +1,10 @@
 package net.myriantics.klaxon.mixin.grapple_winch;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
@@ -11,7 +13,9 @@ import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.util.grapple_winch.GrappleWinchClientFallbackData;
 import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,6 +26,7 @@ import java.util.UUID;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEntityGrappleAccess {
 
+    @Shadow @Final private PlayerInventory inventory;
     @Unique
     private GrappleClawEntity klaxon$grappleClaw = null;
 
@@ -48,7 +53,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         if (this.klaxon$grappleClaw != null && !this.klaxon$grappleClaw.isRemoved()) {
             return this.klaxon$grappleClaw;
         } else if (this.klaxon$winchConnectionUUID != null && this.getWorld() instanceof ServerWorld serverWorld) {
-            this.klaxon$grappleClaw = (GrappleClawEntity) serverWorld.getEntity(this.klaxon$winchConnectionUUID);
+            Entity winchConnection = serverWorld.getEntity(this.klaxon$winchConnectionUUID);
+
+            if (winchConnection instanceof GrappleClawEntity grappleClaw) {
+                // update grapple claw if we succeed
+                this.klaxon$grappleClaw = grappleClaw;
+            }
+
             return this.klaxon$grappleClaw;
         } else {
             return null;

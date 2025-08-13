@@ -59,14 +59,14 @@
     "wrench.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
+    "advanced_item_models.ItemRendererAccessor",
+    "advanced_item_models.ItemRendererMixin",
+    "advanced_item_models.ModelLoaderMixin",
     "dual_wielding.BipedEntityModelMixin",
     "dual_wielding.ClientPlayerInteractionManagerMixin",
     "dual_wielding.HeldItemRendererMixin",
     "dual_wielding.MinecraftClientMixin",
     "grapple_winch.ClientPlayerEntityMixin",
-    "advanced_item_models.ItemRendererAccessor",
-    "advanced_item_models.ItemRendererMixin",
-    "advanced_item_models.ModelLoaderMixin",
     "item_components.walljump_ability.MinecraftClientMixin",
     "manual_item_application.ClientPlayerInteractionManagerMixin",
     "splashes.SplashTextResourceSupplierMixin",

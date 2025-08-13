@@ -347,19 +347,4 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         clearPlayerGrappleClawIfNeeded();
         super.remove(reason);
     }
-
-    public static void onLoadedServerside(Entity entity, ServerWorld serverWorld) {
-        if (entity instanceof GrappleClawEntity grappleClaw && grappleClaw.isAnchored()) {
-            Entity owner = grappleClaw.getOwner();
-
-            if (owner instanceof ServerPlayerEntity serverPlayer && owner instanceof PlayerEntityGrappleAccess) {
-                ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.of(
-                        new GrappleWinchClientFallbackData(
-                                grappleClaw.getPos(),
-                                grappleClaw.isAnchored()
-                        )
-                ), grappleClaw.getId()));
-            }
-        }
-    }
 }
