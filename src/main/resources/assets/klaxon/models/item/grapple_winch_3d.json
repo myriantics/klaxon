@@ -82,15 +82,15 @@
 		{
 			"name": "handle_inner",
 			"from": [9, 10.01, 14.01],
-			"to": [7, 5.99, 10.99],
+			"to": [7, 5.99, 11.99],
 			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 12.5]},
 			"faces": {
 				"north": {"uv": [2.5, 14, 3.5, 12], "texture": "#0"},
-				"east": {"uv": [0.5, 14, 2.5, 12], "texture": "#0"},
-				"south": {"uv": [-0.5, 14, 0.5, 12], "texture": "#0"},
-				"west": {"uv": [3.5, 14, 5.5, 12], "texture": "#0"},
-				"up": {"uv": [3.5, 14, 2.5, 16], "texture": "#0"},
-				"down": {"uv": [2.5, 16, 1.5, 14], "texture": "#0"}
+				"east": {"uv": [1.5, 14, 2.5, 12], "texture": "#0"},
+				"south": {"uv": [0.5, 14, 1.5, 12], "texture": "#0"},
+				"west": {"uv": [3.5, 14, 4.5, 12], "texture": "#0"},
+				"up": {"uv": [3.5, 14, 2.5, 15], "texture": "#0"},
+				"down": {"uv": [2.5, 15, 1.5, 14], "texture": "#0"}
 			}
 		},
 		{
@@ -192,6 +192,12 @@
 			}
 		}
 	],
+	"overrides": [
+		{"predicate": {"klaxon:winch_cable": 0}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_0"},
+		{"predicate": {"klaxon:winch_cable": 1}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_1"},
+		{"predicate": {"klaxon:winch_cable": 2}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_2"},
+		{"predicate": {"klaxon:winch_cable": 3}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_3"}
+	],
 	"display": {
 		"thirdperson_righthand": {
 			"translation": [0, -2, -4.5]
@@ -216,32 +222,6 @@
 			"translation": [0, 10.75, -1]
 		}
 	},
-	"overrides": [
-		{
-			"predicate": {
-				"klaxon:winch_cable": 0
-			},
-			"model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_0"
-		},
-		{
-			"predicate": {
-				"klaxon:winch_cable": 1
-			},
-			"model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_1"
-		},
-		{
-			"predicate": {
-				"klaxon:winch_cable": 2
-			},
-			"model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_2"
-		},
-		{
-			"predicate": {
-				"klaxon:winch_cable": 3
-			},
-			"model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_3"
-		}
-	],
 	"groups": [
 		{
 			"name": "trigger",

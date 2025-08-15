@@ -4,14 +4,13 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.render.model.json.JsonUnbakedModel;
-import net.minecraft.client.render.model.json.ModelElement;
-import net.minecraft.client.render.model.json.ModelOverride;
+import net.minecraft.client.render.model.json.*;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.data.client.ModelIds;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.profiler.Profiler;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.util.advanced_item_models.AdvancedItemModelHelper;
@@ -23,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,17 +48,46 @@ public abstract class ModelLoaderMixin {
                     if (model instanceof JsonUnbakedModel jsonUnbakedModel && jsonUnbakedModel instanceof JsonUnbakedModelAccessor accessor) {
                         ArrayList<ModelElement> newElements = new ArrayList<>();
 
+
                         Identifier mirroredId = AdvancedItemModelHelper.getMirroredId(id);
 
                         // copy + mirror model elements
                         for (ModelElement element : jsonUnbakedModel.getElements()) {
-                            float x1 = element.from.get(0);
-                            float x2 = element.to.get(0);
+                            // float x1 = -element.from.get(0);
+                            // float x2 = -element.to.get(0);
 
-                            Vector3f newFrom = new Vector3f(element.to).setComponent(0, x1);
-                            Vector3f newTo = new Vector3f(element.from).setComponent(0, x2);
+                            Vector3f newFrom = new Vector3f(element.to);// .setComponent(0, x1);
+                            Vector3f newTo = new Vector3f(element.from);// .setComponent(0, x2);
 
-                            newElements.add(new ModelElement(newFrom, newTo, element.faces, element.rotation, element.shade));
+                            Map<Direction, ModelElementFace> newFaces = new HashMap<>();
+
+                            for (Direction direction : element.faces.keySet()) {
+                                ModelElementFace face = element.faces.get(direction);
+
+                                float[] oldUvs = element.faces.get(direction.getOpposite()).textureData().uvs;
+
+                                switch (direction.getAxis()) {
+                                    case X -> {
+                                    }
+                                    case Y -> {
+                                        //oldUvs = new float[] {oldUvs[2], oldUvs[3], oldUvs[0], oldUvs[1]};
+                                    }
+                                    case Z -> {
+                                        //oldUvs = new float[] {oldUvs[0], oldUvs[3], oldUvs[2], oldUvs[1]};
+                                    }
+                                }
+
+                                ModelElementTexture newTextureData = new ModelElementTexture(new float[] {
+                                        oldUvs[0],
+                                        oldUvs[1],
+                                        oldUvs[2],
+                                        oldUvs[3]
+                                }, face.textureData().rotation);
+
+                                newFaces.put(direction, new ModelElementFace(face.cullFace(), face.tintIndex(), face.textureId(), newTextureData));
+                            }
+
+                            newElements.add(new ModelElement(newFrom, newTo, Map.copyOf(newFaces), element.rotation, element.shade));
                         }
 
                         ArrayList<ModelOverride> newOverrides = new ArrayList<>();
@@ -82,7 +111,7 @@ public abstract class ModelLoaderMixin {
 
                                 invertedOverrideModel.setParents(this::getOrLoadModel);
 
-                                add(new ModelIdentifier(newOverrideModelId, "inventory"), invertedOverrideModel);
+                                add(ModelIdentifier.ofInventoryVariant(newOverrideModelId), invertedOverrideModel);
                             }
 
                             newOverrides.add(new ModelOverride(newOverrideModelId, ((ModelOverrideAccessor) override).klaxon$getConditions()
