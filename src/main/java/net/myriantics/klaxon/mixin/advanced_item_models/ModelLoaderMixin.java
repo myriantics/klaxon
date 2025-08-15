@@ -53,41 +53,54 @@ public abstract class ModelLoaderMixin {
 
                         // copy + mirror model elements
                         for (ModelElement element : jsonUnbakedModel.getElements()) {
-                            // float x1 = -element.from.get(0);
-                            // float x2 = -element.to.get(0);
+                            Vector3f from = new Vector3f(element.from);
+                            Vector3f to = new Vector3f(element.to);
 
-                            Vector3f newFrom = new Vector3f(element.to);// .setComponent(0, x1);
-                            Vector3f newTo = new Vector3f(element.from);// .setComponent(0, x2);
+                            // invert elements on the X axis
+                            Vector3f newFrom = new Vector3f(8f - (to.x - 8f), from.y, from.z);// .setComponent(0, x1);
+                            Vector3f newTo = new Vector3f(8f - (from.x - 8f), to.y, to.z);// .setComponent(0, x2);
+
+                            boolean shouldAltTextureReflection = (newFrom.x < 8f && newTo.x < 8f) || (newFrom.x > 8f && newTo.x > 8f);
 
                             Map<Direction, ModelElementFace> newFaces = new HashMap<>();
 
                             for (Direction direction : element.faces.keySet()) {
                                 ModelElementFace face = element.faces.get(direction);
 
-                                float[] oldUvs = element.faces.get(direction.getOpposite()).textureData().uvs;
+                                ModelElementFace usedFace = element.faces.get(direction.getAxis().equals(Direction.Axis.X) ? direction.getOpposite() : direction);
 
-                                switch (direction.getAxis()) {
-                                    case X -> {
-                                    }
-                                    case Y -> {
-                                        //oldUvs = new float[] {oldUvs[2], oldUvs[3], oldUvs[0], oldUvs[1]};
-                                    }
-                                    case Z -> {
-                                        //oldUvs = new float[] {oldUvs[0], oldUvs[3], oldUvs[2], oldUvs[1]};
-                                    }
+                                float[] uvs = usedFace.textureData().uvs;
+
+                                if (shouldAltTextureReflection && !direction.getAxis().equals(Direction.Axis.X)) {
+                                    uvs = new float[] {
+                                            uvs[0],
+                                            uvs[3],
+                                            uvs[2],
+                                            uvs[1]
+                                    };
+                                } else {
+                                    uvs = new float[] {
+                                            uvs[2],
+                                            uvs[1],
+                                            uvs[0],
+                                            uvs[3]
+                                    };
                                 }
 
-                                ModelElementTexture newTextureData = new ModelElementTexture(new float[] {
-                                        oldUvs[0],
-                                        oldUvs[1],
-                                        oldUvs[2],
-                                        oldUvs[3]
-                                }, face.textureData().rotation);
+                                ModelElementTexture newTextureData = new ModelElementTexture(uvs, face.textureData().rotation);
 
                                 newFaces.put(direction, new ModelElementFace(face.cullFace(), face.tintIndex(), face.textureId(), newTextureData));
                             }
 
-                            newElements.add(new ModelElement(newFrom, newTo, Map.copyOf(newFaces), element.rotation, element.shade));
+                            // rotate that shi
+                            ModelRotation newRotation = new ModelRotation(
+                                    element.rotation.origin(),
+                                    element.rotation.axis(),
+                                    element.rotation.axis().equals(Direction.Axis.X) ? element.rotation.angle() : -element.rotation.angle(),
+                                    element.rotation.rescale()
+                            );
+
+                            newElements.add(new ModelElement(newFrom, newTo, Map.copyOf(newFaces), newRotation, element.shade));
                         }
 
                         ArrayList<ModelOverride> newOverrides = new ArrayList<>();

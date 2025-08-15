@@ -49,7 +49,7 @@ public abstract class ItemRendererMixin {
     public void klaxon$flipLeftHandedItemIfNeeded(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci, @Share(namespace = "klaxon", value = "shouldMirror") LocalBooleanRef shouldMirror) {
         if (leftHanded && stack.contains(KlaxonDataComponentTypes.MIRRORED_LEFT_HAND_MODEL)) {
             // matrices.multiply(RotationAxis.POSITIVE_Y.rotation(0));
-            matrices.scale(-1, 1, 1);
+            // matrices.scale(-1, 1, 1);
             shouldMirror.set(true);
         }
     }
