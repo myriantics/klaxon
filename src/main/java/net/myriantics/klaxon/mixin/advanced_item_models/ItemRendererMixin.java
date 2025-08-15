@@ -56,10 +56,6 @@ public abstract class ItemRendererMixin {
 
             BakedModel newModel = getModels().getModelManager().getModel(ModelIdentifier.ofInventoryVariant(id));
 
-            if (newModel.equals(getModels().getModelManager().getMissingModel())) {
-                KlaxonCommon.locate("skib");
-            }
-
             // apply while keeping overrides
             original.call(instance, stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, newModel);// newModel.getOverrides().apply(newModel, stack, (ClientWorld) world, entity, seed));
         } else {
