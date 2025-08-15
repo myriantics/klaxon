@@ -3,6 +3,7 @@ package net.myriantics.klaxon.registry.item;
 import com.mojang.serialization.Codec;
 import net.minecraft.component.ComponentType;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Unit;
@@ -90,12 +91,25 @@ public abstract class KlaxonDataComponentTypes {
             });
 
     // Items with this component override the check that disallows both damage and stacking components coexisting.
-    public static final ComponentType<Unit> DAMAGEABLE_AND_STACKABLE = register("damageable_and_stackable",
-            unitBuilder -> unitBuilder.codec(Codec.unit(Unit.INSTANCE)).packetCodec(PacketCodec.unit(Unit.INSTANCE))
-            );
+    public static final ComponentType<Unit> DAMAGEABLE_AND_STACKABLE = registerUnit("damageable_and_stackable");
+
+    // Items with this component replace their held item model "x:example_model" with "x:example_model_[YOUR_STRING_HERE]" under certain conditions
+    public static final ComponentType<String> ALT_HAND_MODEL = register("alt_hand_model",
+            builder ->  {
+                builder.codec(Codec.STRING);
+                builder.packetCodec(PacketCodecs.STRING);
+                return builder;
+            });
+
+    // Items with this component flip their held item model when held in the left hand
+    public static final ComponentType<Unit> MIRRORED_LEFT_HAND_MODEL = registerUnit("mirrored_left_hand_model");
 
     private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());
+    }
+
+    private static ComponentType<Unit> registerUnit(String name) {
+        return register(name, unitBuilder -> unitBuilder.codec(Codec.unit(Unit.INSTANCE)).packetCodec(PacketCodec.unit(Unit.INSTANCE)));
     }
 
     public static void init() {

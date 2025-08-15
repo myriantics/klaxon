@@ -18,6 +18,7 @@
     "cable_shears.SnowGolemEntityMixin",
     "cable_shears.TripwireBlockMixin",
     "cable_shears.WolfEntityMixin",
+    "damageable_and_stackable.ItemMixin",
     "damageable_and_stackable.ItemStackMixin",
     "dual_wielding.LivingEntityMixin",
     "entity_attributes.ArmorItemMixin",
@@ -59,9 +60,10 @@
     "wrench.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
-    "advanced_item_models.ItemRendererAccessor",
     "advanced_item_models.ItemRendererMixin",
+    "advanced_item_models.JsonUnbakedModelAccessor",
     "advanced_item_models.ModelLoaderMixin",
+    "advanced_item_models.ModelOverrideAccessor",
     "dual_wielding.BipedEntityModelMixin",
     "dual_wielding.ClientPlayerInteractionManagerMixin",
     "dual_wielding.HeldItemRendererMixin",

@@ -4,7 +4,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "klaxon:item/grapple_winch/grapple_winch_structure",
-		"1": "klaxon:item/grapple_winch/grapple_winch_spool",
+		"1": "klaxon:item/grapple_winch/grapple_winch_spool_4",
 		"2": "klaxon:item/grapple_winch/grapple_winch_claw",
 		"particle": "klaxon:item/grapple_winch/grapple_winch_structure"
 	},

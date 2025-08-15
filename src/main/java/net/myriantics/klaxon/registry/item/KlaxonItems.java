@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.registry.item;
 
-import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.enchantment.Enchantments;
@@ -10,6 +9,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Unit;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.api.KlaxonItemSettings;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
@@ -20,7 +20,6 @@ import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
 import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -31,44 +30,51 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
 
     // tools
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer",
-            new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+            new HammerItem(KlaxonToolMaterials.STEEL, new KlaxonItemSettings()
                     .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
                     .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING))
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), ShieldBreachingComponent.Condition.KNOCKBACK))
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+                    .with3dHandModel()
+                    .getSettings()
             ));
     public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
-            new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
+            new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
                     .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1.0f, -2.8f))
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+                    .getSettings()
             ));
     public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
-            new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
+            new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
                     .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.CLEAVING))
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), ShieldBreachingComponent.Condition.CRITICAL))
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.LOOTING, 1, Enchantments.UNBREAKING, 4)))
+                    .innateEnchantments(Map.of(Enchantments.LOOTING, 1, Enchantments.UNBREAKING, 4))
+                    .getSettings()
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
-            new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+            new WrenchItem(KlaxonToolMaterials.STEEL, new KlaxonItemSettings()
                     .attributeModifiers(WrenchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 0f, -2.6f))
                     .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.WRENCH_OVERTUNING))
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+                    .getSettings()
             ));
     public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
-            new GrappleClawItem(new Item.Settings()
-                    .component(DataComponentTypes.MAX_STACK_SIZE, 16)
-                    .component(DataComponentTypes.MAX_DAMAGE, KlaxonToolMaterials.STEEL.getDurability())
-                    .component(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE, Unit.INSTANCE)
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+            new GrappleClawItem(new KlaxonItemSettings()
+                    .maxCountMaxDamage(16, KlaxonToolMaterials.STEEL.getDurability())
+                    .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+                    .getSettings()
             ));
     public static final Item GRAPPLE_WINCH = registerSimpleItem("grapple_winch",
-            new GrappleWinchItem(new Item.Settings()
+            new GrappleWinchItem(new KlaxonItemSettings()
                     .maxCount(1)
                     .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
+                    .with3dHandModel()
+                    .withMirroredLeftHandModel()
+                    .getSettings()
             ));
 
     // armor

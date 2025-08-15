@@ -15,6 +15,7 @@ import net.minecraft.client.render.block.entity.HangingSignBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.SignBlockEntityRenderer;
 import net.minecraft.client.render.entity.ArrowEntityRenderer;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import net.myriantics.klaxon.client.particle.HallnoxDripParticle;
@@ -27,8 +28,10 @@ import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepsla
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
+import net.myriantics.klaxon.registry.render.KlaxonItemModelPredicates;
 
 public class KlaxonClient implements ClientModInitializer {
+
     @Override
     public void onInitializeClient() {
         // block transparency
@@ -56,6 +59,9 @@ public class KlaxonClient implements ClientModInitializer {
 
         // client event listeners
         KlaxonEventListeners.initClient();
+
+        // model predicates
+        KlaxonItemModelPredicates.init();
 
         // particles
         ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.HALLNOX_POD_DRIP, HallnoxDripParticle.HallnoxDripParticleFactory::new);
