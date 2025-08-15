@@ -42,18 +42,6 @@ public abstract class ItemRendererMixin {
 
     @Shadow public abstract ItemModels getModels();
 
-    @Inject(
-            method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V")
-    )
-    public void klaxon$flipLeftHandedItemIfNeeded(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci, @Share(namespace = "klaxon", value = "shouldMirror") LocalBooleanRef shouldMirror) {
-        if (leftHanded && stack.contains(KlaxonDataComponentTypes.MIRRORED_LEFT_HAND_MODEL)) {
-            // matrices.multiply(RotationAxis.POSITIVE_Y.rotation(0));
-            // matrices.scale(-1, 1, 1);
-            shouldMirror.set(true);
-        }
-    }
-
     @WrapOperation(
             method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderer;renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V")
