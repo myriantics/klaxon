@@ -20,20 +20,20 @@ public abstract class KlaxonItemModelPredicates {
             // 4 = 100%
             double remainingCableProportion = access.klaxon$getCurrentWinchCableLength() / GrappleClawEntity.MAX_RANGE_SQUARED;
             if (remainingCableProportion == 1.00) {
-                return 4;
+                return 0;
             } else if (remainingCableProportion >= 0.70) {
-                return 3;
+                return 1;
             } else if (remainingCableProportion >= 0.30) {
                 return 2;
             } else if (remainingCableProportion >= 0.10) {
-                return 1;
+                return 3;
             } else {
-                return 0;
+                return 4;
             }
         }
 
         // default to displaying a full spool
-        return 4;
+        return 0;
     }));
 
     private static ClampedModelPredicateProvider register(String name, ClampedModelPredicateProvider provider) {

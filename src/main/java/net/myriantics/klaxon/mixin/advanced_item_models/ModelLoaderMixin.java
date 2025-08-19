@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.mixin.advanced_item_models;
 
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
@@ -15,6 +16,7 @@ import net.minecraft.util.profiler.Profiler;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.util.advanced_item_models.AdvancedItemModelHelper;
 import org.joml.Vector3f;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,8 +35,12 @@ public abstract class ModelLoaderMixin {
 
     @Shadow protected abstract void add(ModelIdentifier id, UnbakedModel model);
 
+    @Shadow protected abstract void addModelToBake(ModelIdentifier id, UnbakedModel model);
+
+    @Shadow @Final private Map<Identifier, UnbakedModel> unbakedModels;
+
     // Registers the hammer model as an available resource you can pull from
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 1))
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 0))
     public void klaxon$loadFancyModels(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
         for (Item item : Registries.ITEM) {
             if (item.getComponents().get(KlaxonDataComponentTypes.ALT_HAND_MODEL) instanceof String suffix) {
@@ -49,7 +55,7 @@ public abstract class ModelLoaderMixin {
                         ArrayList<ModelElement> newElements = new ArrayList<>();
 
 
-                        Identifier mirroredId = AdvancedItemModelHelper.getMirroredId(id);
+                        Identifier mirroredModelId = AdvancedItemModelHelper.getMirroredId(id);
 
                         // copy + mirror model elements
                         for (ModelElement element : jsonUnbakedModel.getElements()) {
@@ -109,26 +115,24 @@ public abstract class ModelLoaderMixin {
                         for (ModelOverride override : jsonUnbakedModel.getOverrides()) {
                             UnbakedModel overrideModel = getOrLoadModel(override.getModelId());
 
-                            Identifier newOverrideModelId = AdvancedItemModelHelper.getMirroredId(override.getModelId());
+                            Identifier mirroredOverrideModelId = AdvancedItemModelHelper.getMirroredId(override.getModelId());
 
-                            if (overrideModel instanceof JsonUnbakedModel jayson && jayson instanceof JsonUnbakedModelAccessor jaysonAccess) {
-                                JsonUnbakedModel invertedOverrideModel =  new JsonUnbakedModel(
-                                        jaysonAccess.klaxon$getParentId(),
-                                        jayson.getElements(),
-                                        jaysonAccess.klaxon$getTextureMap(),
-                                        jayson.useAmbientOcclusion(),
-                                        jayson.getGuiLight(),
-                                        jsonUnbakedModel.getTransformations(),
-                                        jsonUnbakedModel.getOverrides()
+                            if (overrideModel instanceof JsonUnbakedModel overrideJsonModel && overrideJsonModel instanceof JsonUnbakedModelAccessor overrideJsonModelAccess) {
+                                JsonUnbakedModel mirroredOverrideModel =  new JsonUnbakedModel(
+                                        mirroredModelId,
+                                        overrideJsonModel.getElements(),
+                                        overrideJsonModelAccess.klaxon$getTextureMap(),
+                                        overrideJsonModel.useAmbientOcclusion(),
+                                        overrideJsonModel.getGuiLight(),
+                                        overrideJsonModel.getTransformations(),
+                                        overrideJsonModel.getOverrides()
                                 );
 
-                                invertedOverrideModel.setParents(this::getOrLoadModel);
-
-                                add(ModelIdentifier.ofInventoryVariant(newOverrideModelId), invertedOverrideModel);
+                                addModelToBake(ModelIdentifier.ofInventoryVariant(mirroredOverrideModelId), mirroredOverrideModel);
+                                unbakedModels.put(mirroredOverrideModelId, mirroredOverrideModel);
                             }
 
-                            newOverrides.add(new ModelOverride(newOverrideModelId, ((ModelOverrideAccessor) override).klaxon$getConditions()
-                            ));
+                            newOverrides.add(new ModelOverride(mirroredOverrideModelId, ((ModelOverrideAccessor) override).klaxon$getConditions()));
                         }
 
                         JsonUnbakedModel invertedModel = new JsonUnbakedModel(
@@ -141,9 +145,8 @@ public abstract class ModelLoaderMixin {
                                 newOverrides
                         );
 
-                        invertedModel.setParents(this::getOrLoadModel);
-
-                        add(new ModelIdentifier(mirroredId, "inventory"), invertedModel);
+                        unbakedModels.put(mirroredModelId, invertedModel);
+                        addModelToBake(ModelIdentifier.ofInventoryVariant(mirroredModelId), invertedModel);
                     }
                 }
             }

@@ -17,6 +17,7 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.data.client.ModelProvider;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -56,8 +57,10 @@ public abstract class ItemRendererMixin {
 
             BakedModel newModel = getModels().getModelManager().getModel(ModelIdentifier.ofInventoryVariant(id));
 
+            newModel = newModel.getOverrides().apply(newModel, stack, (ClientWorld) world, entity, seed);
+
             // apply while keeping overrides
-            original.call(instance, stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, newModel);// newModel.getOverrides().apply(newModel, stack, (ClientWorld) world, entity, seed));
+            original.call(instance, stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, newModel);
         } else {
             original.call(instance, stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model);
         }

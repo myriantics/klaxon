@@ -193,10 +193,10 @@
 		}
 	],
 	"overrides": [
-		{"predicate": {"klaxon:winch_cable": 0}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_0"},
-		{"predicate": {"klaxon:winch_cable": 1}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_1"},
+		{"predicate": {"klaxon:winch_cable": 4}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_4"},
+		{"predicate": {"klaxon:winch_cable": 3}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_3"},
 		{"predicate": {"klaxon:winch_cable": 2}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_2"},
-		{"predicate": {"klaxon:winch_cable": 3}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_3"}
+		{"predicate": {"klaxon:winch_cable": 1}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_1"}
 	],
 	"display": {
 		"thirdperson_righthand": {
