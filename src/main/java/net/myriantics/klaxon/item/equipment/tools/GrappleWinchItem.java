@@ -113,7 +113,6 @@ public class GrappleWinchItem extends RangedWeaponItem {
             return TypedActionResult.consume(winchStack);
         } else if (!ammoStack.isEmpty()) {
             List<ItemStack> list = load(winchStack, ammoStack, user);
-            user.setCurrentHand(hand);
             // load grapple winch if we don't have a grapple claw loaded
             winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
             user.incrementStat(Stats.USED.getOrCreateStat(this));
