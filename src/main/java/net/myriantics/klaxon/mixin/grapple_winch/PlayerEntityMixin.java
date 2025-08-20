@@ -10,7 +10,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
-import net.myriantics.klaxon.util.grapple_winch.GrappleWinchClientFallbackData;
+import net.myriantics.klaxon.util.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -39,7 +39,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     // stored separately in order to allow grapple winch to work even if grapple claw is unloaded on client
     @Nullable
     @Unique
-    private GrappleWinchClientFallbackData klaxon$grappleWinchFallbackData = null;
+    private GrappleWinchConnectionData klaxon$grappleWinchFallbackData = null;
 
     @Unique
     private double klaxon$currentWinchCableLength = GrappleClawEntity.MAX_RANGE_SQUARED;
@@ -83,12 +83,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     }
 
     @Override
-    public GrappleWinchClientFallbackData klaxon$getWinchFallbackData() {
+    public GrappleWinchConnectionData klaxon$getWinchFallbackData() {
         return klaxon$grappleWinchFallbackData;
     }
 
     @Override
-    public void klaxon$setWinchFallbackData(GrappleWinchClientFallbackData winchFallbackData) {
+    public void klaxon$setWinchConnectionData(GrappleWinchConnectionData winchFallbackData) {
         this.klaxon$grappleWinchFallbackData = winchFallbackData;
     }
 
@@ -110,12 +110,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     @Override
     public void klaxon$resetWinchCableLength() {
         GrappleClawEntity grappleClaw = klaxon$getGrappleClaw();
-        GrappleWinchClientFallbackData fallbackData = klaxon$getWinchFallbackData();
+        GrappleWinchConnectionData fallbackData = klaxon$getWinchFallbackData();
 
         if (grappleClaw != null) {
             this.klaxon$setCurrentWinchCableLength(grappleClaw.getPos().squaredDistanceTo(this.getPos()));
         } else if (fallbackData != null) {
-            this.klaxon$setCurrentWinchCableLength(fallbackData.winchConnectedPos().squaredDistanceTo(this.getPos()));
+            this.klaxon$setCurrentWinchCableLength(fallbackData.clawPos().squaredDistanceTo(this.getPos()));
         }
     }
 
@@ -130,9 +130,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             Vec3d selfVec = Vec3d.ZERO;
 
             // get grapple claw through the getter in order to sync it with UUID
-            // also get fallback data in case claw is unloaded on client side
+            // also get fallback connectionData in case claw is unloaded on client side
             @Nullable GrappleClawEntity grappleClaw = klaxon$getGrappleClaw();
-            @Nullable GrappleWinchClientFallbackData fallbackData = klaxon$getWinchFallbackData();
+            @Nullable GrappleWinchConnectionData fallbackData = klaxon$getWinchFallbackData();
 
             // initialize values
             Vec3d playerToClawVec;
@@ -147,8 +147,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 clawDistance = getPos().squaredDistanceTo(grappleClaw.getPos());
                 shouldMove = grappleClaw.isAnchored();
             } else if (fallbackData != null) {
-                playerToClawVec = fallbackData.winchConnectedPos().subtract(this.getPos());
-                clawDistance = getPos().squaredDistanceTo(fallbackData.winchConnectedPos());
+                playerToClawVec = fallbackData.clawPos().subtract(this.getPos());
+                clawDistance = getPos().squaredDistanceTo(fallbackData.clawPos());
                 shouldMove = fallbackData.isWinchAnchored();
             } else {
                 // return if both checks fail

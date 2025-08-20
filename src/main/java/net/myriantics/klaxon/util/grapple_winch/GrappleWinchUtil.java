@@ -7,8 +7,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
-import net.myriantics.klaxon.networking.s2c.GrappleWinchSyncPacket;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
+import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionDiscardPacket;
+import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -45,16 +49,22 @@ public abstract class GrappleWinchUtil {
     }
 
     public static void updateClientFallbackData(ServerPlayerEntity serverPlayer, GrappleClawEntity grappleClaw) {
-        ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.of(
-                new GrappleWinchClientFallbackData(
+        KlaxonServerPlayNetworkHandler.sendToTracking(serverPlayer.getServerWorld(), serverPlayer.getBlockPos(), new GrappleWinchConnectionSyncPacket(
+                new GrappleWinchConnectionData(
+                        serverPlayer.getId(),
+                        grappleClaw.getId(),
+                        serverPlayer.getPos(),
                         grappleClaw.getPos(),
                         grappleClaw.isAnchored()
                 )
-        ), grappleClaw.getId()));
+        ));
     }
 
-    public static void clearClientFallbackData(ServerPlayerEntity serverPlayer) {
-        ServerPlayNetworking.send(serverPlayer, new GrappleWinchSyncPacket(Optional.empty(), -1));
+    public static void clearClientFallbackData(ServerPlayerEntity serverPlayer, @Nullable GrappleClawEntity grappleClaw) {
+        KlaxonServerPlayNetworkHandler.sendToTracking(serverPlayer.getServerWorld(), serverPlayer.getBlockPos(), new GrappleWinchConnectionDiscardPacket(
+                serverPlayer.getId(),
+                grappleClaw == null ? -1 : grappleClaw.getId()
+        ));
     }
 
 

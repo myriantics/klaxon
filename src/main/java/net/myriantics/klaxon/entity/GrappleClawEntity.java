@@ -1,7 +1,5 @@
 package net.myriantics.klaxon.entity;
 
-import com.mojang.serialization.Decoder;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
@@ -15,33 +13,25 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.SimpleVoxelShape;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.networking.s2c.GrappleWinchSyncPacket;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BoundingBoxHelper;
-import net.myriantics.klaxon.util.grapple_winch.GrappleWinchClientFallbackData;
 import net.myriantics.klaxon.util.grapple_winch.GrappleWinchUtil;
 import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
 
@@ -282,7 +272,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             access.klaxon$setGrappleClaw(grappleClaw);
             if (getOwner() instanceof ServerPlayerEntity serverPlayer) {
                 if (grappleClaw == null) {
-                    GrappleWinchUtil.clearClientFallbackData(serverPlayer);
+                    GrappleWinchUtil.clearClientFallbackData(serverPlayer, null);
                 } else {
                     GrappleWinchUtil.updateClientFallbackData(serverPlayer, grappleClaw);
                 }
@@ -294,9 +284,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         Entity entity = this.getOwner();
         if (entity instanceof PlayerEntityGrappleAccess access && this.equals(access.klaxon$getGrappleClaw())) {
             access.klaxon$setGrappleClaw(null);
-            access.klaxon$setWinchFallbackData(null);
+            access.klaxon$setWinchConnectionData(null);
             if (entity instanceof ServerPlayerEntity serverPlayer) {
-                GrappleWinchUtil.clearClientFallbackData(serverPlayer);
+                GrappleWinchUtil.clearClientFallbackData(serverPlayer, this);
             }
         }
     }
@@ -328,7 +318,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     @Override
     public void remove(RemovalReason reason) {
         if (getOwner() instanceof ServerPlayerEntity serverPlayer) {
-            GrappleWinchUtil.clearClientFallbackData(serverPlayer);
+            GrappleWinchUtil.clearClientFallbackData(serverPlayer, this);
         }
         // if (getOwner() instanceof PlayerEntityGrappleAccess access) access.klaxon$resetWinchCableLength();
         clearPlayerGrappleClawIfNeeded();

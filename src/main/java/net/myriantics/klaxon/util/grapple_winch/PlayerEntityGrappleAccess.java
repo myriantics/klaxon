@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.util.grapple_winch;
 
-import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,9 +12,9 @@ public interface PlayerEntityGrappleAccess {
 
     void klaxon$setRetracting(boolean isRetracting);
 
-    GrappleWinchClientFallbackData klaxon$getWinchFallbackData();
+    GrappleWinchConnectionData klaxon$getWinchFallbackData();
 
-    void klaxon$setWinchFallbackData(GrappleWinchClientFallbackData winchFallbackData);
+    void klaxon$setWinchConnectionData(GrappleWinchConnectionData winchFallbackData);
 
     boolean klaxon$hasActiveConnection();
 
