@@ -43,7 +43,6 @@ public abstract class GrappleWinchUtil {
             // this solves that and is more baller
             if (grappleClaw != null) {
                 updateClientFallbackData(serverPlayer, grappleClaw);
-
             }
         }
     }

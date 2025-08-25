@@ -91,6 +91,8 @@ public abstract class KlaxonPackets {
 
                     if (potentialPlayer instanceof AbstractClientPlayerEntity player) {
                         GrappleWinchConnectionManager.INSTANCE.addConnection(
+                                connectionData.playerId(),
+                                connectionData.clawId(),
                                 player,
                                 (GrappleClawEntity) potentialClaw,
                                 connectionData.playerPos(),
@@ -102,6 +104,8 @@ public abstract class KlaxonPackets {
                         access.klaxon$resetWinchCableLength();
                     } else if (potentialClaw instanceof GrappleClawEntity grappleClaw) {
                         GrappleWinchConnectionManager.INSTANCE.addConnection(
+                                connectionData.playerId(),
+                                connectionData.clawId(),
                                 null,
                                 grappleClaw,
                                 connectionData.playerPos(),
@@ -118,25 +122,10 @@ public abstract class KlaxonPackets {
             MinecraftClient client = context.client();
 
             client.execute(() -> {
-                if (MinecraftClient.getInstance().world instanceof ClientWorld clientWorld) {
-                    Entity potentialPlayer = clientWorld.getEntityById(payload.playerId());
-                    Entity potentialClaw = clientWorld.getEntityById(payload.clawId());
-
-                    if (potentialPlayer instanceof AbstractClientPlayerEntity player) {
-                        GrappleWinchConnectionManager.INSTANCE.discardConnection(
-                                player,
-                                (GrappleClawEntity) potentialClaw
-                        );
-
-                        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
-                        access.klaxon$setWinchConnectionData(null);
-                        access.klaxon$resetWinchCableLength();
-                    } else if (potentialClaw instanceof GrappleClawEntity grappleClaw) {
-                        GrappleWinchConnectionManager.INSTANCE.discardConnection(
-                                null,
-                                grappleClaw
-                        );
-                    }
+                GrappleWinchConnectionManager.INSTANCE.discardConnection(payload.playerId());
+                if (client.world instanceof ClientWorld world && world.getEntityById(payload.playerId()) instanceof PlayerEntityGrappleAccess access) {
+                    access.klaxon$setWinchConnectionData(null);
+                    access.klaxon$resetWinchCableLength();
                 }
             });
         }));

@@ -1,58 +1,103 @@
 package net.myriantics.klaxon.client;
 
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Arm;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon.util.grapple_winch.GrappleWinchCableRenderer;
-import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public enum GrappleWinchConnectionManager {
     INSTANCE;
 
-    private ArrayList<GrappleWinchConnection> activeConnections = new ArrayList<>();
+    private final Map<Integer, GrappleWinchConnection> playerIdToActiveConnections = new HashMap<>();
 
-    public void addConnection(@Nullable AbstractClientPlayerEntity player, @Nullable GrappleClawEntity grappleClaw, Vec3d playerPos, Vec3d clawPos) {
-        activeConnections.add(
-                new GrappleWinchConnection(
-                        player,
-                        grappleClaw,
-                        playerPos,
-                        clawPos,
-                        playerPos.distanceTo(clawPos)
-                )
-        );
-    }
+    public void addConnection(
+            int playerId,
+            int grappleClawId,
+            @Nullable AbstractClientPlayerEntity player,
+            @Nullable GrappleClawEntity grappleClaw,
+            Vec3d playerPos,
+            Vec3d clawPos
+    ) {
+        if (player == null && grappleClaw == null) {
+            return;
+        }
 
-    public void discardConnection(@Nullable AbstractClientPlayerEntity player, @Nullable GrappleClawEntity grappleClaw) {
-        if (player != null) {
-            activeConnections.removeIf(connection -> player.equals(connection.player));
-        } else if (grappleClaw != null) {
-            activeConnections.removeIf(connection -> grappleClaw.equals(connection.grappleClaw));
+        GrappleWinchConnection connection = playerIdToActiveConnections.get(playerId);
+
+        if (connection == null) {
+            playerIdToActiveConnections.put(playerId,
+                    new GrappleWinchConnection(
+                            grappleClawId,
+                            Optional.ofNullable(player),
+                            Optional.ofNullable(grappleClaw),
+                            playerPos,
+                            clawPos
+                    )
+            );
+        } else {
+            playerIdToActiveConnections.put(playerId,
+                    new GrappleWinchConnection(
+                            grappleClawId,
+                            connection.player,
+                            connection.grappleClaw().isPresent() ? connection.grappleClaw() : Optional.ofNullable(grappleClaw),
+                            playerPos,
+                            clawPos
+                    )
+            );
         }
     }
 
-    public void renderCables(
+    public void discardConnection(int playerId) {
+        playerIdToActiveConnections.remove(playerId);
+    }
+
+    public void clientTick(MinecraftClient client) {
+        if (client.world instanceof ClientWorld clientWorld) {
+            // we must copy the key set here so editing the map doesn't fuck shit up
+            for (int playerId : List.copyOf(playerIdToActiveConnections.keySet())) {
+                GrappleWinchConnection connection = playerIdToActiveConnections.get(playerId);
+                int grappleClawId = connection.grappleClawId();
+
+                Entity potentialPlayer = clientWorld.getEntityById(playerId);
+                Entity potentialGrappleClaw = clientWorld.getEntityById(grappleClawId);
+
+                if (potentialPlayer instanceof PlayerEntity || potentialGrappleClaw instanceof GrappleClawEntity) {
+                    playerIdToActiveConnections.put(playerId, new GrappleWinchConnection(
+                            grappleClawId,
+                            Optional.ofNullable(potentialPlayer instanceof PlayerEntity player ? player : null),
+                            Optional.ofNullable(potentialGrappleClaw instanceof GrappleClawEntity claw ? claw : null),
+                            potentialPlayer instanceof PlayerEntity ? potentialPlayer.getPos() : connection.playerPos(),
+                            potentialGrappleClaw instanceof GrappleClawEntity ? potentialGrappleClaw.getPos() : connection.clawPos()
+                    ));
+                } else {
+                    // remove the connection if neither player nor claw are loaded
+                    playerIdToActiveConnections.remove(playerId);
+                }
+            }
+        }
+    }
+
+    public void renderGrappleWinchCable(
             ClientWorld clientWorld,
             Camera camera,
             RenderTickCounter renderTickCounter,
@@ -61,69 +106,112 @@ public enum GrappleWinchConnectionManager {
     ) {
         Vec3d cameraPos = camera.getPos();
 
-        for (GrappleWinchConnection connection : activeConnections) {
-            Entity source = connection.player == null ? connection.grappleClaw : connection.player;
-
-            // bonk the connection if both entities deload
+        for (int playerId : playerIdToActiveConnections.keySet()) {
+            GrappleWinchConnection connection = playerIdToActiveConnections.get(playerId);
+            Entity source = connection.player().isPresent() ? connection.player().get() : connection.grappleClaw().orElse(null);
             if (source == null) {
-                activeConnections.remove(connection);
+                playerIdToActiveConnections.remove(playerId);
                 return;
             }
-
-            Vec3d sourcePos = source.getPos();
-            Vec3d opposingPos = connection.getOpposingPos(source);
 
             float tickDelta = renderTickCounter.getTickDelta(clientWorld.getTickManager().shouldSkipTick(source));
             int blockLight = source.isOnFire() ? 15 : clientWorld.getLightLevel(LightType.BLOCK, source.getBlockPos());
 
-            double d = MathHelper.lerp(tickDelta, source.lastRenderX, sourcePos.getX());
-            double e = MathHelper.lerp(tickDelta, source.lastRenderY, sourcePos.getY());
-            double f = MathHelper.lerp(tickDelta, source.lastRenderZ, sourcePos.getZ());
+            Vec3d sourcePos = source.getPos();
+            Vec3d handPos = sourcePos;
+
+            if (connection.player().orElse(null) instanceof PlayerEntity player) {
+                float swingProgress = player.getHandSwingProgress(tickDelta);
+                float handMovementOffset = MathHelper.sin(MathHelper.sqrt(swingProgress) * (float) Math.PI);
+                handPos = GrappleWinchConnectionManager.INSTANCE.getHandPos(connection.player().get(), camera, handMovementOffset, tickDelta);
+            }
+
+            double lerpedX = MathHelper.lerp(tickDelta, source.lastRenderX, sourcePos.getX());
+            double lerpedY = MathHelper.lerp(tickDelta, source.lastRenderY, sourcePos.getY());
+            double lerpedZ = MathHelper.lerp(tickDelta, source.lastRenderZ, sourcePos.getZ());
 
             matrices.push();
-            matrices.translate(d - cameraPos.getX(), e - cameraPos.getY(), f - cameraPos.getZ());
+            matrices.translate(lerpedX - cameraPos.getX(), lerpedY - cameraPos.getY(), lerpedZ - cameraPos.getZ());
+            matrices.translate(handPos.getX() - lerpedX, handPos.getY() - lerpedY, handPos.getZ() - lerpedZ);
 
-            GrappleWinchCableRenderer.renderGrappleWinchCable(source, camera, tickDelta, matrices, immediate, opposingPos, blockLight);
+            VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getLines());
+            Matrix4f entry1 = matrices.peek().getPositionMatrix();
+            WorldRenderer.drawBox(matrices, vertexConsumer, 0, 0, 0, 1, 1, 1, 1f, 0f, 1f, 1.0f);
 
             matrices.pop();
         }
     }
 
+    private void renderCableSegment() {
+
+    }
+
     public Vec3d getHandPos(PlayerEntity player, Camera camera, float f, float tickDelta) {
-        int i = player.getMainArm() == Arm.RIGHT ? 1 : -1;
+        int handInverter = player.getMainArm() == Arm.RIGHT ? 1 : -1;
+        boolean isUsing = player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
         ItemStack itemStack = player.getMainHandStack();
         if (!itemStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
-            i = -i;
+            handInverter = -handInverter;
         }
 
         if (MinecraftClient.getInstance().options.getPerspective().isFirstPerson() && player == MinecraftClient.getInstance().player) {
             double m = 960.0 / MinecraftClient.getInstance().options.getFov().getValue();
-            Vec3d vec3d = camera.getProjection().getPosition(i * 0.525F, -0.1F).multiply(m).rotateY(f * 0.5F).rotateX(-f * 0.7F);
+            Vec3d vec3d = camera.getProjection().getPosition(handInverter * 0.4F, -0.5F).multiply(m).rotateY(f * 0.25F).rotateX(-f * 0.3F);
+
             return player.getCameraPosVec(tickDelta).add(vec3d);
         } else {
-            float g = MathHelper.lerp(tickDelta, player.prevBodyYaw, player.bodyYaw) * (float) (Math.PI / 180.0);
-            double d = MathHelper.sin(g);
-            double e = MathHelper.cos(g);
-            float h = player.getScale();
-            double j = i * 0.35 * h;
-            double k = 0.8 * h;
-            float l = player.isInSneakingPose() ? -0.1875F : 0.0F;
-            return player.getCameraPosVec(tickDelta).add(-e * j - d * k, l - 0.45 * h, -d * j + e * k);
+            float scale = player.getScale();
+            double lateralOffset = handInverter * scale;
+            double facingOffset = scale;
+            float sneakOffset = player.isInSneakingPose() ? -0.1375F : -0.0675F;
+            float verticalOffset = 0.8625f;
+
+            Vec3d vec3d = Vec3d.ZERO;
+
+            if (isUsing) {
+                float headYawRadians = MathHelper.lerp(tickDelta, player.prevHeadYaw, player.headYaw) * (float) (Math.PI / 180);
+                float headPitchRadians = MathHelper.lerp(tickDelta, player.prevPitch, player.getPitch()) * (float) (Math.PI / 180);
+
+                double sinHeadYaw = MathHelper.sin(headYawRadians);
+                double cosHeadYaw = MathHelper.cos(headYawRadians);
+
+                vec3d = new Vec3d(
+                        vec3d.getX(), // -cosYaw * usingLateralOffset - sinYaw * usingFacingOffset,
+                        vec3d.getY() * MathHelper.sin(headPitchRadians),
+                        vec3d.getZ()// -sinYaw * usingLateralOffset - cosYaw * usingFacingOffset
+                );
+            } else {
+                float bodyYawRadians = MathHelper.lerp(tickDelta, player.prevBodyYaw, player.bodyYaw) * (float) (Math.PI / 180.0);
+                double sinBodyYaw = MathHelper.sin(bodyYawRadians);
+                double cosBodyYaw = MathHelper.cos(bodyYawRadians);
+
+                lateralOffset *= 0.375;
+                facingOffset *= (player.isInSneakingPose() ? -0.0475 : 0.2875);
+
+
+                        vec3d = new Vec3d(
+                        -cosBodyYaw * lateralOffset - sinBodyYaw * facingOffset,
+                        sneakOffset - verticalOffset * scale,
+                        -sinBodyYaw * lateralOffset + cosBodyYaw * facingOffset
+                );
+            }
+
+            return player.getCameraPosVec(tickDelta).add(vec3d.subtract(0, 0.45, 0));
         }
     }
 
     private record GrappleWinchConnection(
-            AbstractClientPlayerEntity player,
-            GrappleClawEntity grappleClaw,
+            int grappleClawId,
+            Optional<PlayerEntity> player,
+            Optional<GrappleClawEntity> grappleClaw,
             Vec3d playerPos,
-            Vec3d clawPos,
-            double spentRange
+            Vec3d clawPos
     ) {
         public Vec3d getOpposingPos(@NotNull Entity origin) {
-            if (origin instanceof AbstractClientPlayerEntity) {
-                return clawPos();
+            if (origin instanceof PlayerEntity) {
+                return grappleClaw.isPresent() ? grappleClaw.get().getPos() : clawPos;
             } else {
-                return playerPos();
+                return player.isPresent() ? player.get().getPos() : playerPos();
             }
         }
     }

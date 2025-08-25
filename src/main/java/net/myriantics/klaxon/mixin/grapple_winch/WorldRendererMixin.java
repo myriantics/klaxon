@@ -2,15 +2,11 @@ package net.myriantics.klaxon.mixin.grapple_winch;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.profiler.Profiler;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,7 +36,7 @@ public abstract class WorldRendererMixin {
             ) {
         if (world != null) {
             world.getProfiler().swap("grapple_winch_cable");
-            GrappleWinchConnectionManager.INSTANCE.renderCables(world, camera, tickCounter, matrixStack, immediate);
+            GrappleWinchConnectionManager.INSTANCE.renderGrappleWinchCable(world, camera, tickCounter, matrixStack, immediate);
         }
     }
 }

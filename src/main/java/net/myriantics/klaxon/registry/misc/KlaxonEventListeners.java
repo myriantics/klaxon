@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry.misc;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -7,6 +8,7 @@ import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeLogic;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
@@ -43,5 +45,6 @@ public abstract class KlaxonEventListeners {
     }
 
     public static void initClient() {
+        ClientTickEvents.END_CLIENT_TICK.register(GrappleWinchConnectionManager.INSTANCE::clientTick);
     }
 }
