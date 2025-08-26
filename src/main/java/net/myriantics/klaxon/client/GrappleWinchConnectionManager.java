@@ -18,6 +18,7 @@ import net.myriantics.klaxon.registry.item.KlaxonItems;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -149,6 +150,7 @@ public enum GrappleWinchConnectionManager {
     public Vec3d getHandPos(PlayerEntity player, Camera camera, float f, float tickDelta) {
         int handInverter = player.getMainArm() == Arm.RIGHT ? 1 : -1;
         boolean isUsing = player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
+        boolean isSneaking = player.isInSneakingPose();
         ItemStack itemStack = player.getMainHandStack();
         if (!itemStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
             handInverter = -handInverter;
@@ -161,10 +163,9 @@ public enum GrappleWinchConnectionManager {
             return player.getCameraPosVec(tickDelta).add(vec3d);
         } else {
             float scale = player.getScale();
-            double lateralOffset = handInverter * scale;
-            double facingOffset = scale;
-            float sneakOffset = player.isInSneakingPose() ? -0.1375F : -0.0675F;
-            float verticalOffset = 0.8625f;
+
+            float sneakOffset = isSneaking ? -0.1375F : -0.0675F;
+
 
             Vec3d vec3d = Vec3d.ZERO;
 
@@ -174,22 +175,34 @@ public enum GrappleWinchConnectionManager {
 
                 double sinHeadYaw = MathHelper.sin(headYawRadians);
                 double cosHeadYaw = MathHelper.cos(headYawRadians);
+                double sinHeadPitch = MathHelper.sin(headPitchRadians);
+                double cosHeadPitch = MathHelper.cos(headPitchRadians);
+
+                // lateral offset is 2 pixels away from head center
+                // facing offset is
+                double lateralOffset = handInverter * scale * 0.125;
+                double facingOffset = scale * 1;
+                float verticalOffset = 0.8625f;
 
                 vec3d = new Vec3d(
-                        vec3d.getX(), // -cosYaw * usingLateralOffset - sinYaw * usingFacingOffset,
-                        vec3d.getY() * MathHelper.sin(headPitchRadians),
-                        vec3d.getZ()// -sinYaw * usingLateralOffset - cosYaw * usingFacingOffset
+                        -cosHeadYaw * lateralOffset - sinHeadYaw * facingOffset * cosHeadPitch,
+                        sneakOffset - verticalOffset * scale,
+                        -sinHeadYaw * lateralOffset + cosHeadYaw * facingOffset
+                ).multiply(
+                        cosHeadPitch,
+                        sinHeadPitch,
+                        cosHeadPitch
                 );
             } else {
                 float bodyYawRadians = MathHelper.lerp(tickDelta, player.prevBodyYaw, player.bodyYaw) * (float) (Math.PI / 180.0);
                 double sinBodyYaw = MathHelper.sin(bodyYawRadians);
                 double cosBodyYaw = MathHelper.cos(bodyYawRadians);
 
-                lateralOffset *= 0.375;
-                facingOffset *= (player.isInSneakingPose() ? -0.0475 : 0.2875);
+                double lateralOffset = handInverter * scale * 0.375;
+                double facingOffset = scale * (isSneaking ? -0.0475 : 0.2875);
+                float verticalOffset = 0.8625f;
 
-
-                        vec3d = new Vec3d(
+                vec3d = new Vec3d(
                         -cosBodyYaw * lateralOffset - sinBodyYaw * facingOffset,
                         sneakOffset - verticalOffset * scale,
                         -sinBodyYaw * lateralOffset + cosBodyYaw * facingOffset
