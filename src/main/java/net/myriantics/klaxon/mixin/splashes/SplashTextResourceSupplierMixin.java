@@ -20,6 +20,8 @@ public abstract class SplashTextResourceSupplierMixin {
         // original.add("Bioluminescent");
         original.add("Steel, Iron, Nuts and Bolts");
         original.add("But um yeah.");
+        original.add("THIS IS MY CRAFT!!!");
+        original.add("OH MY BLOCKS!!!");
         return original;
     }
 }
