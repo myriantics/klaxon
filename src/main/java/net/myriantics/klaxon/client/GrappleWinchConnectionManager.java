@@ -11,10 +11,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Colors;
 import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.render.KlaxonRenderLayers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -109,42 +111,88 @@ public enum GrappleWinchConnectionManager {
 
         for (int playerId : playerIdToActiveConnections.keySet()) {
             GrappleWinchConnection connection = playerIdToActiveConnections.get(playerId);
-            Entity source = connection.player().isPresent() ? connection.player().get() : connection.grappleClaw().orElse(null);
+
+            PlayerEntity player = connection.player.orElse(null);
+            GrappleClawEntity grappleClaw = connection.grappleClaw.orElse(null);
+
+            Entity source = player == null ? grappleClaw : player;
+
+            // don't render if neither entity is present
             if (source == null) {
-                playerIdToActiveConnections.remove(playerId);
-                return;
+                continue;
             }
+
 
             float tickDelta = renderTickCounter.getTickDelta(clientWorld.getTickManager().shouldSkipTick(source));
+
+            Vec3d playerPos = player == null ? connection.playerPos : player.getLerpedPos(tickDelta);
+            Vec3d clawPos = grappleClaw == null ? connection.clawPos : grappleClaw.getLerpedPos(tickDelta);
+
             int blockLight = source.isOnFire() ? 15 : clientWorld.getLightLevel(LightType.BLOCK, source.getBlockPos());
 
-            Vec3d sourcePos = source.getPos();
-            Vec3d handPos = sourcePos;
+            Vec3d cableOriginPos = playerPos;
+            Vec3d cableEndpointPos = clawPos;
 
-            if (connection.player().orElse(null) instanceof PlayerEntity player) {
+            // override cable origin pos with player hand position if possible
+            if (player != null) {
                 float swingProgress = player.getHandSwingProgress(tickDelta);
                 float handMovementOffset = MathHelper.sin(MathHelper.sqrt(swingProgress) * (float) Math.PI);
-                handPos = GrappleWinchConnectionManager.INSTANCE.getHandPos(connection.player().get(), camera, handMovementOffset, tickDelta);
+                cableOriginPos = GrappleWinchConnectionManager.INSTANCE.getHandPos(connection.player().get(), camera, handMovementOffset, tickDelta);
             }
 
-            double lerpedX = MathHelper.lerp(tickDelta, source.lastRenderX, sourcePos.getX());
-            double lerpedY = MathHelper.lerp(tickDelta, source.lastRenderY, sourcePos.getY());
-            double lerpedZ = MathHelper.lerp(tickDelta, source.lastRenderZ, sourcePos.getZ());
+            // yonk the lerped values
+            double lerpedX;
+            double lerpedY;
+            double lerpedZ;
+
+            if (grappleClaw == null) {
+                lerpedX = clawPos.x;
+                lerpedY = clawPos.y;
+                lerpedZ = clawPos.y;
+            } else {
+                lerpedX = MathHelper.lerp(tickDelta, grappleClaw.lastRenderX, grappleClaw.getX());
+                lerpedY = MathHelper.lerp(tickDelta, grappleClaw.lastRenderY, grappleClaw.getY());
+                lerpedZ = MathHelper.lerp(tickDelta, grappleClaw.lastRenderZ, grappleClaw.getZ());
+            }
 
             matrices.push();
             matrices.translate(lerpedX - cameraPos.getX(), lerpedY - cameraPos.getY(), lerpedZ - cameraPos.getZ());
-            matrices.translate(handPos.getX() - lerpedX, handPos.getY() - lerpedY, handPos.getZ() - lerpedZ);
 
-            VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getLines());
-            Matrix4f entry1 = matrices.peek().getPositionMatrix();
-            WorldRenderer.drawBox(matrices, vertexConsumer, 0, 0, 0, 1, 1, 1, 1f, 0f, 1f, 1.0f);
+            VertexConsumer vertexConsumer = immediate.getBuffer(KlaxonRenderLayers.getGrappleWinchCable());
+            MatrixStack.Entry entry = matrices.peek();
+
+            int distance = (int) cableOriginPos.distanceTo(cableEndpointPos);
+            int maxSegments = distance * 4;
+
+            // cable segments are 2 per block of distance
+            for (int segmentIndex = 0; segmentIndex <= maxSegments; segmentIndex++) {
+                renderCableSegment(
+                        cableOriginPos.subtract(cableEndpointPos).toVector3f(),
+                        vertexConsumer,
+                        blockLight,
+                        entry,
+                        (float) segmentIndex / maxSegments,
+                        (float) (segmentIndex + 1) / maxSegments,
+                        segmentIndex
+                );
+            }
 
             matrices.pop();
         }
     }
 
-    private void renderCableSegment() {
+    private void renderCableSegment(Vector3f cableBegin2End, VertexConsumer vertexConsumer, int blockLight, MatrixStack.Entry matrices, float segmentStart, float segmentEnd, int index) {
+        float startX = cableBegin2End.x() * segmentStart;
+        float startY = cableBegin2End.y() * segmentStart;
+        float startZ = cableBegin2End.z() * segmentStart;
+        float endX = cableBegin2End.x() * segmentEnd;
+        float endY = cableBegin2End.y() * segmentEnd;
+        float endZ = cableBegin2End.z() * segmentEnd;
 
+        vertexConsumer.vertex(matrices, startX, startY, startZ)
+                .color(index % 2 == 0 ? Colors.RED : Colors.GREEN)
+                .light(blockLight)
+                .normal(matrices, endX, endY, endZ);
     }
 
     public Vec3d getHandPos(PlayerEntity player, Camera camera, float f, float tickDelta) {

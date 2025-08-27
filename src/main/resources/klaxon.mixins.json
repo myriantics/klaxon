@@ -72,6 +72,7 @@
     "grapple_winch.WorldRendererMixin",
     "item_components.walljump_ability.MinecraftClientMixin",
     "manual_item_application.ClientPlayerInteractionManagerMixin",
+    "rendering.RenderLayerInvoker",
     "splashes.SplashTextResourceSupplierMixin",
     "wrench.ClientPlayerInteractionManagerMixin"
   ],
