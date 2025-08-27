@@ -115,13 +115,12 @@ public enum GrappleWinchConnectionManager {
             PlayerEntity player = connection.player.orElse(null);
             GrappleClawEntity grappleClaw = connection.grappleClaw.orElse(null);
 
-            Entity source = player == null ? grappleClaw : player;
+            Entity source = player == null || player.isRemoved() ? grappleClaw : player;
 
             // don't render if neither entity is present
-            if (source == null) {
+            if (source == null || source.isRemoved()) {
                 continue;
             }
-
 
             float tickDelta = renderTickCounter.getTickDelta(clientWorld.getTickManager().shouldSkipTick(source));
 
@@ -134,29 +133,20 @@ public enum GrappleWinchConnectionManager {
             Vec3d cableEndpointPos = clawPos;
 
             // override cable origin pos with player hand position if possible
-            if (player != null) {
+            if (player != null && !player.isRemoved()) {
                 float swingProgress = player.getHandSwingProgress(tickDelta);
                 float handMovementOffset = MathHelper.sin(MathHelper.sqrt(swingProgress) * (float) Math.PI);
                 cableOriginPos = GrappleWinchConnectionManager.INSTANCE.getHandPos(connection.player().get(), camera, handMovementOffset, tickDelta);
             }
 
             // yonk the lerped values
-            double lerpedX;
-            double lerpedY;
-            double lerpedZ;
-
-            if (grappleClaw == null) {
-                lerpedX = clawPos.x;
-                lerpedY = clawPos.y;
-                lerpedZ = clawPos.y;
-            } else {
-                lerpedX = MathHelper.lerp(tickDelta, grappleClaw.lastRenderX, grappleClaw.getX());
-                lerpedY = MathHelper.lerp(tickDelta, grappleClaw.lastRenderY, grappleClaw.getY());
-                lerpedZ = MathHelper.lerp(tickDelta, grappleClaw.lastRenderZ, grappleClaw.getZ());
-            }
+            double lerpedX = MathHelper.lerp(tickDelta, source.lastRenderX, source.getX());
+            double lerpedY = MathHelper.lerp(tickDelta, source.lastRenderY, source.getY());
+            double lerpedZ = MathHelper.lerp(tickDelta, source.lastRenderZ, source.getZ());
 
             matrices.push();
             matrices.translate(lerpedX - cameraPos.getX(), lerpedY - cameraPos.getY(), lerpedZ - cameraPos.getZ());
+            matrices.translate(cableOriginPos.getX() - lerpedX, cableOriginPos.getY() - lerpedY, cableOriginPos.getZ() - lerpedZ);
 
             VertexConsumer vertexConsumer = immediate.getBuffer(KlaxonRenderLayers.getGrappleWinchCable());
             MatrixStack.Entry entry = matrices.peek();
@@ -167,7 +157,7 @@ public enum GrappleWinchConnectionManager {
             // cable segments are 2 per block of distance
             for (int segmentIndex = 0; segmentIndex <= maxSegments; segmentIndex++) {
                 renderCableSegment(
-                        cableOriginPos.subtract(cableEndpointPos).toVector3f(),
+                        cableEndpointPos.subtract(cableOriginPos).toVector3f(),
                         vertexConsumer,
                         blockLight,
                         entry,
@@ -191,7 +181,6 @@ public enum GrappleWinchConnectionManager {
 
         vertexConsumer.vertex(matrices, startX, startY, startZ)
                 .color(index % 2 == 0 ? Colors.RED : Colors.GREEN)
-                .light(blockLight)
                 .normal(matrices, endX, endY, endZ);
     }
 
