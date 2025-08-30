@@ -154,10 +154,12 @@ public enum GrappleWinchConnectionManager {
             int distance = (int) cableOriginPos.distanceTo(cableEndpointPos);
             int maxSegments = distance * 4;
 
+            Vector3f origin2Endpoint = cableEndpointPos.subtract(cableOriginPos).toVector3f();
+
             // cable segments are 2 per block of distance
             for (int segmentIndex = 0; segmentIndex <= maxSegments; segmentIndex++) {
                 renderCableSegment(
-                        cableEndpointPos.subtract(cableOriginPos).toVector3f(),
+                        origin2Endpoint,
                         vertexConsumer,
                         blockLight,
                         entry,
@@ -178,9 +180,13 @@ public enum GrappleWinchConnectionManager {
         float endX = cableBegin2End.x() * segmentEnd;
         float endY = cableBegin2End.y() * segmentEnd;
         float endZ = cableBegin2End.z() * segmentEnd;
+        float l = MathHelper.sqrt(endX * endX + endY * endY + endZ * endZ);
+        endX /= l;
+        endY /= l;
+        endZ /= l;
 
         vertexConsumer.vertex(matrices, startX, startY, startZ)
-                .color(index % 2 == 0 ? Colors.RED : Colors.GREEN)
+                .color(index % 2 == 0 ? Colors.GRAY : Colors.LIGHT_GRAY)
                 .normal(matrices, endX, endY, endZ);
     }
 
