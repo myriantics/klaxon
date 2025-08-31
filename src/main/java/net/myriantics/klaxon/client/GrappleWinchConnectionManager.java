@@ -16,6 +16,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.render.KlaxonColors;
 import net.myriantics.klaxon.registry.render.KlaxonRenderLayers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +24,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,12 +158,20 @@ public enum GrappleWinchConnectionManager {
 
             Vector3f origin2Endpoint = cableEndpointPos.subtract(cableOriginPos).toVector3f();
 
+            float multipoggers = Math.min(0.3f + ((float) blockLight / 15f), 1f);
+
             // cable segments are 2 per block of distance
             for (int segmentIndex = 0; segmentIndex <= maxSegments; segmentIndex++) {
+                Color initialColor = segmentIndex % 2 == 0 ? KlaxonColors.STEEL_DARK : KlaxonColors.STEEL_LIGHT;
+
                 renderCableSegment(
                         origin2Endpoint,
                         vertexConsumer,
-                        blockLight,
+                        new Color(
+                                (int) (initialColor.getRed() * multipoggers),
+                                (int) (initialColor.getGreen() * multipoggers),
+                                (int) (initialColor.getBlue() * multipoggers)
+                        ),
                         entry,
                         (float) segmentIndex / maxSegments,
                         (float) (segmentIndex + 1) / maxSegments,
@@ -173,7 +183,7 @@ public enum GrappleWinchConnectionManager {
         }
     }
 
-    private void renderCableSegment(Vector3f cableBegin2End, VertexConsumer vertexConsumer, int blockLight, MatrixStack.Entry matrices, float segmentStart, float segmentEnd, int index) {
+    private void renderCableSegment(Vector3f cableBegin2End, VertexConsumer vertexConsumer, Color color, MatrixStack.Entry matrices, float segmentStart, float segmentEnd, int index) {
         float startX = cableBegin2End.x() * segmentStart;
         float startY = cableBegin2End.y() * segmentStart;
         float startZ = cableBegin2End.z() * segmentStart;
@@ -186,7 +196,7 @@ public enum GrappleWinchConnectionManager {
         endZ /= l;
 
         vertexConsumer.vertex(matrices, startX, startY, startZ)
-                .color(index % 2 == 0 ? Colors.GRAY : Colors.LIGHT_GRAY)
+                .color(color.getRGB())
                 .normal(matrices, endX, endY, endZ);
     }
 
