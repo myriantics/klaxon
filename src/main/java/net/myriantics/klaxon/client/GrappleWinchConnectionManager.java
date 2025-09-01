@@ -3,11 +3,13 @@ package net.myriantics.klaxon.client;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
@@ -34,6 +36,8 @@ public enum GrappleWinchConnectionManager {
     INSTANCE;
 
     private final Map<Integer, GrappleWinchConnection> playerIdToActiveConnections = new HashMap<>();
+    private float daylightMultiplier = 1.0f;
+    private boolean clientPlayerHasNightVision = false;
 
     public void addConnection(
             int playerId,
@@ -78,6 +82,15 @@ public enum GrappleWinchConnectionManager {
 
     public void clientTick(MinecraftClient client) {
         if (client.world instanceof ClientWorld clientWorld) {
+            // compute the daytime multiplier here instead of every render tick
+            // kinda funky, look at daylight on the minecraft wiki for more info haha
+            // basically keeps the value at 1.0f unless it's night, in which case it gets progressively smaller until midnight, when it starts climbing back up again.
+            long timeOfDay = clientWorld.getTimeOfDay() % 24000L;
+            daylightMultiplier = timeOfDay < 12040 || timeOfDay > 22331 ? 1.0f : Math.min(Math.abs((18000f - timeOfDay) / 10000), 1.0f);
+
+            // update night vision status so we're not doing it every render tick
+            clientPlayerHasNightVision = client.player != null && client.player.hasStatusEffect(StatusEffects.NIGHT_VISION);
+
             // we must copy the key set here so editing the map doesn't fuck shit up
             for (int playerId : List.copyOf(playerIdToActiveConnections.keySet())) {
                 GrappleWinchConnection connection = playerIdToActiveConnections.get(playerId);
@@ -126,10 +139,34 @@ public enum GrappleWinchConnectionManager {
 
             float tickDelta = renderTickCounter.getTickDelta(clientWorld.getTickManager().shouldSkipTick(source));
 
+            // initialize positions
             Vec3d playerPos = player == null ? connection.playerPos : player.getLerpedPos(tickDelta);
             Vec3d clawPos = grappleClaw == null ? connection.clawPos : grappleClaw.getLerpedPos(tickDelta);
+            BlockPos playerBlockPos = BlockPos.ofFloored(playerPos);
+            BlockPos clawBlockPos = BlockPos.ofFloored(clawPos);
 
-            int blockLight = source.isOnFire() ? 15 : clientWorld.getLightLevel(LightType.BLOCK, source.getBlockPos());
+            // gather light values
+            int originBlockLight = clientWorld.getLightLevel(LightType.BLOCK, playerBlockPos);
+            int endpointBlockLight = clientWorld.getLightLevel(LightType.BLOCK, clawBlockPos);
+            int originSkyLight = clientWorld.getLightLevel(LightType.SKY, playerBlockPos);
+            int endpointSkyLight = clientWorld.getLightLevel(LightType.SKY, clawBlockPos);
+
+            // block light level is overridden to 15 if on fire or glowing
+            originBlockLight = player != null && (player.isOnFire() || player.isGlowing()) ? 15 : originBlockLight;
+            endpointBlockLight = grappleClaw != null && (grappleClaw.isOnFire() || grappleClaw.isGlowing()) ? 15 : endpointBlockLight;
+
+            // multiply skylight by daytime multiplier (computed in clientTick())
+            // this is needed because the skylight is always 15 when you're in the open regardless of whether it's night
+            originSkyLight = (int) (originSkyLight * daylightMultiplier);
+            endpointSkyLight = (int) (endpointSkyLight * daylightMultiplier);
+
+            // all cables have decently high brightness if the camera player has night vision
+            if (clientPlayerHasNightVision) {
+                originBlockLight = Math.max(originBlockLight, 13);
+                endpointBlockLight = Math.max(endpointBlockLight, 13);
+                originSkyLight = Math.max(originSkyLight, 13);
+                endpointSkyLight = Math.max(endpointSkyLight, 13);
+            }
 
             Vec3d cableOriginPos = playerPos;
             Vec3d cableEndpointPos = clawPos;
@@ -158,24 +195,24 @@ public enum GrappleWinchConnectionManager {
 
             Vector3f origin2Endpoint = cableEndpointPos.subtract(cableOriginPos).toVector3f();
 
-            float multipoggers = Math.min(0.3f + ((float) blockLight / 15f), 1f);
+            // yonk the HSB arrays
+            float[] lightSteelHSB = KlaxonColors.toHSBArray(KlaxonColors.STEEL_LIGHT);
+            float[] mediumSteelHSB = KlaxonColors.toHSBArray(KlaxonColors.STEEL_MEDIUM);
 
             // cable segments are 2 per block of distance
             for (int segmentIndex = 0; segmentIndex <= maxSegments; segmentIndex++) {
-                Color initialColor = segmentIndex % 2 == 0 ? KlaxonColors.STEEL_DARK : KlaxonColors.STEEL_LIGHT;
 
                 renderCableSegment(
                         origin2Endpoint,
                         vertexConsumer,
-                        new Color(
-                                (int) (initialColor.getRed() * multipoggers),
-                                (int) (initialColor.getGreen() * multipoggers),
-                                (int) (initialColor.getBlue() * multipoggers)
-                        ),
+                        originBlockLight,
+                        originSkyLight,
+                        endpointBlockLight,
+                        endpointSkyLight,
+                        segmentIndex % 2 == 0 ? mediumSteelHSB : lightSteelHSB,
                         entry,
                         (float) segmentIndex / maxSegments,
-                        (float) (segmentIndex + 1) / maxSegments,
-                        segmentIndex
+                        (float) (segmentIndex + 1) / maxSegments
                 );
             }
 
@@ -183,20 +220,43 @@ public enum GrappleWinchConnectionManager {
         }
     }
 
-    private void renderCableSegment(Vector3f cableBegin2End, VertexConsumer vertexConsumer, Color color, MatrixStack.Entry matrices, float segmentStart, float segmentEnd, int index) {
-        float startX = cableBegin2End.x() * segmentStart;
-        float startY = cableBegin2End.y() * segmentStart;
-        float startZ = cableBegin2End.z() * segmentStart;
-        float endX = cableBegin2End.x() * segmentEnd;
-        float endY = cableBegin2End.y() * segmentEnd;
-        float endZ = cableBegin2End.z() * segmentEnd;
+    private void renderCableSegment(
+            Vector3f cableBegin2End,
+            VertexConsumer vertexConsumer,
+            int cableOriginBlockLight,
+            int cableOriginSkyLight,
+            int cableEndpointBlockLight,
+            int cableEndpointSkyLight,
+            float[] segmentHSB,
+            MatrixStack.Entry matrices,
+            float segmentStartPercentage,
+            float segmentEndPercentage
+    ) {
+        // do lighting calculations
+        int lerpedBlockLight = MathHelper.lerp(segmentStartPercentage, cableOriginBlockLight, cableEndpointBlockLight);
+        int lerpedSkyLight = MathHelper.lerp(segmentStartPercentage, cableOriginSkyLight, cableEndpointSkyLight);
+        float lightingPercentage = (float) Math.clamp(lerpedSkyLight + lerpedBlockLight, 0, 15) / 15;
+
+        // do position calculations
+        float startX = cableBegin2End.x() * segmentStartPercentage;
+        float startY = cableBegin2End.y() * segmentStartPercentage;
+        float startZ = cableBegin2End.z() * segmentStartPercentage;
+        float endX = cableBegin2End.x() * segmentEndPercentage;
+        float endY = cableBegin2End.y() * segmentEndPercentage;
+        float endZ = cableBegin2End.z() * segmentEndPercentage;
         float l = MathHelper.sqrt(endX * endX + endY * endY + endZ * endZ);
         endX /= l;
         endY /= l;
         endZ /= l;
 
         vertexConsumer.vertex(matrices, startX, startY, startZ)
-                .color(color.getRGB())
+                .color(
+                        Color.getHSBColor(
+                        segmentHSB[0],
+                        segmentHSB[1],
+                        segmentHSB[2] * (0.35f + 0.65f * lightingPercentage)
+                        ).getRGB()
+                )
                 .normal(matrices, endX, endY, endZ);
     }
 
