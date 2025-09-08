@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
-import net.myriantics.klaxon.mixin.blast_processor_behaviors.WindChargeEntityInvoker;
+import net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors.WindChargeEntityInvoker;
 import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 

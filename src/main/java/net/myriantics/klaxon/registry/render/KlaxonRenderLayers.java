@@ -1,12 +1,11 @@
 package net.myriantics.klaxon.registry.render;
 
-import net.fabricmc.fabric.mixin.blockrenderlayer.RenderLayersMixin;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayer.MultiPhase;
 import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
-import net.myriantics.klaxon.mixin.rendering.RenderLayerInvoker;
+import net.myriantics.klaxon.mixin.minecraft.rendering.RenderLayerInvoker;
 
 import java.util.OptionalDouble;
 
