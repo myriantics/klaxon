@@ -9,6 +9,7 @@ import net.minecraft.block.ObserverBlock;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.item.ItemStack;
@@ -29,9 +30,11 @@ import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 import net.myriantics.klaxon.util.AbilityModifierCalculator;
 import net.myriantics.klaxon.util.EntityWeightHelper;
 import net.myriantics.klaxon.util.PermissionsHelper;
+import net.myriantics.klaxon.util.StatusEffectHelper;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.block.FacingBlock.FACING;
@@ -63,7 +66,6 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
     // rising edge block hit - uses MinecraftClientMixin and HammerWalljumpTriggerPacket
     // called on both client and server
     public void processHammerWalljump(PlayerEntity player, World world, BlockPos pos, Direction direction) {
-
         BlockState targetBlockState = world.getBlockState(pos);
 
         if (player == null) {
@@ -84,9 +86,6 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
 
             Entity movedEntity = canWalljumpWithMount ? player.getVehicle() : player;
 
-            // velocity needs to be multiplied by 8 because minecarts don't play well with velocity
-            // you know that one spongebob meme where they go over the little bump in the rollercoaster
-            // thats this easter egg without this change
             boolean walljumpSucceeded = processWallJumpPhysics(player, movedEntity);
 
             world.playSound(player, pos, walljumpSucceeded ? KlaxonSoundEvents.ITEM_HAMMER_WALLJUMP_SUCCESS : KlaxonSoundEvents.ITEM_HAMMER_WALLJUMP_FAIL_HEAVY, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
@@ -98,8 +97,8 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
                 }
 
                 KlaxonAdvancementTriggers.triggerWalljumpAbility((ServerPlayerEntity) player, walljumpSucceeded ? HammerItem.UsageType.WALLJUMP_SUCCEEDED : HammerItem.UsageType.WALLJUMP_FAILED);
-                // if player overpowered steel armor with strength proc this
-                if (walljumpSucceeded && EntityWeightHelper.isHeavy(player)) {
+                // if player walljumps with strength
+                if (StatusEffectHelper.containsAnyEffectIn(player.getStatusEffects(), KlaxonStatusEffectTags.STRENGTHENING_EFFECTS)) {
                     KlaxonAdvancementTriggers.triggerWalljumpAbility((ServerPlayerEntity) player, HammerItem.UsageType.STRENGTH_WALLJUMP_SUCCEEDED);
                 }
                 if (walljumpSucceeded && movedEntity.getType().isIn(ConventionalEntityTypeTags.MINECARTS)) {

@@ -6,7 +6,6 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
-import net.myriantics.klaxon.registry.entity.KlaxonStatusEffects;
 import net.myriantics.klaxon.registry.item.KlaxonItemGroups;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -148,7 +147,7 @@ public class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
     }
 
     private static void generateStatusEffectTagTranslations(TranslationBuilder translationBuilder) {
-        translationBuilder.add(KlaxonStatusEffectTags.HEAVY_STATUS_EFFECTS, "Heavy Status Effects");
+        translationBuilder.add(KlaxonStatusEffectTags.HEAVY_EFFECTS, "Heavy Status Effects");
     }
 
     private static void generateDeathMessageTranslations(TranslationBuilder translationBuilder) {

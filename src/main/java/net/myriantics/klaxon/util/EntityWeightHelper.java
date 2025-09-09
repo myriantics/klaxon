@@ -1,15 +1,10 @@
 package net.myriantics.klaxon.util;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.registry.entity.KlaxonDataAttachments;
-import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
-import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 
 public abstract class EntityWeightHelper {
@@ -38,12 +33,7 @@ public abstract class EntityWeightHelper {
 
         // living entities with any status effect in the heavy tag are considered heavy
         if (!heavy && entity instanceof LivingEntity livingEntity) {
-            for (StatusEffectInstance instance : livingEntity.getStatusEffects()) {
-                if (instance.getEffectType().isIn(KlaxonStatusEffectTags.HEAVY_STATUS_EFFECTS)) {
-                    heavy = true;
-                    break;
-                }
-            }
+            heavy = StatusEffectHelper.containsAnyEffectIn(livingEntity.getStatusEffects(), KlaxonStatusEffectTags.HEAVY_EFFECTS);
         }
 
         // return the fallback value

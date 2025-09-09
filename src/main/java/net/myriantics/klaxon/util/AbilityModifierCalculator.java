@@ -3,8 +3,7 @@ package net.myriantics.klaxon.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 
 public abstract class AbilityModifierCalculator {
     /**
@@ -23,11 +22,11 @@ public abstract class AbilityModifierCalculator {
         // status effect modifier starts out at 0 - tug-of-war between strength and weakness begins
         int statusEffectModifier = 0;
 
-        // TIL weakness doesn't have a tier 2 version. The more you know
-        statusEffectModifier += StatusEffectHelper.getUnborkedStatusEffectAmplifier(sourceEntity, StatusEffects.STRENGTH);
-        statusEffectModifier -= StatusEffectHelper.getUnborkedStatusEffectAmplifier(sourceEntity, StatusEffects.WEAKNESS);
+        // Sum up all strengthening and weakening effects and modify the modifier
+        statusEffectModifier += StatusEffectHelper.totalLevelOfTagContents(sourceEntity.getStatusEffects(), KlaxonStatusEffectTags.STRENGTHENING_EFFECTS);
+        statusEffectModifier -= StatusEffectHelper.totalLevelOfTagContents(sourceEntity.getStatusEffects(), KlaxonStatusEffectTags.WEAKENING_EFFECTS);
 
-        // if an entity is heavy, walljump strength is halved
+        // if either source or moved entity is heavy, walljump strength is halved
         boolean heavy = EntityWeightHelper.isHeavy(sourceEntity) || EntityWeightHelper.isHeavy(movedEntity);
 
         // compile all the factors
