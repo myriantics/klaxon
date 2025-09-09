@@ -2,7 +2,6 @@ package net.myriantics.klaxon.datagen.advancement.providers;
 
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
@@ -42,9 +41,9 @@ public class KlaxonPreludeAdvancementProvider extends KlaxonAdvancementSubProvid
         AdvancementEntry obtainSteelWrench = addTask(hammerCraftMetalPlate, "obtain_steel_wrench", KlaxonItems.STEEL_WRENCH, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_WRENCH));
         AdvancementEntry editRailWithSteelWrench = addTask(obtainSteelWrench, "rotate_rail_with_wrench", Items.RAIL, WrenchUsageCriterion.Conditions.createRotation(BlockTags.RAILS));
         AdvancementEntry obtainAnyRubberGlob = addTask(watchBlastProcessorCraft, "obtain_any_rubber_glob", KlaxonItems.RUBBER_GLOB, InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_GLOBS)));
-        AdvancementEntry hammerWalljump = addTask(watchBlastProcessorCraft, "hammer_walljump", KlaxonItems.STEEL_HAMMER, WalljumpAbilityCriterion.Conditions.createWalljump(true));
-        AdvancementEntry strengthWalljump = addChallenge(hammerWalljump, "hammer_walljump_strength", Items.BLAZE_POWDER, false, WalljumpAbilityCriterion.Conditions.createStrengthWalljump(), AdvancementRewards.Builder.experience(400));
-        AdvancementEntry minecartWalljump = addChallenge(hammerWalljump, "hammer_walljump_minecart", Items.CAULDRON, true, WalljumpAbilityCriterion.Conditions.createMinecartWalljump(), AdvancementRewards.Builder.experience(400));
+        AdvancementEntry normalHammerWalljump = addTask(watchBlastProcessorCraft, "hammer_walljump_normal", KlaxonItems.STEEL_HAMMER, WalljumpAbilityCriterion.Conditions.createNormalWalljump());
+        AdvancementEntry boostedHammerWalljump = addGoal(normalHammerWalljump, "hammer_walljump_boosted", Items.BLAZE_POWDER,  WalljumpAbilityCriterion.Conditions.createStrengthWalljump());
+        AdvancementEntry minecartHammerWalljump = addGoal(normalHammerWalljump, "hammer_walljump_minecart", Items.CAULDRON, WalljumpAbilityCriterion.Conditions.createMinecartWalljump());
         AdvancementEntry obtainFullSteelArmor = addGoal(hammerCraftMetalPlate, "obtain_full_steel_armor", KlaxonItems.STEEL_CHESTPLATE, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_HELMET, KlaxonItems.STEEL_CHESTPLATE, KlaxonItems.STEEL_LEGGINGS, KlaxonItems.STEEL_BOOTS));
         AdvancementEntry makeshiftItemFullRepair = addTask(watchBlastProcessorCraft, "makeshift_item_full_repair", Items.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
     }

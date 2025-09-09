@@ -9,7 +9,6 @@ import net.minecraft.block.ObserverBlock;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.item.ItemStack;
@@ -23,18 +22,14 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.mixin.minecraft.item_components.walljump_ability.ObserverBlockInvoker;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
-import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 import net.myriantics.klaxon.util.AbilityModifierCalculator;
-import net.myriantics.klaxon.util.EntityWeightHelper;
 import net.myriantics.klaxon.util.PermissionsHelper;
-import net.myriantics.klaxon.util.StatusEffectHelper;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.block.FacingBlock.FACING;
@@ -69,7 +64,6 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
         BlockState targetBlockState = world.getBlockState(pos);
 
         if (player == null) {
-            KlaxonCommon.LOGGER.error("Player is null when trying to do a Hammer Walljump. Why?");
             return;
         }
 
@@ -80,47 +74,49 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
         boolean canWalljumpWithMount = canWalljumpWithMount(player, walljumpStack, targetBlockState);
 
         // validate that player has sufficient attack cooldown and satisfies conditions for walljump
-        if (attackCooldownProgress > (world.isClient() ? 0.8 : 0.7) && (!world.isClient() || canWalljumpWithMount || canStandardWallJump(player, walljumpStack, targetBlockState))) {
-
+        if (attackCooldownProgress > 0.7 && (!world.isClient() || canWalljumpWithMount || canStandardWallJump(player, walljumpStack, targetBlockState))) {
             world.addBlockBreakParticles(pos, targetBlockState);
 
             Entity movedEntity = canWalljumpWithMount ? player.getVehicle() : player;
 
-            boolean walljumpSucceeded = processWallJumpPhysics(player, movedEntity);
+            float walljumpStrength = processWallJumpPhysics(player, movedEntity);
 
-            world.playSound(player, pos, walljumpSucceeded ? KlaxonSoundEvents.ITEM_HAMMER_WALLJUMP_SUCCESS : KlaxonSoundEvents.ITEM_HAMMER_WALLJUMP_FAIL_HEAVY, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
+            world.playSound(player, pos, KlaxonSoundEvents.ITEM_HAMMER_WALLJUMP_SUCCESS, SoundCategory.PLAYERS, 2 * attackCooldownProgress, 2f * attackCooldownProgress);
 
-            if (!world.isClient()) {
+            if (player instanceof ServerPlayerEntity serverPlayer) {
                 // update observers monitoring target block - doesn't work in adventure
                 if (PermissionsHelper.canModifyWorld(player) && shouldUpdateObservers) {
                     updateAdjacentMonitoringObservers(world, pos, targetBlockState);
                 }
 
-                KlaxonAdvancementTriggers.triggerWalljumpAbility((ServerPlayerEntity) player, walljumpSucceeded ? HammerItem.UsageType.WALLJUMP_SUCCEEDED : HammerItem.UsageType.WALLJUMP_FAILED);
-                // if player walljumps with strength
-                if (StatusEffectHelper.containsAnyEffectIn(player.getStatusEffects(), KlaxonStatusEffectTags.STRENGTHENING_EFFECTS)) {
-                    KlaxonAdvancementTriggers.triggerWalljumpAbility((ServerPlayerEntity) player, HammerItem.UsageType.STRENGTH_WALLJUMP_SUCCEEDED);
+                // proc normal walljump advancement
+                KlaxonAdvancementTriggers.triggerWalljumpAbility(serverPlayer, HammerItem.UsageType.NORMAL_WALLJUMP);
+                // proc boosted walljump advancement
+                if (walljumpStrength > 1f) {
+                    KlaxonAdvancementTriggers.triggerWalljumpAbility(serverPlayer, HammerItem.UsageType.BOOSTED_WALLJUMP);
                 }
-                if (walljumpSucceeded && movedEntity.getType().isIn(ConventionalEntityTypeTags.MINECARTS)) {
-                    KlaxonAdvancementTriggers.triggerWalljumpAbility((ServerPlayerEntity) player, HammerItem.UsageType.MINECART_WALLJUMP_SUCCESS);
+                // proc minecart walljump advancement
+                // this intentionally doesn't use the walljumpable entity tag because it's a specific easter egg to minecarts
+                if (movedEntity != null && movedEntity.getType().isIn(ConventionalEntityTypeTags.MINECARTS)) {
+                    KlaxonAdvancementTriggers.triggerWalljumpAbility(serverPlayer, HammerItem.UsageType.MINECART_WALLJUMP);
                 }
             }
 
             // trip sculk sensors
             world.emitGameEvent(player, GameEvent.HIT_GROUND, pos);
 
+            // player shenanigans
             player.onLanding();
-
             player.resetLastAttackedTicks();
 
-            // damage it wheee
+            // damage both main hand walljump stack and offhand one if present
             walljumpStack.damage(1, player, EquipmentSlot.MAINHAND);
             if (get(player.getOffHandStack()) != null) player.getOffHandStack().damage(1, player, EquipmentSlot.OFFHAND);
         }
     }
 
     private float calculateWalljumpStrength(PlayerEntity sourcePlayer, Entity launchedEntity) {
-        float walljumpStrength = 0.6f;
+        float walljumpStrength = 1f;
 
         walljumpStrength *= sourcePlayer.getAttackCooldownProgress(0.5f);
         walljumpStrength *= AbilityModifierCalculator.calculateHammerWalljumpMultiplier(sourcePlayer, launchedEntity);
@@ -141,14 +137,17 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
     }
 
     // yoinked from trident riptide physics - edited to suit my needs
-    private boolean processWallJumpPhysics(PlayerEntity sourcePlayer, Entity launchedEntity) {
+    private float processWallJumpPhysics(PlayerEntity sourcePlayer, Entity launchedEntity) {
+
         float playerYaw = sourcePlayer.getYaw();
         float playerPitch = sourcePlayer.getPitch();
         float h = MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
         float k = MathHelper.sin(playerPitch * 0.017453292F);
         float l = -MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
         float m = MathHelper.sqrt(h * h + k * k + l * l);
-        float n = calculateWalljumpStrength(sourcePlayer, launchedEntity);
+        float walljumpStrength = calculateWalljumpStrength(sourcePlayer, launchedEntity);
+        float n = walljumpStrength * 0.6f;
+
         h *= n / m;
         k *= n / m;
         l *= n / m;
@@ -160,10 +159,15 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
             l *= 12;
         }
 
+        // no-op early - we shouldn't give the player velocity from the server end
+        if (launchedEntity.equals(sourcePlayer) && launchedEntity instanceof ServerPlayerEntity) {
+            return walljumpStrength;
+        }
+
+        // add velocity to the entity
         launchedEntity.addVelocity(h, k, l);
 
-        // returns false if failed, true if succeeded in moving player
-        return n > 0;
+        return walljumpStrength;
     }
 
     // called in ItemMixin

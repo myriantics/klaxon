@@ -1,28 +1,28 @@
 {
   "parent": "klaxon:prelude/watch_blast_processor_craft",
   "criteria": {
-    "hammer_walljump": {
+    "hammer_walljump_normal": {
       "conditions": {
-        "usageType": "walljump_succeeded"
+        "usageType": "normal_walljump"
       },
       "trigger": "klaxon:walljump_ability"
     }
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.hammer_walljump.description"
+      "translate": "advancements.klaxon.prelude.hammer_walljump_normal.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:steel_hammer"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.hammer_walljump.title"
+      "translate": "advancements.klaxon.prelude.hammer_walljump_normal.title"
     }
   },
   "requirements": [
     [
-      "hammer_walljump"
+      "hammer_walljump_normal"
     ]
   ],
   "sends_telemetry_event": true

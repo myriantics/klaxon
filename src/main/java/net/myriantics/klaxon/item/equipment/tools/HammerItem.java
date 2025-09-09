@@ -163,10 +163,9 @@ public class HammerItem extends MiningToolItem {
     }
 
     public enum UsageType implements StringIdentifiable {
-        WALLJUMP_SUCCEEDED,
-        STRENGTH_WALLJUMP_SUCCEEDED,
-        WALLJUMP_FAILED,
-        MINECART_WALLJUMP_SUCCESS;
+        NORMAL_WALLJUMP,
+        BOOSTED_WALLJUMP,
+        MINECART_WALLJUMP;
 
         private static final Codec<UsageType> CODEC = StringIdentifiable.createCodec(UsageType::values);
 
