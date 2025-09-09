@@ -10,6 +10,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.registry.entity.KlaxonDataAttachments;
+import net.myriantics.klaxon.util.EntityWeightHelper;
 import net.myriantics.klaxon.util.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
@@ -156,7 +158,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             }
 
             // make sure grapple claw is loaded and anchored
-            if (shouldMove) {
+            if (shouldMove && !EntityWeightHelper.isHeavy(this)) {
 
                 // get movement vectors and normalize them
                 playerToClawVec = playerToClawVec.normalize();

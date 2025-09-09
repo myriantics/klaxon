@@ -26,6 +26,7 @@
     "minecraft.entity_attributes.ArmorItemMixin",
     "minecraft.entity_attributes.LivingEntityMixin",
     "minecraft.grapple_winch.EntityMixin",
+    "minecraft.grapple_winch.PersistentProjectileEntityMixin",
     "minecraft.grapple_winch.PlayerEntityMixin",
     "minecraft.grapple_winch.ServerPlayNetworkHandlerMixin",
     "minecraft.hallnox_bulb.BlockItemMixin",

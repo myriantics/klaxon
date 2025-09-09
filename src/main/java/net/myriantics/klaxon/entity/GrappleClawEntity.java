@@ -17,6 +17,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
@@ -27,11 +28,13 @@ import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BoundingBoxHelper;
+import net.myriantics.klaxon.util.EntityWeightHelper;
 import net.myriantics.klaxon.util.grapple_winch.GrappleWinchUtil;
 import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
 
@@ -122,6 +125,25 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     @Override
+    protected void onEntityHit(EntityHitResult entityHitResult) {
+        Entity entity = entityHitResult.getEntity();
+
+        if (entity.equals(getOwner()) && entity instanceof ServerPlayerEntity serverPlayer) {
+
+            // if we hit the owner entity try to have the owner pick up claw
+            if (this.tryPickup(serverPlayer)) {
+                this.discard();
+            }
+
+            // if we can't be picked up, bonk all velocity
+            setVelocity(Vec3d.ZERO);
+        } else {
+            // we don't want to damage the retracting player haha
+            super.onEntityHit(entityHitResult);
+        }
+    }
+
+    @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
 
         // prep variables
@@ -143,6 +165,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             // we have to call super before this because the isAnchored() check will fail otherwise
             if (owner instanceof ServerPlayerEntity serverPlayer && serverPlayer instanceof PlayerEntityGrappleAccess access && access.klaxon$hasActiveConnection()) {
+
                 serverPlayer.playSoundToPlayer(
                         KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_ANCHOR,
                         SoundCategory.PLAYERS,
@@ -203,16 +226,17 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     owner.fallDistance = 1.0F;
                 }
 
-                if (!this.isAnchored()) {
+                // owner being heavy overrides anchoring
+                if (!this.isAnchored() || EntityWeightHelper.isHeavy(owner)) {
                     // retract grapple claw if owner pulls back before landing
                     if (access.klaxon$isRetracting()) {
-                        Vec3d vec = owner.getPos().subtract(this.getPos()).normalize();
+                        Vec3d vec = owner.getEyePos().subtract(this.getPos()).normalize().multiply(4f/20);
                         selfVec = selfVec.add(vec);
                     }
 
                     // retract grapple claw if it hits limit
                     if (ownerDistance >= currentWinchCableLength) {
-                        Vec3d vec = owner.getPos().subtract(this.getPos()).normalize().multiply(5f/20);
+                        Vec3d vec = owner.getEyePos().subtract(this.getPos()).normalize().multiply(4f/20);
                         selfVec = selfVec.add(vec);
                     }
                 }
@@ -234,9 +258,28 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         if (owner instanceof PlayerEntity player) {
             if (!this.removeIfInvalid(player)) {
                 super.tick();
+                if (player instanceof PlayerEntityGrappleAccess access && access.klaxon$isRetracting() && EntityWeightHelper.isHeavy(player)) {
+                    inGround = false;
+                }
             }
         } else {
             super.tick();
+        }
+    }
+
+    @Override
+    protected boolean tryPickup(PlayerEntity player) {
+        ItemStack winchStack = player.getActiveItem();
+        if (winchStack.isOf(KlaxonItems.GRAPPLE_WINCH) && winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty()) {
+            // try picking up claw into active grapple winch
+            winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
+            // this is needed so players can choose whether they want to recast grapple claw or not
+            player.stopUsingItem();
+
+            this.discard();
+            return true;
+        } else {
+            return super.tryPickup(player);
         }
     }
 
