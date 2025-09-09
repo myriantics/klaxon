@@ -25,7 +25,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
-import net.myriantics.klaxon.registry.misc.KlaxonGamerules;
+import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
@@ -188,7 +188,7 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
                 BlastProcessingRecipeData processingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), powerData));
 
                 // do explosion effect
-                blastProcessorBehavior.onExplosion(world, pos, this, powerData, world.getGameRules().getBoolean(KlaxonGamerules.SHOULD_BLAST_PROCESSOR_EXPLOSION_MODIFY_WORLD));
+                blastProcessorBehavior.onExplosion(world, pos, this, powerData, world.getGameRules().getBoolean(KlaxonGameRules.SHOULD_BLAST_PROCESSOR_EXPLOSION_MODIFY_WORLD));
 
                 // eject recipe results
                 blastProcessorBehavior.ejectItems(world, pos, this, processingData, powerData);

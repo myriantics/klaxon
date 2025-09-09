@@ -62,7 +62,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonAdvancementCriteria.init();
 		KlaxonStatusEffects.init();
 		KlaxonToolMaterials.init();
-		KlaxonGamerules.init();
+		KlaxonGameRules.init();
 		KlaxonFuelRegistry.init();
 		KlaxonOxidationRegistry.init();
 		KlaxonEventListeners.init();
