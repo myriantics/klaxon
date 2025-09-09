@@ -28,7 +28,6 @@ public class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
         generateItemTranslations(translationBuilder);
         generateBlockTranslations(translationBuilder);
         generateEntityTypeTranslations(translationBuilder);
-        generateStatusEffectTranslations(translationBuilder);
 
         generateItemTagTranslations(translationBuilder);
         generateBlockTagTranslations(translationBuilder);
@@ -98,10 +97,6 @@ public class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
 
     private static void generateEntityTypeTranslations(TranslationBuilder translationBuilder) {
 
-    }
-
-    private static void generateStatusEffectTranslations(TranslationBuilder translationBuilder) {
-        translationBuilder.add(KlaxonStatusEffects.HEAVY.value(), "Heavy");
     }
 
     private static void generateItemTagTranslations(TranslationBuilder translationBuilder) {

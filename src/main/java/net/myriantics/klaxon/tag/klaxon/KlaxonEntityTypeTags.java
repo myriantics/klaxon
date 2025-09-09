@@ -17,12 +17,8 @@ public abstract class KlaxonEntityTypeTags {
     // entity weight logistics tags
     public static final TagKey<EntityType<?>> HEAVY_ENTITIES =
             createTag("heavy_entities");
-    public static final TagKey<EntityType<?>> ULTRA_HEAVY_ENTITIES =
-            createTag("ultra_heavy_entities");
     public static final TagKey<EntityType<?>> LIGHT_ENTITIES =
             createTag("light_entities");
-    public static final TagKey<EntityType<?>> ULTRA_LIGHT_ENTITIES =
-            createTag("ultra_light_entities");
 
     private static TagKey<EntityType<?>> createTag(String name) {
         return TagKey.of(RegistryKeys.ENTITY_TYPE, KlaxonCommon.locate(name));

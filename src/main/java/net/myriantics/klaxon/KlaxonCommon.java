@@ -13,10 +13,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.block.KlaxonOxidationRegistry;
 import net.myriantics.klaxon.registry.block.KlaxonStrippedBlocksRegistry;
-import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
-import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
-import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
-import net.myriantics.klaxon.registry.entity.KlaxonStatusEffects;
+import net.myriantics.klaxon.registry.entity.*;
 import net.myriantics.klaxon.registry.item.*;
 import net.myriantics.klaxon.registry.misc.*;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
@@ -32,11 +29,15 @@ public class KlaxonCommon implements ModInitializer {
 		return Identifier.of(MOD_ID, name);
 	}
 
-	@Override
+    public static String locateAlt(String name) {
+        return MOD_ID + "." + name;
+    }
+
+    @Override
 	public void onInitialize() {
 		KlaxonWorldgenFeatures.init();
 		KlaxonSaplingGenerators.init();
-		KlaxonEntityAttributes.init();
+		// KlaxonEntityAttributes.init(); // Not currently used
 		KlaxonBlocks.init();
 		KlaxonBlockItems.init();
 		KlaxonBlockEntities.init();
@@ -48,7 +49,6 @@ public class KlaxonCommon implements ModInitializer {
 			KlaxonDatagenPhantomItems.registerPhantomItemsForDatagen();
 		}
 
-		// KlaxonEntities.registerModEntities();
 		KlaxonRegistryKeys.init();
 		KlaxonRegistries.init();
 		KlaxonRecipeTypes.init();
@@ -71,6 +71,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonCompostableRegistry.init();
 		KlaxonParticleTypes.init();
 		KlaxonEntityTypes.init();
+        KlaxonDataAttachments.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

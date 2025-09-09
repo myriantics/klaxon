@@ -30,16 +30,14 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
                 .forceAddTag(ConventionalEntityTypeTags.MINECARTS);
 
         // weight tags
-        getOrCreateTagBuilder(KlaxonEntityTypeTags.ULTRA_HEAVY_ENTITIES)
+        getOrCreateTagBuilder(KlaxonEntityTypeTags.HEAVY_ENTITIES)
                 .forceAddTag(ConventionalEntityTypeTags.BOSSES)
                 .add(EntityType.ENDER_DRAGON)
                 .add(EntityType.WITHER)
-                .add(EntityType.GIANT);
-        getOrCreateTagBuilder(KlaxonEntityTypeTags.ULTRA_LIGHT_ENTITIES)
-                .add(EntityType.GHAST);
-        getOrCreateTagBuilder(KlaxonEntityTypeTags.HEAVY_ENTITIES)
+                .add(EntityType.GIANT)
                 .add(EntityType.WARDEN);
         getOrCreateTagBuilder(KlaxonEntityTypeTags.LIGHT_ENTITIES)
-                .add(EntityType.ENDERMAN);
+                .add(EntityType.ENDERMAN)
+                .add(EntityType.GHAST);
     }
 }

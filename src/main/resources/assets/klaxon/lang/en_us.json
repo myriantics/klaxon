@@ -149,7 +149,8 @@
   "tag.item.klaxon.fractured_materials.raw_gold": "Fractured Raw Gold",
   "tag.item.klaxon.fractured_materials.raw_copper": "Fractured Raw Copper",
 
-  "klaxon.text.innate_enchantment_prefix":  "Innate %1$s",
+  "klaxon.text.tooltip.innate_enchantment_prefix":  "Innate %1$s",
+  "klaxon.text.tooltip.heavy_equipment":  "Heavy Equipment",
   "klaxon.text.blast_processor_creeper_name":  "a Blast Processor mimicking a Charged Creeper. Expensive death right there.",
 
   "tag.entity.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
@@ -190,8 +191,6 @@
   "config.jade.plugin_klaxon.deepslate_blast_processor": "Explosion Power: ",
   "config.jade.plugin_klaxon.crop_growth_disabled": "Crop Growth Disabled",
 
-  "klaxon.attribute.name.generic.weight": "Entity Weight",
-
   "container.klaxon.item_explosion_power.title": "Item Explosion Power",
   "container.klaxon.tool_usage.title": "Tool Usage",
   "container.klaxon.item_cooling.title": "Item Cooling",
@@ -230,9 +229,6 @@
   "advancements.klaxon.prelude.obtain_any_rubber_glob.description": "Obtain Rubber by blast processing a valid log",
   "advancements.klaxon.prelude.obtain_steel_cleaver.title": "Now THIS is a Knife!",
   "advancements.klaxon.prelude.obtain_steel_cleaver.description": "Obtain a Steel Cleaver",
-
-  "effect.klaxon.heavy": "Heavy",
-  "effect.klaxon.heavy.description": "Modifies the function of KLAXON's weight-dependent abilities such as the Hammer WallJump",
 
   "gamerule.shouldBlastProcessorExplosionModifyWorld": "Blast Processor Explosions should modify world"
 }

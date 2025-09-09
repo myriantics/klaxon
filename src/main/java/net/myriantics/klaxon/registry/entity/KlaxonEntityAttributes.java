@@ -13,12 +13,6 @@ import java.util.List;
 public abstract class KlaxonEntityAttributes {
     private static final ArrayList<RegistryEntry<EntityAttribute>> KLAXON_GENERIC_ENTITY_ATTRIBUTES =  new ArrayList<>();
 
-    public static final RegistryEntry<EntityAttribute> GENERIC_WEIGHT = registerGeneric(
-            "generic.weight", new ClampedEntityAttribute("klaxon.attribute.name.generic.weight", 0.0, 0.0, 20.0)
-                    .setCategory(EntityAttribute.Category.NEUTRAL)
-                    .setTracked(true)
-    );
-
     private static RegistryEntry<EntityAttribute> registerGeneric(String id, EntityAttribute attribute) {
         RegistryEntry<EntityAttribute> entry = Registry.registerReference(Registries.ATTRIBUTE, KlaxonCommon.locate(id), attribute);
         KLAXON_GENERIC_ENTITY_ATTRIBUTES.add(entry);

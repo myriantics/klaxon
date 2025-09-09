@@ -27,24 +27,26 @@ public abstract class AbilityModifierCalculator {
         statusEffectModifier += StatusEffectHelper.getUnborkedStatusEffectAmplifier(sourceEntity, StatusEffects.STRENGTH);
         statusEffectModifier -= StatusEffectHelper.getUnborkedStatusEffectAmplifier(sourceEntity, StatusEffects.WEAKNESS);
 
-        // factor in entity weight value - defined by attribute modifier
-        // its divided by half so that you can offset wearing full steel armor by having strength 2 in vanilla klaxon
-        // starts out at 1 - you cannot walljump if you have the heavy effect at all
-
-        double weightValue = EntityWeightHelper.getEntityWeightValue(sourceEntity);
-        if (movedEntity != null && !movedEntity.equals(sourceEntity)) weightValue += EntityWeightHelper.getEntityWeightValue(movedEntity);
+        // if an entity is heavy, walljump strength is halved
+        boolean heavy = EntityWeightHelper.isHeavy(sourceEntity) || EntityWeightHelper.isHeavy(movedEntity);
 
         // compile all the factors
-        float totalModifier = (float) (statusEffectModifier - weightValue);
-
-        // make it not crazy powerful
-        if (totalModifier > 0) {
-            totalModifier *= 0.2f;
+        float totalModifier;
+        if (heavy && statusEffectModifier < 0) {
+            // heavy while having weakness? believe it or not, straight to 0
+            totalModifier = 0;
+        } else if (heavy && statusEffectModifier > 0) {
+            // heavy while having strength? believe it or not, start at 1 and halve effectiveness of strength
+            totalModifier = 1f + (0.1f * statusEffectModifier);
+        } else {
+            // total modifier is 0.5 if heavy
+            totalModifier = heavy ? 0.5f : 1f;
+            // weakness is stronger than strength - do that to total modifier
+            // these are great comments btw
+            totalModifier += statusEffectModifier * (statusEffectModifier < 0 ? 0.5f : 0.2f);
         }
 
-        // KlaxonCommon.LOGGER.info("Total Ability Modifier: "  + Math.max(0, 1 + totalModifier));
-
         // ensure it doesn't cause negative velocity
-        return Math.max(0, 1 + totalModifier);
+        return Math.max(0, totalModifier);
     }
 }

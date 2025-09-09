@@ -51,7 +51,7 @@ public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent enchantm
         for (RegistryEntry<Enchantment> registryEntry : enchantments.getEnchantments()) {
             int i = enchantments.getLevel(registryEntry);
             if (i > 0) {
-                MutableText text = Text.translatable("klaxon.text.innate_enchantment_prefix", Enchantment.getName(registryEntry, i));
+                MutableText text = Text.translatable("klaxon.text.tooltip.innate_enchantment_prefix", Enchantment.getName(registryEntry, i));
                 if (registryEntry.isIn(EnchantmentTags.CURSE)) {
                     Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.RED));
                 } else {

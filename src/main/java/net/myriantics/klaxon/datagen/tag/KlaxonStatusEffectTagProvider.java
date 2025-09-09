@@ -17,7 +17,6 @@ public class KlaxonStatusEffectTagProvider extends FabricTagProvider<StatusEffec
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-        getOrCreateTagBuilder(KlaxonStatusEffectTags.HEAVY_STATUS_EFFECTS)
-                .add(KlaxonStatusEffects.HEAVY.value());
+        // getOrCreateTagBuilder(KlaxonStatusEffectTags.HEAVY_STATUS_EFFECTS).add();
     }
 }
