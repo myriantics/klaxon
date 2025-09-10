@@ -1,0 +1,77 @@
+---
+title: Grapple Winch
+icon: klaxon:grapple_winch_3d
+id: klaxon:grapple_winch
+type: item
+---
+
+### **Description**
+
+The Grapple Winch is a **very** powerful multipurpose tool that uses Grapple Claws as ammunition. It's official purpose is to aid in the
+harvesting of Glowstone while wearing proper **Heavy Equipment** in order to protect the wielder from moving. However, it is far more versatile than KLAXON would have you believe.
+It can be used for movement, entity transport, item collection, block breaking, and block vein mining. Read on to find out more.
+
+### **Attacking**
+
+While not a terribly strong damage dealer on its own, the Grapple Winch's incredible mobility buffs offer a great combat advantage.
+
+### **Usage**
+
+- **Attack Key Pressed**
+    - Attacking an in-world Grapple Claw with an unloaded Grapple Winch will load it into the Grapple Winch if unowned.
+
+- **Usage Key Press**
+    - Using an unloaded & disconnected Grapple Winch will attempt to load in a Grapple Claw from the player's inventory.
+    - Using an unloaded Grapple Winch on an in-world Grapple Claw will detach the current Grapple Claw and attach to the interacted one.
+
+- **Usage Key Hold**
+    - While unloaded and disconnected, attempts to load. Immediately starts charging for a shot afterwards.
+    - While loaded & disconnected, charges like a bow.
+    - While loaded & connected, triggers **Retraction**. If crouching, this instead triggers **Extrusion**.
+
+- **Usage Key Release**
+    - While loaded and charged, fire connected Grapple Claw - disconnecting current Grapple Claw if active.
+
+- **Right Click in GUI**
+    - When unloaded, the selected Grapple Claw can be inserted.
+    - When loaded, the loaded Grapple Claw can be withdrawn.
+
+- **Deselecting Grapple Winch in Hotbar**
+    - This will **detach** any connected Grapple Claw, maintaining player velocity.
+
+### **Interface**
+
+- **Loading**
+    - The Grapple Winch can be loaded by using it with Grapple Claws in your inventory. It loads instantly in this manner.
+    - Attacking a Grapple Claw in-world with an empty Grapple Winch will instantly load it into said Grapple Winch.
+    - If the actively connected Grapple Claw makes contact with its owner, it will attempt to load itself into the held Grapple Winch. If this fails, it will then try to pick itself up into the inventory. If that fails, it zeroes out its velocity.
+- **Unloading**
+    - The Grapple Winch can be right-clicked in-a GUI as you would a Bundle in order to withdraw any loaded Grapple Claws.
+- **Launching**
+    - Draw the Grapple Winch back like a bow and release to launch a Grapple Claw. When a Grapple Winch Cable is active, this action will trigger **Retraction** instead.
+- **Retracting**
+    - Reduces the distance between the wielder & the connected Grapple Claw if possible.
+- **Extrusion**
+    - Increases the distance between the wielder & the connected Grapple Claw if possible.
+- **Detaching**
+    - Swapping off of the Grapple Winch like a Fishing Rod will detach any active Grapple Claws.
+    - This does not retract the Grapple Claw into the wielder's inventory - it remains in-world on a timer to despawn.
+
+### **Functionalities**
+
+- **Wielder Movement**
+    - When the Grapple Claw is anchored, and the Wielder is moveable, retracting the Grapple Winch will draw the wielder towards the Grapple Claw.
+    - **The Wielder's look direction has influence on the direction of the pull - useful for getting oneself unstuck.**
+    - Crouching
+- **Attached Entity Movement**
+    - When a Grapple Claw is hooked into a moveable entity, retracting it will move the attached entity towards the Grapple Winch Wielder.
+- **Item Entity Movement**
+    - When retracting, an attached Grapple Claw will drag nearby Item Entities along with it, collecting more as it travels.
+- **Mining**
+    - Grapple Claws will instantly break & fly through any blocks in the *#klaxon:grapple_claw_breakable* tag, dropping their loot.
+    - By default, said tag includes all blocks in *#klaxon:instabreakable/cleaver* and *#klaxon:grapple_claw_veinmineable*.
+    - **This functionality <u>does not require</u> attachment to a Grapple Winch.**
+- **Veinmining**
+    - While retracting, an attached Grapple Claw will **veinmine** connected blobs of any blocks in the *#klaxon:grapple_claw_veinmineable* tag.
+    - By default, said tag includes all blocks in *#klaxon:instabreakable/hammer*.
+    - **This functionality <u>requires</u> attachment to a Grapple Winch.**

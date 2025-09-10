@@ -1,6 +1,6 @@
 plugins {
-	id 'fabric-loom' version "1.10-SNAPSHOT"
-	id("org.moddedmc.wiki.toolkit") version "0.2.7"
+	id 'fabric-loom' version "1.11-SNAPSHOT"
+	id("org.moddedmc.wiki.toolkit") version "0.3.2"
 	id 'maven-publish'
 }
 
@@ -107,7 +107,7 @@ publishing {
 
 wiki {
 	docs {
-		// The name of the object (examplemod) should match the registered wiki project ID (if it exists).
+		// The name of the object (klaxon) should match the registered wiki project ID (if it exists).
 		klaxon {
 			// The path to the folder containing the documentation metadata file (sinytra-wiki.json)
 			root = file('docs/klaxon')
