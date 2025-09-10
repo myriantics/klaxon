@@ -1,6 +1,8 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -37,7 +39,7 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
                 original
                 && (Object) this instanceof GrappleClawEntity
                 && this.getOwner() instanceof ServerPlayerEntity serverPlayer
-                && ((PlayerEntityGrappleAccess) serverPlayer).klaxon$getGrappleClaw().equals(this)
+                && this.equals(((PlayerEntityGrappleAccess) serverPlayer).klaxon$getGrappleClaw())
                 && ((PlayerEntityGrappleAccess) serverPlayer).klaxon$isRetracting()
         ) {
             // this returning false indicates that the owner exists and is retracting the grapple winch - so we should tick movement like normal
@@ -45,5 +47,22 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
         }
 
         return original;
+    }
+
+    @WrapOperation(
+            method = "tick",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;applyGravity()V")
+    )
+    private void klaxon$cancelGravityIfRetracting(PersistentProjectileEntity instance, Operation<Void> original) {
+        if (
+                instance instanceof GrappleClawEntity grappleClaw
+                && grappleClaw.getOwner() instanceof PlayerEntityGrappleAccess access
+                && this.equals(access.klaxon$getGrappleClaw())
+                && access.klaxon$isRetracting()
+        ) {
+            return;
+        } else {
+            original.call(instance);
+        }
     }
 }
