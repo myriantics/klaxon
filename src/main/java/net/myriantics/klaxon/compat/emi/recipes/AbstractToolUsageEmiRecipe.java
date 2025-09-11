@@ -9,27 +9,22 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
-import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.AbstractToolUsageRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ToolUsageEmiRecipe implements EmiRecipe {
+public abstract class AbstractToolUsageEmiRecipe implements EmiRecipe {
     private final Identifier id;
     private final List<EmiIngredient> requiredTool;
     private final List<EmiIngredient> input;
     private final List<EmiStack> output;
 
-    public ToolUsageEmiRecipe(RecipeEntry<ToolUsageRecipe> recipe) {
+    public AbstractToolUsageEmiRecipe(RecipeEntry<AbstractToolUsageRecipe> recipe) {
         this.id = recipe.id();
         this.requiredTool = List.of(EmiIngredient.of(recipe.value().getRequiredTool()));
         this.input = List.of(EmiIngredient.of(recipe.value().getInputIngredient()));
         this.output = List.of(EmiStack.of(recipe.value().getResult(null)));
-    }
-
-    @Override
-    public EmiRecipeCategory getCategory() {
-        return KlaxonEmiRecipeCategories.TOOL_USAGE;
     }
 
     @Override

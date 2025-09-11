@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:hammering",
+  "input_ingredient": {
+    "item": "minecraft:gold_ingot"
+  },
+  "output_stack": {
+    "count": 1,
+    "id": "klaxon:gold_plate"
+  },
+  "sound_override": {}
+}

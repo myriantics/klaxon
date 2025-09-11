@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.recipe.tool_usage;
 
+import com.mojang.datafixers.util.Function3;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.item.ItemStack;
@@ -10,47 +11,51 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.sound.SoundEvent;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 
-public class ToolUsageRecipeSerializer implements RecipeSerializer<ToolUsageRecipe> {
-    public ToolUsageRecipeSerializer() {
+public class ToolUsageRecipeSerializer implements RecipeSerializer<AbstractToolUsageRecipe> {
+    private final Function3<Ingredient, ItemStack, SoundEvent, AbstractToolUsageRecipe> recipeConstructor;
+
+    public ToolUsageRecipeSerializer(Function3<Ingredient, ItemStack, SoundEvent, AbstractToolUsageRecipe> function) {
+        this.recipeConstructor = function;
     }
 
-    private final MapCodec<ToolUsageRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance -> {
-        return recipeInstance.group(
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("required_tool").forGetter(ToolUsageRecipe::getRequiredTool),
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input_ingredient").forGetter(ToolUsageRecipe::getInputIngredient),
-                ItemStack.OPTIONAL_CODEC.fieldOf("output_stack").forGetter(ToolUsageRecipe::getOutputStack),
-                KlaxonCodecUtils.OPTIONAL_SOUND_EVENT_CODEC.fieldOf("sound_override").forGetter(ToolUsageRecipe::getSoundOverride)
-                )
-                .apply(recipeInstance, ToolUsageRecipe::new);
-    }));
+    private MapCodec<AbstractToolUsageRecipe> createCodec() {
+        return RecordCodecBuilder.mapCodec(recipeInstance -> {
+            return recipeInstance.group(
+                    Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input_ingredient").forGetter(AbstractToolUsageRecipe::getInputIngredient),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("output_stack").forGetter(AbstractToolUsageRecipe::getOutputStack),
+                    KlaxonCodecUtils.OPTIONAL_SOUND_EVENT_CODEC.fieldOf("sound_override").forGetter(AbstractToolUsageRecipe::getSoundOverride)
+            ).apply(recipeInstance, (recipeConstructor));
+        });
+    }
 
-    private final PacketCodec<RegistryByteBuf, ToolUsageRecipe> PACKET_CODEC = PacketCodec.ofStatic(
-            ToolUsageRecipeSerializer::write, ToolUsageRecipeSerializer::read
-    );
+    private PacketCodec<RegistryByteBuf, AbstractToolUsageRecipe> createPacketCodec() {
+        return PacketCodec.of(
+                ((value, buf) -> this.write(buf, value)),
+                (this::read)
+        );
+    }
 
-    private static ToolUsageRecipe read(RegistryByteBuf buf) {
-        Ingredient requiredTool = Ingredient.PACKET_CODEC.decode(buf);
+    private AbstractToolUsageRecipe read(RegistryByteBuf buf) {
         Ingredient ingredient = Ingredient.PACKET_CODEC.decode(buf);
         ItemStack output = ItemStack.OPTIONAL_PACKET_CODEC.decode(buf);
         SoundEvent soundOverride = KlaxonCodecUtils.OPTIONAL_SOUND_EVENT_PACKET_CODEC.decode(buf);
 
-        return new ToolUsageRecipe(requiredTool, ingredient, output, soundOverride);
+        return recipeConstructor.apply(ingredient, output, soundOverride);
     }
 
-    private static void write(RegistryByteBuf buf, ToolUsageRecipe recipe) {
-        Ingredient.PACKET_CODEC.encode(buf, recipe.getRequiredTool());
+    private void write(RegistryByteBuf buf, AbstractToolUsageRecipe recipe) {
         Ingredient.PACKET_CODEC.encode(buf, recipe.getInputIngredient());
-        ItemStack.OPTIONAL_PACKET_CODEC.encode(buf, recipe.getResult(null));
+        ItemStack.OPTIONAL_PACKET_CODEC.encode(buf, recipe.getResult(buf.getRegistryManager()));
         KlaxonCodecUtils.OPTIONAL_SOUND_EVENT_PACKET_CODEC.encode(buf, recipe.getSoundOverride());
     }
 
     @Override
-    public MapCodec<ToolUsageRecipe> codec() {
-        return CODEC;
+    public MapCodec<AbstractToolUsageRecipe> codec() {
+        return createCodec();
     }
 
     @Override
-    public PacketCodec<RegistryByteBuf, ToolUsageRecipe> packetCodec() {
-        return PACKET_CODEC;
+    public PacketCodec<RegistryByteBuf, AbstractToolUsageRecipe> packetCodec() {
+        return createPacketCodec();
     }
 }

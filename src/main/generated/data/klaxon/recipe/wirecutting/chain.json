@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:wirecutting",
+  "input_ingredient": {
+    "item": "minecraft:iron_bars"
+  },
+  "output_stack": {
+    "count": 2,
+    "id": "minecraft:chain"
+  },
+  "sound_override": {}
+}

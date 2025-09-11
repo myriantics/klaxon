@@ -7,7 +7,7 @@
       ]
     }
   ],
-  "type": "klaxon:tool_usage",
+  "type": "klaxon:hammering",
   "input_ingredient": {
     "item": "create:brass_ingot"
   },
@@ -15,10 +15,5 @@
     "count": 1,
     "id": "create:brass_sheet"
   },
-  "required_tool": {
-    "tag": "klaxon:recipe_processing_hammers"
-  },
-  "sound_override": {
-    "sound_id": "minecraft:block.anvil.land"
-  }
+  "sound_override": {}
 }

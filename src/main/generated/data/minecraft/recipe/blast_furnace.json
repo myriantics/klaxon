@@ -7,7 +7,7 @@
       }
     }
   ],
-  "type": "klaxon:tool_usage",
+  "type": "klaxon:hammering",
   "input_ingredient": {
     "item": "minecraft:end_rod"
   },
@@ -15,8 +15,7 @@
     "count": 1,
     "id": "minecraft:sheep_spawn_egg"
   },
-  "required_tool": {
-    "item": "minecraft:piston"
-  },
-  "sound_override": {}
+  "sound_override": {
+    "sound_id": "minecraft:block.piston.extend"
+  }
 }

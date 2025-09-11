@@ -16,8 +16,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
+import net.myriantics.klaxon.compat.emi.recipes.types.HammeringEmiRecipe;
+import net.myriantics.klaxon.compat.emi.recipes.types.WirecuttingEmiRecipe;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.types.HammeringRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -41,7 +44,8 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerCategories(EmiRegistry registry) {
-        registry.addCategory(KlaxonEmiRecipeCategories.TOOL_USAGE);
+        registry.addCategory(KlaxonEmiRecipeCategories.HAMMERING);
+        registry.addCategory(KlaxonEmiRecipeCategories.WIRECUTTING);
         registry.addCategory(KlaxonEmiRecipeCategories.BLAST_PROCESSING);
         registry.addCategory(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER);
         registry.addCategory(KlaxonEmiRecipeCategories.ITEM_COOLING);
@@ -50,6 +54,8 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private void registerWorkstations(EmiRegistry registry) {
         registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.HAMMERING, EmiIngredient.of(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.WIRECUTTING, EmiIngredient.of(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS));
 
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(PotionContentsComponent.createStack(Items.SPLASH_POTION, Potions.WATER)));
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.POWDER_SNOW_BUCKET));
@@ -63,7 +69,8 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerRecipes(EmiRegistry registry) {
-        addAll(registry, KlaxonRecipeTypes.TOOL_USAGE, ToolUsageEmiRecipe::new);
+        addAll(registry, KlaxonRecipeTypes.HAMMERING, HammeringEmiRecipe::new);
+        addAll(registry, KlaxonRecipeTypes.WIRECUTTING, WirecuttingEmiRecipe::new);
         addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);

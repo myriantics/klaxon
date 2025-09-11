@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:hammering",
+  "input_ingredient": {
+    "item": "klaxon:crude_steel_ingot"
+  },
+  "output_stack": {
+    "count": 1,
+    "id": "klaxon:crude_steel_plate"
+  },
+  "sound_override": {}
+}

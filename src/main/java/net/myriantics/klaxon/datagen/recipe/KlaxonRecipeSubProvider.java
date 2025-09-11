@@ -19,9 +19,11 @@ import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehav
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.types.HammeringRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.types.WirecuttingRecipe;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
-import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.AbstractToolUsageRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
@@ -284,27 +286,21 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addHammeringRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS), input, output, SoundEvents.BLOCK_ANVIL_LAND, conditions);
-    }
-
-    public void addWirecuttingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS), input, output, SoundEvents.BLOCK_CHAIN_BREAK, conditions);
-    }
-
-    public void addShearingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_SHEARS), input, output, SoundEvents.ENTITY_SHEEP_SHEAR, conditions);
-    }
-
-    public void addToolUsageRecipe(NamedIngredient requiredTool, Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(requiredTool, input, output, null, conditions);
-    }
-
-    public void addToolUsageRecipe(NamedIngredient requiredTool, Ingredient input, ItemStack output, SoundEvent soundOverride, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.TOOL_USAGE_RECIPE_ID + "/" + requiredTool.getName(),
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.HAMMERING_RECIPE_ID,
                 getItemPath(output.getItem()),
                 conditions);
 
-        ToolUsageRecipe recipe = new ToolUsageRecipe(requiredTool.toIngredient(), input, output, soundOverride);
+        AbstractToolUsageRecipe recipe = new HammeringRecipe(input, output, null);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addWirecuttingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.WIRECUTTING_RECIPE_ID,
+                getItemPath(output.getItem()),
+                conditions);
+
+        AbstractToolUsageRecipe recipe = new WirecuttingRecipe(input, output, null);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

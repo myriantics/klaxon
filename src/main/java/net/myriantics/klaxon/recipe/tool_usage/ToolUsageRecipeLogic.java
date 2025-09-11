@@ -10,6 +10,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.resource.LifecycledResourceManager;
@@ -37,37 +38,42 @@ import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 // Inspiration taken from AE2's Item Transformation system
 public abstract class ToolUsageRecipeLogic {
+    // i could implement a cleaner thing than this but i want to keep the recipe types distinct and i really cant be arsed haha
+    private static final List<RecipeType<AbstractToolUsageRecipe>> TOOL_USAGE_RECIPE_TYPES = List.of(
+            KlaxonRecipeTypes.HAMMERING,
+            KlaxonRecipeTypes.WIRECUTTING
+    );
+    private static Map<Item, RecipeType<AbstractToolUsageRecipe>> ITEM_2_RECIPE_TYPE_CACHE = new HashMap<>();
     private static Set<Item> VALID_RECIPE_TOOL_CACHE = new HashSet<>();
     public static final int MAX_SOUNDS_PER_ACTION = 4;
     public static final int MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION = 16;
 
     public static boolean test(World world, ItemStack stack) {
-        return getUsableTools(world).contains(stack.getItem());
+        return getTool2RecipeTypeCache(world).containsKey(stack.getItem());
     }
 
-    private static Set<Item> getUsableTools(World world) {
-        if (VALID_RECIPE_TOOL_CACHE.isEmpty()) {
+    private static <T extends AbstractToolUsageRecipe> Map<Item, RecipeType<AbstractToolUsageRecipe>> getTool2RecipeTypeCache(World world) {
 
-            Set<Item> newCache = new HashSet<>();
-            for (RecipeEntry<ToolUsageRecipe> entry : world.getRecipeManager().listAllOfType(KlaxonRecipeTypes.TOOL_USAGE)) {
-                // add all the compatible items to the new cache
-                for (ItemStack stack : entry.value().getRequiredTool().getMatchingStacks()) {
-                    newCache.add(stack.getItem());
+        if (ITEM_2_RECIPE_TYPE_CACHE.isEmpty()) {
+            Map<Item, RecipeType<AbstractToolUsageRecipe>> newCache = new HashMap<>();
+            for (RecipeType<AbstractToolUsageRecipe> type : TOOL_USAGE_RECIPE_TYPES) {
+                for (RecipeEntry<AbstractToolUsageRecipe> entry : world.getRecipeManager().listAllOfType(type)) {
+                    // add all the compatible items to the new cache
+                    for (ItemStack stack : entry.value().getRequiredTool().getMatchingStacks()) {
+                        newCache.put(stack.getItem(), type);
+                    }
                 }
             }
 
             // update stored cache
-            VALID_RECIPE_TOOL_CACHE = newCache;
+            ITEM_2_RECIPE_TYPE_CACHE = newCache;
             return newCache;
         } else {
-            return VALID_RECIPE_TOOL_CACHE;
+            return ITEM_2_RECIPE_TYPE_CACHE;
         }
     }
 
@@ -109,6 +115,8 @@ public abstract class ToolUsageRecipeLogic {
             return original;
         }
 
+        RecipeType<AbstractToolUsageRecipe> type = getTool2RecipeTypeCache(world).get(toolStack.getItem());
+
         for (ItemEntity targetItemEntity : selectedItems) {
             ItemStack targetStack = targetItemEntity.getStack().copy();
             Position outputPos = targetItemEntity.getPos();
@@ -120,12 +128,12 @@ public abstract class ToolUsageRecipeLogic {
             if (world.isClient()) {
                 RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
 
-                Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+                Optional<RecipeEntry<AbstractToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
 
                 // change recipe success indicator and recipe sound override
                 if (match.isPresent()) {
                     targetRecipeSuccess = true;
-                    SoundEvent soundEvent = match.get().value().getSoundOverride();
+                    SoundEvent soundEvent = match.get().value().getSound();
                     recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
                 }
 
@@ -139,7 +147,7 @@ public abstract class ToolUsageRecipeLogic {
             if (world instanceof ServerWorld serverWorld) {
                 RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
 
-                Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+                Optional<RecipeEntry<AbstractToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
 
                 if (match.isPresent()) {
                     targetRecipeSuccess = true;
@@ -165,7 +173,7 @@ public abstract class ToolUsageRecipeLogic {
                             outputStack
                     );
 
-                    SoundEvent soundEvent = match.get().value().getSoundOverride();
+                    SoundEvent soundEvent = match.get().value().getSound();
 
                     // make sure to get the sound override - ignore empty ones
                     recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
@@ -215,7 +223,7 @@ public abstract class ToolUsageRecipeLogic {
     }
 
     private static void clearCache() {
-        VALID_RECIPE_TOOL_CACHE.clear();
+        ITEM_2_RECIPE_TYPE_CACHE.clear();
     }
 
     public static void onServerStarted(MinecraftServer minecraftServer) {
