@@ -1,0 +1,84 @@
+# Makeshift Crafting
+
+**Makeshift Shaped / Shapeless Crafting** recipes are usable in anything that performs vanilla **Shaped / Shapeless Crafting** recipes.
+
+They decrement the durability of the output item by up to 50% if poor-quality (makeshift) ingredients are used.
+
+This is accomplished by taking the proportion of ingredients in the ```#klaxon:makeshift_crafting_ingredients``` tag compared to the total amount of ingredients in the recipe, then applying **this much damage** to the resultant item:
+
+```(resultItem.maxDamage() * 0.5 * (makeshiftIngredientCount / totalNonConstantIngredientCount))```
+
+You can also define **Constant Ingredients** that are ignored in the above calculation. This is used to exclude stuff like sticks - ideally **Makeshift Crafting elements focus on the core material of the recipe**.
+
+### Example Makeshift Shaped Crafting Recipe JSON
+
+```
+{
+  "type": "klaxon:makeshift_shaped",
+  "category": "equipment",
+  "constant_ingredients": [
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "tag": "klaxon:gear_grip_materials"
+    }
+  ],
+  "group": "steel_hammer",
+  "key": {
+    "B": {
+      "tag": "klaxon:crude_inclusive_steel_blocks"
+    },
+    "G": {
+      "tag": "klaxon:gear_grip_materials"
+    },
+    "I": {
+      "tag": "klaxon:crude_inclusive_steel_ingots"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "BIB",
+    " S ",
+    "GSG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:steel_hammer"
+  },
+  "show_notification": false
+}
+```
+
+### Example Makeshift Shapeless Crafting Recipe JSON
+
+```
+{
+  "type": "klaxon:makeshift_shapeless",
+  "category": "misc",
+  "constant_ingredients": [
+    {
+      "item": "minecraft:flint"
+    }
+  ],
+  "group": "flint_and_steel",
+  "ingredients": [
+    {
+      "tag": "klaxon:crude_inclusive_steel_ingots"
+    },
+    {
+      "item": "minecraft:flint"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:flint_and_steel"
+  }
+}
+```
+
+### Good To Know
+- In KLAXON, these recipe types are used to encourage the player to progress towards better metallurgy tools in order to obtain **proper Steel**.
+- They also serve the purpose of teaching the player about KLAXON's tweaks to **item repair mechanics**.

@@ -1,0 +1,27 @@
+# Blast Processing
+
+One of the 3 recipe types used by **Blast Processors**, alongside **Item Explosion Power** and **Explosive Catalyst Behavior** recipes.
+
+Blast Processing recipes define the **ingredient, valid explosion power range, and output** of a given recipe process.
+
+In order for the recipe to successfully complete, a catalyst must be used with an explosion power that falls between the bounds defined in this recipe.
+
+### Example Blast Processing Recipe JSON
+
+```
+{
+  "type": "klaxon:blast_processing",
+  "explosionPowerMax": 1.7,
+  "explosionPowerMin": 0.5,
+  "ingredientItem": {
+    "item": "minecraft:iron_ingot"
+  },
+  "output": {
+    "count": 1,
+    "id": "klaxon:fractured_iron"
+  }
+}
+```
+
+### Good To Know
+- Blast Processors will attempt to perform a **Blasting (Ore Smelting)** recipe on their output if a **fiery catalyst** is used.

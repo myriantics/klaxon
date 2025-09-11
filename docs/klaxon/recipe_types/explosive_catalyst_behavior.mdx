@@ -1,0 +1,41 @@
+# Explosive Catalyst Behavior
+
+One of the 3 recipe types used by **Blast Processors**, alongside **Blast Processing** and **Item Explosion Power** recipes.
+
+Explosive Catalyst Behaviors define how an **Explosive Catalyst** is handled. They are prebuilt objects that augment catalyst performance in several ways, including:
+- What happens when the Blast Processor produces an explosion
+- What items the Blast Processor ejects
+- The resultant explosion power of a catalyst
+- The recipe output & bounds of a Blast Processor craft
+- Whether the Blast Processor should run the default dispenser effects
+
+### Example Explosive Catalyst Behavior Recipe JSON
+
+```
+{
+  "type": "klaxon:blast_processor_behavior",
+  "behavior_id": "klaxon:bedlike_explodable",
+  "ingredient": {
+    "tag": "klaxon:bedlike_explodables"
+  }
+}
+```
+
+### Good To Know
+- If no **Explosive Catalyst Behavior** is defined for an item via JSON, ```klaxon:default``` is used.
+
+### Built-In Explosive Catalyst Behavior IDs and Functions
+- A "-" indicates default behavior.
+
+| **Identifier**                  | **On Explosion**                                                       | Ejected Items                            | Catalyst Explosion Power                                                                                                     | Recipe Output                     | Dispenser Effects      |
+|---------------------------------|------------------------------------------------------------------------|------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|-----------------------------------|------------------------|
+| ```klaxon:default```            | Produces vanilla explosion with defined explosion power & fiery status | Ejects result of Blast Processing recipe | Default Item Explosion Power recipe result                                                                                   | Result of Blast Processing recipe | True                   |
+| ```klaxon:firework_rocket```    | Produces instant firework blast at explosion origin point              | -                                        | Compiles Item Explosion Power of firework materials into final value                                                         | -                                 | False                  |
+| ```klaxon:firework_star```      | -                                                                      | -                                        | Compiles Item Explosion Power of firework star materials into final value                                                    | -                                 | -                      |
+| ```klaxon:bedlike_explodable``` | -                                                                      | -                                        | Nullifies explosion power if a Bed would not explode in current dimension                                                    | -                                 | -                      |
+| ```klaxon:wind_charge```        | Produces wind charge burst at explosion output point                   | -                                        | -                                                                                                                            | -                                 | False                  |
+| ```klaxon:dragons_breath```     | Produces dragon's breath pool at explosion output point                | -                                        | -                                                                                                                            | -                                 | False                  |
+| ```klaxon:glowstone```          | -                                                                      | -                                        | Nullifies explosion power if a Respawn Anchor would not explode in current dimension                                         | -                                 | -                      |
+| ```klaxon:tnt_minecart```       | -                                                                      | -                                        | Adds (redstoneSignalStrength / 5) to output explosion power                                                                  | -                                 | -                      |
+| ```klaxon:end_crystal```        | -                                                                      | -                                        | Explosion is fiery if state in front of, below, or diagonally down + forward from Blast Processor is **Obsidian or Bedrock** | -                                 | -                      |
+| ```klaxon:creeper_head```       | Produces Charged Creeper explosion of defined explosion power          | -                                        | Explosion is fiery if state in front of, below, or diagonally down + forward from Blast Processor is **Obsidian or Bedrock** | -                                 | -                      |
