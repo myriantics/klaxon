@@ -7,15 +7,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
-import net.myriantics.klaxon.registry.entity.KlaxonDataAttachments;
-import net.myriantics.klaxon.util.EntityWeightHelper;
+import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PersistentProjectileEntity.class)

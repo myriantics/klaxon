@@ -28,13 +28,12 @@ import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BoundingBoxHelper;
-import net.myriantics.klaxon.util.EntityWeightHelper;
+import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.util.grapple_winch.GrappleWinchUtil;
 import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
 

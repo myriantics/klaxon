@@ -2,7 +2,7 @@ package net.myriantics.klaxon.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffects;
+import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
 
 public abstract class AbilityModifierCalculator {

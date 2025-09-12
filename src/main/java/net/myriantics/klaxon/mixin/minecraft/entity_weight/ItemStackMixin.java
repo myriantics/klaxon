@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin.minecraft.heavy_equipment;
+package net.myriantics.klaxon.mixin.minecraft.entity_weight;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.PlayerEntity;
