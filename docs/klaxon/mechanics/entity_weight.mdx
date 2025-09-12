@@ -9,6 +9,7 @@ Several tags are also offered to allow for more fine-tuned configuration of Enti
 - If the given entity type is in the **```#klaxon:light_entities```** tag, it is considered **LIGHT** and calculations stop there.
 - If the previous check fails and the given entity type is in the **```#klaxon:heavy_entities```** tag, it is considered **HEAVY**.
 - If the entity is **wider than a boat**, it is considered **HEAVY**.
+- If the entity is a **falling block that cannot be moved by pistons when solid**, it is considered **HEAVY**.
 - If the entity is **wearing anything in the ```#klaxon:heavy_equipment``` tag**, it is considered **HEAVY**.
 - If the entity has **any status effect in the ```#klaxon:heavy_effects``` tag**, it is considered **HEAVY**.
 - If all of the above checks fail (besides the first one), an entity is considered **LIGHT**.

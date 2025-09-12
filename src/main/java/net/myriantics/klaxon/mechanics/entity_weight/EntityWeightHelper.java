@@ -1,7 +1,9 @@
 package net.myriantics.klaxon.mechanics.entity_weight;
 
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
@@ -28,6 +30,13 @@ public abstract class EntityWeightHelper {
         // entities larger than a boat or wearing any heavy equipment are considered heavy
         if (entity.getWidth() > EntityType.BOAT.getWidth()) {
             return true;
+        }
+
+        // Falling blocks are considered heavy if they block piston movement. This includes anvils by default.
+        if (entity instanceof FallingBlockEntity fallingBlockEntity) {
+            if (fallingBlockEntity.getBlockState().getPistonBehavior().equals(PistonBehavior.BLOCK)) {
+                return true;
+            }
         }
 
         // the next conditions only apply to living entities so check for that
