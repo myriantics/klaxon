@@ -64,6 +64,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.WOOL_CARPETS)
                 .forceAddTag(BlockTags.WOOL)
                 .forceAddTag(BlockTags.LEAVES)
+                .add(Blocks.SPAWNER)
                 .add(Blocks.IRON_BARS);
 
         // cleaver

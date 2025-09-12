@@ -8,6 +8,7 @@
     "#minecraft:wool_carpets",
     "#minecraft:wool",
     "#minecraft:leaves",
+    "minecraft:spawner",
     "minecraft:iron_bars"
   ]
 }
