@@ -26,7 +26,7 @@ public abstract class EntityWeightHelper {
         // fallback calculations in order of priciness
 
         // entities larger than a boat or wearing any heavy equipment are considered heavy
-        if (entity.getWidth() >= EntityType.BOAT.getWidth()) {
+        if (entity.getWidth() > EntityType.BOAT.getWidth()) {
             return true;
         }
 

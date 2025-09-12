@@ -1,6 +1,11 @@
 {
   "values": [
-    "minecraft:enderman",
-    "minecraft:ghast"
+    "#minecraft:powder_snow_walkable_mobs",
+    "#minecraft:skeletons",
+    "minecraft:snow_golem",
+    "minecraft:ghast",
+    "minecraft:item",
+    "minecraft:ender_pearl",
+    "minecraft:eye_of_ender"
   ]
 }

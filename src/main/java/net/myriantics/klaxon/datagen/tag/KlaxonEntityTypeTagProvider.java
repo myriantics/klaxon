@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.EntityTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -32,12 +33,23 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
         // weight tags
         getOrCreateTagBuilder(KlaxonEntityTypeTags.HEAVY_ENTITIES)
                 .forceAddTag(ConventionalEntityTypeTags.BOSSES)
+                .forceAddTag(ConventionalEntityTypeTags.CAPTURING_NOT_SUPPORTED)
+                .forceAddTag(ConventionalEntityTypeTags.TELEPORTING_NOT_SUPPORTED)
+                .add(EntityType.SHULKER)
+                .add(EntityType.IRON_GOLEM)
+                .add(EntityType.RAVAGER)
                 .add(EntityType.ENDER_DRAGON)
                 .add(EntityType.WITHER)
                 .add(EntityType.GIANT)
-                .add(EntityType.WARDEN);
+                .add(EntityType.WARDEN)
+                .add(EntityType.AREA_EFFECT_CLOUD);
         getOrCreateTagBuilder(KlaxonEntityTypeTags.LIGHT_ENTITIES)
-                .add(EntityType.ENDERMAN)
-                .add(EntityType.GHAST);
+                .forceAddTag(EntityTypeTags.POWDER_SNOW_WALKABLE_MOBS)
+                .forceAddTag(EntityTypeTags.SKELETONS)
+                .add(EntityType.SNOW_GOLEM)
+                .add(EntityType.GHAST)
+                .add(EntityType.ITEM)
+                .add(EntityType.ENDER_PEARL)
+                .add(EntityType.EYE_OF_ENDER);
     }
 }

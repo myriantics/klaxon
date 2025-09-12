@@ -32,7 +32,6 @@
     "minecraft.hallnox_bulb.BlockItemMixin",
     "minecraft.hallnox_pod.FallingBlockEntityMixin",
     "minecraft.hallnox_pod.ShearsItemMixin",
-    "minecraft.entity_weight.EntityMixin",
     "minecraft.entity_weight.ItemStackMixin",
     "minecraft.innate_enchantments.EnchantmentHelperMixin",
     "minecraft.innate_enchantments.EnchantmentsPredicateMixin",

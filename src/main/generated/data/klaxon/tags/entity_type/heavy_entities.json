@@ -1,9 +1,15 @@
 {
   "values": [
     "#c:bosses",
+    "#c:capturing_not_supported",
+    "#c:teleporting_not_supported",
+    "minecraft:shulker",
+    "minecraft:iron_golem",
+    "minecraft:ravager",
     "minecraft:ender_dragon",
     "minecraft:wither",
     "minecraft:giant",
-    "minecraft:warden"
+    "minecraft:warden",
+    "minecraft:area_effect_cloud"
   ]
 }
