@@ -6,6 +6,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
 import net.minecraft.util.Unit;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
@@ -103,6 +104,13 @@ public abstract class KlaxonDataComponentTypes {
 
     // Items with this component flip their held item model when held in the left hand
     public static final ComponentType<Unit> MIRRORED_LEFT_HAND_MODEL = registerUnit("mirrored_left_hand_model");
+
+    public static final ComponentType<Double> RECIPE_OUTPUT_LORE = register("recipe_output_lore",
+            builder -> {
+        builder.codec(Codec.DOUBLE);
+        builder.packetCodec(PacketCodecs.DOUBLE);
+        return builder;
+    });
 
     private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());

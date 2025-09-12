@@ -150,7 +150,8 @@
   "tag.item.klaxon.fractured_materials.raw_copper": "Fractured Raw Copper",
 
   "klaxon.text.tooltip.innate_enchantment_prefix":  "Innate %1$s",
-  "klaxon.text.tooltip.heavy_equipment":  "Heavy Equipment",
+  "klaxon.text.tooltip.recipe_output_lore.chance": "Chance: %1$s",
+  "klaxon.text.tooltip.heavy_equipment": "Heavy Equipment",
   "klaxon.text.blast_processor_creeper_name":  "a Blast Processor mimicking a Charged Creeper. Expensive death right there.",
 
   "tag.entity.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
