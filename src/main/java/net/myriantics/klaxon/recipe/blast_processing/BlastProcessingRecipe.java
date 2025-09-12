@@ -13,13 +13,13 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
     private final Ingredient ingredientItem;
     private final double explosionPowerMin;
     private final double explosionPowerMax;
-    private final ItemStack result;
+    private final ItemStack outputStack;
 
     public BlastProcessingRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result) {
         this.ingredientItem = inputA;
         this.explosionPowerMin = explosionPowerMin;
         this.explosionPowerMax = explosionPowerMax;
-        this.result = result;
+        this.outputStack = result;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
         // check if explosion power exists and is within bounds
         if (explosionPower > 0 && explosionPower >= explosionPowerMin && explosionPower <= explosionPowerMax) {
-            return result.copy();
+            return getResult(lookup).copy();
         }
 
         return ItemStack.EMPTY;
@@ -46,7 +46,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
     @Override
     public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
-        return this.result;
+        return this.outputStack;
     }
 
     public Ingredient getIngredientItem() {
@@ -59,6 +59,10 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
     public double getExplosionPowerMax() {
         return explosionPowerMax;
+    }
+
+    public ItemStack getOutputStack() {
+        return outputStack;
     }
 
 

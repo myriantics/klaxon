@@ -12,7 +12,8 @@ import net.myriantics.klaxon.util.KlaxonCodecUtils;
 public class NetherReactionRecipeSerializer implements RecipeSerializer<NetherReactionRecipe> {
 
     private final MapCodec<NetherReactionRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance) -> {
-        return recipeInstance.group(KlaxonCodecUtils.BLOCK_TAG_CODEC.fieldOf("valid_blocks").forGetter(NetherReactionRecipe::getValidBlockInputs),
+        return recipeInstance.group(
+                KlaxonCodecUtils.BLOCK_TAG_CODEC.fieldOf("valid_blocks_tag").forGetter(NetherReactionRecipe::getValidBlockInputs),
                 KlaxonCodecUtils.BLOCK_CODEC.fieldOf("output_block").forGetter(NetherReactionRecipe::getOutputBlock)
         ).apply(recipeInstance, NetherReactionRecipe::new);
     });

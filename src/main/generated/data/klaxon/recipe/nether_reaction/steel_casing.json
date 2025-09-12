@@ -1,5 +1,5 @@
 {
   "type": "klaxon:nether_reaction",
   "output_block": "klaxon:steel_casing",
-  "valid_blocks": "#klaxon:nether_reaction/steel_casing_convertible"
+  "valid_blocks_tag": "#klaxon:nether_reaction/steel_casing_convertible"
 }

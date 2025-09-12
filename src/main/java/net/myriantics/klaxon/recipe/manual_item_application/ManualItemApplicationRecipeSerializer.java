@@ -13,8 +13,8 @@ import net.myriantics.klaxon.util.KlaxonCodecUtils;
 public class ManualItemApplicationRecipeSerializer implements RecipeSerializer<ManualItemApplicationRecipe> {
     private final MapCodec<ManualItemApplicationRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance) -> {
         return recipeInstance.group(
-                KlaxonCodecUtils.BLOCK_TAG_CODEC.fieldOf("valid_blocks").forGetter(ManualItemApplicationRecipe::getValidBlockInputs),
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input").forGetter(ManualItemApplicationRecipe::getInputIngredient),
+                KlaxonCodecUtils.BLOCK_TAG_CODEC.fieldOf("valid_blocks_tag").forGetter(ManualItemApplicationRecipe::getValidBlockInputs),
+                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input_ingredient").forGetter(ManualItemApplicationRecipe::getInputIngredient),
                 KlaxonCodecUtils.BLOCK_CODEC.fieldOf("output_block").forGetter(ManualItemApplicationRecipe::getOutputBlock)
         ).apply(recipeInstance, ManualItemApplicationRecipe::new);
     });

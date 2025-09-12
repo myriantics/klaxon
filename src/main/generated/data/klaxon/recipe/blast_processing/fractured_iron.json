@@ -1,11 +1,11 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 1.7,
-  "explosionPowerMin": 0.5,
-  "ingredientItem": {
+  "explosion_power_max": 1.7,
+  "explosion_power_min": 0.5,
+  "input_ingredient": {
     "item": "minecraft:iron_ingot"
   },
-  "output": {
+  "output_stack": {
     "count": 1,
     "id": "klaxon:fractured_iron"
   }

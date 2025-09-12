@@ -14,15 +14,12 @@ public class ItemExplosionPowerRecipeSerializer implements RecipeSerializer<Item
     }
 
     private final MapCodec<ItemExplosionPowerRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance) -> {
-        return recipeInstance.group(Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter((recipe) ->  {
-            return recipe.getIngredient();
-        }), PrimitiveCodec.DOUBLE.fieldOf("explosionPower").forGetter((recipe) -> {
-            return recipe.getExplosionPower();
-        }), PrimitiveCodec.BOOL.fieldOf("producesFire").forGetter((recipe) -> {
-            return recipe.producesFire();
-        }), PrimitiveCodec.BOOL.fieldOf("isHidden").forGetter((recipe) -> {
-            return recipe.isHidden();
-        })).apply(recipeInstance, ItemExplosionPowerRecipe::new);
+        return recipeInstance.group(
+                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter(ItemExplosionPowerRecipe::getIngredient),
+                PrimitiveCodec.DOUBLE.fieldOf("explosion_power").forGetter(ItemExplosionPowerRecipe::getExplosionPower),
+                PrimitiveCodec.BOOL.fieldOf("produces_fire").forGetter(ItemExplosionPowerRecipe::producesFire),
+                PrimitiveCodec.BOOL.fieldOf("is_hidden_from_emi").forGetter(ItemExplosionPowerRecipe::isHidden)
+        ).apply(recipeInstance, ItemExplosionPowerRecipe::new);
     });
 
     private final PacketCodec<RegistryByteBuf, ItemExplosionPowerRecipe> PACKET_CODEC = PacketCodec.ofStatic(

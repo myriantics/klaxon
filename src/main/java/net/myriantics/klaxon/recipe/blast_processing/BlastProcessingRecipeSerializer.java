@@ -14,15 +14,12 @@ public class BlastProcessingRecipeSerializer implements RecipeSerializer<BlastPr
     }
 
     private final MapCodec<BlastProcessingRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance -> {
-        return recipeInstance.group(Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredientItem").forGetter((recipe) -> {
-            return recipe.getIngredientItem();
-        }), PrimitiveCodec.DOUBLE.fieldOf("explosionPowerMin").forGetter((recipe) -> {
-            return recipe.getExplosionPowerMin();
-        }), PrimitiveCodec.DOUBLE.fieldOf("explosionPowerMax").forGetter((recipe) -> {
-            return recipe.getExplosionPowerMax();
-        }), ItemStack.OPTIONAL_CODEC.fieldOf("output").forGetter((recipe) -> {
-            return recipe.getResult(null);
-        })).apply(recipeInstance, BlastProcessingRecipe::new);
+        return recipeInstance.group(
+                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input_ingredient").forGetter(BlastProcessingRecipe::getIngredientItem),
+                PrimitiveCodec.DOUBLE.fieldOf("explosion_power_min").forGetter(BlastProcessingRecipe::getExplosionPowerMin),
+                PrimitiveCodec.DOUBLE.fieldOf("explosion_power_max").forGetter(BlastProcessingRecipe::getExplosionPowerMax),
+                ItemStack.OPTIONAL_CODEC.fieldOf("output_stack").forGetter(BlastProcessingRecipe::getOutputStack)
+        ).apply(recipeInstance, BlastProcessingRecipe::new);
     }));
 
     private final PacketCodec<RegistryByteBuf, BlastProcessingRecipe> PACKET_CODEC = PacketCodec.ofStatic(

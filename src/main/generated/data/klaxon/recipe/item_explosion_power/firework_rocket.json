@@ -1,9 +1,9 @@
 {
   "type": "klaxon:item_explosion_power",
-  "explosionPower": 0.0,
+  "explosion_power": 0.0,
   "ingredient": {
     "item": "minecraft:firework_rocket"
   },
-  "isHidden": false,
-  "producesFire": false
+  "is_hidden_from_emi": false,
+  "produces_fire": false
 }

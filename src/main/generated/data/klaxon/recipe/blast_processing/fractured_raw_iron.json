@@ -1,11 +1,11 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 1.4,
-  "explosionPowerMin": 0.4,
-  "ingredientItem": {
+  "explosion_power_max": 1.4,
+  "explosion_power_min": 0.4,
+  "input_ingredient": {
     "item": "minecraft:raw_iron"
   },
-  "output": {
+  "output_stack": {
     "count": 1,
     "id": "klaxon:fractured_raw_iron"
   }

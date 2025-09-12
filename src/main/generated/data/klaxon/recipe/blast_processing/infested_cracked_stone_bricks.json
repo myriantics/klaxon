@@ -1,11 +1,11 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 0.3,
-  "explosionPowerMin": 0.1,
-  "ingredientItem": {
+  "explosion_power_max": 0.3,
+  "explosion_power_min": 0.1,
+  "input_ingredient": {
     "item": "minecraft:infested_stone_bricks"
   },
-  "output": {
+  "output_stack": {
     "count": 1,
     "id": "minecraft:infested_cracked_stone_bricks"
   }

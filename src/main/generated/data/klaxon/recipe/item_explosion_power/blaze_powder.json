@@ -1,9 +1,9 @@
 {
   "type": "klaxon:item_explosion_power",
-  "explosionPower": 0.5,
+  "explosion_power": 0.5,
   "ingredient": {
     "item": "minecraft:blaze_powder"
   },
-  "isHidden": false,
-  "producesFire": true
+  "is_hidden_from_emi": false,
+  "produces_fire": true
 }

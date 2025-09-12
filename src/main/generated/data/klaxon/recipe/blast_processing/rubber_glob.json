@@ -1,11 +1,11 @@
 {
   "type": "klaxon:blast_processing",
-  "explosionPowerMax": 1.9,
-  "explosionPowerMin": 0.8,
-  "ingredientItem": {
+  "explosion_power_max": 1.9,
+  "explosion_power_min": 0.8,
+  "input_ingredient": {
     "tag": "klaxon:overworld_rubber_extractable_logs"
   },
-  "output": {
+  "output_stack": {
     "count": 5,
     "id": "klaxon:rubber_glob"
   }
