@@ -48,7 +48,6 @@ public abstract class ToolUsageRecipeLogic {
             KlaxonRecipeTypes.WIRECUTTING
     );
     private static Map<Item, RecipeType<AbstractToolUsageRecipe>> ITEM_2_RECIPE_TYPE_CACHE = new HashMap<>();
-    private static Set<Item> VALID_RECIPE_TOOL_CACHE = new HashSet<>();
     public static final int MAX_SOUNDS_PER_ACTION = 4;
     public static final int MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION = 16;
 
