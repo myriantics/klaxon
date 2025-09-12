@@ -188,7 +188,7 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
                 BlastProcessingRecipeData processingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), powerData));
 
                 // do explosion effect
-                blastProcessorBehavior.onExplosion(world, pos, this, powerData, world.getGameRules().getBoolean(KlaxonGameRules.SHOULD_BLAST_PROCESSOR_EXPLOSION_MODIFY_WORLD));
+                blastProcessorBehavior.onExplosion(world, pos, this, powerData, world.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
 
                 // eject recipe results
                 blastProcessorBehavior.ejectItems(world, pos, this, processingData, powerData);

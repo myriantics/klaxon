@@ -14,6 +14,7 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeInput;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
 import net.myriantics.klaxon.registry.behavior.KlaxonDispenserBehaviors;
+import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,6 +39,12 @@ public abstract class DispenserBlockMixin {
             @Local ItemStack selectedStack
         )
     {
+        // return the original behavior if functionality is disabled
+        if (!serverWorld.getGameRules().getBoolean(KlaxonGameRules.DISPENSERS_PERFORM_ITEM_INTERACTION_RECIPES)) {
+            return original;
+        }
+
+        // if functionality is enabled, run logic & affect world.
         if (ManualItemApplicationRecipeLogic.test(serverWorld, selectedStack)) {
             BlockPos targetPos = dispenserPos.offset(dispenserState.get(FACING));
             BlockState targetState = serverWorld.getBlockState(targetPos);

@@ -6,8 +6,12 @@ import net.minecraft.world.GameRules;
 import net.myriantics.klaxon.KlaxonCommon;
 
 public abstract class KlaxonGameRules {
-    public static final GameRules.Key<GameRules.BooleanRule> SHOULD_BLAST_PROCESSOR_EXPLOSION_MODIFY_WORLD = registerBooleanRule(
-            "shouldBlastProcessorExplosionModifyWorld", GameRules.Category.MISC, true
+    public static final GameRules.Key<GameRules.BooleanRule> BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD = registerBooleanRule(
+            "blastProcessorExplosionsModifyWorld", GameRules.Category.MISC, true
+    );
+
+    public static final GameRules.Key<GameRules.BooleanRule> DISPENSERS_PERFORM_ITEM_INTERACTION_RECIPES = registerBooleanRule(
+            "dispensersPerformItemInteractionRecipes", GameRules.Category.MISC, true
     );
 
     private static GameRules.Key<GameRules.BooleanRule> registerBooleanRule(String name, GameRules.Category category, boolean defaultValue) {
