@@ -26,6 +26,10 @@ public final class NamedIngredient {
         return this.ingredient;
     }
 
+    public NamedIngredient withName(String name) {
+        return new NamedIngredient(ingredient, name);
+    }
+
     public static NamedIngredient fromTag(TagKey<Item> tag) {
         return new NamedIngredient(Ingredient.fromTag(tag), tag.id().getPath());
     }

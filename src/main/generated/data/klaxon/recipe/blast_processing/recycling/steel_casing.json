@@ -1,0 +1,31 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosion_power_max": 2.4,
+  "explosion_power_min": 0.8,
+  "input_ingredient": {
+    "item": "klaxon:steel_casing"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 0.8,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:steel_ingot"
+      }
+    },
+    {
+      "chance": 0.8,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:steel_plate"
+      }
+    },
+    {
+      "chance": 0.4,
+      "stack": {
+        "count": 4,
+        "id": "klaxon:steel_nugget"
+      }
+    }
+  ]
+}

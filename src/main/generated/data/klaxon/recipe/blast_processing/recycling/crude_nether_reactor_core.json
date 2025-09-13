@@ -1,0 +1,38 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosion_power_max": 4.0,
+  "explosion_power_min": 1.5,
+  "input_ingredient": {
+    "item": "klaxon:crude_nether_reactor_core"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 0.6,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:crude_steel_ingot"
+      }
+    },
+    {
+      "chance": 0.6,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:crude_steel_plate"
+      }
+    },
+    {
+      "chance": 0.4,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:hallnox_pod"
+      }
+    },
+    {
+      "chance": 0.3,
+      "stack": {
+        "count": 4,
+        "id": "klaxon:crude_steel_nugget"
+      }
+    }
+  ]
+}

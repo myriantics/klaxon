@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.api;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import com.mojang.datafixers.util.Pair;
@@ -45,6 +46,10 @@ public final class RecipeOutputCompound {
         return new RecipeOutputCompound(List.of(new Pair<>(new ItemStack(item), d), new Pair<>(new ItemStack(item1), d1)));
     }
 
+    public int size() {
+        return dropsAndChances.size();
+    }
+
     public List<ItemStack> computeDrops(Random random) {
         ArrayList<ItemStack> outputList = new ArrayList<>();
 
@@ -59,14 +64,22 @@ public final class RecipeOutputCompound {
                 continue;
             }
 
-            int count = 0;
-            // Roll a random value for each count of the item - adds more randomness and coolness
-            for (int i = 0; i < stack.getCount(); i++) {
-                if (random.nextDouble() <= chance) {
-                    count++;
-                }
+            /*
+            double max = 31 - Integer.numberOfLeadingZeros(stack.getCount() - 1);
+            int count = (int) (stack.getCount() * chance + Math.sqrt(max * (1 - chance)) * random.nextGaussian() + 0.5);
+            if (count > 0) {
+                outputList.add(stack.copyWithCount(count));
+            }*/
+
+
+
+            int count = (int) (0.5 + random.nextTriangular(
+                    stack.getCount() * chance,
+                    stack.getCount() / 2f
+            ));
+            if (count > 0) {
+                outputList.add(stack.copyWithCount(count));
             }
-            outputList.add(stack.copyWithCount(count));
         }
 
         return List.copyOf(outputList);
@@ -143,6 +156,46 @@ public final class RecipeOutputCompound {
         for (Pair<ItemStack, Double> pair : rawDropsAndChances) {
             ItemStack.PACKET_CODEC.encode(buf, pair.getFirst());
             PacketCodecs.DOUBLE.encode(buf, pair.getSecond());
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final ArrayList<Pair<ItemStack, Double>> pairs = new ArrayList<>();
+
+        private Builder() {}
+
+        public Builder guaranteed(ItemStack... stacks) {
+            for (ItemStack stack : stacks) {
+                pairs.add(new Pair<>(stack, 1.0));
+            }
+
+            return this;
+        }
+
+        public Builder chance(ItemStack stack, double chance) {
+            if (chance > 1 || chance < 0) {
+                throw new IllegalArgumentException();
+            }
+
+            pairs.add(new Pair<>(stack, chance));
+
+            return this;
+        }
+
+        public Builder chance(Item item, double chance) {
+            return chance(new ItemStack(item), chance);
+        }
+
+        public Builder chance(Item item, int count, double chance) {
+            return chance(new ItemStack(item, count), chance);
+        }
+
+        public RecipeOutputCompound build() {
+            return new RecipeOutputCompound(pairs);
         }
     }
 }

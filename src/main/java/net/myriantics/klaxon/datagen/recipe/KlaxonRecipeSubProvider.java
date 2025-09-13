@@ -32,6 +32,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static net.minecraft.data.server.recipe.RecipeProvider.getItemPath;
 
@@ -336,20 +337,38 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addBlastProcessingRecipe(Ingredient input,
+    public void addBlastProcessingRecipe(NamedIngredient input,
                                          double explosionPowerMin, double explosionPowerMax,
                                          ItemStack output, final ResourceCondition... conditions) {
         addBlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, RecipeOutputCompound.of(output), conditions);
     }
 
-    public void addBlastProcessingRecipe(Ingredient input,
+    public void addBlastProcessingRecipe(NamedIngredient input,
+                                         double explosionPowerMin, double explosionPowerMax,
+                                         Function<RecipeOutputCompound.Builder, RecipeOutputCompound.Builder> function, final ResourceCondition... conditions) {
+        addBlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, function.apply(RecipeOutputCompound.builder()).build(), conditions);
+    }
+
+    public void addExplosiveDisassemblyRecipe(NamedIngredient input,
+                                         double explosionPowerMin, double explosionPowerMax,
+                                         Function<RecipeOutputCompound.Builder, RecipeOutputCompound.Builder> function, final ResourceCondition... conditions) {
+        addBlastProcessingRecipe(input.withName("recycling/" + input.getName()), explosionPowerMin, explosionPowerMax, function.apply(RecipeOutputCompound.builder()).build(), conditions);
+    }
+
+    public void addBlastProcessingRecipe(NamedIngredient input,
                                          double explosionPowerMin, double explosionPowerMax,
                                          RecipeOutputCompound outputCompound, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
-                getItemPath(outputCompound.getDisplayStacks().getFirst().getItem()),
-                conditions);
+        String path = outputCompound.size() > 1
+                ? input.getName()
+                : getItemPath(outputCompound.getDisplayStacks().getFirst().getItem()) + "_from_" + input.getName();
 
-        BlastProcessingRecipe recipe = new BlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, outputCompound);
+        Identifier recipeId = provider.computeRecipeIdentifier(
+                KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
+                path,
+                conditions
+        );
+
+        BlastProcessingRecipe recipe = new BlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax, outputCompound);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
