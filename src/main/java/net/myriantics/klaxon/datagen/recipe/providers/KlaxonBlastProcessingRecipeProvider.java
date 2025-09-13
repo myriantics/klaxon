@@ -1,14 +1,12 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
 import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.api.RecipeOutputCompound;
-import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
+import net.myriantics.klaxon.datagen.KlaxonDatagenCompatIds;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -44,10 +42,6 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
         // rubber extraction
         addBlastProcessingRecipe(NamedIngredient.fromTag(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS), 0.8, 1.9, new ItemStack(KlaxonItems.RUBBER_GLOB, 5));
         addBlastProcessingRecipe(NamedIngredient.fromTag(KlaxonItemTags.NETHER_RUBBER_EXTRACTABLE_LOGS), 1.2, 2.5, new ItemStack(KlaxonItems.MOLTEN_RUBBER_GLOB, 5));
-
-        // create compat
-        addBlastProcessingRecipe(NamedIngredient.ofItems(KlaxonDatagenPhantomItems.CREATE_PRECISION_MECHANISM), 0.2, 1.0, new ItemStack(Items.CLOCK),
-                new AllModsLoadedResourceCondition(List.of(KlaxonDatagenPhantomItems.CREATE_MOD_ID)));
     }
 
     private void buildExplosiveDisassemblyRecipes() {

@@ -1,12 +1,11 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
 import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
+import net.myriantics.klaxon.datagen.KlaxonDatagenCompatIds;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -36,10 +35,6 @@ public class KlaxonToolUsageRecipeProvider extends KlaxonRecipeSubProvider {
         addHammeringRecipe(Ingredient.ofItems(Items.COPPER_INGOT), new ItemStack(KlaxonItems.COPPER_PLATE));
 
         addHammeringRecipe(Ingredient.ofItems(KlaxonItems.MOLTEN_RUBBER_GLOB), new ItemStack(KlaxonItems.MOLTEN_RUBBER_SHEET));
-
-        // create compat recipes - done manually for now because of issues with itemstacks returning air as an id - should resolve in future
-        addHammeringRecipe(Ingredient.ofItems(KlaxonDatagenPhantomItems.CREATE_BRASS_INGOT), new ItemStack(KlaxonDatagenPhantomItems.CREATE_BRASS_SHEET),
-                new AllModsLoadedResourceCondition(List.of(KlaxonDatagenPhantomItems.CREATE_MOD_ID)));
     }
 
     private void buildWirecuttingRecipes() {

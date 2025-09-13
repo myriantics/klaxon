@@ -4,7 +4,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.datagen.KlaxonDatagenPhantomItems;
+import net.myriantics.klaxon.datagen.KlaxonDatagenCompatIds;
 import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.behavior.KlaxonBlastProcessorCatalystBehaviors;
@@ -43,12 +43,6 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonBlockEntities.init();
 		KlaxonArmorMaterials.init();
 		KlaxonItems.init();
-
-		// if it's datagen, run my hacky hack of hacks
-		if (isDatagenEnabled()) {
-			KlaxonDatagenPhantomItems.registerPhantomItemsForDatagen();
-		}
-
 		KlaxonRegistryKeys.init();
 		KlaxonRegistries.init();
 		KlaxonRecipeTypes.init();
