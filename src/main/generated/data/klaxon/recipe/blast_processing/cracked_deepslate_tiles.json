@@ -5,8 +5,13 @@
   "input_ingredient": {
     "item": "minecraft:deepslate_tiles"
   },
-  "output_stack": {
-    "count": 1,
-    "id": "minecraft:cracked_deepslate_tiles"
-  }
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:cracked_deepslate_tiles"
+      }
+    }
+  ]
 }

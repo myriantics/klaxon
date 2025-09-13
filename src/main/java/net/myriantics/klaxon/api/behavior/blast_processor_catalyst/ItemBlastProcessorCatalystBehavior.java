@@ -77,7 +77,7 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
 
         Direction facing = world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
 
-        if (recipeData.result().isEmpty()) {
+        if (recipeData.outputStacks().isEmpty()) {
             if (powerData.explosionPower() <= 0 || powerData.explosionPower() < recipeData.explosionPowerMin()) {
                 for (ItemStack ejectedStack : blastProcessor.getItems()) {
                     ItemDispenserBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
@@ -87,7 +87,9 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
             Position itemOutputPos = blastProcessor.getItemOutputLocation(facing);
             double advancementGrantRange = 17.0;
 
-            ItemDispenserBehavior.spawnItem(world, recipeData.result().copy(), 8, facing, itemOutputPos);
+            for (ItemStack stack : recipeData.outputStacks()) {
+                ItemDispenserBehavior.spawnItem(world, stack, 8, facing, itemOutputPos);
+            }
 
             // proc blast processor crafting advancement
             for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of((Vec3d) itemOutputPos, advancementGrantRange, advancementGrantRange, advancementGrantRange))) {
@@ -114,8 +116,7 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
         return new ItemExplosionPowerData(0.0, false);
     }
 
-    public BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory) {
-
+    public BlastProcessingRecipeData getBlastProcessingPreviewData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory) {
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ItemExplosionPowerData powerData = recipeInventory.getPowerData();
 
@@ -125,20 +126,39 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
         if (blastProcessingMatch.isPresent()) {
             BlastProcessingRecipe recipe = blastProcessingMatch.get();
 
-            ItemStack outputStack = recipe.craft(recipeInventory, world.getRegistryManager());
+            List<ItemStack> outputStacks = recipe.getRecipeOutputCompound().getDisplayStacks();
 
-            // if the catalyst produces fire, try to smelt output stack as if it were in a blast furnace
+            // if the catalyst produces fire, try to smelt output stacks as if they were in a blast furnace
             if (powerData.producesFire()) {
-                SingleStackRecipeInput blastingRecipeInput = new SingleStackRecipeInput(outputStack);
-                Optional<RecipeEntry<BlastingRecipe>> blastingRecipe = world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, blastingRecipeInput, world);
-                if (blastingRecipe.isPresent()) {
-                    outputStack = blastingRecipe.get().value().craft(blastingRecipeInput, world.getRegistryManager()).copyWithCount(outputStack.getCount());
-                }
+                tryBlastingSmeltingRecipeOnAllStacks(outputStacks, world);
             }
 
-            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStack);
+            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
         } else {
-            return new BlastProcessingRecipeData(0.0, 0.0, ItemStack.EMPTY);
+            return new BlastProcessingRecipeData(0.0, 0.0, List.of());
+        }
+    }
+
+    public BlastProcessingRecipeData getBlastProcessingRecipeData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory) {
+        Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
+        ItemExplosionPowerData powerData = recipeInventory.getPowerData();
+
+        if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty()) {
+            blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
+        }
+        if (blastProcessingMatch.isPresent()) {
+            BlastProcessingRecipe recipe = blastProcessingMatch.get();
+
+            List<ItemStack> outputStacks = recipe.craft(recipeInventory, world.getRegistryManager(), world.getRandom());
+
+            // if the catalyst produces fire, try to smelt output stacks as if they were in a blast furnace
+            if (powerData.producesFire()) {
+                tryBlastingSmeltingRecipeOnAllStacks(outputStacks, world);
+            }
+
+            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
+        } else {
+            return new BlastProcessingRecipeData(0.0, 0.0, List.of());
         }
     }
 
@@ -179,5 +199,29 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
     @Override
     public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystRecipeInput recipeInventory) {
         return true;
+    }
+
+    private void tryBlastingSmeltingRecipeOnAllStacks(List<ItemStack> stacks, World world) {
+        for (int i = 0; i < stacks.size(); i++) {
+            ItemStack stack = stacks.get(i);
+
+            // init recipe input
+            SingleStackRecipeInput input = new SingleStackRecipeInput(stack);
+
+            // find blasting recipe
+            Optional<RecipeEntry<BlastingRecipe>> blastingRecipe = world.getRecipeManager().getFirstMatch(
+                    RecipeType.BLASTING,
+                    input,
+                    world
+            );
+
+            // if recipe was successful, overwrite that index in output stacks with proper count
+            if (blastingRecipe.isPresent()) {
+                stacks.set(i, blastingRecipe.get().value().craft(
+                        input,
+                        world.getRegistryManager()
+                ).copyWithCount(stack.getCount()));
+            }
+        }
     }
 }

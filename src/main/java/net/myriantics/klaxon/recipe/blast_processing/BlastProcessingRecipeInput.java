@@ -2,6 +2,7 @@ package net.myriantics.klaxon.recipe.blast_processing;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.util.math.random.Random;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 
 public class BlastProcessingRecipeInput implements RecipeInput {

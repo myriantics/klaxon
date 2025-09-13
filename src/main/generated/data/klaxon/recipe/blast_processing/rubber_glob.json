@@ -5,8 +5,13 @@
   "input_ingredient": {
     "tag": "klaxon:overworld_rubber_extractable_logs"
   },
-  "output_stack": {
-    "count": 5,
-    "id": "klaxon:rubber_glob"
-  }
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 5,
+        "id": "klaxon:rubber_glob"
+      }
+    }
+  ]
 }

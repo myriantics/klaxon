@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.api;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.RegistryByteBuf;
@@ -21,17 +22,27 @@ public final class RecipeOutputCompound {
         this.dropsAndChances = chanceDrops;
     }
 
-    public RecipeOutputCompound of(ItemStack... guaranteedStacks) {
+    public static RecipeOutputCompound of(ItemStack... guaranteedStacks) {
         return of(List.of(guaranteedStacks));
     }
 
-    public RecipeOutputCompound of(List<ItemStack> guaranteedStacks) {
+    public static RecipeOutputCompound of(List<ItemStack> guaranteedStacks) {
+        ArrayList<Pair<ItemStack, Double>> dropsAndChances = new ArrayList<>();
+
         // compute chance drops
         for (ItemStack stack : guaranteedStacks) {
             dropsAndChances.add(new Pair<>(stack, 1.0));
         }
 
         return new RecipeOutputCompound(List.copyOf(dropsAndChances));
+    }
+
+    public static RecipeOutputCompound of(ItemConvertible item, double d) {
+        return new RecipeOutputCompound(List.of(new Pair<>(new ItemStack(item), d)));
+    }
+
+    public static RecipeOutputCompound of(ItemConvertible item, double d, ItemConvertible item1, double d1) {
+        return new RecipeOutputCompound(List.of(new Pair<>(new ItemStack(item), d), new Pair<>(new ItemStack(item1), d1)));
     }
 
     public List<ItemStack> computeDrops(Random random) {
@@ -45,6 +56,7 @@ public final class RecipeOutputCompound {
             // If a drop is guaranteed, just add it no questions asked
             if (chance >= 1) {
                 outputList.add(stack.copy());
+                continue;
             }
 
             int count = 0;
@@ -70,12 +82,10 @@ public final class RecipeOutputCompound {
                 ItemStack stack = entry.getFirst();
                 double chance = entry.getSecond();
 
-                if (chance >= 1) {
-                    displayStacks.add(stack);
-                } else if (chance < 0) {
+                if (chance > 0) {
                     ItemStack display = stack.copy();
                     display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_LORE, chance);
-                    displayStacks.add(stack);
+                    displayStacks.add(display);
                 }
             }
 
@@ -88,7 +98,7 @@ public final class RecipeOutputCompound {
         return dropsAndChances;
     }
 
-    public Codec<RecipeOutputCompound> createCodec(int size) {
+    public static Codec<RecipeOutputCompound> createCodec(int size) {
         return Codec.list(
                 Codec.mapPair(
                         ItemStack.CODEC.fieldOf("stack"),
@@ -105,7 +115,7 @@ public final class RecipeOutputCompound {
         );
     }
 
-    public PacketCodec<RegistryByteBuf, RecipeOutputCompound> PACKET_CODEC = PacketCodec.ofStatic(
+    public static PacketCodec<RegistryByteBuf, RecipeOutputCompound> PACKET_CODEC = PacketCodec.ofStatic(
             RecipeOutputCompound::write, RecipeOutputCompound::read
     );
 

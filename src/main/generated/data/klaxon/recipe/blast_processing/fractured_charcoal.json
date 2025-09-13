@@ -5,8 +5,20 @@
   "input_ingredient": {
     "item": "minecraft:charcoal"
   },
-  "output_stack": {
-    "count": 1,
-    "id": "klaxon:fractured_charcoal"
-  }
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:fractured_charcoal"
+      }
+    },
+    {
+      "chance": 0.4,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:fractured_charcoal"
+      }
+    }
+  ]
 }

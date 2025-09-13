@@ -8,6 +8,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.*;
+import net.myriantics.klaxon.api.RecipeOutputCompound;
 
 public class BlastProcessingRecipeSerializer implements RecipeSerializer<BlastProcessingRecipe> {
     public BlastProcessingRecipeSerializer() {
@@ -18,7 +19,7 @@ public class BlastProcessingRecipeSerializer implements RecipeSerializer<BlastPr
                 Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input_ingredient").forGetter(BlastProcessingRecipe::getIngredientItem),
                 PrimitiveCodec.DOUBLE.fieldOf("explosion_power_min").forGetter(BlastProcessingRecipe::getExplosionPowerMin),
                 PrimitiveCodec.DOUBLE.fieldOf("explosion_power_max").forGetter(BlastProcessingRecipe::getExplosionPowerMax),
-                ItemStack.OPTIONAL_CODEC.fieldOf("output_stack").forGetter(BlastProcessingRecipe::getOutputStack)
+                RecipeOutputCompound.createCodec(9).fieldOf("recipe_output_compound").forGetter(BlastProcessingRecipe::getRecipeOutputCompound)
         ).apply(recipeInstance, BlastProcessingRecipe::new);
     }));
 
@@ -30,16 +31,16 @@ public class BlastProcessingRecipeSerializer implements RecipeSerializer<BlastPr
         Ingredient ingredientItem = Ingredient.PACKET_CODEC.decode(buf);
         double explosionPowerMin = PacketCodecs.DOUBLE.decode(buf);
         double explosionPowerMax = PacketCodecs.DOUBLE.decode(buf);
-        ItemStack output = ItemStack.OPTIONAL_PACKET_CODEC.decode(buf);
+        RecipeOutputCompound outputCompound = RecipeOutputCompound.PACKET_CODEC.decode(buf);
 
-        return new BlastProcessingRecipe(ingredientItem, explosionPowerMin, explosionPowerMax, output);
+        return new BlastProcessingRecipe(ingredientItem, explosionPowerMin, explosionPowerMax, outputCompound);
     }
 
     private static void write(RegistryByteBuf buf, BlastProcessingRecipe recipe) {
         Ingredient.PACKET_CODEC.encode(buf, recipe.getIngredientItem());
         PacketCodecs.DOUBLE.encode(buf, recipe.getExplosionPowerMin());
         PacketCodecs.DOUBLE.encode(buf, recipe.getExplosionPowerMax());
-        ItemStack.OPTIONAL_PACKET_CODEC.encode(buf, recipe.getResult(null));
+        RecipeOutputCompound.PACKET_CODEC.encode(buf, recipe.getRecipeOutputCompound());
     }
 
 

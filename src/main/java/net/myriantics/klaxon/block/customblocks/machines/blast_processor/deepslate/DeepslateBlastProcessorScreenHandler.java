@@ -24,6 +24,8 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
 
+import java.util.List;
+
 public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     private final Inventory ingredientInventory;
     private final SimpleInventory outputInventory;
@@ -71,7 +73,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
                 this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), catalystInput);
 
                 BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
-                this.blastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInput);
+                this.blastProcessingData = blastProcessorBehavior.getBlastProcessingPreviewData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInput);
             });
         }
 
@@ -154,7 +156,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
                 ItemExplosionPowerData newPowerData = blastProcessorBehavior.getExplosionPowerData(world, pos, blastProcessor, catalystInput);
-                BlastProcessingRecipeData newBlastProcessingData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
+                BlastProcessingRecipeData newBlastProcessingData = blastProcessorBehavior.getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
 
                 // Make sure we've changed something before sending an update packet
                 if (!newPowerData.equals(powerData) || !newBlastProcessingData.equals(this.blastProcessingData)) {
@@ -164,7 +166,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
                     ServerPlayNetworking.send(serverPlayer, new BlastProcessorScreenSyncPacket(
                                     blastProcessingData.explosionPowerMin(),
                                     blastProcessingData.explosionPowerMax(),
-                                    blastProcessingData.result(),
+                                    blastProcessingData.outputStacks(),
                                     powerData.explosionPower(),
                                     powerData.producesFire()
                             )
@@ -173,7 +175,14 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
             }
         }
 
-        resultInventory.setStack(0, blastProcessingData.result());
+        // yonk the display stacks
+        List<ItemStack> displayStacks = blastProcessingData.outputStacks();
+
+        // update display inventory
+        for (int i = 0; i < resultInventory.size(); i++) {
+            // set slot to display stack if possible, otherwise clear it
+            resultInventory.setStack(i, i < displayStacks.size() ? displayStacks.get(i) : ItemStack.EMPTY);
+        }
     }
 
     @Override

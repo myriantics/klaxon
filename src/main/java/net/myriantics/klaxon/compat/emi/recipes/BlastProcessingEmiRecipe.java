@@ -6,6 +6,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -20,6 +21,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlastProcessingEmiRecipe implements EmiRecipe {
@@ -27,7 +29,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
     private final Identifier id;
     private final List<EmiIngredient> input;
-    private final List<EmiStack> output;
+    private final List<EmiStack> outputStacks;
     private final EmiRegistry registry;
 
     private final DefaultedList<ItemExplosionPowerRecipe> catalystData;
@@ -38,7 +40,10 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
     public BlastProcessingEmiRecipe(RecipeEntry<BlastProcessingRecipe> recipe, EmiRegistry registry, Identifier id) {
         this.id = id;
-        this.output = List.of(EmiStack.of(recipe.value().getResult(null)));
+        this.outputStacks = new ArrayList<>();
+        for (ItemStack stack : recipe.value().getRecipeOutputCompound().getDisplayStacks()) {
+            outputStacks.add(EmiStack.of(stack));
+        }
         this.explosionPowerMin = recipe.value().getExplosionPowerMin();
         this.explosionPowerMax = recipe.value().getExplosionPowerMax();
         this.registry = registry;
@@ -82,7 +87,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
     @Override
     public List<EmiStack> getOutputs() {
-        return output;
+        return outputStacks;
     }
 
     @Override
@@ -106,7 +111,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         widgets.addText(Text.literal("" + explosionPowerMax), 48, 8, 16777215, false);
         widgets.addText(Text.literal("---" ), 48, 26, 16777215, false);
 
-        widgets.addSlot(output.get(0), 90, 3).recipeContext(this).drawBack(false);
+        widgets.addSlot(outputStacks.get(0), 90, 3).recipeContext(this).drawBack(false);
     }
 
     private DefaultedList<ItemExplosionPowerRecipe> getValidCatalysts() {

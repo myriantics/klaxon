@@ -17,6 +17,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.api.RecipeOutputCompound;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
@@ -31,6 +32,7 @@ import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.*;
 
@@ -256,7 +258,7 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
         // default values if world is null
         ItemExplosionPowerData itemExplosionPowerData = new ItemExplosionPowerData(0.0, false);
-        BlastProcessingRecipeData blastProcessingRecipeData = new BlastProcessingRecipeData(0.0, 0.0, ItemStack.EMPTY);
+        BlastProcessingRecipeData blastProcessingRecipeData = new BlastProcessingRecipeData(0.0, 0.0, List.of());
 
         // if we have a world, actually yoink the proper values.
         if (world != null) {
@@ -264,12 +266,12 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
             BlastProcessorCatalystBehavior blastProcessorBehavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, recipeInventory);
 
             itemExplosionPowerData = blastProcessorBehavior.getExplosionPowerData(world, pos, this, recipeInventory);
-            blastProcessingRecipeData = blastProcessorBehavior.getBlastProcessingRecipeData(world, pos, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), itemExplosionPowerData));
+            blastProcessingRecipeData = blastProcessorBehavior.getBlastProcessingPreviewData(world, pos, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), itemExplosionPowerData));
         }
 
         return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
                 blastProcessingRecipeData.explosionPowerMax(),
-                blastProcessingRecipeData.result(),
+                blastProcessingRecipeData.outputStacks(),
                 itemExplosionPowerData.explosionPower(),
                 itemExplosionPowerData.producesFire());
     }

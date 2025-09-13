@@ -54,10 +54,12 @@ public abstract class KlaxonPackets {
                 MinecraftClient client = context.client();
 
                 if (client.player != null && client.player.currentScreenHandler instanceof DeepslateBlastProcessorScreenHandler screenHandler) {
-                    screenHandler.setRecipeData(payload.explosionPower(),
+                    screenHandler.setRecipeData(
+                            payload.explosionPower(),
                             payload.explosionPowerMin(),
                             payload.explosionPowerMax(),
-                            payload.producesFire());
+                            payload.producesFire()
+                    );
                 }
             });
         }));

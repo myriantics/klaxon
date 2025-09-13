@@ -15,6 +15,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.NamedIngredient;
+import net.myriantics.klaxon.api.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
@@ -338,11 +339,17 @@ public abstract class KlaxonRecipeSubProvider {
     public void addBlastProcessingRecipe(Ingredient input,
                                          double explosionPowerMin, double explosionPowerMax,
                                          ItemStack output, final ResourceCondition... conditions) {
+        addBlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, RecipeOutputCompound.of(output), conditions);
+    }
+
+    public void addBlastProcessingRecipe(Ingredient input,
+                                         double explosionPowerMin, double explosionPowerMax,
+                                         RecipeOutputCompound outputCompound, final ResourceCondition... conditions) {
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
-                getItemPath(output.getItem()),
+                getItemPath(outputCompound.getDisplayStacks().getFirst().getItem()),
                 conditions);
 
-        BlastProcessingRecipe recipe = new BlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, output);
+        BlastProcessingRecipe recipe = new BlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, outputCompound);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

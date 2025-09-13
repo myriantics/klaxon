@@ -5,8 +5,13 @@
   "input_ingredient": {
     "item": "minecraft:raw_iron"
   },
-  "output_stack": {
-    "count": 1,
-    "id": "klaxon:fractured_raw_iron"
-  }
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:fractured_raw_iron"
+      }
+    }
+  ]
 }

@@ -5,8 +5,13 @@
   "input_ingredient": {
     "item": "minecraft:nether_bricks"
   },
-  "output_stack": {
-    "count": 1,
-    "id": "minecraft:cracked_nether_bricks"
-  }
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:cracked_nether_bricks"
+      }
+    }
+  ]
 }
