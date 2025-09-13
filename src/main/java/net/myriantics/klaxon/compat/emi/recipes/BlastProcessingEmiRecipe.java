@@ -111,7 +111,18 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         widgets.addText(Text.literal("" + explosionPowerMax), 48, 8, 16777215, false);
         widgets.addText(Text.literal("---" ), 48, 26, 16777215, false);
 
-        widgets.addSlot(outputStacks.get(0), 90, 3).recipeContext(this).drawBack(false);
+        // add the 3x3 grid of output slots
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                int index = x + y * 3;
+
+                widgets.addSlot(
+                        index < outputStacks.size() ? outputStacks.get(index) : EmiStack.EMPTY,
+                        90 + x * 18,
+                        3 + y * 18
+                ).recipeContext(this).drawBack(false);
+            }
+        }
     }
 
     private DefaultedList<ItemExplosionPowerRecipe> getValidCatalysts() {
