@@ -1,7 +1,7 @@
 {
   "type": "klaxon:blast_processing",
-  "explosion_power_max": 4.0,
-  "explosion_power_min": 1.5,
+  "explosion_power_max": 2.4,
+  "explosion_power_min": 0.8,
   "input_ingredient": {
     "item": "klaxon:crude_nether_reactor_core"
   },
