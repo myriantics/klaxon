@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.entity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
@@ -19,10 +20,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
@@ -167,8 +171,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             super.onBlockHit(blockHitResult);
 
             // we have to call super before this because the isAnchored() check will fail otherwise
-            if (owner instanceof ServerPlayerEntity serverPlayer && serverPlayer instanceof PlayerEntityGrappleAccess access && access.klaxon$hasActiveConnection()) {
-
+            if (
+                    this.isAnchored()
+                            && owner instanceof ServerPlayerEntity serverPlayer
+                            && serverPlayer instanceof PlayerEntityGrappleAccess access
+                            && access.klaxon$hasActiveConnection()
+                            && !access.klaxon$isRetracting()
+            ) {
                 serverPlayer.playSoundToPlayer(
                         KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_ANCHOR,
                         SoundCategory.PLAYERS,
@@ -231,9 +240,17 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                 // owner being heavy overrides anchoring
                 if (!this.isAnchored() || EntityWeightHelper.isHeavy(owner)) {
+
                     // retract grapple claw if owner pulls back before landing
                     if (access.klaxon$isRetracting()) {
-                        Vec3d vec = owner.getEyePos().subtract(this.getPos()).normalize().multiply(4f/20);
+                        Vec3d pulling = player.getEyePos().subtract(getPos()).normalize();
+                        // Direction pullingTowards = Direction.getFacing(pulling);
+
+                        if (this.inGround && !world.isClient()) {
+                            this.inGround = false;
+                        }
+
+                        Vec3d vec = pulling.multiply(4f/20);
                         selfVec = selfVec.add(vec);
                     }
 
@@ -279,6 +296,14 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             // try picking up claw into held grapple winch
             winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
 
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                // this is needed so players can choose whether they want to recast grapple claw or not
+                if (player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH)) {
+                    // update usage lockout if true
+                    KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
+                }
+            }
+
             this.discard();
             return true;
         } else {
@@ -294,7 +319,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
      * @return - true if succeeded in breaking, false if not
      */
     private boolean breakBlockIfValid(World world, BlockState targetState, BlockPos targetPos, @Nullable Entity owner) {
-        if (targetState.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || targetState.isReplaceable() || targetState.getHardness(world, targetPos) == 0) {
+        if (canBreakBlock(world, targetState, targetPos)) {
 
             // don't break blocks on clientside
             if (!world.isClient()) {
@@ -310,6 +335,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
 
         return false;
+    }
+
+    private boolean canBreakBlock(World world, BlockState state, BlockPos pos) {
+        return (state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0);
     }
 
     private void setPlayerGrappleClaw(@Nullable GrappleClawEntity grappleClaw) {
