@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -7,12 +8,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
-import net.myriantics.klaxon.util.grapple_winch.GrappleWinchConnectionData;
-import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

@@ -3,14 +3,19 @@ package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
-import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
+import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -60,5 +65,21 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
         } else {
             original.call(instance);
         }
+    }
+
+    @ModifyExpressionValue(
+            method = "onPlayerCollision",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;tryPickup(Lnet/minecraft/entity/player/PlayerEntity;)Z")
+    )
+    private boolean klaxon$lockoutItemUse(boolean original, @Local(argsOnly = true) PlayerEntity player) {
+        if (original && player instanceof ServerPlayerEntity serverPlayer) {
+            // this is needed so players can choose whether they want to recast grapple claw or not
+            if (player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH)) {
+                // update usage lockout if true
+                KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
+            }
+        }
+
+        return original;
     }
 }

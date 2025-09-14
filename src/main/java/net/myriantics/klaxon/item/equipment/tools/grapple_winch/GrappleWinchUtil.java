@@ -1,20 +1,16 @@
-package net.myriantics.klaxon.util.grapple_winch;
+package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionDiscardPacket;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public abstract class GrappleWinchUtil {
 
@@ -65,6 +61,4 @@ public abstract class GrappleWinchUtil {
                 grappleClaw == null ? -1 : grappleClaw.getId()
         ));
     }
-
-
 }

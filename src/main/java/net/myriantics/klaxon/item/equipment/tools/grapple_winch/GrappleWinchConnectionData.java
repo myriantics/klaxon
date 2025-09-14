@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.util.grapple_winch;
+package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
 
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;

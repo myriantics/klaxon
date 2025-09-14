@@ -1,18 +1,13 @@
-package net.myriantics.klaxon.util.grapple_winch;
+package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
 
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
-import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;

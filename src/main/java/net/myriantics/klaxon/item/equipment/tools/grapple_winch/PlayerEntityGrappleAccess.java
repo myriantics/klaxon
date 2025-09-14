@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.util.grapple_winch;
+package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
 
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;

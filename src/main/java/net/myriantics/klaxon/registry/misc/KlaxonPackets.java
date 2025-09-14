@@ -15,18 +15,21 @@ import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepsla
 import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.ClientPlayerEntityUsageAccess;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.*;
 import net.myriantics.klaxon.networking.c2s.EntityDualWieldToggleC2SPacket;
 import net.myriantics.klaxon.networking.c2s.HammerWalljumpTriggerPacket;
 import net.myriantics.klaxon.util.LivingEntityMixinAccess;
-import net.myriantics.klaxon.util.grapple_winch.GrappleWinchConnectionData;
-import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 
 public abstract class KlaxonPackets {
 
     public static final Identifier GRAPPLE_WINCH_CONNECTION_SYNC_S2C_ID = locateS2C("grapple_winch_connection_sync");
     public static final Identifier GRAPPLE_WINCH_CONNECTION_DISCARD_S2C_ID = locateS2C("grapple_winch_connection_discard");
+    public static final Identifier ITEM_USAGE_LOCKOUT_TRIGGER_S2C_ID = locateS2C("item_usage_lockout");
     public static final Identifier BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID = locateS2C("blast_processor_screen_sync");
     public static final Identifier KLAXON_WORLD_EVENT_TRIGGER_PACKET_S2C_ID = locateS2C("klaxon_world_event");
     public static final Identifier HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID = locateC2S("hammer_walljump_trigger_packet");
@@ -41,6 +44,7 @@ public abstract class KlaxonPackets {
         PayloadTypeRegistry.playS2C().register(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(ItemUsageLockoutTrigger.ID, ItemUsageLockoutTrigger.PACKET_CODEC);
 
         // c2s
         PayloadTypeRegistry.playC2S().register(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket.PACKET_CODEC);
@@ -128,6 +132,19 @@ public abstract class KlaxonPackets {
                 if (client.world instanceof ClientWorld world && world.getEntityById(payload.playerId()) instanceof PlayerEntityGrappleAccess access) {
                     access.klaxon$setWinchConnectionData(null);
                     access.klaxon$resetWinchCableLength();
+                }
+            });
+        }));
+
+        ClientPlayNetworking.registerGlobalReceiver(ItemUsageLockoutTrigger.ID, ((payload, context) -> {
+            MinecraftClient client = context.client();
+
+            client.execute(() -> {
+                if (client instanceof MinecraftClientUsageLockoutAccess access) {
+                    access.klaxon$setUsageLockout(true);
+                }
+                if (client.player instanceof ClientPlayerEntityUsageAccess access) {
+                    access.klaxon$setUsingItem(false);
                 }
             });
         }));

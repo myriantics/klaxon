@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.entity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.Entity;
@@ -23,14 +24,17 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
+import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BoundingBoxHelper;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
-import net.myriantics.klaxon.util.grapple_winch.GrappleWinchUtil;
-import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchUtil;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -268,12 +272,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     protected boolean tryPickup(PlayerEntity player) {
-        ItemStack winchStack = player.getActiveItem();
+        ItemStack winchStack = player.getMainHandStack().isOf(KlaxonItems.GRAPPLE_WINCH)
+                ? player.getMainHandStack()
+                : player.getOffHandStack();
         if (winchStack.isOf(KlaxonItems.GRAPPLE_WINCH) && winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty()) {
-            // try picking up claw into active grapple winch
+            // try picking up claw into held grapple winch
             winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
-            // this is needed so players can choose whether they want to recast grapple claw or not
-            player.stopUsingItem();
 
             this.discard();
             return true;

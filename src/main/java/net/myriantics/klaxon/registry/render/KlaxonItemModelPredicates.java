@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 
 public abstract class KlaxonItemModelPredicates {
 

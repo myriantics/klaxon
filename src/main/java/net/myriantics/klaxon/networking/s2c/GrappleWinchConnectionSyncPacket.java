@@ -4,7 +4,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
-import net.myriantics.klaxon.util.grapple_winch.GrappleWinchConnectionData;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 
 public record GrappleWinchConnectionSyncPacket(GrappleWinchConnectionData connectionData) implements CustomPayload {
 

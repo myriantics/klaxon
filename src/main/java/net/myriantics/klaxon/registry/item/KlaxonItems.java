@@ -7,7 +7,6 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Unit;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.KlaxonItemSettings;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
@@ -18,6 +17,7 @@ import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 
 import java.util.ArrayList;

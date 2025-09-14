@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.item.equipment.tools;
+package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -26,7 +26,6 @@ import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
-import net.myriantics.klaxon.util.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

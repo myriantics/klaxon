@@ -14,7 +14,7 @@ import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeLogic;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
 import net.myriantics.klaxon.registry.item.KlaxonDefaultItemComponentModifications;
-import net.myriantics.klaxon.util.grapple_winch.GrappleWinchUtil;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchUtil;
 
 public abstract class KlaxonEventListeners {
     public static void init() {
