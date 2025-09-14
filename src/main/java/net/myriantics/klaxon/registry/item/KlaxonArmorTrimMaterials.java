@@ -19,33 +19,6 @@ public abstract class KlaxonArmorTrimMaterials {
     public static final RegistryKey<ArmorTrimMaterial> STEEL = of("steel");
     public static final RegistryKey<ArmorTrimMaterial> CRUDE_STEEL = of("crude_steel");
 
-    public static void bootstrap(Registerable<ArmorTrimMaterial> registry) {
-        register(registry, STEEL, KlaxonItems.STEEL_INGOT, Style.EMPTY.withColor(7300466), 0.3f);
-        register(registry, CRUDE_STEEL, KlaxonItems.CRUDE_STEEL_INGOT, Style.EMPTY.withColor(7632002), 0.2f);
-    }
-
-    private static void register(Registerable<ArmorTrimMaterial> registry, RegistryKey<ArmorTrimMaterial> key, Item ingredient, Style style, float itemModelIndex) {
-        register(registry, key, ingredient, style, itemModelIndex, Map.of());
-    }
-
-    private static void register(
-            Registerable<ArmorTrimMaterial> registry,
-            RegistryKey<ArmorTrimMaterial> key,
-            Item ingredient,
-            Style style,
-            float itemModelIndex,
-            Map<RegistryEntry<ArmorMaterial>, String> overrideArmorMaterials
-    ) {
-        ArmorTrimMaterial armorTrimMaterial = ArmorTrimMaterial.of(
-                key.getValue().getPath(),
-                ingredient,
-                itemModelIndex,
-                Text.translatable(Util.createTranslationKey("trim_material", key.getValue())).fillStyle(style),
-                overrideArmorMaterials
-        );
-        registry.register(key, armorTrimMaterial);
-    }
-
     private static RegistryKey<ArmorTrimMaterial> of(String id) {
         return RegistryKey.of(RegistryKeys.TRIM_MATERIAL, KlaxonCommon.locate(id));
     }

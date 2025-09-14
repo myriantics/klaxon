@@ -31,6 +31,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(KlaxonBlockEntityTypeTagProvider::new);
 		pack.addProvider(KlaxonFluidTagProvider::new);
 		pack.addProvider(KlaxonFeatureProvider::new);
+        pack.addProvider(KlaxonArmorTrimMaterialProvider::new);
 		// pack.addProvider(KlaxonEnUsLanguageProvider::new);
 	}
 
@@ -38,5 +39,6 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 	public void buildRegistry(RegistryBuilder registryBuilder) {
 		registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, KlaxonFeatureProvider::generateConfiguredFeatures);
 		registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, KlaxonFeatureProvider::generatePlacedFeatures);
+		registryBuilder.addRegistry(RegistryKeys.TRIM_MATERIAL, KlaxonArmorTrimMaterialProvider::generateArmorTrimMaterials);
 	}
 }

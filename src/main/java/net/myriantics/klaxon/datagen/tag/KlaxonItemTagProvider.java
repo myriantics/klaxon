@@ -314,6 +314,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_SHEARS)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS)
                 .add(Items.SHEARS);
+        getOrCreateTagBuilder(ItemTags.TRIM_MATERIALS)
+                .add(KlaxonItems.STEEL_INGOT)
+                .add(KlaxonItems.CRUDE_STEEL_INGOT);
     }
 
     private void buildAnvilRelatedTags() {
