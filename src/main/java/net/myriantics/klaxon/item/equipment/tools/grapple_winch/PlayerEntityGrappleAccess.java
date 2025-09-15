@@ -4,7 +4,7 @@ import net.myriantics.klaxon.entity.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
 
 public interface PlayerEntityGrappleAccess {
-    GrappleClawEntity klaxon$getGrappleClaw();
+    @Nullable GrappleClawEntity klaxon$getGrappleClaw();
 
     void klaxon$setGrappleClaw(@Nullable GrappleClawEntity grappleClaw);
 

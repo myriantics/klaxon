@@ -20,12 +20,10 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -178,10 +176,43 @@ public class GrappleWinchItem extends RangedWeaponItem {
         if (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty()) {
             ItemStack itemStack = chargedProjectilesComponent.getProjectiles().get(0);
             tooltip.add(Text.translatable("item.klaxon.grapple_winch.projectile").append(ScreenTexts.SPACE).append(itemStack.toHoverableText()));
-        }
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (player instanceof PlayerEntityGrappleAccess access && access.klaxon$hasActiveConnection()) {
-            tooltip.add(Text.translatable("item.klaxon.grapple_winch.current_winch_cable_length").append(ScreenTexts.SPACE).append(Texts.bracketed(Text.literal("" + KlaxonMathHelper.roundToTenth(Math.sqrt(access.klaxon$getCurrentWinchCableLength()))))));
+        } else {
+            ClientPlayerEntity player = MinecraftClient.getInstance().player;
+            if (player == null) {
+                return;
+            }
+
+            // initialize max cable length
+            double maxCableLength = player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
+
+            MutableText valuesText;
+
+            // only render live numbers if cable length is greater than 0
+            // ensures no divide by 0
+            if (maxCableLength > 0 && ((PlayerEntityGrappleAccess) player).klaxon$hasActiveConnection()) {
+                double truncatedCableLength = KlaxonMathHelper.roundToTenth(((PlayerEntityGrappleAccess) player).klaxon$getCurrentWinchCableLength());
+                double ratio = truncatedCableLength / maxCableLength;
+
+                valuesText = Texts.bracketed(Text.literal(truncatedCableLength + "/" + maxCableLength));
+
+                // format text according to cable ratio
+                if (ratio >= 1.0) {
+                    valuesText = valuesText.formatted(Formatting.RED);
+                } else if (ratio >= 0.75) {
+                    valuesText = valuesText.formatted(Formatting.YELLOW);
+                } else {
+                    valuesText = valuesText.formatted(Formatting.GREEN);
+                }
+            } else {
+                valuesText = Texts.bracketed(Text.literal("--/--"));
+            }
+
+            // add the tooltip
+            tooltip.add(Text.translatable("item.klaxon.grapple_winch.current_winch_cable_length")
+                    .formatted(Formatting.GRAY)
+                    .append(ScreenTexts.SPACE)
+                    .append(valuesText)
+            );
         }
     }
 

@@ -189,8 +189,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 // also this is a dope ass spot to use ternary operators omg
                 if (clawDistance > (klaxon$isRetractingGrappleWinch ? maxRangeBlocks : currentWinchCableLength)) {
                     Vec3d playerRangeCorrectionVec = playerToClawVec.multiply(0.1);
-                    // when i say a limit i mean it haha
-                    if (clawDistance > maxRangeBlocks) playerRangeCorrectionVec = playerRangeCorrectionVec.multiply(Math.pow(clawDistance / maxRangeBlocks, 3));
                     playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, this.getFinalGravity(), 0);
                     selfVec = selfVec.add(playerRangeCorrectionVec);
                 }
