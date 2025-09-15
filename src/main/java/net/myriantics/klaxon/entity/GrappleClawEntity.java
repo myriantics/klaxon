@@ -202,7 +202,14 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
         Vec3d velocity = this.getVelocity().multiply(0.85);
 
-        boolean blockBrokenSuccess = breakBlockIfValid(world, hitState, hitPos, owner);
+        boolean blockBrokenSuccess;
+
+        // try to veinmine before breaking the block :)
+        if (isWinchCableAttached && owner instanceof PlayerEntityGrappleAccess access && access.klaxon$isRetracting()) {
+            blockBrokenSuccess = veinmineBlocksIfValid(world, hitState, hitPos, owner);
+        } else {
+            blockBrokenSuccess = breakBlockIfValid(world, hitState, hitPos, owner);
+        }
 
         // break block if we can
         // anchor grapple claw and run super method if block break did not succeed
