@@ -93,6 +93,8 @@
   "entity.klaxon.copper_plate": "Copper Plate",
   "entity.klaxon.gold_plate": "Gold Plate",
 
+  "klaxon.attribute.name.player.winch_cable_length": "Winch Cable Length",
+
   "death.attack.hammer_bonking": "%1$s was bonked by %2$s",
   "death.attack.hammer_bonking.item": "%1$s was bonked by %2$s using %3$s",
   "death.attack.hammer_walloping": "%1$s was walloped by %2$s",

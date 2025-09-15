@@ -16,6 +16,7 @@ import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientU
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,7 +31,6 @@ import java.util.UUID;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEntityGrappleAccess {
 
-    @Shadow @Final private PlayerInventory inventory;
     @Unique
     private GrappleClawEntity klaxon$grappleClaw = null;
 
@@ -46,7 +46,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     private GrappleWinchConnectionData klaxon$grappleWinchFallbackData = null;
 
     @Unique
-    private double klaxon$currentWinchCableLength = GrappleClawEntity.MAX_RANGE_SQUARED;
+    private double klaxon$currentWinchCableLength = getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -108,7 +108,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
 
     @Override
     public void klaxon$setCurrentWinchCableLength(double currentWinchCableLength) {
-        this.klaxon$currentWinchCableLength = Math.clamp(currentWinchCableLength, 0, GrappleClawEntity.MAX_RANGE_SQUARED);
+        this.klaxon$currentWinchCableLength = Math.clamp(currentWinchCableLength, 0, getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH));
     }
 
     @Override
@@ -117,9 +117,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         GrappleWinchConnectionData fallbackData = klaxon$getWinchFallbackData();
 
         if (grappleClaw != null) {
-            this.klaxon$setCurrentWinchCableLength(grappleClaw.getPos().squaredDistanceTo(this.getPos()));
+            this.klaxon$setCurrentWinchCableLength(grappleClaw.getPos().distanceTo(this.getPos()));
         } else if (fallbackData != null) {
-            this.klaxon$setCurrentWinchCableLength(fallbackData.clawPos().squaredDistanceTo(this.getPos()));
+            this.klaxon$setCurrentWinchCableLength(fallbackData.clawPos().distanceTo(this.getPos()));
         }
     }
 
@@ -141,18 +141,18 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             // initialize values
             Vec3d playerToClawVec;
             double clawDistance;
-            double maxRangeSquared = GrappleClawEntity.MAX_RANGE_SQUARED;
+            double maxRangeBlocks = getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
             double currentWinchCableLength = klaxon$getCurrentWinchCableLength();
             boolean shouldMove;
 
             // update values based on whether the claw is loaded clientside or not
             if (grappleClaw != null) {
                 playerToClawVec = grappleClaw.getPos().subtract(this.getPos());
-                clawDistance = getPos().squaredDistanceTo(grappleClaw.getPos());
+                clawDistance = getPos().distanceTo(grappleClaw.getPos());
                 shouldMove = grappleClaw.isAnchored();
             } else if (fallbackData != null) {
                 playerToClawVec = fallbackData.clawPos().subtract(this.getPos());
-                clawDistance = getPos().squaredDistanceTo(fallbackData.clawPos());
+                clawDistance = getPos().distanceTo(fallbackData.clawPos());
                 shouldMove = fallbackData.isWinchAnchored();
             } else {
                 // return if both checks fail
@@ -187,10 +187,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 // apply velocity to player if they go past target range
                 // retraction is only capped at the max range
                 // also this is a dope ass spot to use ternary operators omg
-                if (clawDistance > (klaxon$isRetractingGrappleWinch ? maxRangeSquared : currentWinchCableLength)) {
+                if (clawDistance > (klaxon$isRetractingGrappleWinch ? maxRangeBlocks : currentWinchCableLength)) {
                     Vec3d playerRangeCorrectionVec = playerToClawVec.multiply(0.1);
                     // when i say a limit i mean it haha
-                    if (clawDistance > maxRangeSquared) playerRangeCorrectionVec = playerRangeCorrectionVec.multiply(Math.pow(clawDistance / maxRangeSquared, 3));
+                    if (clawDistance > maxRangeBlocks) playerRangeCorrectionVec = playerRangeCorrectionVec.multiply(Math.pow(clawDistance / maxRangeBlocks, 3));
                     playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, this.getFinalGravity(), 0);
                     selfVec = selfVec.add(playerRangeCorrectionVec);
                 }

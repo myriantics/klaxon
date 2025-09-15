@@ -25,6 +25,7 @@
     "minecraft.dual_wielding.LivingEntityMixin",
     "minecraft.entity_attributes.ArmorItemMixin",
     "minecraft.entity_attributes.LivingEntityMixin",
+    "minecraft.entity_attributes.PlayerEntityMixin",
     "minecraft.entity_weight.ItemStackMixin",
     "minecraft.grapple_winch.ClientPlayerInteractionManagerMixin",
     "minecraft.grapple_winch.EntityMixin",

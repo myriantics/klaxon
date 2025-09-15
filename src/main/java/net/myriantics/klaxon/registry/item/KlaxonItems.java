@@ -72,6 +72,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             new GrappleWinchItem(new KlaxonItemSettings()
                     .maxCount(1)
                     .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
+                    .attributeModifiers(GrappleWinchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1, 1))
                     .with3dHandModel()
                     .withMirroredLeftHandModel()
                     .getSettings()

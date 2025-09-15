@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
@@ -46,7 +47,6 @@ import java.util.ArrayList;
 public class GrappleClawEntity extends PersistentProjectileEntity {
 
     public static final int MAX_RANGE_BLOCKS = 128;
-    public static final double MAX_RANGE_SQUARED = Math.pow(MAX_RANGE_BLOCKS, 2);
 
     public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, World world) {
         super(entityType, world);
@@ -225,13 +225,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
 
         if (owner != null) {
-            double ownerDistance = this.getPos().squaredDistanceTo(owner.getPos());
+            double ownerDistance = this.getPos().distanceTo(owner.getPos());
 
             Vec3d selfVec = new Vec3d(0,0, 0);
 
             if (owner instanceof PlayerEntity player && player instanceof PlayerEntityGrappleAccess access && this.equals(access.klaxon$getGrappleClaw())) {
 
-                double currentWinchCableLength = MAX_RANGE_SQUARED;
+                double currentWinchCableLength = player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
 
                 // limit fall distance to give players more leeway
                 if (owner.getVelocity().getY() > -1 && owner.fallDistance > 1.0F) {

@@ -3,12 +3,17 @@ package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
+import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.screen.ScreenTexts;
@@ -18,11 +23,14 @@ import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
@@ -34,6 +42,8 @@ import java.util.function.Predicate;
 public class GrappleWinchItem extends RangedWeaponItem {
 
     static protected ItemPredicate PROJECTILES = ItemPredicate.Builder.create().tag(KlaxonItemTags.GRAPPLE_CLAWS).build();
+
+    private static final Identifier BASE_WINCH_CABLE_LENGTH = KlaxonCommon.locate("base_winch_cable_length");
 
     public GrappleWinchItem(Settings settings) {
         super(settings);
@@ -47,6 +57,25 @@ public class GrappleWinchItem extends RangedWeaponItem {
     @Override
     public int getRange() {
         return 20;
+    }
+
+    public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
+        return AttributeModifiersComponent.builder()
+                .add(
+                        EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                        new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, material.getAttackDamage() + baseAttackDamage, EntityAttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifierSlot.MAINHAND
+                )
+                .add(
+                        EntityAttributes.GENERIC_ATTACK_SPEED,
+                        new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifierSlot.MAINHAND
+                )
+                .add(
+                        KlaxonEntityAttributes.WINCH_CABLE_LENGTH,
+                        new EntityAttributeModifier(BASE_WINCH_CABLE_LENGTH, 48, EntityAttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifierSlot.HAND
+                ).build();
     }
 
     @Override
