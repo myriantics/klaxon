@@ -8,7 +8,7 @@ import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public record EntityDualWieldToggleC2SPacket(boolean isDualWielding) implements CustomPayload {
 
-    public static final Id<EntityDualWieldToggleC2SPacket> ID = new Id<>(KlaxonPackets.DUAL_WIELD_TOGGLE_BIDIRECTIONAL_PACKET);
+    public static final Id<EntityDualWieldToggleC2SPacket> ID = new Id<>(KlaxonPackets.DUAL_WIELD_TOGGLE_C2S_PACKET);
 
     public static final PacketCodec<RegistryByteBuf, EntityDualWieldToggleC2SPacket> PACKET_CODEC = PacketCodec.tuple(
             PacketCodecs.BOOL, EntityDualWieldToggleC2SPacket::isDualWielding,

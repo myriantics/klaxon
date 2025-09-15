@@ -15,7 +15,6 @@ import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepsla
 import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.ClientPlayerEntityUsageAccess;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.*;
@@ -33,7 +32,8 @@ public abstract class KlaxonPackets {
     public static final Identifier BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID = locateS2C("blast_processor_screen_sync");
     public static final Identifier KLAXON_WORLD_EVENT_TRIGGER_PACKET_S2C_ID = locateS2C("klaxon_world_event");
     public static final Identifier HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID = locateC2S("hammer_walljump_trigger_packet");
-    public static final Identifier DUAL_WIELD_TOGGLE_BIDIRECTIONAL_PACKET = locateBidirectional("dual_wield_toggle");
+    public static final Identifier DUAL_WIELD_TOGGLE_S2C_PACKET = locateS2C("dual_wield_toggle");
+    public static final Identifier DUAL_WIELD_TOGGLE_C2S_PACKET = locateC2S("dual_wield_toggle");
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Packets!");
@@ -182,9 +182,5 @@ public abstract class KlaxonPackets {
 
     private static Identifier locateC2S(String name) {
         return KlaxonCommon.locate(name + "_c2s");
-    }
-
-    private static Identifier locateBidirectional(String name) {
-        return KlaxonCommon.locate(name + "_bidirectional");
     }
 }
