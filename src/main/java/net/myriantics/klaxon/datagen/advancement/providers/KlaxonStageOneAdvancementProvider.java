@@ -2,6 +2,7 @@ package net.myriantics.klaxon.datagen.advancement.providers;
 
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
@@ -46,5 +47,6 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementEntry minecartHammerWalljump = addGoal(normalHammerWalljump, "hammer_walljump_minecart", Items.CAULDRON, WalljumpAbilityCriterion.Conditions.createMinecartWalljump());
         AdvancementEntry obtainFullSteelArmor = addGoal(hammerCraftMetalPlate, "obtain_full_steel_armor", KlaxonItems.STEEL_CHESTPLATE, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_HELMET, KlaxonItems.STEEL_CHESTPLATE, KlaxonItems.STEEL_LEGGINGS, KlaxonItems.STEEL_BOOTS));
         AdvancementEntry makeshiftItemFullRepair = addTask(watchBlastProcessorCraft, "makeshift_item_full_repair", Items.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
+        AdvancementEntry grappleWinchVeinMine = addGoal(hammerCraftMetalPlate, "grapple_winch_vein_mine_glowstone", Items.GLOWSTONE, GrappleWinchVeinMineCriterion.Conditions.create(Blocks.GLOWSTONE));
     }
 }

@@ -231,8 +231,8 @@
   "advancements.klaxon.stage_one.hammer_walljump_minecart.description": "Propel a Minecart using the Steel Hammer",
   "advancements.klaxon.stage_one.obtain_any_rubber_glob.title": "Biggering",
   "advancements.klaxon.stage_one.obtain_any_rubber_glob.description": "Obtain Rubber by blast processing a valid log",
-  "advancements.klaxon.stage_one.obtain_steel_cleaver.title": "Now THIS is a Knife!",
-  "advancements.klaxon.stage_one.obtain_steel_cleaver.description": "Obtain a Steel Cleaver",
+  "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.title": "Smash And Grab",
+  "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.description": "Veinmine Glowstone on your Grapple Claw's return journey",
 
   "gamerule.shouldBlastProcessorExplosionModifyWorld": "Blast Processor Explosions should modify world"
 }

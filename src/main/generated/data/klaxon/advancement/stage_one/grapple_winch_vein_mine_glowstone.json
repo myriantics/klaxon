@@ -1,0 +1,30 @@
+{
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
+  "criteria": {
+    "grapple_winch_vein_mine_glowstone": {
+      "conditions": {
+        "blocks": "minecraft:glowstone"
+      },
+      "trigger": "klaxon:grapple_winch_veinmine"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:glowstone"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.title"
+    }
+  },
+  "requirements": [
+    [
+      "grapple_winch_vein_mine_glowstone"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
