@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.entity;
 
 import net.minecraft.advancement.criterion.Criteria;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
@@ -13,8 +14,11 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -25,11 +29,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.Offset;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -37,9 +43,12 @@ import net.myriantics.klaxon.util.BoundingBoxHelper;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchUtil;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.util.KlaxonItemStackHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
 
@@ -258,7 +267,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                 }*/
 
-                breakBlockIfValid(world, occupiedState, occupiedPos, owner);
+                // try to veinmine before breaking the block :)
+                if (isWinchCableAttached && owner instanceof PlayerEntityGrappleAccess access && access.klaxon$isRetracting()) {
+                    veinmineBlocksIfValid(world, occupiedState, occupiedPos, owner);
+                } else {
+                    breakBlockIfValid(world, occupiedState, occupiedPos, owner);
+                }
             }
         }
 
@@ -346,6 +360,71 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         } else {
             return super.tryPickup(player);
         }
+    }
+
+    private boolean veinmineBlocksIfValid(World world, BlockState originState, BlockPos originPos, @NotNull Entity owner) {
+        int radius = world.getGameRules().getInt(KlaxonGameRules.GRAPPLE_CLAW_VEINMINE_RADIUS);
+
+        // don't veinmine anything if the source block is not veinmineable
+        // also declare failure if radius is 0
+        if (!originState.isIn(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE) || radius == 0) {
+            return false;
+        }
+
+        Block veinminedBlock = originState.getBlock();
+
+        if (world.isClient) {
+            return true;
+        }
+
+        // init loot context
+        LootContextParameterSet.Builder lootContextBuilder = new LootContextParameterSet.Builder(
+                (ServerWorld) world
+        )
+                .add(LootContextParameters.ORIGIN, getPos())
+                .add(LootContextParameters.TOOL, getItemStack());
+
+        // Output stacks to be merged and output at the grapple winch's position
+        ArrayList<ItemStack> outputStacks = new ArrayList<>();
+
+        // Positions we've already checked through and destroyed if possible - to be ignored when checking for new positions.
+        ArrayList<BlockPos> processedPositions = new ArrayList<>();
+
+        // Contains all of the positions to check on the next pass
+        List<BlockPos> targetPositions = List.of(originPos);
+
+        for (int x = 0; x < radius; x++) {
+            ArrayList<BlockPos> newTargetPositions = new ArrayList<>();
+
+            // iterate through the current target positions
+            for (BlockPos newOriginPos : targetPositions) {
+                // iterate through all offset directions from the checking pos
+                for (Offset offset : Offset.values()) {
+                    BlockPos targetPos = newOriginPos.add(offset.getOffsetVector());
+
+                    // make sure we haven't processed position before
+                    if (!processedPositions.contains(targetPos) && world.getBlockState(targetPos).isOf(veinminedBlock)) {
+                        // condense dropped stacks so we don't get 5 billion item entities
+                        for (ItemStack droppedStack : world.getBlockState(targetPos).getDroppedStacks(lootContextBuilder)) {
+                            KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);
+                        }
+                        world.breakBlock(targetPos, false, owner);
+                        processedPositions.add(targetPos);
+                        newTargetPositions.add(targetPos);
+                    }
+                }
+            }
+
+            // update target positions list
+            targetPositions = newTargetPositions;
+        }
+
+        // drop all of the output stacks at the grapple claw's location, ready to be dragged
+        for (ItemStack stack : outputStacks) {
+            dropStack(stack);
+        }
+
+        return true;
     }
 
     /**
