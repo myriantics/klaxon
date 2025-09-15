@@ -143,8 +143,8 @@ public abstract class KlaxonPackets {
                 if (client instanceof MinecraftClientUsageLockoutAccess access) {
                     access.klaxon$setUsageLockout(true);
                 }
-                if (client.player instanceof ClientPlayerEntityUsageAccess access) {
-                    access.klaxon$setUsingItem(false);
+                if (client.player != null) {
+                    client.player.clearActiveItem();
                 }
             });
         }));
