@@ -14,6 +14,7 @@ public abstract class KlaxonAdvancementCriteria {
     public static final ToolUsageRecipeCraftCriterion TOOL_USAGE_RECIPE_CRITERION = register("tool_usage_recipe", new ToolUsageRecipeCraftCriterion());
     public static final WrenchUsageCriterion WRENCH_USAGE_CRITERION = register("wrench_usage", new WrenchUsageCriterion());
     public static final InstabreakToolInstabreakCriterion INSTABREAK_TOOL_INSTABREAK_CRITERION = register("instabreak_tool_instabreak", new InstabreakToolInstabreakCriterion());
+    public static final GrappleWinchVeinMineCriterion GRAPPLE_WINCH_VEIN_MINE_CRITERION = register("grapple_winch_veinmine", new GrappleWinchVeinMineCriterion());
 
     private static <T extends Criterion<?>> T register(String name, T criterion) {
         return Registry.register(Registries.CRITERION, KlaxonCommon.locate(name), criterion);

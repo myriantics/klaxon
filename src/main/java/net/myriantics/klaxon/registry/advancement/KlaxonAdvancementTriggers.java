@@ -25,4 +25,7 @@ public abstract class KlaxonAdvancementTriggers {
     public static void triggerInstabreakToolInstabreak(ServerPlayerEntity serverPlayer, ItemStack instabreakingTool, BlockState instabrokenState) {
         KlaxonAdvancementCriteria.INSTABREAK_TOOL_INSTABREAK_CRITERION.trigger(serverPlayer, instabreakingTool, instabrokenState);
     }
+    public static void triggerGrappleWinchVeinMine(ServerPlayerEntity serverPlayer, BlockState veinMinedState) {
+        KlaxonAdvancementCriteria.GRAPPLE_WINCH_VEIN_MINE_CRITERION.trigger(serverPlayer, veinMinedState);
+    }
 }

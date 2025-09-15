@@ -32,6 +32,7 @@ import net.minecraft.world.World;
 import net.myriantics.klaxon.api.Offset;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -422,6 +423,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         // drop all of the output stacks at the grapple claw's location, ready to be dragged
         for (ItemStack stack : outputStacks) {
             dropStack(stack);
+        }
+
+        if (owner instanceof ServerPlayerEntity serverPlayer) {
+            KlaxonAdvancementTriggers.triggerGrappleWinchVeinMine(serverPlayer, originState);
         }
 
         return true;
