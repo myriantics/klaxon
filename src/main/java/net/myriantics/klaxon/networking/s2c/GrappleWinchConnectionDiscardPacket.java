@@ -1,9 +1,14 @@
 package net.myriantics.klaxon.networking.s2c;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
+import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public record GrappleWinchConnectionDiscardPacket(int playerId, int clawId) implements CustomPayload{
@@ -18,5 +23,17 @@ public record GrappleWinchConnectionDiscardPacket(int playerId, int clawId) impl
     @Override
     public Id<? extends CustomPayload> getId() {
         return ID;
+    }
+
+    public void execute(ClientPlayNetworking.Context context) {
+        MinecraftClient client = context.client();
+
+        client.execute(() -> {
+            GrappleWinchConnectionManager.INSTANCE.discardConnection(playerId);
+            if (client.world instanceof ClientWorld world && world.getEntityById(playerId) instanceof PlayerEntityGrappleAccess access) {
+                access.klaxon$setWinchConnectionData(null);
+                access.klaxon$resetWinchCableLength();
+            }
+        });
     }
 }

@@ -1,10 +1,13 @@
 package net.myriantics.klaxon.networking.c2s;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
+import net.myriantics.klaxon.util.LivingEntityMixinAccess;
 
 public record EntityDualWieldToggleC2SPacket(boolean isDualWielding) implements CustomPayload {
 
@@ -20,4 +23,13 @@ public record EntityDualWieldToggleC2SPacket(boolean isDualWielding) implements 
         return ID;
     }
 
+    public void execute(ServerPlayNetworking.Context context) {
+        context.server().execute(() -> {
+            ServerPlayerEntity player = context.player();
+
+            if (player instanceof LivingEntityMixinAccess access) {
+                access.klaxon$setDualWielding(isDualWielding);
+            }
+        });
+    }
 }

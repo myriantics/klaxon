@@ -53,127 +53,18 @@ public abstract class KlaxonPackets {
 
     // client only
     public static void registerS2CPacketRecievers() {
-        ClientPlayNetworking.registerGlobalReceiver(BlastProcessorScreenSyncPacket.ID, ((payload, context) -> {
-            context.client().execute(() -> {
-                MinecraftClient client = context.client();
-
-                if (client.player != null && client.player.currentScreenHandler instanceof DeepslateBlastProcessorScreenHandler screenHandler) {
-                    screenHandler.setRecipeData(
-                            payload.explosionPower(),
-                            payload.explosionPowerMin(),
-                            payload.explosionPowerMax(),
-                            payload.producesFire()
-                    );
-                }
-            });
-        }));
-
-        ClientPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleS2CPacket.ID, ((payload, context) -> {
-            context.client().execute(() -> {
-                MinecraftClient client = context.client();
-
-                if (client.world != null && client.world.getEntityById(payload.entityId()) instanceof LivingEntityMixinAccess access) {
-                    access.klaxon$setDualWielding(payload.isDualWielding());
-                }
-            });
-        }));
-
-        ClientPlayNetworking.registerGlobalReceiver(KlaxonWorldEventPacket.ID, (((payload, context) -> {
-            context.client().execute(() -> {
-                WorldEventS2CPacket packet = payload.packet();
-                KlaxonClientPlayNetworkHandler.processKlaxonWorldEvent(packet.getEventId(), packet.getPos(), packet.getData());
-            });
-        })));
-
-        ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionSyncPacket.ID, ((payload, context) -> {
-            MinecraftClient client = context.client();
-
-            client.execute(() -> {
-                GrappleWinchConnectionData connectionData = payload.connectionData();
-
-                if (MinecraftClient.getInstance().world instanceof ClientWorld clientWorld) {
-                    Entity potentialPlayer = clientWorld.getEntityById(connectionData.playerId());
-                    Entity potentialClaw = clientWorld.getEntityById(connectionData.clawId());
-
-                    if (potentialPlayer instanceof AbstractClientPlayerEntity player) {
-                        GrappleWinchConnectionManager.INSTANCE.addConnection(
-                                connectionData.playerId(),
-                                connectionData.clawId(),
-                                player,
-                                (GrappleClawEntity) potentialClaw,
-                                connectionData.playerPos(),
-                                connectionData.clawPos());
-
-                        // update access shi
-                        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
-                        access.klaxon$setWinchConnectionData(connectionData);
-                        access.klaxon$resetWinchCableLength();
-                    } else if (potentialClaw instanceof GrappleClawEntity grappleClaw) {
-                        GrappleWinchConnectionManager.INSTANCE.addConnection(
-                                connectionData.playerId(),
-                                connectionData.clawId(),
-                                null,
-                                grappleClaw,
-                                connectionData.playerPos(),
-                                connectionData.clawPos());
-                    } else {
-                        // cancel other operations if client world doesn't have either entity loaded
-                        return;
-                    }
-                }
-            });
-        }));
-
-        ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionDiscardPacket.ID, ((payload, context) -> {
-            MinecraftClient client = context.client();
-
-            client.execute(() -> {
-                GrappleWinchConnectionManager.INSTANCE.discardConnection(payload.playerId());
-                if (client.world instanceof ClientWorld world && world.getEntityById(payload.playerId()) instanceof PlayerEntityGrappleAccess access) {
-                    access.klaxon$setWinchConnectionData(null);
-                    access.klaxon$resetWinchCableLength();
-                }
-            });
-        }));
-
-        ClientPlayNetworking.registerGlobalReceiver(ItemUsageLockoutTrigger.ID, ((payload, context) -> {
-            MinecraftClient client = context.client();
-
-            client.execute(() -> {
-                if (client instanceof MinecraftClientUsageLockoutAccess access) {
-                    access.klaxon$setUsageLockout(true);
-                }
-                if (client.player != null) {
-                    client.player.clearActiveItem();
-                }
-            });
-        }));
+        ClientPlayNetworking.registerGlobalReceiver(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket::execute);
+        ClientPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleS2CPacket.ID, EntityDualWieldToggleS2CPacket::execute);
+        ClientPlayNetworking.registerGlobalReceiver(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket::execute);
+        ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket::execute);
+        ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket::execute);
+        ClientPlayNetworking.registerGlobalReceiver(ItemUsageLockoutTrigger.ID, ItemUsageLockoutTrigger::execute);
     }
 
     // server only
     public static void initC2SRecievers() {
-        ServerPlayNetworking.registerGlobalReceiver(HammerWalljumpTriggerPacket.ID, ((payload, context) -> {
-            context.server().execute(() -> {
-                ServerPlayerEntity player = context.player();
-
-                WalljumpAbilityComponent component = WalljumpAbilityComponent.get(player.getMainHandStack());
-
-                if (component != null) {
-                    // run the walljump ability :D
-                    component.processHammerWalljump(player, player.getWorld(), payload.pos(), payload.direction());
-                }
-            });
-        }));
-
-        ServerPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleC2SPacket.ID, ((payload, context) -> {
-            context.server().execute(() -> {
-                ServerPlayerEntity player = context.player();
-
-                if (player instanceof LivingEntityMixinAccess access) {
-                    access.klaxon$setDualWielding(payload.isDualWielding());
-                }
-            });
-        }));
+        ServerPlayNetworking.registerGlobalReceiver(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket::execute);
+        ServerPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleC2SPacket.ID, EntityDualWieldToggleC2SPacket::execute);
     }
 
     private static Identifier locateS2C(String name) {
