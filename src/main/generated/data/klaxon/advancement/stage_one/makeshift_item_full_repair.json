@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/watch_blast_processor_craft",
+  "parent": "klaxon:stage_one/watch_blast_processor_craft",
   "criteria": {
     "makeshift_item_full_repair": {
       "conditions": {
@@ -13,14 +13,14 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.makeshift_item_full_repair.description"
+      "translate": "advancements.klaxon.stage_one.makeshift_item_full_repair.description"
     },
     "icon": {
       "count": 1,
       "id": "minecraft:anvil"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.makeshift_item_full_repair.title"
+      "translate": "advancements.klaxon.stage_one.makeshift_item_full_repair.title"
     }
   },
   "requirements": [

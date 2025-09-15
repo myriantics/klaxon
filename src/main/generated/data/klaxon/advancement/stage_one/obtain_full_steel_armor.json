@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/use_hammer_to_make_metal_plate",
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
   "criteria": {
     "obtain_full_steel_armor": {
       "conditions": {
@@ -23,7 +23,7 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.obtain_full_steel_armor.description"
+      "translate": "advancements.klaxon.stage_one.obtain_full_steel_armor.description"
     },
     "frame": "goal",
     "icon": {
@@ -31,7 +31,7 @@
       "id": "klaxon:steel_chestplate"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.obtain_full_steel_armor.title"
+      "translate": "advancements.klaxon.stage_one.obtain_full_steel_armor.title"
     }
   },
   "requirements": [

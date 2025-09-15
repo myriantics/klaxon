@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/watch_blast_processor_craft",
+  "parent": "klaxon:stage_one/watch_blast_processor_craft",
   "criteria": {
     "obtain_any_rubber_glob": {
       "conditions": {
@@ -14,14 +14,14 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.obtain_any_rubber_glob.description"
+      "translate": "advancements.klaxon.stage_one.obtain_any_rubber_glob.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:rubber_glob"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.obtain_any_rubber_glob.title"
+      "translate": "advancements.klaxon.stage_one.obtain_any_rubber_glob.title"
     }
   },
   "requirements": [

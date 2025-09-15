@@ -16,9 +16,9 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.function.Consumer;
 
-public class KlaxonPreludeAdvancementProvider extends KlaxonAdvancementSubProvider {
-    public KlaxonPreludeAdvancementProvider(Consumer<AdvancementEntry> consumer) {
-        super(consumer, "prelude");
+public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvider {
+    public KlaxonStageOneAdvancementProvider(Consumer<AdvancementEntry> consumer) {
+        super(consumer, "stage_one");
     }
 
     @Override

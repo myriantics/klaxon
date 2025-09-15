@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/watch_blast_processor_craft",
+  "parent": "klaxon:stage_one/watch_blast_processor_craft",
   "criteria": {
     "use_hammer_to_make_metal_plate": {
       "conditions": {
@@ -15,14 +15,14 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.description"
+      "translate": "advancements.klaxon.stage_one.use_hammer_to_make_metal_plate.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:crude_steel_plate"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.use_hammer_to_make_metal_plate.title"
+      "translate": "advancements.klaxon.stage_one.use_hammer_to_make_metal_plate.title"
     }
   },
   "requirements": [

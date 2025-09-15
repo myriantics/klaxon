@@ -13,9 +13,9 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "klaxon:textures/gui/advancements/backgrounds/prelude.png",
+    "background": "klaxon:textures/gui/advancements/backgrounds/stage_one.png",
     "description": {
-      "translate": "advancements.klaxon.prelude.root.description"
+      "translate": "advancements.klaxon.stage_one.root.description"
     },
     "icon": {
       "count": 1,
@@ -23,7 +23,7 @@
     },
     "show_toast": false,
     "title": {
-      "translate": "advancements.klaxon.prelude.root.title"
+      "translate": "advancements.klaxon.stage_one.root.title"
     }
   },
   "requirements": [

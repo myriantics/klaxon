@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.*;
 import net.minecraft.registry.RegistryWrapper;
-import net.myriantics.klaxon.datagen.advancement.providers.KlaxonPreludeAdvancementProvider;
+import net.myriantics.klaxon.datagen.advancement.providers.KlaxonStageOneAdvancementProvider;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -16,6 +16,6 @@ public class KlaxonAdvancementProvider extends FabricAdvancementProvider {
 
     @Override
     public void generateAdvancement(RegistryWrapper.WrapperLookup registryLookup, Consumer<AdvancementEntry> consumer) {
-        AdvancementEntry preludeRoot = new KlaxonPreludeAdvancementProvider(consumer).generateAdvancements();
+        AdvancementEntry preludeRoot = new KlaxonStageOneAdvancementProvider(consumer).generateAdvancements();
     }
 }

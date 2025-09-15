@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/obtain_steel_wrench",
+  "parent": "klaxon:stage_one/obtain_steel_wrench",
   "criteria": {
     "rotate_rail_with_wrench": {
       "conditions": {
@@ -11,14 +11,14 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.rotate_rail_with_wrench.description"
+      "translate": "advancements.klaxon.stage_one.rotate_rail_with_wrench.description"
     },
     "icon": {
       "count": 1,
       "id": "minecraft:rail"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.rotate_rail_with_wrench.title"
+      "translate": "advancements.klaxon.stage_one.rotate_rail_with_wrench.title"
     }
   },
   "requirements": [

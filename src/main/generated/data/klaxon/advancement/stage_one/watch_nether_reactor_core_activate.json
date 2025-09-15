@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/obtain_hallnox_pod",
+  "parent": "klaxon:stage_one/obtain_hallnox_pod",
   "criteria": {
     "watch_nether_reactor_core_activate": {
       "conditions": {
@@ -10,14 +10,14 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.watch_nether_reactor_core_activate.description"
+      "translate": "advancements.klaxon.stage_one.watch_nether_reactor_core_activate.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:nether_reactor_core"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.watch_nether_reactor_core_activate.title"
+      "translate": "advancements.klaxon.stage_one.watch_nether_reactor_core_activate.title"
     }
   },
   "requirements": [

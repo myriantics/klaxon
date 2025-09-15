@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/use_hammer_to_make_metal_plate",
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
   "criteria": {
     "obtain_steel_cleaver": {
       "conditions": {
@@ -14,14 +14,14 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.obtain_steel_cleaver.description"
+      "translate": "advancements.klaxon.stage_one.obtain_steel_cleaver.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:steel_cleaver"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.obtain_steel_cleaver.title"
+      "translate": "advancements.klaxon.stage_one.obtain_steel_cleaver.title"
     }
   },
   "requirements": [

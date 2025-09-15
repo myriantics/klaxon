@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/root",
+  "parent": "klaxon:stage_one/root",
   "criteria": {
     "obtain_hallnox_pod": {
       "conditions": {
@@ -14,14 +14,14 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.obtain_hallnox_pod.description"
+      "translate": "advancements.klaxon.stage_one.obtain_hallnox_pod.description"
     },
     "icon": {
       "count": 1,
       "id": "klaxon:hallnox_pod"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.obtain_hallnox_pod.title"
+      "translate": "advancements.klaxon.stage_one.obtain_hallnox_pod.title"
     }
   },
   "requirements": [

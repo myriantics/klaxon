@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:prelude/hammer_walljump_normal",
+  "parent": "klaxon:stage_one/hammer_walljump_normal",
   "criteria": {
     "hammer_walljump_boosted": {
       "conditions": {
@@ -10,7 +10,7 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.prelude.hammer_walljump_boosted.description"
+      "translate": "advancements.klaxon.stage_one.hammer_walljump_boosted.description"
     },
     "frame": "goal",
     "icon": {
@@ -18,7 +18,7 @@
       "id": "minecraft:blaze_powder"
     },
     "title": {
-      "translate": "advancements.klaxon.prelude.hammer_walljump_boosted.title"
+      "translate": "advancements.klaxon.stage_one.hammer_walljump_boosted.title"
     }
   },
   "requirements": [
