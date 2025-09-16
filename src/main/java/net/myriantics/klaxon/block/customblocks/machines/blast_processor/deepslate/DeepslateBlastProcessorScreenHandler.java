@@ -176,12 +176,12 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         }
 
         // yonk the display stacks
-        List<ItemStack> displayStacks = blastProcessingData.outputStacks();
+        ItemStack[] displayStacks = blastProcessingData.outputStacks();
 
         // update display inventory
         for (int i = 0; i < resultInventory.size(); i++) {
             // set slot to display stack if possible, otherwise clear it
-            resultInventory.setStack(i, i < displayStacks.size() ? displayStacks.get(i) : ItemStack.EMPTY);
+            resultInventory.setStack(i, i < displayStacks.length ? displayStacks[i] : ItemStack.EMPTY);
         }
     }
 

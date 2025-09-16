@@ -360,7 +360,7 @@ public abstract class KlaxonRecipeSubProvider {
                                          RecipeOutputCompound outputCompound, final ResourceCondition... conditions) {
         String path = outputCompound.size() > 1
                 ? input.getName()
-                : getItemPath(outputCompound.getDisplayStacks().getFirst().getItem()) + "_from_" + input.getName();
+                : getItemPath(outputCompound.getDisplayStacks()[0].getItem()) + "_from_" + input.getName();
 
         Identifier recipeId = provider.computeRecipeIdentifier(
                 KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,

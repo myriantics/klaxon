@@ -4,5 +4,5 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public record BlastProcessingRecipeData(double explosionPowerMin, double explosionPowerMax, List<ItemStack> outputStacks) {
+public record BlastProcessingRecipeData(double explosionPowerMin, double explosionPowerMax, ItemStack[] outputStacks) {
 }

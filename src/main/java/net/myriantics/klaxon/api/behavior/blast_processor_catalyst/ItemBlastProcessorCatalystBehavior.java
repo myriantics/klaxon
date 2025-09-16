@@ -80,7 +80,7 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
 
         Direction facing = world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
 
-        if (recipeData.outputStacks().isEmpty()) {
+        if (recipeData.outputStacks().length == 0) {
             if (powerData.explosionPower() <= 0 || powerData.explosionPower() < recipeData.explosionPowerMin()) {
                 for (ItemStack ejectedStack : blastProcessor.getItems()) {
                     ItemDispenserBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
@@ -129,7 +129,7 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
         if (blastProcessingMatch.isPresent()) {
             BlastProcessingRecipe recipe = blastProcessingMatch.get();
 
-            List<ItemStack> outputStacks = recipe.getRecipeOutputCompound().getDisplayStacks();
+            ItemStack[] outputStacks = recipe.getRecipeOutputCompound().getDisplayStacks();
 
             // if the catalyst produces fire, try to smelt output stacks as if they were in a blast furnace
             if (powerData.producesFire()) {
@@ -138,7 +138,7 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
 
             return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
         } else {
-            return new BlastProcessingRecipeData(0.0, 0.0, List.of());
+            return new BlastProcessingRecipeData(0.0, 0.0, new ItemStack[0]);
         }
     }
 
@@ -152,16 +152,16 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
         if (blastProcessingMatch.isPresent()) {
             BlastProcessingRecipe recipe = blastProcessingMatch.get();
 
-            List<ItemStack> outputStacks = recipe.craft(recipeInventory, world.getRegistryManager(), world.getRandom());
+            ItemStack[] outputStacks = recipe.craft(recipeInventory, world.getRegistryManager(), world.getRandom());
 
             // if the catalyst produces fire, try to smelt output stacks as if they were in a blast furnace
             if (powerData.producesFire()) {
-                outputStacks = tryBlastingSmeltingRecipeOnAllStacks(outputStacks, world);
+                tryBlastingSmeltingRecipeOnAllStacks(outputStacks, world);
             }
 
             return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
         } else {
-            return new BlastProcessingRecipeData(0.0, 0.0, List.of());
+            return new BlastProcessingRecipeData(0.0, 0.0, new ItemStack[0]);
         }
     }
 
@@ -204,11 +204,9 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
         return true;
     }
 
-    private List<ItemStack> tryBlastingSmeltingRecipeOnAllStacks(List<ItemStack> stacks, World world) {
-        ArrayList<ItemStack> newStacks = new ArrayList<>();
-
-        for (int i = 0; i < stacks.size(); i++) {
-            ItemStack stack = stacks.get(i);
+    private void tryBlastingSmeltingRecipeOnAllStacks(ItemStack[] stacks, World world) {
+        for (int i = 0; i < stacks.length; i++) {
+            ItemStack stack = stacks[i];
 
             // init recipe input
             SingleStackRecipeInput input = new SingleStackRecipeInput(stack);
@@ -221,14 +219,12 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
             );
 
             // if recipe was successful, overwrite that index in output stacks with proper count
-            blastingRecipe.ifPresent(blastingRecipeRecipeEntry -> newStacks.add(
-                    blastingRecipeRecipeEntry.value().craft(
-                            input,
-                            world.getRegistryManager()
-                    ).copyWithCount(stack.getCount())
-            ));
+            if (blastingRecipe.isPresent()) {
+                stacks[i] = blastingRecipe.get().value().craft(
+                        input,
+                        world.getRegistryManager()
+                ).copyWithCount(stack.getCount());
+            }
         }
-
-        return newStacks;
     }
 }

@@ -17,7 +17,7 @@ public final class RecipeOutputCompound {
     private final List<Pair<ItemStack, Double>> dropsAndChances;
 
     // Display stacks to be rendered in EMI and other GUIs. Only computed upon request.
-    private List<ItemStack> displayStacksCache = List.of();
+    private ItemStack[] displayStacksCache = null;
 
     public RecipeOutputCompound(List<Pair<ItemStack, Double>> chanceDrops) {
         this.dropsAndChances = chanceDrops;
@@ -50,17 +50,18 @@ public final class RecipeOutputCompound {
         return dropsAndChances.size();
     }
 
-    public List<ItemStack> computeDrops(Random random) {
-        ArrayList<ItemStack> outputList = new ArrayList<>();
+    public ItemStack[] computeDrops(Random random) {
+        ItemStack[] outputList = new ItemStack[dropsAndChances.size()];
 
         // Roll the random drops and add copies to the list
-        for (Pair<ItemStack, Double> pair : dropsAndChances) {
+        for (int i = 0; i < dropsAndChances.size(); i++) {
+            Pair<ItemStack, Double> pair = dropsAndChances.get(i);
             ItemStack stack = pair.getFirst();
             double chance = pair.getSecond();
 
             // If a drop is guaranteed, just add it no questions asked
             if (chance >= 1) {
-                outputList.add(stack.copy());
+                outputList[i] = stack.copy();
                 continue;
             }
 
@@ -71,34 +72,33 @@ public final class RecipeOutputCompound {
                 outputList.add(stack.copyWithCount(count));
             }*/
 
-
-
             int count = (int) (0.5 + random.nextTriangular(
                     stack.getCount() * chance,
                     stack.getCount() / 2f
             ));
             if (count > 0) {
-                outputList.add(stack.copyWithCount(count));
+                outputList[i] = stack.copyWithCount(count);
             }
         }
 
-        return List.copyOf(outputList);
+        return outputList;
     }
 
-    public List<ItemStack> getDisplayStacks() {
-        if (!this.displayStacksCache.isEmpty()) {
+    public ItemStack[] getDisplayStacks() {
+        if (this.displayStacksCache != null && this.displayStacksCache.length > 0) {
             return this.displayStacksCache;
         } else {
-            ArrayList<ItemStack> displayStacks = new ArrayList<>();
+            ItemStack[] displayStacks = new ItemStack[dropsAndChances.size()];
 
-            for (Pair<ItemStack, Double> entry : dropsAndChances) {
-                ItemStack stack = entry.getFirst();
-                double chance = entry.getSecond();
+            for (int i = 0; i < dropsAndChances.size(); i++) {
+                Pair<ItemStack, Double> pair = dropsAndChances.get(i);
+                ItemStack stack = pair.getFirst();
+                double chance = pair.getSecond();
 
                 if (chance > 0) {
                     ItemStack display = stack.copy();
                     display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_LORE, chance);
-                    displayStacks.add(display);
+                    displayStacks[i] = display;
                 }
             }
 

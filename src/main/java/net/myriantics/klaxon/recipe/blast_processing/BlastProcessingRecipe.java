@@ -36,7 +36,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
         return ItemStack.EMPTY;
     }
 
-    public List<ItemStack> craft(BlastProcessingRecipeInput input, RegistryWrapper.WrapperLookup lookup, Random random) {
+    public ItemStack[] craft(BlastProcessingRecipeInput input, RegistryWrapper.WrapperLookup lookup, Random random) {
         double explosionPower = input.getPowerData().explosionPower();
 
         // check if explosion power exists and is within bounds
@@ -44,7 +44,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
             return recipeOutputCompound.computeDrops(random);
         }
 
-        return List.of();
+        return new ItemStack[0];
     }
 
     @Override

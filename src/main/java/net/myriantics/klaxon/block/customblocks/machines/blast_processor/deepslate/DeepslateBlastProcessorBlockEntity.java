@@ -258,7 +258,7 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
         // default values if world is null
         ItemExplosionPowerData itemExplosionPowerData = new ItemExplosionPowerData(0.0, false);
-        BlastProcessingRecipeData blastProcessingRecipeData = new BlastProcessingRecipeData(0.0, 0.0, List.of());
+        BlastProcessingRecipeData blastProcessingRecipeData = new BlastProcessingRecipeData(0.0, 0.0, new ItemStack[0]);
 
         // if we have a world, actually yoink the proper values.
         if (world != null) {
