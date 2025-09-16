@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.api.behavior.blast_processor_catalyst;
 
+import com.mojang.serialization.ListBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.item.ItemStack;
@@ -28,6 +29,8 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -153,7 +156,7 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
 
             // if the catalyst produces fire, try to smelt output stacks as if they were in a blast furnace
             if (powerData.producesFire()) {
-                tryBlastingSmeltingRecipeOnAllStacks(outputStacks, world);
+                outputStacks = tryBlastingSmeltingRecipeOnAllStacks(outputStacks, world);
             }
 
             return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
@@ -201,7 +204,9 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
         return true;
     }
 
-    private void tryBlastingSmeltingRecipeOnAllStacks(List<ItemStack> stacks, World world) {
+    private List<ItemStack> tryBlastingSmeltingRecipeOnAllStacks(List<ItemStack> stacks, World world) {
+        ArrayList<ItemStack> newStacks = new ArrayList<>();
+
         for (int i = 0; i < stacks.size(); i++) {
             ItemStack stack = stacks.get(i);
 
@@ -216,12 +221,14 @@ public class ItemBlastProcessorCatalystBehavior implements BlastProcessorCatalys
             );
 
             // if recipe was successful, overwrite that index in output stacks with proper count
-            if (blastingRecipe.isPresent()) {
-                stacks.set(i, blastingRecipe.get().value().craft(
-                        input,
-                        world.getRegistryManager()
-                ).copyWithCount(stack.getCount()));
-            }
+            blastingRecipe.ifPresent(blastingRecipeRecipeEntry -> newStacks.add(
+                    blastingRecipeRecipeEntry.value().craft(
+                            input,
+                            world.getRegistryManager()
+                    ).copyWithCount(stack.getCount())
+            ));
         }
+
+        return newStacks;
     }
 }
