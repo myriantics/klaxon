@@ -27,7 +27,6 @@
     "minecraft.entity_attributes.LivingEntityMixin",
     "minecraft.entity_attributes.PlayerEntityMixin",
     "minecraft.entity_weight.ItemStackMixin",
-    "minecraft.grapple_winch.ClientPlayerInteractionManagerMixin",
     "minecraft.grapple_winch.EntityMixin",
     "minecraft.grapple_winch.PersistentProjectileEntityMixin",
     "minecraft.grapple_winch.PlayerEntityMixin",
@@ -65,6 +64,7 @@
     "minecraft.wrench.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
+    "minecraft.grapple_winch.ClientPlayerInteractionManagerMixin",
     "minecraft.advanced_item_models.ItemRendererMixin",
     "minecraft.advanced_item_models.JsonUnbakedModelAccessor",
     "minecraft.advanced_item_models.ModelLoaderMixin",

@@ -1,5 +1,7 @@
 {
   "type": "klaxon:nether_reaction",
-  "output_block": "minecraft:warped_wart_block",
-  "valid_blocks_tag": "#klaxon:nether_reaction/warped_wart_block_convertible"
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/warped_wart_block_convertible"
+  },
+  "output_block": "minecraft:warped_wart_block"
 }

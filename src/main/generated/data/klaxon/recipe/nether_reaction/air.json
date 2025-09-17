@@ -1,5 +1,7 @@
 {
   "type": "klaxon:nether_reaction",
-  "output_block": "minecraft:air",
-  "valid_blocks_tag": "#klaxon:nether_reaction/air_convertible"
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/air_convertible"
+  },
+  "output_block": "minecraft:air"
 }

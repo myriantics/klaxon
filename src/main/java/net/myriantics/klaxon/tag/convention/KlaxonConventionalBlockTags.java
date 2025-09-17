@@ -41,6 +41,11 @@ public class KlaxonConventionalBlockTags {
     public static final TagKey<Block> LEVERS =
             createConventionalBlockTag("levers");
 
+    public static final TagKey<Block> WOODS =
+            createConventionalBlockTag("woods");
+    public static final TagKey<Block> LOGS =
+            createConventionalBlockTag("logs");
+
     private static TagKey<Block> createConventionalStorageBlockTag(String name) {
         return createConventionalBlockTag("storage_blocks/" + name);
     }

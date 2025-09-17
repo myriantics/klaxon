@@ -8,21 +8,22 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.BlockIngredient;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class NetherReactionRecipe implements Recipe<NetherReactionRecipeInput> {
-    private final TagKey<Block> validBlockInputs;
+    private final BlockIngredient blockIngredient;
 
     private final Block outputBlock;
 
-    public NetherReactionRecipe(TagKey<Block> validBlockInputs, Block outputBlock) {
-        this.validBlockInputs = validBlockInputs;
+    public NetherReactionRecipe(BlockIngredient blockIngredient, Block outputBlock) {
+        this.blockIngredient = blockIngredient;
         this.outputBlock = outputBlock;
     }
 
     @Override
     public boolean matches(NetherReactionRecipeInput input, World world) {
-        return input.inputBlockState().isIn(validBlockInputs);
+        return blockIngredient.test(input.inputBlockState());
     }
 
     @Override
@@ -50,8 +51,8 @@ public class NetherReactionRecipe implements Recipe<NetherReactionRecipeInput> {
         return KlaxonRecipeTypes.NETHER_REACTION;
     }
 
-    public TagKey<Block> getValidBlockInputs() {
-        return validBlockInputs;
+    public BlockIngredient getBlockIngredient() {
+        return blockIngredient;
     }
 
     public Block getOutputBlock() {

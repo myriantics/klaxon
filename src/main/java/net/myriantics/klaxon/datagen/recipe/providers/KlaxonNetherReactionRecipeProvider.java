@@ -40,7 +40,6 @@ public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider 
         addNetherReactionRecipe(KlaxonBlockTags.SOUL_SAND_CONVERTIBLE, Blocks.SOUL_SAND);
         addNetherReactionRecipe(KlaxonBlockTags.SOUL_SOIL_CONVERTIBLE, Blocks.SOUL_SOIL);
         addNetherReactionRecipe(KlaxonBlockTags.SOUL_TORCH_CONVERTIBLE, Blocks.SOUL_TORCH);
-        addNetherReactionRecipe(KlaxonBlockTags.SOUL_WALL_TORCH_CONVERTIBLE, Blocks.SOUL_WALL_TORCH);
         addNetherReactionRecipe(KlaxonBlockTags.SOUL_LANTERN_CONVERTIBLE, Blocks.SOUL_LANTERN);
         addNetherReactionRecipe(KlaxonBlockTags.SOUL_CAMPFIRE_CONVERTIBLE, Blocks.SOUL_CAMPFIRE);
 
@@ -63,6 +62,8 @@ public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider 
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_FENCE_GATE_CONVERTIBLE, Blocks.CRIMSON_FENCE_GATE);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_DOOR_CONVERTIBLE, Blocks.CRIMSON_DOOR);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_TRAPDOOR_CONVERTIBLE, Blocks.CRIMSON_TRAPDOOR);
+        addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_SIGN_CONVERTIBLE, Blocks.CRIMSON_SIGN);
+        addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_HANGING_SIGN_CONVERTIBLE, Blocks.CRIMSON_HANGING_SIGN);
 
         // warped stuff
         addNetherReactionRecipe(KlaxonBlockTags.WARPED_NYLIUM_CONVERTIBLE, Blocks.WARPED_NYLIUM);

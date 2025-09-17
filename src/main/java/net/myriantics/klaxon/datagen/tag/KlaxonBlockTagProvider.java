@@ -159,24 +159,26 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // axe
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .forceAddTag(KlaxonConventionalBlockTags.RUBBER)
-                .add(KlaxonBlocks.HALLNOX_POD)
-                .add(KlaxonBlocks.HALLNOX_STEM)
-                .add(KlaxonBlocks.STRIPPED_HALLNOX_STEM)
-                .add(KlaxonBlocks.HALLNOX_HYPHAE)
-                .add(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE)
-                .add(KlaxonBlocks.HALLNOX_PLANKS)
-                .add(KlaxonBlocks.HALLNOX_STAIRS)
-                .add(KlaxonBlocks.HALLNOX_SLAB)
-                .add(KlaxonBlocks.HALLNOX_PRESSURE_PLATE)
-                .add(KlaxonBlocks.HALLNOX_BUTTON)
-                .add(KlaxonBlocks.HALLNOX_TRAPDOOR)
-                .add(KlaxonBlocks.HALLNOX_DOOR)
-                .add(KlaxonBlocks.HALLNOX_SIGN)
-                .add(KlaxonBlocks.HALLNOX_WALL_SIGN)
-                .add(KlaxonBlocks.HALLNOX_HANGING_SIGN)
-                .add(KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN)
-                .add(KlaxonBlocks.HALLNOX_FENCE)
-                .add(KlaxonBlocks.HALLNOX_FENCE_GATE);
+                .add(
+                        KlaxonBlocks.HALLNOX_POD,
+                        KlaxonBlocks.HALLNOX_STEM,
+                        KlaxonBlocks.STRIPPED_HALLNOX_STEM,
+                        KlaxonBlocks.HALLNOX_HYPHAE,
+                        KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE,
+                        KlaxonBlocks.HALLNOX_PLANKS,
+                        KlaxonBlocks.HALLNOX_STAIRS,
+                        KlaxonBlocks.HALLNOX_SLAB,
+                        KlaxonBlocks.HALLNOX_PRESSURE_PLATE,
+                        KlaxonBlocks.HALLNOX_BUTTON,
+                        KlaxonBlocks.HALLNOX_TRAPDOOR,
+                        KlaxonBlocks.HALLNOX_DOOR,
+                        KlaxonBlocks.HALLNOX_SIGN,
+                        KlaxonBlocks.HALLNOX_WALL_SIGN,
+                        KlaxonBlocks.HALLNOX_HANGING_SIGN,
+                        KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN,
+                        KlaxonBlocks.HALLNOX_FENCE,
+                        KlaxonBlocks.HALLNOX_FENCE_GATE
+                );
 
         // hoe
         getOrCreateTagBuilder(BlockTags.HOE_MINEABLE)
@@ -216,9 +218,11 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         // hallnox pod
         getOrCreateTagBuilder(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)
-                .add(KlaxonBlocks.HALLNOX_WART_BLOCK)
-                .add(KlaxonBlocks.HALLNOX_STEM)
-                .add(KlaxonBlocks.HALLNOX_HYPHAE);
+                .add(
+                        KlaxonBlocks.HALLNOX_WART_BLOCK,
+                        KlaxonBlocks.HALLNOX_STEM,
+                        KlaxonBlocks.HALLNOX_HYPHAE
+                );
 
         // grapple winch
         getOrCreateTagBuilder(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE)
@@ -230,7 +234,94 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     private void buildNetherReactionTags() {
         getOrCreateTagBuilder(KlaxonBlockTags.NETHER_REACTION_IMMUNE)
-                .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED);
+                .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
+                .forceAddTag(ConventionalBlockTags.ORES_IN_GROUND_NETHERRACK)
+                .forceAddTag(ConventionalBlockTags.ORE_BEARING_GROUND_NETHERRACK)
+                .forceAddTag(ConventionalBlockTags.NETHERITE_SCRAP_ORES)
+                .forceAddTag(ConventionalBlockTags.STORAGE_BLOCKS_NETHERITE)
+                .forceAddTag(ConventionalBlockTags.NETHERRACKS)
+                .forceAddTag(ConventionalBlockTags.NETHER_BRICK_FENCES)
+                .forceAddTag(ConventionalBlockTags.STORAGE_BLOCKS_BONE_MEAL)
+                .forceAddTag(KlaxonBlockTags.HALLNOX_STEMS)
+                .forceAddTag(BlockTags.SOUL_SPEED_BLOCKS)
+                .forceAddTag(BlockTags.SOUL_FIRE_BASE_BLOCKS)
+                .forceAddTag(BlockTags.BASE_STONE_NETHER)
+                .forceAddTag(BlockTags.CRIMSON_STEMS)
+                .forceAddTag(BlockTags.WARPED_STEMS)
+                .forceAddTag(BlockTags.WART_BLOCKS)
+                .forceAddTag(BlockTags.NYLIUM)
+                .forceAddTag(BlockTags.FIRE)
+                .add(Blocks.SHROOMLIGHT)
+                .add(
+                        Blocks.BLACKSTONE_STAIRS,
+                        Blocks.BLACKSTONE_SLAB,
+                        Blocks.BLACKSTONE_WALL
+                )
+                .add(
+                        Blocks.SOUL_TORCH,
+                        Blocks.SOUL_WALL_TORCH,
+                        Blocks.SOUL_LANTERN,
+                        Blocks.SOUL_CAMPFIRE
+                )
+                .add(
+                        Blocks.CRIMSON_ROOTS,
+                        Blocks.CRIMSON_FUNGUS,
+                        Blocks.POTTED_CRIMSON_FUNGUS,
+                        Blocks.POTTED_CRIMSON_ROOTS,
+                        Blocks.WEEPING_VINES,
+                        Blocks.WEEPING_VINES_PLANT,
+                        Blocks.CRIMSON_PLANKS,
+                        Blocks.CRIMSON_STAIRS,
+                        Blocks.CRIMSON_SLAB,
+                        Blocks.CRIMSON_BUTTON,
+                        Blocks.CRIMSON_PRESSURE_PLATE,
+                        Blocks.CRIMSON_FENCE,
+                        Blocks.CRIMSON_FENCE_GATE,
+                        Blocks.CRIMSON_DOOR,
+                        Blocks.CRIMSON_TRAPDOOR,
+                        Blocks.CRIMSON_SIGN,
+                        Blocks.CRIMSON_WALL_SIGN,
+                        Blocks.CRIMSON_HANGING_SIGN,
+                        Blocks.CRIMSON_WALL_HANGING_SIGN
+                )
+                .add(
+                        Blocks.WARPED_ROOTS,
+                        Blocks.WARPED_FUNGUS,
+                        Blocks.POTTED_WARPED_FUNGUS,
+                        Blocks.POTTED_WARPED_ROOTS,
+                        Blocks.TWISTING_VINES,
+                        Blocks.TWISTING_VINES_PLANT,
+                        Blocks.WARPED_PLANKS,
+                        Blocks.WARPED_STAIRS,
+                        Blocks.WARPED_SLAB,
+                        Blocks.WARPED_BUTTON,
+                        Blocks.WARPED_PRESSURE_PLATE,
+                        Blocks.WARPED_FENCE,
+                        Blocks.WARPED_FENCE_GATE,
+                        Blocks.WARPED_DOOR,
+                        Blocks.WARPED_TRAPDOOR,
+                        Blocks.WARPED_SIGN,
+                        Blocks.WARPED_WALL_SIGN,
+                        Blocks.WARPED_HANGING_SIGN,
+                        Blocks.WARPED_WALL_HANGING_SIGN
+                )
+                .add(
+                        KlaxonBlocks.HALLNOX_POD,
+                        KlaxonBlocks.POTTED_HALLNOX_POD,
+                        KlaxonBlocks.HALLNOX_PLANKS,
+                        KlaxonBlocks.HALLNOX_STAIRS,
+                        KlaxonBlocks.HALLNOX_SLAB,
+                        KlaxonBlocks.HALLNOX_BUTTON,
+                        KlaxonBlocks.HALLNOX_PRESSURE_PLATE,
+                        KlaxonBlocks.HALLNOX_FENCE,
+                        KlaxonBlocks.HALLNOX_FENCE_GATE,
+                        KlaxonBlocks.HALLNOX_DOOR,
+                        KlaxonBlocks.HALLNOX_TRAPDOOR,
+                        KlaxonBlocks.HALLNOX_SIGN,
+                        KlaxonBlocks.HALLNOX_WALL_SIGN,
+                        KlaxonBlocks.HALLNOX_HANGING_SIGN,
+                        KlaxonBlocks.HALLNOX_WALL_SIGN
+                );
 
 
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE)
@@ -255,7 +346,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.DIRT)
                 .add(Blocks.DIRT_PATH)
                 .add(Blocks.COARSE_DIRT)
-                .add(Blocks.ROOTED_DIRT);
+                .add(Blocks.ROOTED_DIRT)
+                .add(Blocks.MUDDY_MANGROVE_ROOTS);
         getOrCreateTagBuilder(KlaxonBlockTags.NETHER_GOLD_ORE_CONVERTIBLE)
                 .forceAddTag(BlockTags.COPPER_ORES)
                 .forceAddTag(BlockTags.IRON_ORES)
@@ -279,9 +371,6 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_TORCH_CONVERTIBLE)
                 .add(Blocks.TORCH)
                 .add(Blocks.REDSTONE_TORCH);
-        getOrCreateTagBuilder(KlaxonBlockTags.SOUL_WALL_TORCH_CONVERTIBLE)
-                .add(Blocks.WALL_TORCH)
-                .add(Blocks.REDSTONE_WALL_TORCH);
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_LANTERN_CONVERTIBLE)
                 .add(Blocks.LANTERN);
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_CAMPFIRE_CONVERTIBLE)
@@ -348,123 +437,36 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.VINE)
                 .add(Blocks.GLOW_LICHEN);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_STEM_CONVERTIBLE)
-                .add(Blocks.OAK_LOG)
-                .add(Blocks.SPRUCE_LOG)
-                .add(Blocks.BIRCH_LOG)
-                .add(Blocks.JUNGLE_LOG)
-                .add(Blocks.ACACIA_LOG)
-                .add(Blocks.DARK_OAK_LOG)
-                .add(Blocks.MANGROVE_LOG)
-                .add(Blocks.CHERRY_LOG)
-                .add(Blocks.MANGROVE_ROOTS);
+                .forceAddTag(KlaxonConventionalBlockTags.LOGS);
         getOrCreateTagBuilder(KlaxonBlockTags.STRIPPED_CRIMSON_STEM_CONVERTIBLE)
-                .add(Blocks.STRIPPED_OAK_LOG)
-                .add(Blocks.STRIPPED_SPRUCE_LOG)
-                .add(Blocks.STRIPPED_BIRCH_LOG)
-                .add(Blocks.STRIPPED_JUNGLE_LOG)
-                .add(Blocks.STRIPPED_ACACIA_LOG)
-                .add(Blocks.STRIPPED_DARK_OAK_LOG)
-                .add(Blocks.STRIPPED_MANGROVE_LOG)
-                .add(Blocks.STRIPPED_CHERRY_LOG);
+                .forceAddTag(ConventionalBlockTags.STRIPPED_LOGS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_HYPHAE_CONVERTIBLE)
-                .add(Blocks.OAK_WOOD)
-                .add(Blocks.SPRUCE_WOOD)
-                .add(Blocks.BIRCH_WOOD)
-                .add(Blocks.JUNGLE_WOOD)
-                .add(Blocks.ACACIA_WOOD)
-                .add(Blocks.DARK_OAK_WOOD)
-                .add(Blocks.MANGROVE_WOOD)
-                .add(Blocks.CHERRY_WOOD);
+                .forceAddTag(KlaxonConventionalBlockTags.WOODS)
+                .add(Blocks.MANGROVE_ROOTS);
         getOrCreateTagBuilder(KlaxonBlockTags.STRIPPED_CRIMSON_HYPHAE_CONVERTIBLE)
-                .add(Blocks.STRIPPED_OAK_WOOD)
-                .add(Blocks.STRIPPED_SPRUCE_WOOD)
-                .add(Blocks.STRIPPED_BIRCH_WOOD)
-                .add(Blocks.STRIPPED_JUNGLE_WOOD)
-                .add(Blocks.STRIPPED_ACACIA_WOOD)
-                .add(Blocks.STRIPPED_DARK_OAK_WOOD)
-                .add(Blocks.STRIPPED_MANGROVE_WOOD)
-                .add(Blocks.STRIPPED_CHERRY_WOOD);
+                .forceAddTag(ConventionalBlockTags.STRIPPED_WOODS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_PLANKS_CONVERTIBLE)
-                .add(Blocks.OAK_PLANKS)
-                .add(Blocks.SPRUCE_PLANKS)
-                .add(Blocks.BIRCH_PLANKS)
-                .add(Blocks.JUNGLE_PLANKS)
-                .add(Blocks.ACACIA_PLANKS)
-                .add(Blocks.DARK_OAK_PLANKS)
-                .add(Blocks.MANGROVE_PLANKS)
-                .add(Blocks.CHERRY_PLANKS);
+                .forceAddTag(BlockTags.PLANKS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_STAIRS_CONVERTIBLE)
-                .add(Blocks.OAK_STAIRS)
-                .add(Blocks.SPRUCE_STAIRS)
-                .add(Blocks.BIRCH_STAIRS)
-                .add(Blocks.JUNGLE_STAIRS)
-                .add(Blocks.ACACIA_STAIRS)
-                .add(Blocks.DARK_OAK_STAIRS)
-                .add(Blocks.MANGROVE_STAIRS)
-                .add(Blocks.CHERRY_STAIRS);
+                .forceAddTag(BlockTags.WOODEN_STAIRS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_SLAB_CONVERTIBLE)
-                .add(Blocks.OAK_SLAB)
-                .add(Blocks.SPRUCE_SLAB)
-                .add(Blocks.BIRCH_SLAB)
-                .add(Blocks.JUNGLE_SLAB)
-                .add(Blocks.ACACIA_SLAB)
-                .add(Blocks.DARK_OAK_SLAB)
-                .add(Blocks.MANGROVE_SLAB)
-                .add(Blocks.CHERRY_SLAB);
+                .forceAddTag(BlockTags.WOODEN_SLABS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_BUTTON_CONVERTIBLE)
-                .add(Blocks.OAK_BUTTON)
-                .add(Blocks.SPRUCE_BUTTON)
-                .add(Blocks.BIRCH_BUTTON)
-                .add(Blocks.JUNGLE_BUTTON)
-                .add(Blocks.ACACIA_BUTTON)
-                .add(Blocks.DARK_OAK_BUTTON)
-                .add(Blocks.MANGROVE_BUTTON)
-                .add(Blocks.CHERRY_BUTTON);
+                .forceAddTag(BlockTags.WOODEN_BUTTONS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_PRESSURE_PLATE_CONVERTIBLE)
-                .add(Blocks.OAK_PRESSURE_PLATE)
-                .add(Blocks.SPRUCE_PRESSURE_PLATE)
-                .add(Blocks.BIRCH_PRESSURE_PLATE)
-                .add(Blocks.JUNGLE_PRESSURE_PLATE)
-                .add(Blocks.ACACIA_PRESSURE_PLATE)
-                .add(Blocks.DARK_OAK_PRESSURE_PLATE)
-                .add(Blocks.MANGROVE_PRESSURE_PLATE)
-                .add(Blocks.CHERRY_PRESSURE_PLATE);
+                .forceAddTag(BlockTags.WOODEN_PRESSURE_PLATES);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_FENCE_CONVERTIBLE)
-                .add(Blocks.OAK_FENCE)
-                .add(Blocks.SPRUCE_FENCE)
-                .add(Blocks.BIRCH_FENCE)
-                .add(Blocks.JUNGLE_FENCE)
-                .add(Blocks.ACACIA_FENCE)
-                .add(Blocks.DARK_OAK_FENCE)
-                .add(Blocks.MANGROVE_FENCE)
-                .add(Blocks.CHERRY_FENCE);
+                .forceAddTag(BlockTags.WOODEN_FENCES);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_FENCE_GATE_CONVERTIBLE)
-                .add(Blocks.OAK_FENCE_GATE)
-                .add(Blocks.SPRUCE_FENCE_GATE)
-                .add(Blocks.BIRCH_FENCE_GATE)
-                .add(Blocks.JUNGLE_FENCE_GATE)
-                .add(Blocks.ACACIA_FENCE_GATE)
-                .add(Blocks.DARK_OAK_FENCE_GATE)
-                .add(Blocks.MANGROVE_FENCE_GATE)
-                .add(Blocks.CHERRY_FENCE_GATE);
+                .forceAddTag(BlockTags.FENCE_GATES);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_DOOR_CONVERTIBLE)
-                .add(Blocks.OAK_DOOR)
-                .add(Blocks.SPRUCE_DOOR)
-                .add(Blocks.BIRCH_DOOR)
-                .add(Blocks.JUNGLE_DOOR)
-                .add(Blocks.ACACIA_DOOR)
-                .add(Blocks.DARK_OAK_DOOR)
-                .add(Blocks.MANGROVE_DOOR)
-                .add(Blocks.CHERRY_DOOR);
+                .forceAddTag(BlockTags.WOODEN_DOORS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_TRAPDOOR_CONVERTIBLE)
-                .add(Blocks.OAK_TRAPDOOR)
-                .add(Blocks.SPRUCE_TRAPDOOR)
-                .add(Blocks.BIRCH_TRAPDOOR)
-                .add(Blocks.JUNGLE_TRAPDOOR)
-                .add(Blocks.ACACIA_TRAPDOOR)
-                .add(Blocks.DARK_OAK_TRAPDOOR)
-                .add(Blocks.MANGROVE_TRAPDOOR)
-                .add(Blocks.CHERRY_TRAPDOOR);
+                .forceAddTag(BlockTags.WOODEN_TRAPDOORS);
+        getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_SIGN_CONVERTIBLE)
+                .forceAddTag(BlockTags.SIGNS);
+        getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_HANGING_SIGN_CONVERTIBLE)
+                .forceAddTag(BlockTags.ALL_HANGING_SIGNS);
 
         // warped stuff
         getOrCreateTagBuilder(KlaxonBlockTags.WARPED_NYLIUM_CONVERTIBLE)

@@ -14,6 +14,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.myriantics.klaxon.api.BlockIngredient;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.api.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
@@ -317,12 +318,16 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addNetherReactionRecipe(TagKey<Block> validBlockInputs, Block outputBlock, ResourceCondition... conditions) {
+    public void addNetherReactionRecipe(TagKey<Block> blockTag, Block outputBlock, ResourceCondition... conditions) {
+        addNetherReactionRecipe(BlockIngredient.fromTag(blockTag), outputBlock, conditions);
+    }
+
+    public void addNetherReactionRecipe(BlockIngredient blockIngredient, Block outputBlock, ResourceCondition... conditions) {
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
                 Registries.BLOCK.getId(outputBlock).getPath(),
                 conditions);
 
-        NetherReactionRecipe recipe = new NetherReactionRecipe(validBlockInputs, outputBlock);
+        NetherReactionRecipe recipe = new NetherReactionRecipe(blockIngredient, outputBlock);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

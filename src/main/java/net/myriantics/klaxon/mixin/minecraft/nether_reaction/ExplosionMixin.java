@@ -124,7 +124,7 @@ public abstract class ExplosionMixin {
 
             // if there is a blockentity, make sure it's tagged as overwritable before replacing it
             RegistryEntry<BlockEntityType<?>> entry = targetBlockEntity.getType().getRegistryEntry();
-            if (entry != null && !entry.isIn(KlaxonBlockEntityTypeTags.NETHER_REACTION_OVERWRITABLE)) {
+            if (entry != null && !entry.isIn(KlaxonBlockEntityTypeTags.NETHER_REACTION_OVERWRITABLE) && !(targetBlockEntity instanceof SignBlockEntity)) {
                 // if it's not overwritable, skip further operations
                 return;
             }
