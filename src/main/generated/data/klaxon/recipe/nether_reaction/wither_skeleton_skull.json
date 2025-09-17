@@ -1,0 +1,7 @@
+{
+  "type": "klaxon:nether_reaction",
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/wither_skeleton_skull_convertible"
+  },
+  "output_block": "minecraft:wither_skeleton_skull"
+}

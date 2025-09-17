@@ -24,6 +24,7 @@ public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider 
         addNetherReactionRecipe(KlaxonBlockTags.FIRE_CONVERTIBLE, Blocks.FIRE);
         addNetherReactionRecipe(KlaxonBlockTags.SHROOMLIGHT_CONVERTIBLE, Blocks.SHROOMLIGHT);
         addNetherReactionRecipe(KlaxonBlockTags.BONE_BLOCK_CONVERTIBLE, Blocks.BONE_BLOCK);
+        addNetherReactionRecipe(KlaxonBlockTags.WITHER_SKELETON_SKULL_CONVERTIBLE, Blocks.WITHER_SKELETON_SKULL);
 
         // netherrack & ores and stuff
         addNetherReactionRecipe(KlaxonBlockTags.NETHERRACK_CONVERTIBLE, Blocks.NETHERRACK);

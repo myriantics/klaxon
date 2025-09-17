@@ -324,6 +324,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 );
 
 
+        getOrCreateTagBuilder(KlaxonBlockTags.WITHER_SKELETON_SKULL_CONVERTIBLE)
+                .add(Blocks.SKELETON_SKULL)
+                .add(Blocks.SKELETON_WALL_SKULL);
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(KlaxonBlockTags.AIR_CONVERTIBLE)
