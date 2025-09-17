@@ -2,11 +2,16 @@ package net.myriantics.klaxon.mixin.minecraft.nether_reaction;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -17,6 +22,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -24,6 +30,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeLogic;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockEntityTypeTags;
@@ -33,6 +40,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -81,44 +90,69 @@ public abstract class ExplosionMixin {
             method = "affectWorld",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;onExploded(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/explosion/Explosion;Ljava/util/function/BiConsumer;)V")
     )
-    private void klaxon$hijackBlockDestruction(BlockState instance, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer, Operation<Void> original) {
-
-        if (klaxon$isNetherReactionExplosion) {
-            // don't convert any nether reactor cores aside from the origin one
-            if (instance.isIn(KlaxonBlockTags.NETHER_REACTOR_CORES) && !pos.equals(BlockPos.ofFloored(x, y, z))) return;
-
-            // yonk the blockentity from the target position
-            BlockEntity targetBlockEntity = world.getBlockEntity(pos);
-            if (targetBlockEntity != null) {
-                // if there is a blockentity, get it's type's registry entry
-                RegistryEntry<BlockEntityType<?>> entry = targetBlockEntity.getType().getRegistryEntry();
-                if (entry != null && !entry.isIn(KlaxonBlockEntityTypeTags.NETHER_REACTION_OVERWRITABLE)) {
-                    // if it's not overwritable, skip further operations
-                    return;
-                }
-                // if this check passes, the blockentity is free to go through whatever
-            }
-
-            // make sure that blockstate can be moved - blockentities have already been handled
-            if (!instance.isIn(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)) {
-                // override for door blocks because i cant think of a better way to handle them
-                if (instance.getBlock() instanceof DoorBlock && instance.get(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER)) {
-                    pos = pos.down();
-                    instance = world.getBlockState(pos);
-                }
-
-                if (world instanceof ServerWorld serverWorld) {
-                    BlockState newState = NetherReactionRecipeLogic.getOutputState(instance, pos, serverWorld, explosion);
-                    // make sure we've changed something before setting the blockstate
-                    if (!instance.equals(newState)) serverWorld.setBlockState(pos, newState);
-                }
-            }
-
-            // we did our own custom processing, no need to call original
+    private void klaxon$hijackBlockDestruction(
+            BlockState instance,
+            World world,
+            BlockPos pos,
+            Explosion explosion,
+            BiConsumer<ItemStack, BlockPos> biConsumer,
+            Operation<Void> original,
+            @Share("klaxon$netherReactionOutputs") LocalRef<HashMap<Block, Block>> netherReactionOutputs
+    ) {
+        // if it's not a nether reaction explosion, call original method and break out of this one
+        if (!klaxon$isNetherReactionExplosion) {
+            original.call(instance, world, pos, explosion, biConsumer);
             return;
         }
 
-        // if anything failed, call the original method
-        original.call(instance, world, pos, explosion, biConsumer);
+        // if the target state is immune to nether reaction, skip operating on it
+        if (instance.isIn(KlaxonBlockTags.NETHER_REACTION_IMMUNE)) {
+            return;
+        }
+
+        // don't convert any nether reactor cores aside from the origin one
+        if (instance.isIn(KlaxonBlockTags.NETHER_REACTOR_CORES) && !pos.equals(BlockPos.ofFloored(x, y, z))) {
+            return;
+        }
+
+        // sign text preserved for reapplication later
+        Pair<SignText, SignText> signText = null;
+
+        // yonk the blockentity from the target position
+        BlockEntity targetBlockEntity = world.getBlockEntity(pos);
+        if (targetBlockEntity != null) {
+
+            // if there is a blockentity, make sure it's tagged as overwritable before replacing it
+            RegistryEntry<BlockEntityType<?>> entry = targetBlockEntity.getType().getRegistryEntry();
+            if (entry != null && !entry.isIn(KlaxonBlockEntityTypeTags.NETHER_REACTION_OVERWRITABLE)) {
+                // if it's not overwritable, skip further operations
+                return;
+            }
+
+            // preserve the text from sign block entities
+            if (targetBlockEntity instanceof SignBlockEntity signBlockEntity) {
+                signText = new Pair<>(signBlockEntity.getFrontText(), signBlockEntity.getBackText());
+            }
+        }
+
+        // override for door blocks because i cant think of a better way to handle them
+        if (instance.getBlock() instanceof DoorBlock && instance.get(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER)) {
+            pos = pos.down();
+            instance = world.getBlockState(pos);
+        }
+
+        if (world instanceof ServerWorld serverWorld) {
+            BlockState newState = NetherReactionRecipeLogic.getOutputState(instance, pos, serverWorld, explosion);
+            // make sure we've changed something before setting the blockstate
+            if (!instance.equals(newState)) {
+                serverWorld.setBlockState(pos, newState);
+            }
+        }
+
+        // apply the preserved sign text if present
+        if (signText != null && world.getBlockEntity(pos) instanceof SignBlockEntity signBlockEntity) {
+            signBlockEntity.setText(signText.getLeft(), true);
+            signBlockEntity.setText(signText.getRight(), false);
+        }
     }
 }

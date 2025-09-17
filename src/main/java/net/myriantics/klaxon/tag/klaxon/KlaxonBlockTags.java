@@ -52,6 +52,9 @@ public abstract class KlaxonBlockTags {
             createTag("hallnox_pod_natural_growth_inhibiting");
 
     // nether reaction tags
+    public static final TagKey<Block> NETHER_REACTION_IMMUNE =
+            createTag("nether_reaction_immune");
+
     public static final TagKey<Block> STEEL_CASING_CONVERTIBLE =
             createNetherReactionTag("steel_casing");
 

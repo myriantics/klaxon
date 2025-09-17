@@ -35,8 +35,9 @@ public abstract class WorldRendererMixin {
             @Local VertexConsumerProvider.Immediate immediate
             ) {
         if (world != null) {
-            world.getProfiler().swap("grapple_winch_cable");
+            world.getProfiler().swap("grapple_winch_cables");
             GrappleWinchConnectionManager.INSTANCE.renderGrappleWinchCable(world, camera, tickCounter, matrixStack, immediate);
+            world.getProfiler().pop();
         }
     }
 }

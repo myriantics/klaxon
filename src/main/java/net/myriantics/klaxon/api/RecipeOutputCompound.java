@@ -19,7 +19,7 @@ public final class RecipeOutputCompound {
     // Display stacks to be rendered in EMI and other GUIs. Only computed upon request.
     private ItemStack[] displayStacksCache = null;
 
-    public RecipeOutputCompound(List<Pair<ItemStack, Double>> chanceDrops) {
+    private RecipeOutputCompound(List<Pair<ItemStack, Double>> chanceDrops) {
         this.dropsAndChances = chanceDrops;
     }
 
@@ -97,7 +97,7 @@ public final class RecipeOutputCompound {
 
                 if (chance > 0) {
                     ItemStack display = stack.copy();
-                    display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_LORE, chance);
+                    display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE, chance);
                     displayStacks[i] = display;
                 }
             }

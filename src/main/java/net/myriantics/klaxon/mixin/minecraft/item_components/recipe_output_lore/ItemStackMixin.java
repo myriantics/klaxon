@@ -6,18 +6,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.awt.geom.Arc2D;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -35,7 +33,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
             CallbackInfoReturnable<List<Text>> cir,
             @Local Consumer<Text> consumer
     ) {
-        if (this.get(KlaxonDataComponentTypes.RECIPE_OUTPUT_LORE) instanceof Double chance) {
+        if (this.get(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE) instanceof Double chance) {
             Formatting color;
             if (chance >= 0.75) {
                 color = Formatting.GREEN;
@@ -47,7 +45,11 @@ public abstract class ItemStackMixin implements ComponentHolder {
                 color = Formatting.DARK_RED;
             }
 
-            consumer.accept(Text.translatable("klaxon.text.tooltip.recipe_output_lore.chance", chance * 100 + "%").formatted(color));
+            consumer.accept(
+                    Text.translatable("klaxon.text.tooltip.recipe_output_lore.chance",
+                            KlaxonMathHelper.roundToDecimalPlace(chance * 100, 4) + "%"
+                    ).formatted(color)
+            );
         }
     }
 }

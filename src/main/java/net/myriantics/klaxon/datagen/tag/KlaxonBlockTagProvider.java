@@ -229,6 +229,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     }
 
     private void buildNetherReactionTags() {
+        getOrCreateTagBuilder(KlaxonBlockTags.NETHER_REACTION_IMMUNE)
+                .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED);
+
+
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(KlaxonBlockTags.AIR_CONVERTIBLE)
