@@ -14,7 +14,13 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent ITEM_SHEARS_USAGE = register("item.shears.usage", SoundEvents.ENTITY_SHEEP_SHEAR);
     // grapple winch
     public static final SoundEvent ITEM_GRAPPLE_WINCH_LAUNCH = register("item.grapple_winch.launch", SoundEvents.ITEM_TRIDENT_THROW.value());
-    public static final SoundEvent ITEM_GRAPPLE_WINCH_ANCHOR = register("item.grapple_winch.anchor", SoundEvents.ITEM_TRIDENT_THUNDER.value());
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_EXTRUDING = register("item.grapple_winch.extrude", SoundEvents.ENTITY_MINECART_INSIDE_UNDERWATER);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_RETRACTING = register("item.grapple_winch.retracting", SoundEvents.ENTITY_MINECART_RIDING);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_RELOAD = register("item.grapple_winch.reload", SoundEvents.ITEM_TRIDENT_THUNDER.value());
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_FAST_RELOAD = register("item.grapple_winch.fast_reload", SoundEvents.ITEM_TRIDENT_THUNDER.value());
+    // grapple claw
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_ANCHOR = register("entity.grapple_claw.anchor", SoundEvents.ITEM_TRIDENT_THUNDER.value());
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DAMAGE = register("entity.grapple_claw.damage", SoundEvents.BLOCK_CHAIN_BREAK);
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");

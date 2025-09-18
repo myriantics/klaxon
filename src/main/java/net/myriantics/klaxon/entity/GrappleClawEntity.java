@@ -145,6 +145,16 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 if (source.getAttacker() instanceof ServerPlayerEntity serverPlayer) {
                     Criteria.PLAYER_HURT_ENTITY.trigger(serverPlayer, this, source, amount, amount, false);
                 }
+
+                // play damage sound
+                getWorld().playSound(
+                        source.getAttacker(),
+                        getBlockPos(),
+                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DAMAGE,
+                        SoundCategory.NEUTRAL,
+                        0.5f + getWorld().getRandom().nextFloat() * 0.3f,
+                        0.7f + getWorld().getRandom().nextFloat() * 0.3f
+                );
             }
         }
 
@@ -227,7 +237,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                             && !access.klaxon$isRetracting()
             ) {
                 serverPlayer.playSoundToPlayer(
-                        KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_ANCHOR,
+                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
                         SoundCategory.PLAYERS,
                         1.0F,
                         1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
