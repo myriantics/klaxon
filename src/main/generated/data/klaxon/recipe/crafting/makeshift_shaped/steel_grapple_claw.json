@@ -1,0 +1,24 @@
+{
+  "type": "klaxon:makeshift_shaped",
+  "category": "equipment",
+  "constant_ingredients": [],
+  "group": "steel_grapple_claw",
+  "key": {
+    "N": {
+      "tag": "klaxon:crude_inclusive_steel_nuggets"
+    },
+    "P": {
+      "tag": "klaxon:crude_inclusive_steel_plates"
+    }
+  },
+  "pattern": [
+    " P ",
+    "PNP",
+    " P "
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:steel_grapple_claw"
+  },
+  "show_notification": false
+}

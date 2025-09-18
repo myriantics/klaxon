@@ -34,6 +34,8 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.STEEL_LEGGINGS);
                 entries.add(KlaxonItems.STEEL_BOOTS);
 
+                entries.add(KlaxonItems.GRAPPLE_WINCH);
+                entries.add(KlaxonItems.STEEL_GRAPPLE_CLAW);
             })).build();
 
     public static final ItemGroup KLAXON_MACHINES = FabricItemGroup.builder()

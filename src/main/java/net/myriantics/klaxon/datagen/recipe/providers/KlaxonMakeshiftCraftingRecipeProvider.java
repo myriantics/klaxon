@@ -144,6 +144,20 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
+        addMakeshiftShapedCraftingRecipe(Map.of(
+                'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'N', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS)
+                ),
+                new String[] {
+                      " P ",
+                      "PNP",
+                      " P "
+                },
+                List.of(),
+                new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
     }
 
     private void buildShapelessCraftingRecipes() {
