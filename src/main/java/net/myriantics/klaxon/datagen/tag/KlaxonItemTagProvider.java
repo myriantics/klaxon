@@ -30,6 +30,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         buildMaterialStorageBlockTags();
         buildMaterialNuggetTags();
         buildMaterialPlateTags();
+        buildMaterialWireTags();
         buildMaterialSheetTags();
         buildFracturedMaterialTags();
         buildWoodTags();
@@ -154,6 +155,22 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_NUGGET);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET);
+    }
+
+    private void buildMaterialWireTags() {
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.WIRES)
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_WIRES)
+                .forceAddTag(KlaxonConventionalItemTags.IRON_WIRES)
+                .forceAddTag(KlaxonConventionalItemTags.GOLD_WIRES)
+                .forceAddTag(KlaxonConventionalItemTags.COPPER_WIRES);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_WIRES)
+                .add(KlaxonItems.STEEL_WIRE);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.IRON_WIRES)
+                .add(KlaxonItems.IRON_WIRE);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_WIRES)
+                .add(KlaxonItems.GOLD_WIRE);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_WIRES)
+                .add(KlaxonItems.COPPER_WIRE);
     }
 
     private void buildMakeshiftCraftingIngredientTags() {

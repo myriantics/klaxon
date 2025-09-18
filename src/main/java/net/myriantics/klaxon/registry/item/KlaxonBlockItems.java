@@ -21,6 +21,7 @@ public abstract class KlaxonBlockItems {
     public static final Item STEEL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_BLOCK);
     public static final Item STEEL_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_PLATING_BLOCK);
     public static final Item STEEL_CASING = registerBlockItem(KlaxonBlocks.STEEL_CASING);
+    public static final Item STEEL_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
     public static final Item STEEL_DOOR = registerBlockItem(KlaxonBlocks.STEEL_DOOR);
     public static final Item STEEL_TRAPDOOR = registerBlockItem(KlaxonBlocks.STEEL_TRAPDOOR);
 
@@ -33,9 +34,11 @@ public abstract class KlaxonBlockItems {
 
     // iron
     public static final Item IRON_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.IRON_PLATING_BLOCK);
+    public static final Item IRON_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK);
 
     // gold
     public static final Item GOLD_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.GOLD_PLATING_BLOCK);
+    public static final Item GOLD_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK);
 
     // copper
     public static final Item COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.COPPER_PLATING_BLOCK);
@@ -46,6 +49,15 @@ public abstract class KlaxonBlockItems {
     public static final Item WAXED_EXPOSED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
     public static final Item WAXED_WEATHERED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
     public static final Item WAXED_OXIDIZED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+
+    public static final Item COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WAXED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
 
     // rubber
     public static final Item RUBBER_BLOCK = registerBlockItem(KlaxonBlocks.RUBBER_BLOCK);

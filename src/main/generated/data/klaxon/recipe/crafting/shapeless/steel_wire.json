@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "steel_wire",
+  "ingredients": [
+    {
+      "item": "klaxon:steel_wire_spool"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "klaxon:steel_wire"
+  }
+}

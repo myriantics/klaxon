@@ -16,8 +16,6 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockFamilies;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 
-import java.security.InvalidParameterException;
-
 public class KlaxonModelProvider extends FabricModelProvider {
     public KlaxonModelProvider(FabricDataOutput output) {
         super(output);
@@ -54,29 +52,37 @@ public class KlaxonModelProvider extends FabricModelProvider {
         generator.registerLog(KlaxonBlocks.STRIPPED_HALLNOX_STEM).stem(KlaxonBlocks.STRIPPED_HALLNOX_STEM).wood(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
 
         // steel
-        registerPlatingBlock(generator, KlaxonBlocks.STEEL_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.STEEL_PLATING_BLOCK);
 
         // crude steel
-        registerPlatingBlock(generator, KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
 
         // iron
-        registerPlatingBlock(generator, KlaxonBlocks.IRON_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.IRON_PLATING_BLOCK);
 
         // gold
-        registerPlatingBlock(generator, KlaxonBlocks.GOLD_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.GOLD_PLATING_BLOCK);
 
         // copper // oxidation is so fun :D
-        registerPlatingBlock(generator, KlaxonBlocks.COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
-        registerPlatingBlock(generator, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
-        registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK, KlaxonBlocks.COPPER_PLATING_BLOCK);
-        registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
-        registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
-        registerOxidizedPlatingBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.COPPER_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
+        registerOxidizedPillarBlock(generator, KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK, KlaxonBlocks.COPPER_PLATING_BLOCK);
+        registerOxidizedPillarBlock(generator, KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK, KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
+        registerOxidizedPillarBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK, KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
+        registerOxidizedPillarBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+        registerOxidizedPillarBlock(generator, KlaxonBlocks.WAXED_COPPER_WIRE_SPOOL_BLOCK, KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK);
+        registerOxidizedPillarBlock(generator, KlaxonBlocks.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK, KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+        registerOxidizedPillarBlock(generator, KlaxonBlocks.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK, KlaxonBlocks.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+        registerOxidizedPillarBlock(generator, KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK, KlaxonBlocks.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
 
         // rubber
-        registerPlatingBlock(generator, KlaxonBlocks.RUBBER_SHEET_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.RUBBER_SHEET_BLOCK);
     }
 
     private void registerMiscBlockStateModels(BlockStateModelGenerator generator) {
@@ -188,7 +194,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
                 .coordinate(createDownDefaultRotationStates()));
     }
 
-    private void registerOxidizedPlatingBlock(BlockStateModelGenerator generator, Block platingBlock, Block modelBlock) {
+    private void registerOxidizedPillarBlock(BlockStateModelGenerator generator, Block platingBlock, Block modelBlock) {
         Identifier modelIdentifier = ModelIds.getBlockModelId(modelBlock);
         Identifier platingIdentifier = ModelIds.getBlockModelId(platingBlock);
         generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(platingBlock, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier)).coordinate(BlockStateModelGenerator.createAxisRotatedVariantMap()));
@@ -196,7 +202,7 @@ public class KlaxonModelProvider extends FabricModelProvider {
         generator.registerParentedItemModel(platingBlock, platingIdentifier);
     }
 
-    private void registerPlatingBlock(BlockStateModelGenerator generator, Block platingBlock) {
+    private void registerPillarBlock(BlockStateModelGenerator generator, Block platingBlock) {
         generator.registerAxisRotated(platingBlock, TexturedModel.CUBE_COLUMN);
     }
 

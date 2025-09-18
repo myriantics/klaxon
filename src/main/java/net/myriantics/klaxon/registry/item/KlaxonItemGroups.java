@@ -67,6 +67,12 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.COPPER_PLATING_BLOCK);
                 entries.add(KlaxonItems.RUBBER_SHEET_BLOCK);
 
+                // wire spools / wire storage blocks
+                entries.add(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.IRON_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK);
+
                 // casings and hulls
                 entries.add(KlaxonItems.STEEL_CASING);
                 entries.add(KlaxonItems.CRUDE_STEEL_CASING);
@@ -94,6 +100,12 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.STEEL_PLATE);
                 entries.add(KlaxonItems.RUBBER_SHEET);
                 entries.add(KlaxonItems.MOLTEN_RUBBER_SHEET);
+
+                // wires
+                entries.add(KlaxonItems.STEEL_WIRE);
+                entries.add(KlaxonItems.IRON_WIRE);
+                entries.add(KlaxonItems.GOLD_WIRE);
+                entries.add(KlaxonItems.COPPER_WIRE);
 
                 // blends
                 entries.add(KlaxonItems.CRUDE_STEEL_MIXTURE);
@@ -133,6 +145,19 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
                 entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
                 entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+
+                // wire spool blocks
+                entries.add(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.IRON_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
 
                 // casings
                 entries.add(KlaxonItems.STEEL_CASING);

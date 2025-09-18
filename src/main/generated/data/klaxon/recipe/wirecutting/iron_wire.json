@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:wirecutting",
+  "input_ingredient": {
+    "tag": "c:plates/iron"
+  },
+  "output_stack": {
+    "count": 3,
+    "id": "klaxon:iron_wire"
+  },
+  "sound_override": {}
+}

@@ -163,6 +163,8 @@ public abstract class KlaxonBlockTags {
             createTag("machines");
     public static final TagKey<Block> HALLNOX_STEMS =
             createTag("hallnox_stems");
+    public static final TagKey<Block> WIRE_SPOOLS =
+            createTag("wire_spools");
 
     // advancement tags
 

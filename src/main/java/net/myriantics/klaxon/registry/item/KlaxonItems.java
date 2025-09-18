@@ -126,6 +126,12 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item RUBBER_SHEET = registerReallySimpleItem("rubber_sheet");
     public static final Item MOLTEN_RUBBER_SHEET = registerReallySimpleItem("molten_rubber_sheet");
 
+    // wires
+    public static final Item STEEL_WIRE = registerReallySimpleItem("steel_wire");
+    public static final Item IRON_WIRE = registerReallySimpleItem("iron_wire");
+    public static final Item GOLD_WIRE = registerReallySimpleItem("gold_wire");
+    public static final Item COPPER_WIRE = registerReallySimpleItem("copper_wire");
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);
     }

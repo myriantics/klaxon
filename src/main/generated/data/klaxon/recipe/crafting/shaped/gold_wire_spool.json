@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "gold_wire_spool",
+  "key": {
+    "F": {
+      "tag": "minecraft:wooden_fences"
+    },
+    "W": {
+      "item": "klaxon:gold_wire"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "WFW",
+    "WWW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:gold_wire_spool"
+  }
+}

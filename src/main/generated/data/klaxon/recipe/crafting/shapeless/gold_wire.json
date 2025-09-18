@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "gold_wire",
+  "ingredients": [
+    {
+      "item": "klaxon:gold_wire_spool"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "klaxon:gold_wire"
+  }
+}

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
@@ -407,6 +408,85 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
 
         add2x2PackingRecipe(Ingredient.ofItems(KlaxonItems.FRACTURED_COAL), new ItemStack(Items.COAL), null, null);
         add2x2PackingRecipe(Ingredient.ofItems(KlaxonItems.FRACTURED_CHARCOAL), new ItemStack(Items.CHARCOAL), null, null);
+
+        // these take fences in the center and don't give them back because i'm EVIL HAHAHAHAHA
+        addShapedCraftingRecipe(Map.of(
+                'W', Ingredient.ofItems(KlaxonItems.STEEL_WIRE),
+                'F', Ingredient.fromTag(ItemTags.WOODEN_FENCES)
+                ),
+                new String[] {
+                        "WWW",
+                        "WFW",
+                        "WWW"
+                },
+                new ItemStack(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK),
+                CraftingRecipeCategory.MISC,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                'W', Ingredient.ofItems(KlaxonItems.IRON_WIRE),
+                'F', Ingredient.fromTag(ItemTags.WOODEN_FENCES)
+                ),
+                new String[] {
+                        "WWW",
+                        "WFW",
+                        "WWW"
+                },
+                new ItemStack(KlaxonItems.IRON_WIRE_SPOOL_BLOCK),
+                CraftingRecipeCategory.MISC,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'W', Ingredient.ofItems(KlaxonItems.GOLD_WIRE),
+                        'F', Ingredient.fromTag(ItemTags.WOODEN_FENCES)
+                ),
+                new String[] {
+                        "WWW",
+                        "WFW",
+                        "WWW"
+                },
+                new ItemStack(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK),
+                CraftingRecipeCategory.MISC,
+                null
+        );
+        addShapedCraftingRecipe(Map.of(
+                        'W', Ingredient.ofItems(KlaxonItems.COPPER_WIRE),
+                        'F', Ingredient.fromTag(ItemTags.WOODEN_FENCES)
+                ),
+                new String[] {
+                        "WWW",
+                        "WFW",
+                        "WWW"
+                },
+                new ItemStack(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK),
+                CraftingRecipeCategory.MISC,
+                null
+        );
+
+        addShapelessCraftingRecipe(
+                Ingredient.ofItems(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK),
+                new ItemStack(KlaxonItems.STEEL_WIRE, 8),
+                CraftingRecipeCategory.MISC,
+                null
+        );
+        addShapelessCraftingRecipe(
+                Ingredient.ofItems(KlaxonItems.IRON_WIRE_SPOOL_BLOCK),
+                new ItemStack(KlaxonItems.IRON_WIRE, 8),
+                CraftingRecipeCategory.MISC,
+                null
+        );
+        addShapelessCraftingRecipe(
+                Ingredient.ofItems(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK),
+                new ItemStack(KlaxonItems.GOLD_WIRE, 8),
+                CraftingRecipeCategory.MISC,
+                null
+        );
+        addShapelessCraftingRecipe(
+                Ingredient.fromTag(KlaxonItemTags.WAXING_STATUS_INCLUSIVE_COPPER_WIRE_SPOOL_BLOCKS),
+                new ItemStack(KlaxonItems.COPPER_WIRE, 8),
+                CraftingRecipeCategory.MISC,
+                null
+        );
     }
 
     private void buildCompressionCraftingRecipes() {

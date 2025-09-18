@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "iron_wire_spool",
+  "key": {
+    "F": {
+      "tag": "minecraft:wooden_fences"
+    },
+    "W": {
+      "item": "klaxon:iron_wire"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "WFW",
+    "WWW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:iron_wire_spool"
+  }
+}

@@ -24,6 +24,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(KlaxonBlocks.STEEL_BLOCK);
         addDrop(KlaxonBlocks.STEEL_CASING);
         addDrop(KlaxonBlocks.STEEL_PLATING_BLOCK);
+        addDrop(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
         addDrop(KlaxonBlocks.STEEL_DOOR, this::doorDrops);
         addDrop(KlaxonBlocks.STEEL_TRAPDOOR);
 
@@ -36,9 +37,11 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         // iron
         addDrop(KlaxonBlocks.IRON_PLATING_BLOCK);
+        addDrop(KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK);
 
         // gold
         addDrop(KlaxonBlocks.GOLD_PLATING_BLOCK);
+        addDrop(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK);
 
         // copper
         addDrop(KlaxonBlocks.COPPER_PLATING_BLOCK);
@@ -49,6 +52,14 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
         addDrop(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
         addDrop(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+        addDrop(KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK);
+        addDrop(KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+        addDrop(KlaxonBlocks.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+        addDrop(KlaxonBlocks.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+        addDrop(KlaxonBlocks.WAXED_COPPER_WIRE_SPOOL_BLOCK);
+        addDrop(KlaxonBlocks.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+        addDrop(KlaxonBlocks.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+        addDrop(KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
 
         // rubber
         addDrop(KlaxonBlocks.RUBBER_BLOCK);

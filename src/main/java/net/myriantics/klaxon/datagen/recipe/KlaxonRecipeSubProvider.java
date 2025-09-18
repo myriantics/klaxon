@@ -179,6 +179,12 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
+    public void addShapelessCraftingRecipe(Ingredient input, ItemStack output,
+                                           @Nullable CraftingRecipeCategory category, @Nullable String group,
+                                           final ResourceCondition... conditions) {
+        addShapelessCraftingRecipe(DefaultedList.copyOf(Ingredient.EMPTY, input), output, category, group, conditions);
+    }
+
     public void addShapelessCraftingRecipe(DefaultedList<Ingredient> input, ItemStack output,
                                            @Nullable CraftingRecipeCategory category, @Nullable String group,
                                            final ResourceCondition... conditions) {

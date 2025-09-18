@@ -26,6 +26,8 @@ public abstract class KlaxonBlocks {
             new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
     public static final Block STEEL_CASING = registerBlock("steel_casing",
             new Block(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK)));
+    public static final Block STEEL_WIRE_SPOOL_BLOCK = registerBlock("steel_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
     public static final Block STEEL_DOOR = registerBlock("steel_door",
             new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK).nonOpaque()));
     public static final Block STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
@@ -153,12 +155,16 @@ public abstract class KlaxonBlocks {
     // iron
     public static final Block IRON_PLATING_BLOCK = registerBlock("iron_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+    public static final Block IRON_WIRE_SPOOL_BLOCK = registerBlock("iron_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
 
     // gold
     public static final Block GOLD_PLATING_BLOCK = registerBlock("gold_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.GOLD_BLOCK)));
+    public static final Block GOLD_WIRE_SPOOL_BLOCK = registerBlock("gold_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.GOLD_BLOCK)));
 
-    // copper
+    // copper plating blocks
     public static final Block COPPER_PLATING_BLOCK = registerBlock("copper_plating_block",
             new OxidizablePillarBlock(Oxidizable.OxidationLevel.UNAFFECTED, AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)));
     public static final Block EXPOSED_COPPER_PLATING_BLOCK = registerBlock("exposed_copper_plating_block",
@@ -175,6 +181,23 @@ public abstract class KlaxonBlocks {
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER)));
     public static final Block WAXED_OXIDIZED_COPPER_PLATING_BLOCK = registerBlock("waxed_oxidized_copper_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER)));
+    // copper wire spool
+    public static final Block COPPER_WIRE_SPOOL_BLOCK = registerBlock("copper_wire_spool",
+            new OxidizablePillarBlock(Oxidizable.OxidationLevel.UNAFFECTED, AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)));
+    public static final Block EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("exposed_copper_wire_spool",
+            new OxidizablePillarBlock(Oxidizable.OxidationLevel.EXPOSED, AbstractBlock.Settings.copy(Blocks.EXPOSED_COPPER)));
+    public static final Block WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("weathered_copper_wire_spool",
+            new OxidizablePillarBlock(Oxidizable.OxidationLevel.WEATHERED, AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER)));
+    public static final Block OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("oxidized_copper_wire_spool",
+            new OxidizablePillarBlock(Oxidizable.OxidationLevel.OXIDIZED, AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER)));
+    public static final Block WAXED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("waxed_copper_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WAXED_COPPER_BLOCK)));
+    public static final Block WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("waxed_exposed_copper_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WAXED_EXPOSED_COPPER)));
+    public static final Block WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("waxed_weathered_copper_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WAXED_WEATHERED_COPPER)));
+    public static final Block WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("waxed_oxidized_copper_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WAXED_OXIDIZED_COPPER)));
 
     // rubber
     public static final Block RUBBER_BLOCK = registerBlock("rubber_block",

@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:wirecutting",
+  "input_ingredient": {
+    "tag": "c:plates/gold"
+  },
+  "output_stack": {
+    "count": 3,
+    "id": "klaxon:gold_wire"
+  },
+  "sound_override": {}
+}

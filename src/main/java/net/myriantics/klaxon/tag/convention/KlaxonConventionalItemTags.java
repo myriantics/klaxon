@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 public class KlaxonConventionalItemTags {
 
     // categories
+    public static final TagKey<Item> WIRES = createConventionalItemTag("wires");
     public static final TagKey<Item> PLATES = createConventionalItemTag("plates");
     public static final TagKey<Item> SHEETS = createConventionalItemTag("sheets");
     public static final TagKey<Item> GLOBS = createConventionalItemTag("globs");
@@ -36,6 +37,12 @@ public class KlaxonConventionalItemTags {
     public static final TagKey<Item> IRON_PLATES = createConventionalPlateTag("iron");
     public static final TagKey<Item> GOLD_PLATES = createConventionalPlateTag("gold");
     public static final TagKey<Item> COPPER_PLATES = createConventionalPlateTag("copper");
+
+    // wires
+    public static final TagKey<Item> STEEL_WIRES = createConventionalWireTag("steel");
+    public static final TagKey<Item> IRON_WIRES = createConventionalWireTag("iron");
+    public static final TagKey<Item> GOLD_WIRES = createConventionalWireTag("gold");
+    public static final TagKey<Item> COPPER_WIRES = createConventionalWireTag("copper");
 
     // sheets
     public static final TagKey<Item> RUBBER_SHEETS = createConventionalSheetTag("rubber");
@@ -66,6 +73,10 @@ public class KlaxonConventionalItemTags {
 
     private static TagKey<Item> createConventionalPlateTag(String name) {
         return createConventionalItemTag("plates/" + name);
+    }
+
+    private static TagKey<Item> createConventionalWireTag(String name) {
+        return createConventionalItemTag("wires/" + name);
     }
 
     private static TagKey<Item> createConventionalSheetTag(String name) {
