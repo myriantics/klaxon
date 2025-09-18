@@ -9,6 +9,11 @@ import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -18,6 +23,11 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.ItemScatterer;
+import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -37,6 +47,8 @@ public final class BlockIngredient implements Predicate<BlockState> {
     private final BlockIngredient.Entry[] entries;
     @Nullable
     private Block[] matchingBlocks;
+    @Nullable
+    private ItemStack[] displayStacksCache = null;
     @Nullable
     private IntList ids;
     public static final Codec<BlockIngredient> ALLOW_EMPTY_CODEC = createCodec(true);
@@ -68,6 +80,27 @@ public final class BlockIngredient implements Predicate<BlockState> {
         }
 
         return matchingBlocks;
+    }
+
+    public ItemStack[] getDisplayStacks() {
+        if (displayStacksCache == null) {
+            int size = getMatchingBlocks().length;
+            ItemStack[] displayStacks = new ItemStack[size];
+
+            for (int i = 0; i < size; i++) {
+                Block block = getMatchingBlocks()[i];
+
+                // add newly made stack to
+                displayStacks[i] = KlaxonBlockItems.getBlockDisplayStack(block);
+            }
+
+            // cache the newly computed stacks
+            this.displayStacksCache = displayStacks;
+
+            return displayStacks;
+        } else {
+            return displayStacksCache;
+        }
     }
 
     public boolean test(@Nullable BlockState state) {

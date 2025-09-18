@@ -26,6 +26,8 @@ import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockEntityTypeTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.Random;
@@ -56,6 +58,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.HAMMERING, EmiIngredient.of(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS));
         registry.addWorkstation(KlaxonEmiRecipeCategories.WIRECUTTING, EmiIngredient.of(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
 
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(PotionContentsComponent.createStack(Items.SPLASH_POTION, Potions.WATER)));
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.POWDER_SNOW_BUCKET));
@@ -75,6 +78,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.ITEM_COOLING, ItemCoolingEmiRecipe::new);
+        addAll(registry, KlaxonRecipeTypes.NETHER_REACTION, NetherReactionEmiRecipe::new);
         addAll(registry, KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION, (entry) -> {
             ManualItemApplicationRecipe recipe = entry.value();
             return EmiWorldInteractionRecipe.builder()

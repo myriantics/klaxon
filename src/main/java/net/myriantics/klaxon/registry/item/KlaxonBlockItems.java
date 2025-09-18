@@ -1,14 +1,18 @@
 package net.myriantics.klaxon.registry.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.HangingSignItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.SignItem;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+
+import java.util.List;
 
 // KlaxonItems inherits this so you can access all the item fields from KlaxonItems.
 public abstract class KlaxonBlockItems {
@@ -97,6 +101,33 @@ public abstract class KlaxonBlockItems {
 
     private static Item registerBlockItem(String name, BlockItem blockItem) {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), blockItem);
+    }
+
+    /**
+     * Creates an ItemStack that illustrates the given block, for use in recipe viewers and machine output displays.
+     * @param block The block to attempt item yonkage on.
+     * @return New ItemStack of block's item with size 1 if block has an associated BlockItem, and outputs a barrier with lore if no BlockItem is present.
+     */
+    public static ItemStack getBlockDisplayStack(Block block) {
+
+        // create items based off of blockitems if possible.
+        // if a block doesn't have a blockitem, fall back to barrier with lore
+        if (block.asItem().equals(Items.AIR)) {
+            ItemStack displayStack = new ItemStack(Items.BARRIER);
+
+            // apply components
+            displayStack.applyComponentsFrom(ComponentMap.builder()
+                    .add(DataComponentTypes.CUSTOM_NAME, block.getName().formatted(Formatting.RED))
+                    .add(DataComponentTypes.LORE, new LoreComponent(
+                            List.of(Text.translatable("klaxon.text.tooltip.lore.missing_block_item")
+                                    .formatted(Formatting.BOLD))
+                    )).build()
+            );
+
+            return displayStack;
+        } else {
+            return new ItemStack(block.asItem());
+        }
     }
 
     public static void init() {

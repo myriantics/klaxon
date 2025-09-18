@@ -13,15 +13,39 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 // also yoinked from spectrum
-public class KlaxonEmiRecipeCategories {
-    public static final EmiRecipeCategory BLAST_PROCESSING = new KlaxonCategory(KlaxonCommon.locate("blast_processing"), EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
-    public static final EmiRecipeCategory HAMMERING = new KlaxonCategory(KlaxonCommon.locate("hammering"), EmiIngredient.of(Ingredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS)));
-    public static final EmiRecipeCategory WIRECUTTING = new KlaxonCategory(KlaxonCommon.locate("wirecutting"), EmiIngredient.of(Ingredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS)));
-    public static final EmiRecipeCategory ITEM_EXPLOSION_POWER = new KlaxonCategory(KlaxonCommon.locate("item_explosion_power"), EmiStack.of(Blocks.TNT));
-    public static final EmiRecipeCategory ITEM_COOLING = new KlaxonCategory(KlaxonCommon.locate("item_cooling"), EmiIngredient.of(Ingredient.ofItems(Items.WATER_BUCKET)));
+public abstract class KlaxonEmiRecipeCategories {
+    public static final EmiRecipeCategory BLAST_PROCESSING = register(
+            KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
+            EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR)
+    );
+    public static final EmiRecipeCategory HAMMERING = register(
+            KlaxonRecipeTypes.HAMMERING_RECIPE_ID,
+            EmiIngredient.of(Ingredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS))
+    );
+    public static final EmiRecipeCategory WIRECUTTING = register(
+            KlaxonRecipeTypes.WIRECUTTING_RECIPE_ID,
+            EmiIngredient.of(Ingredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS))
+    );
+    public static final EmiRecipeCategory ITEM_EXPLOSION_POWER = register(
+            KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID,
+            EmiStack.of(Items.TNT)
+    );
+    public static final EmiRecipeCategory ITEM_COOLING = register(
+            KlaxonRecipeTypes.COOLING_RECIPE_ID,
+            EmiIngredient.of(Ingredient.ofItems(Items.WATER_BUCKET))
+    );
+    public static final EmiRecipeCategory NETHER_REACTION = register(
+            KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
+            EmiStack.of(KlaxonItems.NETHER_REACTOR_CORE)
+    );
+
+    private static KlaxonCategory register(String name, EmiRenderable icon) {
+        return new KlaxonCategory(KlaxonCommon.locate(name), icon);
+    }
 
     private static class KlaxonCategory extends EmiRecipeCategory {
         private final String key;
