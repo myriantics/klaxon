@@ -149,7 +149,7 @@
   "tag.item.klaxon.no_xp_cost_repairable": "Items Repairable with No EXP",
   "tag.item.klaxon.steel_armor": "Steel Armor",
   "tag.item.klaxon.steel_equipment": "Steel Equipment",
-  "tag.item.klaxon.steel_repairable_flint_and_steel": "Steel Repairable Flint and Steel",
+  "tag.item.klaxon.grapple_claws": "Grapple Claws",
   "tag.item.klaxon.unenchantable": "Unenchantable Items",
   "tag.item.klaxon.innate_unbreaking_equipment": "Innate Unbreaking Equipment",
   "tag.item.klaxon.recipe_processing_hammers": "Recipe Processing Hammers",
@@ -215,6 +215,7 @@
   "container.klaxon.wirecutting.title": "Wirecutting",
   "container.klaxon.item_cooling.title": "Item Cooling",
   "container.klaxon.blast_processing.title": "Blast Processing",
+  "container.klaxon.nether_reaction.title": "Nether Reaction",
 
   "itemGroup.klaxon.building_blocks": "KLAXON's Building Blocks",
   "itemGroup.klaxon.equipment": "KLAXON's Equipment",
@@ -248,7 +249,5 @@
   "advancements.klaxon.stage_one.obtain_any_rubber_glob.title": "Biggering",
   "advancements.klaxon.stage_one.obtain_any_rubber_glob.description": "Obtain Rubber by blast processing a valid log",
   "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.title": "Smash And Grab",
-  "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.description": "Veinmine Glowstone on your Grapple Claw's return journey",
-
-  "gamerule.shouldBlastProcessorExplosionModifyWorld": "Blast Processor Explosions should modify world"
+  "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.description": "Veinmine Glowstone on your Grapple Claw's return journey"
 }

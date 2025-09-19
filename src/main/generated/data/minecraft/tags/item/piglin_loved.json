@@ -3,6 +3,8 @@
     "klaxon:gold_plate",
     "klaxon:fractured_raw_gold",
     "klaxon:fractured_gold",
-    "klaxon:gold_plating_block"
+    "klaxon:gold_plating_block",
+    "klaxon:gold_wire",
+    "klaxon:gold_wire_spool"
   ]
 }

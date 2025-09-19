@@ -111,7 +111,6 @@ public class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(KlaxonItemTags.INFINITELY_REPAIRABLE, "Infinitely Repairable Items");
         translationBuilder.add(KlaxonItemTags.NO_XP_COST_REPAIRABLE, "Items Repairable with No EXP");
         translationBuilder.add(KlaxonItemTags.UNENCHANTABLE, "Unenchantable Items");
-        translationBuilder.add(KlaxonItemTags.STEEL_REPAIRABLE_FLINT_AND_STEEL, "Steel Nugget Repairable Flint & Steel");
         translationBuilder.add(KlaxonItemTags.MAKESHIFT_REPAIR_MATERIALS, "Makeshift Repair Materials");
 
         // makeshift crafting ingredients

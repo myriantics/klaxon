@@ -4,7 +4,6 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 
 public abstract class KlaxonItemTags {
     // makeshift tags
@@ -48,8 +47,6 @@ public abstract class KlaxonItemTags {
             createTag("no_xp_cost_repairable");
     public static final TagKey<Item> UNENCHANTABLE =
             createTag("unenchantable");
-    public static final TagKey<Item> STEEL_REPAIRABLE_FLINT_AND_STEEL =
-            createTag("steel_repairable_flint_and_steel");
 
     // behavior tags
     public static final TagKey<Item> HEAVY_EQUIPMENT =

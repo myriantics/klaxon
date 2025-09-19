@@ -3,6 +3,7 @@ package net.myriantics.klaxon.compat.emi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -46,11 +47,9 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerCategories(EmiRegistry registry) {
-        registry.addCategory(KlaxonEmiRecipeCategories.HAMMERING);
-        registry.addCategory(KlaxonEmiRecipeCategories.WIRECUTTING);
-        registry.addCategory(KlaxonEmiRecipeCategories.BLAST_PROCESSING);
-        registry.addCategory(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER);
-        registry.addCategory(KlaxonEmiRecipeCategories.ITEM_COOLING);
+        for (EmiRecipeCategory category : KlaxonEmiRecipeCategories.CATEGORIES) {
+            registry.addCategory(category);
+        }
     }
 
     private void registerWorkstations(EmiRegistry registry) {

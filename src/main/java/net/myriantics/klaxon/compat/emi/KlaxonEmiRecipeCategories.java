@@ -16,8 +16,12 @@ import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.ArrayList;
+
 // also yoinked from spectrum
 public abstract class KlaxonEmiRecipeCategories {
+    public static final ArrayList<EmiRecipeCategory> CATEGORIES = new ArrayList<>();
+
     public static final EmiRecipeCategory BLAST_PROCESSING = register(
             KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
             EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR)
@@ -44,7 +48,9 @@ public abstract class KlaxonEmiRecipeCategories {
     );
 
     private static KlaxonCategory register(String name, EmiRenderable icon) {
-        return new KlaxonCategory(KlaxonCommon.locate(name), icon);
+        KlaxonCategory category = new KlaxonCategory(KlaxonCommon.locate(name), icon);
+        CATEGORIES.add(category);
+        return category;
     }
 
     private static class KlaxonCategory extends EmiRecipeCategory {
