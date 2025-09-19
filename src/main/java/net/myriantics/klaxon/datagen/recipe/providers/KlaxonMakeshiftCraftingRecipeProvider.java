@@ -1,9 +1,12 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
+import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RawShapedRecipe;
+import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
@@ -11,6 +14,7 @@ import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -155,6 +159,25 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 },
                 List.of(),
                 new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW),
+                CraftingRecipeCategory.EQUIPMENT,
+                null
+        );
+        addMakeshiftShapedCraftingRecipe(Map.of(
+                'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                'R', Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
+                'S', Ingredient.ofItems(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK),
+                'C', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING)
+                ),
+                new String[] {
+                        "RS ",
+                        "PC ",
+                        "PR "
+                },
+                List.of(
+                        Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
+                        Ingredient.ofItems(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK)
+                ),
+                new ItemStack(KlaxonItems.GRAPPLE_WINCH),
                 CraftingRecipeCategory.EQUIPMENT,
                 null
         );
