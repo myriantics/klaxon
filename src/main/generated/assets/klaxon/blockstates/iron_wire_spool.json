@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "klaxon:block/iron_wire_spool",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "klaxon:block/iron_wire_spool"
+    },
+    "axis=z": {
+      "model": "klaxon:block/iron_wire_spool",
+      "x": 90
+    }
+  }
+}

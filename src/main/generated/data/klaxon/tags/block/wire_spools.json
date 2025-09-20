@@ -1,0 +1,15 @@
+{
+  "values": [
+    "klaxon:steel_wire_spool",
+    "klaxon:iron_wire_spool",
+    "klaxon:gold_wire_spool",
+    "klaxon:copper_wire_spool",
+    "klaxon:exposed_copper_wire_spool",
+    "klaxon:weathered_copper_wire_spool",
+    "klaxon:oxidized_copper_wire_spool",
+    "klaxon:waxed_copper_wire_spool",
+    "klaxon:waxed_exposed_copper_wire_spool",
+    "klaxon:waxed_weathered_copper_wire_spool",
+    "klaxon:waxed_oxidized_copper_wire_spool"
+  ]
+}

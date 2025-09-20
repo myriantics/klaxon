@@ -60,6 +60,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.GRATES)
                 .forceAddTag(ConventionalBlockTags.CHAINS)
                 .forceAddTag(ConventionalBlockTags.ROPES)
+                .forceAddTag(KlaxonBlockTags.WIRE_SPOOLS)
                 .forceAddTag(BlockTags.CEILING_HANGING_SIGNS)
                 .forceAddTag(BlockTags.WOOL_CARPETS)
                 .forceAddTag(BlockTags.WOOL)
@@ -142,6 +143,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .forceAddTag(KlaxonConventionalBlockTags.STEEL)
                 .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL)
+                .forceAddTag(KlaxonBlockTags.WIRE_SPOOLS)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE)
                 .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE)
@@ -521,6 +523,20 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.TWISTING_VINES_PLANT)
                 .add(Blocks.TWISTING_VINES)
                 .add(Blocks.VINE);
+        getOrCreateTagBuilder(KlaxonBlockTags.WIRE_SPOOLS)
+                .add(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK)
+                .add(KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK)
+                .add(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK)
+                .add(
+                        KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK,
+                        KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK,
+                        KlaxonBlocks.WEATHERED_COPPER_WIRE_SPOOL_BLOCK,
+                        KlaxonBlocks.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK,
+                        KlaxonBlocks.WAXED_COPPER_WIRE_SPOOL_BLOCK,
+                        KlaxonBlocks.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK,
+                        KlaxonBlocks.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK,
+                        KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK
+                );
 
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.RUBBER)
                 .add(KlaxonBlocks.RUBBER_BLOCK)

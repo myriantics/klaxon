@@ -53,15 +53,18 @@ public class KlaxonModelProvider extends FabricModelProvider {
 
         // steel
         registerPillarBlock(generator, KlaxonBlocks.STEEL_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
 
         // crude steel
         registerPillarBlock(generator, KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
 
         // iron
         registerPillarBlock(generator, KlaxonBlocks.IRON_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK);
 
         // gold
         registerPillarBlock(generator, KlaxonBlocks.GOLD_PLATING_BLOCK);
+        registerPillarBlock(generator, KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK);
 
         // copper // oxidation is so fun :D
         registerPillarBlock(generator, KlaxonBlocks.COPPER_PLATING_BLOCK);
