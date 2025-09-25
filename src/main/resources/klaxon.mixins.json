@@ -30,6 +30,7 @@
     "minecraft.grapple_winch.EntityMixin",
     "minecraft.grapple_winch.PersistentProjectileEntityMixin",
     "minecraft.grapple_winch.PlayerEntityMixin",
+    "minecraft.grapple_winch.PlayerManagerMixin",
     "minecraft.grapple_winch.ServerPlayNetworkHandlerMixin",
     "minecraft.hallnox_bulb.BlockItemMixin",
     "minecraft.hallnox_pod.FallingBlockEntityMixin",
@@ -64,7 +65,6 @@
     "minecraft.wrench.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
-    "minecraft.grapple_winch.ClientPlayerInteractionManagerMixin",
     "minecraft.advanced_item_models.ItemRendererMixin",
     "minecraft.advanced_item_models.JsonUnbakedModelAccessor",
     "minecraft.advanced_item_models.ModelLoaderMixin",
@@ -74,6 +74,7 @@
     "minecraft.dual_wielding.HeldItemRendererMixin",
     "minecraft.dual_wielding.MinecraftClientMixin",
     "minecraft.grapple_winch.ClientPlayerEntityMixin",
+    "minecraft.grapple_winch.ClientPlayerInteractionManagerMixin",
     "minecraft.grapple_winch.MinecraftClientMixin",
     "minecraft.grapple_winch.WorldRendererMixin",
     "minecraft.item_components.walljump_ability.MinecraftClientMixin",

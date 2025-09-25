@@ -45,7 +45,7 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
         if (
                 instance instanceof GrappleClawEntity grappleClaw
                 && grappleClaw.getOwner() instanceof PlayerEntityGrappleAccess access
-                && this.equals(access.klaxon$getGrappleClaw())
+                && instance.equals(access.klaxon$getGrappleClaw())
                 && access.klaxon$isRetracting()
         ) {
             return;

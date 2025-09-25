@@ -50,6 +50,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
 
@@ -59,6 +60,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     private boolean isWinchCableAttached = false;
     private int ticksSinceDamaged = 0;
 
+    private PlayerEntity attachedPlayerEntity = null;
+    private UUID attachedPlayerEntityUUID = null;
 
     public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, World world) {
         super(entityType, world);
@@ -488,10 +491,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
      */
     public boolean attachCable(ServerPlayerEntity serverPlayer) {
         if (!this.isRemoved()) {
-            PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) serverPlayer;
             // make sure we're not reattaching
-            if (!this.equals(access.klaxon$getGrappleClaw())) {
-                access.klaxon$setGrappleClaw(this);
+            if (!isAttachedToPlayer(serverPlayer)) {
+                ((PlayerEntityGrappleAccess) serverPlayer).klaxon$setGrappleClaw(this);
                 this.setOwner(serverPlayer);
                 GrappleWinchUtil.updateClientFallbackData(serverPlayer, this);
                 isWinchCableAttached = true;
@@ -536,20 +538,63 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        isWinchCableAttached = nbt.getBoolean(KlaxonNBTIds.IS_WINCH_CABLE_ATTACHED);
-        ticksSinceDamaged = nbt.getInt(KlaxonNBTIds.TICKS_SINCE_DAMAGED);
+    public @Nullable PlayerEntity getAttachedPlayer() {
+        // if there's no cable attached, return null.
+        if (!isWinchCableAttached) {
+            return null;
+        }
 
-        super.readNbt(nbt);
+        // return the attached player if it's present
+        if (attachedPlayerEntity != null) {
+            return attachedPlayerEntity;
+        }
+
+        // update attached player if it's missing but the UUID is present.
+        if (attachedPlayerEntityUUID != null && this.getWorld() instanceof ServerWorld serverWorld) {
+            Entity entity = serverWorld.getEntity(attachedPlayerEntityUUID);
+
+            if (entity instanceof PlayerEntity player) {
+                attachedPlayerEntity = player;
+            }
+
+            return attachedPlayerEntity;
+        }
+
+        // if all else fails, return null
+        return null;
+    }
+
+    public boolean isAttachedToPlayer(PlayerEntity player) {
+        return isWinchCableAttached && attachedPlayerEntity != null && attachedPlayerEntity.equals(player) && this.equals(((PlayerEntityGrappleAccess) player).klaxon$getGrappleClaw());
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+
+        if (nbt.contains(KlaxonNBTIds.IS_WINCH_CABLE_ATTACHED)) {
+            isWinchCableAttached = nbt.getBoolean(KlaxonNBTIds.IS_WINCH_CABLE_ATTACHED);
+        }
+
+        if (nbt.contains(KlaxonNBTIds.TICKS_SINCE_DAMAGED)) {
+            ticksSinceDamaged = nbt.getInt(KlaxonNBTIds.TICKS_SINCE_DAMAGED);
+        }
+
+        if (nbt.contains(KlaxonNBTIds.WINCH_ATTACHED_PLAYER)) {
+            attachedPlayerEntityUUID = nbt.getUuid(KlaxonNBTIds.WINCH_ATTACHED_PLAYER);
+        }
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+
         nbt.putBoolean(KlaxonNBTIds.IS_WINCH_CABLE_ATTACHED, isWinchCableAttached);
         nbt.putInt(KlaxonNBTIds.TICKS_SINCE_DAMAGED, ticksSinceDamaged);
 
-        return super.writeNbt(nbt);
+        if (this.attachedPlayerEntityUUID != null) {
+            nbt.putUuid(KlaxonNBTIds.WINCH_ATTACHED_PLAYER, attachedPlayerEntityUUID);
+        }
     }
 
     @Override

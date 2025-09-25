@@ -1,41 +1,33 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
+import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.UUID;
+import java.util.Optional;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEntityGrappleAccess {
 
     @Unique
     private GrappleClawEntity klaxon$grappleClaw = null;
-
-    @Unique
-    private UUID klaxon$winchConnectionUUID = null;
 
     @Unique
     private boolean klaxon$isRetractingGrappleWinch = false;
@@ -53,16 +45,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     }
 
     @Override
-    public GrappleClawEntity klaxon$getGrappleClaw() {
+    public @Nullable GrappleClawEntity klaxon$getGrappleClaw() {
         if (this.klaxon$grappleClaw != null && this.klaxon$grappleClaw.isRemoved()) {
             this.klaxon$grappleClaw = null;
-        } else if (this.klaxon$winchConnectionUUID != null && this.getWorld() instanceof ServerWorld serverWorld) {
-            Entity winchConnection = serverWorld.getEntity(this.klaxon$winchConnectionUUID);
-
-            if (winchConnection instanceof GrappleClawEntity grappleClaw) {
-                // update grapple claw if we succeed
-                this.klaxon$grappleClaw = grappleClaw;
-            }
         }
 
         return this.klaxon$grappleClaw;
@@ -71,9 +56,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     @Override
     public void klaxon$setGrappleClaw(GrappleClawEntity grappleClaw) {
         this.klaxon$grappleClaw = grappleClaw;
-        if (grappleClaw != null) {
-            this.klaxon$winchConnectionUUID = grappleClaw.getUuid();
-        }
     }
 
     @Override
@@ -204,11 +186,21 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             at = @At(value = "TAIL")
     )
     private void klaxon$writePersistentData(NbtCompound nbt, CallbackInfo ci) {
-        if (this.klaxon$winchConnectionUUID != null) {
-            nbt.putUuid("klaxon.winch_connection", this.klaxon$winchConnectionUUID);
+
+        // write grapple claw data to player nbt like you would a vehicle
+        if ((Object) this instanceof ServerPlayerEntity serverPlayer) {
+            GrappleClawEntity grappleClaw = this.klaxon$getGrappleClaw();
+
+            if (grappleClaw != null) {
+                NbtCompound grappleClawCompound = new NbtCompound();
+                grappleClaw.saveNbt(grappleClawCompound);
+                nbt.put(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW, grappleClawCompound);
+            } else {
+                nbt.remove(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW);
+            }
         }
 
-        nbt.putDouble("klaxon.current_winch_cable_length", this.klaxon$currentWinchCableLength);
+        nbt.putDouble(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH, this.klaxon$currentWinchCableLength);
     }
 
     @Inject(
@@ -216,13 +208,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             at = @At(value = "TAIL")
     )
     private void klaxon$readPersistentData(NbtCompound nbt, CallbackInfo ci) {
-        if (nbt.containsUuid("klaxon.winch_connection")) {
-            this.klaxon$winchConnectionUUID = nbt.getUuid("klaxon.winch_connection");
-            this.klaxon$grappleClaw = null;
+        if (nbt.contains(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW)) {
+            NbtCompound grappleClawCompound = nbt.getCompound(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW);
+            Optional<Entity> maybeGrappleClaw = EntityType.getEntityFromNbt(grappleClawCompound, getWorld());
+            if (maybeGrappleClaw.isPresent() && maybeGrappleClaw.get() instanceof GrappleClawEntity grappleClaw) {
+                this.klaxon$setGrappleClaw(grappleClaw);
+                if ((PlayerEntity) (Object) this instanceof ServerPlayerEntity serverPlayer) {
+                    grappleClaw.attachCable(serverPlayer);
+                }
+            }
         }
 
-        if (nbt.containsUuid("klaxon.current_winch_cable_length")) {
-            this.klaxon$currentWinchCableLength = nbt.getDouble("klaxon.current_winch_cable_length");
+        if (nbt.containsUuid(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH)) {
+            this.klaxon$currentWinchCableLength = nbt.getDouble(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH);
         }
     }
 }
