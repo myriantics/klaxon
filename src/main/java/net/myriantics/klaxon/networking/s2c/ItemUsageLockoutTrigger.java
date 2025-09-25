@@ -1,12 +1,11 @@
 package net.myriantics.klaxon.networking.s2c;
 
-import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
+import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public record ItemUsageLockoutTrigger() implements CustomPayload {

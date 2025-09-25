@@ -3,26 +3,11 @@ package net.myriantics.klaxon.registry.misc;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.packet.s2c.play.WorldEventS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
-import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
-import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.entity.GrappleClawEntity;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.MinecraftClientUsageLockoutAccess;
-import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.*;
 import net.myriantics.klaxon.networking.c2s.EntityDualWieldToggleC2SPacket;
 import net.myriantics.klaxon.networking.c2s.HammerWalljumpTriggerPacket;
-import net.myriantics.klaxon.util.LivingEntityMixinAccess;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 
 public abstract class KlaxonPackets {
 

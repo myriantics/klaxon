@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
+package net.myriantics.klaxon.mechanics.item_usage_lockout;
 
 public interface MinecraftClientUsageLockoutAccess {
 
