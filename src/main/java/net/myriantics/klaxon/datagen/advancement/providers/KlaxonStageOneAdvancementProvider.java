@@ -45,7 +45,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementEntry normalHammerWalljump = addTask(watchBlastProcessorCraft, "hammer_walljump_normal", KlaxonItems.STEEL_HAMMER, WalljumpAbilityCriterion.Conditions.createNormalWalljump());
         AdvancementEntry boostedHammerWalljump = addGoal(normalHammerWalljump, "hammer_walljump_boosted", Items.BLAZE_POWDER,  WalljumpAbilityCriterion.Conditions.createStrengthWalljump());
         AdvancementEntry minecartHammerWalljump = addGoal(normalHammerWalljump, "hammer_walljump_minecart", Items.CAULDRON, WalljumpAbilityCriterion.Conditions.createMinecartWalljump());
-        AdvancementEntry obtainFullSteelArmor = addGoal(hammerCraftMetalPlate, "obtain_full_steel_armor", KlaxonItems.STEEL_CHESTPLATE, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_HELMET, KlaxonItems.STEEL_CHESTPLATE, KlaxonItems.STEEL_LEGGINGS, KlaxonItems.STEEL_BOOTS));
+        AdvancementEntry obtainAnySteelArmor = addGoal(hammerCraftMetalPlate, "obtain_any_steel_armor", KlaxonItems.STEEL_CHESTPLATE, InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.STEEL_ARMOR)));
         AdvancementEntry makeshiftItemFullRepair = addTask(watchBlastProcessorCraft, "makeshift_item_full_repair", Items.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
         AdvancementEntry grappleWinchVeinMine = addGoal(hammerCraftMetalPlate, "grapple_winch_vein_mine_glowstone", Items.GLOWSTONE, GrappleWinchVeinMineCriterion.Conditions.create(Blocks.GLOWSTONE));
     }

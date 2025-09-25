@@ -1,0 +1,34 @@
+{
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
+  "criteria": {
+    "obtain_any_heavy_equipment": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#klaxon:steel_equipment"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.obtain_any_heavy_equipment.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_chestplate"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.obtain_any_heavy_equipment.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_any_heavy_equipment"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
