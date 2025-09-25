@@ -28,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.Offset;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
@@ -384,6 +385,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     private boolean veinmineBlocksIfValid(World world, BlockState originState, BlockPos originPos, @NotNull Entity owner) {
+        if (!world.getGameRules().getBoolean(GameRules.PROJECTILES_CAN_BREAK_BLOCKS)) {
+            return false;
+        }
+
         int radius = world.getGameRules().getInt(KlaxonGameRules.GRAPPLE_CLAW_VEINMINE_RADIUS);
 
         // don't veinmine anything if the source block is not veinmineable
@@ -460,6 +465,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
      * @return - true if succeeded in breaking, false if not
      */
     private boolean breakBlockIfValid(World world, BlockState targetState, BlockPos targetPos, @Nullable Entity owner) {
+        if (!world.getGameRules().getBoolean(GameRules.PROJECTILES_CAN_BREAK_BLOCKS)) {
+            return false;
+        }
+
         if (canBreakBlock(world, targetState, targetPos)) {
 
             // don't break blocks on clientside

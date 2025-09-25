@@ -8,7 +8,7 @@
 
 # To-Do
 - Connected Grapple Claws should disconnect with the player like Ender Pearls do. [DONE BUT VERIFY]
-- Grapple Claws should obey the canProjectilesBreakBlocks gamerule.
+- Grapple Claws should obey the canProjectilesBreakBlocks gamerule. [DONE]
 - Grapple Claws should drag items with them when retracting
 - Rename Steel Armor advancement to something like "Safety First" because it sucks rn
 - Retexture Steel Armor
