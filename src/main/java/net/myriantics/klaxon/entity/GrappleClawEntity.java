@@ -362,6 +362,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     protected boolean tryPickup(PlayerEntity player) {
+        // if a player is attached, only that player can pick up the grapple claw
+        if (isWinchCableAttached && !player.equals(getAttachedPlayer())) {
+            return false;
+        }
+
         ItemStack winchStack = player.getMainHandStack().isOf(KlaxonItems.GRAPPLE_WINCH)
                 ? player.getMainHandStack()
                 : player.getOffHandStack();
