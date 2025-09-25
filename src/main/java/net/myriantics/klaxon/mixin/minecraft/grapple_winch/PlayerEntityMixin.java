@@ -195,12 +195,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 NbtCompound grappleClawCompound = new NbtCompound();
                 grappleClaw.saveNbt(grappleClawCompound);
                 nbt.put(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW, grappleClawCompound);
+                nbt.putDouble(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH, this.klaxon$currentWinchCableLength);
             } else {
                 nbt.remove(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW);
+                nbt.remove(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH);
             }
         }
-
-        nbt.putDouble(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH, this.klaxon$currentWinchCableLength);
     }
 
     @Inject(
