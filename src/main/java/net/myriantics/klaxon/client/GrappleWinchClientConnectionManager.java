@@ -1,11 +1,7 @@
 package net.myriantics.klaxon.client;
 
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -13,71 +9,76 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
-import net.minecraft.util.Colors;
 import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonColors;
 import net.myriantics.klaxon.registry.render.KlaxonRenderLayers;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-public enum GrappleWinchConnectionManager {
+public enum GrappleWinchClientConnectionManager {
     INSTANCE;
 
-    private final Map<Integer, GrappleWinchConnection> playerIdToActiveConnections = new HashMap<>();
+    private final Map<Integer, GrappleWinchLiveConnection> playerIdToActiveConnections = new HashMap<>();
     private float daylightMultiplier = 1.0f;
     private boolean clientPlayerHasNightVision = false;
 
-    public void addConnection(
-            int playerId,
-            int grappleClawId,
-            @Nullable AbstractClientPlayerEntity player,
-            @Nullable GrappleClawEntity grappleClaw,
-            Vec3d playerPos,
-            Vec3d clawPos
-    ) {
-        if (player == null && grappleClaw == null) {
+    public void addOrUpdateConnection(GrappleWinchConnectionData connectionData) {
+        ClientWorld clientWorld = MinecraftClient.getInstance().world;
+
+        if (clientWorld == null) {
+            playerIdToActiveConnections.clear();
             return;
         }
 
-        GrappleWinchConnection connection = playerIdToActiveConnections.get(playerId);
+        int playerId = connectionData.playerId();
+        int grappleClawId = connectionData.grappleClawId();
 
-        if (connection == null) {
-            playerIdToActiveConnections.put(playerId,
-                    new GrappleWinchConnection(
-                            grappleClawId,
-                            Optional.ofNullable(player),
-                            Optional.ofNullable(grappleClaw),
-                            playerPos,
-                            clawPos
-                    )
+        GrappleWinchLiveConnection connection = playerIdToActiveConnections.get(connectionData.playerId());
+
+        PlayerEntity player = MinecraftClient.getInstance().world.getEntityById(playerId) instanceof PlayerEntity player1 ? player1 : null;
+        GrappleClawEntity grappleClaw = MinecraftClient.getInstance().world.getEntityById(grappleClawId) instanceof GrappleClawEntity grappleClaw1 ? grappleClaw1 : null;
+
+        if (player == null && grappleClaw == null) {
+            playerIdToActiveConnections.remove(playerId);
+        } else if (connection == null || grappleClawId != connection.data.grappleClawId()) {
+            GrappleWinchLiveConnection newConnection = new GrappleWinchLiveConnection(
+                    connectionData,
+                    player,
+                    grappleClaw
             );
+
+            playerIdToActiveConnections.put(playerId, newConnection);
         } else {
-            playerIdToActiveConnections.put(playerId,
-                    new GrappleWinchConnection(
-                            grappleClawId,
-                            connection.player,
-                            connection.grappleClaw().isPresent() ? connection.grappleClaw() : Optional.ofNullable(grappleClaw),
-                            playerPos,
-                            clawPos
-                    )
-            );
+            connection.data.setGrappleClawPos(grappleClaw == null || grappleClaw.isRemoved() ? connectionData.grappleClawPos() : grappleClaw.getPos());
+            connection.data.setPlayerPos(player == null || player.isRemoved() ? connectionData.playerPos() : player.getPos());
+            connection.data.setClawAnchored(grappleClaw == null || grappleClaw.isRemoved() ? connectionData.isClawAnchored() : grappleClaw.isAnchored());
         }
     }
 
     public void discardConnection(int playerId) {
         playerIdToActiveConnections.remove(playerId);
+    }
+
+    public @Nullable GrappleClawEntity getGrappleClaw(int playerId) {
+        GrappleWinchLiveConnection connection = playerIdToActiveConnections.get(playerId);
+        return connection == null ? null : connection.getGrappleClaw();
+    }
+
+    public @Nullable GrappleWinchConnectionData getConnectionData(int playerId) {
+        GrappleWinchLiveConnection connection = playerIdToActiveConnections.get(playerId);
+        return connection == null ? null : connection.getData();
+    }
+
+    public boolean hasConnection(int playerId) {
+        return playerIdToActiveConnections.containsKey(playerId);
     }
 
     public void clientTick(MinecraftClient client) {
@@ -93,21 +94,15 @@ public enum GrappleWinchConnectionManager {
 
             // we must copy the key set here so editing the map doesn't fuck shit up
             for (int playerId : List.copyOf(playerIdToActiveConnections.keySet())) {
-                GrappleWinchConnection connection = playerIdToActiveConnections.get(playerId);
-                int grappleClawId = connection.grappleClawId();
+                GrappleWinchLiveConnection connection = playerIdToActiveConnections.get(playerId);
+                int grappleClawId = connection.data.grappleClawId();
+
+                addOrUpdateConnection(connection.getData());
 
                 Entity potentialPlayer = clientWorld.getEntityById(playerId);
                 Entity potentialGrappleClaw = clientWorld.getEntityById(grappleClawId);
 
-                if (potentialPlayer instanceof PlayerEntity || potentialGrappleClaw instanceof GrappleClawEntity) {
-                    playerIdToActiveConnections.put(playerId, new GrappleWinchConnection(
-                            grappleClawId,
-                            Optional.ofNullable(potentialPlayer instanceof PlayerEntity player ? player : null),
-                            Optional.ofNullable(potentialGrappleClaw instanceof GrappleClawEntity claw ? claw : null),
-                            potentialPlayer instanceof PlayerEntity ? potentialPlayer.getPos() : connection.playerPos(),
-                            potentialGrappleClaw instanceof GrappleClawEntity ? potentialGrappleClaw.getPos() : connection.clawPos()
-                    ));
-                } else {
+                if (potentialPlayer == null && potentialGrappleClaw == null) {
                     // remove the connection if neither player nor claw are loaded
                     playerIdToActiveConnections.remove(playerId);
                 }
@@ -125,10 +120,10 @@ public enum GrappleWinchConnectionManager {
         Vec3d cameraPos = camera.getPos();
 
         for (int playerId : playerIdToActiveConnections.keySet()) {
-            GrappleWinchConnection connection = playerIdToActiveConnections.get(playerId);
+            GrappleWinchLiveConnection connection = playerIdToActiveConnections.get(playerId);
 
-            PlayerEntity player = connection.player.orElse(null);
-            GrappleClawEntity grappleClaw = connection.grappleClaw.orElse(null);
+            @Nullable PlayerEntity player = connection.player;
+            @Nullable GrappleClawEntity grappleClaw = connection.grappleClaw;
 
             Entity source = player == null || player.isRemoved() ? grappleClaw : player;
 
@@ -140,8 +135,8 @@ public enum GrappleWinchConnectionManager {
             float tickDelta = renderTickCounter.getTickDelta(clientWorld.getTickManager().shouldSkipTick(source));
 
             // initialize positions
-            Vec3d playerPos = player == null ? connection.playerPos : player.getLerpedPos(tickDelta);
-            Vec3d clawPos = grappleClaw == null ? connection.clawPos : grappleClaw.getLerpedPos(tickDelta);
+            Vec3d playerPos = player == null || player.isRemoved() ? connection.data.playerPos() : player.getLerpedPos(tickDelta);
+            Vec3d clawPos = grappleClaw == null || grappleClaw.isRemoved() ? connection.data.grappleClawPos() : grappleClaw.getLerpedPos(tickDelta);
             BlockPos playerBlockPos = BlockPos.ofFloored(playerPos);
             BlockPos clawBlockPos = BlockPos.ofFloored(clawPos);
 
@@ -175,7 +170,7 @@ public enum GrappleWinchConnectionManager {
             if (player != null && !player.isRemoved()) {
                 float swingProgress = player.getHandSwingProgress(tickDelta);
                 float handMovementOffset = MathHelper.sin(MathHelper.sqrt(swingProgress) * (float) Math.PI);
-                cableOriginPos = GrappleWinchConnectionManager.INSTANCE.getHandPos(connection.player().get(), camera, handMovementOffset, tickDelta);
+                cableOriginPos = GrappleWinchClientConnectionManager.INSTANCE.getHandPos(connection.getPlayer(), camera, handMovementOffset, tickDelta);
             }
 
             // yonk the lerped values
@@ -326,19 +321,37 @@ public enum GrappleWinchConnectionManager {
         }
     }
 
-    private record GrappleWinchConnection(
-            int grappleClawId,
-            Optional<PlayerEntity> player,
-            Optional<GrappleClawEntity> grappleClaw,
-            Vec3d playerPos,
-            Vec3d clawPos
-    ) {
-        public Vec3d getOpposingPos(@NotNull Entity origin) {
-            if (origin instanceof PlayerEntity) {
-                return grappleClaw.isPresent() ? grappleClaw.get().getPos() : clawPos;
-            } else {
-                return player.isPresent() ? player.get().getPos() : playerPos();
-            }
+    private static final class GrappleWinchLiveConnection {
+        private GrappleWinchConnectionData data;
+        private @Nullable PlayerEntity player;
+        private @Nullable GrappleClawEntity grappleClaw;
+
+
+        private GrappleWinchLiveConnection(
+                GrappleWinchConnectionData connectionData,
+                @Nullable PlayerEntity player,
+                @Nullable GrappleClawEntity grappleClaw
+
+        ) {
+            this.data = connectionData;
+            this.player = player;
+            this.grappleClaw = grappleClaw;
+        }
+
+        public GrappleWinchConnectionData getData() {
+            return data;
+        }
+
+        public @Nullable PlayerEntity getPlayer() {
+            return player;
+        }
+
+        public @Nullable GrappleClawEntity getGrappleClaw() {
+            return grappleClaw;
+        }
+
+        public void updateData(GrappleWinchConnectionData data) {
+            this.data = data;
         }
     }
 }

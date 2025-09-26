@@ -17,6 +17,7 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.stat.Stats;
@@ -86,9 +87,6 @@ public class GrappleWinchItem extends RangedWeaponItem {
         if (user instanceof PlayerEntity playerEntity) {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) playerEntity;
 
-            // update retraction status
-            access.klaxon$setRetracting(false);
-
             if (!access.klaxon$hasActiveConnection()) {
                 int i = this.getMaxUseTime(winchStack, user) - remainingUseTicks;
                 float f = getPullProgress(i);
@@ -100,8 +98,8 @@ public class GrappleWinchItem extends RangedWeaponItem {
                             Vec3d eyePos = playerEntity.getEyePos();
                             GrappleClawEntity grappleClaw = new GrappleClawEntity(serverWorld, playerEntity, eyePos.x, eyePos.y, eyePos.z, chargedProjectilesComponent.getProjectiles().get(0), winchStack);
                             grappleClaw.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
-                            access.klaxon$setGrappleClaw(grappleClaw);
                             serverWorld.spawnEntity(grappleClaw);
+                            grappleClaw.attachCable((ServerPlayerEntity) playerEntity);
                         }
 
                         // play sound
@@ -146,18 +144,6 @@ public class GrappleWinchItem extends RangedWeaponItem {
         } else {
             return TypedActionResult.fail(winchStack);
         }
-    }
-
-    @Override
-    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (user instanceof PlayerEntity player) {
-            PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
-            if (access.klaxon$hasActiveConnection()) {
-                access.klaxon$setRetracting(true);
-            }
-        }
-
-        super.usageTick(world, user, stack, remainingUseTicks);
     }
 
     public static float getPullProgress(int useTicks) {

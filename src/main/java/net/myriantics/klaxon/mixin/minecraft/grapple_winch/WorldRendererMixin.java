@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
-import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,7 +36,7 @@ public abstract class WorldRendererMixin {
             ) {
         if (world != null) {
             world.getProfiler().swap("grapple_winch_cables");
-            GrappleWinchConnectionManager.INSTANCE.renderGrappleWinchCable(world, camera, tickCounter, matrixStack, immediate);
+            GrappleWinchClientConnectionManager.INSTANCE.renderGrappleWinchCable(world, camera, tickCounter, matrixStack, immediate);
             world.getProfiler().pop();
         }
     }

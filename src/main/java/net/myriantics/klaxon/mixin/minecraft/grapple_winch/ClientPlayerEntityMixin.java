@@ -6,8 +6,12 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Hand;
+import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
+import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,14 +20,29 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity{
+public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity implements PlayerEntityGrappleAccess {
+
+    public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
+        super(world, profile);
+    }
 
     @Shadow
     @Final
     protected MinecraftClient client;
 
-    public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
-        super(world, profile);
+    @Override
+    public @Nullable GrappleClawEntity klaxon$getGrappleClaw() {
+        return GrappleWinchClientConnectionManager.INSTANCE.getGrappleClaw(this.getId());
+    }
+
+    @Override
+    public @Nullable GrappleWinchConnectionData klaxon$getWinchFallbackData() {
+        return GrappleWinchClientConnectionManager.INSTANCE.getConnectionData(this.getId());
+    }
+
+    @Override
+    public boolean klaxon$hasActiveConnection() {
+        return GrappleWinchClientConnectionManager.INSTANCE.hasConnection(this.getId());
     }
 
     @Inject(
@@ -31,9 +50,9 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V", ordinal = 0)
     )
     public void klaxon$resetGrappleWinchTargetPosition(CallbackInfo ci) {
-        if (!isOnGround() && this instanceof PlayerEntityGrappleAccess access) {
-            if (access.klaxon$hasActiveConnection()) {
-                access.klaxon$resetWinchCableLength();
+        if (!isOnGround()) {
+            if (this.klaxon$hasActiveConnection()) {
+                this.klaxon$resetWinchCableLength();
             }
         }
     }

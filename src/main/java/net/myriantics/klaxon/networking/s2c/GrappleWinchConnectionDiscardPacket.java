@@ -7,7 +7,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
-import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
@@ -29,9 +29,8 @@ public record GrappleWinchConnectionDiscardPacket(int playerId, int clawId) impl
         MinecraftClient client = context.client();
 
         client.execute(() -> {
-            GrappleWinchConnectionManager.INSTANCE.discardConnection(playerId);
+            GrappleWinchClientConnectionManager.INSTANCE.discardConnection(playerId);
             if (client.world instanceof ClientWorld world && world.getEntityById(playerId) instanceof PlayerEntityGrappleAccess access) {
-                access.klaxon$setWinchConnectionData(null);
                 access.klaxon$resetWinchCableLength();
             }
         });

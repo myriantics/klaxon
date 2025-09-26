@@ -31,6 +31,7 @@
     "minecraft.grapple_winch.PersistentProjectileEntityMixin",
     "minecraft.grapple_winch.PlayerEntityMixin",
     "minecraft.grapple_winch.PlayerManagerMixin",
+    "minecraft.grapple_winch.ServerPlayerEntityMixin",
     "minecraft.grapple_winch.ServerPlayNetworkHandlerMixin",
     "minecraft.hallnox_bulb.BlockItemMixin",
     "minecraft.hallnox_pod.FallingBlockEntityMixin",

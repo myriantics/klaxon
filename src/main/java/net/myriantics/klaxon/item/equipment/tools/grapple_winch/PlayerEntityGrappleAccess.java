@@ -4,21 +4,27 @@ import net.myriantics.klaxon.entity.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
 
 public interface PlayerEntityGrappleAccess {
-    @Nullable GrappleClawEntity klaxon$getGrappleClaw();
+    default @Nullable GrappleClawEntity klaxon$getGrappleClaw() {
+        return null;
+    }
 
     void klaxon$setGrappleClaw(@Nullable GrappleClawEntity grappleClaw);
 
-    boolean klaxon$isRetracting();
+    default boolean klaxon$isRetracting() {
+        return false;
+    }
 
-    void klaxon$setRetracting(boolean isRetracting);
+    default @Nullable GrappleWinchConnectionData klaxon$getWinchFallbackData() {
+        return null;
+    }
 
-    GrappleWinchConnectionData klaxon$getWinchFallbackData();
+    default boolean klaxon$hasActiveConnection() {
+        return false;
+    }
 
-    void klaxon$setWinchConnectionData(GrappleWinchConnectionData winchFallbackData);
-
-    boolean klaxon$hasActiveConnection();
-
-    double klaxon$getCurrentWinchCableLength();
+    default double klaxon$getCurrentWinchCableLength() {
+        return 0.0;
+    }
 
     void klaxon$setCurrentWinchCableLength(double spentWinchLength);
 

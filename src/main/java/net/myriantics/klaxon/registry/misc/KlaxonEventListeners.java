@@ -2,19 +2,16 @@ package net.myriantics.klaxon.registry.misc;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeLogic;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
 import net.myriantics.klaxon.registry.item.KlaxonDefaultItemComponentModifications;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchUtil;
 
 public abstract class KlaxonEventListeners {
     public static void init() {
@@ -37,14 +34,10 @@ public abstract class KlaxonEventListeners {
         ServerLifecycleEvents.SERVER_STARTED.register(DefaultInnateItemEnchantmentsComponent::onServerStarted);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(DefaultInnateItemEnchantmentsComponent::onDataPackReload);
 
-        ServerPlayConnectionEvents.JOIN.register(GrappleWinchUtil::onPlayerJoinServer);
-        ServerEntityEvents.ENTITY_LOAD.register(GrappleWinchUtil::onEntityLoadedServerside);
-
-
         KlaxonCommon.LOGGER.info("Registered KLAXON's Event Listeners!");
     }
 
     public static void initClient() {
-        ClientTickEvents.END_CLIENT_TICK.register(GrappleWinchConnectionManager.INSTANCE::clientTick);
+        ClientTickEvents.END_CLIENT_TICK.register(GrappleWinchClientConnectionManager.INSTANCE::clientTick);
     }
 }

@@ -43,7 +43,7 @@ import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.BoundingBoxHelper;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchUtil;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchNetworkUtil;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import org.jetbrains.annotations.NotNull;
@@ -190,7 +190,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
 
-        if (entity.equals(getOwner()) && entity instanceof ServerPlayerEntity serverPlayer) {
+        if (entity.equals(getAttachedPlayer()) && entity instanceof ServerPlayerEntity serverPlayer) {
 
             // if we hit the owner entity try to have the owner pick up claw
             if (this.tryPickup(serverPlayer)) {
@@ -247,7 +247,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                         1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
 
                 // needs to be here to let client know about grapple claw coords if it lands outside client render distance
-                GrappleWinchUtil.updateClientFallbackData(serverPlayer, this);
+                GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
             }
         } else {
             this.setVelocity(velocity);
@@ -263,7 +263,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             getDataTracker().set(DAMAGE, 0f);
         }
 
-
+        @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
         @Nullable Entity owner = getOwner();
         World world = this.getWorld();
 
@@ -298,26 +298,30 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
         }
 
-        if (owner != null) {
-            double ownerDistance = this.getPos().distanceTo(owner.getPos());
+        if (attachedPlayer != null) {
+            Vec3d attachedEyePos = attachedPlayer.getEyePos();
+
+            double ownerDistance = this.getPos().distanceTo(attachedEyePos);
+
+            PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) attachedPlayer;
 
             Vec3d selfVec = new Vec3d(0,0, 0);
 
-            if (owner instanceof PlayerEntity player && player instanceof PlayerEntityGrappleAccess access && this.equals(access.klaxon$getGrappleClaw())) {
+            if (this.equals(access.klaxon$getGrappleClaw())) {
 
-                double currentWinchCableLength = player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
+                double currentWinchCableLength = attachedPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
 
                 // limit fall distance to give players more leeway
-                if (owner.getVelocity().getY() > -1 && owner.fallDistance > 1.0F) {
-                    owner.fallDistance = 1.0F;
+                if (attachedPlayer.getVelocity().getY() > -1 && attachedPlayer.fallDistance > 1.0F) {
+                    attachedPlayer.fallDistance = 1.0F;
                 }
 
                 // owner being heavy overrides anchoring
-                if (!this.isAnchored() || EntityWeightHelper.isHeavy(owner)) {
+                if (!this.isAnchored() || EntityWeightHelper.isHeavy(attachedPlayerEntity)) {
 
                     // retract grapple claw if owner pulls back before landing
                     if (access.klaxon$isRetracting()) {
-                        Vec3d pulling = player.getEyePos().subtract(getPos()).normalize();
+                        Vec3d pulling = attachedPlayer.getEyePos().subtract(getPos()).normalize();
                         // Direction pullingTowards = Direction.getFacing(pulling);
 
                         if (this.inGround && !world.isClient()) {
@@ -330,13 +334,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                     // retract grapple claw if it hits limit
                     if (ownerDistance >= currentWinchCableLength) {
-                        Vec3d vec = owner.getEyePos().subtract(this.getPos()).normalize().multiply(4f/20);
+                        Vec3d vec = attachedEyePos.subtract(this.getPos()).normalize().multiply(4f/20);
                         selfVec = selfVec.add(vec);
                     }
                 }
 
                 // players can extend target range by sprinting
-                if (player.isSprinting() && player.isOnGround() && ownerDistance > currentWinchCableLength) {
+                if (attachedPlayer.isSprinting() && attachedPlayer.isOnGround() && ownerDistance > currentWinchCableLength) {
                     access.klaxon$resetWinchCableLength();
                 }
 
@@ -344,18 +348,21 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             // commit the total velocity edits
             if (!getWorld().isClient()) this.addVelocity(selfVec);
-
-
         }
 
         this.detachIfInvalid();
         super.tick();
+
+        // sync to clients if attached and not in ground
+        if (!this.inGround && this.getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
+            GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
+        }
     }
 
     @Override
     protected void age() {
         // only age up if in ground and disconnected
-        if (inGround && !(getOwner() instanceof PlayerEntityGrappleAccess access && this.equals(access.klaxon$getGrappleClaw()))) {
+        if (inGround && !isWinchCableAttached) {
             super.age();
         }
     }
@@ -509,8 +516,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             if (!isAttachedToPlayer(serverPlayer)) {
                 ((PlayerEntityGrappleAccess) serverPlayer).klaxon$setGrappleClaw(this);
                 this.setOwner(serverPlayer);
-                GrappleWinchUtil.updateClientFallbackData(serverPlayer, this);
+                GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
                 isWinchCableAttached = true;
+                this.attachedPlayerEntity = serverPlayer;
+                this.attachedPlayerEntityUUID = serverPlayer.getUuid();
                 return true;
             }
         }
@@ -527,7 +536,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         if (isWinchCableAttached && this.getOwner() instanceof ServerPlayerEntity serverPlayer && this.equals(((PlayerEntityGrappleAccess) serverPlayer).klaxon$getGrappleClaw())) {
             ((PlayerEntityGrappleAccess) serverPlayer).klaxon$setGrappleClaw(null);
             this.isWinchCableAttached = false;
-            GrappleWinchUtil.clearClientFallbackData(serverPlayer, this);
+            this.attachedPlayerEntity = null;
+            this.attachedPlayerEntityUUID = null;
+            GrappleWinchNetworkUtil.clearFromClients(serverPlayer, this);
             return true;
         }
 

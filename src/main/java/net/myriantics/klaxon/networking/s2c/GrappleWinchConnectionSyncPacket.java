@@ -2,17 +2,18 @@ package net.myriantics.klaxon.networking.s2c;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
-import net.myriantics.klaxon.client.GrappleWinchConnectionManager;
+import net.minecraft.util.math.Vec3d;
+import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 
 public record GrappleWinchConnectionSyncPacket(GrappleWinchConnectionData connectionData) implements CustomPayload {
 
@@ -32,34 +33,11 @@ public record GrappleWinchConnectionSyncPacket(GrappleWinchConnectionData connec
         MinecraftClient client = context.client();
 
         client.execute(() -> {
-            if (MinecraftClient.getInstance().world instanceof ClientWorld clientWorld) {
-                Entity potentialPlayer = clientWorld.getEntityById(connectionData.playerId());
-                Entity potentialClaw = clientWorld.getEntityById(connectionData.clawId());
+            if (client.world != null) {
+                GrappleWinchClientConnectionManager.INSTANCE.addOrUpdateConnection(connectionData);
 
-                if (potentialPlayer instanceof AbstractClientPlayerEntity player) {
-                    GrappleWinchConnectionManager.INSTANCE.addConnection(
-                            connectionData.playerId(),
-                            connectionData.clawId(),
-                            player,
-                            (GrappleClawEntity) potentialClaw,
-                            connectionData.playerPos(),
-                            connectionData.clawPos());
-
-                    // update access shi
-                    PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
-                    access.klaxon$setWinchConnectionData(connectionData);
+                if (client.player instanceof PlayerEntityGrappleAccess access) {
                     access.klaxon$resetWinchCableLength();
-                } else if (potentialClaw instanceof GrappleClawEntity grappleClaw) {
-                    GrappleWinchConnectionManager.INSTANCE.addConnection(
-                            connectionData.playerId(),
-                            connectionData.clawId(),
-                            null,
-                            grappleClaw,
-                            connectionData.playerPos(),
-                            connectionData.clawPos());
-                } else {
-                    // cancel other operations if client world doesn't have either entity loaded
-                    return;
                 }
             }
         });
