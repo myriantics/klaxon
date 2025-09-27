@@ -6,17 +6,20 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ChargedProjectilesComponent;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -27,6 +30,7 @@ import net.minecraft.text.Texts;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
@@ -136,9 +140,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
             user.setCurrentHand(hand);
             return TypedActionResult.consume(winchStack);
         } else if (!ammoStack.isEmpty()) {
-            List<ItemStack> list = load(winchStack, ammoStack, user);
-            // load grapple winch if we don't have a grapple claw loaded
-            winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
+            protectedLoad(winchStack, ammoStack, user);
             user.incrementStat(Stats.USED.getOrCreateStat(this));
             return TypedActionResult.success(winchStack);
         } else {
@@ -154,6 +156,54 @@ public class GrappleWinchItem extends RangedWeaponItem {
         }
 
         return f;
+    }
+
+    @Override
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        if (clickType.equals(ClickType.RIGHT) && slot.canTakePartial(player)) {
+            // don't allow any right click item movements or actions when a connection is active
+            if (((PlayerEntityGrappleAccess) player).klaxon$hasActiveConnection()) {
+                return true;
+            }
+
+            List<ItemStack> projectiles = stack.get(DataComponentTypes.CHARGED_PROJECTILES) instanceof ChargedProjectilesComponent component ? component.getProjectiles() : List.of();
+
+            if (!projectiles.isEmpty() && otherStack.isEmpty()) {
+                if (!player.getWorld().isClient()) {
+                    // yoink stack from front of list and set cursor stack to it
+                    ItemStack firstProjectileStack = projectiles.getFirst();
+                    cursorStackReference.set(firstProjectileStack);
+
+                    // replace projectiles component with a new one that has everything but the first element
+                    List<ItemStack> newProjectiles = projectiles.subList(1, projectiles.size());
+                    stack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(newProjectiles));
+                }
+                return true;
+            } else if (projectiles.isEmpty() && PROJECTILES.test(otherStack)) {
+                if (!player.getWorld().isClient()) {
+                    // update component
+                    protectedLoad(stack, otherStack, player);
+                }
+                return true;
+            }
+        }
+
+        return super.onClicked(stack, otherStack, slot, clickType, player, cursorStackReference);
+    }
+
+    public static boolean protectedLoad(ItemStack winchStack, ItemStack loadingStack, @Nullable LivingEntity entity) {
+        if ((entity == null || !entity.getWorld().isClient()) && PROJECTILES.test(loadingStack)) {
+            // if the entity doesn't have grapple access or it doesn't have an active connection, proceed.
+            if (!(entity instanceof PlayerEntityGrappleAccess access) || !access.klaxon$hasActiveConnection()) {
+                List<ItemStack> list = load(winchStack, loadingStack, entity);
+                // load grapple winch if we don't have a grapple claw loaded
+                winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

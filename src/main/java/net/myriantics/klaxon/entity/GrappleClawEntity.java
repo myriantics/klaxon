@@ -7,6 +7,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -30,6 +31,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.Offset;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
@@ -117,19 +119,17 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             // players in creative can instantly kill grapple claws
             if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).getAbilities().creativeMode) {
-                this.setStack(ItemStack.EMPTY);
-                this.kill();
+                this.discard();
                 return true;
             }
 
             // attacking grapple claw with an unloaded grapple winch attempts to load claw into winch
             ItemStack weaponStack = source.getWeaponStack();
-            if (weaponStack != null && weaponStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
+            if (weaponStack != null && weaponStack.isOf(KlaxonItems.GRAPPLE_WINCH) && source.getAttacker() instanceof LivingEntity livingAttacker) {
                 ChargedProjectilesComponent chargedProjectilesComponent = weaponStack.get(DataComponentTypes.CHARGED_PROJECTILES);
                 if (chargedProjectilesComponent == null || chargedProjectilesComponent.isEmpty()) {
-                    weaponStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
-                    this.setStack(ItemStack.EMPTY);
-                    this.kill();
+                    GrappleWinchItem.protectedLoad(weaponStack, this.getItemStack(), livingAttacker);
+                    this.discard();
                     return true;
                 }
             }
