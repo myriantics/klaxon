@@ -8,15 +8,14 @@ import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -41,6 +40,7 @@ import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.BoundingBoxHelper;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchNetworkUtil;
@@ -52,12 +52,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
 
-    public static final int MAX_DAMAGE = 10;
+    private static final int HIT_INVINCIBILITY_TICKS = 5;
 
-    protected static final TrackedData<Float> DAMAGE = DataTracker.registerData(GrappleClawEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private boolean isWinchCableAttached = false;
     private int ticksSinceDamaged = 0;
 
@@ -80,12 +80,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(DAMAGE, 0f);
-    }
-
-    @Override
     protected ItemStack getDefaultItemStack() {
         return new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
     }
@@ -103,15 +97,27 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     @Override
+    public void kill() {
+        this.dropStack(getItemStack());
+        super.kill();
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource damageSource) {
+        return super.isInvulnerableTo(damageSource) || damageSource.isIn(DamageTypeTags.BYPASSES_ARMOR);
+    }
+
+    @Override
     public boolean damage(DamageSource source, float amount) {
         if (this.getWorld().isClient() || this.isRemoved()) {
             return true;
-        } else if (this.isInvulnerableTo(source)) {
+        } else if (this.isInvulnerableTo(source) || ticksSinceDamaged < HIT_INVINCIBILITY_TICKS) {
             return false;
         } else {
 
             // players in creative can instantly kill grapple claws
             if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).getAbilities().creativeMode) {
+                this.setStack(ItemStack.EMPTY);
                 this.kill();
                 return true;
             }
@@ -122,49 +128,94 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 ChargedProjectilesComponent chargedProjectilesComponent = weaponStack.get(DataComponentTypes.CHARGED_PROJECTILES);
                 if (chargedProjectilesComponent == null || chargedProjectilesComponent.isEmpty()) {
                     weaponStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
-
+                    this.setStack(ItemStack.EMPTY);
                     this.kill();
                     return true;
                 }
             }
 
-            float newDamage = getDataTracker().get(DAMAGE) + amount;
+            // retrievers do not damage grapple claw
+            if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.GRAPPLE_CLAW_RETRIEVERS)) {
+                this.kill();
+            }
 
-            // handle damage
-            if (newDamage >= MAX_DAMAGE) {
-                // proc entity kill advancement
+            ItemStack grappleClawStack = this.getItemStack();
+
+            int damage = grappleClawStack.isDamageable() ? grappleClawStack.getMaxDamage() / 12 : 0;
+
+            // unless hit with a tool
+            if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)) {
+                damage *= 2;
+            }
+
+            // damage claw stack and trigger kill advancement if needed
+            // also return the value
+            return damageClawStack((ServerWorld) getWorld(), source, damage, (item -> {
                 if (source.getAttacker() instanceof ServerPlayerEntity serverPlayer) {
                     Criteria.PLAYER_KILLED_ENTITY.trigger(serverPlayer, this, source);
                 }
 
-                // if damage exceeded threshold, drop stack and kill
-                this.dropStack(this.getItemStack());
-                this.kill();
-            } else {
-                // if damage did not exceed threshold, reset ticks and update damage
-                ticksSinceDamaged = 0;
-                getDataTracker().set(DAMAGE, newDamage);
-
-                // proc entity hurt advancement
-                if (source.getAttacker() instanceof ServerPlayerEntity serverPlayer) {
-                    Criteria.PLAYER_HURT_ENTITY.trigger(serverPlayer, this, source, amount, amount, false);
-                }
-
-                // play damage sound
-                getWorld().playSound(
-                        source.getAttacker(),
+                // play destroy sound
+                this.getWorld().playSound(
+                        null,
                         getBlockPos(),
-                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DAMAGE,
-                        SoundCategory.NEUTRAL,
-                        0.5f + getWorld().getRandom().nextFloat() * 0.3f,
+                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DESTROY,
+                        SoundCategory.PLAYERS,
+                        0.7f + getWorld().getRandom().nextFloat() * 0.3f,
                         0.7f + getWorld().getRandom().nextFloat() * 0.3f
                 );
-            }
+            }));
+        }
+    }
+
+    /**
+     * Damages the contained ItemStack, and returns whether any damage was successfully dealt or not.
+     * @param serverWorld needed for cool stuff
+     * @param source Optionally the damage source
+     * @param damage The raw amount of damage to deal to the grapple claw stack
+     * @param consumer Consumer run on item break
+     * @return Whether the stack was successfully damaged or not
+     */
+    private boolean damageClawStack(ServerWorld serverWorld, @Nullable DamageSource source, int damage, Consumer<Item> consumer) {
+        ItemStack grappleClawStack = this.getItemStack();
+
+        int appliedDamage = grappleClawStack.getDamage();
+
+        grappleClawStack.damage(
+                damage,
+                serverWorld,
+                source != null && source.getAttacker() instanceof ServerPlayerEntity serverPlayer ? serverPlayer : null,
+                (item) -> {
+                    consumer.accept(item);
+                    this.kill();
+                }
+        );
+
+        // play damage sound if grapple claw wasn't killed
+        if (!grappleClawStack.isEmpty()) {
+            this.getWorld().playSound(
+                    null,
+                    getBlockPos(),
+                    KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DAMAGE,
+                    SoundCategory.PLAYERS,
+                    0.8f + getWorld().getRandom().nextFloat() * 0.2f,
+                    0.7f + getWorld().getRandom().nextFloat() * 0.3f
+            );
         }
 
+        // determine the amount that was actually applied
+        appliedDamage -= grappleClawStack.getDamage();
 
+        // proc entity hurt advancement - registers as blocked if stack is unbreakable
+        if (source != null && source.getAttacker() instanceof ServerPlayerEntity serverPlayer) {
+            Criteria.PLAYER_HURT_ENTITY.trigger(serverPlayer, this, source, damage, appliedDamage, !grappleClawStack.isDamageable());
+        }
 
-        return super.damage(source, amount);
+        if (appliedDamage > 0) {
+            this.ticksSinceDamaged = 0;
+        }
+
+        return appliedDamage > 0;
     }
 
     @Override
@@ -216,12 +267,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
         Vec3d velocity = this.getVelocity().multiply(0.85);
 
-        boolean blockBrokenSuccess;
+        boolean blockBrokenSuccess = false;
 
         // try to veinmine before breaking the block :)
         if (isWinchCableAttached && owner instanceof PlayerEntityGrappleAccess access && access.klaxon$isRetracting()) {
             blockBrokenSuccess = veinmineBlocksIfValid(world, hitState, hitPos, owner);
-        } else {
+        }
+
+        // if we didn't veinmine the block, try to break it
+        if (!blockBrokenSuccess) {
             blockBrokenSuccess = breakBlockIfValid(world, hitState, hitPos, owner);
         }
 
@@ -258,10 +312,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     public void tick() {
         // update damage reset ticker
         ticksSinceDamaged++;
-        if (ticksSinceDamaged > 20) {
-            // if damage reset ticker passes threshold, reset damage
-            getDataTracker().set(DAMAGE, 0f);
-        }
 
         @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
         @Nullable Entity owner = getOwner();

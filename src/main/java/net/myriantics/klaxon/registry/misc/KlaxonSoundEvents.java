@@ -21,6 +21,7 @@ public abstract class KlaxonSoundEvents {
     // grapple claw
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_ANCHOR = register("entity.grapple_claw.anchor", SoundEvents.ITEM_TRIDENT_THUNDER.value());
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_DAMAGE = register("entity.grapple_claw.damage", SoundEvents.BLOCK_CHAIN_BREAK);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DESTROY = register("entity.grapple_claw.damage", SoundEvents.ENTITY_ITEM_BREAK);
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");

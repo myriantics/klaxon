@@ -13,8 +13,8 @@ public abstract class KlaxonEntityTypes {
     public static final EntityType<GrappleClawEntity> STEEL_GRAPPLE_CLAW = register(
             "steel_grapple_claw",
             EntityType.Builder.<GrappleClawEntity>create(GrappleClawEntity::new, SpawnGroup.MISC)
-                    .dimensions(0.5f, 0.5f)
-                    .eyeHeight(0.25f)
+                    .dimensions(0.8f, 0.8f)
+                    .eyeHeight(0.4f)
                     .maxTrackingRange(4)
                     .trackingTickInterval(20)
     );

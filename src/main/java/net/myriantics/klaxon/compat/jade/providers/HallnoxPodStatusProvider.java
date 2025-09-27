@@ -22,6 +22,8 @@ public enum HallnoxPodStatusProvider implements IBlockComponentProvider {
     private HallnoxPodStatusProvider() {
     }
 
+    private static final Identifier ID = KlaxonCommon.locate("crop_growth_disabled");
+
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         BlockState podState = blockAccessor.getBlockState();
@@ -42,6 +44,6 @@ public enum HallnoxPodStatusProvider implements IBlockComponentProvider {
 
     @Override
     public Identifier getUid() {
-        return KlaxonCommon.locate("crop_growth_disabled");
+        return ID;
     }
 }

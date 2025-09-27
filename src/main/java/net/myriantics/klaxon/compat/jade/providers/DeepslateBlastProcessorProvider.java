@@ -29,6 +29,8 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
     private DeepslateBlastProcessorProvider() {
     }
 
+    private static final Identifier ID = KlaxonCommon.locate("deepslate_blast_processor");
+
     @Override
     public boolean shouldRequestData(BlockAccessor accessor) {
         return accessor.getBlockState().get(DeepslateBlastProcessorBlock.FUELED);
@@ -42,7 +44,7 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
 
     @Override
     public Identifier getUid() {
-        return KlaxonCommon.locate("deepslate_blast_processor");
+        return ID;
     }
 
     @Override

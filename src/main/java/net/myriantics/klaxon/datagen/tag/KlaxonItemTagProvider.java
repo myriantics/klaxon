@@ -336,6 +336,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ItemTags.TRIM_MATERIALS)
                 .add(KlaxonItems.STEEL_INGOT)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);
+        getOrCreateTagBuilder(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)
+                .forceAddTag(ConventionalItemTags.MINING_TOOL_TOOLS);
+        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAW_RETRIEVERS)
+                .forceAddTag(KlaxonConventionalItemTags.WRENCH)
+                .forceAddTag(KlaxonConventionalItemTags.WRENCHES);
     }
 
     private void buildAnvilRelatedTags() {
@@ -363,6 +368,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CHESTPLATE)
                 .add(KlaxonItems.STEEL_LEGGINGS)
                 .add(KlaxonItems.STEEL_BOOTS);
+        getOrCreateTagBuilder(ConventionalItemTags.TOOLS)
+                .forceAddTag(KlaxonItemTags.GRAPPLE_CLAWS)
+                .add(KlaxonItems.GRAPPLE_WINCH);
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(KlaxonItems.STEEL_CLEAVER)
