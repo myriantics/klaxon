@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +48,11 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
     @Override
     public boolean klaxon$hasActiveConnection() {
         return klaxon$getGrappleClaw() != null;
+    }
+
+    @Override
+    public @Nullable GrappleWinchConnectionData klaxon$getWinchFallbackData() {
+        return null;
     }
 
     @Inject(

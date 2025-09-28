@@ -20,6 +20,7 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -93,7 +94,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         // If we're on the server and succeed in attaching cable to the player, succeed!
         if (player instanceof ServerPlayerEntity serverPlayer && attachCable(serverPlayer)) {
             return ActionResult.SUCCESS;
-        } else if (detachCable()) {
+        } else if (detachCable(false)) {
             return ActionResult.SUCCESS;
         }
 
@@ -113,7 +114,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (this.getWorld().isClient() || this.isRemoved()) {
+        World world = this.getWorld();
+
+        if (world.isClient() || this.isRemoved()) {
             return true;
         } else if (this.isInvulnerableTo(source) || ticksSinceDamaged < HIT_INVINCIBILITY_TICKS) {
             return false;
@@ -130,15 +133,17 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             if (weaponStack != null && weaponStack.isOf(KlaxonItems.GRAPPLE_WINCH) && source.getAttacker() instanceof LivingEntity livingAttacker) {
                 // if loading succeeded, play indicator sound and discard.
                 if (GrappleWinchItem.loadIfPossible(weaponStack, this.getItemStack(), livingAttacker)) {
-                    this.getWorld().playSound(
-                            this,
-                            this.getBlockPos(),
+                    world.playSound(
+                            null,
+                            this.getX(),
+                            this.getEyeY(),
+                            this.getZ(),
                             KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_FAST_LOAD,
-                            livingAttacker instanceof PlayerEntity ? SoundCategory.PLAYERS : SoundCategory.NEUTRAL,
-                            0.7f + getWorld().getRandom().nextFloat() * 0.3f,
-                            0.7f + getWorld().getRandom().nextFloat() * 0.3f
+                            SoundCategory.PLAYERS,
+                            0.8f + world.getRandom().nextFloat() * 0.3f,
+                            0.7f + world.getRandom().nextFloat() * 0.3f
                     );
-                    this.getWorld().emitGameEvent(
+                    world.emitGameEvent(
                             GameEvent.ENTITY_ACTION,
                             getPos(),
                             GameEvent.Emitter.of(livingAttacker)
@@ -323,7 +328,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                         KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
                         SoundCategory.PLAYERS,
                         1.0F,
-                        1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+                        1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F)
+                );
 
                 // needs to be here to let client know about grapple claw coords if it lands outside client render distance
                 GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
@@ -411,6 +417,17 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     if (ownerDistance >= currentWinchCableLength) {
                         Vec3d vec = attachedEyePos.subtract(this.getPos()).normalize().multiply(4f/20);
                         selfVec = selfVec.add(vec);
+
+                        this.playSoundAtSelfAndThroughCableIfPossible(
+                                KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
+                                0.7f + world.getRandom().nextFloat() * 0.3f,
+                                0.7f + world.getRandom().nextFloat() * 0.3f
+                        );
+                        world.emitGameEvent(
+                                GameEvent.ENTITY_ACTION,
+                                this.getEyePos(),
+                                GameEvent.Emitter.of(attachedPlayer)
+                        );
                     }
                 }
 
@@ -449,20 +466,35 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             return false;
         }
 
+        World world = player.getWorld();
+
         ItemStack winchStack = player.getMainHandStack().isOf(KlaxonItems.GRAPPLE_WINCH)
                 ? player.getMainHandStack()
                 : player.getOffHandStack();
-        if (winchStack.isOf(KlaxonItems.GRAPPLE_WINCH) && winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty()) {
-            // try picking up claw into held grapple winch
-            winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
 
+        if (GrappleWinchItem.loadIfPossible(winchStack, this.getItemStack(), player)) {
+
+            // this is needed so players can choose whether they want to recast grapple claw or not
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                // this is needed so players can choose whether they want to recast grapple claw or not
-                if (player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH)) {
-                    // update usage lockout if true
-                    KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
-                }
+                // update usage lockout if true
+                KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
             }
+
+            world.playSound(
+                    player,
+                    player.getX(),
+                    player.getEyeY(),
+                    player.getZ(),
+                    KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
+                    SoundCategory.PLAYERS,
+                    0.7f + world.getRandom().nextFloat() * 0.3f,
+                    0.7f + world.getRandom().nextFloat() * 0.3f
+            );
+            world.emitGameEvent(
+                    GameEvent.ENTITY_ACTION,
+                    player.getEyePos(),
+                    GameEvent.Emitter.of(player)
+            );
 
             this.discard();
             return true;
@@ -506,6 +538,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         // Contains all of the positions to check on the next pass
         List<BlockPos> targetPositions = List.of(originPos);
 
+        // counts how many blocks we've broken - used to increment stat at the end
+        int blocksBroken = 0;
+
         for (int x = 0; x < radius; x++) {
             ArrayList<BlockPos> newTargetPositions = new ArrayList<>();
 
@@ -521,7 +556,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                         for (ItemStack droppedStack : world.getBlockState(targetPos).getDroppedStacks(lootContextBuilder)) {
                             KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);
                         }
+
                         world.breakBlock(targetPos, false, owner);
+
+                        blocksBroken++;
                         processedPositions.add(targetPos);
                         newTargetPositions.add(targetPos);
                     }
@@ -537,8 +575,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             dropStack(stack);
         }
 
+        // pop advancement trigger and increase mined stat
         if (owner instanceof ServerPlayerEntity serverPlayer) {
             KlaxonAdvancementTriggers.triggerGrappleWinchVeinMine(serverPlayer, originState);
+            serverPlayer.increaseStat(Stats.MINED.getOrCreateStat(originState.getBlock()), blocksBroken);
         }
 
         return true;
@@ -556,15 +596,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             return false;
         }
 
-        if (canBreakBlock(world, targetState, targetPos)) {
+        if (this.canBreakBlock(world, targetState, targetPos)) {
 
             // don't break blocks on clientside
             if (!world.isClient()) {
-                if (owner != null) {
-                    world.breakBlock(targetPos, true, owner);
-                } else {
-                    world.breakBlock(targetPos, true);
-                }
+                world.breakBlock(targetPos, true, owner);
+            }
+
+            if (owner instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.incrementStat(Stats.MINED.getOrCreateStat(targetState.getBlock()));
             }
 
             // a winner is you
@@ -607,14 +647,27 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
      * Sends packet to client indicating detachment
      *
      */
-    public boolean detachCable() {
-        if (isWinchCableAttached && this.getOwner() instanceof ServerPlayerEntity serverPlayer && this.equals(((PlayerEntityGrappleAccess) serverPlayer).klaxon$getGrappleClaw())) {
-            ((PlayerEntityGrappleAccess) serverPlayer).klaxon$setGrappleClaw(null);
+    public boolean detachCable(boolean silent) {
+        PlayerEntity attachedPlayer = this.getAttachedPlayer();
+
+        if (this.isWinchCableAttached && attachedPlayer != null) {
+            if (!silent) {
+                // play sound before detaching so we know where to direct the sound
+                this.playSoundAtSelfAndThroughCableIfPossible(
+                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DETACH,
+                        0.8f + getWorld().getRandom().nextFloat() * 0.2f,
+                        0.7f + getWorld().getRandom().nextFloat() * 0.3f
+                );
+            }
+
             this.isWinchCableAttached = false;
             this.attachedPlayerEntity = null;
             this.attachedPlayerEntityUUID = null;
-            GrappleWinchNetworkUtil.clearFromClients(serverPlayer, this);
-            return true;
+            ((PlayerEntityGrappleAccess) attachedPlayer).klaxon$setGrappleClaw(null);
+
+            if (attachedPlayer instanceof ServerPlayerEntity serverPlayer) {
+                GrappleWinchNetworkUtil.clearFromClients(serverPlayer, this);
+            }
         }
 
         return false;
@@ -633,7 +686,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             boolean bl2 = itemStack2.isOf(KlaxonItems.GRAPPLE_WINCH);
 
             if (serverPlayer.isRemoved() || !serverPlayer.isAlive() || !(bl || bl2) || !serverPlayer.getWorld().equals(this.getWorld())) {
-                this.detachCable();
+                this.detachCable(false);
             }
         }
     }
@@ -668,6 +721,41 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         return isWinchCableAttached && attachedPlayerEntity != null && attachedPlayerEntity.equals(player) && this.equals(((PlayerEntityGrappleAccess) player).klaxon$getGrappleClaw());
     }
 
+    private void playSoundAtSelfAndThroughCableIfPossible(
+            SoundEvent soundEvent,
+            float volume,
+            float pitch
+    ) {
+        @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
+        SoundCategory category = attachedPlayer == null ? SoundCategory.NEUTRAL : SoundCategory.PLAYERS;
+
+        World world = this.getWorld();
+
+        world.playSound(
+                attachedPlayer,
+                attachedPlayer.getX(),
+                attachedPlayer.getY(),
+                attachedPlayer.getZ(),
+                soundEvent,
+                category,
+                volume,
+                pitch
+        );
+
+        if (!this.getWorld().isClient()) {
+            world.playSound(
+                    null,
+                    this.getX(),
+                    this.getY(),
+                    this.getZ(),
+                    soundEvent,
+                    category,
+                    volume,
+                    pitch
+            );
+        }
+    }
+
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
@@ -699,7 +787,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     public void remove(RemovalReason reason) {
-        detachCable();
+        detachCable(true);
         super.remove(reason);
     }
 }

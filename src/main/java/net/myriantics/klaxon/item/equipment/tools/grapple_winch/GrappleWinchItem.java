@@ -12,6 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.StackReference;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.item.ToolMaterial;
@@ -33,6 +34,7 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
@@ -95,7 +97,10 @@ public class GrappleWinchItem extends RangedWeaponItem {
                 float f = getPullProgress(i);
                 if (!(f < 0.1)) {
                     ChargedProjectilesComponent chargedProjectilesComponent = winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
+
                     if (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty()) {
+                        Item projectileItem = chargedProjectilesComponent.getProjectiles().getFirst().getItem();
+
                         if (world instanceof ServerWorld serverWorld) {
                             // shoot a grapple claw if we have one loaded
                             Vec3d eyePos = playerEntity.getEyePos();
@@ -121,9 +126,10 @@ public class GrappleWinchItem extends RangedWeaponItem {
                                 playerEntity.getEyePos(),
                                 GameEvent.Emitter.of(playerEntity)
                         );
-                    }
 
-                    playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+                        playerEntity.incrementStat(Stats.USED.getOrCreateStat(projectileItem));
+                        playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+                    }
                 }
             } else if (access.klaxon$hasActiveConnection()) {
                 access.klaxon$resetWinchCableLength();
@@ -159,7 +165,9 @@ public class GrappleWinchItem extends RangedWeaponItem {
                     user.getEyePos(),
                     GameEvent.Emitter.of(user)
             );
+
             user.incrementStat(Stats.USED.getOrCreateStat(this));
+            user.incrementStat(Stats.USED.getOrCreateStat(ammoStack.getItem()));
             return TypedActionResult.success(winchStack);
         } else {
             return TypedActionResult.fail(winchStack);
@@ -242,17 +250,20 @@ public class GrappleWinchItem extends RangedWeaponItem {
     }
 
     public static boolean loadIfPossible(ItemStack winchStack, ItemStack loadingStack, @Nullable LivingEntity entity) {
+        if (!winchStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
+            return false;
+        }
+
         @Nullable ChargedProjectilesComponent originalProjectiles = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
         if ((originalProjectiles == null || originalProjectiles.isEmpty()) && PROJECTILES.test(loadingStack)) {
             if (entity != null && entity.getWorld().isClient()) {
                 return true;
             } else {
                 // if the entity doesn't have grapple access or it doesn't have an active connection, proceed.
-                if (!(entity instanceof PlayerEntityGrappleAccess access) || !access.klaxon$hasActiveConnection()) {
+                if (!(entity instanceof PlayerEntity player) || !((PlayerEntityGrappleAccess) player).klaxon$hasActiveConnection()) {
                     List<ItemStack> list = load(winchStack, loadingStack, entity);
                     // load grapple winch if we don't have a grapple claw loaded
                     winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
-
                     return true;
                 }
             }

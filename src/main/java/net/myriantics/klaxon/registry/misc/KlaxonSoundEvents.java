@@ -16,13 +16,15 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent ITEM_GRAPPLE_WINCH_LAUNCH = register("item.grapple_winch.launch", SoundEvents.ITEM_TRIDENT_THROW.value());
     public static final SoundEvent ITEM_GRAPPLE_WINCH_EXTRUDING = register("item.grapple_winch.extrude", SoundEvents.ENTITY_MINECART_INSIDE_UNDERWATER);
     public static final SoundEvent ITEM_GRAPPLE_WINCH_RETRACTING = register("item.grapple_winch.retracting", SoundEvents.ENTITY_MINECART_RIDING);
-    public static final SoundEvent ITEM_GRAPPLE_WINCH_LOAD = register("item.grapple_winch.load", SoundEvents.BLOCK_COPPER_BULB_PLACE);
-    public static final SoundEvent ITEM_GRAPPLE_WINCH_UNLOAD = register("item.grapple_winch.load", SoundEvents.BLOCK_COPPER_BULB_BREAK);
-    public static final SoundEvent ITEM_GRAPPLE_WINCH_FAST_LOAD = register("item.grapple_winch.fast_load", SoundEvents.BLOCK_COPPER_BREAK);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_LOAD = register("item.grapple_winch.load", SoundEvents.BLOCK_PISTON_CONTRACT);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_UNLOAD = register("item.grapple_winch.load", SoundEvents.BLOCK_PISTON_EXTEND);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_FAST_LOAD = register("item.grapple_winch.fast_load", SoundEvents.BLOCK_PISTON_CONTRACT);
     // grapple claw
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_ANCHOR = register("entity.grapple_claw.anchor", SoundEvents.ITEM_TRIDENT_THUNDER.value());
-    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DAMAGE = register("entity.grapple_claw.damage", SoundEvents.BLOCK_CHAIN_BREAK);
-    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DESTROY = register("entity.grapple_claw.damage", SoundEvents.ENTITY_ITEM_BREAK);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DAMAGE = register("entity.grapple_claw.damage", SoundEvents.BLOCK_METAL_HIT);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DESTROY = register("entity.grapple_claw.destroy", SoundEvents.ENTITY_ITEM_BREAK);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DETACH = register("entity.grapple_claw.detach", SoundEvents.ENTITY_ITEM_BREAK);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT = register("entity.grapple_claw.rebound_at_limit", SoundEvents.ITEM_TRIDENT_RETURN);
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");
