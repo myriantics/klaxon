@@ -6,7 +6,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -108,7 +107,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
                         // play sound
                         world.playSound(
-                                null,
+                                playerEntity,
                                 playerEntity.getX(),
                                 playerEntity.getY(),
                                 playerEntity.getZ(),
@@ -117,8 +116,12 @@ public class GrappleWinchItem extends RangedWeaponItem {
                                 1.0F,
                                 1.0F / (world.getRandom().nextFloat() * 0.8F + 1.2F) + f * 0.5F
                         );
+                        world.emitGameEvent(
+                                GameEvent.ENTITY_ACTION,
+                                playerEntity.getEyePos(),
+                                GameEvent.Emitter.of(playerEntity)
+                        );
                     }
-
 
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                 }
@@ -140,7 +143,22 @@ public class GrappleWinchItem extends RangedWeaponItem {
             user.setCurrentHand(hand);
             return TypedActionResult.consume(winchStack);
         } else if (!ammoStack.isEmpty()) {
-            protectedLoad(winchStack, ammoStack, user);
+            loadIfPossible(winchStack, ammoStack, user);
+            world.playSound(
+                    user,
+                    user.getX(),
+                    user.getEyeY(),
+                    user.getZ(),
+                    KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
+                    SoundCategory.PLAYERS,
+                    0.7f + world.getRandom().nextFloat() * 0.3f,
+                    0.7f + world.getRandom().nextFloat() * 0.3f
+            );
+            world.emitGameEvent(
+                    GameEvent.ENTITY_ACTION,
+                    user.getEyePos(),
+                    GameEvent.Emitter.of(user)
+            );
             user.incrementStat(Stats.USED.getOrCreateStat(this));
             return TypedActionResult.success(winchStack);
         } else {
@@ -166,10 +184,12 @@ public class GrappleWinchItem extends RangedWeaponItem {
                 return true;
             }
 
+            World world = player.getWorld();
+
             List<ItemStack> projectiles = stack.get(DataComponentTypes.CHARGED_PROJECTILES) instanceof ChargedProjectilesComponent component ? component.getProjectiles() : List.of();
 
             if (!projectiles.isEmpty() && otherStack.isEmpty()) {
-                if (!player.getWorld().isClient()) {
+                if (!world.isClient()) {
                     // yoink stack from front of list and set cursor stack to it
                     ItemStack firstProjectileStack = projectiles.getFirst();
                     cursorStackReference.set(firstProjectileStack);
@@ -178,11 +198,41 @@ public class GrappleWinchItem extends RangedWeaponItem {
                     List<ItemStack> newProjectiles = projectiles.subList(1, projectiles.size());
                     stack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(newProjectiles));
                 }
+
+                world.playSound(
+                        player,
+                        player.getX(),
+                        player.getEyeY(),
+                        player.getZ(),
+                        KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_UNLOAD,
+                        SoundCategory.PLAYERS,
+                        0.7f + world.getRandom().nextFloat() * 0.3f,
+                        0.7f + world.getRandom().nextFloat() * 0.3f
+                );
+                world.emitGameEvent(
+                        GameEvent.ENTITY_ACTION,
+                        player.getEyePos(),
+                        GameEvent.Emitter.of(player)
+                );
+
                 return true;
             } else if (projectiles.isEmpty() && PROJECTILES.test(otherStack)) {
-                if (!player.getWorld().isClient()) {
-                    // update component
-                    protectedLoad(stack, otherStack, player);
+                if (loadIfPossible(stack, otherStack, player)) {
+                    world.playSound(
+                            player,
+                            player.getX(),
+                            player.getEyeY(),
+                            player.getZ(),
+                            KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
+                            SoundCategory.PLAYERS,
+                            0.7f + world.getRandom().nextFloat() * 0.3f,
+                            0.7f + world.getRandom().nextFloat() * 0.3f
+                    );
+                    world.emitGameEvent(
+                            GameEvent.ENTITY_ACTION,
+                            player.getEyePos(),
+                            GameEvent.Emitter.of(player)
+                    );
                 }
                 return true;
             }
@@ -191,15 +241,20 @@ public class GrappleWinchItem extends RangedWeaponItem {
         return super.onClicked(stack, otherStack, slot, clickType, player, cursorStackReference);
     }
 
-    public static boolean protectedLoad(ItemStack winchStack, ItemStack loadingStack, @Nullable LivingEntity entity) {
-        if ((entity == null || !entity.getWorld().isClient()) && PROJECTILES.test(loadingStack)) {
-            // if the entity doesn't have grapple access or it doesn't have an active connection, proceed.
-            if (!(entity instanceof PlayerEntityGrappleAccess access) || !access.klaxon$hasActiveConnection()) {
-                List<ItemStack> list = load(winchStack, loadingStack, entity);
-                // load grapple winch if we don't have a grapple claw loaded
-                winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
-
+    public static boolean loadIfPossible(ItemStack winchStack, ItemStack loadingStack, @Nullable LivingEntity entity) {
+        @Nullable ChargedProjectilesComponent originalProjectiles = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
+        if ((originalProjectiles == null || originalProjectiles.isEmpty()) && PROJECTILES.test(loadingStack)) {
+            if (entity != null && entity.getWorld().isClient()) {
                 return true;
+            } else {
+                // if the entity doesn't have grapple access or it doesn't have an active connection, proceed.
+                if (!(entity instanceof PlayerEntityGrappleAccess access) || !access.klaxon$hasActiveConnection()) {
+                    List<ItemStack> list = load(winchStack, loadingStack, entity);
+                    // load grapple winch if we don't have a grapple claw loaded
+                    winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
+
+                    return true;
+                }
             }
         }
 

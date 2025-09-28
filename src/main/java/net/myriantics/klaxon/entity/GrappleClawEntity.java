@@ -20,6 +20,7 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -30,6 +31,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.Offset;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
@@ -126,17 +128,30 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             // attacking grapple claw with an unloaded grapple winch attempts to load claw into winch
             ItemStack weaponStack = source.getWeaponStack();
             if (weaponStack != null && weaponStack.isOf(KlaxonItems.GRAPPLE_WINCH) && source.getAttacker() instanceof LivingEntity livingAttacker) {
-                ChargedProjectilesComponent chargedProjectilesComponent = weaponStack.get(DataComponentTypes.CHARGED_PROJECTILES);
-                if (chargedProjectilesComponent == null || chargedProjectilesComponent.isEmpty()) {
-                    GrappleWinchItem.protectedLoad(weaponStack, this.getItemStack(), livingAttacker);
+                // if loading succeeded, play indicator sound and discard.
+                if (GrappleWinchItem.loadIfPossible(weaponStack, this.getItemStack(), livingAttacker)) {
+                    this.getWorld().playSound(
+                            this,
+                            this.getBlockPos(),
+                            KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_FAST_LOAD,
+                            livingAttacker instanceof PlayerEntity ? SoundCategory.PLAYERS : SoundCategory.NEUTRAL,
+                            0.7f + getWorld().getRandom().nextFloat() * 0.3f,
+                            0.7f + getWorld().getRandom().nextFloat() * 0.3f
+                    );
+                    this.getWorld().emitGameEvent(
+                            GameEvent.ENTITY_ACTION,
+                            getPos(),
+                            GameEvent.Emitter.of(livingAttacker)
+                    );
                     this.discard();
                     return true;
                 }
             }
 
-            // retrievers do not damage grapple claw
+            // retrievers do not damage grapple claw - make sure to return so we don't do damage anyways
             if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.GRAPPLE_CLAW_RETRIEVERS)) {
                 this.kill();
+                return true;
             }
 
             ItemStack grappleClawStack = this.getItemStack();
@@ -186,6 +201,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 serverWorld,
                 source != null && source.getAttacker() instanceof ServerPlayerEntity serverPlayer ? serverPlayer : null,
                 (item) -> {
+                    // increment broken stat if needed
+                    if (source != null && source.getAttacker() instanceof ServerPlayerEntity serverPlayer) {
+                        serverPlayer.incrementStat(Stats.BROKEN.getOrCreateStat(item));
+                    }
+
                     consumer.accept(item);
                     this.kill();
                 }
@@ -200,6 +220,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     SoundCategory.PLAYERS,
                     0.8f + getWorld().getRandom().nextFloat() * 0.2f,
                     0.7f + getWorld().getRandom().nextFloat() * 0.3f
+            );
+            this.getWorld().emitGameEvent(
+                    GameEvent.ENTITY_DAMAGE,
+                    this.getEyePos(),
+                    source == null ? GameEvent.Emitter.of(this) : GameEvent.Emitter.of(source.getAttacker())
             );
         }
 
