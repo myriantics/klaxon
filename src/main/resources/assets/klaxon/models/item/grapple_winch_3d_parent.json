@@ -4,7 +4,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"#structure": "klaxon:item/grapple_winch/grapple_winch_structure",
-		"#spool": "klaxon:item/grapple_winch/grapple_winch_spool_4",
+		"#spool": "klaxon:item/grapple_winch/cable_length_0",
 		"#claw": "klaxon:item/grapple_winch/grapple_winch_claw",
 		"#particle": "klaxon:item/grapple_winch/grapple_winch_structure"
 	},
@@ -191,12 +191,6 @@
 				"down": {"uv": [0, 0, 0, 0], "texture": "#spool"}
 			}
 		}
-	],
-	"overrides": [
-		{"predicate": {"klaxon:winch_cable": 4}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_4"},
-		{"predicate": {"klaxon:winch_cable": 3}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_3"},
-		{"predicate": {"klaxon:winch_cable": 2}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_2"},
-		{"predicate": {"klaxon:winch_cable": 1}, "model": "klaxon:item/grapple_winch/grapple_winch_3d_cablestage_1"}
 	],
 	"display": {
 		"thirdperson_righthand": {

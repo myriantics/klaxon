@@ -2,7 +2,7 @@
   "parent": "minecraft:item/generated",
   "overrides": [
     {
-      "model": "klaxon:item/grapple_winch_loaded",
+      "model": "klaxon:item/grapple_winch/charged_1",
       "predicate": {
         "klaxon:charged": 1
       }

@@ -7,6 +7,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.render.KlaxonItemModelPredicateIds;
+import net.myriantics.klaxon.registry.render.KlaxonItemModelPredicates;
 import net.myriantics.klaxon.registry.render.KlaxonModels;
 
 import java.util.Map;
@@ -26,72 +28,47 @@ public abstract class KlaxonItemModelSubProvider {
         generator.register(item, Models.GENERATED);
     }
 
-    protected void registerFancyShit() {
-
-    }
-
     protected void register2DGrappleWinch() {
-        Identifier rawId = Registries.ITEM.getId(KlaxonItems.GRAPPLE_WINCH);
-        Identifier unchargedTextureId = rawId.withPath((path) -> "item/" + path + "_unloaded");
-        Identifier chargedTextureId = rawId.withPath((path) -> "item/" + path + "_loaded");
-        Identifier chargedModelId = rawId.withPath((path) -> "item/" + path + "_loaded");
+        Identifier modelId = getItemId(Registries.ITEM.getId(KlaxonItems.GRAPPLE_WINCH));
+        Identifier unchargedTextureId = modelId.withPath((path) -> path + "_unloaded");
 
-        FancyFuckinModelBuilder.of(Models.GENERATED)
-                .id(getItemId(rawId.getPath()))
+        Identifier chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
+
+        FancyModelBuilder.of(Models.GENERATED)
+                .id(getItemId(modelId.getPath()))
                 .textureMap(TextureMap.layer0(unchargedTextureId))
-                .override(Map.of(KlaxonCommon.locate("charged"), 1), chargedModelId)
-                .build(generator.writer);
-        FancyFuckinModelBuilder.of(Models.GENERATED)
-                .id(chargedModelId)
-                .textureMap(TextureMap.layer0(chargedTextureId))
+                .override(modelId, KlaxonItemModelPredicateIds.CHARGED)
+                .associateTexture(chargedPredicate, 1, TextureKey.of("layer0"))
+                .add(1)
+                .buildOverrides()
                 .build(generator);
     }
 
     protected void register3DGrappleWinch() {
-        Identifier rawId = Registries.ITEM.getId(KlaxonItems.GRAPPLE_WINCH);
-        Identifier raw3dId = rawId.withPath((path) -> path + "_3d");
+        Identifier raw3dId = Registries.ITEM.getId(KlaxonItems.GRAPPLE_WINCH).withPath((path) -> path + "_3d");
         Identifier modelId = getItemId(raw3dId);
-        Identifier cableStage1 = getSubModelId(raw3dId.withPath((path) -> path + "_cablestage_1"), "grapple_winch");
-        Identifier cableStage2 = getSubModelId(raw3dId.withPath((path) -> path + "_cablestage_2"), "grapple_winch");
-        Identifier cableStage3 = getSubModelId(raw3dId.withPath((path) -> path + "_cablestage_3"), "grapple_winch");
-        Identifier cableStage4 = getSubModelId(raw3dId.withPath((path) -> path + "_cablestage_4"), "grapple_winch");
 
-        FancyFuckinModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D)
+        Identifier chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
+        Identifier winchCableLengthPredicate = KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH;
+
+        FancyModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D)
                 .id(modelId)
                 .textureMap(Map.of(
-                        "structure", rawId.withPath((path) -> "item/" + path + "/grapple_winch_structure"),
-                        "spool", rawId.withPath((path) -> "item/" + path + "/grapple_winch_spool_4"),
-                        "claw", rawId.withPath((path) -> "item/" + path + "/grapple_winch_claw"),
-                        "particle", rawId.withPath((path) -> "item/" + path + "/grapple_winch_structure")
+                        "#structure", raw3dId.withPath((path) -> "item/" + path + "/grapple_winch_structure"),
+                        "#spool", raw3dId.withPath((path) -> "item/" + path + "/cable_length_0"),
+                        "#claw", raw3dId.withPath((path) -> "item/" + path + "/grapple_winch_claw"),
+                        "#particle", raw3dId.withPath((path) -> "item/" + path + "/grapple_winch_structure")
                 ))
-                .override(Map.of(KlaxonCommon.locate("charged"), 1, KlaxonCommon.locate("winch_cable"), 1), cableStage1)
-                .override(Map.of(KlaxonCommon.locate("charged"), 1, KlaxonCommon.locate("winch_cable"), 2), cableStage2)
-                .override(Map.of(KlaxonCommon.locate("charged"), 1, KlaxonCommon.locate("winch_cable"), 3), cableStage3)
-                .override(Map.of(KlaxonCommon.locate("charged"), 1, KlaxonCommon.locate("winch_cable"), 4), cableStage4)
-                .build(generator);
-        FancyFuckinModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D)
-                .id(cableStage1)
-                .textureMap(Map.of(
-                        "spool", rawId.withPath((path) -> "item/" + path + "/grapple_winch_spool_1"))
-                )
-                .build(generator);
-        FancyFuckinModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D)
-                .id(cableStage2)
-                .textureMap(Map.of(
-                        "spool", rawId.withPath((path) -> "item/" + path + "/grapple_winch_spool_2"))
-                )
-                .build(generator);
-        FancyFuckinModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D)
-                .id(cableStage3)
-                .textureMap(Map.of(
-                        "spool", rawId.withPath((path) -> "item/" + path + "/grapple_winch_spool_3"))
-                )
-                .build(generator);
-        FancyFuckinModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D)
-                .id(cableStage4)
-                .textureMap(Map.of(
-                        "spool", rawId.withPath((path) -> "item/" + path + "/grapple_winch_spool_4"))
-                )
+                .override(modelId, chargedPredicate, winchCableLengthPredicate)
+                .associateTexture(winchCableLengthPredicate, 1, TextureKey.of("spool"))
+                .associateTexture(winchCableLengthPredicate, 2, TextureKey.of("spool"))
+                .associateTexture(winchCableLengthPredicate, 3, TextureKey.of("spool"))
+                .associateTexture(winchCableLengthPredicate, 4, TextureKey.of("spool"))
+                .add(1, 1)
+                .add(1, 2)
+                .add(1, 3)
+                .add(1, 4)
+                .buildOverrides()
                 .build(generator);
     }
 
