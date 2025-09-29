@@ -2,6 +2,8 @@ package net.myriantics.klaxon.registry.render;
 
 import net.minecraft.client.item.ClampedModelPredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -42,6 +44,17 @@ public abstract class KlaxonItemModelPredicates {
         // default to displaying a full spool
         return 0;
     }));
+
+    static {
+        register(KlaxonItems.GRAPPLE_WINCH, "charged", ((stack, world, entity, seed) -> {
+            ChargedProjectilesComponent component = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
+            if (component == null || component.isEmpty()) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }));
+    }
 
     private static ClampedModelPredicateProvider register(String name, ClampedModelPredicateProvider provider) {
         return ModelPredicateProviderRegistry.register(KlaxonCommon.locate(name), provider);

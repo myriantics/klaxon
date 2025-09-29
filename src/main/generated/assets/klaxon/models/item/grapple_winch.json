@@ -1,6 +1,14 @@
 {
   "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "klaxon:item/grapple_winch_loaded",
+      "predicate": {
+        "klaxon:charged": 1
+      }
+    }
+  ],
   "textures": {
-    "layer0": "klaxon:item/grapple_winch"
+    "layer0": "klaxon:item/grapple_winch_unloaded"
   }
 }

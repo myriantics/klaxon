@@ -40,7 +40,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .with3dHandModel()
                     .getSettings()
             ));
-    public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
+    public static final Item STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
             new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
                     .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1.0f, -2.8f))
                     .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
@@ -68,7 +68,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
                     .getSettings()
             ));
-    public static final Item GRAPPLE_WINCH = registerSimpleItem("grapple_winch",
+    public static final Item GRAPPLE_WINCH = registerItem("grapple_winch",
             new GrappleWinchItem(new KlaxonItemSettings()
                     .maxCount(1)
                     .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
@@ -79,19 +79,19 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             ));
 
     // armor
-    public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
+    public static final Item STEEL_HELMET = registerItem("steel_helmet",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new Item.Settings()
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
-    public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate",
+    public static final Item STEEL_CHESTPLATE = registerItem("steel_chestplate",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new Item.Settings()
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
-    public static final Item STEEL_LEGGINGS = registerSimpleItem("steel_leggings",
+    public static final Item STEEL_LEGGINGS = registerItem("steel_leggings",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new Item.Settings()
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));
-    public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots",
+    public static final Item STEEL_BOOTS = registerItem("steel_boots",
             new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new Item.Settings()
                     .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
             ));

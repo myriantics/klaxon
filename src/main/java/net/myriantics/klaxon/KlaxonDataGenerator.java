@@ -7,6 +7,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
+import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.tag.*;
 
