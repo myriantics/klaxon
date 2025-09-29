@@ -1,0 +1,7 @@
+{
+  "parent": "klaxon:item/grapple_winch_3d_parent",
+  "overrides": [],
+  "textures": {
+    "spool": "klaxon:item/grapple_winch/grapple_winch_spool_3"
+  }
+}

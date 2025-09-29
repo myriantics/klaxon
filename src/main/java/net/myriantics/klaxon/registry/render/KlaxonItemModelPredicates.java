@@ -6,6 +6,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
@@ -14,7 +15,7 @@ import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrap
 
 public abstract class KlaxonItemModelPredicates {
 
-    public static ClampedModelPredicateProvider GRAPPLE_WINCH_CABLE = register(KlaxonItems.GRAPPLE_WINCH, "winch_cable", ((stack, world, entity, seed) -> {
+    public static final Identifier GRAPPLE_WINCH_CABLE = register(KlaxonItems.GRAPPLE_WINCH, "winch_cable", ((stack, world, entity, seed) -> {
         if (
                 entity instanceof PlayerEntityGrappleAccess access
                         && access.klaxon$hasActiveConnection()
@@ -45,24 +46,19 @@ public abstract class KlaxonItemModelPredicates {
         return 0;
     }));
 
-    static {
-        register(KlaxonItems.GRAPPLE_WINCH, "charged", ((stack, world, entity, seed) -> {
-            ChargedProjectilesComponent component = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
-            if (component == null || component.isEmpty()) {
-                return 0;
-            } else {
-                return 1;
-            }
-        }));
-    }
+    public static final Identifier GRAPPLE_WINCH_CHARGED = register(KlaxonItems.GRAPPLE_WINCH, "charged", ((stack, world, entity, seed) -> {
+        ChargedProjectilesComponent component = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
+        if (component == null || component.isEmpty()) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }));
 
-    private static ClampedModelPredicateProvider register(String name, ClampedModelPredicateProvider provider) {
-        return ModelPredicateProviderRegistry.register(KlaxonCommon.locate(name), provider);
-    }
-
-    private static ClampedModelPredicateProvider register(Item item, String name, ClampedModelPredicateProvider provider) {
+    private static Identifier register(Item item, String name, ClampedModelPredicateProvider provider) {
+        Identifier id = KlaxonCommon.locate(name);
         ModelPredicateProviderRegistry.register(item, KlaxonCommon.locate(name), provider);
-        return provider;
+        return id;
     }
 
     public static void init() {

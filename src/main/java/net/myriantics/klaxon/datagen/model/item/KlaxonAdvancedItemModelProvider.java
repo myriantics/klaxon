@@ -18,5 +18,6 @@ public class KlaxonAdvancedItemModelProvider extends KlaxonItemModelSubProvider 
         registerArmor(KlaxonItems.STEEL_LEGGINGS);
         registerArmor(KlaxonItems.STEEL_BOOTS);
         register2DGrappleWinch();
+        register3DGrappleWinch();
     }
 }
