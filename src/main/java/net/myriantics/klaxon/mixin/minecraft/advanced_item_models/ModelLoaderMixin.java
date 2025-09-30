@@ -11,6 +11,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.profiler.Profiler;
+import net.myriantics.klaxon.mixin.minecraft.datagen.ModelAccessor;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.util.advanced_item_models.AdvancedItemModelHelper;
 import org.joml.Vector3f;
@@ -45,6 +46,7 @@ public abstract class ModelLoaderMixin {
                 Identifier id = AdvancedItemModelHelper.getAlternateModelId(Registries.ITEM.getId(item), suffix);
 
                 UnbakedModel model = getOrLoadModel(id.withPrefixedPath("item/"));
+                UnbakedModel parentModel = getOrLoadModel(((JsonUnbakedModelAccessor) model).klaxon$getParentId());
                 add(ModelIdentifier.ofInventoryVariant(id), model);
 
                 if (item.getComponents().contains(KlaxonDataComponentTypes.MIRRORED_LEFT_HAND_MODEL)) {
@@ -52,11 +54,10 @@ public abstract class ModelLoaderMixin {
                     if (model instanceof JsonUnbakedModel jsonUnbakedModel && jsonUnbakedModel instanceof JsonUnbakedModelAccessor accessor) {
                         ArrayList<ModelElement> newElements = new ArrayList<>();
 
-
                         Identifier mirroredModelId = AdvancedItemModelHelper.getMirroredId(id);
 
                         // copy + mirror model elements
-                        for (ModelElement element : jsonUnbakedModel.getElements()) {
+                        for (ModelElement element : jsonUnbakedModel.getElements().isEmpty() ? ((JsonUnbakedModel) parentModel).getElements() : jsonUnbakedModel.getElements()) {
                             Vector3f from = new Vector3f(element.from);
                             Vector3f to = new Vector3f(element.to);
 
