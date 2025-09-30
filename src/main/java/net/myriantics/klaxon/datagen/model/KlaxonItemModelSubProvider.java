@@ -30,15 +30,15 @@ public abstract class KlaxonItemModelSubProvider {
 
     protected void register2DGrappleWinch() {
         Identifier modelId = getItemId(Registries.ITEM.getId(KlaxonItems.GRAPPLE_WINCH));
-        Identifier unchargedTextureId = modelId.withPath((path) -> path + "_unloaded");
 
         Identifier chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
 
-        FancyModelBuilder.of(Models.GENERATED)
-                .id(getItemId(modelId.getPath()))
-                .textureMap(TextureMap.layer0(unchargedTextureId))
+        FancyModelBuilder.of(Models.GENERATED, modelId)
+                .textureMap(TextureMap.layer0(modelId.withPath((path) -> path + "/charged_0")))
                 .override(modelId, KlaxonItemModelPredicateIds.CHARGED)
+                .associateTexture(chargedPredicate, 0, TextureKey.of("layer0"))
                 .associateTexture(chargedPredicate, 1, TextureKey.of("layer0"))
+                .add(0)
                 .add(1)
                 .buildOverrides()
                 .build(generator);
@@ -51,19 +51,27 @@ public abstract class KlaxonItemModelSubProvider {
         Identifier chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
         Identifier winchCableLengthPredicate = KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH;
 
-        FancyModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D)
-                .id(modelId)
+        FancyModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D, modelId)
                 .textureMap(Map.of(
-                        "#structure", raw3dId.withPath((path) -> "item/" + path + "/grapple_winch_structure"),
-                        "#spool", raw3dId.withPath((path) -> "item/" + path + "/cable_length_0"),
-                        "#claw", raw3dId.withPath((path) -> "item/" + path + "/grapple_winch_claw"),
-                        "#particle", raw3dId.withPath((path) -> "item/" + path + "/grapple_winch_structure")
+                        "#structure", raw3dId.withPath((path) -> "item/" + path + "/structure/structure"),
+                        "#spool", raw3dId.withPath((path) -> "item/" + path + "/spool/cable_length_0"),
+                        "#claw", raw3dId.withPath((path) -> "item/" + path + "/claw/charged_0"),
+                        "#particle", raw3dId.withPath((path) -> "item/" + path + "/structure/structure")
                 ))
                 .override(modelId, chargedPredicate, winchCableLengthPredicate)
+                .associateTexture(winchCableLengthPredicate, 0, TextureKey.of("spool"))
                 .associateTexture(winchCableLengthPredicate, 1, TextureKey.of("spool"))
                 .associateTexture(winchCableLengthPredicate, 2, TextureKey.of("spool"))
                 .associateTexture(winchCableLengthPredicate, 3, TextureKey.of("spool"))
                 .associateTexture(winchCableLengthPredicate, 4, TextureKey.of("spool"))
+                .associateTexture(chargedPredicate, 0, TextureKey.of("claw"))
+                .associateTexture(chargedPredicate, 1, TextureKey.of("claw"))
+                .add(0, 0)
+                .add(0, 1)
+                .add(0, 2)
+                .add(0, 3)
+                .add(0, 4)
+                .add(1, 0)
                 .add(1, 1)
                 .add(1, 2)
                 .add(1, 3)

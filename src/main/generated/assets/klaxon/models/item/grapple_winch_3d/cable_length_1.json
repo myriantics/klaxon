@@ -1,6 +1,0 @@
-{
-  "parent": "klaxon:item/grapple_winch_3d_parent",
-  "textures": {
-    "spool": "klaxon:item/grapple_winch_3d/cable_length_1"
-  }
-}

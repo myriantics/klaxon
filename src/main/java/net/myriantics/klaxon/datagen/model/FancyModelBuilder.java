@@ -20,36 +20,31 @@ import java.util.function.Supplier;
 
 public final class FancyModelBuilder {
     private final Model parentModel;
+    private final Model model;
     private final JsonArray overrides;
-    private Identifier modelId;
+    private final Identifier modelId;
     private Map<TextureKey, Identifier> textureMap;
     private final ArrayList<FancyModelBuilder> overrideModelBuilder = new ArrayList<>();
 
+
     private static final String validationString = "item/";
 
-    private FancyModelBuilder(Model parentModel) {
+    private FancyModelBuilder(Model parentModel, Identifier modelId) {
         this.parentModel = parentModel;
         this.overrides = new JsonArray();
-    }
+        this.modelId = modelId;
 
-    public static FancyModelBuilder of(Model parent) {
-        return new FancyModelBuilder(parent);
-    }
-
-    public FancyModelBuilder id(String id) {
-        this.id(KlaxonItemModelSubProvider.getItemId(id));
-        return this;
-    }
-
-    public FancyModelBuilder id(Identifier id) {
-        String substring = id.getPath().substring(0, 5);
+        String substring = modelId.getPath().substring(0, 5);
 
         if (!substring.equals(validationString)) {
             throw new IllegalArgumentException("Got: \"" + substring + "\", expected: \"" + validationString + "\"");
         }
 
-        this.modelId = id;
-        return this;
+        this.model = new Model(Optional.of(modelId), Optional.empty(), ((ModelAccessor) parentModel).klaxon$getRequiredTextures().toArray(new TextureKey[0]));
+    }
+
+    public static FancyModelBuilder of(Model parent, Identifier id) {
+        return new FancyModelBuilder(parent, id);
     }
 
     public FancyModelBuilder textureMap(TextureMap textureMap) {
@@ -116,7 +111,7 @@ public final class FancyModelBuilder {
         private final Identifier baseModelId;
         private final Identifier[] predicateIds;
         private final ArrayList<Map<Identifier, Number>> predicates = new ArrayList<>();
-        private final Map<Identifier, Map<Number, TextureKey>> overrideTextureAssociations;
+        private final Map<Identifier, Map<Number, ArrayList<TextureKey>>> overrideTextureAssociations;
         private final Map<Identifier, Map<Number, Model>> overrideModelAssociations;
 
         private FancyOverrideBuilder(FancyModelBuilder builder, Identifier baseModelId, Identifier... predicateIds) {
@@ -128,19 +123,22 @@ public final class FancyModelBuilder {
         }
 
         public FancyOverrideBuilder associateTexture(Identifier predicateId, Number value, TextureKey textureKey) {
-            @Nullable Map<Number, TextureKey> valueToKeyMap = overrideTextureAssociations.get(predicateId);
+            @Nullable Map<Number, ArrayList<TextureKey>> valueToKeysMap = overrideTextureAssociations.get(predicateId);
 
-            // if a map hasn't been created yet
-            if (valueToKeyMap == null) {
-                valueToKeyMap = new HashMap<>();
-                this.overrideTextureAssociations.put(predicateId, valueToKeyMap);
+            // if a map hasn't been created yet, create one and add it
+            if (valueToKeysMap == null) {
+                valueToKeysMap = new HashMap<>();
+                this.overrideTextureAssociations.put(predicateId, valueToKeysMap);
             }
 
-            if (valueToKeyMap.containsKey(value)) {
-                throw new IllegalArgumentException("FancyOverrideBuilder of model [" + baseModelId + "] already has associated [\"" + predicateId + "\": " + value + "] with: \"" + valueToKeyMap.get(value));
+            @Nullable ArrayList<TextureKey> keyList = valueToKeysMap.get(value);
+            if (keyList == null) {
+                keyList = new ArrayList<>();
+                valueToKeysMap.put(value, keyList);
             }
 
-            valueToKeyMap.put(value, textureKey);
+            // add the texture key to the list inside the map inside the map
+            keyList.add(textureKey);
 
             return this;
         }
@@ -201,7 +199,7 @@ public final class FancyModelBuilder {
 
             for (Map<Identifier, Number> predicate : this.predicates) {
                 // set up the parent model and texture overrides - ready for overriding
-                Model parentModel = this.builder.parentModel;
+                Model parentModel = this.builder.model;
                 HashMap<String, Identifier> textureOverrides = HashMap.newHashMap(predicate.size());
 
                 // prep the override and predicate objects
@@ -227,14 +225,16 @@ public final class FancyModelBuilder {
                     }
 
                     if (this.overrideTextureAssociations.containsKey(conditionId)) {
-                        @Nullable TextureKey textureKey = this.overrideTextureAssociations.get(conditionId).get(value);
+                        @Nullable ArrayList<TextureKey> textureKeys = this.overrideTextureAssociations.get(conditionId).get(value);
 
-                        // add the texture into the specialized directory
-                        if (textureKey != null) {
-                            textureOverrides.put(
-                                    textureKey.toString(),
-                                    baseModelId.withPath(basePath + "/" + predicateSuffix)
-                            );
+                        // add the textures into the specialized directory - take in the texture key into account when deciding file name to prevent conflicts
+                        if (textureKeys != null && !textureKeys.isEmpty()) {
+                            for (TextureKey textureKey : textureKeys) {
+                                textureOverrides.put(
+                                        textureKey.toString(),
+                                        this.baseModelId.withPath(basePath + "/" + textureKey.toString().substring(1) + "/" + predicateSuffix)
+                                );
+                            }
                             overrideActionPerformed = true;
                         }
                     }
@@ -266,7 +266,7 @@ public final class FancyModelBuilder {
                 // add newly made override model to the last fancy builder for it to build when it builds
                 // bob the builder
                 if (parentModel != this.builder.parentModel || !textureOverrides.isEmpty()) {
-                    this.builder.overrideModelBuilder.add(FancyModelBuilder.of(parentModel).id(overrideModelId).textureMap(textureOverrides));
+                    this.builder.overrideModelBuilder.add(FancyModelBuilder.of(parentModel, overrideModelId).textureMap(textureOverrides));
                 }
             }
 
