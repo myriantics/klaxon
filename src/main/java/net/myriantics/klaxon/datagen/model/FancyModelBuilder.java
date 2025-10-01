@@ -10,6 +10,7 @@ import net.minecraft.data.client.Model;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.util.Identifier;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mixin.minecraft.datagen.ModelAccessor;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,6 +94,7 @@ public final class FancyModelBuilder {
                 modelId,
                 () -> builtObject
         );
+
 
         // build all the models that we assembled when doing override crap
         for (FancyModelBuilder builder : this.overrideModelBuilder) {
@@ -214,21 +216,31 @@ public final class FancyModelBuilder {
                     boolean overrideActionPerformed = false;
 
                     // if the parent model hasn't already been overwritten, and an override exists for it, apply that override
-                    if (this.overrideModelAssociations.containsKey(conditionId) && parentModel == builder.parentModel) {
+                    if (this.overrideModelAssociations.containsKey(conditionId)) {
                         @Nullable Model overrideModel = this.overrideModelAssociations.get(conditionId).get(value);
 
-                        // make sure we don't overwrite the parent model with a null value
-                        if (overrideModel != null) {
+                        // make sure we don't overwrite the parent model with a null value - also don't overwrite it when it's already been reassigned
+                        if (overrideModel != null && parentModel == builder.model) {
                             parentModel = overrideModel;
                             overrideActionPerformed = true;
-                        }
-                    }
 
-                    if (this.overrideTextureAssociations.containsKey(conditionId)) {
+                            String overrideModelPath = ((ModelAccessor) overrideModel).klaxon$getParent().orElse(KlaxonCommon.locate("")).getPath();
+                            int lastIndexOfASlashTotallyCoolVariableName = overrideModelPath.lastIndexOf('/') + 1;
+                            if (lastIndexOfASlashTotallyCoolVariableName < overrideModelPath.length()) {
+                                overrideModelPath = overrideModelPath.substring(lastIndexOfASlashTotallyCoolVariableName);
+                            }
+
+                            suffixBuilder.append(overrideModelPath);
+                            suffixBuilder.append("/");
+                        }
+                    } else if (this.overrideTextureAssociations.containsKey(conditionId)) {
                         @Nullable ArrayList<TextureKey> textureKeys = this.overrideTextureAssociations.get(conditionId).get(value);
 
                         // add the textures into the specialized directory - take in the texture key into account when deciding file name to prevent conflicts
                         if (textureKeys != null && !textureKeys.isEmpty()) {
+
+
+
                             for (TextureKey textureKey : textureKeys) {
                                 textureOverrides.put(
                                         textureKey.toString(),
@@ -244,7 +256,8 @@ public final class FancyModelBuilder {
 
                     // add the formatted suffix to the builder - only if an override was performed
                     if (overrideActionPerformed) {
-                        if (!suffixBuilder.isEmpty()) {
+                        // don't start off the suffix builder with an underscore - also don't do it if the last character is a slash
+                        if (!suffixBuilder.isEmpty() && suffixBuilder.toString().charAt(suffixBuilder.length() - 1) != '/') {
                             suffixBuilder.append('_');
                         }
                         suffixBuilder.append(predicateSuffix);

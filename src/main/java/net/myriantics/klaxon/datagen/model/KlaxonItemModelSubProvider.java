@@ -8,7 +8,6 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonItemModelPredicateIds;
-import net.myriantics.klaxon.registry.render.KlaxonItemModelPredicates;
 import net.myriantics.klaxon.registry.render.KlaxonModels;
 
 import java.util.Map;
@@ -51,31 +50,30 @@ public abstract class KlaxonItemModelSubProvider {
         Identifier chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
         Identifier winchCableLengthPredicate = KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH;
 
-        FancyModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D, modelId)
+        FancyModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_4, modelId)
                 .textureMap(Map.of(
                         "#structure", raw3dId.withPath((path) -> "item/" + path + "/structure/structure"),
-                        "#spool", raw3dId.withPath((path) -> "item/" + path + "/spool/cable_length_0"),
-                        "#claw", raw3dId.withPath((path) -> "item/" + path + "/claw/charged_0"),
-                        "#particle", raw3dId.withPath((path) -> "item/" + path + "/structure/structure")
+                        "#spool", raw3dId.withPath((path) -> "item/" + path + "/spool/cable_length_4"),
+                        "#claw", raw3dId.withPath((path) -> "item/" + path + "/claw/charged_0")
                 ))
                 .override(modelId, chargedPredicate, winchCableLengthPredicate)
-                .associateTexture(winchCableLengthPredicate, 0, TextureKey.of("spool"))
-                .associateTexture(winchCableLengthPredicate, 1, TextureKey.of("spool"))
-                .associateTexture(winchCableLengthPredicate, 2, TextureKey.of("spool"))
-                .associateTexture(winchCableLengthPredicate, 3, TextureKey.of("spool"))
-                .associateTexture(winchCableLengthPredicate, 4, TextureKey.of("spool"))
+                .associateModel(winchCableLengthPredicate, 0, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_0)
+                .associateModel(winchCableLengthPredicate, 0.25, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_1)
+                .associateModel(winchCableLengthPredicate, 0.5, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_2)
+                .associateModel(winchCableLengthPredicate, 0.75, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_3)
+                .associateModel(winchCableLengthPredicate, 1, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_4)
                 .associateTexture(chargedPredicate, 0, TextureKey.of("claw"))
                 .associateTexture(chargedPredicate, 1, TextureKey.of("claw"))
                 .add(0, 0)
+                .add(0, 0.25)
+                .add(0, 0.5)
+                .add(0, 0.75)
                 .add(0, 1)
-                .add(0, 2)
-                .add(0, 3)
-                .add(0, 4)
                 .add(1, 0)
+                .add(1, 0.25)
+                .add(1, 0.5)
+                .add(1, 0.75)
                 .add(1, 1)
-                .add(1, 2)
-                .add(1, 3)
-                .add(1, 4)
                 .buildOverrides()
                 .build(generator);
     }

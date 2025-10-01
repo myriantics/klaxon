@@ -38,6 +38,10 @@ public abstract class ModelLoaderMixin {
 
     @Shadow @Final private Map<Identifier, UnbakedModel> unbakedModels;
 
+    @Shadow
+    @Final
+    private UnbakedModel missingModel;
+
     // Registers the hammer model as an available resource you can pull from
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 0))
     public void klaxon$loadFancyModels(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
@@ -136,7 +140,7 @@ public abstract class ModelLoaderMixin {
 
                         JsonUnbakedModel invertedModel = new JsonUnbakedModel(
                                 accessor.klaxon$getParentId(),
-                                newElements,
+                                newElements.isEmpty() ? ((JsonUnbakedModel) missingModel).getElements() : newElements,
                                 accessor.klaxon$getTextureMap(),
                                 jsonUnbakedModel.useAmbientOcclusion(),
                                 jsonUnbakedModel.getGuiLight(),
@@ -149,7 +153,6 @@ public abstract class ModelLoaderMixin {
                     }
                 }
             }
-
 
         }
     }

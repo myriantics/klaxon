@@ -1,81 +1,80 @@
 {
-  "parent": "klaxon:item/grapple_winch_3d_parent",
+  "parent": "klaxon:item/grapple_winch_3d/spool_4",
   "overrides": [
     {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_0_charged_0",
+      "model": "klaxon:item/grapple_winch_3d/spool_0/cable_length_0_charged_0",
       "predicate": {
         "klaxon:cable_length": 0,
         "klaxon:charged": 0
       }
     },
     {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_1_charged_0",
+      "model": "klaxon:item/grapple_winch_3d/spool_1/cable_length_0.25_charged_0",
+      "predicate": {
+        "klaxon:cable_length": 0.25,
+        "klaxon:charged": 0
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/spool_2/cable_length_0.5_charged_0",
+      "predicate": {
+        "klaxon:cable_length": 0.5,
+        "klaxon:charged": 0
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/spool_3/cable_length_0.75_charged_0",
+      "predicate": {
+        "klaxon:cable_length": 0.75,
+        "klaxon:charged": 0
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/spool_4/cable_length_1_charged_0",
       "predicate": {
         "klaxon:cable_length": 1,
         "klaxon:charged": 0
       }
     },
     {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_2_charged_0",
-      "predicate": {
-        "klaxon:cable_length": 2,
-        "klaxon:charged": 0
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_3_charged_0",
-      "predicate": {
-        "klaxon:cable_length": 3,
-        "klaxon:charged": 0
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_4_charged_0",
-      "predicate": {
-        "klaxon:cable_length": 4,
-        "klaxon:charged": 0
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_0_charged_1",
+      "model": "klaxon:item/grapple_winch_3d/spool_0/cable_length_0_charged_1",
       "predicate": {
         "klaxon:cable_length": 0,
         "klaxon:charged": 1
       }
     },
     {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_1_charged_1",
+      "model": "klaxon:item/grapple_winch_3d/spool_1/cable_length_0.25_charged_1",
+      "predicate": {
+        "klaxon:cable_length": 0.25,
+        "klaxon:charged": 1
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/spool_2/cable_length_0.5_charged_1",
+      "predicate": {
+        "klaxon:cable_length": 0.5,
+        "klaxon:charged": 1
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/spool_3/cable_length_0.75_charged_1",
+      "predicate": {
+        "klaxon:cable_length": 0.75,
+        "klaxon:charged": 1
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/spool_4/cable_length_1_charged_1",
       "predicate": {
         "klaxon:cable_length": 1,
-        "klaxon:charged": 1
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_2_charged_1",
-      "predicate": {
-        "klaxon:cable_length": 2,
-        "klaxon:charged": 1
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_3_charged_1",
-      "predicate": {
-        "klaxon:cable_length": 3,
-        "klaxon:charged": 1
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_4_charged_1",
-      "predicate": {
-        "klaxon:cable_length": 4,
         "klaxon:charged": 1
       }
     }
   ],
   "textures": {
     "claw": "klaxon:item/grapple_winch_3d/claw/charged_0",
-    "particle": "klaxon:item/grapple_winch_3d/structure/structure",
-    "spool": "klaxon:item/grapple_winch_3d/spool/cable_length_0",
+    "spool": "klaxon:item/grapple_winch_3d/spool/cable_length_4",
     "structure": "klaxon:item/grapple_winch_3d/structure/structure"
   }
 }

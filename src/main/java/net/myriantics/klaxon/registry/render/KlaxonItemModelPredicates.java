@@ -26,29 +26,12 @@ public abstract class KlaxonItemModelPredicates {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
 
             if (access.klaxon$hasActiveConnection() && attributes.hasAttribute(KlaxonEntityAttributes.WINCH_CABLE_LENGTH)) {
-                // returns numbers 0 thru 4 indicating the depletion stage of the grapple winch cable
-                // 0 = 100%
-                // 1 = 70% to 99%
-                // 2 = 30% to 69%
-                // 3 = 10% to 29%
-                // 4 = 0% to 9%
-                double remainingCableProportion = access.klaxon$getCurrentWinchCableLength() / entity.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
-                if (remainingCableProportion >= 1.00) {
-                    return 0;
-                } else if (remainingCableProportion >= 0.70) {
-                    return 1;
-                } else if (remainingCableProportion >= 0.30) {
-                    return 2;
-                } else if (remainingCableProportion >= 0.10) {
-                    return 3;
-                } else {
-                    return 4;
-                }
+                return  1f - (float) (access.klaxon$getCurrentWinchCableLength() / entity.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH));
             }
         }
 
         // default to displaying a full spool
-        return 0;
+        return 0f;
     }));
 
     public static final Identifier GRAPPLE_WINCH_CHARGED = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.CHARGED, ((stack, world, entity, seed) -> {
