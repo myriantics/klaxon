@@ -45,6 +45,7 @@ import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.BoundingBoxHelper;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
@@ -115,6 +116,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         World world = this.getWorld();
+        @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
+
+        // conduct electrical damage to the attached player if present because get trolled haha
+        if (source.isIn(KlaxonDamageTypeTags.ELECTRICAL) && attachedPlayer != null) {
+            attachedPlayer.damage(source, amount);
+        }
 
         if (world.isClient() || this.isRemoved()) {
             return true;

@@ -8,6 +8,8 @@ import net.myriantics.klaxon.KlaxonCommon;
 public abstract class KlaxonDamageTypeTags {
     public static TagKey<DamageType> CLEAVING_DAMAGE = createTag("cleaving_damage");
 
+    public static TagKey<DamageType> ELECTRICAL = createTag("electrical");
+
     private static TagKey<DamageType> createTag(String name) {
         return TagKey.of(RegistryKeys.DAMAGE_TYPE, KlaxonCommon.locate(name));
     }

@@ -3,10 +3,12 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
+import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,5 +24,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
 
         getOrCreateTagBuilder(DamageTypeTags.NO_KNOCKBACK)
                 .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING);
+
+        getOrCreateTagBuilder(KlaxonDamageTypeTags.ELECTRICAL)
+                .add(DamageTypes.LIGHTNING_BOLT);
     }
 }
