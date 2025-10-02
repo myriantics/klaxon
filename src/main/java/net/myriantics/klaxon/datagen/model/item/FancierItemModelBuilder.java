@@ -16,44 +16,40 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public final class FancierModelBuilder {
+public final class FancierItemModelBuilder {
     private final Identifier modelId;
     private final Model parentModel;
     private final Model model;
     private final Map<TextureKey, Identifier> defaultTextureMap;
     private final ArrayList<FancyOverride> overrides = new ArrayList<>();
 
-    private FancierModelBuilder(Model parentModel, Identifier modelId, Map<TextureKey, Identifier> defaultTextureMap) {
+    private FancierItemModelBuilder(Model parentModel, Identifier modelId, Map<TextureKey, Identifier> defaultTextureMap) {
         this.parentModel = parentModel;
         this.modelId = modelId;
         this.defaultTextureMap = defaultTextureMap;
         this.model = new Model(Optional.of(modelId), Optional.empty(), ((ModelAccessor) parentModel).klaxon$getRequiredTextures().toArray(new TextureKey[0]));
     }
 
-    public static FancierModelBuilder of(Model rootModel, Identifier rootModelId, Map<TextureKey, Identifier> defaultTextureMap) {
-        return new FancierModelBuilder(rootModel, rootModelId, defaultTextureMap);
+    public static FancierItemModelBuilder of(Model rootModel, Identifier rootModelId, Map<TextureKey, Identifier> defaultTextureMap) {
+        return new FancierItemModelBuilder(rootModel, rootModelId, defaultTextureMap);
     }
 
-    public FancierModelBuilder modelOverride(Identifier predicateId, Map<Number, Model> valuesToModels) {
-        return this.modelOverride(predicateId.toString(), valuesToModels);
+    public FancierTextureOverrideBuilder textureOverride(Identifier predicateId, TextureKey textureKey, int size) {
+        return textureOverride(predicateId.toString(), textureKey, size);
     }
 
-    public FancierModelBuilder modelOverride(String predicateId, Map<Number, Model> valueToModel) {
+    public FancierTextureOverrideBuilder textureOverride(String predicateId, TextureKey textureKey, int size) {
         this.validatePredicateId(predicateId);
-        this.validateValues(predicateId, valueToModel.keySet());
-        this.overrides.add(new FancyModelOverride(predicateId, valueToModel));
-        return this;
+        return new FancierTextureOverrideBuilder(this, predicateId, textureKey, size);
     }
 
-    public FancierModelBuilder textureOverride(Identifier predicateId, TextureKey textureKey, Map<Number, Identifier> valuesToTextureIds) {
-        return this.textureOverride(predicateId.toString(), textureKey, valuesToTextureIds);
+    public FancierModelOverrideBuilder modelOverride(Identifier predicateId, int size) {
+        return modelOverride(predicateId.toString(), size);
     }
 
-    public FancierModelBuilder textureOverride(String predicateId, TextureKey textureKey, Map<Number, Identifier> valueToTextureIds) {
+    public FancierModelOverrideBuilder modelOverride(String predicateId, int size) {
         this.validatePredicateId(predicateId);
-        this.validateValues(predicateId, valueToTextureIds.keySet());
-        this.overrides.add(new FancyTextureOverride(predicateId, textureKey, valueToTextureIds));
-        return this;
+        return new FancierModelOverrideBuilder(this, predicateId, size);
     }
 
     private void validatePredicateId(String predicateId) {
@@ -70,7 +66,7 @@ public final class FancierModelBuilder {
         }
     }
 
-    private void validateValues(String predicateId, Iterable<Number> values) {
+    private void validateValues(String predicateId, Number[] values) {
         for (Number n : values) {
             if (n.floatValue() < 0 || n.floatValue() > 1) {
                 throw new IllegalArgumentException("Value [" + n + "] of predicate \"" + predicateId + "\" out of bounds. Should be between [0, 1]. Problematic Model ID: \"" + this.modelId + "\"");
@@ -95,7 +91,6 @@ public final class FancierModelBuilder {
         JsonArray overrides = new JsonArray();
 
         // iterate through all the overrides and make a builder for each one
-        FancierModelBuilder[] overrideBuilders = new FancierModelBuilder[overrideCount];
         for (int i = 0; i < overrideCount; i++) {
             Model overrideModel = model;
             HashMap<TextureKey, Identifier> textureMap = HashMap.newHashMap(defaultTextureMap.size());
@@ -112,10 +107,10 @@ public final class FancierModelBuilder {
                 int selectedIndex = selector % override.values.length;
                 Number selectedValue = override.values[selectedIndex];
                 if (override instanceof FancyModelOverride modelOverride) {
-                    overrideModel = modelOverride.valuesToModels.get(selectedValue);
+                    overrideModel = modelOverride.getModel(selectedIndex);
                     pathBuilder.append(predicateId).append("_").append(selectedValue).append("/");
                 } else if (override instanceof FancyTextureOverride textureOverride) {
-                    textureMap.put(textureOverride.textureKey, textureOverride.get(selectedValue));
+                    textureMap.put(textureOverride.textureKey, textureOverride.getTexture(selectedIndex));
                     if (pathBuilder.toString().charAt(pathBuilder.length() - 1) != '/') {
                         pathBuilder.append('_');
                     }
@@ -138,12 +133,8 @@ public final class FancierModelBuilder {
 
             Identifier modelId = this.modelId.withPath(pathBuilder.toString());
 
-            // add the builder to the array
-            overrideBuilders[i] = FancierModelBuilder.of(
-                    overrideModel,
-                    modelId,
-                    textureMap
-            );
+            // build the model
+            FancierItemModelBuilder.of(overrideModel, modelId, textureMap).build(modelCollector);
 
             // assemble the override object and add it to the array
             JsonObject override = new JsonObject();
@@ -163,10 +154,75 @@ public final class FancierModelBuilder {
                     return modelJson;
                 }
         );
+    }
 
-        // build all the override model builders
-        for (FancierModelBuilder builder : overrideBuilders) {
-            builder.build(modelCollector);
+    public static class FancierTextureOverrideBuilder {
+        private final FancierItemModelBuilder builder;
+        private final TextureKey textureKey;
+        private final String predicateId;
+        private final Number[] values;
+        private final Identifier[] textures;
+        private final int size;
+        private int workingIndex = 0;
+
+        private FancierTextureOverrideBuilder(FancierItemModelBuilder builder, String predicateId, TextureKey textureKey, int size) {
+            this.builder = builder;
+            this.textureKey = textureKey;
+            this.predicateId = predicateId;
+            this.values = new Number[size];
+            this.textures = new Identifier[size];
+            this.size = size;
+        }
+
+        public FancierTextureOverrideBuilder add(Number value, Identifier texture) {
+            if (this.workingIndex >= size) {
+                throw new IndexOutOfBoundsException("Attempted to add a " + workingIndex + "th entry to " + getClass().getName() + "of size" + size);
+            }
+
+            this.values[this.workingIndex] = value;
+            this.textures[this.workingIndex] = texture;
+            this.workingIndex++;
+            return this;
+        }
+
+        public FancierItemModelBuilder build() {
+            builder.validateValues(predicateId, values);
+            builder.overrides.add(new FancyTextureOverride(predicateId, textureKey, values, textures));
+            return builder;
+        }
+    }
+
+    public static class FancierModelOverrideBuilder {
+        private final FancierItemModelBuilder builder;
+        private final String predicateId;
+        private final Number[] values;
+        private final Model[] models;
+        private final int size;
+        private int workingIndex = 0;
+
+        private FancierModelOverrideBuilder(FancierItemModelBuilder builder, String predicateId, int size) {
+            this.builder = builder;
+            this.predicateId = predicateId;
+            this.values = new Number[size];
+            this.models = new Model[size];
+            this.size = size;
+        }
+
+        public FancierModelOverrideBuilder add(Number value, Model model) {
+            if (this.workingIndex >= size) {
+                throw new IndexOutOfBoundsException("Attempted to add a " + workingIndex + "th entry to " + getClass().getName() + "of size" + size);
+            }
+
+            this.values[this.workingIndex] = value;
+            this.models[this.workingIndex] = model;
+            this.workingIndex++;
+            return this;
+        }
+
+        public FancierItemModelBuilder build() {
+            builder.validateValues(predicateId, values);
+            builder.overrides.add(new FancyModelOverride(predicateId, values, models));
+            return builder;
         }
     }
 
@@ -189,26 +245,30 @@ public final class FancierModelBuilder {
     }
 
     private static final class FancyModelOverride extends FancyOverride {
-        private final Map<Number, Model> valuesToModels;
+        private final Model[] models;
 
-        FancyModelOverride(String predicateId, Map<Number, Model> valuesToModels) {
-            super(predicateId, valuesToModels.keySet().toArray(new Number[]{}));
-            this.valuesToModels = valuesToModels;
+        FancyModelOverride(String predicateId, Number[] values, Model[] models) {
+            super(predicateId, values);
+            this.models = models;
+        }
+
+        public Model getModel(int index) {
+            return models[index];
         }
     }
 
     private static final class FancyTextureOverride extends FancyOverride {
         private final TextureKey textureKey;
-        private final Map<Number, Identifier> valuesToTextures;
+        private final Identifier[] textureIds;
 
-        FancyTextureOverride(String predicateId, TextureKey textureKey, Map<Number, Identifier> valuesToTextures) {
-            super(predicateId, valuesToTextures.keySet().toArray(new Number[]{}));
+        FancyTextureOverride(String predicateId, TextureKey textureKey, Number[] values, Identifier[] textureIds) {
+            super(predicateId, values);
             this.textureKey = textureKey;
-            this.valuesToTextures = valuesToTextures;
+            this.textureIds = textureIds;
         }
 
-        private Identifier get(Number value) {
-            return this.valuesToTextures.get(value);
+        public Identifier getTexture(int index) {
+            return textureIds[index];
         }
     }
 }

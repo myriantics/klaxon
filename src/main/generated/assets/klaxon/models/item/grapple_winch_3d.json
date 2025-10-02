@@ -2,38 +2,17 @@
   "parent": "klaxon:item/grapple_winch_3d/spool_4",
   "overrides": [
     {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_0.5/charged_1",
-      "predicate": {
-        "klaxon:cable_length": 0.5,
-        "klaxon:charged": 1
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_0.75/charged_1",
-      "predicate": {
-        "klaxon:cable_length": 0.75,
-        "klaxon:charged": 1
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_0/charged_1",
+      "model": "klaxon:item/grapple_winch_3d/cable_length_0/charged_0",
       "predicate": {
         "klaxon:cable_length": 0,
-        "klaxon:charged": 1
+        "klaxon:charged": 0
       }
     },
     {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_1.0/charged_1",
-      "predicate": {
-        "klaxon:cable_length": 1.0,
-        "klaxon:charged": 1
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_0.25/charged_1",
+      "model": "klaxon:item/grapple_winch_3d/cable_length_0.25/charged_0",
       "predicate": {
         "klaxon:cable_length": 0.25,
-        "klaxon:charged": 1
+        "klaxon:charged": 0
       }
     },
     {
@@ -51,24 +30,45 @@
       }
     },
     {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_0/charged_0",
+      "model": "klaxon:item/grapple_winch_3d/cable_length_1/charged_0",
+      "predicate": {
+        "klaxon:cable_length": 1,
+        "klaxon:charged": 0
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/cable_length_0/charged_1",
       "predicate": {
         "klaxon:cable_length": 0,
-        "klaxon:charged": 0
+        "klaxon:charged": 1
       }
     },
     {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_1.0/charged_0",
-      "predicate": {
-        "klaxon:cable_length": 1.0,
-        "klaxon:charged": 0
-      }
-    },
-    {
-      "model": "klaxon:item/grapple_winch_3d/cable_length_0.25/charged_0",
+      "model": "klaxon:item/grapple_winch_3d/cable_length_0.25/charged_1",
       "predicate": {
         "klaxon:cable_length": 0.25,
-        "klaxon:charged": 0
+        "klaxon:charged": 1
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/cable_length_0.5/charged_1",
+      "predicate": {
+        "klaxon:cable_length": 0.5,
+        "klaxon:charged": 1
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/cable_length_0.75/charged_1",
+      "predicate": {
+        "klaxon:cable_length": 0.75,
+        "klaxon:charged": 1
+      }
+    },
+    {
+      "model": "klaxon:item/grapple_winch_3d/cable_length_1/charged_1",
+      "predicate": {
+        "klaxon:cable_length": 1,
+        "klaxon:charged": 1
       }
     }
   ],
