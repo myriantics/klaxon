@@ -24,6 +24,7 @@ public abstract class KlaxonEntityTypes {
     }
 
     private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder<T> type) {
-        return Registry.register(Registries.ENTITY_TYPE, KlaxonCommon.locate(id), type.build(id));
+        // built with null identifier to stop missing datafixer log message
+        return Registry.register(Registries.ENTITY_TYPE, KlaxonCommon.locate(id), type.build(null));
     }
 }
