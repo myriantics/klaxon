@@ -1,6 +1,0 @@
-{
-  "parent": "klaxon:item/grapple_winch_3d/spool_1",
-  "textures": {
-    "claw": "klaxon:item/grapple_winch_3d/claw/charged_0"
-  }
-}

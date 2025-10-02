@@ -26,7 +26,7 @@ public abstract class KlaxonItemModelPredicates {
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
 
             if (access.klaxon$hasActiveConnection() && attributes.hasAttribute(KlaxonEntityAttributes.WINCH_CABLE_LENGTH)) {
-                return  1f - (float) (access.klaxon$getCurrentWinchCableLength() / entity.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH));
+                return  (float) (access.klaxon$getCurrentWinchCableLength() / entity.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH));
             }
         }
 

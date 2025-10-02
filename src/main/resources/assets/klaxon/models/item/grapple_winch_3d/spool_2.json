@@ -3,9 +3,9 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"claw": "klaxon:item/grapple_winch_3d/claw/charged_1",
-		"spool": "klaxon:item/grapple_winch_3d/spool/cable_length_4",
-		"structure": "klaxon:item/grapple_winch_3d/structure/structure"
+		"claw": "klaxon:item/grapple_winch_3d/claw",
+		"spool": "klaxon:item/grapple_winch_3d/spool",
+		"structure": "klaxon:item/grapple_winch_3d/structure"
 	},
 	"elements": [
 		{
