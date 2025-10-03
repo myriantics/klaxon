@@ -21,7 +21,7 @@ import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrap
 public abstract class KlaxonItemModelPredicates {
 
     public static final Identifier GRAPPLE_WINCH_CABLE = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH, ((stack, world, entity, seed) -> {
-        if (entity instanceof PlayerEntity player) {
+        if (entity instanceof PlayerEntity player && (player.getMainHandStack().equals(stack) || !player.getMainHandStack().isOf(KlaxonItems.GRAPPLE_WINCH))) {
             AttributeContainer attributes = player.getAttributes();
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
 
