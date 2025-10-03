@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.session.report.ReporterEnvironment;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
@@ -589,15 +590,20 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 // iterate through all offset directions from the checking pos
                 for (Offset offset : Offset.values()) {
                     BlockPos targetPos = newOriginPos.add(offset.getOffsetVector());
+                    BlockState targetState = world.getBlockState(targetPos);
 
                     // make sure we haven't processed position before
-                    if (!processedPositions.contains(targetPos) && world.getBlockState(targetPos).isOf(veinminedBlock)) {
+                    if (!processedPositions.contains(targetPos) && targetState.isOf(veinminedBlock)) {
                         // condense dropped stacks so we don't get 5 billion item entities
                         for (ItemStack droppedStack : world.getBlockState(targetPos).getDroppedStacks(lootContextBuilder)) {
                             KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);
                         }
 
+                        BlockEntity blockEntity = world.getBlockEntity(targetPos);
                         world.breakBlock(targetPos, false, owner);
+                        if (owner instanceof ServerPlayerEntity serverPlayer) {
+                            veinminedBlock.afterBreak(world, serverPlayer, targetPos, targetState, blockEntity, this.getItemStack());
+                        }
 
                         blocksBroken++;
                         processedPositions.add(targetPos);
@@ -640,11 +646,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             // don't break blocks on clientside
             if (!world.isClient()) {
+                BlockEntity blockEntity = world.getBlockEntity(targetPos);
                 world.breakBlock(targetPos, true, owner);
-            }
 
-            if (owner instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.incrementStat(Stats.MINED.getOrCreateStat(targetState.getBlock()));
+                if (owner instanceof ServerPlayerEntity serverPlayer) {
+                    serverPlayer.incrementStat(Stats.MINED.getOrCreateStat(targetState.getBlock()));
+                    targetState.getBlock().afterBreak(world, serverPlayer, targetPos, targetState, blockEntity, this.getItemStack());
+                }
             }
 
             // a winner is you
