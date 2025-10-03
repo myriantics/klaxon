@@ -65,6 +65,8 @@ public abstract class KlaxonItemTags {
             createTag("effective_against_metal_entities");
     public static final TagKey<Item> GRAPPLE_CLAW_RETRIEVERS =
             createTag("grapple_claw_retrievers");
+    public static final TagKey<Item> GRAPPLE_WINCH_CABLE_DETACHERS =
+            createTag("grapple_winch_cable_detachers");
 
     // gear categories
     public static final TagKey<Item> STEEL_ARMOR =

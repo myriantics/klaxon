@@ -341,6 +341,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAW_RETRIEVERS)
                 .forceAddTag(KlaxonConventionalItemTags.WRENCH)
                 .forceAddTag(KlaxonConventionalItemTags.WRENCHES);
+        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)
+                .forceAddTag(ConventionalItemTags.SHEAR_TOOLS);
     }
 
     private void buildAnvilRelatedTags() {
@@ -401,7 +403,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCH)
                 .add(KlaxonItems.STEEL_WRENCH);
 
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEARS)
+        getOrCreateTagBuilder(ConventionalItemTags.SHEAR_TOOLS)
                 .forceAddTag(KlaxonItemTags.CABLE_SHEARS);
         getOrCreateTagBuilder(KlaxonItemTags.CABLE_SHEARS)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);

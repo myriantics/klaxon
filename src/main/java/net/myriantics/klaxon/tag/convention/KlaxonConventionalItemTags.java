@@ -57,7 +57,6 @@ public class KlaxonConventionalItemTags {
     public static final TagKey<Item> HAMMERS = createConventionalToolTag("hammers");
     public static final TagKey<Item> WRENCH = createConventionalToolTag("wrench");
     public static final TagKey<Item> WRENCHES = createConventionalToolTag("wrenches");
-    public static final TagKey<Item> SHEARS = createConventionalToolTag("shears");
 
     private static TagKey<Item> createConventionalNuggetTag(String name) {
         return createConventionalItemTag("nuggets/" + name);

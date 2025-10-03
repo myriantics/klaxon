@@ -1,8 +1,10 @@
 package net.myriantics.klaxon.entity;
 
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.session.report.ReporterEnvironment;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.Entity;
@@ -92,11 +94,20 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
-        // If we're on the server and succeed in attaching cable to the player, succeed!
-        if (player instanceof ServerPlayerEntity serverPlayer && attachCable(serverPlayer)) {
-            return ActionResult.SUCCESS;
-        } else if (detachCable(false)) {
-            return ActionResult.SUCCESS;
+        ItemStack handStack = player.getStackInHand(hand);
+
+        if (this.isWinchCableAttached) {
+            // attempt to detach grapple winch cable if shears are used on it
+            if (handStack.isIn(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)) {
+                if (player instanceof ServerPlayerEntity) {
+                    return this.detachCable(false) ? ActionResult.SUCCESS : ActionResult.FAIL;
+                }
+
+                return ActionResult.SUCCESS;
+            }
+        } else {
+            // attempt to pick up / load the attached grapple claw
+            return this.tryPickup(player) ? ActionResult.SUCCESS : ActionResult.FAIL;
         }
 
         return super.interact(player, hand);
@@ -473,8 +484,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     protected boolean tryPickup(PlayerEntity player) {
+        @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
+
         // if a player is attached, only that player can pick up the grapple claw
-        if (isWinchCableAttached && !player.equals(getAttachedPlayer())) {
+        if (isWinchCableAttached && !player.equals(attachedPlayer)) {
+            return false;
+        }
+
+        // don't pick up grapple claw while you're being supported by it
+        if (!player.isOnGround() && player.equals(getAttachedPlayer())) {
             return false;
         }
 
@@ -508,7 +526,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     GameEvent.Emitter.of(player)
             );
 
-            this.discard();
+            this.detachCable(true);
             return true;
         } else {
             return super.tryPickup(player);
