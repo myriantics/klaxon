@@ -102,10 +102,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             @Nullable GrappleWinchConnectionData fallbackData = klaxon$getConnectionData();
 
             boolean isRetracting = klaxon$isRetracting();
-            double targetRange = getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
-            if (isRetracting) {
-                targetRange = Math.min(targetRange, klaxon$getCurrentWinchCableLength() * 1.2);
-            }
+            double targetRange = Math.min(
+                    getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH),
+                    klaxon$getCurrentWinchCableLength()
+            );
 
             // initialize values
             Vec3d playerToClawVec;

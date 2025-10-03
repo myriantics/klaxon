@@ -418,7 +418,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                     // retract grapple claw if owner pulls back before landing
                     if (access.klaxon$isRetracting()) {
-                        Vec3d pulling = attachedPlayer.getEyePos().subtract(getPos()).normalize();
+                        Vec3d pulling = attachedEyePos.subtract(getPos()).normalize();
                         // Direction pullingTowards = Direction.getFacing(pulling);
 
                         if (this.inGround && !world.isClient()) {
@@ -447,15 +447,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     }
                 }
 
-                // players can extend target range by sprinting
-                if (attachedPlayer.isSprinting() && attachedPlayer.isOnGround() && ownerDistance > currentWinchCableLength) {
-                    access.klaxon$resetWinchCableLength();
+                // commit the total velocity edits
+                if (!getWorld().isClient()) {
+                    this.addVelocity(selfVec);
                 }
-
             }
-
-            // commit the total velocity edits
-            if (!getWorld().isClient()) this.addVelocity(selfVec);
         }
 
         this.detachIfInvalid();
@@ -750,7 +746,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         World world = this.getWorld();
 
         world.playSound(
-                attachedPlayer,
+                null,
                 attachedPlayer.getX(),
                 attachedPlayer.getY(),
                 attachedPlayer.getZ(),
