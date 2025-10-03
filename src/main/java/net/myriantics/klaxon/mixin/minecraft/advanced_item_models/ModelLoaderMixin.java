@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.mixin.minecraft.advanced_item_models;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ModelLoader;
@@ -37,56 +38,69 @@ public abstract class ModelLoaderMixin {
 
     @Shadow @Final private Map<Identifier, UnbakedModel> unbakedModels;
 
-    // Registers the hammer model as an available resource you can pull from
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 0))
-    public void klaxon$loadFancyModels(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
-        for (Item item : Registries.ITEM) {
-            if (item.getComponents().get(KlaxonDataComponentTypes.ALT_HAND_MODEL) instanceof String suffix) {
-                Identifier modelId = AdvancedItemModelHelper.getAlternateModelId(Registries.ITEM.getId(item), suffix);
+    // Registers alt models and generates inverted models
+    @Inject(
+            method = "<init>",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/model/ModelLoader;loadInventoryVariantItemModel(Lnet/minecraft/util/Identifier;)V"
+            )
+    )
+    public void klaxon$loadFancyModels(
+            BlockColors blockColors,
+            Profiler profiler,
+            Map<Identifier, JsonUnbakedModel> jsonUnbakedModels,
+            Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates,
+            CallbackInfo ci,
+            @Local Identifier itemId
+    ) {
+        Item item = Registries.ITEM.get(itemId);
 
-                JsonUnbakedModel model = (JsonUnbakedModel) getOrLoadModel(modelId.withPrefixedPath("item/"));
-                Collection<Identifier> modelDependencies = model.getModelDependencies();
+        if (item.getComponents().get(KlaxonDataComponentTypes.ALT_HAND_MODEL) instanceof String suffix) {
+            Identifier modelId = AdvancedItemModelHelper.getAlternateModelId(Registries.ITEM.getId(item), suffix);
 
-                ArrayList<Identifier> processedIds = new ArrayList<>();
-                while (modelDependencies != null && !modelDependencies.isEmpty()) {
-                    Collection<Identifier> newDependencies = new ArrayList<>();
+            JsonUnbakedModel model = (JsonUnbakedModel) getOrLoadModel(modelId.withPrefixedPath("item/"));
+            Collection<Identifier> modelDependencies = model.getModelDependencies();
 
-                    modelDependencies.forEach((identifier -> {
-                        // protection against an infinite loop - it will exhaust itself eventually
-                        if (processedIds.contains(identifier)) {
-                            return;
-                        }
+            ArrayList<Identifier> processedIds = new ArrayList<>();
+            while (modelDependencies != null && !modelDependencies.isEmpty()) {
+                Collection<Identifier> newDependencies = new ArrayList<>();
 
-                        Identifier mirroredId = AdvancedItemModelHelper.getMirroredId(identifier);
+                modelDependencies.forEach((identifier -> {
+                    // protection against an infinite loop - it will exhaust itself eventually
+                    if (processedIds.contains(identifier)) {
+                        return;
+                    }
 
-                        JsonUnbakedModel selected = (JsonUnbakedModel) this.getOrLoadModel(identifier);
-                        JsonUnbakedModel mirrored = ModelUtils.generateInvertedModel(selected);
+                    Identifier mirroredId = AdvancedItemModelHelper.getMirroredId(identifier);
 
-                        // add selected model and mirrored variant to baking
-                        add(ModelIdentifier.ofInventoryVariant(identifier), selected);
-                        this.addModelToBake(
-                                ModelIdentifier.ofInventoryVariant(mirroredId),
-                                mirrored
-                        );
-                        unbakedModels.put(mirroredId, mirrored);
-                        newDependencies.addAll(selected.getModelDependencies());
+                    JsonUnbakedModel selected = (JsonUnbakedModel) this.getOrLoadModel(identifier);
+                    JsonUnbakedModel mirrored = ModelUtils.generateInvertedModel(selected);
 
-                        // make sure we don't process the same id twice.
-                        processedIds.add(identifier);
-                    }));
-                    // update the model dependencies with the next list to process
-                    modelDependencies = newDependencies;
-                }
+                    // add selected model and mirrored variant to baking
+                    add(ModelIdentifier.ofInventoryVariant(identifier), selected);
+                    this.addModelToBake(
+                            ModelIdentifier.ofInventoryVariant(mirroredId),
+                            mirrored
+                    );
+                    unbakedModels.put(mirroredId, mirrored);
+                    newDependencies.addAll(selected.getModelDependencies());
 
-                ModelIdentifier mirroredModelId = ModelIdentifier.ofInventoryVariant(AdvancedItemModelHelper.getMirroredId(modelId));
-                JsonUnbakedModel invertedModel = ModelUtils.generateInvertedModel(model);
-
-                add(ModelIdentifier.ofInventoryVariant(modelId), model);
-                this.addModelToBake(mirroredModelId, invertedModel);
-
-                unbakedModels.put(mirroredModelId.id(), invertedModel);
-                addModelToBake(mirroredModelId, invertedModel);
+                    // make sure we don't process the same id twice.
+                    processedIds.add(identifier);
+                }));
+                // update the model dependencies with the next list to process
+                modelDependencies = newDependencies;
             }
+
+            ModelIdentifier mirroredModelId = ModelIdentifier.ofInventoryVariant(AdvancedItemModelHelper.getMirroredId(modelId));
+            JsonUnbakedModel invertedModel = ModelUtils.generateInvertedModel(model);
+
+            add(ModelIdentifier.ofInventoryVariant(modelId), model);
+            this.addModelToBake(mirroredModelId, invertedModel);
+
+            unbakedModels.put(mirroredModelId.id(), invertedModel);
+            addModelToBake(mirroredModelId, invertedModel);
         }
     }
 }
