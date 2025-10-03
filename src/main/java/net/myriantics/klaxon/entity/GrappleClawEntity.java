@@ -405,7 +405,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 }
 
                 // owner being heavy overrides anchoring
-                if (!this.isAnchored() || EntityWeightHelper.isHeavy(attachedPlayerEntity)) {
+                if (!this.isAnchored() || EntityWeightHelper.isHeavy(attachedPlayer)) {
 
                     // retract grapple claw if owner pulls back before landing
                     if (access.klaxon$isRetracting()) {
@@ -682,17 +682,19 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     /**
      * Detaches cable if attached and owner is no longer holding a Grapple Winch <br>
-     * Also detaches if player is removed, dead, or in a different dimension. <br>
+     * Also detaches if player is removed, dead, too far away, or in a different dimension. <br>
      * Called every tick.
      */
     private void detachIfInvalid() {
-        if (isWinchCableAttached && getOwner() instanceof ServerPlayerEntity serverPlayer) {
+        if (isWinchCableAttached && getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
             ItemStack itemStack = serverPlayer.getMainHandStack();
             ItemStack itemStack2 = serverPlayer.getOffHandStack();
             boolean bl = itemStack.isOf(KlaxonItems.GRAPPLE_WINCH);
             boolean bl2 = itemStack2.isOf(KlaxonItems.GRAPPLE_WINCH);
 
-            if (serverPlayer.isRemoved() || !serverPlayer.isAlive() || !(bl || bl2) || !serverPlayer.getWorld().equals(this.getWorld())) {
+            boolean cableTooLong = this.getPos().distanceTo(serverPlayer.getEyePos()) > serverPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH) * 1.5f;
+
+            if (serverPlayer.isRemoved() || !serverPlayer.isAlive() || !(bl || bl2) || !serverPlayer.getWorld().equals(this.getWorld()) || cableTooLong) {
                 this.detachCable(false);
             }
         }
