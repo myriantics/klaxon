@@ -5,13 +5,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.Hand;
-import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
-import net.myriantics.klaxon.entity.GrappleClawEntity;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
-import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
+import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,13 +29,10 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             method = "sendMovementPackets",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V", ordinal = 0)
     )
-    public void klaxon$resetGrappleWinchTargetPosition(CallbackInfo ci) {
+    public void klaxon$nullifyVelocityIfCrouchingInAirWithActiveNonRetractingGrappleWinchConnection(CallbackInfo ci) {
         PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) this;
-
-        if (!isOnGround()) {
-            if (access.klaxon$hasActiveConnection()) {
-                access.klaxon$resetWinchCableLength();
-            }
+        if (!isOnGround() && access.klaxon$hasActiveConnection() && !access.klaxon$isRetracting()) {
+            this.setVelocity(Vec3d.ZERO);
         }
     }
 }

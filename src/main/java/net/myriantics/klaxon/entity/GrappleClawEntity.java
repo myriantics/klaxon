@@ -96,18 +96,20 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     public ActionResult interact(PlayerEntity player, Hand hand) {
         ItemStack handStack = player.getStackInHand(hand);
 
-        if (this.isWinchCableAttached) {
+        if (this.isWinchCableAttached || this.equals(((PlayerEntityGrappleAccess)player).klaxon$getGrappleClaw())) {
             // attempt to detach grapple winch cable if shears are used on it
             if (handStack.isIn(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)) {
                 if (player instanceof ServerPlayerEntity) {
-                    return this.detachCable(false) ? ActionResult.SUCCESS : ActionResult.FAIL;
+                    return this.detachCable(false) ? ActionResult.SUCCESS : ActionResult.PASS;
                 }
 
                 return ActionResult.SUCCESS;
             }
         } else {
             // attempt to pick up / load the attached grapple claw
-            return this.tryPickup(player) ? ActionResult.SUCCESS : ActionResult.FAIL;
+            if (this.tryPickup(player)) {
+                return ActionResult.SUCCESS;
+            }
         }
 
         return super.interact(player, hand);
@@ -486,13 +488,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     protected boolean tryPickup(PlayerEntity player) {
         @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
 
+        boolean isAttachedToPlayer = this.equals(((PlayerEntityGrappleAccess) player).klaxon$getGrappleClaw());
+
         // if a player is attached, only that player can pick up the grapple claw
-        if (isWinchCableAttached && !player.equals(attachedPlayer)) {
+        if (isWinchCableAttached && !isAttachedToPlayer) {
             return false;
         }
 
         // don't pick up grapple claw while you're being supported by it
-        if (!player.isOnGround() && player.equals(getAttachedPlayer())) {
+        if (!player.isOnGround() && (player.equals(getAttachedPlayer()) || isAttachedToPlayer)) {
             return false;
         }
 
@@ -502,7 +506,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 ? player.getMainHandStack()
                 : player.getOffHandStack();
 
-        if (GrappleWinchItem.loadIfPossible(winchStack, this.getItemStack(), player)) {
+        if ((!((PlayerEntityGrappleAccess) player).klaxon$hasActiveConnection() || isAttachedToPlayer) && GrappleWinchItem.loadIfPossible(winchStack, this.getItemStack(), player)) {
 
             // this is needed so players can choose whether they want to recast grapple claw or not
             if (player instanceof ServerPlayerEntity serverPlayer) {
@@ -526,10 +530,16 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     GameEvent.Emitter.of(player)
             );
 
+            this.discard();
             this.detachCable(true);
             return true;
         } else {
-            return super.tryPickup(player);
+            boolean success = super.tryPickup(player);
+            if (success && !this.getWorld().isClient()) {
+                this.discard();
+                this.detachCable(true);
+            }
+            return success;
         }
     }
 

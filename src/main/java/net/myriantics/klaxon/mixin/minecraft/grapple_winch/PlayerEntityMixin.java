@@ -102,10 +102,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             @Nullable GrappleWinchConnectionData fallbackData = klaxon$getConnectionData();
 
             boolean isRetracting = klaxon$isRetracting();
-            double targetRange = Math.min(
-                    getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH),
-                    klaxon$getCurrentWinchCableLength()
-            );
+            double maxWinchCableLength = getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
+            double currentWinchCableLength = klaxon$getCurrentWinchCableLength();
 
             // initialize values
             Vec3d playerToClawVec;
@@ -147,19 +145,18 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                     Vec3d playerFacingRetractionVec = playerFacingVec.multiply(1./20).multiply(this.isSprinting() ? 1.5 : 1);
 
                     // add vectors to self vector
-                    // owner goes towards claw if not sneaking, away if they are sneaking
                     if (!this.isSneaking()) {
                         selfVec = selfVec.add(playerToClawRetractionVec).add(playerFacingRetractionVec);
-                    } else {
-                        Vec3d correctedFacingVec = playerFacingRetractionVec.multiply(1, playerFacingRetractionVec.getY() > 0 ? 0 : 1, 1).negate().multiply(0.65);
-                        selfVec = selfVec.add(correctedFacingVec);
                     }
                 }
 
                 // apply velocity to player if they go past target range
                 // retraction is only capped at the max range
-                // also this is a dope ass spot to use ternary operators omg
-                if (clawDistance > targetRange) {
+                // cable length is also less regulated when sneaking & retracting so that players can descend with the grapple winch
+                if (clawDistance > ((isSneaking() && isRetracting) || isOnGround()
+                        ? maxWinchCableLength
+                        : Math.min(maxWinchCableLength, currentWinchCableLength)
+                )) {
                     Vec3d playerRangeCorrectionVec = playerToClawVec.multiply(0.1);
                     playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, this.getFinalGravity(), 0);
                     selfVec = selfVec.add(playerRangeCorrectionVec);
