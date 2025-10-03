@@ -10,7 +10,9 @@ public interface PlayerEntityGrappleAccess {
 
     boolean klaxon$isRetracting();
 
-    @Nullable GrappleWinchConnectionData klaxon$getWinchFallbackData();
+    @Nullable GrappleWinchConnectionData klaxon$getConnectionData();
+
+    void klaxon$setConnectionData(@Nullable GrappleWinchConnectionData connectionData);
 
     boolean klaxon$hasActiveConnection();
 

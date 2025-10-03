@@ -22,37 +22,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Optional;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin extends PlayerEntity implements PlayerEntityGrappleAccess {
+public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
     public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
         super(world, pos, yaw, gameProfile);
-    }
-
-    @Unique
-    private GrappleClawEntity klaxon$grappleClaw = null;
-
-    @Override
-    public void klaxon$setGrappleClaw(GrappleClawEntity grappleClaw) {
-        this.klaxon$grappleClaw = grappleClaw;
-    }
-
-    @Override
-    public @Nullable GrappleClawEntity klaxon$getGrappleClaw() {
-        if (this.klaxon$grappleClaw != null && this.klaxon$grappleClaw.isRemoved()) {
-            this.klaxon$grappleClaw = null;
-        }
-
-        return this.klaxon$grappleClaw;
-    }
-
-    @Override
-    public boolean klaxon$hasActiveConnection() {
-        return klaxon$getGrappleClaw() != null;
-    }
-
-    @Override
-    public @Nullable GrappleWinchConnectionData klaxon$getWinchFallbackData() {
-        return null;
     }
 
     @Inject(
@@ -60,14 +33,16 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
             at = @At(value = "TAIL")
     )
     private void klaxon$writePersistentData(NbtCompound nbt, CallbackInfo ci) {
-        GrappleClawEntity grappleClaw = this.klaxon$getGrappleClaw();
+        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) this;
+
+        @Nullable GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
 
         // write grapple claw data to player nbt like you would a vehicle
         if (grappleClaw != null) {
             NbtCompound grappleClawCompound = new NbtCompound();
             grappleClaw.saveNbt(grappleClawCompound);
             nbt.put(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW, grappleClawCompound);
-            nbt.putDouble(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH, this.klaxon$getCurrentWinchCableLength());
+            nbt.putDouble(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH, access.klaxon$getCurrentWinchCableLength());
         } else {
             nbt.remove(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW);
             nbt.remove(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH);
@@ -79,19 +54,19 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
             at = @At(value = "TAIL")
     )
     private void klaxon$readPersistentData(NbtCompound nbt, CallbackInfo ci) {
+        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) this;
+
         if (nbt.contains(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW)) {
             NbtCompound grappleClawCompound = nbt.getCompound(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW);
             Optional<Entity> maybeGrappleClaw = EntityType.getEntityFromNbt(grappleClawCompound, getWorld());
             if (maybeGrappleClaw.isPresent() && maybeGrappleClaw.get() instanceof GrappleClawEntity grappleClaw) {
-                this.klaxon$setGrappleClaw(grappleClaw);
-                if ((PlayerEntity) (Object) this instanceof ServerPlayerEntity serverPlayer) {
-                    grappleClaw.attachCable(serverPlayer);
-                }
+                access.klaxon$setGrappleClaw(grappleClaw);
+                grappleClaw.attachCable((ServerPlayerEntity) (Object)this);
             }
         }
 
         if (nbt.containsUuid(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH)) {
-            klaxon$setCurrentWinchCableLength(nbt.getDouble(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH));
+            access.klaxon$setCurrentWinchCableLength(nbt.getDouble(KlaxonNBTIds.CURRENT_WINCH_CABLE_LENGTH));
         }
     }
 }

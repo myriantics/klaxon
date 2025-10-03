@@ -2,7 +2,9 @@ package net.myriantics.klaxon.networking.s2c;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -34,11 +36,16 @@ public record GrappleWinchConnectionSyncPacket(GrappleWinchConnectionData connec
 
         client.execute(() -> {
             if (client.world != null) {
-                GrappleWinchClientConnectionManager.INSTANCE.addOrUpdateConnection(connectionData);
-
-                if (client.player instanceof PlayerEntityGrappleAccess access) {
-                    access.klaxon$resetWinchCableLength();
+                // if the player is tracked by the client, update its connection data
+                Entity player = client.world.getEntityById(connectionData.playerId());
+                Entity grappleClaw = client.world.getEntityById(connectionData.grappleClawId());
+                if (player instanceof AbstractClientPlayerEntity) {
+                    ((PlayerEntityGrappleAccess) player).klaxon$setConnectionData(connectionData);
+                    ((PlayerEntityGrappleAccess) player).klaxon$setGrappleClaw(grappleClaw instanceof GrappleClawEntity ? (GrappleClawEntity) grappleClaw : null);
+                    ((PlayerEntityGrappleAccess) player).klaxon$resetWinchCableLength();
                 }
+
+                GrappleWinchClientConnectionManager.INSTANCE.addOrUpdateConnection(connectionData);
             }
         });
     }

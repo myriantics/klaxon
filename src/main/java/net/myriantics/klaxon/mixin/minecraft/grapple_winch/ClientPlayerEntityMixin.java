@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity implements PlayerEntityGrappleAccess {
+public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
 
     public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
@@ -30,29 +30,16 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Final
     protected MinecraftClient client;
 
-    @Override
-    public @Nullable GrappleClawEntity klaxon$getGrappleClaw() {
-        return GrappleWinchClientConnectionManager.INSTANCE.getGrappleClaw(this.getId());
-    }
-
-    @Override
-    public @Nullable GrappleWinchConnectionData klaxon$getWinchFallbackData() {
-        return GrappleWinchClientConnectionManager.INSTANCE.getConnectionData(this.getId());
-    }
-
-    @Override
-    public boolean klaxon$hasActiveConnection() {
-        return GrappleWinchClientConnectionManager.INSTANCE.hasConnection(this.getId());
-    }
-
     @Inject(
             method = "sendMovementPackets",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V", ordinal = 0)
     )
     public void klaxon$resetGrappleWinchTargetPosition(CallbackInfo ci) {
+        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) this;
+
         if (!isOnGround()) {
-            if (this.klaxon$hasActiveConnection()) {
-                this.klaxon$resetWinchCableLength();
+            if (access.klaxon$hasActiveConnection()) {
+                access.klaxon$resetWinchCableLength();
             }
         }
     }

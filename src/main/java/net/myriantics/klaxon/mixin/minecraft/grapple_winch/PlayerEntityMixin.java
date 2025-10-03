@@ -24,6 +24,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     @Unique
     private double klaxon$currentWinchCableLength = getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
 
+    @Unique
+    private @Nullable GrappleWinchConnectionData klaxon$connectionData = null;
+
+    @Unique
+    private @Nullable GrappleClawEntity klaxon$attachedGrappleClaw = null;
+
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -39,14 +45,39 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     }
 
     @Override
+    public void klaxon$setConnectionData(@Nullable GrappleWinchConnectionData connectionData) {
+        this.klaxon$connectionData = connectionData;
+    }
+
+    @Override
+    public @Nullable GrappleWinchConnectionData klaxon$getConnectionData() {
+        return klaxon$connectionData;
+    }
+
+    @Override
+    public @Nullable GrappleClawEntity klaxon$getGrappleClaw() {
+        return klaxon$attachedGrappleClaw;
+    }
+
+    @Override
+    public void klaxon$setGrappleClaw(@Nullable GrappleClawEntity grappleClaw) {
+        this.klaxon$attachedGrappleClaw = grappleClaw;
+    }
+
+    @Override
     public void klaxon$setCurrentWinchCableLength(double currentWinchCableLength) {
         this.klaxon$currentWinchCableLength = Math.clamp(currentWinchCableLength, 0, getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH));
     }
 
     @Override
+    public boolean klaxon$hasActiveConnection() {
+        return getWorld().isClient() ? klaxon$getConnectionData() != null : klaxon$attachedGrappleClaw != null && !klaxon$attachedGrappleClaw.isRemoved();
+    }
+
+    @Override
     public void klaxon$resetWinchCableLength() {
         GrappleClawEntity grappleClaw = klaxon$getGrappleClaw();
-        GrappleWinchConnectionData fallbackData = klaxon$getWinchFallbackData();
+        GrappleWinchConnectionData fallbackData = klaxon$getConnectionData();
 
         if (grappleClaw != null) {
             this.klaxon$setCurrentWinchCableLength(grappleClaw.getPos().distanceTo(this.getPos()));
@@ -68,7 +99,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             // get grapple claw through the getter in order to sync it with UUID
             // also get fallback connectionData in case claw is unloaded on client side
             @Nullable GrappleClawEntity grappleClaw = klaxon$getGrappleClaw();
-            @Nullable GrappleWinchConnectionData fallbackData = klaxon$getWinchFallbackData();
+            @Nullable GrappleWinchConnectionData fallbackData = klaxon$getConnectionData();
 
             boolean isRetracting = klaxon$isRetracting();
             double targetRange = getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);

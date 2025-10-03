@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
+package net.myriantics.klaxon.mixin.minecraft.grapple_winch.claw_logs_out_with_player;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
