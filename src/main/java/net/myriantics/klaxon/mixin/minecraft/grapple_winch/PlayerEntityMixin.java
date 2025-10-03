@@ -93,7 +93,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     private void klaxon$tickGrappleWinchMovement(CallbackInfo ci) {
 
         // only run player movement logic when we have an active anchored grapple claw
-        if (this.getWorld().isClient()) {
+        if (this.getWorld().isClient() && klaxon$hasActiveConnection()) {
             Vec3d selfVec = Vec3d.ZERO;
 
             // get grapple claw through the getter in order to sync it with UUID
@@ -124,6 +124,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
             } else {
                 // return if both checks fail
                 return;
+            }
+
+            // update winch cable length
+            if (isRetracting || (isOnGround() && clawDistance > klaxon$getCurrentWinchCableLength()) ) {
+                this.klaxon$setCurrentWinchCableLength(clawDistance);
             }
 
             // make sure grapple claw is loaded and anchored
