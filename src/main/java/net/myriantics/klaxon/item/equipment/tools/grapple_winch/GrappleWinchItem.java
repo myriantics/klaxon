@@ -256,17 +256,12 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
         @Nullable ChargedProjectilesComponent originalProjectiles = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
         if ((originalProjectiles == null || originalProjectiles.isEmpty()) && PROJECTILES.test(loadingStack)) {
-            if (entity != null && entity.getWorld().isClient()) {
-                return true;
-            } else {
-                // if the entity doesn't have grapple access or it doesn't have an active connection, proceed.
-                if (!(entity instanceof PlayerEntity player) || !((PlayerEntityGrappleAccess) player).klaxon$hasActiveConnection()) {
-                    List<ItemStack> list = load(winchStack, loadingStack, entity);
-                    // load grapple winch if we don't have a grapple claw loaded
-                    winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
-                    return true;
-                }
+            if (entity == null || !entity.getWorld().isClient()) {
+                List<ItemStack> list = load(winchStack, loadingStack, entity);
+                // load grapple winch if we don't have a grapple claw loaded
+                winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
             }
+            return true;
         }
 
         return false;

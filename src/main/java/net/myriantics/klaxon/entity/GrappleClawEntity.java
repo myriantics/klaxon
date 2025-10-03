@@ -137,26 +137,35 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             // attacking grapple claw with an unloaded grapple winch attempts to load claw into winch
             ItemStack weaponStack = source.getWeaponStack();
-            if (weaponStack != null && weaponStack.isOf(KlaxonItems.GRAPPLE_WINCH) && source.getAttacker() instanceof LivingEntity livingAttacker) {
-                // if loading succeeded, play indicator sound and discard.
-                if (GrappleWinchItem.loadIfPossible(weaponStack, this.getItemStack(), livingAttacker)) {
-                    world.playSound(
-                            null,
-                            this.getX(),
-                            this.getEyeY(),
-                            this.getZ(),
-                            KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_FAST_LOAD,
-                            SoundCategory.PLAYERS,
-                            0.8f + world.getRandom().nextFloat() * 0.3f,
-                            0.7f + world.getRandom().nextFloat() * 0.3f
-                    );
-                    world.emitGameEvent(
-                            GameEvent.ENTITY_ACTION,
-                            getPos(),
-                            GameEvent.Emitter.of(livingAttacker)
-                    );
-                    this.discard();
-                    return true;
+            if (weaponStack != null && weaponStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
+                Entity attacker = source.getAttacker();
+
+                // make sure the attacker is present & is a living entity.
+                // after that, make sure it's either not a player, a disconnected player, or the currently attached player
+                // ugly condition i know haha
+                if (attacker instanceof LivingEntity && (!(attacker instanceof PlayerEntity) || (!((PlayerEntityGrappleAccess) attacker).klaxon$hasActiveConnection() || attacker.equals(attachedPlayer)))) {
+                    // if loading succeeded, play indicator sound and discard.
+                    if (GrappleWinchItem.loadIfPossible(weaponStack, this.getItemStack(), (LivingEntity) attacker)) {
+                        world.playSound(
+                                null,
+                                this.getX(),
+                                this.getEyeY(),
+                                this.getZ(),
+                                KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_FAST_LOAD,
+                                attacker.getSoundCategory(),
+                                0.8f + world.getRandom().nextFloat() * 0.3f,
+                                0.7f + world.getRandom().nextFloat() * 0.3f
+                        );
+
+                        world.emitGameEvent(
+                                GameEvent.ENTITY_ACTION,
+                                getPos(),
+                                GameEvent.Emitter.of(attacker)
+                        );
+
+                        this.discard();
+                        return true;
+                    }
                 }
             }
 
@@ -488,7 +497,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
 
             world.playSound(
-                    player,
+                    null,
                     player.getX(),
                     player.getEyeY(),
                     player.getZ(),
