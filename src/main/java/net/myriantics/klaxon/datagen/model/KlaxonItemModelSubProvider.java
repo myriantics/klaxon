@@ -41,7 +41,7 @@ public abstract class KlaxonItemModelSubProvider {
         FancierItemModelBuilder.of(Models.GENERATED, modelId, Map.of(
                 layer0, KlaxonTextures.GRAPPLE_WINCH_2D_UNLOADED
                 ))
-                .textureOverride(chargedPredicate, TextureKey.of("layer0"), 2)
+                .textureOverride(chargedPredicate, "layer0", 2)
                 .add(0, KlaxonTextures.GRAPPLE_WINCH_2D_UNLOADED)
                 .add(1, KlaxonTextures.GRAPPLE_WINCH_2D_LOADED)
                 .build()
@@ -73,7 +73,7 @@ public abstract class KlaxonItemModelSubProvider {
                 .add(0.75, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_1)
                 .add(1, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_0)
                 .build()
-                .textureOverride(chargedPredicate, TextureKey.of("claw"), 2)
+                .textureOverride(chargedPredicate, claw.getName(), 2)
                 .add(0, KlaxonTextures.EMPTY)
                 .add(1, KlaxonTextures.GRAPPLE_WINCH_3D_CLAW)
                 .build()

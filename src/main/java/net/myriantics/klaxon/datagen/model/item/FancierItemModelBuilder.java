@@ -1,8 +1,10 @@
 package net.myriantics.klaxon.datagen.model.item;
 
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.fabricmc.loader.impl.lib.tinyremapper.extension.mixin.common.MapUtility;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Model;
 import net.minecraft.data.client.TextureKey;
@@ -34,11 +36,11 @@ public final class FancierItemModelBuilder {
         return new FancierItemModelBuilder(rootModel, rootModelId, defaultTextureMap);
     }
 
-    public FancierTextureOverrideBuilder textureOverride(Identifier predicateId, TextureKey textureKey, int size) {
+    public FancierTextureOverrideBuilder textureOverride(Identifier predicateId, String textureKey, int size) {
         return textureOverride(predicateId.toString(), textureKey, size);
     }
 
-    public FancierTextureOverrideBuilder textureOverride(String predicateId, TextureKey textureKey, int size) {
+    public FancierTextureOverrideBuilder textureOverride(String predicateId, String textureKey, int size) {
         this.validatePredicateId(predicateId);
         return new FancierTextureOverrideBuilder(this, predicateId, textureKey, size);
     }
@@ -94,6 +96,7 @@ public final class FancierItemModelBuilder {
         for (int i = 0; i < overrideCount; i++) {
             Model overrideModel = model;
             HashMap<TextureKey, Identifier> textureMap = HashMap.newHashMap(defaultTextureMap.size());
+            textureMap.putAll(defaultTextureMap);
 
             StringBuilder pathBuilder = new StringBuilder(modelId.getPath() + "/");
 
@@ -110,7 +113,18 @@ public final class FancierItemModelBuilder {
                     overrideModel = modelOverride.getModel(selectedIndex);
                     pathBuilder.append(predicateId).append("_").append(selectedValue).append("/");
                 } else if (override instanceof FancyTextureOverride textureOverride) {
-                    textureMap.put(textureOverride.textureKey, textureOverride.getTexture(selectedIndex));
+                    boolean succeeded = false;
+                    for (TextureKey textureKey : textureMap.keySet()) {
+                        if (textureKey.getName().equals(textureOverride.textureKey)) {
+                            textureMap.replace(textureKey, textureOverride.getTexture(selectedIndex));
+                            succeeded = true;
+                            break;
+                        }
+                    }
+                    if (!succeeded) {
+                        throw new RuntimeException("Texture Key [" + textureOverride.textureKey + "] not found in texture map + [" + textureMap + "]. Override failed.");
+                    }
+
                     if (pathBuilder.toString().charAt(pathBuilder.length() - 1) != '/') {
                         pathBuilder.append('_');
                     }
@@ -120,15 +134,6 @@ public final class FancierItemModelBuilder {
 
                 // add the property to the predicate list
                 predicates.addProperty(override.predicateId, selectedValue);
-            }
-
-            // fill in any missing textures
-            for (TextureKey textureKey : this.defaultTextureMap.keySet()) {
-                for (TextureKey textureKey1 : textureMap.keySet().toArray(new TextureKey[]{})) {
-                    if (!textureKey.toString().equals(textureKey1.toString())){
-                        textureMap.put(textureKey, this.defaultTextureMap.get(textureKey));
-                    }
-                }
             }
 
             Identifier modelId = this.modelId.withPath(pathBuilder.toString());
@@ -158,14 +163,14 @@ public final class FancierItemModelBuilder {
 
     public static class FancierTextureOverrideBuilder {
         private final FancierItemModelBuilder builder;
-        private final TextureKey textureKey;
+        private final String textureKey;
         private final String predicateId;
         private final Number[] values;
         private final Identifier[] textures;
         private final int size;
         private int workingIndex = 0;
 
-        private FancierTextureOverrideBuilder(FancierItemModelBuilder builder, String predicateId, TextureKey textureKey, int size) {
+        private FancierTextureOverrideBuilder(FancierItemModelBuilder builder, String predicateId, String textureKey, int size) {
             this.builder = builder;
             this.textureKey = textureKey;
             this.predicateId = predicateId;
@@ -258,10 +263,10 @@ public final class FancierItemModelBuilder {
     }
 
     private static final class FancyTextureOverride extends FancyOverride {
-        private final TextureKey textureKey;
+        private final String textureKey;
         private final Identifier[] textureIds;
 
-        FancyTextureOverride(String predicateId, TextureKey textureKey, Number[] values, Identifier[] textureIds) {
+        FancyTextureOverride(String predicateId, String textureKey, Number[] values, Identifier[] textureIds) {
             super(predicateId, values);
             this.textureKey = textureKey;
             this.textureIds = textureIds;
