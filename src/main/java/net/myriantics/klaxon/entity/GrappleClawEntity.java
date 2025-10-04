@@ -402,8 +402,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 }*/
 
                 // try to veinmine before breaking the block :)
-                if (isWinchCableAttached && owner instanceof PlayerEntityGrappleAccess access && access.klaxon$isRetracting()) {
-                    veinmineBlocksIfValid(world, occupiedState, occupiedPos, owner);
+                if (isWinchCableAttached && attachedPlayer instanceof PlayerEntityGrappleAccess access && access.klaxon$isRetracting()) {
+                    veinmineBlocksIfValid(world, occupiedState, occupiedPos, attachedPlayer);
                 } else {
                     breakBlockIfValid(world, occupiedState, occupiedPos, owner);
                 }
