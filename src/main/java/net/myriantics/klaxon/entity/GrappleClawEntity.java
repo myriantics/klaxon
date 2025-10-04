@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.session.report.ReporterEnvironment;
 import net.minecraft.component.DataComponentTypes;
@@ -601,9 +602,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                         BlockEntity blockEntity = world.getBlockEntity(targetPos);
                         world.breakBlock(targetPos, false, owner);
-                        if (owner instanceof ServerPlayerEntity serverPlayer) {
-                            veinminedBlock.afterBreak(world, serverPlayer, targetPos, targetState, blockEntity, this.getItemStack());
-                        }
 
                         blocksBroken++;
                         processedPositions.add(targetPos);
@@ -651,7 +649,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                 if (owner instanceof ServerPlayerEntity serverPlayer) {
                     serverPlayer.incrementStat(Stats.MINED.getOrCreateStat(targetState.getBlock()));
-                    targetState.getBlock().afterBreak(world, serverPlayer, targetPos, targetState, blockEntity, this.getItemStack());
                 }
             }
 
