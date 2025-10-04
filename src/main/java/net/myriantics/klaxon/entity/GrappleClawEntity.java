@@ -488,9 +488,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     protected boolean tryPickup(PlayerEntity player) {
-        @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
+        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
 
-        boolean isAttachedToPlayer = this.equals(((PlayerEntityGrappleAccess) player).klaxon$getGrappleClaw());
+        boolean isAttachedToPlayer = this.equals(access.klaxon$getGrappleClaw());
 
         // if a player is attached, only that player can pick up the grapple claw
         if (isWinchCableAttached && !isAttachedToPlayer) {
@@ -511,10 +511,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 ? player.getMainHandStack()
                 : player.getOffHandStack();
 
-        if ((!((PlayerEntityGrappleAccess) player).klaxon$hasActiveConnection() || isAttachedToPlayer) && GrappleWinchItem.loadIfPossible(winchStack, this.getItemStack(), player)) {
+        if ((!access.klaxon$hasActiveConnection() || isAttachedToPlayer) && GrappleWinchItem.loadIfPossible(winchStack, this.getItemStack(), player)) {
 
             // this is needed so players can choose whether they want to recast grapple claw or not
-            if (player instanceof ServerPlayerEntity serverPlayer) {
+            // only trigger this if pickup occurred while retracting
+            if (player instanceof ServerPlayerEntity serverPlayer && access.klaxon$isRetracting()) {
                 // update usage lockout if true
                 KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
             }
