@@ -497,8 +497,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             return false;
         }
 
+        BlockPos steppingPos = player.getSteppingPos();
+        BlockPos anchoredPos = this.getBlockPos();
+
         // don't pick up grapple claw while you're being supported by it
-        if (!player.isOnGround() && (player.equals(getAttachedPlayer()) || isAttachedToPlayer)) {
+        if ((!player.isOnGround() && anchoredPos.getY() > steppingPos.getY()) && (player.equals(getAttachedPlayer()) || isAttachedToPlayer)) {
             return false;
         }
 
