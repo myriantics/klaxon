@@ -1,31 +1,29 @@
 package net.myriantics.klaxon.mixin.minecraft.item_usage_lockout;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.util.Hand;
 import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin {
 
     @Shadow
-    private boolean usingItem;
-
-    @Shadow
     @Final
     protected MinecraftClient client;
 
-    @Inject(
+    @ModifyExpressionValue(
             method = "setCurrentHand",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/client/network/ClientPlayerEntity;activeHand:Lnet/minecraft/util/Hand;")
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z"
+            )
     )
-    private void klaxon$cancelItemUsageIfLockoutIsActive(Hand hand, CallbackInfo ci) {
-        usingItem &= !(client instanceof MinecraftClientUsageLockoutAccess access && access.klaxon$isUsageLockoutActive());
+    private boolean klaxon$cancelItemUsageIfLockoutIsActive(boolean original) {
+        return original || ((MinecraftClientUsageLockoutAccess)client).klaxon$isUsageLockoutActive();
     }
 }

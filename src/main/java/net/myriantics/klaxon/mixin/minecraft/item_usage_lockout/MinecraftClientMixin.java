@@ -1,5 +1,7 @@
 package net.myriantics.klaxon.mixin.minecraft.item_usage_lockout;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.MinecraftClient;
 import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,5 +33,15 @@ public abstract class MinecraftClientMixin implements MinecraftClientUsageLockou
     )
     private void klaxon$resetUsageLockoutIfNeeded(CallbackInfo ci) {
         klaxon$usageLockoutTriggered = false;
+    }
+
+    @WrapOperation(
+            method = "handleInputEvents",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V")
+    )
+    private void klaxon$preventSustainedUseIfItemUsageLockoutIsActive(MinecraftClient instance, Operation<Void> original) {
+        if (!klaxon$usageLockoutTriggered) {
+            original.call(instance);
+        }
     }
 }

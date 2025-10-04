@@ -22,9 +22,7 @@ public record ItemUsageLockoutTrigger() implements CustomPayload {
         MinecraftClient client = context.client();
 
         client.execute(() -> {
-            if (client instanceof MinecraftClientUsageLockoutAccess access) {
-                access.klaxon$setUsageLockout(true);
-            }
+            ((MinecraftClientUsageLockoutAccess) client).klaxon$setUsageLockout(true);
             if (client.player != null) {
                 client.player.clearActiveItem();
             }
