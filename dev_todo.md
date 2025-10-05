@@ -1,16 +1,14 @@
 # Issues
-- Grapple Winch reloading is fucked - look at accessor interface and refactor?
 - Grapple Claws do not anchor when they hit the ground while being retracted
-- Fix the fucking networking for the Grapple Winch / Grapple Claws
-- Grapple Winch spool does not animate
-- Grapple Winch Claw does not reflect loaded contents
 - Grapple Claws get stuck in blocks when landing occasionally ???
-- 
+- Entities are considered Heavy if they hold Heavy Equipment in their hands
+- Grapple Winch sometimes bricks on relog
+- Grapple Claws repeatedly play rebound sound when out of range
 
 # To-Do
 - Grapple Claws should drag items with them when retracting
-- Finish implementing Grapple Winch / Claw Sounds
+- Grapple Claw Entity Hooking & Movement
 - Retexture Steel Armor
-- Connected Grapple Claws should disconnect with the player like Ender Pearls do. [DONE BUT VERIFY]
-- Rename Steel Armor advancement to something like "Safety First" because it sucks rn [DONE]
-- Grapple Claws should obey the canProjectilesBreakBlocks gamerule. [DONE]
+- Implement "Tension" mechanic on Grapple Claws to counteract them getting stuck - value increments whenever it tries to pull towards the player but has blocked movement - when it hits cap, detach
+- Add "Spidey" advancement for intentionally detaching a Grapple Winch cable while midair
+- Add "Immovable Object" advancement for de-anchoring a Grapple Claw with the help of Heavy Equipment
