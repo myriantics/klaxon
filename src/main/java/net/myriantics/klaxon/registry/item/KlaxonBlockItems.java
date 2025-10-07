@@ -72,7 +72,7 @@ public abstract class KlaxonBlockItems {
     public static final Item CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
     // copper pipe matrices
-    public static final Item COPPER_PIPE_MATRIX = registerBlockItem(KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item COPPER_PIPE_MATRIX = registerBlockItem("copper_pipe_matrix", KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
 
     // hallnox
     public static final Item HALLNOX_POD = registerBlockItem(KlaxonBlocks.HALLNOX_POD);
@@ -105,6 +105,10 @@ public abstract class KlaxonBlockItems {
             )
     );
     public static final Item HALLNOX_BULB = registerBlockItem(KlaxonBlocks.HALLNOX_BULB);
+
+    private static Item registerBlockItem(String name, Block block) {
+        return registerBlockItem(name, new BlockItem(block, new Item.Settings()));
+    }
 
     private static Item registerBlockItem(Block block) {
         return registerBlockItem(block, new BlockItem(block, new Item.Settings()));

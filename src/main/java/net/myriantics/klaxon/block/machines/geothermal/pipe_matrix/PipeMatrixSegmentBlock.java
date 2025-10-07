@@ -32,13 +32,13 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
     // Tracks whether this pipe matrix loop is part of a valid structure or not.
     public static final BooleanProperty FORMED = KlaxonBlockStateProperties.FORMED;
 
-    public static final Map<PipeMatrixLoopBlock, PipeMatrixSegmentBlock> LOOP_TO_MATRIX = new HashMap<>();
+    public static final Map<PipeMatrixUBendBlock, PipeMatrixSegmentBlock> LOOP_TO_MATRIX = new HashMap<>();
 
-    private final PipeMatrixLoopBlock loopBlock;
+    private final PipeMatrixUBendBlock loopBlock;
 
     public PipeMatrixSegmentBlock(Settings settings, Block loopBlock) {
         super(settings);
-        if (loopBlock instanceof PipeMatrixLoopBlock loop) {
+        if (loopBlock instanceof PipeMatrixUBendBlock loop) {
             this.loopBlock = loop;
             LOOP_TO_MATRIX.put(loop, this);
         } else {
@@ -95,7 +95,7 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
             BlockState neighborState = world.getBlockState(neighborPos);
 
             if (neighborState.getBlock() instanceof PipeMatrix pipeMatrix && pipeMatrix.canConnect(neighborState, neighborDirection)) {
-                BlockState newState = this.loopBlock.getDefaultState().with(PipeMatrixLoopBlock.FACING, neighborDirection);
+                BlockState newState = this.loopBlock.getDefaultState().with(PipeMatrixUBendBlock.FACING, neighborDirection);
 
                 world.setBlockState(pos, newState);
 

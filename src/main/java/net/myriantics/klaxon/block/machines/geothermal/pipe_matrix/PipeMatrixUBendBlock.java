@@ -27,9 +27,7 @@ import net.myriantics.klaxon.api.Wrenchable;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
-public class PipeMatrixLoopBlock extends Block implements Wrenchable, PipeMatrix, NeighborPlacementListener {
+public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatrix, NeighborPlacementListener {
     // Tracks the axis the pipes turns around.
     // This refers to the axis as if the facing direction was the Y axis.
     public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = Properties.HORIZONTAL_AXIS;
@@ -40,7 +38,7 @@ public class PipeMatrixLoopBlock extends Block implements Wrenchable, PipeMatrix
 
     private Item pickItem;
 
-    public PipeMatrixLoopBlock(Settings settings) {
+    public PipeMatrixUBendBlock(Settings settings) {
         super(settings);
 
         this.setDefaultState(this.getDefaultState()
@@ -123,7 +121,7 @@ public class PipeMatrixLoopBlock extends Block implements Wrenchable, PipeMatrix
     @Override
     public void onAdjacentPlaceOnSide(World world, BlockPos pos, BlockState state, BlockPos placedPos, BlockState placedState, ItemPlacementContext context) {
         // if the adjacent placed block would extend this one, replace this block with a pipe matrix
-        if (placedState.getBlock() instanceof PipeMatrixLoopBlock && placedState.get(FACING).equals(context.getSide())) {
+        if (placedState.getBlock() instanceof PipeMatrixUBendBlock && placedState.get(FACING).equals(context.getSide())) {
             world.setBlockState(pos, PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this).getDefaultState().with(PipeMatrixSegmentBlock.AXIS, context.getSide().getAxis()));
         }
     }
