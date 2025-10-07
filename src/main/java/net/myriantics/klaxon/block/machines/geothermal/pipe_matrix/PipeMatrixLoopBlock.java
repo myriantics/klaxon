@@ -3,8 +3,10 @@ package net.myriantics.klaxon.block.machines.geothermal.pipe_matrix;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -19,10 +21,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import net.myriantics.klaxon.api.NeighborPlacementListener;
 import net.myriantics.klaxon.api.Wrenchable;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class PipeMatrixLoopBlock extends Block implements Wrenchable, PipeMatrix, NeighborPlacementListener {
     // Tracks the axis the pipes turns around.
@@ -32,6 +37,8 @@ public class PipeMatrixLoopBlock extends Block implements Wrenchable, PipeMatrix
     public static final DirectionProperty FACING = Properties.FACING;
     // Tracks whether this pipe matrix loop is part of a valid structure or not.
     public static final BooleanProperty FORMED = KlaxonBlockStateProperties.FORMED;
+
+    private Item pickItem;
 
     public PipeMatrixLoopBlock(Settings settings) {
         super(settings);
@@ -100,6 +107,15 @@ public class PipeMatrixLoopBlock extends Block implements Wrenchable, PipeMatrix
     }
 
     @Override
+    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
+        if (this.pickItem == null) {
+            this.pickItem = PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this).asItem();
+        }
+
+        return pickItem == null || pickItem.equals(Items.AIR) ? super.getPickStack(world, pos, state) : new ItemStack(pickItem);
+    }
+
+    @Override
     public boolean canConnect(BlockState state, Direction direction) {
         return direction.getOpposite().equals(state.get(FACING));
     }
@@ -114,11 +130,19 @@ public class PipeMatrixLoopBlock extends Block implements Wrenchable, PipeMatrix
 
     @Override
     public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        return null;
+        @Nullable Block segmentBlock = PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this);
+        if (segmentBlock != null) {
+            world.setBlockState(hitResult.getBlockPos(), segmentBlock.getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis()));
+        }
+        return ItemActionResult.SUCCESS;
     }
 
     @Override
     public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
-        return null;
+        @Nullable Block segmentBlock = PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this);
+        if (segmentBlock != null) {
+            serverWorld.setBlockState(targetPos, segmentBlock.getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis()));
+        }
+        return ItemActionResult.SUCCESS;
     }
 }

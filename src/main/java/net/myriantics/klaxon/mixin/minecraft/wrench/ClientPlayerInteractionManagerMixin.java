@@ -45,7 +45,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
     public ItemActionResult klaxon$runWrenchableFunctionalities(BlockState instance, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult, Operation<ItemActionResult> original) {
         if (instance.getBlock() instanceof Wrenchable wrenchable && (stack.isIn(KlaxonConventionalItemTags.WRENCHES) || stack.isIn(KlaxonConventionalItemTags.WRENCH))) {
             ItemActionResult result = wrenchable.onWrenched(instance, stack, world, player, hand, hitResult);
-            if (result.isAccepted()) return result;
+            if (result != null && result.isAccepted()) return result;
         }
 
         return original.call(instance, stack, world, player, hand, hitResult);
