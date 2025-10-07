@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate;
+package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,8 +23,6 @@ import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
 import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
-
-import java.util.List;
 
 public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     private final Inventory ingredientInventory;

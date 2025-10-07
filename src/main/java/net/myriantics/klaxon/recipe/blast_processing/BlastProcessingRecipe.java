@@ -9,9 +9,7 @@ import net.myriantics.klaxon.api.RecipeOutputCompound;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
-import java.util.List;
-
-import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
+import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
 public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput> {
     private final Ingredient ingredientItem;

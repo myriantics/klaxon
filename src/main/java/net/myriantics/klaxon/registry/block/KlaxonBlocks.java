@@ -6,15 +6,15 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.decor.*;
-import net.myriantics.klaxon.block.customblocks.decor.custom_hanging_sign.CustomHangingSignBlock;
-import net.myriantics.klaxon.block.customblocks.decor.custom_hanging_sign.CustomWallHangingSignBlock;
-import net.myriantics.klaxon.block.customblocks.decor.custom_sign.CustomSignBlock;
-import net.myriantics.klaxon.block.customblocks.decor.custom_sign.CustomWallSignBlock;
-import net.myriantics.klaxon.block.customblocks.functional.HallnoxPodBlock;
-import net.myriantics.klaxon.block.customblocks.functional.MoltenRubberBlock;
-import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.block.customblocks.machines.nether_reactor_core.NetherReactorCoreBlock;
+import net.myriantics.klaxon.block.decor.*;
+import net.myriantics.klaxon.block.decor.custom_hanging_sign.CustomHangingSignBlock;
+import net.myriantics.klaxon.block.decor.custom_hanging_sign.CustomWallHangingSignBlock;
+import net.myriantics.klaxon.block.decor.custom_sign.CustomSignBlock;
+import net.myriantics.klaxon.block.decor.custom_sign.CustomWallSignBlock;
+import net.myriantics.klaxon.block.functional.HallnoxPodBlock;
+import net.myriantics.klaxon.block.functional.MoltenRubberBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 
 public abstract class KlaxonBlocks {

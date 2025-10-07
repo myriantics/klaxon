@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.decor.custom_sign;
+package net.myriantics.klaxon.block.decor.custom_sign;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallSignBlock;

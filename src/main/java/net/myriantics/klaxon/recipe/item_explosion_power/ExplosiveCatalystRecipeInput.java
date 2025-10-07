@@ -2,7 +2,7 @@ package net.myriantics.klaxon.recipe.item_explosion_power;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.input.RecipeInput;
-import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 
 public record ExplosiveCatalystRecipeInput(ItemStack catalystStack) implements RecipeInput {
     public ExplosiveCatalystRecipeInput(DeepslateBlastProcessorBlockEntity blastProcessor) {

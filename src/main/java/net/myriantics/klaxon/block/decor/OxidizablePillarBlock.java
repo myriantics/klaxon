@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.decor;
+package net.myriantics.klaxon.block.decor;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

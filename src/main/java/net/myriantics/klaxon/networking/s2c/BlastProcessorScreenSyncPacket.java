@@ -7,12 +7,10 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
-import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double explosionPowerMax, ItemStack[] displayStacks, double explosionPower, boolean producesFire) implements CustomPayload {
 

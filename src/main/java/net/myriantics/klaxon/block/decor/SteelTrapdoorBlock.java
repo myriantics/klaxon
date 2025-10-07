@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.decor;
+package net.myriantics.klaxon.block.decor;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSetType;

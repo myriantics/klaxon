@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.decor.custom_hanging_sign;
+package net.myriantics.klaxon.block.decor.custom_hanging_sign;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.SignBlockEntity;

@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.machines.nether_reactor_core;
+package net.myriantics.klaxon.block.machines.nether_reactor_core;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

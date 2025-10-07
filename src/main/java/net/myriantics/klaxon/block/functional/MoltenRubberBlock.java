@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.customblocks.functional;
+package net.myriantics.klaxon.block.functional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.MagmaBlock;
