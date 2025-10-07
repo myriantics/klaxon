@@ -1,7 +1,6 @@
 # Issues
 - Grapple Claws do not anchor when they hit the ground while being retracted
 - Grapple Claws get stuck in blocks when landing occasionally ???
-- Entities are considered Heavy if they hold Heavy Equipment in their hands
 - Grapple Winch sometimes bricks on relog
 - Grapple Claws repeatedly play rebound sound when out of range
 

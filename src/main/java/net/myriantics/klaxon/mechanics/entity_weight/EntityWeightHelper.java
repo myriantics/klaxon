@@ -55,7 +55,7 @@ public abstract class EntityWeightHelper {
     }
 
     private static boolean isEntityWearingHeavyEquipment(LivingEntity livingEntity) {
-        for (ItemStack stack : livingEntity.getEquippedItems()) {
+        for (ItemStack stack : livingEntity.getAllArmorItems()) {
             if (stack.isIn(KlaxonItemTags.HEAVY_EQUIPMENT)) {
                 return true;
             }
