@@ -27,11 +27,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.block.NeighborUpdater;
 import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.api.NeighborPlacementListener;
 import net.myriantics.klaxon.api.Wrenchable;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import org.jetbrains.annotations.Nullable;
 
-public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, Wrenchable {
+public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, Wrenchable, NeighborPlacementListener {
 
     public static final MapCodec<HallnoxBulbBlock> CODEC = createCodec(HallnoxBulbBlock::new);
 
@@ -71,8 +72,18 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
         return targetState.isSideSolid(world, targetPos, offsetDir.getOpposite(), SideShapeType.CENTER) || targetState.getBlock() instanceof HallnoxBulbBlock;
     }
 
-    // called in hallnox_bulb.BlockItemMixin
-    // makes building easier so you don't have to replace stuff or carry a wrench in order to do a cleaner build
+    @Override
+    public void onAdjacentPlaceOnSide(World world, BlockPos clickedPos, BlockState clickedState, BlockPos placedPos, BlockState placedState, ItemPlacementContext context) {
+        if (context.getPlayer() == null || context.getPlayer().isSneaking()) {
+            return;
+        }
+
+        if (shouldConnect(world, placedState, placedPos, context.getSide())) {
+            world.setBlockState(clickedPos, clickedState.with(FACING_PROPERTIES.get(context.getSide()), true));
+        }
+    }
+
+
     public void onAdjacentPlaceOnSideWhileNotCrouching(World world, BlockPos bulbPos, BlockState bulbState, BlockPos placedPos, BlockState placedState, Direction clickedSide) {
         if (shouldConnect(world, placedState, placedPos, clickedSide)) {
             world.setBlockState(bulbPos, bulbState.with(FACING_PROPERTIES.get(clickedSide), true));
@@ -157,6 +168,8 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
 
         return ItemActionResult.SUCCESS;
     }
+
+
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {

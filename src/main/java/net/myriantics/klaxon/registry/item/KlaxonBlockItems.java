@@ -71,6 +71,9 @@ public abstract class KlaxonBlockItems {
     public static final Item NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.NETHER_REACTOR_CORE);
     public static final Item CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
+    // copper pipe matrices
+    public static final Item COPPER_PIPE_MATRIX = registerBlockItem(KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
+
     // hallnox
     public static final Item HALLNOX_POD = registerBlockItem(KlaxonBlocks.HALLNOX_POD);
     public static final Item HALLNOX_WART_BLOCK = registerBlockItem(KlaxonBlocks.HALLNOX_WART_BLOCK);

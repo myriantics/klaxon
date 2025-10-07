@@ -14,6 +14,8 @@ import net.myriantics.klaxon.block.decor.custom_sign.CustomWallSignBlock;
 import net.myriantics.klaxon.block.functional.HallnoxPodBlock;
 import net.myriantics.klaxon.block.functional.MoltenRubberBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixLoopBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 
@@ -54,6 +56,13 @@ public abstract class KlaxonBlocks {
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_CASING).luminance((state) -> 15).nonOpaque()));
     public static final Block CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_CASING).luminance((state) -> 12).nonOpaque()));
+
+    // pipe matrices
+    public static final Block COPPER_PIPE_MATRIX_LOOP = registerBlock("copper_pipe_matrix_loop",
+            new PipeMatrixLoopBlock(AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)));
+    public static final Block COPPER_PIPE_MATRIX_SEGMENT = registerBlock("copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(AbstractBlock.Settings.copy(COPPER_PIPE_MATRIX_LOOP), COPPER_PIPE_MATRIX_LOOP));
+
 
     // hallnox
     public static final Block HALLNOX_POD = registerBlock("hallnox_pod",
