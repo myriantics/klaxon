@@ -6,7 +6,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -21,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
 import net.myriantics.klaxon.api.NeighborPlacementListener;
 import net.myriantics.klaxon.api.Wrenchable;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
@@ -36,7 +34,7 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     // Tracks whether this pipe matrix loop is part of a valid structure or not.
     public static final BooleanProperty FORMED = KlaxonBlockStateProperties.FORMED;
 
-    private Item pickItem;
+    private PipeMatrixSegmentBlock segmentBlock;
 
     public PipeMatrixUBendBlock(Settings settings) {
         super(settings);
@@ -105,41 +103,43 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     }
 
     @Override
-    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
-        if (this.pickItem == null) {
-            this.pickItem = PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this).asItem();
-        }
-
-        return pickItem == null || pickItem.equals(Items.AIR) ? super.getPickStack(world, pos, state) : new ItemStack(pickItem);
+    public boolean sideHasExposedPipes(BlockState state, Direction direction) {
+        return direction.equals(state.get(FACING));
     }
 
     @Override
-    public boolean sideHasExposedPipes(BlockState state, Direction direction) {
-        return direction.equals(state.get(FACING));
+    public Item asItem() {
+        return this.getSegmentBlock().asItem();
+    }
+
+    public PipeMatrixSegmentBlock getSegmentBlock() {
+        if (this.segmentBlock == null) {
+            this.segmentBlock = PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this);
+        }
+
+        return this.segmentBlock;
     }
 
     @Override
     public void onAdjacentPlaceOnSide(World world, BlockPos pos, BlockState state, BlockPos placedPos, BlockState placedState, ItemPlacementContext context) {
         // if the adjacent placed block would extend this one, replace this block with a pipe matrix
         if (placedState.getBlock() instanceof PipeMatrixUBendBlock && placedState.get(FACING).equals(context.getSide())) {
-            world.setBlockState(pos, PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this).getDefaultState().with(PipeMatrixSegmentBlock.AXIS, context.getSide().getAxis()));
+            world.setBlockState(pos, getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, context.getSide().getAxis()));
         }
     }
 
     @Override
     public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        @Nullable Block segmentBlock = PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this);
         if (segmentBlock != null) {
-            world.setBlockState(hitResult.getBlockPos(), segmentBlock.getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis()));
+            world.setBlockState(hitResult.getBlockPos(), getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis()));
         }
         return ItemActionResult.SUCCESS;
     }
 
     @Override
     public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
-        @Nullable Block segmentBlock = PipeMatrixSegmentBlock.LOOP_TO_MATRIX.get(this);
         if (segmentBlock != null) {
-            serverWorld.setBlockState(targetPos, segmentBlock.getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis()));
+            serverWorld.setBlockState(targetPos, getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis()));
         }
         return ItemActionResult.SUCCESS;
     }

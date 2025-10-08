@@ -60,6 +60,22 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(KlaxonBlocks.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
         addDrop(KlaxonBlocks.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
         addDrop(KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+        addDrop(KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND);
+        addDrop(KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_U_BEND);
+        addDrop(KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_U_BEND);
+        addDrop(KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_U_BEND);
+        addDrop(KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
+        addDrop(KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
+        addDrop(KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
+        addDrop(KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
+        addDrop(KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_U_BEND);
+        addDrop(KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND);
+        addDrop(KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND);
+        addDrop(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND);
+        addDrop(KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_SEGMENT);
+        addDrop(KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
+        addDrop(KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
+        addDrop(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
 
         // rubber
         addDrop(KlaxonBlocks.RUBBER_BLOCK);
