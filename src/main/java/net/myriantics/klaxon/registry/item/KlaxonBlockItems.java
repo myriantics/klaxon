@@ -73,6 +73,13 @@ public abstract class KlaxonBlockItems {
 
     // copper pipe matrices
     public static final Item COPPER_PIPE_MATRIX = registerBlockItem("copper_pipe_matrix", KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("exposed_copper_pipe_matrix", KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WEATHERED_COPPER_PIPE_MATRIX = registerBlockItem("weathered_copper_pipe_matrix", KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item OXIDIZED_COPPER_PIPE_MATRIX = registerBlockItem("oxidized_copper_pipe_matrix", KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WAXED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_copper_pipe_matrix", KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WAXED_EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_exposed_copper_pipe_matrix", KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WAXED_WEATHERED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_weathered_copper_pipe_matrix", KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WAXED_OXIDIZED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_oxidized_copper_pipe_matrix", KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
 
     // hallnox
     public static final Item HALLNOX_POD = registerBlockItem(KlaxonBlocks.HALLNOX_POD);
