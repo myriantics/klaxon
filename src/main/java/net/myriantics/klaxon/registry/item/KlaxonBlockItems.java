@@ -114,7 +114,7 @@ public abstract class KlaxonBlockItems {
     public static final Item HALLNOX_BULB = registerBlockItem(KlaxonBlocks.HALLNOX_BULB);
 
     private static Item registerBlockItem(String name, Block block) {
-        return registerBlockItem(name, new BlockItem(block, new Item.Settings()));
+        return registerBlockItem(name, new AliasedBlockItem(block, new Item.Settings()));
     }
 
     private static Item registerBlockItem(Block block) {
