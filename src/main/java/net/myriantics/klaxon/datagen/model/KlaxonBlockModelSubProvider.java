@@ -200,23 +200,23 @@ public abstract class KlaxonBlockModelSubProvider {
                 .register(
                         Direction.EAST, Direction.Axis.X,
                         BlockStateVariant.create()
-                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
+                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
                                 .put(VariantSettings.X, VariantSettings.Rotation.R90)
-                                .put(VariantSettings.Y, VariantSettings.Rotation.R270)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R90)
                 )
                 .register(
                         Direction.EAST,
                         Direction.Axis.Z,
                         BlockStateVariant.create()
-                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
+                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
                                 .put(VariantSettings.X, VariantSettings.Rotation.R90)
-                                .put(VariantSettings.Y, VariantSettings.Rotation.R270)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R90)
                 )
                 .register(
                         Direction.SOUTH, Direction.Axis.X,
                         BlockStateVariant.create()
                                 .put(VariantSettings.MODEL, xAxisModelIdentifier)
-                                .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R90)
                 )
                 .register(
                         Direction.SOUTH,
@@ -228,16 +228,16 @@ public abstract class KlaxonBlockModelSubProvider {
                 .register(
                         Direction.WEST, Direction.Axis.X,
                         BlockStateVariant.create()
-                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
+                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
                                 .put(VariantSettings.X, VariantSettings.Rotation.R90)
-                                .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R270)
                 )
                 .register(
                         Direction.WEST, Direction.Axis.Z,
                         BlockStateVariant.create()
-                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
+                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
                                 .put(VariantSettings.X, VariantSettings.Rotation.R90)
-                                .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R270)
                 );
 
         generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(uBendBlock).coordinate(map));
