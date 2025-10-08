@@ -134,7 +134,27 @@ public abstract class KlaxonBlockModelSubProvider {
         );
     }
 
-    protected void registerPipeMatrixUBend(Block uBendBlock,Item pipeMatrixItemThatIndicatesTextureDirectory) {
+    protected void registerPipeMatrixSegment(Block segmentBlock, Item pipeMatrixItem) {
+        Identifier modelIdentifier = ModelIds.getBlockModelId(segmentBlock);
+        Identifier itemId = Registries.ITEM.getId(pipeMatrixItem);
+
+        generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(segmentBlock, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier)).coordinate(BlockStateModelGenerator.createAxisRotatedVariantMap()));
+        generator.modelCollector.accept(
+                modelIdentifier,
+                () -> Models.CUBE_BOTTOM_TOP.createJson(
+                        modelIdentifier,
+                        Map.of(
+                                TextureKey.TOP, itemId.withPath((path) -> "block/" + path + "/top"),
+                                TextureKey.BOTTOM, itemId.withPath((path) -> "block/" + path + "/top"),
+                                TextureKey.SIDE, itemId.withPath((path) -> "block/" + path + "/segment_side")
+                        )
+                )
+        );
+
+        generator.registerParentedItemModel(pipeMatrixItem, modelIdentifier);
+    }
+
+    protected void registerPipeMatrixUBend(Block uBendBlock, Item pipeMatrixItemThatIndicatesTextureDirectory) {
         Identifier itemPath = Registries.ITEM.getId(pipeMatrixItemThatIndicatesTextureDirectory);
         Identifier modelIdentifier = ModelIds.getBlockModelId(uBendBlock);
         Identifier xAxisModelIdentifier = modelIdentifier.withPath((path) -> path + "_x");

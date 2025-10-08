@@ -49,6 +49,6 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
 
         // pipe matrices
         registerPipeMatrixUBend(KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.COPPER_PIPE_MATRIX);
-        registerPillarBlock(KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
+        registerPipeMatrixSegment(KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.COPPER_PIPE_MATRIX);
     }
 }
