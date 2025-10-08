@@ -1,6 +1,7 @@
 {
   "values": [
     "#c:steel",
+    "#klaxon:pipe_matrices/copper",
     "klaxon:iron_plating_block",
     "klaxon:gold_plating_block",
     "klaxon:nether_reactor_core"

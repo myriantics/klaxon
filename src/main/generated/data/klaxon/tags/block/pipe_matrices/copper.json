@@ -1,0 +1,20 @@
+{
+  "values": [
+    "klaxon:copper_pipe_matrix_u_bend",
+    "klaxon:exposed_copper_pipe_matrix_u_bend",
+    "klaxon:weathered_copper_pipe_matrix_u_bend",
+    "klaxon:oxidized_copper_pipe_matrix_u_bend",
+    "klaxon:waxed_copper_pipe_matrix_u_bend",
+    "klaxon:waxed_exposed_copper_pipe_matrix_u_bend",
+    "klaxon:waxed_weathered_copper_pipe_matrix_u_bend",
+    "klaxon:waxed_oxidized_copper_pipe_matrix_u_bend",
+    "klaxon:copper_pipe_matrix_segment",
+    "klaxon:exposed_copper_pipe_matrix_segment",
+    "klaxon:weathered_copper_pipe_matrix_segment",
+    "klaxon:oxidized_copper_pipe_matrix_segment",
+    "klaxon:waxed_copper_pipe_matrix_segment",
+    "klaxon:waxed_exposed_copper_pipe_matrix_segment",
+    "klaxon:waxed_weathered_copper_pipe_matrix_segment",
+    "klaxon:waxed_oxidized_copper_pipe_matrix_segment"
+  ]
+}

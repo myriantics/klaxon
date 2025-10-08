@@ -165,6 +165,10 @@ public abstract class KlaxonBlockTags {
             createTag("hallnox_stems");
     public static final TagKey<Block> WIRE_SPOOLS =
             createTag("wire_spools");
+    public static final TagKey<Block> PIPE_MATRICES =
+            createTag("pipe_matrices");
+    public static final TagKey<Block> COPPER_PIPE_MATRICES =
+            createPipeMatricesTag("copper");
 
     // advancement tags
 
@@ -182,6 +186,10 @@ public abstract class KlaxonBlockTags {
 
     private static TagKey<Block> createManualItemApplicationTag(String name) {
         return createTag("manual_item_application/" + name + "_convertible");
+    }
+
+    private static TagKey<Block> createPipeMatricesTag(String name) {
+        return createTag("pipe_matrices/" + name);
     }
 
     private static TagKey<Block> createTag(String name) {

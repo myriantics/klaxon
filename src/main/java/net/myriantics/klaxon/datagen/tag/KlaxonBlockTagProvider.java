@@ -116,6 +116,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.SCAFFOLDINGS)
                 .forceAddTag(KlaxonConventionalBlockTags.LEVERS)
                 .addOptionalTag(KlaxonCompatBlockTags.WRENCH_PICKUP)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRICES)
                 .add(KlaxonBlocks.HALLNOX_BULB)
                 .add(KlaxonBlocks.STEEL_CASING)
                 .add(KlaxonBlocks.CRUDE_STEEL_CASING)
@@ -144,6 +145,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.STEEL)
                 .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL)
                 .forceAddTag(KlaxonBlockTags.WIRE_SPOOLS)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRICES)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE)
                 .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE)
@@ -538,6 +540,35 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK
                 );
 
+        getOrCreateTagBuilder(KlaxonBlockTags.PIPE_MATRICES)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRICES);
+
+        getOrCreateTagBuilder(KlaxonBlockTags.COPPER_PIPE_MATRICES)
+                .add(
+                        KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND,
+                        KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_U_BEND,
+                        KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_U_BEND,
+                        KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_U_BEND
+                )
+                .add(
+                        KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_U_BEND,
+                        KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND,
+                        KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND,
+                        KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND
+                )
+                .add(
+                        KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT,
+                        KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT,
+                        KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_SEGMENT,
+                        KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT
+                )
+                .add(
+                        KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_SEGMENT,
+                        KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT,
+                        KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT,
+                        KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT
+                );
+
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.RUBBER)
                 .add(KlaxonBlocks.RUBBER_BLOCK)
                 .add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK)
@@ -658,6 +689,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     private void buildToolRequirementTags() {
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .forceAddTag(KlaxonConventionalBlockTags.STEEL)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRICES)
                 .add(KlaxonBlocks.IRON_PLATING_BLOCK)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE);

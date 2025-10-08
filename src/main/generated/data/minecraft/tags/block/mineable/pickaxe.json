@@ -3,6 +3,7 @@
     "#c:steel",
     "#c:crude_steel",
     "#klaxon:wire_spools",
+    "#klaxon:pipe_matrices/copper",
     "klaxon:deepslate_blast_processor",
     "klaxon:nether_reactor_core",
     "klaxon:crude_nether_reactor_core",
