@@ -1,16 +1,15 @@
 package net.myriantics.klaxon.registry.render;
 
+import net.minecraft.client.render.RenderPhase;
 import net.minecraft.data.client.Model;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mixin.minecraft.datagen.ModelAccessor;
-import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
 import java.util.Optional;
 
 public abstract class KlaxonModels {
-    private static final Identifier EMPTY = KlaxonCommon.locate("empty");
 
     public static final Model GRAPPLE_WINCH_3D_SPOOL_4 = item("grapple_winch_3d/spool_4",
             TextureKey.of("structure"),
@@ -22,11 +21,46 @@ public abstract class KlaxonModels {
     public static final Model GRAPPLE_WINCH_3D_SPOOL_1 = copyTextureMap("grapple_winch_3d/spool_1", GRAPPLE_WINCH_3D_SPOOL_4);
     public static final Model GRAPPLE_WINCH_3D_SPOOL_0 = copyTextureMap("grapple_winch_3d/spool_0", GRAPPLE_WINCH_3D_SPOOL_4);
 
-    public static final Model PIPE_MATRIX_U_BEND_X = block("pipe_matrix_u_bend_x");
-    public static final Model PIPE_MATRIX_U_BEND_Z = block("pipe_matrix_u_bend_z");
+    public static final Model PIPE_MATRIX_U_BEND_X_POSITIVE = block("pipe_matrix_u_bend/x_positive",
+            TextureKey.TOP,
+            KlaxonTextureKeys.U_BEND_CURVE,
+            KlaxonTextureKeys.U_BEND_BOTTOM,
+            KlaxonTextureKeys.U_BEND_SIDE,
+            TextureKey.PARTICLE
+    );
+    public static final Model PIPE_MATRIX_U_BEND_X_NEGATIVE = copyDir("x_negative", PIPE_MATRIX_U_BEND_X_POSITIVE,
+            TextureKey.BOTTOM,
+            KlaxonTextureKeys.U_BEND_CURVE,
+            KlaxonTextureKeys.U_BEND_SIDE,
+            KlaxonTextureKeys.U_BEND_SIDE,
+            TextureKey.PARTICLE
+    );
+    public static final Model PIPE_MATRIX_U_BEND_Z_POSITIVE = copyDir("z_positive", PIPE_MATRIX_U_BEND_X_POSITIVE);
+    public static final Model PIPE_MATRIX_U_BEND_Z_NEGATIVE = copyDir("z_negative", PIPE_MATRIX_U_BEND_X_NEGATIVE);
 
-    public static Identifier id(Model model) {
-        return ((ModelAccessor) model).klaxon$getParent().orElse(EMPTY);
+    public static Optional<Identifier> id(Model model) {
+        return ((ModelAccessor) model).klaxon$getParent();
+    }
+
+    private static Model copyDir(String path, Model parent, TextureKey... textureKeys) {
+        Optional<Identifier> parentId = id(parent);
+        if (parentId.isEmpty()) {
+            return new Model(Optional.empty(), Optional.empty());
+        }
+
+        String parentPath = parentId.get().getPath();
+
+        int lastParentSlash = parentPath.lastIndexOf('/');
+        Identifier modelId = KlaxonCommon.locate(
+                lastParentSlash == -1
+                        ? path
+                        : parentPath.substring(0, lastParentSlash) + '/' + path
+        );
+        return new Model(Optional.of(modelId), Optional.empty(), textureKeys);
+    }
+
+    private static Model copyDir(String path, Model parent) {
+        return copyDir(path, parent, ((ModelAccessor)parent).klaxon$getRequiredTextures().toArray(new TextureKey[] {}));
     }
 
     private static Model block(String path, TextureKey... requiredTextureKeys) {

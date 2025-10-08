@@ -1,0 +1,27 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": true,
+    "textures": {
+        "bottom": "klaxon:block/copper_pipe_matrix/top",
+        "u_bend_bottom": "klaxon:block/copper_pipe_matrix/u_bend_bottom",
+        "u_bend_curve": "klaxon:block/copper_pipe_matrix/u_bend_curve_negative",
+        "u_bend_side": "klaxon:block/copper_pipe_matrix/u_bend_side_negative",
+        "particle": "klaxon:block/copper_pipe_matrix/top"
+    },
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#u_bend_curve"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#u_bend_side"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#u_bend_curve"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#u_bend_side"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#u_bend_bottom"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#bottom"}
+			}
+		}
+	]
+}

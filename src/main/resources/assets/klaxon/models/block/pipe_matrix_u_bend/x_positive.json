@@ -4,7 +4,7 @@
 	"ambientocclusion": true,
 	"textures": {
 		"top": "klaxon:block/copper_pipe_matrix/top",
-		"u_bend": "klaxon:block/copper_pipe_matrix/u_bend",
+		"u_bend_curve": "klaxon:block/copper_pipe_matrix/u_bend",
 		"u_bend_bottom": "klaxon:block/copper_pipe_matrix/u_bend_bottom",
 		"u_bend_side": "klaxon:block/copper_pipe_matrix/u_bend_side",
 		"particle": "klaxon:block/copper_pipe_matrix/u_bend_side"
@@ -16,9 +16,9 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 16, 16], "texture": "#u_bend_side"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#u_bend"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#u_bend_curve"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#u_bend_side"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#u_bend"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#u_bend_curve"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#u_bend_bottom"}
 			}
