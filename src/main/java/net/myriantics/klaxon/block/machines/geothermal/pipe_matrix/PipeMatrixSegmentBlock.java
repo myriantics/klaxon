@@ -10,6 +10,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -70,7 +71,7 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
         BlockState clickedState = world.getBlockState(clickedPos);
 
         // if this should connect to the target state, delegate to the loop block
-        if (clickedState.getBlock() instanceof PipeMatrix pipeMatrix && pipeMatrix.canConnect(clickedState, clickedSide)) {
+        if (clickedState.getBlock() instanceof PipeMatrix pipeMatrix && pipeMatrix.sideHasExposedPipes(clickedState, clickedSide.getOpposite())) {
             return this.loopBlock.getPlacementState(ctx);
         }
 
@@ -81,29 +82,14 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
     public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
         BlockPos pos = hitResult.getBlockPos();
         Direction.Axis axis = targetState.get(AXIS);
-        Direction clickedSide = hitResult.getSide();
 
         Vec3d blockInteractionPos = hitResult.getPos().subtract(Vec3d.of(hitResult.getBlockPos()));
 
-        Direction.AxisDirection clickedAxisDir = blockInteractionPos.getComponentAlongAxis(axis) >= 0.5 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE;
+        Direction.AxisDirection clickedAxisDir = blockInteractionPos.getComponentAlongAxis(axis) < 0.5 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE;
 
-        // thats cool i never thought to instantiate an array inside an enhanced for loop before
-        // dope
-        for (Direction.AxisDirection axisDirection : new Direction.AxisDirection[] {clickedAxisDir, clickedAxisDir.getOpposite()}) {
-            Direction neighborDirection = Direction.from(targetState.get(AXIS), axisDirection);
-            BlockPos neighborPos = pos.offset(neighborDirection);
-            BlockState neighborState = world.getBlockState(neighborPos);
+        world.setBlockState(pos, this.loopBlock.getDefaultState().with(PipeMatrixUBendBlock.FACING, Direction.from(targetState.get(AXIS), clickedAxisDir)));
 
-            if (neighborState.getBlock() instanceof PipeMatrix pipeMatrix && pipeMatrix.canConnect(neighborState, neighborDirection)) {
-                BlockState newState = this.loopBlock.getDefaultState().with(PipeMatrixUBendBlock.FACING, neighborDirection);
-
-                world.setBlockState(pos, newState);
-
-                return ItemActionResult.SUCCESS;
-            }
-        }
-
-        return null;
+        return ItemActionResult.SUCCESS;
     }
 
     @Override
@@ -112,7 +98,7 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
     }
 
     @Override
-    public boolean canConnect(BlockState state, Direction direction) {
+    public boolean sideHasExposedPipes(BlockState state, Direction direction) {
         return direction.getAxis().equals(state.get(AXIS));
     }
 }

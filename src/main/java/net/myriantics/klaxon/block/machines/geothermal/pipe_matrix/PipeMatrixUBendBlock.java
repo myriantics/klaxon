@@ -114,8 +114,8 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     }
 
     @Override
-    public boolean canConnect(BlockState state, Direction direction) {
-        return direction.getOpposite().equals(state.get(FACING));
+    public boolean sideHasExposedPipes(BlockState state, Direction direction) {
+        return direction.equals(state.get(FACING));
     }
 
     @Override

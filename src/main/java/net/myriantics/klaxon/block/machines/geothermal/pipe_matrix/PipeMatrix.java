@@ -4,5 +4,5 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.Direction;
 
 public interface PipeMatrix {
-    boolean canConnect(BlockState state, Direction direction);
+    boolean sideHasExposedPipes(BlockState state, Direction direction);
 }
