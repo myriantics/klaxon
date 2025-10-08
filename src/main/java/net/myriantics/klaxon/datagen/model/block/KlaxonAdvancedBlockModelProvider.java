@@ -9,6 +9,7 @@ import net.myriantics.klaxon.datagen.model.KlaxonBlockModelSubProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
 import net.myriantics.klaxon.registry.block.KlaxonBlockFamilies;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvider {
     public KlaxonAdvancedBlockModelProvider(KlaxonModelProvider provider, BlockStateModelGenerator generator) {
@@ -45,5 +46,9 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         // nether reactors
         acceptSingletonBlockState(KlaxonBlocks.NETHER_REACTOR_CORE, KlaxonCommon.locate("block/" + Registries.BLOCK.getId(KlaxonBlocks.NETHER_REACTOR_CORE).getPath()));
         acceptSingletonBlockState(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, KlaxonCommon.locate("block/" + Registries.BLOCK.getId(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE).getPath()));
+
+        // pipe matrices
+        registerPipeMatrixUBend(KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.COPPER_PIPE_MATRIX);
+        registerPillarBlock(KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
     }
 }

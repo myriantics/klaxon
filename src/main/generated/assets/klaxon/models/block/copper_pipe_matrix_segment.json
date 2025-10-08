@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "klaxon:block/copper_pipe_matrix_segment_top",
+    "side": "klaxon:block/copper_pipe_matrix_segment_side"
+  }
+}

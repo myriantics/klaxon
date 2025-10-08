@@ -1,0 +1,54 @@
+{
+  "variants": {
+    "axis=x,facing=down": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_x",
+      "x": 180
+    },
+    "axis=x,facing=east": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_x",
+      "x": 90,
+      "y": 270
+    },
+    "axis=x,facing=north": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_x",
+      "x": 270
+    },
+    "axis=x,facing=south": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_x",
+      "y": 90
+    },
+    "axis=x,facing=up": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_x"
+    },
+    "axis=x,facing=west": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_x",
+      "x": 90,
+      "y": 90
+    },
+    "axis=z,facing=down": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_z",
+      "x": 180
+    },
+    "axis=z,facing=east": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_z",
+      "x": 90,
+      "y": 270
+    },
+    "axis=z,facing=north": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_z",
+      "x": 270
+    },
+    "axis=z,facing=south": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_z",
+      "x": 90
+    },
+    "axis=z,facing=up": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_z"
+    },
+    "axis=z,facing=west": {
+      "model": "klaxon:block/copper_pipe_matrix_u_bend_z",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

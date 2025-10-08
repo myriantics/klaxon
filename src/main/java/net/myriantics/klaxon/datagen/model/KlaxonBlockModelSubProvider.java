@@ -1,15 +1,21 @@
 package net.myriantics.klaxon.datagen.model;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
+import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.myriantics.klaxon.block.decor.HallnoxBulbBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.render.KlaxonModels;
+
+import java.util.Map;
 
 public abstract class KlaxonBlockModelSubProvider {
     public final BlockStateModelGenerator generator;
@@ -126,6 +132,115 @@ public abstract class KlaxonBlockModelSubProvider {
                                         .put(VariantSettings.Y, VariantSettings.Rotation.R270)
                         )
         );
+    }
+
+    protected void registerPipeMatrixUBend(Block uBendBlock,Item pipeMatrixItemThatIndicatesTextureDirectory) {
+        Identifier itemPath = Registries.ITEM.getId(pipeMatrixItemThatIndicatesTextureDirectory);
+        Identifier modelIdentifier = ModelIds.getBlockModelId(uBendBlock);
+        Identifier xAxisModelIdentifier = modelIdentifier.withPath((path) -> path + "_x");
+        Identifier zAxisModelIdentifier = modelIdentifier.withPath((path) -> path + "_z");
+
+        Identifier topId = itemPath.withPath((path) -> "block/" + path + "/top");
+        Identifier uBendId = itemPath.withPath((path) -> "block/" + path + "/u_bend");
+        Identifier bottomId = itemPath.withPath((path) -> "block/" + path + "/u_bend_bottom");
+        Identifier sideId = itemPath.withPath((path) -> "block/" + path + "/u_bend_side");
+
+        Map<TextureKey, Identifier> textureMap = Map.of(
+                TextureKey.of("top"), topId,
+                TextureKey.of("u_bend"), uBendId,
+                TextureKey.of("bottom"), bottomId,
+                TextureKey.of("side"), sideId,
+                TextureKey.of("particle"), sideId
+        );
+
+        // create both x and z variants
+        generator.modelCollector.accept(
+                xAxisModelIdentifier,
+                () -> KlaxonModels.PIPE_MATRIX_U_BEND_X.createJson(xAxisModelIdentifier, textureMap)
+        );
+        generator.modelCollector.accept(
+                zAxisModelIdentifier,
+                () -> KlaxonModels.PIPE_MATRIX_U_BEND_Z.createJson(zAxisModelIdentifier, textureMap)
+        );
+
+        // make the map - helpful comment i know :)
+        BlockStateVariantMap map = BlockStateVariantMap.create(PipeMatrixUBendBlock.FACING, PipeMatrixUBendBlock.HORIZONTAL_AXIS)
+                .register(
+                        Direction.UP, Direction.Axis.X,
+                        BlockStateVariant.create().put(VariantSettings.MODEL, xAxisModelIdentifier)
+                )
+                .register(
+                        Direction.UP, Direction.Axis.Z,
+                        BlockStateVariant.create().put(VariantSettings.MODEL, zAxisModelIdentifier)
+                )
+                .register(
+                        Direction.DOWN, Direction.Axis.X,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R180)
+                )
+                .register(
+                        Direction.DOWN, Direction.Axis.Z,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R180)
+                )
+                .register(
+                        Direction.NORTH, Direction.Axis.X,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R270)
+                )
+                .register(
+                        Direction.NORTH, Direction.Axis.Z,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R270)
+                )
+                .register(
+                        Direction.EAST, Direction.Axis.X,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R90)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R270)
+                )
+                .register(
+                        Direction.EAST,
+                        Direction.Axis.Z,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R90)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R270)
+                )
+                .register(
+                        Direction.SOUTH, Direction.Axis.X,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+                )
+                .register(
+                        Direction.SOUTH,
+                        Direction.Axis.Z,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R90)
+                )
+                .register(
+                        Direction.WEST, Direction.Axis.X,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, xAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R90)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+                )
+                .register(
+                        Direction.WEST, Direction.Axis.Z,
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, zAxisModelIdentifier)
+                                .put(VariantSettings.X, VariantSettings.Rotation.R90)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+                );
+
+        generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(uBendBlock).coordinate(map));
     }
 
     protected void registerHallnoxPod(BlockStateModelGenerator generator) {
