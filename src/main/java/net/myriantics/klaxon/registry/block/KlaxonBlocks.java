@@ -14,6 +14,8 @@ import net.myriantics.klaxon.block.decor.custom_sign.CustomWallSignBlock;
 import net.myriantics.klaxon.block.functional.HallnoxPodBlock;
 import net.myriantics.klaxon.block.functional.MoltenRubberBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
@@ -59,9 +61,101 @@ public abstract class KlaxonBlocks {
 
     // pipe matrices
     public static final Block COPPER_PIPE_MATRIX_U_BEND = registerBlock("copper_pipe_matrix_u_bend",
-            new PipeMatrixUBendBlock(AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)));
+            new OxidizablePipeMatrixUBendBlock(
+                    Oxidizable.OxidationLevel.UNAFFECTED,
+                    AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)
+            )
+    );
     public static final Block COPPER_PIPE_MATRIX_SEGMENT = registerBlock("copper_pipe_matrix_segment",
-            new PipeMatrixSegmentBlock(AbstractBlock.Settings.copy(COPPER_PIPE_MATRIX_U_BEND), COPPER_PIPE_MATRIX_U_BEND));
+            new OxidizablePipeMatrixSegmentBlock(
+                    Oxidizable.OxidationLevel.UNAFFECTED,
+                    AbstractBlock.Settings.copy(COPPER_PIPE_MATRIX_U_BEND),
+                    COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block EXPOSED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("exposed_copper_pipe_matrix_u_bend",
+            new OxidizablePipeMatrixUBendBlock(
+                    Oxidizable.OxidationLevel.EXPOSED,
+                    AbstractBlock.Settings.copy(Blocks.EXPOSED_COPPER)
+            )
+    );
+    public static final Block EXPOSED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("exposed_copper_pipe_matrix_segment",
+            new OxidizablePipeMatrixSegmentBlock(
+                    Oxidizable.OxidationLevel.EXPOSED,
+                    AbstractBlock.Settings.copy(EXPOSED_COPPER_PIPE_MATRIX_U_BEND),
+                    EXPOSED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WEATHERED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("weathered_copper_pipe_matrix_u_bend",
+            new OxidizablePipeMatrixUBendBlock(
+                    Oxidizable.OxidationLevel.WEATHERED,
+                    AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER)
+            )
+    );
+    public static final Block WEATHERED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("weathered_copper_pipe_matrix_segment",
+            new OxidizablePipeMatrixSegmentBlock(
+                    Oxidizable.OxidationLevel.WEATHERED,
+                    AbstractBlock.Settings.copy(WEATHERED_COPPER_PIPE_MATRIX_U_BEND),
+                    WEATHERED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block OXIDIZED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("oxidized_copper_pipe_matrix_u_bend",
+            new OxidizablePipeMatrixUBendBlock(
+                    Oxidizable.OxidationLevel.OXIDIZED,
+                    AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER)
+            )
+    );
+    public static final Block OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("oxidized_copper_pipe_matrix_segment",
+            new OxidizablePipeMatrixSegmentBlock(
+                    Oxidizable.OxidationLevel.OXIDIZED,
+                    AbstractBlock.Settings.copy(OXIDIZED_COPPER_PIPE_MATRIX_U_BEND),
+                    OXIDIZED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WAXED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("waxed_copper_pipe_matrix_u_bend",
+            new PipeMatrixUBendBlock(
+                    AbstractBlock.Settings.copy(Blocks.WAXED_COPPER_BLOCK)
+            )
+    );
+    public static final Block WAXED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("waxed_copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(
+                    AbstractBlock.Settings.copy(WAXED_COPPER_PIPE_MATRIX_U_BEND),
+                    WAXED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("waxed_exposed_copper_pipe_matrix_u_bend",
+            new PipeMatrixUBendBlock(
+                    AbstractBlock.Settings.copy(Blocks.WAXED_EXPOSED_COPPER)
+            )
+    );
+    public static final Block WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("waxed_exposed_copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(
+                    AbstractBlock.Settings.copy(WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND),
+                    WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("waxed_weathered_copper_pipe_matrix_u_bend",
+            new PipeMatrixUBendBlock(
+                    AbstractBlock.Settings.copy(Blocks.WAXED_WEATHERED_COPPER)
+            )
+    );
+    public static final Block WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("waxed_weathered_copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(
+                    AbstractBlock.Settings.copy(WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND),
+                    WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("waxed_oxidized_copper_pipe_matrix_u_bend",
+            new PipeMatrixUBendBlock(
+                    AbstractBlock.Settings.copy(Blocks.WAXED_OXIDIZED_COPPER)
+            )
+    );
+    public static final Block WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("waxed_oxidized_copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(
+                    AbstractBlock.Settings.copy(WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND),
+                    WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
 
 
     // hallnox
