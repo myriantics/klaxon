@@ -212,11 +212,13 @@ public abstract class KlaxonBlockModelSubProvider {
         BlockStateVariantMap map = BlockStateVariantMap.create(PipeMatrixUBendBlock.FACING, PipeMatrixUBendBlock.HORIZONTAL_AXIS)
                 .register(
                         Direction.UP, Direction.Axis.X,
-                        BlockStateVariant.create().put(VariantSettings.MODEL, xAxisPositiveModelIdentifier)
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, xAxisPositiveModelIdentifier)
                 )
                 .register(
                         Direction.UP, Direction.Axis.Z,
-                        BlockStateVariant.create().put(VariantSettings.MODEL, zAxisPositiveModelIdentifier)
+                        BlockStateVariant.create()
+                                .put(VariantSettings.MODEL, zAxisPositiveModelIdentifier)
                 )
                 .register(
                         Direction.DOWN, Direction.Axis.X,
@@ -231,14 +233,16 @@ public abstract class KlaxonBlockModelSubProvider {
                 .register(
                         Direction.NORTH, Direction.Axis.X,
                         BlockStateVariant.create()
-                                .put(VariantSettings.MODEL, xAxisNegativeModelIdentifier)
+                                .put(VariantSettings.MODEL, xAxisPositiveModelIdentifier)
                                 .put(VariantSettings.X, VariantSettings.Rotation.R270)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R180)
                 )
                 .register(
                         Direction.NORTH, Direction.Axis.Z,
                         BlockStateVariant.create()
-                                .put(VariantSettings.MODEL, zAxisNegativeModelIdentifier)
+                                .put(VariantSettings.MODEL, zAxisPositiveModelIdentifier)
                                 .put(VariantSettings.X, VariantSettings.Rotation.R270)
+                                .put(VariantSettings.Y, VariantSettings.Rotation.R180)
                 )
                 .register(
                         Direction.EAST, Direction.Axis.X,
@@ -257,16 +261,14 @@ public abstract class KlaxonBlockModelSubProvider {
                 .register(
                         Direction.SOUTH, Direction.Axis.X,
                         BlockStateVariant.create()
-                                .put(VariantSettings.MODEL, xAxisPositiveModelIdentifier)
+                                .put(VariantSettings.MODEL, xAxisNegativeModelIdentifier)
                                 .put(VariantSettings.X, VariantSettings.Rotation.R90)
-                                .put(VariantSettings.Y, VariantSettings.Rotation.R180)
                 )
                 .register(
                         Direction.SOUTH, Direction.Axis.Z,
                         BlockStateVariant.create()
-                                .put(VariantSettings.MODEL, zAxisPositiveModelIdentifier)
+                                .put(VariantSettings.MODEL, zAxisNegativeModelIdentifier)
                                 .put(VariantSettings.X, VariantSettings.Rotation.R90)
-                                .put(VariantSettings.Y, VariantSettings.Rotation.R180)
                 )
                 .register(
                         Direction.WEST, Direction.Axis.X,

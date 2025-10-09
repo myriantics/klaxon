@@ -9,13 +9,13 @@
       "y": 90
     },
     "axis=x,facing=north": {
-      "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/x_negative",
-      "x": 270
+      "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/x_positive",
+      "x": 270,
+      "y": 180
     },
     "axis=x,facing=south": {
-      "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/x_positive",
-      "x": 90,
-      "y": 180
+      "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/x_negative",
+      "x": 90
     },
     "axis=x,facing=up": {
       "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/x_positive"
@@ -34,13 +34,13 @@
       "y": 90
     },
     "axis=z,facing=north": {
-      "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/z_negative",
-      "x": 270
+      "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/z_positive",
+      "x": 270,
+      "y": 180
     },
     "axis=z,facing=south": {
-      "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/z_positive",
-      "x": 90,
-      "y": 180
+      "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/z_negative",
+      "x": 90
     },
     "axis=z,facing=up": {
       "model": "klaxon:block/oxidized_copper_pipe_matrix_u_bend/z_positive"
