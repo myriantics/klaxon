@@ -41,7 +41,7 @@ public abstract class ServerPlayerInteractionManagerMixin {
 
         // if we're in adventure and we can't do anything to the block, don't override anything
         if (!PermissionsHelper.canModifyWorld(player) && !usedStack.canPlaceOn(targetPos)) return original;
-        return original || (usedStack.getItem() instanceof WrenchItem && targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST) && !targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST) && WrenchItem.getRotatedState(world, hitResult.getBlockPos(), targetState, hitResult.getSide(), player.getHorizontalFacing(), hitResult.getPos()).isPresent());
+        return original || (usedStack.getItem() instanceof WrenchItem && WrenchItem.allowDefaultRotationBehavior(targetState) && WrenchItem.getRotatedState(world, hitResult.getBlockPos(), targetState, hitResult.getSide(), player.getHorizontalFacing(), hitResult.getPos()).isPresent());
     }
 
     @WrapOperation(

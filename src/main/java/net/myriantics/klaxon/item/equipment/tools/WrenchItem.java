@@ -24,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.Wrenchable;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
@@ -66,8 +67,7 @@ public class WrenchItem extends MiningToolItem {
 
         if (player != null) {
             // Wrench pickup ability requires both CAN_PLACE_ON and CAN_DESTROY components to work in Adventure Mode
-            if (player.isSneaking() && targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST) && !targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST) && (PermissionsHelper.canModifyWorld(player) || wrenchStack.canBreak(new CachedBlockPosition(world, targetPos, false)))) {
-
+            if (canPickup(targetState, targetPos, world, player, wrenchStack)) {
                 if (world instanceof ServerWorld serverWorld) {
                     List<ItemStack> outputStacks = Block.getDroppedStacks(targetState, serverWorld, targetPos, serverWorld.getBlockEntity(targetPos));
                     if (!outputStacks.isEmpty()) {
@@ -90,7 +90,7 @@ public class WrenchItem extends MiningToolItem {
             }
 
             // Only requires CAN_PLACE_ON in adventure mode
-            if (targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST) && !targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)) {
+            if (allowDefaultRotationBehavior(targetState)) {
                 Optional<BlockState> rotatedState = getRotatedState(world, targetPos, targetState, context.getSide(), context.getHorizontalPlayerFacing(), context.getHitPos());
 
                 if (rotatedState.isPresent()) {
@@ -108,6 +108,25 @@ public class WrenchItem extends MiningToolItem {
         }
 
         return super.useOnBlock(context);
+    }
+
+    public static boolean canRotate(BlockState targetState) {
+        return targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)
+                && !targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST);
+    }
+
+    public static boolean allowDefaultRotationBehavior(BlockState targetState) {
+        return !(targetState.getBlock() instanceof Wrenchable) && canRotate(targetState);
+    }
+
+    public static boolean canPickup(BlockState targetState, BlockPos targetPos, World world, @Nullable PlayerEntity player, ItemStack wrenchStack) {
+        return (player == null || player.isSneaking())
+                && targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST)
+                && !targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST)
+                && (player == null
+                || PermissionsHelper.canModifyWorld(player)
+                || wrenchStack.canBreak(new CachedBlockPosition(world, targetPos, false))
+        );
     }
 
     public static Optional<BlockState> getRotatedState(World world, BlockPos targetPos, BlockState targetState, Direction clickedFace, @Nullable Direction playerFacing, @Nullable Vec3d clickedPos) {

@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -20,10 +21,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.NeighborPlacementListener;
 import net.myriantics.klaxon.api.Wrenchable;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatrix, NeighborPlacementListener {
     // Tracks the axis the pipes turns around.
@@ -57,6 +61,41 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
         return neighborState instanceof PipeMatrix && neighborState.get(FORMED) ? state : state.with(FORMED, false);
     }
 
+    public static Optional<BlockState> withAxisIfPossible(BlockState state, Direction.Axis clickedAxis, Direction.Axis facingAxis) {
+        Optional<BlockState> result = withAxisIfPossible(state, clickedAxis);
+        if (result.isEmpty()) {
+            result = withAxisIfPossible(state, facingAxis);
+        }
+        return result;
+    }
+
+    public static Optional<BlockState> withAxisIfPossible(BlockState state, Direction.Axis axis) {
+        Optional<BlockState> result = Optional.empty();
+
+        switch (state.get(FACING).getAxis()) {
+            case X -> {
+                switch (axis) {
+                    case Y -> result = Optional.of(state.with(HORIZONTAL_AXIS, Direction.Axis.X));
+                    case Z -> result = Optional.of(state.with(HORIZONTAL_AXIS, Direction.Axis.Z));
+                }
+            }
+            case Y -> {
+                switch (axis) {
+                    case X -> result = Optional.of(state.with(HORIZONTAL_AXIS, Direction.Axis.X));
+                    case Z -> result = Optional.of(state.with(HORIZONTAL_AXIS, Direction.Axis.Z));
+                }
+            }
+            case Z -> {
+                switch (axis) {
+                    case X -> result = Optional.of(state.with(HORIZONTAL_AXIS, Direction.Axis.X));
+                    case Y -> result = Optional.of(state.with(HORIZONTAL_AXIS, Direction.Axis.Z));
+                }
+            }
+        }
+
+        return result;
+    }
+
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
         Direction clickedDirection = ctx.getSide();
@@ -65,41 +104,11 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
         // this method is only called from the pipe matrix block, and we verify that the clicked block is safe there.
         BlockState newState = this.getDefaultState().with(FACING, clickedDirection);
 
-        // hacky switch statement go brr to satisfy my hacky fix for a potential fuckup
-        switch (clickedDirection.getAxis()) {
-            case X -> {
-                switch (facingDirection.getAxis()) {
-                    case Y -> {
-                        newState = newState.with(HORIZONTAL_AXIS, Direction.Axis.X);
-                    }
-                    case Z -> {
-                        newState = newState.with(HORIZONTAL_AXIS, Direction.Axis.Z);
-                    }
-                }
-            }
-            case Y -> {
-                switch (facingDirection.getAxis()) {
-                    case X -> {
-                        newState = newState.with(HORIZONTAL_AXIS, Direction.Axis.X);
-                    }
-                    case Z -> {
-                        newState = newState.with(HORIZONTAL_AXIS, Direction.Axis.Z);
-                    }
-                }
-            }
-            case Z -> {
-                switch (facingDirection.getAxis()) {
-                    case X -> {
-                        newState = newState.with(HORIZONTAL_AXIS, Direction.Axis.X);
-                    }
-                    case Y -> {
-                        newState = newState.with(HORIZONTAL_AXIS, Direction.Axis.Z);
-                    }
-                }
-            }
-        }
-
-        return newState;
+        return withAxisIfPossible(
+                newState,
+                clickedDirection.getAxis(),
+                facingDirection.getAxis()
+        ).orElse(newState);
     }
 
     @Override
@@ -130,16 +139,51 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
 
     @Override
     public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        if (segmentBlock != null) {
-            world.setBlockState(hitResult.getBlockPos(), getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis()));
+        if (getSegmentBlock() != null) {
+            BlockPos pos = hitResult.getBlockPos();
+
+            world.setBlockState(
+                    hitResult.getBlockPos(),
+                    getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis())
+            );
+
+            world.playSound(
+                    player,
+                    pos,
+                    soundGroup.getPlaceSound(),
+                    player.getSoundCategory(),
+                    0.7f + (0.2f * world.getRandom().nextFloat()),
+                    0.2f + (0.4f * world.getRandom().nextFloat())
+            );
+
+            // trip sculk sensors because it's funny
+            world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(player, targetState));
+
+            return ItemActionResult.SUCCESS;
+        } else {
+            return ItemActionResult.FAIL;
         }
-        return ItemActionResult.SUCCESS;
     }
 
     @Override
     public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
         if (segmentBlock != null) {
-            serverWorld.setBlockState(targetPos, getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis()));
+            serverWorld.setBlockState(
+                    targetPos,
+                    getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis())
+            );
+
+            serverWorld.playSound(
+                    null,
+                    targetPos,
+                    soundGroup.getPlaceSound(),
+                    SoundCategory.BLOCKS,
+                    0.7f + (0.2f * serverWorld.getRandom().nextFloat()),
+                    0.2f + (0.4f * serverWorld.getRandom().nextFloat())
+            );
+
+            // trip sculk sensors because it's funny
+            serverWorld.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(targetState));
         }
         return ItemActionResult.SUCCESS;
     }

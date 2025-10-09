@@ -135,8 +135,8 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
                 targetPos,
                 targetState.get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
                 SoundCategory.BLOCKS,
-                0.6f + (0.2f + world.getRandom().nextFloat()),
-                0.2f + (0.4f + world.getRandom().nextFloat())
+                0.6f + (0.2f * world.getRandom().nextFloat()),
+                0.2f + (0.4f * world.getRandom().nextFloat())
         );
 
         // this is a stub implementation in ClientWorld so it's fine
@@ -159,8 +159,8 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
                 targetPos,
                 targetState.get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
                 SoundCategory.BLOCKS,
-                0.6f + (0.2f + serverWorld.getRandom().nextFloat()),
-                0.2f + (0.4f + serverWorld.getRandom().nextFloat())
+                0.6f + (0.2f * serverWorld.getRandom().nextFloat()),
+                0.2f + (0.4f * serverWorld.getRandom().nextFloat())
         );
 
         // proc sculk sensors
