@@ -59,7 +59,10 @@ public abstract class ModelLoaderMixin {
         if (item.getComponents().get(KlaxonDataComponentTypes.ALT_HAND_MODEL) instanceof String suffix) {
             Identifier modelId = AdvancedItemModelHelper.getAlternateModelId(Registries.ITEM.getId(item), suffix);
 
-            JsonUnbakedModel model = (JsonUnbakedModel) getOrLoadModel(modelId.withPrefixedPath("item/"));
+            if (!(getOrLoadModel(modelId.withPrefixedPath("item/")) instanceof JsonUnbakedModel model)) {
+                return;
+            }
+
             Collection<Identifier> modelDependencies = model.getModelDependencies();
 
             ArrayList<Identifier> processedIds = new ArrayList<>();
