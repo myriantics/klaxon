@@ -103,7 +103,7 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
                 PipeMatrixUBendBlock.withAxisIfPossible(
                         newUBendState,
                         hitResult.getSide().getAxis(),
-                        player.getFacing().getAxis()
+                        player.getHorizontalFacing().getAxis()
                 ).orElse(newUBendState)
         );
 
@@ -112,8 +112,8 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
                 pos,
                 soundGroup.getPlaceSound(),
                 player.getSoundCategory(),
-                0.7f + (0.2f * world.getRandom().nextFloat()),
-                0.2f + (0.4f * world.getRandom().nextFloat())
+                0.8f + (0.2f * world.getRandom().nextFloat()),
+                0.4f + (0.4f * world.getRandom().nextFloat())
         );
 
         // trip sculk sensors because it's funny
@@ -171,8 +171,8 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
                 targetPos,
                 soundGroup.getPlaceSound(),
                 SoundCategory.BLOCKS,
-                0.7f + (0.2f * serverWorld.getRandom().nextFloat()),
-                0.2f + (0.4f * serverWorld.getRandom().nextFloat())
+                0.8f + (0.2f * serverWorld.getRandom().nextFloat()),
+                0.4f + (0.4f * serverWorld.getRandom().nextFloat())
         );
 
         // trip sculk sensors because it's funny

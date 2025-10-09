@@ -152,8 +152,8 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
                     pos,
                     soundGroup.getPlaceSound(),
                     player.getSoundCategory(),
-                    0.7f + (0.2f * world.getRandom().nextFloat()),
-                    0.2f + (0.4f * world.getRandom().nextFloat())
+                    0.8f + (0.2f * world.getRandom().nextFloat()),
+                    0.4f + (0.4f * world.getRandom().nextFloat())
             );
 
             // trip sculk sensors because it's funny
@@ -161,13 +161,13 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
 
             return ItemActionResult.SUCCESS;
         } else {
-            return ItemActionResult.FAIL;
+            return null;
         }
     }
 
     @Override
     public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
-        if (segmentBlock != null) {
+        if (getSegmentBlock() != null) {
             serverWorld.setBlockState(
                     targetPos,
                     getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis())
@@ -178,13 +178,16 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
                     targetPos,
                     soundGroup.getPlaceSound(),
                     SoundCategory.BLOCKS,
-                    0.7f + (0.2f * serverWorld.getRandom().nextFloat()),
-                    0.2f + (0.4f * serverWorld.getRandom().nextFloat())
+                    0.8f + (0.2f * serverWorld.getRandom().nextFloat()),
+                    0.4f + (0.4f * serverWorld.getRandom().nextFloat())
             );
 
             // trip sculk sensors because it's funny
             serverWorld.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(targetState));
+
+            return ItemActionResult.SUCCESS;
+        } else {
+            return null;
         }
-        return ItemActionResult.SUCCESS;
     }
 }

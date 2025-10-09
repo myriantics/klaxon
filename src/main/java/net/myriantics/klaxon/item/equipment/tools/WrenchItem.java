@@ -111,7 +111,8 @@ public class WrenchItem extends MiningToolItem {
     }
 
     public static boolean canRotate(BlockState targetState) {
-        return targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)
+        return targetState.getBlock() instanceof Wrenchable
+                && targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)
                 && !targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST);
     }
 

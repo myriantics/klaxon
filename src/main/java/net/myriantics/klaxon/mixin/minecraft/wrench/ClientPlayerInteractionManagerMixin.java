@@ -10,6 +10,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -35,7 +36,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
 
         // if we're in adventure and we can't do anything to the block, don't override anything
         if (!PermissionsHelper.canModifyWorld(player) && !usedStack.canPlaceOn(targetPos)) return original;
-        return original || (usedStack.getItem() instanceof WrenchItem && WrenchItem.canRotate(targetState)) && WrenchItem.getRotatedState(player.clientWorld, hitResult.getBlockPos(), targetState, hitResult.getSide(), player.getHorizontalFacing(), hitResult.getPos()).isPresent();
+        return original || (usedStack.getItem() instanceof WrenchItem && !WrenchItem.canRotate(targetState)) && WrenchItem.getRotatedState(player.clientWorld, hitResult.getBlockPos(), targetState, hitResult.getSide(), player.getHorizontalFacing(), hitResult.getPos()).isPresent();
     }
 
     @WrapOperation(
@@ -45,7 +46,9 @@ public abstract class ClientPlayerInteractionManagerMixin {
     public ItemActionResult klaxon$runWrenchableFunctionalities(BlockState instance, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult, Operation<ItemActionResult> original) {
         if (instance.getBlock() instanceof Wrenchable wrenchable && (stack.isIn(KlaxonConventionalItemTags.WRENCHES) || stack.isIn(KlaxonConventionalItemTags.WRENCH))) {
             ItemActionResult result = wrenchable.onWrenched(instance, stack, world, player, hand, hitResult);
-            if (result != null && result.isAccepted()) return result;
+            if (result != null && !result.toActionResult().equals(ActionResult.PASS)) {
+                return result;
+            }
         }
 
         return original.call(instance, stack, world, player, hand, hitResult);
