@@ -10,6 +10,7 @@ import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.WorldEvents;
 import net.myriantics.klaxon.api.Wrenchable;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -17,12 +18,17 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import java.util.Optional;
 
 public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
+    private boolean shouldPlayEffects = true;
+
     @Override
     protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
         ServerWorld serverWorld = pointer.world();
         Direction facing = pointer.state().get(DispenserBlock.FACING);
         BlockPos targetPos = pointer.pos().offset(facing);
         BlockState targetState = serverWorld.getBlockState(targetPos);
+
+        setSuccess(false);
+        shouldPlayEffects = true;
 
         // run custom behavior if present
         if (targetState.getBlock() instanceof Wrenchable wrenchable) {
@@ -45,10 +51,25 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
                     serverWorld.updateNeighbor(targetPos, pointer.state().getBlock(), pointer.pos());
                     serverWorld.updateComparators(pointer.pos(), pointer.state().getBlock());
                     setSuccess(true);
+                    shouldPlayEffects = false;
                 }
             }
         }
 
         return stack;
+    }
+
+    @Override
+    protected void playSound(BlockPointer pointer) {
+        if (this.shouldPlayEffects) {
+            super.playSound(pointer);
+        }
+    }
+
+    @Override
+    protected void spawnParticles(BlockPointer pointer, Direction side) {
+        if (this.shouldPlayEffects) {
+            super.spawnParticles(pointer, side);
+        }
     }
 }
