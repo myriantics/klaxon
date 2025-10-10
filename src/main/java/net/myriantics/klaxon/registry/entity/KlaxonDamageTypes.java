@@ -24,6 +24,8 @@ public abstract class KlaxonDamageTypes {
             createDamageType("flint_and_steeeling");
     public static final RegistryKey<DamageType> WRENCH_OVERTUNING =
             createDamageType("wrench_overtuning");
+    public static final RegistryKey<DamageType> BLUDGEONING =
+            createDamageType("bludgeoning");
 
     // to be added - will be used with Coring Drill
     public static final RegistryKey<DamageType> MINCING =

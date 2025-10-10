@@ -43,6 +43,11 @@ public class KlaxonDamageTypeProviderImpl extends KlaxonDamageTypeProvider {
                 DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER,
                 0.4f
         ));
+        accept(damageTypeMap, KlaxonDamageTypes.BLUDGEONING, new DamageType(
+                KlaxonDamageTypes.BLUDGEONING.getValue().getPath(),
+                DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER,
+                0.5f
+        ));
         return damageTypeMap;
     }
 

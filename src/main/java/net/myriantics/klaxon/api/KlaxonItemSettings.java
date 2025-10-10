@@ -4,11 +4,14 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Unit;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
+import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 import java.util.Map;
 
@@ -49,6 +52,11 @@ public class KlaxonItemSettings {
 
     public KlaxonItemSettings attributeModifiers(AttributeModifiersComponent attributeModifiers) {
         this.settings.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributeModifiers);
+        return this;
+    }
+
+    public KlaxonItemSettings damageTypeOverride(RegistryKey<DamageType> damageTypeKey) {
+        this.settings.component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(damageTypeKey));
         return this;
     }
 
