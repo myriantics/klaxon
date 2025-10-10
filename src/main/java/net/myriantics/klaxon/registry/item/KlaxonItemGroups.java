@@ -47,6 +47,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.CRUDE_NETHER_REACTOR_CORE);
                 entries.add(KlaxonItems.STEEL_CASING);
                 entries.add(KlaxonItems.CRUDE_STEEL_CASING);
+                entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
             })).build();
 
     public static final ItemGroup KLAXON_MATERIALS = FabricItemGroup.builder()
@@ -158,6 +159,16 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
                 entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
                 entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+
+                // pipe matrices
+                entries.add(KlaxonItems.COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WEATHERED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.OXIDIZED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_PIPE_MATRIX);
 
                 // casings
                 entries.add(KlaxonItems.STEEL_CASING);

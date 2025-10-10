@@ -198,6 +198,19 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingRecipeCategory.REDSTONE,
                 "steel_casing"
         );
+
+        addShapedCraftingRecipe(Map.of(
+                'R', Ingredient.ofItems(KlaxonItems.RUBBER_SHEET),
+                'C', Ingredient.fromTag(KlaxonConventionalItemTags.COPPER_PLATES)),
+                new String[] {
+                        "CCC",
+                        "CRC",
+                        "CCC"
+                },
+                new ItemStack(KlaxonItems.COPPER_PIPE_MATRIX, 4),
+                CraftingRecipeCategory.REDSTONE,
+                "pipe_matrix"
+        );
     }
 
     private void buildDecorationCraftingRecipes() {
