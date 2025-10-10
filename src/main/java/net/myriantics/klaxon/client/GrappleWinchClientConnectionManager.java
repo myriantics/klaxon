@@ -13,6 +13,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonColors;
 import net.myriantics.klaxon.registry.render.KlaxonRenderLayers;
@@ -260,7 +261,7 @@ public enum GrappleWinchClientConnectionManager {
         boolean isUsing = player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
         boolean isSneaking = player.isInSneakingPose();
         ItemStack itemStack = player.getMainHandStack();
-        if (!itemStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
+        if (!(itemStack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(itemStack))) {
             handInverter = -handInverter;
         }
 

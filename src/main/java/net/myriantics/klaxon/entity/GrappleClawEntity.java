@@ -738,8 +738,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         if (isWinchCableAttached && getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
             ItemStack itemStack = serverPlayer.getMainHandStack();
             ItemStack itemStack2 = serverPlayer.getOffHandStack();
-            boolean bl = itemStack.isOf(KlaxonItems.GRAPPLE_WINCH);
-            boolean bl2 = itemStack2.isOf(KlaxonItems.GRAPPLE_WINCH);
+            boolean bl = itemStack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(itemStack);
+            boolean bl2 = itemStack2.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(itemStack2);
 
             boolean cableTooLong = this.getPos().distanceTo(serverPlayer.getEyePos()) > serverPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH) * 1.5f;
 

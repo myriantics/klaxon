@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
@@ -21,7 +22,9 @@ import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrap
 public abstract class KlaxonItemModelPredicates {
 
     public static final Identifier GRAPPLE_WINCH_CABLE = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH, ((stack, world, entity, seed) -> {
-        if (entity instanceof PlayerEntity player && (player.getMainHandStack().equals(stack) || !player.getMainHandStack().isOf(KlaxonItems.GRAPPLE_WINCH))) {
+        boolean supportsCable = stack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(stack);
+
+        if (entity instanceof PlayerEntity player && supportsCable) {
             AttributeContainer attributes = player.getAttributes();
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
 

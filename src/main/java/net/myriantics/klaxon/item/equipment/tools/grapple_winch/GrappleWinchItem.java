@@ -159,14 +159,20 @@ public class GrappleWinchItem extends RangedWeaponItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) user;
         ItemStack winchStack = user.getStackInHand(hand);
+        ItemStack offhandStack = user.getStackInHand(hand.equals(Hand.OFF_HAND) ? Hand.MAIN_HAND : Hand.OFF_HAND);
+        boolean supportsCable = this.canSupportCable(winchStack);
+        boolean offhandSupportsCable = offhandStack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(offhandStack);
+        boolean activeConnection = access.klaxon$hasActiveConnection();
         ItemStack ammoStack = user.getProjectileType(winchStack);
         ChargedProjectilesComponent chargedProjectilesComponent = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
+        boolean isLoaded = chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty();
 
         // proceed if connection is active or winch has a grapple claw stored
-        if (access.klaxon$hasActiveConnection() || (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty())) {
+        // make sure offhand cannot support cable before trying to charge back
+        if ((activeConnection && supportsCable) || (isLoaded && !offhandSupportsCable)) {
             user.setCurrentHand(hand);
             return TypedActionResult.consume(winchStack);
-        } else if (!ammoStack.isEmpty()) {
+        } else if (!isLoaded && !ammoStack.isEmpty()) {
             loadIfPossible(winchStack, ammoStack, user);
             world.playSound(
                     user,
@@ -296,6 +302,10 @@ public class GrappleWinchItem extends RangedWeaponItem {
         }
 
         return false;
+    }
+
+    public boolean canSupportCable(ItemStack winchStack) {
+        return winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty();
     }
 
     @Override
