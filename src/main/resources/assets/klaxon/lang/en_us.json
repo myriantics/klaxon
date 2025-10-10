@@ -277,6 +277,12 @@
   "advancements.klaxon.stage_one.hammer_walljump_minecart.description": "Propel a Minecart using the Steel Hammer",
   "advancements.klaxon.stage_one.obtain_any_rubber_glob.title": "Biggering",
   "advancements.klaxon.stage_one.obtain_any_rubber_glob.description": "Obtain Rubber by blast processing a valid log",
+  "advancements.klaxon.stage_one.obtain_grapple_winch.title": "Boring Mining Tool",
+  "advancements.klaxon.stage_one.obtain_grapple_winch.description": "Obtain the Grapple Winch",
+  "advancements.klaxon.stage_one.grapple_winch_de_anchor_grapple_claw.title": "Immovable Object",
+  "advancements.klaxon.stage_one.grapple_winch_de_anchor_grapple_claw.description": "De-anchor a Grapple Claw by retracting it while wearing Heavy Equipment",
+  "advancements.klaxon.stage_one.grapple_winch_intentionally_detach_claw.title": "",
+  "advancements.klaxon.stage_one.grapple_winch_intentionally_detach_claw.description": "Disconnect from an anchored Grapple Claw midair to maintain speed",
   "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.title": "Smash And Grab",
   "advancements.klaxon.stage_one.grapple_winch_vein_mine_glowstone.description": "Veinmine Glowstone on your Grapple Claw's return journey"
 }

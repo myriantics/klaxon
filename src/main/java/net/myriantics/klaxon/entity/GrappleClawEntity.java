@@ -82,11 +82,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         super(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW, x, y, z, world, stack, shotFrom);
     }
 
+    public GrappleClawEntity(World world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
+        super(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW, owner, world, stack, shotFrom);
+    }
+
     public GrappleClawEntity(World world, PlayerEntity player, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
         super(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW, x, y, z, world, stack, shotFrom);
-        if (player instanceof ServerPlayerEntity serverPlayer) {
-            attachCable(serverPlayer);
-        }
     }
 
     @Override
@@ -119,7 +120,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     public void kill() {
-        this.dropStack(getItemStack());
+        if (!this.pickupType.equals(PickupPermission.CREATIVE_ONLY)) {
+            this.dropStack(getItemStack());
+        }
         super.kill();
     }
 
@@ -134,7 +137,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
 
         // conduct electrical damage to the attached player if present because get trolled haha
-        if (source.isIn(KlaxonDamageTypeTags.ELECTRICAL) && attachedPlayer != null) {
+        if (source.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE) && attachedPlayer != null) {
             attachedPlayer.damage(source, amount);
         }
 
@@ -159,8 +162,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 // after that, make sure it's either not a player, a disconnected player, or the currently attached player
                 // ugly condition i know haha
                 if (attacker instanceof LivingEntity && (!(attacker instanceof PlayerEntity) || (!((PlayerEntityGrappleAccess) attacker).klaxon$hasActiveConnection() || attacker.equals(attachedPlayer)))) {
-                    // if loading succeeded, play indicator sound and discard.
-                    if (GrappleWinchItem.loadIfPossible(weaponStack, this.getItemStack(), (LivingEntity) attacker)) {
+                    if (this.pickupType.equals(PickupPermission.CREATIVE_ONLY)) {
+                        // if stored projectile is intangible, detach and return
+                        this.detachCable(false);
+                        return true;
+                    } else if (GrappleWinchItem.loadIfPossible(weaponStack, this.getItemStack(), (LivingEntity) attacker)) {
+                        // if loading succeeded, play indicator sound and discard.
                         world.playSound(
                                 null,
                                 this.getX(),
@@ -511,7 +518,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 ? player.getMainHandStack()
                 : player.getOffHandStack();
 
-        if ((!access.klaxon$hasActiveConnection() || isAttachedToPlayer) && GrappleWinchItem.loadIfPossible(winchStack, this.getItemStack(), player)) {
+        if ((!access.klaxon$hasActiveConnection() || isAttachedToPlayer) && !this.pickupType.equals(PickupPermission.CREATIVE_ONLY) && GrappleWinchItem.loadIfPossible(winchStack, this.getItemStack(), player)) {
 
             // this is needed so players can choose whether they want to recast grapple claw or not
             // only trigger this if pickup occurred while retracting

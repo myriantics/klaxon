@@ -6,16 +6,14 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ChargedProjectilesComponent;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.StackReference;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.RangedWeaponItem;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.screen.ScreenTexts;
@@ -33,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
@@ -45,7 +44,7 @@ import java.util.function.Predicate;
 
 public class GrappleWinchItem extends RangedWeaponItem {
 
-    static protected ItemPredicate PROJECTILES = ItemPredicate.Builder.create().tag(KlaxonItemTags.GRAPPLE_CLAWS).build();
+    protected static final ItemPredicate PROJECTILES = ItemPredicate.Builder.create().tag(KlaxonItemTags.GRAPPLE_CLAWS).build();
 
     private static final Identifier BASE_WINCH_CABLE_LENGTH = KlaxonCommon.locate("base_winch_cable_length");
 
@@ -85,6 +84,18 @@ public class GrappleWinchItem extends RangedWeaponItem {
     @Override
     protected void shoot(LivingEntity shooter, ProjectileEntity projectile, int index, float speed, float divergence, float yaw, @Nullable LivingEntity target) {
         projectile.setVelocity(shooter, shooter.getPitch(), shooter.getYaw() + yaw, 0.0F, speed, divergence);
+
+        // if this is the first projectile shot, attach the server player's cable to it.
+        if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrappleClawEntity grappleClaw) {
+            grappleClaw.attachCable(serverPlayer);
+        }
+    }
+
+    @Override
+    protected ProjectileEntity createArrowEntity(World world, LivingEntity shooter, ItemStack weaponStack, ItemStack projectileStack, boolean critical) {
+        GrappleClawItem clawItem = projectileStack.getItem() instanceof GrappleClawItem item ? item : (GrappleClawItem) KlaxonItems.STEEL_GRAPPLE_CLAW;
+
+        return clawItem.createGrappleClaw(world, projectileStack, shooter, weaponStack);
     }
 
     @Override
@@ -103,11 +114,18 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
                         if (world instanceof ServerWorld serverWorld) {
                             // shoot a grapple claw if we have one loaded
-                            Vec3d eyePos = playerEntity.getEyePos();
-                            GrappleClawEntity grappleClaw = new GrappleClawEntity(serverWorld, playerEntity, eyePos.x, eyePos.y, eyePos.z, chargedProjectilesComponent.getProjectiles().get(0), winchStack);
-                            grappleClaw.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
-                            serverWorld.spawnEntity(grappleClaw);
-                            grappleClaw.attachCable((ServerPlayerEntity) playerEntity);
+                            // grapple claw is attached in the shoot() method
+                            shootAll(
+                                    serverWorld,
+                                    playerEntity,
+                                    playerEntity.getActiveHand(),
+                                    winchStack,
+                                    chargedProjectilesComponent.getProjectiles(),
+                                    2.5f,
+                                    1.0f,
+                                    true,
+                                    null
+                            );
                         }
 
                         // play sound
@@ -196,11 +214,17 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
             List<ItemStack> projectiles = stack.get(DataComponentTypes.CHARGED_PROJECTILES) instanceof ChargedProjectilesComponent component ? component.getProjectiles() : List.of();
 
-            if (!projectiles.isEmpty() && otherStack.isEmpty()) {
+            if (!projectiles.isEmpty()) {
                 if (!world.isClient()) {
-                    // yoink stack from front of list and set cursor stack to it
                     ItemStack firstProjectileStack = projectiles.getFirst();
-                    cursorStackReference.set(firstProjectileStack);
+
+                    if (!firstProjectileStack.contains(DataComponentTypes.INTANGIBLE_PROJECTILE)) {
+                        if (ItemStack.areItemsAndComponentsEqual(firstProjectileStack, otherStack)) {
+                            otherStack.increment(firstProjectileStack.getCount());
+                        } else if (otherStack.isEmpty()) {
+                            cursorStackReference.set(firstProjectileStack);
+                        }
+                    }
 
                     // replace projectiles component with a new one that has everything but the first element
                     List<ItemStack> newProjectiles = projectiles.subList(1, projectiles.size());
@@ -224,24 +248,24 @@ public class GrappleWinchItem extends RangedWeaponItem {
                 );
 
                 return true;
-            } else if (projectiles.isEmpty() && PROJECTILES.test(otherStack)) {
-                if (loadIfPossible(stack, otherStack, player)) {
-                    world.playSound(
-                            player,
-                            player.getX(),
-                            player.getEyeY(),
-                            player.getZ(),
-                            KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
-                            SoundCategory.PLAYERS,
-                            0.7f + world.getRandom().nextFloat() * 0.3f,
-                            0.7f + world.getRandom().nextFloat() * 0.3f
-                    );
-                    world.emitGameEvent(
-                            GameEvent.ENTITY_ACTION,
-                            player.getEyePos(),
-                            GameEvent.Emitter.of(player)
-                    );
-                }
+            } else if (PROJECTILES.test(otherStack)) {
+                stack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(otherStack.split(1)));
+
+                world.playSound(
+                        player,
+                        player.getX(),
+                        player.getEyeY(),
+                        player.getZ(),
+                        KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
+                        SoundCategory.PLAYERS,
+                        0.7f + world.getRandom().nextFloat() * 0.3f,
+                        0.7f + world.getRandom().nextFloat() * 0.3f
+                );
+                world.emitGameEvent(
+                        GameEvent.ENTITY_ACTION,
+                        player.getEyePos(),
+                        GameEvent.Emitter.of(player)
+                );
                 return true;
             }
         }
@@ -250,17 +274,24 @@ public class GrappleWinchItem extends RangedWeaponItem {
     }
 
     public static boolean loadIfPossible(ItemStack winchStack, ItemStack loadingStack, @Nullable LivingEntity entity) {
+        // make sure we're actually trying to load into a grapple winch
         if (!winchStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
             return false;
         }
 
         @Nullable ChargedProjectilesComponent originalProjectiles = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
         if ((originalProjectiles == null || originalProjectiles.isEmpty()) && PROJECTILES.test(loadingStack)) {
-            if (entity == null || !entity.getWorld().isClient()) {
-                List<ItemStack> list = load(winchStack, loadingStack, entity);
-                // load grapple winch if we don't have a grapple claw loaded
-                winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
+            List<ItemStack> list = load(winchStack, loadingStack, entity);
+            if (list.isEmpty()) {
+                return false;
             }
+
+            if (entity == null || !entity.getWorld().isClient()) {
+                if (!list.isEmpty()) {
+                    winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
+                }
+            }
+
             return true;
         }
 

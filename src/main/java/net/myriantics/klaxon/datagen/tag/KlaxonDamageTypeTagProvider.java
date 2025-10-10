@@ -25,6 +25,9 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
         getOrCreateTagBuilder(DamageTypeTags.NO_KNOCKBACK)
                 .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING);
 
+        getOrCreateTagBuilder(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)
+                .forceAddTag(KlaxonDamageTypeTags.ELECTRICAL);
+
         getOrCreateTagBuilder(KlaxonDamageTypeTags.ELECTRICAL)
                 .add(DamageTypes.LIGHTNING_BOLT);
     }
