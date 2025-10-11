@@ -32,4 +32,15 @@ public class OxidizablePipeMatrixUBendBlock extends PipeMatrixUBendBlock impleme
 
         return degraded;
     }
+
+    @Override
+    protected boolean hasRandomTicks(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        this.tickDegradation(state, world, pos, random);
+        super.randomTick(state, world, pos, random);
+    }
 }
