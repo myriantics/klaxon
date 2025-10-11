@@ -1,14 +1,9 @@
 package net.myriantics.klaxon.entity;
 
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.session.report.ReporterEnvironment;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -33,7 +28,6 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -51,7 +45,6 @@ import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
-import net.myriantics.klaxon.util.BoundingBoxHelper;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchNetworkUtil;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
@@ -71,6 +64,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     private boolean isWinchCableAttached = false;
     private int ticksSinceDamaged = 0;
 
+    private Entity hookedEntity = null;
     private PlayerEntity attachedPlayerEntity = null;
     private UUID attachedPlayerEntityUUID = null;
 
@@ -320,8 +314,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             setVelocity(Vec3d.ZERO);
         } else {
             // we don't want to damage the retracting player haha
-            super.onEntityHit(entityHitResult);
+
         }
+    }
+
+    private void updateHookedEntityId(@Nullable Entity entity) {
+        this.hookedEntity = entity;
     }
 
     @Override
@@ -335,17 +333,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
         Vec3d velocity = this.getVelocity().multiply(0.85);
 
-        boolean blockBrokenSuccess = false;
-
-        // try to veinmine before breaking the block :)
-        if (isWinchCableAttached && owner instanceof PlayerEntityGrappleAccess access && access.klaxon$isRetracting()) {
-            blockBrokenSuccess = veinmineBlocksIfValid(world, hitState, hitPos, owner);
-        }
-
-        // if we didn't veinmine the block, try to break it
-        if (!blockBrokenSuccess) {
-            blockBrokenSuccess = breakBlockIfValid(world, hitState, hitPos, owner);
-        }
+        boolean blockBrokenSuccess = tryBreakingBlocks(world, hitState, hitPos);
 
         // break block if we can
         // anchor grapple claw and run super method if block break did not succeed
@@ -377,45 +365,53 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
+    /**
+     * Called while checking for block collision, for each currently colliding block.
+     *
+     * @param world
+     * @param occupiedState
+     * @param pos
+     */
+    public void onBlockPosIntersection(World world, BlockState occupiedState, BlockPos pos) {
+
+        // make sure we're neither anchored nor removed
+        if (this.isAnchored() || this.isRemoved()) {
+            return;
+        }
+
+        VoxelShape occupiedStateShape = occupiedState.getCollisionShape(world, pos);
+
+        // make sure we actually collide with the target bounding box
+        if (occupiedStateShape.isEmpty() || !this.getBoundingBox().intersects(occupiedStateShape.getBoundingBox().offset(pos))) {
+            return;
+        }
+
+        this.tryBreakingBlocks(world, occupiedState, pos);
+    }
+
+    private boolean tryBreakingBlocks(World world, BlockState occupiedState, BlockPos pos) {
+        // make sure projectiles can break blocks
+        if (!world.getGameRules().getBoolean(GameRules.PROJECTILES_CAN_BREAK_BLOCKS)) {
+            return false;
+        }
+
+        PlayerEntity attachedPlayer = this.getAttachedPlayer();
+
+        // try to veinmine before breaking the block :)
+        if (this.isWinchCableAttached && attachedPlayer != null && ((PlayerEntityGrappleAccess) attachedPlayer).klaxon$isRetracting()) {
+            return veinmineBlocksIfValid(world, occupiedState, pos, attachedPlayer);
+        } else {
+            return breakBlockIfValid(world, occupiedState, pos, this.getOwner());
+        }
+    }
+
     @Override
     public void tick() {
         // update damage reset ticker
         ticksSinceDamaged++;
 
         @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
-        @Nullable Entity owner = getOwner();
         World world = this.getWorld();
-
-        // only break blocks if we have velocity
-        if (!this.getVelocity().equals(Vec3d.ZERO) && !this.isRemoved() && !this.isAnchored()) {
-            ArrayList<BlockPos> checkedPositions = new ArrayList<>();
-
-            VoxelShape clawBoundingBox = VoxelShapes.cuboid(this.getBoundingBox());
-
-            // break blocks on all corners
-            for (Vec3d position : BoundingBoxHelper.getCorners(this.getBoundingBox())) {
-                BlockPos occupiedPos = BlockPos.ofFloored(position);
-                // so we don't check blockpos multiple times if we don't need to
-                if (checkedPositions.contains(occupiedPos)) {
-                    continue;
-                } else {
-                    checkedPositions.add(occupiedPos);
-                }
-                BlockState occupiedState = world.getBlockState(occupiedPos);
-
-                // make sure grapple claw is actually colliding with block hitbox
-                /*if (VoxelShapes.matchesAnywhere(occupiedState.getCollisionShape(world, occupiedPos), clawBoundingBox, BooleanBiFunction.AND)) {
-
-                }*/
-
-                // try to veinmine before breaking the block :)
-                if (isWinchCableAttached && attachedPlayer instanceof PlayerEntityGrappleAccess access && access.klaxon$isRetracting()) {
-                    veinmineBlocksIfValid(world, occupiedState, occupiedPos, attachedPlayer);
-                } else {
-                    breakBlockIfValid(world, occupiedState, occupiedPos, owner);
-                }
-            }
-        }
 
         if (attachedPlayer != null) {
             Vec3d attachedEyePos = attachedPlayer.getEyePos();
@@ -557,10 +553,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     private boolean veinmineBlocksIfValid(World world, BlockState originState, BlockPos originPos, @NotNull Entity owner) {
-        if (!world.getGameRules().getBoolean(GameRules.PROJECTILES_CAN_BREAK_BLOCKS)) {
-            return false;
-        }
-
         int radius = world.getGameRules().getInt(KlaxonGameRules.GRAPPLE_CLAW_VEINMINE_RADIUS);
 
         // don't veinmine anything if the source block is not veinmineable
@@ -647,9 +639,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
      * @return - true if succeeded in breaking, false if not
      */
     private boolean breakBlockIfValid(World world, BlockState targetState, BlockPos targetPos, @Nullable Entity owner) {
-        if (!world.getGameRules().getBoolean(GameRules.PROJECTILES_CAN_BREAK_BLOCKS)) {
-            return false;
-        }
 
         if (this.canBreakBlock(world, targetState, targetPos)) {
 
