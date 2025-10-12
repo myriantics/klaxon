@@ -1,0 +1,26 @@
+{
+  "parent": "klaxon:stage_one/obtain_grapple_winch",
+  "criteria": {
+    "grapple_winch_intentionally_disconnect_cable": {
+      "trigger": "klaxon:intentionally_disconnect_grapple_winch_cable"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_intentionally_disconnect_cable.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_wire"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_intentionally_disconnect_cable.title"
+    }
+  },
+  "requirements": [
+    [
+      "grapple_winch_intentionally_disconnect_cable"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

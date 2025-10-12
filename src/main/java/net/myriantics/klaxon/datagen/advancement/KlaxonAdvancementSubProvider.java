@@ -2,6 +2,7 @@ package net.myriantics.klaxon.datagen.advancement;
 
 import net.minecraft.advancement.*;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -24,8 +25,20 @@ public abstract class KlaxonAdvancementSubProvider {
         return addTask(parent, name, display, false, criterion, null);
     }
 
+    protected AdvancementEntry addTask(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+        return addTask(parent, name, display, false, criterion, null);
+    }
+
     protected AdvancementEntry addGoal(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
         return addGoal(parent, name, display, false, criterion, null);
+    }
+
+    protected AdvancementEntry addGoal(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+        return addGoal(parent, name, display, false, criterion, null);
+    }
+
+    protected AdvancementEntry addChallenge(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+        return addChallenge(parent, name, display, false, criterion, null);
     }
 
     protected AdvancementEntry addChallenge(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
@@ -36,8 +49,20 @@ public abstract class KlaxonAdvancementSubProvider {
         return addTask(parent, name, display, true, criterion, null);
     }
 
+    protected AdvancementEntry addHiddenTask(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+        return addTask(parent, name, display, true, criterion, null);
+    }
+
     protected AdvancementEntry addHiddenGoal(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
         return addGoal(parent, name, display, true, criterion, null);
+    }
+
+    protected AdvancementEntry addHiddenGoal(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+        return addGoal(parent, name, display, true, criterion, null);
+    }
+
+    protected AdvancementEntry addHiddenChallenge(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+        return addChallenge(parent, name, display, true, criterion, null);
     }
 
     protected AdvancementEntry addHiddenChallenge(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
@@ -48,7 +73,15 @@ public abstract class KlaxonAdvancementSubProvider {
         return addAdvancement(parent, name, display, AdvancementFrame.TASK, hidden, criterion, rewards);
     }
 
+    protected AdvancementEntry addTask(AdvancementEntry parent, String name, ItemStack display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementFrame.TASK, hidden, criterion, rewards);
+    }
+
     protected AdvancementEntry addGoal(AdvancementEntry parent, String name, ItemConvertible display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementFrame.GOAL, hidden, criterion, rewards);
+    }
+
+    protected AdvancementEntry addGoal(AdvancementEntry parent, String name, ItemStack display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
         return addAdvancement(parent, name, display, AdvancementFrame.GOAL, hidden, criterion, rewards);
     }
 
@@ -56,7 +89,16 @@ public abstract class KlaxonAdvancementSubProvider {
         return addAdvancement(parent, name, display, AdvancementFrame.CHALLENGE, hidden, criterion, rewards);
     }
 
+    protected AdvancementEntry addChallenge(AdvancementEntry parent, String name, ItemStack display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementFrame.CHALLENGE, hidden, criterion, rewards);
+    }
+
+
     protected AdvancementEntry addRootAdvancement(ItemConvertible display, AdvancementFrame frame, AdvancementCriterion<?> criterion) {
+        return addAdvancement(null, "root", KlaxonCommon.locate("textures/gui/advancements/backgrounds/" + path + ".png"), display, frame, false, false, false, criterion, null);
+    }
+
+    protected AdvancementEntry addRootAdvancement(ItemStack display, AdvancementFrame frame, AdvancementCriterion<?> criterion) {
         return addAdvancement(null, "root", KlaxonCommon.locate("textures/gui/advancements/backgrounds/" + path + ".png"), display, frame, false, false, false, criterion, null);
     }
 
@@ -64,7 +106,15 @@ public abstract class KlaxonAdvancementSubProvider {
         return addAdvancement(parent, name, null, display, frame, true, true, hidden, criterion, rewards);
     }
 
+    protected AdvancementEntry addAdvancement(@Nullable AdvancementEntry parent, String name, ItemStack display, AdvancementFrame frame, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, null, display, frame, true, true, hidden, criterion, rewards);
+    }
+
     protected AdvancementEntry addAdvancement(@Nullable AdvancementEntry parent, String name, Identifier backgroundId, ItemConvertible display, AdvancementFrame frame, boolean showToast, boolean showToChat, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return this.addAdvancement(parent, name, backgroundId, new ItemStack(display), frame, showToast, showToChat, hidden, criterion, rewards);
+    }
+
+    protected AdvancementEntry addAdvancement(@Nullable AdvancementEntry parent, String name, Identifier backgroundId, ItemStack display, AdvancementFrame frame, boolean showToast, boolean showToChat, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
         Advancement.Builder builder = Advancement.Builder.create();
         if (parent != null) {
             builder.parent(parent);

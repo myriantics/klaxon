@@ -441,6 +441,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                         if (this.inGround && !world.isClient()) {
                             this.inGround = false;
+                            KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) attachedPlayer);
                         }
 
                         Vec3d vec = pulling.multiply(4f/20);
@@ -732,7 +733,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             boolean cableTooLong = this.getPos().distanceTo(serverPlayer.getEyePos()) > serverPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH) * 1.5f;
 
-            if (serverPlayer.isRemoved() || serverPlayer.isSpectator() || !serverPlayer.isAlive() || !(bl || bl2) || !serverPlayer.getWorld().equals(this.getWorld()) || cableTooLong) {
+            if (!bl && !bl2) {
+                this.detachCable(false);
+                KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(serverPlayer);
+            } else if (serverPlayer.isRemoved() || serverPlayer.isSpectator() || !serverPlayer.isAlive() || !serverPlayer.getWorld().equals(this.getWorld()) || cableTooLong) {
                 this.detachCable(false);
             }
         }

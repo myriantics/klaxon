@@ -28,4 +28,10 @@ public abstract class KlaxonAdvancementTriggers {
     public static void triggerGrappleWinchVeinMine(ServerPlayerEntity serverPlayer, BlockState veinMinedState) {
         KlaxonAdvancementCriteria.GRAPPLE_WINCH_VEIN_MINE_CRITERION.trigger(serverPlayer, veinMinedState);
     }
+    public static void triggerGrappleWinchIntentionallyDisconnectCable(ServerPlayerEntity serverPlayer) {
+        KlaxonAdvancementCriteria.INTENTIONALLY_DISCONNECT_GRAPPLE_WINCH_CABLE_CRITERION.trigger(serverPlayer);
+    }
+    public static void triggerGrappleWinchDeAnchorGrappleClaw(ServerPlayerEntity serverPlayer) {
+        KlaxonAdvancementCriteria.DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION.trigger(serverPlayer);
+    }
 }
