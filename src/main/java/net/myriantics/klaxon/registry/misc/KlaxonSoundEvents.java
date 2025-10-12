@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry.misc;
 
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -25,6 +26,8 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_DESTROY = register("entity.grapple_claw.destroy", SoundEvents.ENTITY_ITEM_BREAK);
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_DETACH = register("entity.grapple_claw.detach", SoundEvents.ENTITY_ITEM_BREAK);
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT = register("entity.grapple_claw.rebound_at_limit", SoundEvents.ITEM_TRIDENT_RETURN);
+    // nether reaction
+    public static final RegistryEntry<SoundEvent> NETHER_REACTION_EXPLOSION = register("block.nether_reactor_core.explosion", SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE);
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");
@@ -32,6 +35,11 @@ public abstract class KlaxonSoundEvents {
 
     // this doesnt actually register anything in order to prevent a crash when our custom sound files are missing
     private static SoundEvent register(String name, SoundEvent soundEvent) {
+        return soundEvent;
+        // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), soundEvent);
+    }
+
+    private static RegistryEntry<SoundEvent> register(String name, RegistryEntry<SoundEvent> soundEvent) {
         return soundEvent;
         // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), soundEvent);
     }

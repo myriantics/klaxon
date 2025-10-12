@@ -5,11 +5,14 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.particle.ExplosionLargeParticle;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.block.entity.HangingSignBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.SignBlockEntityRenderer;
 import net.myriantics.klaxon.client.particle.HallnoxDripParticle;
+import net.myriantics.klaxon.client.particle.NetherReactionExplosionEmitterParticle;
+import net.myriantics.klaxon.client.particle.NetherReactionExplosionLargeParticle;
 import net.myriantics.klaxon.entity.GrappleClawEntityRenderer;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonEventListeners;
@@ -56,6 +59,7 @@ public class KlaxonClient implements ClientModInitializer {
 
         // particles
         ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.HALLNOX_POD_DRIP, HallnoxDripParticle.HallnoxDripParticleFactory::new);
-
+        ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.NETHER_REACTION_EXPLOSION, NetherReactionExplosionLargeParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.NETHER_REACTION_EXPLOSION_EMITTER, new NetherReactionExplosionEmitterParticle.Factory());
     }
 }

@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.mixin.minecraft.nether_reaction;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
@@ -18,6 +19,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -33,6 +35,8 @@ import net.minecraft.world.explosion.ExplosionBehavior;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeLogic;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockEntityTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.spongepowered.asm.mixin.*;
@@ -51,6 +55,21 @@ public abstract class ExplosionMixin {
     @Shadow @Final private double x;
     @Shadow @Final private double y;
     @Shadow @Final private double z;
+
+    @Mutable
+    @Shadow
+    @Final
+    private ParticleEffect particle;
+
+    @Mutable
+    @Shadow
+    @Final
+    private RegistryEntry<SoundEvent> soundEvent;
+
+    @Mutable
+    @Shadow
+    @Final
+    private ParticleEffect emitterParticle;
     @Unique
     private boolean klaxon$isNetherReactionExplosion = false;
 
@@ -69,6 +88,10 @@ public abstract class ExplosionMixin {
             for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of(new Vec3d(x, y, z), 24, 24, 24))) {
                 KlaxonAdvancementTriggers.triggerBlockActivation(serverPlayerEntity, explosionOriginBlockState);
             }
+
+            this.particle = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION;
+            this.emitterParticle = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION_EMITTER;
+            this.soundEvent = KlaxonSoundEvents.NETHER_REACTION_EXPLOSION;
         }
     }
 
@@ -84,6 +107,13 @@ public abstract class ExplosionMixin {
 
         // if the target state is anything but the origin conversion catalyst, return the original value.
         return original.call(instance, explosion, world, targetPos, targetState, fluidState);
+    }
+
+    @WrapMethod(
+            method = "affectWorld"
+    )
+    private void klaxon$alwaysEnableParticlesForNetherReactionExplosions(boolean particles, Operation<Void> original) {
+        original.call(particles);
     }
 
     @WrapOperation(

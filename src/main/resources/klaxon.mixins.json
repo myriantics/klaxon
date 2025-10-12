@@ -33,8 +33,8 @@
     "minecraft.grapple_winch.PlayerEntityMixin",
     "minecraft.grapple_winch.ServerPlayerEntityMixin",
     "minecraft.grapple_winch.ServerPlayNetworkHandlerMixin",
-    "minecraft.grapple_winch.grapple_winch.PlayerManagerMixin",
     "minecraft.grapple_winch.grapple_claw.EntityMixin",
+    "minecraft.grapple_winch.grapple_winch.PlayerManagerMixin",
     "minecraft.hallnox_pod.FallingBlockEntityMixin",
     "minecraft.hallnox_pod.ShearsItemMixin",
     "minecraft.innate_enchantments.EnchantmentHelperMixin",
@@ -83,6 +83,7 @@
     "minecraft.item_usage_lockout.ClientPlayerEntityMixin",
     "minecraft.item_usage_lockout.MinecraftClientMixin",
     "minecraft.manual_item_application.ClientPlayerInteractionManagerMixin",
+    "minecraft.nether_reaction.ExplosionEmitterParticleMixin",
     "minecraft.rendering.RenderLayerInvoker",
     "minecraft.splashes.SplashTextResourceSupplierMixin",
     "minecraft.wrench.ClientPlayerInteractionManagerMixin"
