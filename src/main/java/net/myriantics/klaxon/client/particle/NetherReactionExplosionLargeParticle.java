@@ -9,6 +9,12 @@ import net.minecraft.particle.SimpleParticleType;
 public class NetherReactionExplosionLargeParticle extends ExplosionLargeParticle {
     protected NetherReactionExplosionLargeParticle(ClientWorld world, double x, double y, double z, double d, SpriteProvider spriteProvider) {
         super(world, x, y, z, d, spriteProvider);
+        this.setSprite(spriteProvider.getSprite(world.getRandom()));
+        this.scale((this.scale * 0.3f) + (this.scale * 0.4f * world.getRandom().nextFloat()));
+    }
+
+    @Override
+    public void setSpriteForAge(SpriteProvider spriteProvider) {
     }
 
     @Environment(EnvType.CLIENT)

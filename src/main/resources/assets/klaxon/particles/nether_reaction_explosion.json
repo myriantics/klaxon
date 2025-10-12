@@ -1,5 +1,9 @@
 {
   "textures": [
-    "klaxon:core"
+    "klaxon:nether_reaction_1",
+    "klaxon:nether_reaction_corner_0",
+    "klaxon:nether_reaction_corner_1",
+    "klaxon:nether_reaction_corner_2",
+    "klaxon:nether_reaction_corner_3"
   ]
 }
