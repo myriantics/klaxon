@@ -314,7 +314,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             setVelocity(Vec3d.ZERO);
         } else {
             // we don't want to damage the retracting player haha
-
         }
     }
 
@@ -329,39 +328,28 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         World world = getWorld();
         BlockPos hitPos = blockHitResult.getBlockPos();
         BlockState hitState = getWorld().getBlockState(hitPos);
-        Entity owner = this.getOwner();
+        PlayerEntity attachedPlayer = this.getAttachedPlayer();
 
-        Vec3d velocity = this.getVelocity().multiply(0.85);
-
-        boolean blockBrokenSuccess = tryBreakingBlocks(world, hitState, hitPos);
-
-        // break block if we can
-        // anchor grapple claw and run super method if block break did not succeed
-        if (!blockBrokenSuccess) {
-
+        if (this.tryBreakingBlocks(world, hitState, hitPos)) {
+            this.setVelocity(this.getVelocity().multiply(0.85));
+        } else {
             // if a block was broken, we don't call the super method
             super.onBlockHit(blockHitResult);
 
-            // we have to call super before this because the isAnchored() check will fail otherwise
-            if (
-                    this.isAnchored()
-                            && owner instanceof ServerPlayerEntity serverPlayer
-                            && serverPlayer instanceof PlayerEntityGrappleAccess access
-                            && access.klaxon$hasActiveConnection()
-                            && !access.klaxon$isRetracting()
-            ) {
-                serverPlayer.playSoundToPlayer(
-                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
-                        SoundCategory.PLAYERS,
-                        1.0F,
-                        1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F)
-                );
+            if (attachedPlayer != null) {
+                if (this.isWinchCableAttached) {
+                    this.playSoundAtSelfAndThroughCableIfPossible(
+                            KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
+                            1.0F,
+                            1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F)
+                    );
 
-                // needs to be here to let client know about grapple claw coords if it lands outside client render distance
-                GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
+                    // needs to be here to let client know about grapple claw coords if it lands outside client render distance
+                    if (attachedPlayer instanceof ServerPlayerEntity serverPlayer) {
+                        GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
+                    }
+                }
             }
-        } else {
-            this.setVelocity(velocity);
         }
     }
 
@@ -420,56 +408,55 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) attachedPlayer;
 
+            boolean retracting = access.klaxon$isRetracting();
+
             Vec3d selfVec = new Vec3d(0,0, 0);
 
-            if (this.equals(access.klaxon$getGrappleClaw())) {
+            double currentWinchCableLength = attachedPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
 
-                double currentWinchCableLength = attachedPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
+            // limit fall distance to give players more leeway
+            if (attachedPlayer.getVelocity().getY() > -1 && attachedPlayer.fallDistance > 1.0F) {
+                attachedPlayer.fallDistance = 1.0F;
+            }
 
-                // limit fall distance to give players more leeway
-                if (attachedPlayer.getVelocity().getY() > -1 && attachedPlayer.fallDistance > 1.0F) {
-                    attachedPlayer.fallDistance = 1.0F;
+            // if the attached player is heavy and retracting, de-anchor and pop advancement
+            if (!world.isClient && this.isAnchored() && retracting && EntityWeightHelper.isHeavy(attachedPlayer)) {
+                this.inGround = false;
+                KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) attachedPlayer);
+            }
+
+            // owner being heavy overrides anchoring
+            if (!this.isAnchored()) {
+
+                // retract grapple claw if owner pulls back before landing
+                if (access.klaxon$isRetracting()) {
+                    Vec3d pulling = attachedEyePos.subtract(getPos()).normalize();
+
+                    Vec3d vec = pulling.multiply(4f/20);
+                    selfVec = selfVec.add(vec);
                 }
 
-                // owner being heavy overrides anchoring
-                if (!this.isAnchored() || EntityWeightHelper.isHeavy(attachedPlayer)) {
+                // retract grapple claw if it hits limit
+                if (ownerDistance >= currentWinchCableLength) {
+                    Vec3d vec = attachedEyePos.subtract(this.getPos()).normalize().multiply(4f/20);
+                    selfVec = selfVec.add(vec);
 
-                    // retract grapple claw if owner pulls back before landing
-                    if (access.klaxon$isRetracting()) {
-                        Vec3d pulling = attachedEyePos.subtract(getPos()).normalize();
-                        // Direction pullingTowards = Direction.getFacing(pulling);
-
-                        if (this.inGround && !world.isClient()) {
-                            this.inGround = false;
-                            KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) attachedPlayer);
-                        }
-
-                        Vec3d vec = pulling.multiply(4f/20);
-                        selfVec = selfVec.add(vec);
-                    }
-
-                    // retract grapple claw if it hits limit
-                    if (ownerDistance >= currentWinchCableLength) {
-                        Vec3d vec = attachedEyePos.subtract(this.getPos()).normalize().multiply(4f/20);
-                        selfVec = selfVec.add(vec);
-
-                        this.playSoundAtSelfAndThroughCableIfPossible(
-                                KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
-                                0.7f + world.getRandom().nextFloat() * 0.3f,
-                                0.7f + world.getRandom().nextFloat() * 0.3f
-                        );
-                        world.emitGameEvent(
-                                GameEvent.ENTITY_ACTION,
-                                this.getEyePos(),
-                                GameEvent.Emitter.of(attachedPlayer)
-                        );
-                    }
+                    this.playSoundAtSelfAndThroughCableIfPossible(
+                            KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
+                            1f + world.getRandom().nextFloat() * 0.3f,
+                            0.8f + world.getRandom().nextFloat() * 0.2f
+                    );
+                    world.emitGameEvent(
+                            GameEvent.ENTITY_ACTION,
+                            this.getEyePos(),
+                            GameEvent.Emitter.of(attachedPlayer)
+                    );
                 }
+            }
 
-                // commit the total velocity edits
-                if (!getWorld().isClient()) {
-                    this.addVelocity(selfVec);
-                }
+            // commit the total velocity edits
+            if (!getWorld().isClient()) {
+                this.addVelocity(selfVec);
             }
         }
 
@@ -782,29 +769,24 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
         World world = this.getWorld();
 
+        if (attachedPlayer != null) {
+            attachedPlayer.playSound(
+                    soundEvent,
+                    volume,
+                    pitch
+            );
+        }
+
         world.playSound(
-                null,
-                attachedPlayer.getX(),
-                attachedPlayer.getY(),
-                attachedPlayer.getZ(),
+                attachedPlayer,
+                this.getX(),
+                this.getY(),
+                this.getZ(),
                 soundEvent,
                 category,
                 volume,
                 pitch
         );
-
-        if (!this.getWorld().isClient()) {
-            world.playSound(
-                    null,
-                    this.getX(),
-                    this.getY(),
-                    this.getZ(),
-                    soundEvent,
-                    category,
-                    volume,
-                    pitch
-            );
-        }
     }
 
     @Override
