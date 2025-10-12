@@ -9,6 +9,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.myriantics.klaxon.block.decor.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
+import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -310,6 +311,41 @@ public abstract class KlaxonBlockModelSubProvider {
 
     protected BlockStateModelGenerator.BlockTexturePool registerCubeAllModelTexturePool(Block baseBlock) {
         return generator.registerCubeAllModelTexturePool(baseBlock);
+    }
+
+    protected void registerNetherReactorCore(Block block) {
+        Identifier normalModelIdentifier = ModelIds.getBlockModelId(block);
+        Identifier rotatedModelIdentifier = normalModelIdentifier.withPath((path) -> path + "_rotated");
+        Identifier blockId = Registries.BLOCK.getId(block);
+
+        BlockStateVariantMap map = BlockStateVariantMap.create(NetherReactorCoreBlock.HORIZONTAL_AXIS)
+                .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, normalModelIdentifier))
+                .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.MODEL, rotatedModelIdentifier));
+
+        generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(block).coordinate(map));
+
+        Map<TextureKey, Identifier> textureMap = Map.of(
+                KlaxonTextureKeys.CASING, blockId.withPath((path) -> "block/" + path + "/casing"),
+                KlaxonTextureKeys.CORE, blockId.withPath((path) -> "block/" + path + "/core"),
+                TextureKey.PARTICLE, blockId.withPath((path) -> "block/" + path + "/casing")
+        );
+
+        generator.modelCollector.accept(
+                normalModelIdentifier,
+                () -> KlaxonModels.NORMAL_NETHER_REACTOR_CORE.createJson(
+                        normalModelIdentifier,
+                        textureMap
+                )
+        );
+        generator.modelCollector.accept(
+                rotatedModelIdentifier,
+                () -> KlaxonModels.ROTATED_NETHER_REACTOR_CORE.createJson(
+                        rotatedModelIdentifier,
+                        textureMap
+                )
+        );
+
+        generator.registerParentedItemModel(block, normalModelIdentifier);
     }
 
     protected void acceptSingletonBlockState(Block block, Identifier identifier) {

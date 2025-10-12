@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.registry.render;
 
-import net.minecraft.client.render.RenderPhase;
 import net.minecraft.data.client.Model;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.util.Identifier;
@@ -37,6 +36,13 @@ public abstract class KlaxonModels {
     );
     public static final Model PIPE_MATRIX_U_BEND_Z_POSITIVE = copyDir("z_positive", PIPE_MATRIX_U_BEND_X_POSITIVE);
     public static final Model PIPE_MATRIX_U_BEND_Z_NEGATIVE = copyDir("z_negative", PIPE_MATRIX_U_BEND_X_NEGATIVE);
+
+    public static final Model NORMAL_NETHER_REACTOR_CORE = block("nether_reactor_core/normal",
+            KlaxonTextureKeys.CASING,
+            KlaxonTextureKeys.CORE,
+            TextureKey.PARTICLE
+    );
+    public static final Model ROTATED_NETHER_REACTOR_CORE = copyDir("rotated", NORMAL_NETHER_REACTOR_CORE);
 
     public static Optional<Identifier> id(Model model) {
         return ((ModelAccessor) model).klaxon$getParent();

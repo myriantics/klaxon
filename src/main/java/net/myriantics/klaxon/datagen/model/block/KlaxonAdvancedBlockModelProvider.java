@@ -44,8 +44,8 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         registerDeepslateBlastProcessor();
 
         // nether reactors
-        acceptSingletonBlockState(KlaxonBlocks.NETHER_REACTOR_CORE, KlaxonCommon.locate("block/" + Registries.BLOCK.getId(KlaxonBlocks.NETHER_REACTOR_CORE).getPath()));
-        acceptSingletonBlockState(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, KlaxonCommon.locate("block/" + Registries.BLOCK.getId(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE).getPath()));
+        registerNetherReactorCore(KlaxonBlocks.NETHER_REACTOR_CORE);
+        registerNetherReactorCore(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
         // pipe matrices
         registerPipeMatrixUBend(KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.COPPER_PIPE_MATRIX);
