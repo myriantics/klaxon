@@ -2,12 +2,16 @@ package net.myriantics.klaxon.block.machines.nether_reactor_core;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
@@ -21,12 +25,17 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.Wrenchable;
 import org.jetbrains.annotations.Nullable;
 
-public class NetherReactorCoreBlock extends Block implements Wrenchable {
+public class NetherReactorCoreBlock extends Block implements Wrenchable, Waterloggable {
+    public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = Properties.HORIZONTAL_AXIS;
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+
     public NetherReactorCoreBlock(Settings settings) {
         super(settings);
+        this.setDefaultState(getDefaultState()
+                .with(HORIZONTAL_AXIS, Direction.Axis.X)
+                .with(WATERLOGGED, false)
+        );
     }
-
-    public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = Properties.HORIZONTAL_AXIS;
 
     @Override
     protected boolean hasComparatorOutput(BlockState state) {
@@ -49,13 +58,22 @@ public class NetherReactorCoreBlock extends Block implements Wrenchable {
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState original = super.getPlacementState(ctx);
-        return original == null ? null : original.with(HORIZONTAL_AXIS, ctx.getHorizontalPlayerFacing().getAxis());
+        return original == null
+                ? null
+                : original
+                        .with(HORIZONTAL_AXIS, ctx.getHorizontalPlayerFacing().getAxis())
+                        .with(WATERLOGGED, ctx.getWorld().getBlockState(ctx.getBlockPos()).getFluidState().isOf(Fluids.WATER.getStill()));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(HORIZONTAL_AXIS);
+        builder.add(HORIZONTAL_AXIS, WATERLOGGED);
+    }
+
+    @Override
+    protected FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override
