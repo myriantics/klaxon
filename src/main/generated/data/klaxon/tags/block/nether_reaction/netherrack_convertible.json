@@ -1,6 +1,8 @@
 {
   "values": [
     "#minecraft:terracotta",
+    "minecraft:snow_block",
+    "minecraft:powder_snow",
     "minecraft:farmland",
     "minecraft:dirt",
     "minecraft:dirt_path",

@@ -337,7 +337,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(KlaxonBlockTags.AIR_CONVERTIBLE)
-                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
+                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE)
+                .add(Blocks.SNOW);
         getOrCreateTagBuilder(KlaxonBlockTags.FIRE_CONVERTIBLE)
                 .add(Blocks.MOSS_CARPET)
                 .add(Blocks.GLOW_LICHEN)
@@ -352,6 +353,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // netherrack stuff
         getOrCreateTagBuilder(KlaxonBlockTags.NETHERRACK_CONVERTIBLE)
                 .forceAddTag(BlockTags.TERRACOTTA)
+                .add(Blocks.SNOW_BLOCK)
+                .add(Blocks.POWDER_SNOW)
                 .add(Blocks.FARMLAND)
                 .add(Blocks.DIRT)
                 .add(Blocks.DIRT_PATH)
