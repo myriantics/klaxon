@@ -153,7 +153,7 @@ public abstract class KlaxonBlockItems {
 
             // apply components
             displayStack.applyComponentsFrom(ComponentMap.builder()
-                    .add(DataComponentTypes.CUSTOM_NAME, block.getName().formatted(Formatting.RED))
+                    .add(DataComponentTypes.ITEM_NAME, block.getName().formatted(Formatting.RED))
                     .add(DataComponentTypes.LORE, new LoreComponent(
                             List.of(Text.translatable("klaxon.text.tooltip.missing_block_item")
                                     .formatted(Formatting.BOLD))
@@ -162,7 +162,12 @@ public abstract class KlaxonBlockItems {
 
             return displayStack;
         } else {
-            return new ItemStack(item);
+            ItemStack displayStack = new ItemStack(item);
+            displayStack.applyComponentsFrom(ComponentMap.builder()
+                    .add(DataComponentTypes.ITEM_NAME, block.getName())
+                    .build()
+            );
+            return displayStack;
         }
     }
 
