@@ -8,6 +8,8 @@ import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
@@ -21,18 +23,18 @@ import net.myriantics.klaxon.compat.emi.recipes.types.HammeringEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.types.WirecuttingEmiRecipe;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
-import net.myriantics.klaxon.recipe.tool_usage.types.HammeringRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.tag.klaxon.KlaxonBlockEntityTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.Random;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 // spectrum's emi plugin used as reference
 public class KlaxonEmiPlugin implements EmiPlugin {
@@ -73,11 +75,11 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private void registerRecipes(EmiRegistry registry) {
         addAll(registry, KlaxonRecipeTypes.HAMMERING, HammeringEmiRecipe::new);
         addAll(registry, KlaxonRecipeTypes.WIRECUTTING, WirecuttingEmiRecipe::new);
-        addAllConditional(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
+        addAllItemExplosionPower(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.ITEM_COOLING, ItemCoolingEmiRecipe::new);
-        addAll(registry, KlaxonRecipeTypes.NETHER_REACTION, NetherReactionEmiRecipe::new);
+        addAllConditional(registry, KlaxonRecipeTypes.NETHER_REACTION, NetherReactionEmiRecipe::new, (recipeEntry -> !KlaxonBlockItems.getBlockDisplayStack(recipeEntry.value().getOutputBlock()).getItem().equals(Items.BARRIER)));
         addAll(registry, KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION, (entry) -> {
             ManualItemApplicationRecipe recipe = entry.value();
             return EmiWorldInteractionRecipe.builder()
@@ -99,7 +101,16 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         }
     }
 
-    public <C extends Recipe<V>, T extends RecipeEntry<C>, V extends RecipeInput> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
+    public <C extends Recipe<V>, T extends RecipeEntry<C>, V extends RecipeInput> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor, Predicate<RecipeEntry<C>> predicate) {
+        for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
+            if (predicate.test(recipeEntry)) {
+                registry.addRecipe(constructor.apply(recipeEntry));
+            }
+        }
+    }
+
+
+    public <C extends Recipe<V>, T extends RecipeEntry<C>, V extends RecipeInput> void addAllItemExplosionPower(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
         for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
 
             // dont show hidden recipes
