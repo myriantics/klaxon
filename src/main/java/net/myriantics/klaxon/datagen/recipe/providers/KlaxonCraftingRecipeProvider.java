@@ -121,7 +121,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         "PPP",
                         " S "
                 },
-                new ItemStack(KlaxonItems.HALLNOX_SIGN),
+                new ItemStack(KlaxonItems.HALLNOX_SIGN, 3),
                 CraftingRecipeCategory.BUILDING,
                 null
         );
