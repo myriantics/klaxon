@@ -455,11 +455,11 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.VINE)
                 .add(Blocks.GLOW_LICHEN);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_STEM_CONVERTIBLE)
-                .forceAddTag(KlaxonConventionalBlockTags.LOGS);
+                .forceAddTag(KlaxonConventionalBlockTags.LOGS_WITH_BARK);
         getOrCreateTagBuilder(KlaxonBlockTags.STRIPPED_CRIMSON_STEM_CONVERTIBLE)
                 .forceAddTag(ConventionalBlockTags.STRIPPED_LOGS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_HYPHAE_CONVERTIBLE)
-                .forceAddTag(KlaxonConventionalBlockTags.WOODS)
+                .forceAddTag(KlaxonConventionalBlockTags.WOODS_WITH_BARK)
                 .add(Blocks.MANGROVE_ROOTS);
         getOrCreateTagBuilder(KlaxonBlockTags.STRIPPED_CRIMSON_HYPHAE_CONVERTIBLE)
                 .forceAddTag(ConventionalBlockTags.STRIPPED_WOODS);
@@ -653,6 +653,38 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
         getOrCreateTagBuilder(BlockTags.WART_BLOCKS)
                 .add(KlaxonBlocks.HALLNOX_WART_BLOCK);
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.WOODS_WITH_BARK)
+                .add(
+                        Blocks.OAK_WOOD,
+                        Blocks.SPRUCE_WOOD,
+                        Blocks.BIRCH_WOOD,
+                        Blocks.JUNGLE_WOOD,
+                        Blocks.ACACIA_WOOD,
+                        Blocks.DARK_OAK_WOOD,
+                        Blocks.MANGROVE_WOOD,
+                        Blocks.CHERRY_WOOD
+                )
+                .add(
+                        Blocks.CRIMSON_HYPHAE,
+                        Blocks.WARPED_HYPHAE,
+                        KlaxonBlocks.HALLNOX_HYPHAE
+                );
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.LOGS_WITH_BARK)
+                .add(
+                        Blocks.OAK_LOG,
+                        Blocks.SPRUCE_LOG,
+                        Blocks.BIRCH_LOG,
+                        Blocks.JUNGLE_LOG,
+                        Blocks.ACACIA_LOG,
+                        Blocks.DARK_OAK_LOG,
+                        Blocks.MANGROVE_LOG,
+                        Blocks.CHERRY_LOG
+                )
+                .add(
+                        Blocks.CRIMSON_STEM,
+                        Blocks.WARPED_STEM,
+                        KlaxonBlocks.HALLNOX_STEM
+                );
 
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.METAL_DOORS)
                 .add(KlaxonBlocks.STEEL_DOOR)

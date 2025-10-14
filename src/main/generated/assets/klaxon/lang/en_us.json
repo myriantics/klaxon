@@ -217,6 +217,8 @@
   "klaxon.text.tooltip.innate_enchantment_prefix": "Innate %1$s",
   "klaxon.text.tooltip.missing_block_item": "Missing Block Item",
   "klaxon.text.tooltip.recipe_output_lore": "Chance: %1$s",
+  "tag.block.c.logs_with_bark": "Logs With Bark",
+  "tag.block.c.woods_with_bark": "Woods With Bark",
   "tag.block.klaxon.blast_processors": "Blast Processors",
   "tag.block.klaxon.cold_blocks": "Cold Blocks",
   "tag.block.klaxon.ferromagnetic_blocks": "Ferromagnetic Blocks",
