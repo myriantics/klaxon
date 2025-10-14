@@ -6,6 +6,7 @@ import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
+import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
@@ -33,7 +34,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(KlaxonFluidTagProvider::new);
 		pack.addProvider(KlaxonFeatureProvider::new);
         pack.addProvider(KlaxonArmorTrimMaterialProvider::new);
-		// pack.addProvider(KlaxonEnUsLanguageProvider::new);
+		pack.addProvider(KlaxonEnUsLanguageProvider::new);
 	}
 
 	@Override

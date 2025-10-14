@@ -330,9 +330,6 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_HAMMER);
         getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
-        getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_SHEARS)
-                .add(KlaxonItems.STEEL_CABLE_SHEARS)
-                .add(Items.SHEARS);
         getOrCreateTagBuilder(ItemTags.TRIM_MATERIALS)
                 .add(KlaxonItems.STEEL_INGOT)
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);

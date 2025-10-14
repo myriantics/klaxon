@@ -59,8 +59,6 @@ public abstract class KlaxonItemTags {
             createTag("recipe_processing_hammers");
     public static final TagKey<Item> RECIPE_PROCESSING_WIRECUTTERS =
             createTag("recipe_processing_wirecutters");
-    public static final TagKey<Item> RECIPE_PROCESSING_SHEARS =
-            createTag("recipe_processing_shears");
     public static final TagKey<Item> EFFECTIVE_AGAINST_METAL_ENTITIES =
             createTag("effective_against_metal_entities");
     public static final TagKey<Item> GRAPPLE_CLAW_RETRIEVERS =

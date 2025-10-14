@@ -313,7 +313,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
         ChargedProjectilesComponent chargedProjectilesComponent = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
         if (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty()) {
             ItemStack itemStack = chargedProjectilesComponent.getProjectiles().get(0);
-            tooltip.add(Text.translatable("item.klaxon.grapple_winch.projectile").append(ScreenTexts.SPACE).append(itemStack.toHoverableText()));
+            tooltip.add(Text.translatable("klaxon.text.tooltip.grapple_winch.projectile").append(ScreenTexts.SPACE).append(itemStack.toHoverableText()));
         } else {
             ClientPlayerEntity player = MinecraftClient.getInstance().player;
             if (player == null) {
@@ -346,7 +346,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
             }
 
             // add the tooltip
-            tooltip.add(Text.translatable("item.klaxon.grapple_winch.current_winch_cable_length")
+            tooltip.add(Text.translatable("klaxon.text.tooltip.grapple_winch.cable_length")
                     .formatted(Formatting.GRAY)
                     .append(ScreenTexts.SPACE)
                     .append(valuesText)
