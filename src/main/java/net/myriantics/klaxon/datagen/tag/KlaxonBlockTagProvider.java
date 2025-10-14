@@ -425,6 +425,11 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.DIORITE_WALL)
                 .add(Blocks.TUFF_WALL);
 
+        // basalt
+        getOrCreateTagBuilder(KlaxonBlockTags.BASALT_CONVERTIBLE)
+                .add(Blocks.POINTED_DRIPSTONE)
+                .add(Blocks.DRIPSTONE_BLOCK);
+
         // crimson stuff
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_NYLIUM_CONVERTIBLE)
                 .add(Blocks.GRASS_BLOCK)

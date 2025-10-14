@@ -81,6 +81,9 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
         addTag(KlaxonBlockTags.BLACKSTONE_SLAB_CONVERTIBLE, "Nether Reaction Blackstone Slab Convertible");
         addTag(KlaxonBlockTags.BLACKSTONE_WALL_CONVERTIBLE, "Nether Reaction Blackstone Wall Convertible");
 
+        // basalt
+        addTag(KlaxonBlockTags.BASALT_CONVERTIBLE, "Nether Reaction Basalt Convertible");
+
         // soul sand / soil and stuff
         addTag(KlaxonBlockTags.SOUL_SAND_CONVERTIBLE, "Nether Reaction Soul Sand Convertible");
         addTag(KlaxonBlockTags.SOUL_SOIL_CONVERTIBLE, "Nether Reaction Soul Soil Convertible");

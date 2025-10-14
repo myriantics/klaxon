@@ -87,6 +87,9 @@ public abstract class KlaxonBlockTags {
     public static final TagKey<Block> BLACKSTONE_WALL_CONVERTIBLE =
             createNetherReactionTag("blackstone_wall");
 
+    public static final TagKey<Block> BASALT_CONVERTIBLE =
+            createNetherReactionTag("basalt");
+
     public static final TagKey<Block> SOUL_SAND_CONVERTIBLE =
             createNetherReactionTag("soul_sand");
     public static final TagKey<Block> SOUL_SOIL_CONVERTIBLE =

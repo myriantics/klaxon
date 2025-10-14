@@ -38,6 +38,9 @@ public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider 
         addNetherReactionRecipe(KlaxonBlockTags.BLACKSTONE_STAIRS_CONVERTIBLE, Blocks.BLACKSTONE_STAIRS);
         addNetherReactionRecipe(KlaxonBlockTags.BLACKSTONE_WALL_CONVERTIBLE, Blocks.BLACKSTONE_WALL);
 
+        // basalt stuff
+        addNetherReactionRecipe(KlaxonBlockTags.BASALT_CONVERTIBLE, Blocks.BASALT);
+
         // soul stuff
         addNetherReactionRecipe(KlaxonBlockTags.SOUL_SAND_CONVERTIBLE, Blocks.SOUL_SAND);
         addNetherReactionRecipe(KlaxonBlockTags.SOUL_SOIL_CONVERTIBLE, Blocks.SOUL_SOIL);

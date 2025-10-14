@@ -1,0 +1,7 @@
+{
+  "type": "klaxon:nether_reaction",
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/basalt_convertible"
+  },
+  "output_block": "minecraft:basalt"
+}
