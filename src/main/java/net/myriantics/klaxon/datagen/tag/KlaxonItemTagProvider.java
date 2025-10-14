@@ -342,6 +342,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.WRENCHES);
         getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)
                 .forceAddTag(ConventionalItemTags.SHEAR_TOOLS);
+        getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS)
+                .add(KlaxonItems.STEEL_INGOT);
     }
 
     private void buildAnvilRelatedTags() {
