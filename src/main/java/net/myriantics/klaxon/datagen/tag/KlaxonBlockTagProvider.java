@@ -328,7 +328,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 );
 
         getOrCreateTagBuilder(KlaxonBlockTags.WITHER_SKELETON_SKULL_CONVERTIBLE)
-                .add(Blocks.SKELETON_SKULL)
+                .add(Blocks.SKELETON_SKULL);
+        getOrCreateTagBuilder(KlaxonBlockTags.WITHER_SKELETON_WALL_SKULL_CONVERTIBLE)
                 .add(Blocks.SKELETON_WALL_SKULL);
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE);
@@ -377,6 +378,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_TORCH_CONVERTIBLE)
                 .add(Blocks.TORCH)
                 .add(Blocks.REDSTONE_TORCH);
+        getOrCreateTagBuilder(KlaxonBlockTags.SOUL_WALL_TORCH_CONVERTIBLE)
+                .add(Blocks.WALL_TORCH)
+                .add(Blocks.REDSTONE_WALL_TORCH);
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_LANTERN_CONVERTIBLE)
                 .add(Blocks.LANTERN);
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_CAMPFIRE_CONVERTIBLE)
@@ -470,9 +474,13 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_TRAPDOOR_CONVERTIBLE)
                 .forceAddTag(BlockTags.WOODEN_TRAPDOORS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_SIGN_CONVERTIBLE)
-                .forceAddTag(BlockTags.SIGNS);
+                .forceAddTag(BlockTags.STANDING_SIGNS);
+        getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_WALL_SIGN_CONVERTIBLE)
+                .forceAddTag(BlockTags.WALL_SIGNS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_HANGING_SIGN_CONVERTIBLE)
-                .forceAddTag(BlockTags.ALL_HANGING_SIGNS);
+                .forceAddTag(BlockTags.CEILING_HANGING_SIGNS);
+        getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_WALL_HANGING_SIGN_CONVERTIBLE)
+                .forceAddTag(BlockTags.WALL_HANGING_SIGNS);
 
         // warped stuff
         getOrCreateTagBuilder(KlaxonBlockTags.WARPED_NYLIUM_CONVERTIBLE)

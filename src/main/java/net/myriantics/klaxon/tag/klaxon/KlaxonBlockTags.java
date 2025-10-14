@@ -68,6 +68,8 @@ public abstract class KlaxonBlockTags {
             createNetherReactionTag("bone_block");
     public static final TagKey<Block> WITHER_SKELETON_SKULL_CONVERTIBLE =
             createNetherReactionTag("wither_skeleton_skull");
+    public static final TagKey<Block> WITHER_SKELETON_WALL_SKULL_CONVERTIBLE =
+            createNetherReactionTag("wither_skeleton_wall_skull");
     public static final TagKey<Block> NETHER_QUARTZ_ORE_CONVERTIBLE =
             createNetherReactionTag("nether_quartz_ore");
     public static final TagKey<Block> NETHER_GOLD_ORE_CONVERTIBLE =
@@ -91,6 +93,8 @@ public abstract class KlaxonBlockTags {
             createNetherReactionTag("soul_soil");
     public static final TagKey<Block> SOUL_TORCH_CONVERTIBLE =
             createNetherReactionTag("soul_torch");
+    public static final TagKey<Block> SOUL_WALL_TORCH_CONVERTIBLE =
+            createNetherReactionTag("soul_wall_torch");
     public static final TagKey<Block> SOUL_LANTERN_CONVERTIBLE =
             createNetherReactionTag("soul_lantern");
     public static final TagKey<Block> SOUL_CAMPFIRE_CONVERTIBLE =
@@ -134,8 +138,12 @@ public abstract class KlaxonBlockTags {
             createNetherReactionTag("crimson_trapdoor");
     public static final TagKey<Block> CRIMSON_SIGN_CONVERTIBLE =
             createNetherReactionTag("crimson_sign");
+    public static final TagKey<Block> CRIMSON_WALL_SIGN_CONVERTIBLE =
+            createInstabreakableTag("crimson_wall_sign");
     public static final TagKey<Block> CRIMSON_HANGING_SIGN_CONVERTIBLE =
             createNetherReactionTag("crimson_hanging_sign");
+    public static final TagKey<Block> CRIMSON_WALL_HANGING_SIGN_CONVERTIBLE =
+            createNetherReactionTag("crimson_wall_hanging_sign");
 
     public static final TagKey<Block> WARPED_NYLIUM_CONVERTIBLE =
             createNetherReactionTag("warped_nylium");

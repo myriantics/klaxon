@@ -68,6 +68,7 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
         addTag(KlaxonBlockTags.SHROOMLIGHT_CONVERTIBLE, "Nether Reaction Shroomlight Convertible");
         addTag(KlaxonBlockTags.BONE_BLOCK_CONVERTIBLE, "Nether Reaction Bone Block Convertible");
         addTag(KlaxonBlockTags.WITHER_SKELETON_SKULL_CONVERTIBLE, "Nether Reaction Wither Skeleton Skull Convertible");
+        addTag(KlaxonBlockTags.WITHER_SKELETON_WALL_SKULL_CONVERTIBLE, "Nether Reaction Wither Skeleton Wall Skull Convertible");
 
         // netherrack & ores
         addTag(KlaxonBlockTags.NETHER_QUARTZ_ORE_CONVERTIBLE, "Nether Reaction Nether Quartz Ore Convertible");
@@ -84,6 +85,7 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
         addTag(KlaxonBlockTags.SOUL_SAND_CONVERTIBLE, "Nether Reaction Soul Sand Convertible");
         addTag(KlaxonBlockTags.SOUL_SOIL_CONVERTIBLE, "Nether Reaction Soul Soil Convertible");
         addTag(KlaxonBlockTags.SOUL_TORCH_CONVERTIBLE, "Nether Reaction Soul Torch Convertible");
+        addTag(KlaxonBlockTags.SOUL_WALL_TORCH_CONVERTIBLE, "Nether Reaction Soul Wall Torch Convertible");
         addTag(KlaxonBlockTags.SOUL_LANTERN_CONVERTIBLE, "Nether Reaction Soul Lantern Convertible");
         addTag(KlaxonBlockTags.SOUL_CAMPFIRE_CONVERTIBLE, "Nether Reaction Soul Campfire Convertible");
 
@@ -107,7 +109,9 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
         addTag(KlaxonBlockTags.CRIMSON_FENCE_CONVERTIBLE, "Nether Reaction Crimson Fence Convertible");
         addTag(KlaxonBlockTags.CRIMSON_FENCE_GATE_CONVERTIBLE, "Nether Reaction Crimson Fence Gate Convertible");
         addTag(KlaxonBlockTags.CRIMSON_SIGN_CONVERTIBLE, "Nether Reaction Crimson Sign Convertible");
+        addTag(KlaxonBlockTags.CRIMSON_WALL_SIGN_CONVERTIBLE, "Nether Reaction Crimson Wall Sign Convertible");
         addTag(KlaxonBlockTags.CRIMSON_HANGING_SIGN_CONVERTIBLE, "Nether Reaction Crimson Hanging Sign Convertible");
+        addTag(KlaxonBlockTags.CRIMSON_WALL_HANGING_SIGN_CONVERTIBLE, "Nether Reaction Crimson Wall Hanging Sign Convertible");
 
         // redstone components
         addTag(KlaxonBlockTags.CRIMSON_BUTTON_CONVERTIBLE, "Nether Reaction Crimson Button Convertible");

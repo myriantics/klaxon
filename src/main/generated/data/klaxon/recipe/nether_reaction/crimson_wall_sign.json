@@ -1,0 +1,7 @@
+{
+  "type": "klaxon:nether_reaction",
+  "block_ingredient": {
+    "tag": "klaxon:instabreakable/crimson_wall_sign"
+  },
+  "output_block": "minecraft:crimson_wall_sign"
+}
