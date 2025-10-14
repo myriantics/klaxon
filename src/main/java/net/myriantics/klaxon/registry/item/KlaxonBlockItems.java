@@ -135,24 +135,34 @@ public abstract class KlaxonBlockItems {
      * @return New ItemStack of block's item with size 1 if block has an associated BlockItem, and outputs a barrier with lore if no BlockItem is present.
      */
     public static ItemStack getBlockDisplayStack(Block block) {
+        Item item = block.asItem();
+
+        // try to yonk the pick stack
+        if (item == null || item.equals(Items.AIR)) {
+            try {
+                item = block.getPickStack(null, null, null).getItem();
+            } catch (Exception ignored) {
+
+            }
+        }
 
         // create items based off of blockitems if possible.
         // if a block doesn't have a blockitem, fall back to barrier with lore
-        if (block.asItem().equals(Items.AIR)) {
+        if (item == null || item.equals(Items.AIR)) {
             ItemStack displayStack = new ItemStack(Items.BARRIER);
 
             // apply components
             displayStack.applyComponentsFrom(ComponentMap.builder()
                     .add(DataComponentTypes.CUSTOM_NAME, block.getName().formatted(Formatting.RED))
                     .add(DataComponentTypes.LORE, new LoreComponent(
-                            List.of(Text.translatable("klaxon.text.tooltip.lore.missing_block_item")
+                            List.of(Text.translatable("klaxon.text.tooltip.missing_block_item")
                                     .formatted(Formatting.BOLD))
                     )).build()
             );
 
             return displayStack;
         } else {
-            return new ItemStack(block.asItem());
+            return new ItemStack(item);
         }
     }
 
