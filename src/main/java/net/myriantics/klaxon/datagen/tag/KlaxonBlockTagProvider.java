@@ -324,9 +324,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.HALLNOX_SIGN,
                         KlaxonBlocks.HALLNOX_WALL_SIGN,
                         KlaxonBlocks.HALLNOX_HANGING_SIGN,
-                        KlaxonBlocks.HALLNOX_WALL_SIGN
+                        KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN
                 );
-
 
         getOrCreateTagBuilder(KlaxonBlockTags.WITHER_SKELETON_SKULL_CONVERTIBLE)
                 .add(Blocks.SKELETON_SKULL)

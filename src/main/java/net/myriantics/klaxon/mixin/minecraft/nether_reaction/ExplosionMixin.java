@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -146,7 +147,7 @@ public abstract class ExplosionMixin {
         }
 
         // sign text preserved for reapplication later
-        Pair<SignText, SignText> signText = null;
+        NbtCompound signNbt = null;
 
         // yonk the blockentity from the target position
         BlockEntity targetBlockEntity = world.getBlockEntity(pos);
@@ -159,9 +160,9 @@ public abstract class ExplosionMixin {
                 return;
             }
 
-            // preserve the text from sign block entities
-            if (targetBlockEntity instanceof SignBlockEntity signBlockEntity) {
-                signText = new Pair<>(signBlockEntity.getFrontText(), signBlockEntity.getBackText());
+            // preserve the data from sign block entities
+            if (targetBlockEntity instanceof SignBlockEntity) {
+                signNbt = targetBlockEntity.createNbt(world.getRegistryManager());
             }
         }
 
@@ -176,13 +177,14 @@ public abstract class ExplosionMixin {
             // make sure we've changed something before setting the blockstate
             if (!instance.equals(newState)) {
                 serverWorld.setBlockState(pos, newState);
+                // tick stuff so it doesnt get stuck
+                serverWorld.scheduleBlockTick(pos, newState.getBlock(), 1);
             }
         }
 
         // apply the preserved sign text if present
-        if (signText != null && world.getBlockEntity(pos) instanceof SignBlockEntity signBlockEntity) {
-            signBlockEntity.setText(signText.getLeft(), true);
-            signBlockEntity.setText(signText.getRight(), false);
+        if (signNbt != null && world.getBlockEntity(pos) instanceof SignBlockEntity signBlockEntity) {
+            signBlockEntity.read(signNbt, world.getRegistryManager());
         }
     }
 }

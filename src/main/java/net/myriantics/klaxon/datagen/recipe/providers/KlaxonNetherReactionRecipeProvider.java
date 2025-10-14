@@ -58,7 +58,7 @@ public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider 
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_STAIRS_CONVERTIBLE, Blocks.CRIMSON_STAIRS);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_SLAB_CONVERTIBLE, Blocks.CRIMSON_SLAB);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_BUTTON_CONVERTIBLE, Blocks.CRIMSON_BUTTON);
-        addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_BUTTON_CONVERTIBLE, Blocks.CRIMSON_PRESSURE_PLATE);
+        addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_PRESSURE_PLATE_CONVERTIBLE, Blocks.CRIMSON_PRESSURE_PLATE);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_FENCE_CONVERTIBLE, Blocks.CRIMSON_FENCE);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_FENCE_GATE_CONVERTIBLE, Blocks.CRIMSON_FENCE_GATE);
         addNetherReactionRecipe(KlaxonBlockTags.CRIMSON_DOOR_CONVERTIBLE, Blocks.CRIMSON_DOOR);
