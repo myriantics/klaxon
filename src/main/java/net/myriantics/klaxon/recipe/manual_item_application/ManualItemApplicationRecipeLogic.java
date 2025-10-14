@@ -2,6 +2,7 @@ package net.myriantics.klaxon.recipe.manual_item_application;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,11 +13,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.api.ManualItemApplicationResult;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -62,7 +66,7 @@ public abstract class ManualItemApplicationRecipeLogic {
         return output;
     }
 
-    public static void affectWorld(ServerWorld serverWorld, BlockPos targetPos, BlockState newState, ManualItemApplicationRecipeInput recipeInput) {
+    public static void affectWorld(ServerWorld serverWorld, BlockPos targetPos, BlockState newState, Direction clickDirection, @Nullable PlayerEntity player, ManualItemApplicationRecipeInput recipeInput) {
         Random random = serverWorld.getRandom();
         ItemStack usedStack = recipeInput.usedStack();
         BlockState targetState = recipeInput.inputState();
@@ -79,6 +83,11 @@ public abstract class ManualItemApplicationRecipeLogic {
                 0.6f + (0.2f + random.nextFloat()),
                 0.2f + (0.4f + random.nextFloat())
         );
+
+        // apply modifications if possible
+        if (newState.getBlock() instanceof ManualItemApplicationResult result) {
+            newState = result.getResultState(serverWorld, newState, targetPos, clickDirection, player).orElse(newState);
+        }
 
         // decrement stack and set the block state
         serverWorld.setBlockState(targetPos, newState);

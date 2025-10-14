@@ -56,6 +56,7 @@ public abstract class DispenserBlockMixin {
                         serverWorld,
                         blockPointer,
                         targetPos,
+                        dispenserState.get(FACING),
                         recipeInput,
                         newState.get()
                 );

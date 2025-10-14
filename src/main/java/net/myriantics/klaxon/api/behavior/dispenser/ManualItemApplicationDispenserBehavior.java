@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeInput;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
 
@@ -14,12 +15,13 @@ public class ManualItemApplicationDispenserBehavior extends ItemDispenserBehavio
             ServerWorld serverWorld,
             BlockPointer blockPointer,
             BlockPos targetPos,
+            Direction dispenserFacing,
             ManualItemApplicationRecipeInput recipeInput,
             BlockState newState
     ) {
         ItemStack usedStack = recipeInput.usedStack();
 
-        ManualItemApplicationRecipeLogic.affectWorld(serverWorld, targetPos, newState, recipeInput);
+        ManualItemApplicationRecipeLogic.affectWorld(serverWorld, targetPos, newState, dispenserFacing.getOpposite(), null, recipeInput);
 
         // decrement stack and set the block state
         decrementStackWithRemainder(blockPointer, usedStack, usedStack.getRecipeRemainder());

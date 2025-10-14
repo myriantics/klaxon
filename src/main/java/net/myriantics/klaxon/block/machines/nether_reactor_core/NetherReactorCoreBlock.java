@@ -22,10 +22,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.api.ManualItemApplicationResult;
 import net.myriantics.klaxon.api.Wrenchable;
 import org.jetbrains.annotations.Nullable;
 
-public class NetherReactorCoreBlock extends Block implements Wrenchable, Waterloggable {
+import java.util.Optional;
+
+public class NetherReactorCoreBlock extends Block implements Wrenchable, Waterloggable, ManualItemApplicationResult {
     public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = Properties.HORIZONTAL_AXIS;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
@@ -74,6 +77,22 @@ public class NetherReactorCoreBlock extends Block implements Wrenchable, Waterlo
     @Override
     protected FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public Optional<BlockState> getResultState(World world, BlockState state, BlockPos pos, Direction clickDirection, @Nullable PlayerEntity player) {
+        // try using click direction
+        if (!clickDirection.getAxis().equals(Direction.Axis.Y)) {
+            return Optional.of(state.with(HORIZONTAL_AXIS, clickDirection.getAxis()));
+        }
+
+        // try using look direction
+        if (player != null) {
+            return Optional.of(state.with(HORIZONTAL_AXIS, player.getHorizontalFacing().getAxis()));
+        }
+
+        // if both fail return empty, which causes original output state to be used
+        return Optional.empty();
     }
 
     @Override

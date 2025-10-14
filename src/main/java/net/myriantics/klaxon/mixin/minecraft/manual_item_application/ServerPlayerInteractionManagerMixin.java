@@ -40,7 +40,7 @@ public abstract class ServerPlayerInteractionManagerMixin {
 
             if (newState.isPresent()) {
                 BlockPos targetPos = hitResult.getBlockPos();
-                ManualItemApplicationRecipeLogic.affectWorld(this.world, targetPos, newState.get(), recipeInput);
+                ManualItemApplicationRecipeLogic.affectWorld(this.world, targetPos, newState.get(), hitResult.getSide(), player, recipeInput);
 
                 // remainder fuckery
                 if (!player.isCreative()) {
