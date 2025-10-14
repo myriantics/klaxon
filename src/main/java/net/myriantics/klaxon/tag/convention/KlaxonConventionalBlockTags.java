@@ -8,12 +8,6 @@ import net.minecraft.util.Identifier;
 public class KlaxonConventionalBlockTags {
 
     // category tags
-    public static final TagKey<Block> STEEL =
-            createConventionalBlockTag("steel");
-    public static final TagKey<Block> CRUDE_STEEL =
-            createConventionalBlockTag("crude_steel");
-    public static final TagKey<Block> RUBBER =
-            createConventionalBlockTag("rubber");
     public static final TagKey<Block> SCULK =
             createConventionalBlockTag("sculk");
     public static final TagKey<Block> VINES =

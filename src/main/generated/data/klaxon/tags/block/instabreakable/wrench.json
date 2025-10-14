@@ -1,23 +1,20 @@
 {
   "values": [
+    {
+      "id": "#create:wrench_pickup",
+      "required": false
+    },
     "#minecraft:shulker_boxes",
     "#minecraft:rails",
     "#c:metal_doors",
     "#c:metal_trapdoors",
     "#c:scaffoldings",
     "#c:levers",
-    {
-      "id": "#create:wrench_pickup",
-      "required": false
-    },
-    "#klaxon:pipe_matrices/copper",
-    "klaxon:hallnox_bulb",
+    "#klaxon:pipe_matrices",
     "klaxon:steel_casing",
     "klaxon:crude_steel_casing",
     "klaxon:nether_reactor_core",
     "klaxon:crude_nether_reactor_core",
-    "minecraft:daylight_detector",
-    "minecraft:hopper",
     "minecraft:copper_bulb",
     "minecraft:exposed_copper_bulb",
     "minecraft:weathered_copper_bulb",
@@ -26,11 +23,14 @@
     "minecraft:waxed_exposed_copper_bulb",
     "minecraft:waxed_weathered_copper_bulb",
     "minecraft:waxed_oxidized_copper_bulb",
+    "minecraft:sticky_piston",
+    "minecraft:piston",
+    "minecraft:piston_head",
+    "klaxon:hallnox_bulb",
+    "minecraft:daylight_detector",
+    "minecraft:hopper",
     "minecraft:redstone_lamp",
     "minecraft:blast_furnace",
-    "minecraft:sticky_piston",
-    "minecraft:piston_head",
-    "minecraft:piston",
     "minecraft:observer",
     "minecraft:crafter"
   ]

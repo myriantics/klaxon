@@ -143,12 +143,27 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
         addTag(KlaxonConventionalBlockTags.LOGS_WITH_BARK, "Logs With Bark");
         addTag(KlaxonConventionalBlockTags.WOODS_WITH_BARK, "Woods With Bark");
 
+        // plating blocks
+        addTag(KlaxonBlockTags.PLATING_BLOCKS, "Plating Blocks");
+        addTag(KlaxonBlockTags.STEEL_PLATING_BLOCKS, "Steel Plating Blocks");
+        addTag(KlaxonBlockTags.CRUDE_STEEL_PLATING_BLOCKS, "Crude Steel Plating Blocks");
+        addTag(KlaxonBlockTags.GOLD_PLATING_BLOCKS, "Gold Plating Blocks");
+        addTag(KlaxonBlockTags.COPPER_PLATING_BLOCKS, "Copper Plating Blocks");
+        addTag(KlaxonBlockTags.IRON_PLATING_BLOCKS, "Iron Plating Blocks");
+
         // wire spools
         addTag(KlaxonBlockTags.WIRE_SPOOLS, "Wire Spools");
+        addTag(KlaxonBlockTags.COPPER_WIRE_SPOOLS, "Copper Wire Spools");
+        addTag(KlaxonBlockTags.IRON_WIRE_SPOOLS, "Iron Wire Spools");
+        addTag(KlaxonBlockTags.GOLD_WIRE_SPOOLS, "Gold Wire Spools");
+        addTag(KlaxonBlockTags.STEEL_WIRE_SPOOLS, "Steel Wire Spools");
 
         // pipe matrices
         addTag(KlaxonBlockTags.PIPE_MATRICES, "Pipe Matrices");
-        addTag(KlaxonBlockTags.COPPER_PIPE_MATRICES, "Copper Pipe Matrices");
+        addTag(KlaxonBlockTags.PIPE_MATRIX_SEGMENTS, "Pipe Matrix Segments");
+        addTag(KlaxonBlockTags.PIPE_MATRIX_U_BENDS, "Pipe Matrix U-Bends");
+        addTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_SEGMENTS, "Copper Pipe Matrix Segments");
+        addTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_U_BENDS, "Copper Pipe Matrix U-Bends");
 
         // misc
         addTag(KlaxonBlockTags.HALLNOX_STEMS, "Hallnox Stems");

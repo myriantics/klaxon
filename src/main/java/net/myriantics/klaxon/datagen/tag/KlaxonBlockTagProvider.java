@@ -34,8 +34,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_MINEABLE)
                 .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .add(Blocks.BEACON)
-                .add(Blocks.PACKED_ICE)
-                .add(Blocks.BLUE_ICE);
+                .add(
+                        Blocks.PACKED_ICE,
+                        Blocks.BLUE_ICE
+                );
         getOrCreateTagBuilder(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .addOptionalTag(KlaxonCompatBlockTags.BRICK_BREAKABLE)
                 .forceAddTag(ConventionalBlockTags.GLASS_BLOCKS)
@@ -44,8 +46,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.CLUSTERS)
                 .forceAddTag(ConventionalBlockTags.SKULLS)
                 .add(KlaxonBlocks.HALLNOX_BULB)
-                .add(Blocks.ICE)
-                .add(Blocks.FROSTED_ICE)
+                .add(
+                        Blocks.ICE,
+                        Blocks.FROSTED_ICE
+                )
                 .add(Blocks.REDSTONE_LAMP)
                 .add(Blocks.SEA_LANTERN)
                 .add(Blocks.GLOWSTONE)
@@ -74,8 +78,6 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.AXE_MINEABLE)
                 .add(Blocks.COBWEB);
         getOrCreateTagBuilder(KlaxonBlockTags.CLEAVER_INSTABREAKABLE)
-                .forceAddTag(KlaxonConventionalBlockTags.RUBBER)
-                .forceAddTag(KlaxonConventionalBlockTags.SCULK)
                 .forceAddTag(KlaxonConventionalBlockTags.VINES)
                 .forceAddTag(ConventionalBlockTags.PUMPKINS)
                 .forceAddTag(ConventionalBlockTags.ROPES)
@@ -87,18 +89,37 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.BEEHIVES)
                 .forceAddTag(BlockTags.CANDLES)
                 .forceAddTag(BlockTags.LEAVES)
+                .add(
+                        Blocks.SCULK_VEIN,
+                        Blocks.SCULK,
+                        Blocks.SCULK_CATALYST,
+                        Blocks.SCULK_SENSOR,
+                        Blocks.SCULK_SHRIEKER,
+                        Blocks.CALIBRATED_SCULK_SENSOR
+                )
+                .add(
+                        KlaxonBlocks.RUBBER_BLOCK,
+                        KlaxonBlocks.RUBBER_SHEET_BLOCK,
+                        KlaxonBlocks.MOLTEN_RUBBER_BLOCK
+                )
+                .add(
+                        Blocks.MUSHROOM_STEM,
+                        Blocks.RED_MUSHROOM_BLOCK,
+                        Blocks.BROWN_MUSHROOM_BLOCK
+                )
+                .add(
+                        Blocks.OCHRE_FROGLIGHT,
+                        Blocks.PEARLESCENT_FROGLIGHT,
+                        Blocks.VERDANT_FROGLIGHT
+                )
+                .add(
+                        Blocks.MOSS_BLOCK,
+                        Blocks.MOSS_CARPET,
+                        Blocks.AZALEA,
+                        Blocks.FLOWERING_AZALEA
+                )
                 .add(KlaxonBlocks.HALLNOX_POD)
-                .add(Blocks.MUSHROOM_STEM)
-                .add(Blocks.RED_MUSHROOM_BLOCK)
-                .add(Blocks.BROWN_MUSHROOM_BLOCK)
                 .add(Blocks.COCOA)
-                .add(Blocks.OCHRE_FROGLIGHT)
-                .add(Blocks.PEARLESCENT_FROGLIGHT)
-                .add(Blocks.VERDANT_FROGLIGHT)
-                .add(Blocks.MOSS_BLOCK)
-                .add(Blocks.MOSS_CARPET)
-                .add(Blocks.AZALEA)
-                .add(Blocks.FLOWERING_AZALEA)
                 .add(Blocks.SHROOMLIGHT)
                 .add(Blocks.MELON)
                 .add(Blocks.BAMBOO)
@@ -112,60 +133,72 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.TRAPDOORS)
                 .forceAddTag(BlockTags.DOORS);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
+                .addOptionalTag(KlaxonCompatBlockTags.WRENCH_PICKUP)
                 .forceAddTag(BlockTags.SHULKER_BOXES)
                 .forceAddTag(BlockTags.RAILS)
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_DOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.SCAFFOLDINGS)
                 .forceAddTag(KlaxonConventionalBlockTags.LEVERS)
-                .addOptionalTag(KlaxonCompatBlockTags.WRENCH_PICKUP)
-                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRICES)
+                .forceAddTag(KlaxonBlockTags.PIPE_MATRICES)
+                .add(
+                        KlaxonBlocks.STEEL_CASING,
+                        KlaxonBlocks.CRUDE_STEEL_CASING
+                )
+                .add(
+                        KlaxonBlocks.NETHER_REACTOR_CORE,
+                        KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE
+                )
+                .add(
+                        Blocks.COPPER_BULB,
+                        Blocks.EXPOSED_COPPER_BULB,
+                        Blocks.WEATHERED_COPPER_BULB,
+                        Blocks.OXIDIZED_COPPER_BULB
+                )
+                .add(
+                        Blocks.WAXED_COPPER_BULB,
+                        Blocks.WAXED_EXPOSED_COPPER_BULB,
+                        Blocks.WAXED_WEATHERED_COPPER_BULB,
+                        Blocks.WAXED_OXIDIZED_COPPER_BULB
+                )
+                .add(
+                        Blocks.STICKY_PISTON,
+                        Blocks.PISTON,
+                        Blocks.PISTON_HEAD
+                )
                 .add(KlaxonBlocks.HALLNOX_BULB)
-                .add(KlaxonBlocks.STEEL_CASING)
-                .add(KlaxonBlocks.CRUDE_STEEL_CASING)
-                .add(KlaxonBlocks.NETHER_REACTOR_CORE)
-                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE)
                 .add(Blocks.DAYLIGHT_DETECTOR)
                 .add(Blocks.HOPPER)
-                .add(Blocks.COPPER_BULB)
-                .add(Blocks.EXPOSED_COPPER_BULB)
-                .add(Blocks.WEATHERED_COPPER_BULB)
-                .add(Blocks.OXIDIZED_COPPER_BULB)
-                .add(Blocks.WAXED_COPPER_BULB)
-                .add(Blocks.WAXED_EXPOSED_COPPER_BULB)
-                .add(Blocks.WAXED_WEATHERED_COPPER_BULB)
-                .add(Blocks.WAXED_OXIDIZED_COPPER_BULB)
                 .add(Blocks.REDSTONE_LAMP)
                 .add(Blocks.BLAST_FURNACE)
-                .add(Blocks.STICKY_PISTON)
-                .add(Blocks.PISTON_HEAD)
-                .add(Blocks.PISTON)
                 .add(Blocks.OBSERVER)
                 .add(Blocks.CRAFTER);
 
         // pickaxe
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-                .forceAddTag(KlaxonConventionalBlockTags.STEEL)
-                .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL)
                 .forceAddTag(KlaxonBlockTags.WIRE_SPOOLS)
-                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRICES)
+                .forceAddTag(KlaxonBlockTags.PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.PIPE_MATRICES)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
-                .add(KlaxonBlocks.NETHER_REACTOR_CORE)
-                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE)
-                .add(KlaxonBlocks.IRON_PLATING_BLOCK)
-                .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
-                .add(KlaxonBlocks.COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+                .add(
+                        KlaxonBlocks.STEEL_BLOCK,
+                        KlaxonBlocks.STEEL_CASING,
+                        KlaxonBlocks.STEEL_DOOR,
+                        KlaxonBlocks.STEEL_TRAPDOOR
+                )
+                .add(
+                        KlaxonBlocks.CRUDE_STEEL_BLOCK,
+                        KlaxonBlocks.CRUDE_STEEL_CASING,
+                        KlaxonBlocks.CRUDE_STEEL_DOOR,
+                        KlaxonBlocks.CRUDE_STEEL_TRAPDOOR
+                )
+                .add(
+                        KlaxonBlocks.NETHER_REACTOR_CORE,
+                        KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE
+                );
 
         // axe
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
-                .forceAddTag(KlaxonConventionalBlockTags.RUBBER)
                 .add(
                         KlaxonBlocks.HALLNOX_POD,
                         KlaxonBlocks.HALLNOX_STEM,
@@ -185,6 +218,11 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN,
                         KlaxonBlocks.HALLNOX_FENCE,
                         KlaxonBlocks.HALLNOX_FENCE_GATE
+                )
+                .add(
+                        KlaxonBlocks.RUBBER_BLOCK,
+                        KlaxonBlocks.RUBBER_SHEET_BLOCK,
+                        KlaxonBlocks.MOLTEN_RUBBER_BLOCK
                 );
 
         // hoe
@@ -533,13 +571,6 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.RUBBER_STORAGE_BLOCKS)
                 .add(KlaxonBlocks.RUBBER_BLOCK)
                 .add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
-        getOrCreateTagBuilder(KlaxonConventionalBlockTags.SCULK)
-                .add(Blocks.SCULK_VEIN)
-                .add(Blocks.SCULK)
-                .add(Blocks.SCULK_CATALYST)
-                .add(Blocks.SCULK_SENSOR)
-                .add(Blocks.SCULK_SHRIEKER)
-                .add(Blocks.CALIBRATED_SCULK_SENSOR);
         getOrCreateTagBuilder(KlaxonConventionalBlockTags.VINES)
                 .forceAddTag(BlockTags.CAVE_VINES)
                 .add(Blocks.WEEPING_VINES_PLANT)
@@ -547,10 +578,20 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.TWISTING_VINES_PLANT)
                 .add(Blocks.TWISTING_VINES)
                 .add(Blocks.VINE);
+
+        // wire spools
         getOrCreateTagBuilder(KlaxonBlockTags.WIRE_SPOOLS)
-                .add(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK)
-                .add(KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK)
-                .add(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK)
+                .forceAddTag(KlaxonBlockTags.STEEL_WIRE_SPOOLS)
+                .forceAddTag(KlaxonBlockTags.GOLD_WIRE_SPOOLS)
+                .forceAddTag(KlaxonBlockTags.IRON_WIRE_SPOOLS)
+                .forceAddTag(KlaxonBlockTags.COPPER_WIRE_SPOOLS);
+        getOrCreateTagBuilder(KlaxonBlockTags.STEEL_WIRE_SPOOLS)
+                .add(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.GOLD_WIRE_SPOOLS)
+                .add(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.IRON_WIRE_SPOOLS)
+                .add(KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.COPPER_WIRE_SPOOLS)
                 .add(
                         KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK,
                         KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK,
@@ -562,10 +603,20 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK
                 );
 
+        // pipe matrices
         getOrCreateTagBuilder(KlaxonBlockTags.PIPE_MATRICES)
-                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRICES);
+                .forceAddTag(KlaxonBlockTags.PIPE_MATRIX_U_BENDS)
+                .forceAddTag(KlaxonBlockTags.PIPE_MATRIX_SEGMENTS);
+
+        getOrCreateTagBuilder(KlaxonBlockTags.PIPE_MATRIX_U_BENDS)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_U_BENDS);
+        getOrCreateTagBuilder(KlaxonBlockTags.PIPE_MATRIX_SEGMENTS)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_SEGMENTS);
 
         getOrCreateTagBuilder(KlaxonBlockTags.COPPER_PIPE_MATRICES)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_U_BENDS)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_SEGMENTS);
+        getOrCreateTagBuilder(KlaxonBlockTags.COPPER_PIPE_MATRIX_U_BENDS)
                 .add(
                         KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND,
                         KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_U_BEND,
@@ -578,6 +629,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND,
                         KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND
                 )
+                ;
+        getOrCreateTagBuilder(KlaxonBlockTags.COPPER_PIPE_MATRIX_SEGMENTS)
                 .add(
                         KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT,
                         KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT,
@@ -590,23 +643,6 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT,
                         KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT
                 );
-
-        getOrCreateTagBuilder(KlaxonConventionalBlockTags.RUBBER)
-                .add(KlaxonBlocks.RUBBER_BLOCK)
-                .add(KlaxonBlocks.MOLTEN_RUBBER_BLOCK)
-                .add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
-        getOrCreateTagBuilder(KlaxonConventionalBlockTags.STEEL)
-                .add(KlaxonBlocks.STEEL_BLOCK)
-                .add(KlaxonBlocks.STEEL_PLATING_BLOCK)
-                .add(KlaxonBlocks.STEEL_TRAPDOOR)
-                .add(KlaxonBlocks.STEEL_DOOR)
-                .add(KlaxonBlocks.STEEL_CASING);
-        getOrCreateTagBuilder(KlaxonConventionalBlockTags.CRUDE_STEEL)
-                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK)
-                .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK)
-                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
-                .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
-                .add(KlaxonBlocks.CRUDE_STEEL_CASING);
 
         // funny
         getOrCreateTagBuilder(BlockTags.FLOWER_POTS)
@@ -738,25 +774,59 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+
+        // plating blocks
+        getOrCreateTagBuilder(KlaxonBlockTags.PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.STEEL_PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.CRUDE_STEEL_PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.GOLD_PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.COPPER_PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.IRON_PLATING_BLOCKS);
+        getOrCreateTagBuilder(KlaxonBlockTags.STEEL_PLATING_BLOCKS)
+                .add(KlaxonBlocks.STEEL_PLATING_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.CRUDE_STEEL_PLATING_BLOCKS)
+                .add(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.GOLD_PLATING_BLOCKS)
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.IRON_PLATING_BLOCKS)
+                .add(KlaxonBlocks.IRON_PLATING_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.COPPER_PLATING_BLOCKS)
+                .add(
+                        KlaxonBlocks.COPPER_PLATING_BLOCK,
+                        KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK,
+                        KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK,
+                        KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK
+                )
+                .add(
+                        KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK,
+                        KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK,
+                        KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK,
+                        KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK
+                );
     }
 
     private void buildToolRequirementTags() {
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
-                .forceAddTag(KlaxonConventionalBlockTags.STEEL)
-                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRICES)
-                .add(KlaxonBlocks.IRON_PLATING_BLOCK)
-                .add(KlaxonBlocks.GOLD_PLATING_BLOCK)
+                .forceAddTag(KlaxonBlockTags.STEEL_WIRE_SPOOLS)
+                .forceAddTag(KlaxonBlockTags.STEEL_PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.GOLD_WIRE_SPOOLS)
+                .forceAddTag(KlaxonBlockTags.GOLD_PLATING_BLOCKS)
+                .add(KlaxonBlocks.STEEL_BLOCK)
+                .add(KlaxonBlocks.STEEL_CASING)
+                .add(KlaxonBlocks.STEEL_DOOR)
+                .add(KlaxonBlocks.STEEL_TRAPDOOR)
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE);
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
-                .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL)
-                .add(KlaxonBlocks.COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK)
-                .add(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_SEGMENTS)
+                .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_U_BENDS)
+                .forceAddTag(KlaxonBlockTags.COPPER_WIRE_SPOOLS)
+                .forceAddTag(KlaxonBlockTags.COPPER_PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.IRON_WIRE_SPOOLS)
+                .forceAddTag(KlaxonBlockTags.IRON_PLATING_BLOCKS)
+                .add(KlaxonBlocks.CRUDE_STEEL_BLOCK)
+                .add(KlaxonBlocks.CRUDE_STEEL_CASING)
+                .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
                 .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
         // steel tools mirror diamond tools

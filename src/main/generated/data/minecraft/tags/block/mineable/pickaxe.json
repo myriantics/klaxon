@@ -1,21 +1,18 @@
 {
   "values": [
-    "#c:steel",
-    "#c:crude_steel",
     "#klaxon:wire_spools",
-    "#klaxon:pipe_matrices/copper",
+    "#klaxon:plating_blocks",
+    "#klaxon:pipe_matrices",
     "klaxon:deepslate_blast_processor",
+    "klaxon:steel_block",
+    "klaxon:steel_casing",
+    "klaxon:steel_door",
+    "klaxon:steel_trapdoor",
+    "klaxon:crude_steel_block",
+    "klaxon:crude_steel_casing",
+    "klaxon:crude_steel_door",
+    "klaxon:crude_steel_trapdoor",
     "klaxon:nether_reactor_core",
-    "klaxon:crude_nether_reactor_core",
-    "klaxon:iron_plating_block",
-    "klaxon:gold_plating_block",
-    "klaxon:copper_plating_block",
-    "klaxon:exposed_copper_plating_block",
-    "klaxon:weathered_copper_plating_block",
-    "klaxon:oxidized_copper_plating_block",
-    "klaxon:waxed_copper_plating_block",
-    "klaxon:waxed_exposed_copper_plating_block",
-    "klaxon:waxed_weathered_copper_plating_block",
-    "klaxon:waxed_oxidized_copper_plating_block"
+    "klaxon:crude_nether_reactor_core"
   ]
 }

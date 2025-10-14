@@ -1,5 +1,6 @@
 {
   "values": [
-    "#klaxon:pipe_matrices/copper"
+    "#klaxon:pipe_matrices/u_bends",
+    "#klaxon:pipe_matrices/segments"
   ]
 }

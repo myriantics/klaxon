@@ -174,12 +174,46 @@ public abstract class KlaxonBlockTags {
             createTag("machines");
     public static final TagKey<Block> HALLNOX_STEMS =
             createTag("hallnox_stems");
+
+    // plating blocks
+    public static final TagKey<Block> PLATING_BLOCKS =
+            createTag("plating_blocks");
+    public static final TagKey<Block> STEEL_PLATING_BLOCKS =
+            createPlatingBlockTag("steel");
+    public static final TagKey<Block> CRUDE_STEEL_PLATING_BLOCKS =
+            createPlatingBlockTag("crude_steel");
+    public static final TagKey<Block> GOLD_PLATING_BLOCKS =
+            createPlatingBlockTag("gold");
+    public static final TagKey<Block> COPPER_PLATING_BLOCKS =
+            createPlatingBlockTag("copper");
+    public static final TagKey<Block> IRON_PLATING_BLOCKS =
+            createPlatingBlockTag("iron");
+
+    // wire spools
     public static final TagKey<Block> WIRE_SPOOLS =
             createTag("wire_spools");
+    public static final TagKey<Block> COPPER_WIRE_SPOOLS =
+            createWireSpoolsTag("copper");
+    public static final TagKey<Block> IRON_WIRE_SPOOLS =
+            createWireSpoolsTag("iron");
+    public static final TagKey<Block> GOLD_WIRE_SPOOLS =
+            createWireSpoolsTag("gold");
+    public static final TagKey<Block> STEEL_WIRE_SPOOLS =
+            createWireSpoolsTag("steel");
+
+    // pipe matrices
     public static final TagKey<Block> PIPE_MATRICES =
             createTag("pipe_matrices");
+    public static final TagKey<Block> PIPE_MATRIX_U_BENDS =
+            createPipeMatricesTag("u_bends");
+    public static final TagKey<Block> PIPE_MATRIX_SEGMENTS =
+            createPipeMatricesTag("segments");
     public static final TagKey<Block> COPPER_PIPE_MATRICES =
             createPipeMatricesTag("copper");
+    public static final TagKey<Block> COPPER_PIPE_MATRIX_U_BENDS =
+            createPipeMatrixUBendTag("copper");
+    public static final TagKey<Block> COPPER_PIPE_MATRIX_SEGMENTS =
+            createPipeMatrixSegmentTag("copper");
 
     // advancement tags
 
@@ -195,12 +229,28 @@ public abstract class KlaxonBlockTags {
         return createTag("nether_reaction/" + name + "_convertible");
     }
 
+    private static TagKey<Block> createPlatingBlockTag(String name) {
+        return createTag("plating_block/" + name);
+    }
+
     private static TagKey<Block> createManualItemApplicationTag(String name) {
         return createTag("manual_item_application/" + name + "_convertible");
     }
 
     private static TagKey<Block> createPipeMatricesTag(String name) {
         return createTag("pipe_matrices/" + name);
+    }
+
+    private static TagKey<Block> createPipeMatrixSegmentTag(String name) {
+        return createPipeMatricesTag("segment/" + name);
+    }
+
+    private static TagKey<Block> createPipeMatrixUBendTag(String name) {
+        return createPipeMatricesTag("u_bend/" + name);
+    }
+
+    private static TagKey<Block> createWireSpoolsTag(String name) {
+        return createTag("wire_spools/" + name);
     }
 
     private static TagKey<Block> createTag(String name) {
