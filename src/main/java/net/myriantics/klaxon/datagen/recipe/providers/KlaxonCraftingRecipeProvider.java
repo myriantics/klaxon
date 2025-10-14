@@ -423,58 +423,10 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         add2x2PackingRecipe(Ingredient.ofItems(KlaxonItems.FRACTURED_CHARCOAL), new ItemStack(Items.CHARCOAL), null, null);
 
         // these take fences in the center and don't give them back because i'm EVIL HAHAHAHAHA
-        addShapedCraftingRecipe(Map.of(
-                'W', Ingredient.ofItems(KlaxonItems.STEEL_WIRE),
-                'F', Ingredient.fromTag(ItemTags.WOODEN_FENCES)
-                ),
-                new String[] {
-                        "WWW",
-                        "WFW",
-                        "WWW"
-                },
-                new ItemStack(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK),
-                CraftingRecipeCategory.MISC,
-                null
-        );
-        addShapedCraftingRecipe(Map.of(
-                'W', Ingredient.ofItems(KlaxonItems.IRON_WIRE),
-                'F', Ingredient.fromTag(ItemTags.WOODEN_FENCES)
-                ),
-                new String[] {
-                        "WWW",
-                        "WFW",
-                        "WWW"
-                },
-                new ItemStack(KlaxonItems.IRON_WIRE_SPOOL_BLOCK),
-                CraftingRecipeCategory.MISC,
-                null
-        );
-        addShapedCraftingRecipe(Map.of(
-                        'W', Ingredient.ofItems(KlaxonItems.GOLD_WIRE),
-                        'F', Ingredient.fromTag(ItemTags.WOODEN_FENCES)
-                ),
-                new String[] {
-                        "WWW",
-                        "WFW",
-                        "WWW"
-                },
-                new ItemStack(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK),
-                CraftingRecipeCategory.MISC,
-                null
-        );
-        addShapedCraftingRecipe(Map.of(
-                        'W', Ingredient.ofItems(KlaxonItems.COPPER_WIRE),
-                        'F', Ingredient.fromTag(ItemTags.WOODEN_FENCES)
-                ),
-                new String[] {
-                        "WWW",
-                        "WFW",
-                        "WWW"
-                },
-                new ItemStack(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK),
-                CraftingRecipeCategory.MISC,
-                null
-        );
+        addWireSpoolRecipe(Ingredient.ofItems(KlaxonItems.IRON_WIRE), new ItemStack(KlaxonItems.IRON_WIRE_SPOOL_BLOCK));
+        addWireSpoolRecipe(Ingredient.ofItems(KlaxonItems.STEEL_WIRE), new ItemStack(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK));
+        addWireSpoolRecipe(Ingredient.ofItems(KlaxonItems.GOLD_WIRE), new ItemStack(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK));
+        addWireSpoolRecipe(Ingredient.ofItems(KlaxonItems.COPPER_WIRE), new ItemStack(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK));
 
         addShapelessCraftingRecipe(
                 Ingredient.ofItems(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK),
@@ -532,5 +484,22 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
     private void add2x2CompressionDecompressionRecipes(ItemConvertible small, ItemConvertible large, ResourceCondition... conditions) {
         add2x2PackingRecipe(Ingredient.ofItems(small), new ItemStack(large, 1), null, null, conditions);
         add2x2UnpackingRecipe(Ingredient.ofItems(large), small, null, null, conditions);
+    }
+
+    private void addWireSpoolRecipe(Ingredient wire, ItemStack result, ResourceCondition... conditions) {
+        addShapedCraftingRecipe(Map.of(
+                        'W', wire,
+                        'F', Ingredient.fromTag(ConventionalItemTags.WOODEN_FENCES)
+                ),
+                new String[] {
+                        "WWW",
+                        "WFW",
+                        "WWW"
+                },
+                result,
+                CraftingRecipeCategory.MISC,
+                "wire_spools",
+                conditions
+        );
     }
 }

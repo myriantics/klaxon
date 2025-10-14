@@ -97,6 +97,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.HALLNOX_DOOR);
         getOrCreateTagBuilder(ItemTags.WOODEN_TRAPDOORS)
                 .add(KlaxonItems.HALLNOX_TRAPDOOR);
+        getOrCreateTagBuilder(ItemTags.WOODEN_FENCES)
+                .add(KlaxonItems.HALLNOX_FENCE);
         getOrCreateTagBuilder(ConventionalItemTags.WOODEN_FENCES)
                 .add(KlaxonItems.HALLNOX_FENCE);
         getOrCreateTagBuilder(ConventionalItemTags.WOODEN_FENCE_GATES)
