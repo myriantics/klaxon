@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "klaxon.waxing",
+  "ingredients": [
+    {
+      "item": "klaxon:weathered_copper_plating_block"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:waxed_weathered_copper_plating_block"
+  }
+}

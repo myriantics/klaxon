@@ -252,6 +252,19 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingRecipeCategory.BUILDING,
                 null
         );
+
+        addWaxingRecipe(KlaxonItems.COPPER_PLATING_BLOCK, KlaxonItems.WAXED_COPPER_PLATING_BLOCK);
+        addWaxingRecipe(KlaxonItems.EXPOSED_COPPER_PLATING_BLOCK, KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
+        addWaxingRecipe(KlaxonItems.WEATHERED_COPPER_PLATING_BLOCK, KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
+        addWaxingRecipe(KlaxonItems.OXIDIZED_COPPER_PLATING_BLOCK, KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+        addWaxingRecipe(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK, KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK);
+        addWaxingRecipe(KlaxonItems.EXPOSED_COPPER_WIRE_SPOOL_BLOCK, KlaxonItems.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+        addWaxingRecipe(KlaxonItems.WEATHERED_COPPER_WIRE_SPOOL_BLOCK, KlaxonItems.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+        addWaxingRecipe(KlaxonItems.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK, KlaxonItems.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+        addWaxingRecipe(KlaxonItems.COPPER_PIPE_MATRIX, KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
+        addWaxingRecipe(KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX, KlaxonItems.WAXED_EXPOSED_COPPER_PIPE_MATRIX);
+        addWaxingRecipe(KlaxonItems.WEATHERED_COPPER_PIPE_MATRIX, KlaxonItems.WAXED_WEATHERED_COPPER_PIPE_MATRIX);
+        addWaxingRecipe(KlaxonItems.OXIDIZED_COPPER_PIPE_MATRIX, KlaxonItems.WAXED_OXIDIZED_COPPER_PIPE_MATRIX);
     }
 
     private void buildRedstoneCraftingRecipes() {
@@ -484,6 +497,19 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
     private void add2x2CompressionDecompressionRecipes(ItemConvertible small, ItemConvertible large, ResourceCondition... conditions) {
         add2x2PackingRecipe(Ingredient.ofItems(small), new ItemStack(large, 1), null, null, conditions);
         add2x2UnpackingRecipe(Ingredient.ofItems(large), small, null, null, conditions);
+    }
+
+    private void addWaxingRecipe(Item unwaxed, Item waxed) {
+        addShapelessCraftingRecipe(
+                DefaultedList.copyOf(
+                        Ingredient.EMPTY,
+                        Ingredient.ofItems(unwaxed),
+                        Ingredient.ofItems(Items.HONEYCOMB)
+                ),
+                new ItemStack(waxed),
+                CraftingRecipeCategory.BUILDING,
+                "klaxon.waxing"
+        );
     }
 
     private void addWireSpoolRecipe(Ingredient wire, ItemStack result, ResourceCondition... conditions) {
