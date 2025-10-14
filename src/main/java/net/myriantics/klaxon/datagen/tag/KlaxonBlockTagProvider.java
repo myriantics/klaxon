@@ -237,6 +237,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonBlockTags.CLEAVER_INSTABREAKABLE);
         getOrCreateTagBuilder(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE)
                 .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE);
+
+        getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
+                .add(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK)
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
     }
 
     private void buildNetherReactionTags() {
