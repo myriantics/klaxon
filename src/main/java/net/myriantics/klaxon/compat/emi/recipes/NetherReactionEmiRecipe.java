@@ -6,12 +6,14 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.api.BlockIngredient;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -28,7 +30,14 @@ public class NetherReactionEmiRecipe implements EmiRecipe {
         this.id = recipeEntry.id();
         this.inputStacks = Collections.singletonList(EmiIngredient.of(Arrays.stream(
                 recipeEntry.value().getBlockIngredient().getDisplayStacks()
-        ).map(EmiStack::of).toList()));
+        ).filter(itemStack -> {
+            // jank hack but whatevs
+            if (itemStack.getItem() instanceof BlockItem blockItem) {
+                return !blockItem.getBlock().getDefaultState().isIn(KlaxonBlockTags.NETHER_REACTION_IMMUNE);
+            }
+
+            return true;
+        }).map(EmiStack::of).toList()));
         this.outputStacks = List.of(EmiStack.of(
                 KlaxonBlockItems.getBlockDisplayStack(recipeEntry.value().getOutputBlock())
         ));
