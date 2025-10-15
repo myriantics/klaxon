@@ -30,7 +30,6 @@ public abstract class KlaxonPackets {
         PayloadTypeRegistry.playS2C().register(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket.PACKET_CODEC);
-        PayloadTypeRegistry.playS2C().register(GrappleClawEntityGrapplePacket.ID, GrappleClawEntityGrapplePacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(ItemUsageLockoutTrigger.ID, ItemUsageLockoutTrigger.PACKET_CODEC);
 
         // c2s
@@ -45,7 +44,6 @@ public abstract class KlaxonPackets {
         ClientPlayNetworking.registerGlobalReceiver(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket::execute);
         ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket::execute);
         ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket::execute);
-        ClientPlayNetworking.registerGlobalReceiver(GrappleClawEntityGrapplePacket.ID, GrappleClawEntityGrapplePacket::execute);
         ClientPlayNetworking.registerGlobalReceiver(ItemUsageLockoutTrigger.ID, ItemUsageLockoutTrigger::execute);
     }
 

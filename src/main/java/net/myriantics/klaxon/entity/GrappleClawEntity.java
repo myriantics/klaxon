@@ -11,6 +11,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.Item;
@@ -37,7 +40,6 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.Offset;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.networking.s2c.GrappleClawEntityGrapplePacket;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
@@ -68,6 +70,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     private boolean isWinchCableAttached = false;
     private int ticksSinceDamaged = 0;
 
+    private static final TrackedData<Integer> GRAPPLED_ENTITY_ID = DataTracker.registerData(GrappleClawEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
     private Entity grappledEntity = null;
     private PlayerEntity attachedPlayerEntity = null;
     private UUID attachedPlayerEntityUUID = null;
@@ -86,6 +90,25 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     public GrappleClawEntity(World world, PlayerEntity player, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
         super(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW, x, y, z, world, stack, shotFrom);
+    }
+
+    @Override
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(GRAPPLED_ENTITY_ID, 0);
+    }
+
+    @Override
+    public void onTrackedDataSet(TrackedData<?> data) {
+        if (GRAPPLED_ENTITY_ID.equals(data)) {
+            int i = this.getDataTracker().get(GRAPPLED_ENTITY_ID);
+
+            // id is offset by one to allow for entities with an id of 0
+            // was initially confused by this when i saw it in the fishing bobber entity so im dropping this explanation here for myself or whatever future person reads this
+            this.setGrappledEntity(i > 0 ? this.getWorld().getEntityById(i - 1) : null);
+        }
+
+        super.onTrackedDataSet(data);
     }
 
     @Override
@@ -303,7 +326,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     private void hookEntity(@NotNull Entity entity) {
-        this.grappledEntity = entity;
+        this.setGrappledEntity(entity);
         this.setVelocity(Vec3d.ZERO);
         this.setPosition(entity.getEyePos().subtract(0, this.getHeight() / 2, 0));
 
@@ -312,17 +335,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 1.0F,
                 1.0F / (this.getWorld().getRandom().nextFloat() * 0.4F + 1.2F)
         );
-
-        // let attached player know
-        if (this.getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
-            KlaxonServerPlayNetworkHandler.send(serverPlayer, new GrappleClawEntityGrapplePacket(this.getId(), entity.getId()));
-        }
     }
 
     private void releaseGrappledEntity() {
         Entity grappledEntity = this.grappledEntity;
         if (grappledEntity != null) {
-            this.grappledEntity = null;
+            this.setGrappledEntity(null);
             this.setVelocity(grappledEntity.getVelocity());
         }
     }
@@ -487,8 +505,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
-    public void setGrappledEntity(Entity entity) {
+    public void setGrappledEntity(@Nullable Entity entity) {
         this.grappledEntity = entity;
+        if (!this.getWorld().isClient()) {
+            // id is offset by one to allow for entities with an id of 0
+            // was initially confused by this when i saw it in the fishing bobber entity so im dropping this explanation here for myself or whatever future person reads this
+            this.getDataTracker().set(GRAPPLED_ENTITY_ID, entity == null ? 0 : entity.getId() + 1);
+        }
     }
 
     public @Nullable Entity getGrappledEntity() {
