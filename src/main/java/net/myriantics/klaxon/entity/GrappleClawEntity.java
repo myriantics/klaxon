@@ -260,12 +260,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     public boolean canHit() {
-        return true;
+        return this.grappledEntity == null;
     }
 
     @Override
     public boolean isAttackable() {
-        return true;
+        return this.grappledEntity == null;
     }
 
     public boolean isAnchored() {
