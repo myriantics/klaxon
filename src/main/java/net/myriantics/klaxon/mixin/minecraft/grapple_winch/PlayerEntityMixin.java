@@ -1,7 +1,11 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -168,5 +172,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         }
     }
 
+    @WrapOperation(
+            method = "attack",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z")
+    )
+    private boolean klaxon$tryFastReloadWhenHittingEntity(Entity instance, DamageSource source, float amount, Operation<Boolean> original) {
+        @Nullable GrappleClawEntity grappleClaw = this.klaxon$getGrappleClaw();
 
+        // try to fast reload the grapple claw attached to the entity if it's attached
+        if (grappleClaw != null && instance.equals(grappleClaw.getGrappledEntity())) {
+            if (grappleClaw.tryFastReload((PlayerEntity) (Object) this)) {
+                return false;
+            }
+        }
+
+        return original.call(instance, source, amount);
+    }
 }

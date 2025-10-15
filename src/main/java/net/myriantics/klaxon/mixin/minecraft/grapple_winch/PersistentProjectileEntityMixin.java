@@ -42,15 +42,20 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;applyGravity()V")
     )
     private void klaxon$cancelGravityIfRetracting(PersistentProjectileEntity instance, Operation<Void> original) {
-        if (
-                instance instanceof GrappleClawEntity grappleClaw
-                && grappleClaw.getOwner() instanceof PlayerEntityGrappleAccess access
-                && instance.equals(access.klaxon$getGrappleClaw())
-                && access.klaxon$isRetracting()
-        ) {
-            return;
-        } else {
-            original.call(instance);
+        if (instance instanceof GrappleClawEntity grappleClaw) {
+            // no need to apply gravity if it's anchored - this means it's either in a block or grappling an entity
+            if (grappleClaw.isAnchored()) {
+                return;
+            }
+
+            // don't apply gravity if it's being retracted
+            @Nullable PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) grappleClaw.getAttachedPlayer();
+            if (access != null && grappleClaw.equals(access.klaxon$getGrappleClaw()) && access.klaxon$isRetracting()) {
+                return;
+            }
         }
+
+        // otherwise, gravity works as normal
+        original.call(instance);
     }
 }

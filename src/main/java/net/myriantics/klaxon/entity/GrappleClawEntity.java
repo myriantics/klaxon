@@ -4,6 +4,9 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -64,7 +67,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     private boolean isWinchCableAttached = false;
     private int ticksSinceDamaged = 0;
 
-    private Entity hookedEntity = null;
+    private Entity grappledEntity = null;
     private PlayerEntity attachedPlayerEntity = null;
     private UUID attachedPlayerEntityUUID = null;
 
@@ -104,9 +107,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
         } else {
             // attempt to pick up / load the attached grapple claw
-            if (this.tryPickup(player)) {
-                return ActionResult.SUCCESS;
+            // if that fails, just pick self up and discard
+            if (!this.tryFastReload(player)) {
+                player.sendPickup(this, 1);
+                this.discard();
             }
+            return ActionResult.SUCCESS;
         }
 
         return super.interact(player, hand);
@@ -114,7 +120,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     public void kill() {
-        if (!this.pickupType.equals(PickupPermission.CREATIVE_ONLY)) {
+        if (this.pickupType.equals(PickupPermission.ALLOWED)) {
             this.dropStack(getItemStack());
         }
         super.kill();
@@ -147,42 +153,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 return true;
             }
 
-            // attacking grapple claw with an unloaded grapple winch attempts to load claw into winch
             ItemStack weaponStack = source.getWeaponStack();
-            if (weaponStack != null && weaponStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
-                Entity attacker = source.getAttacker();
+            Entity attacker = source.getAttacker();
 
-                // make sure the attacker is present & is a living entity.
-                // after that, make sure it's either not a player, a disconnected player, or the currently attached player
-                // ugly condition i know haha
-                if (attacker instanceof LivingEntity && (!(attacker instanceof PlayerEntity) || (!((PlayerEntityGrappleAccess) attacker).klaxon$hasActiveConnection() || attacker.equals(attachedPlayer)))) {
-                    if (this.pickupType.equals(PickupPermission.CREATIVE_ONLY)) {
-                        // if stored projectile is intangible, detach and return
-                        this.detachCable(false);
-                        return true;
-                    } else if (GrappleWinchItem.loadIfPossible(weaponStack, this.getItemStack(), (LivingEntity) attacker)) {
-                        // if loading succeeded, play indicator sound and discard.
-                        world.playSound(
-                                null,
-                                this.getX(),
-                                this.getEyeY(),
-                                this.getZ(),
-                                KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_FAST_LOAD,
-                                attacker.getSoundCategory(),
-                                0.8f + world.getRandom().nextFloat() * 0.3f,
-                                0.7f + world.getRandom().nextFloat() * 0.3f
-                        );
-
-                        world.emitGameEvent(
-                                GameEvent.ENTITY_ACTION,
-                                getPos(),
-                                GameEvent.Emitter.of(attacker)
-                        );
-
-                        this.discard();
-                        return true;
-                    }
-                }
+            // make sure the attacker is a player entity - then, check if we're either not attached or the player is the attached player
+            // if this passes, attempt fast reloading - and return true if that passes.
+            if (attacker instanceof PlayerEntity player && (!this.isWinchCableAttached || player.equals(attachedPlayer)) && this.tryFastReload(player)) {
+                return true;
             }
 
             // retrievers do not damage grapple claw - make sure to return so we don't do damage anyways
@@ -291,7 +268,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     public boolean isAnchored() {
-        return inGround;
+        return inGround || (this.grappledEntity != null && EntityWeightHelper.isHeavy(this.grappledEntity));
     }
 
     @Override
@@ -301,29 +278,35 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        Entity entity = entityHitResult.getEntity();
+        Entity hitEntity = entityHitResult.getEntity();
+        @Nullable PlayerEntity attachedPlayer = this.getAttachedPlayer();
 
-        if (entity.equals(getAttachedPlayer()) && entity instanceof ServerPlayerEntity serverPlayer) {
+        // don't bother reattaching to currently grappled entity
+        if (hitEntity.equals(this.grappledEntity)) {
+            return;
+        }
 
-            // if we hit the owner entity try to have the owner pick up claw
-            if (this.tryPickup(serverPlayer)) {
-                this.discard();
+        // check that we're attached to a cable
+        if (this.isWinchCableAttached) {
+            // if we hit the attached player, attempt to fast reload
+            if (hitEntity.equals(attachedPlayer)) {
+                if (!this.tryFastReload(attachedPlayer)) {
+                    // if we can't be picked up, bonk all velocity
+                    setVelocity(Vec3d.ZERO);
+                }
+            } else {
+                // attempt to hook into entity
+                this.updateHookedEntity(hitEntity);
             }
-
-            // if we can't be picked up, bonk all velocity
-            setVelocity(Vec3d.ZERO);
-        } else {
-            // we don't want to damage the retracting player haha
         }
     }
 
-    private void updateHookedEntityId(@Nullable Entity entity) {
-        this.hookedEntity = entity;
+    private void updateHookedEntity(@Nullable Entity entity) {
+        this.grappledEntity = entity;
     }
 
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
-
         // prep variables
         World world = getWorld();
         BlockPos hitPos = blockHitResult.getBlockPos();
@@ -361,7 +344,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
      * @param pos
      */
     public void onBlockPosIntersection(World world, BlockState occupiedState, BlockPos pos) {
-
         // make sure we're neither anchored nor removed
         if (this.isAnchored() || this.isRemoved()) {
             return;
@@ -402,6 +384,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         World world = this.getWorld();
 
         if (attachedPlayer != null) {
+            // clear grappled entity if it was removed
+            if (this.grappledEntity != null && this.grappledEntity.isRemoved()) {
+                this.grappledEntity = null;
+            }
+
             Vec3d attachedEyePos = attachedPlayer.getEyePos();
 
             double ownerDistance = this.getPos().distanceTo(attachedEyePos);
@@ -429,7 +416,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             if (!this.isAnchored()) {
 
                 // retract grapple claw if owner pulls back before landing
-                if (access.klaxon$isRetracting()) {
+                if (retracting) {
                     Vec3d pulling = attachedEyePos.subtract(getPos()).normalize();
 
                     Vec3d vec = pulling.multiply(4f/20);
@@ -454,9 +441,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 }
             }
 
-            // commit the total velocity edits
-            if (!getWorld().isClient()) {
-                this.addVelocity(selfVec);
+            // commit the total velocity edits to self or whatever entity we're attached to
+            this.moveSelfOrGrappledEntity(selfVec);
+            // after this, update position and velo to the grappled entity position and velo
+            if (!this.getWorld().isClient && this.grappledEntity != null) {
+                this.setPosition(this.grappledEntity.getEyePos());
             }
         }
 
@@ -469,6 +458,37 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
+    public @Nullable Entity getGrappledEntity() {
+        return grappledEntity;
+    }
+
+    protected void moveSelfOrGrappledEntity(Vec3d velocityToAdd) {
+        Entity grappledEntity = this.grappledEntity;
+        boolean client = this.getWorld().isClient();
+
+        switch (grappledEntity) {
+            case PlayerEntity player -> {
+                if (player instanceof ClientPlayerEntity) {
+                    player.addVelocity(velocityToAdd);
+                }
+            }
+            case null -> {
+                if (!client) {
+                    this.addVelocity(velocityToAdd);
+                }
+            }
+            default -> {
+                grappledEntity.addVelocity(velocityToAdd);
+            }
+        }
+
+        if (grappledEntity == null) {
+            if (!client) {
+                this.addVelocity(velocityToAdd);
+            }
+        }
+    }
+
     @Override
     protected void age() {
         // only age up if in ground and disconnected
@@ -477,67 +497,92 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
-    @Override
-    protected boolean tryPickup(PlayerEntity player) {
-        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
-
-        boolean isAttachedToPlayer = this.equals(access.klaxon$getGrappleClaw());
-
-        // if a player is attached, only that player can pick up the grapple claw
-        if (isWinchCableAttached && !isAttachedToPlayer) {
-            return false;
-        }
-
-        BlockPos steppingPos = player.getSteppingPos();
+    /**
+     * Attempt to perform a fast-reloading operation. Plays a sound, emits game event, discards self, and detaches grapple cable if successful.
+     * @param pickupPlayer - Player that is attempting to fast-reload this Grapple Claw into their Grapple Winch
+     * @return Whether the fast loading succeeded or not
+     */
+    public boolean tryFastReload(PlayerEntity pickupPlayer) {
+        BlockPos steppingPos = pickupPlayer.getSteppingPos();
         BlockPos anchoredPos = this.getBlockPos();
 
         // don't pick up grapple claw while you're being supported by it
-        if ((!player.isOnGround() && anchoredPos.getY() > steppingPos.getY()) && (player.equals(getAttachedPlayer()) || isAttachedToPlayer)) {
+        if ((!pickupPlayer.isOnGround() && anchoredPos.getY() > steppingPos.getY())) {
             return false;
         }
 
-        World world = player.getWorld();
+        World world = pickupPlayer.getWorld();
 
-        ItemStack winchStack = player.getMainHandStack().isOf(KlaxonItems.GRAPPLE_WINCH)
-                ? player.getMainHandStack()
-                : player.getOffHandStack();
+        // find the player's grapple winch stack - main hand priority, then offhand
+        ItemStack winchStack = pickupPlayer.getMainHandStack();
+        if (!(winchStack.getItem() instanceof GrappleWinchItem)) {
+            winchStack = pickupPlayer.getOffHandStack();
 
-        if ((!access.klaxon$hasActiveConnection() || isAttachedToPlayer) && !this.pickupType.equals(PickupPermission.CREATIVE_ONLY) && GrappleWinchItem.loadIfPossible(winchStack, this.getItemStack(), player)) {
+            // if both the main hand stack and offhand stack aren't grapple winches, fail the fast reload
+            if (!(winchStack.getItem() instanceof GrappleWinchItem)) {
+                return false;
+            }
+        }
 
+        ChargedProjectilesComponent projectiles = winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
+
+        // make sure that the grapple winch is empty and that we're either unattached or being loaded into the attached player's grapple winch
+        if (projectiles.isEmpty() && (!this.isWinchCableAttached || pickupPlayer.equals(this.getAttachedPlayer()))) {
             // this is needed so players can choose whether they want to recast grapple claw or not
             // only trigger this if pickup occurred while retracting
-            if (player instanceof ServerPlayerEntity serverPlayer && access.klaxon$isRetracting()) {
+            if (pickupPlayer instanceof ServerPlayerEntity serverPlayer && ((PlayerEntityGrappleAccess) serverPlayer).klaxon$isRetracting()) {
                 // update usage lockout if true
                 KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
             }
 
+            // if we're on the server, update the grapple winch's components to include this one
+            if (!world.isClient()) {
+                winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
+            }
+
+            // play sounds and emit game event
             world.playSound(
                     null,
-                    player.getX(),
-                    player.getEyeY(),
-                    player.getZ(),
-                    KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
+                    pickupPlayer.getX(),
+                    pickupPlayer.getEyeY(),
+                    pickupPlayer.getZ(),
+                    KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_FAST_LOAD,
                     SoundCategory.PLAYERS,
                     0.7f + world.getRandom().nextFloat() * 0.3f,
                     0.7f + world.getRandom().nextFloat() * 0.3f
             );
             world.emitGameEvent(
                     GameEvent.ENTITY_ACTION,
-                    player.getEyePos(),
-                    GameEvent.Emitter.of(player)
+                    pickupPlayer.getEyePos(),
+                    GameEvent.Emitter.of(pickupPlayer)
             );
 
             this.discard();
             this.detachCable(true);
             return true;
-        } else {
-            boolean success = super.tryPickup(player);
-            if (success && !this.getWorld().isClient()) {
-                this.discard();
-                this.detachCable(true);
-            }
-            return success;
         }
+
+        return false;
+    }
+
+    @Override
+    protected boolean tryPickup(PlayerEntity pickupPlayer) {
+        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) pickupPlayer;
+
+        boolean isAttachedToPickupPlayer = this.equals(access.klaxon$getGrappleClaw());
+
+        // don't allow players to pick up attached grapple claws that aren't theirs
+        if (this.isWinchCableAttached && !isAttachedToPickupPlayer) {
+            return false;
+        }
+
+        // if we're allowed to be picked up by this player, only return false if this was handled by fast loading!
+        if (super.tryPickup(pickupPlayer)) {
+            return !this.tryFastReload(pickupPlayer);
+        }
+
+        // if all else failed, we can't be picked up - return false
+        return false;
     }
 
     private boolean veinmineBlocksIfValid(World world, BlockState originState, BlockPos originPos, @NotNull Entity owner) {
@@ -700,6 +745,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             if (attachedPlayer instanceof ServerPlayerEntity serverPlayer) {
                 GrappleWinchNetworkUtil.clearFromClients(serverPlayer, this);
+            }
+
+            // if we detach while grappled onto an entity, take on its velocity
+            Entity grappledEntity = this.grappledEntity;
+            if (grappledEntity != null) {
+                this.grappledEntity = null;
+                this.setVelocity(grappledEntity.getVelocity());
             }
         }
 
