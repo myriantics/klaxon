@@ -13,6 +13,7 @@ public abstract class KlaxonPackets {
 
     public static final Identifier GRAPPLE_WINCH_CONNECTION_SYNC_S2C_ID = locateS2C("grapple_winch_connection_sync");
     public static final Identifier GRAPPLE_WINCH_CONNECTION_DISCARD_S2C_ID = locateS2C("grapple_winch_connection_discard");
+    public static final Identifier GRAPPLE_CLAW_ENTITY_GRAPPLE_S2C_ID = locateS2C("grapple_claw_entity_grapple_s2c_id");
     public static final Identifier ITEM_USAGE_LOCKOUT_TRIGGER_S2C_ID = locateS2C("item_usage_lockout");
     public static final Identifier BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID = locateS2C("blast_processor_screen_sync");
     public static final Identifier KLAXON_WORLD_EVENT_TRIGGER_PACKET_S2C_ID = locateS2C("klaxon_world_event");
@@ -29,6 +30,7 @@ public abstract class KlaxonPackets {
         PayloadTypeRegistry.playS2C().register(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(GrappleClawEntityGrapplePacket.ID, GrappleClawEntityGrapplePacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(ItemUsageLockoutTrigger.ID, ItemUsageLockoutTrigger.PACKET_CODEC);
 
         // c2s
@@ -43,6 +45,7 @@ public abstract class KlaxonPackets {
         ClientPlayNetworking.registerGlobalReceiver(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket::execute);
         ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket::execute);
         ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket::execute);
+        ClientPlayNetworking.registerGlobalReceiver(GrappleClawEntityGrapplePacket.ID, GrappleClawEntityGrapplePacket::execute);
         ClientPlayNetworking.registerGlobalReceiver(ItemUsageLockoutTrigger.ID, ItemUsageLockoutTrigger::execute);
     }
 

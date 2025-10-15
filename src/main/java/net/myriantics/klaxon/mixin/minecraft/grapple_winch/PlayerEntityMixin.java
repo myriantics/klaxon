@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.GrappleClawEntity;
@@ -178,10 +179,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     )
     private boolean klaxon$tryFastReloadWhenHittingEntity(Entity instance, DamageSource source, float amount, Operation<Boolean> original) {
         @Nullable GrappleClawEntity grappleClaw = this.klaxon$getGrappleClaw();
+        @Nullable ItemStack weaponStack = source.getWeaponStack();
 
         // try to fast reload the grapple claw attached to the entity if it's attached
-        if (grappleClaw != null && instance.equals(grappleClaw.getGrappledEntity())) {
-            if (grappleClaw.tryFastReload((PlayerEntity) (Object) this)) {
+        if (grappleClaw != null && weaponStack != null && instance.equals(grappleClaw.getGrappledEntity())) {
+            if (grappleClaw.tryFastReload((PlayerEntity) (Object) this, weaponStack)) {
                 return false;
             }
         }
