@@ -63,7 +63,8 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
     public void processHammerWalljump(PlayerEntity player, World world, BlockPos pos, Direction direction) {
         BlockState targetBlockState = world.getBlockState(pos);
 
-        if (player == null) {
+        // validate this to make sure a random block pos was not passed in
+        if (player == null || player.getEyePos().distanceTo(pos.toCenterPos()) > player.getBlockInteractionRange() * 2) {
             return;
         }
 
