@@ -9,6 +9,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -29,6 +30,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -71,6 +73,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     private int ticksSinceDamaged = 0;
 
     private static final TrackedData<Integer> GRAPPLED_ENTITY_ID = DataTracker.registerData(GrappleClawEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private final ArrayList<ItemEntity> draggedItems = new ArrayList<>();
 
     private Entity grappledEntity = null;
     private PlayerEntity attachedPlayerEntity = null;
@@ -314,6 +317,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         if (this.isWinchCableAttached) {
             // if we hit the attached player, attempt to fast reload
             if (hitEntity.equals(attachedPlayer)) {
+                // attempt to pickup items into attached player when hitting
+                if (!this.draggedItems.isEmpty()) {
+                    for (ItemEntity itemEntity : this.draggedItems) {
+                        itemEntity.onPlayerCollision(attachedPlayer);
+                    }
+                }
+
                 if (!(this.tryFastReload(attachedPlayer, attachedPlayer.getMainHandStack()) || this.tryFastReload(attachedPlayer, attachedPlayer.getOffHandStack()))) {
                     // if we can't be picked up, bonk all velocity
                     setVelocity(Vec3d.ZERO);
@@ -435,6 +445,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             Vec3d attachedEyePos = attachedPlayer.getEyePos();
 
+            Vec3d claw2WielderEyeVec = attachedPlayer.getEyePos().subtract(this.getPos());
+
             double ownerDistance = this.getPos().distanceTo(attachedEyePos);
 
             PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) attachedPlayer;
@@ -451,9 +463,14 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
 
             // if the attached player is heavy and retracting, de-anchor and pop advancement
-            if (!world.isClient && this.isAnchored() && retracting && EntityWeightHelper.isHeavy(attachedPlayer)) {
-                this.inGround = false;
-                KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) attachedPlayer);
+            if (!world.isClient() && retracting && EntityWeightHelper.isHeavy(attachedPlayer)) {
+                if (this.inGround) {
+                    this.inGround = false;
+                    KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) attachedPlayer);
+                } else if (this.grappledEntity != null && EntityWeightHelper.isHeavy(this.grappledEntity)) {
+                    this.releaseGrappledEntity();
+                    KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) attachedPlayer);
+                }
             }
 
             // owner being heavy overrides anchoring
@@ -488,6 +505,27 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             // commit the total velocity edits to self or whatever entity we're attached to
             this.moveSelfOrGrappledEntity(selfVec);
 
+            if (!world.isClient()) {
+                // collect item entities and update their velocity & position
+                if (retracting) {
+                    // yonk nearby entities and add to list
+                    this.draggedItems.addAll(world.getEntitiesByType(
+                            TypeFilter.instanceOf(ItemEntity.class),
+                            this.getBoundingBox().expand(this.getHeight()),
+                            (entity) -> !this.draggedItems.contains(entity)
+                    ));
+
+                    // purge removed item entities
+                    this.draggedItems.removeIf(Entity::isRemoved);
+
+                    // update pos of item entities
+                    for (ItemEntity itemEntity : this.draggedItems) {
+                        itemEntity.setPosition(this.getPos());
+                    }
+                } else if (!this.draggedItems.isEmpty()) {
+                    this.draggedItems.clear();
+                }
+            }
         }
 
         this.detachWielderIfInvalid();
@@ -689,7 +727,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                             KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);
                         }
 
-                        BlockEntity blockEntity = world.getBlockEntity(targetPos);
                         world.breakBlock(targetPos, false, owner);
 
                         blocksBroken++;
@@ -705,7 +742,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
         // drop all of the output stacks at the grapple claw's location, ready to be dragged
         for (ItemStack stack : outputStacks) {
-            dropStack(stack);
+            this.draggedItems.add(dropStack(stack));
         }
 
         // pop advancement trigger and increase mined stat
@@ -730,7 +767,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             // don't break blocks on clientside
             if (!world.isClient()) {
-                BlockEntity blockEntity = world.getBlockEntity(targetPos);
                 world.breakBlock(targetPos, true, owner);
 
                 if (owner instanceof ServerPlayerEntity serverPlayer) {
@@ -746,6 +782,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     private boolean canBreakBlock(World world, BlockState state, BlockPos pos) {
+        if (!world.getGameRules().getBoolean(GameRules.PROJECTILES_CAN_BREAK_BLOCKS)) {
+            return false;
+        }
+
         return (state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0);
     }
 
@@ -929,7 +969,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     public void remove(RemovalReason reason) {
-        this.detachCable(true);
+        if (!reason.equals(RemovalReason.UNLOADED_WITH_PLAYER)) {
+            this.detachCable(true);
+        }
         super.remove(reason);
     }
 }
