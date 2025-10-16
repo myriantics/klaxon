@@ -490,7 +490,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
         }
 
-        this.detachIfInvalid();
+        this.detachWielderIfInvalid();
         // only tick if we're not attached to an entity
         if (this.grappledEntity == null) {
             super.tick();
@@ -812,7 +812,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
      * Also detaches if player is removed, dead, too far away, or in a different dimension. <br>
      * Called every tick.
      */
-    private void detachIfInvalid() {
+    private void detachWielderIfInvalid() {
         if (isWinchCableAttached && getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
             ItemStack itemStack = serverPlayer.getMainHandStack();
             ItemStack itemStack2 = serverPlayer.getOffHandStack();
@@ -826,6 +826,14 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(serverPlayer);
             } else if (serverPlayer.isRemoved() || serverPlayer.isSpectator() || !serverPlayer.isAlive() || !serverPlayer.getWorld().equals(this.getWorld()) || cableTooLong) {
                 this.detachCable(false);
+            }
+        }
+    }
+
+    private void releaseGrappledEntityIfInvalid() {
+        if (this.grappledEntity != null) {
+            if (!this.isWinchCableAttached || this.grappledEntity.isRemoved()) {
+                this.releaseGrappledEntity();
             }
         }
     }

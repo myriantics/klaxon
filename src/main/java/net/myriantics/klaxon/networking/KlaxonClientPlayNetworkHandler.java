@@ -1,9 +1,12 @@
 package net.myriantics.klaxon.networking;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -16,6 +19,10 @@ import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateB
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 
 public abstract class KlaxonClientPlayNetworkHandler {
+    public static void send(CustomPayload customPayload) {
+        ClientPlayNetworking.send(customPayload);
+    }
+
     public static void processKlaxonWorldEvent(int eventId, BlockPos pos, int data) {
         ClientWorld clientWorld = MinecraftClient.getInstance().world;
         if (clientWorld == null) return;
