@@ -41,6 +41,7 @@ public class KlaxonToolUsageRecipeProvider extends KlaxonRecipeSubProvider {
     private void buildWirecuttingRecipes() {
         addWirecuttingRecipe(Ingredient.ofItems(Items.IRON_BARS), new ItemStack(Items.CHAIN, 2));
         addWirecuttingRecipe(Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES), new ItemStack(KlaxonItems.STEEL_WIRE, 3));
+        addWirecuttingRecipe(Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES), new ItemStack(KlaxonItems.STEEL_WIRE, 1));
         addWirecuttingRecipe(Ingredient.fromTag(KlaxonConventionalItemTags.IRON_PLATES), new ItemStack(KlaxonItems.IRON_WIRE, 3));
         addWirecuttingRecipe(Ingredient.fromTag(KlaxonConventionalItemTags.GOLD_PLATES), new ItemStack(KlaxonItems.GOLD_WIRE, 3));
         addWirecuttingRecipe(Ingredient.fromTag(KlaxonConventionalItemTags.COPPER_PLATES), new ItemStack(KlaxonItems.COPPER_WIRE, 3));

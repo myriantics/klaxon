@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:wirecutting",
+  "input_ingredient": {
+    "tag": "c:plates/crude_steel"
+  },
+  "output_stack": {
+    "count": 1,
+    "id": "klaxon:steel_wire"
+  },
+  "sound_override": {}
+}
