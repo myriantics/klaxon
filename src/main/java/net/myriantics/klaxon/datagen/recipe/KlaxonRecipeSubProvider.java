@@ -10,26 +10,22 @@ import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.BlockIngredient;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.api.RecipeOutputCompound;
+import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
-import net.myriantics.klaxon.recipe.tool_usage.types.HammeringRecipe;
-import net.myriantics.klaxon.recipe.tool_usage.types.WirecuttingRecipe;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
-import net.myriantics.klaxon.recipe.tool_usage.AbstractToolUsageRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
-import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -295,21 +291,21 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addHammeringRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.HAMMERING_RECIPE_ID,
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonToolUsageRecipeTypeProvider.HAMMERING.getValue().getPath(),
                 getItemPath(output.getItem()),
                 conditions);
 
-        AbstractToolUsageRecipe recipe = new HammeringRecipe(input, output, null);
+        ToolUsageRecipe recipe = new ToolUsageRecipe(KlaxonToolUsageRecipeTypeProvider.HAMMERING, input, output, null);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     public void addWirecuttingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.WIRECUTTING_RECIPE_ID,
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonToolUsageRecipeTypeProvider.WIRECUTTING.getValue().getPath(),
                 getItemPath(output.getItem()),
                 conditions);
 
-        AbstractToolUsageRecipe recipe = new WirecuttingRecipe(input, output, null);
+        ToolUsageRecipe recipe = new ToolUsageRecipe(KlaxonToolUsageRecipeTypeProvider.WIRECUTTING, input, output, null);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

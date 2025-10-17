@@ -5,12 +5,18 @@ import dev.emi.emi.api.recipe.EmiRecipeSorting;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.RegistryLoader;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
+import net.myriantics.klaxon.registry.KlaxonDynamicRegistries;
+import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
@@ -25,14 +31,6 @@ public abstract class KlaxonEmiRecipeCategories {
     public static final EmiRecipeCategory BLAST_PROCESSING = register(
             KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
             EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR)
-    );
-    public static final EmiRecipeCategory HAMMERING = register(
-            KlaxonRecipeTypes.HAMMERING_RECIPE_ID,
-            EmiIngredient.of(Ingredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS))
-    );
-    public static final EmiRecipeCategory WIRECUTTING = register(
-            KlaxonRecipeTypes.WIRECUTTING_RECIPE_ID,
-            EmiIngredient.of(Ingredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS))
     );
     public static final EmiRecipeCategory ITEM_EXPLOSION_POWER = register(
             KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID,
@@ -51,6 +49,14 @@ public abstract class KlaxonEmiRecipeCategories {
         KlaxonCategory category = new KlaxonCategory(KlaxonCommon.locate(name), icon);
         CATEGORIES.add(category);
         return category;
+    }
+
+    public static EmiRecipeCategory of(String name, EmiRenderable icon) {
+        return of(KlaxonCommon.locate(name), icon);
+    }
+
+    public static EmiRecipeCategory of(Identifier id, EmiRenderable icon) {
+        return new KlaxonCategory(id, icon);
     }
 
     private static class KlaxonCategory extends EmiRecipeCategory {

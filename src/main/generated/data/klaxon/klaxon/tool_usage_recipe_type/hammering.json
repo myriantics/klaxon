@@ -1,0 +1,6 @@
+{
+  "display_item": "klaxon:steel_hammer",
+  "valid_tools": {
+    "tag": "klaxon:recipe_processing_hammers"
+  }
+}

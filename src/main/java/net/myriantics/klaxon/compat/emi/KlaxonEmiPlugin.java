@@ -6,24 +6,30 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
+import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.type.PotionContentsComponent;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
-import net.myriantics.klaxon.compat.emi.recipes.types.HammeringEmiRecipe;
-import net.myriantics.klaxon.compat.emi.recipes.types.WirecuttingEmiRecipe;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -32,6 +38,7 @@ import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecip
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -46,6 +53,44 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registerCategories(registry);
         registerWorkstations(registry);
         registerRecipes(registry);
+
+        World world = MinecraftClient.getInstance().world;
+        if (world != null) {
+            for (RegistryEntry<ToolUsageRecipeType> entry : world.getRegistryManager().get(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).getIndexedEntries()) {
+                Optional<RegistryKey<ToolUsageRecipeType>> optionalKey = entry.getKey();
+
+                if (optionalKey.isPresent()) {
+                    ToolUsageRecipeType type = entry.value();
+                    EmiIngredient validTools = EmiIngredient.of(type.validTools());
+
+                    // attempt to pull from the specified item, but if that fails, use the tag
+                    EmiRenderable renderable;
+                    if (type.display().isPresent() && Registries.ITEM.get(type.display().get()) instanceof Item item) {
+                        renderable = EmiStack.of(item);
+                    } else {
+                        renderable = validTools;
+                    }
+
+                    EmiRecipeCategory category = KlaxonEmiRecipeCategories.of(
+                            optionalKey.get().getValue(), renderable
+                    );
+
+                    registry.addCategory(category);
+                    registry.addWorkstation(category, validTools);
+
+                    for (RecipeEntry<ToolUsageRecipe> recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.TOOL_USAGE)) {
+                        if (recipe.value().getTypeKey().equals(optionalKey.get())) {
+                            registry.addRecipe(new AbstractToolUsageEmiRecipe(recipe, validTools) {
+                                @Override
+                                public EmiRecipeCategory getCategory() {
+                                    return category;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void registerCategories(EmiRegistry registry) {
@@ -57,8 +102,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private void registerWorkstations(EmiRegistry registry) {
         registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.HAMMERING, EmiIngredient.of(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.WIRECUTTING, EmiIngredient.of(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS));
         registry.addWorkstation(KlaxonEmiRecipeCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
 
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(PotionContentsComponent.createStack(Items.SPLASH_POTION, Potions.WATER)));
@@ -73,8 +116,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerRecipes(EmiRegistry registry) {
-        addAll(registry, KlaxonRecipeTypes.HAMMERING, HammeringEmiRecipe::new);
-        addAll(registry, KlaxonRecipeTypes.WIRECUTTING, WirecuttingEmiRecipe::new);
         addAllItemExplosionPower(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);

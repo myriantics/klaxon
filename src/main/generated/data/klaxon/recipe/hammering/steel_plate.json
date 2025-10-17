@@ -1,5 +1,5 @@
 {
-  "type": "klaxon:hammering",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
     "item": "klaxon:steel_ingot"
   },
@@ -7,5 +7,6 @@
     "count": 1,
     "id": "klaxon:steel_plate"
   },
-  "sound_override": {}
+  "sound_override": {},
+  "tool_usage_recipe_type": "klaxon:hammering"
 }

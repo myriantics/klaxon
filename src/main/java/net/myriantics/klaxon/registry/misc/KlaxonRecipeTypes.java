@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.registry.misc;
 
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
@@ -15,7 +14,7 @@ import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeSerializer;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeSerializer;
-import net.myriantics.klaxon.recipe.tool_usage.AbstractToolUsageRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeSerializer;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipeSerializer;
@@ -25,9 +24,6 @@ import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapel
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipeSerializer;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeSerializer;
-import net.myriantics.klaxon.recipe.tool_usage.types.HammeringRecipe;
-import net.myriantics.klaxon.recipe.tool_usage.types.WirecuttingRecipe;
-import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 // recipe code structure yoinked from spectrums github
 public abstract class KlaxonRecipeTypes {
@@ -43,17 +39,10 @@ public abstract class KlaxonRecipeTypes {
     public static RecipeType<BlastProcessorBehaviorRecipe> BLAST_PROCESSOR_BEHAVIOR =
             registerRecipeType(BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID);
 
-    public static final String HAMMERING_RECIPE_ID = "hammering";
-    public static RecipeSerializer<AbstractToolUsageRecipe> HAMMERING_RECIPE_SERIALIZER =
-            registerSerializer(HAMMERING_RECIPE_ID, new ToolUsageRecipeSerializer(HammeringRecipe::new));
-    public static RecipeType<AbstractToolUsageRecipe> HAMMERING =
-            registerRecipeType(HAMMERING_RECIPE_ID);
-
-    public static final String WIRECUTTING_RECIPE_ID = "wirecutting";
-    public static RecipeSerializer<AbstractToolUsageRecipe> WIRECUTTING_RECIPE_SERIALIZER =
-            registerSerializer(WIRECUTTING_RECIPE_ID, new ToolUsageRecipeSerializer(WirecuttingRecipe::new));
-    public static RecipeType<AbstractToolUsageRecipe> WIRECUTTING =
-            registerRecipeType(WIRECUTTING_RECIPE_ID);
+    public static final String TOOL_USAGE_RECIPE_ID = "tool_usage";
+    public static RecipeSerializer<ToolUsageRecipe> TOOL_USAGE_RECIPE_SERIALIZER =
+            registerSerializer(TOOL_USAGE_RECIPE_ID, new ToolUsageRecipeSerializer());
+    public static RecipeType<ToolUsageRecipe> TOOL_USAGE = registerRecipeType(TOOL_USAGE_RECIPE_ID);
 
     public static final String MANUAL_ITEM_APPLICATION_RECIPE_ID = "manual_item_application";
     public static RecipeSerializer<ManualItemApplicationRecipe> MANUAL_ITEM_APPLICATION_RECIPE_SERIALIZER =

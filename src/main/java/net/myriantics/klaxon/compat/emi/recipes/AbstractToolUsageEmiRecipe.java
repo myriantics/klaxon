@@ -1,15 +1,13 @@
 package net.myriantics.klaxon.compat.emi.recipes;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
-import net.myriantics.klaxon.recipe.tool_usage.AbstractToolUsageRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -20,9 +18,9 @@ public abstract class AbstractToolUsageEmiRecipe implements EmiRecipe {
     private final List<EmiIngredient> input;
     private final List<EmiStack> output;
 
-    public AbstractToolUsageEmiRecipe(RecipeEntry<AbstractToolUsageRecipe> recipe) {
+    public AbstractToolUsageEmiRecipe(RecipeEntry<ToolUsageRecipe> recipe, EmiIngredient requiredTool) {
         this.id = recipe.id();
-        this.requiredTool = List.of(EmiIngredient.of(recipe.value().getRequiredTool()));
+        this.requiredTool = List.of(requiredTool);
         this.input = List.of(EmiIngredient.of(recipe.value().getInputIngredient()));
         this.output = List.of(EmiStack.of(recipe.value().getResult(null)));
     }

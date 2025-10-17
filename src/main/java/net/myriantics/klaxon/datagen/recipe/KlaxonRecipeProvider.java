@@ -13,9 +13,9 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.datagen.recipe.providers.*;
-import net.myriantics.klaxon.recipe.tool_usage.AbstractToolUsageRecipe;
-import net.myriantics.klaxon.recipe.tool_usage.types.HammeringRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -89,7 +89,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     public void acceptOverrideRecipe(RecipeExporter exporter, Identifier id) {
         // accept a REALLY FUNNY recipe with the "never loads" resource condition
         withConditions(exporter, new NotResourceCondition(new TrueResourceCondition()))
-                .accept(id, new HammeringRecipe(Ingredient.ofItems(Items.END_ROD), new ItemStack(Items.SHEEP_SPAWN_EGG), SoundEvents.BLOCK_PISTON_EXTEND), null);
+                .accept(id, new ToolUsageRecipe(KlaxonToolUsageRecipeTypeProvider.HAMMERING, Ingredient.ofItems(Items.END_ROD), new ItemStack(Items.SHEEP_SPAWN_EGG), SoundEvents.BLOCK_PISTON_EXTEND), null);
     }
 
     // gotcha stinker

@@ -13,6 +13,8 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.resource.LifecycledResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -32,6 +34,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
+import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
@@ -42,12 +45,8 @@ import java.util.*;
 
 // Inspiration taken from AE2's Item Transformation system
 public abstract class ToolUsageRecipeLogic {
-    // i could implement a cleaner thing than this but i want to keep the recipe types distinct and i really cant be arsed haha
-    private static final List<RecipeType<AbstractToolUsageRecipe>> TOOL_USAGE_RECIPE_TYPES = List.of(
-            KlaxonRecipeTypes.HAMMERING,
-            KlaxonRecipeTypes.WIRECUTTING
-    );
-    private static Map<Item, RecipeType<AbstractToolUsageRecipe>> ITEM_2_RECIPE_TYPE_CACHE = new HashMap<>();
+
+    private static Map<Item, RegistryKey<ToolUsageRecipeType>> ITEM_2_RECIPE_TYPE_CACHE = new HashMap<>();
     public static final int MAX_SOUNDS_PER_ACTION = 4;
     public static final int MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION = 16;
 
@@ -55,16 +54,12 @@ public abstract class ToolUsageRecipeLogic {
         return getTool2RecipeTypeCache(world).containsKey(stack.getItem());
     }
 
-    private static <T extends AbstractToolUsageRecipe> Map<Item, RecipeType<AbstractToolUsageRecipe>> getTool2RecipeTypeCache(World world) {
-
+    private static Map<Item, RegistryKey<ToolUsageRecipeType>> getTool2RecipeTypeCache(World world) {
         if (ITEM_2_RECIPE_TYPE_CACHE.isEmpty()) {
-            Map<Item, RecipeType<AbstractToolUsageRecipe>> newCache = new HashMap<>();
-            for (RecipeType<AbstractToolUsageRecipe> type : TOOL_USAGE_RECIPE_TYPES) {
-                for (RecipeEntry<AbstractToolUsageRecipe> entry : world.getRecipeManager().listAllOfType(type)) {
-                    // add all the compatible items to the new cache
-                    for (ItemStack stack : entry.value().getRequiredTool().getMatchingStacks()) {
-                        newCache.put(stack.getItem(), type);
-                    }
+            Map<Item, RegistryKey<ToolUsageRecipeType>> newCache = new HashMap<>();
+            for (RegistryEntry<ToolUsageRecipeType> type : world.getRegistryManager().get(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).getIndexedEntries()) {
+                for (ItemStack stack : type.value().validTools().getMatchingStacks()) {
+                    type.getKey().ifPresent((key) -> newCache.put(stack.getItem(), key));
                 }
             }
 
@@ -114,7 +109,7 @@ public abstract class ToolUsageRecipeLogic {
             return original;
         }
 
-        RecipeType<AbstractToolUsageRecipe> type = getTool2RecipeTypeCache(world).get(toolStack.getItem());
+        RegistryKey<ToolUsageRecipeType> type = getTool2RecipeTypeCache(world).get(toolStack.getItem());
 
         for (ItemEntity targetItemEntity : selectedItems) {
             ItemStack targetStack = targetItemEntity.getStack().copy();
@@ -125,9 +120,9 @@ public abstract class ToolUsageRecipeLogic {
 
             // necessary so that the client knows if it's completed a recipe or not
             if (world.isClient()) {
-                RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
+                ToolUsageRecipeInput dummyInventory = new ToolUsageRecipeInput(toolStack, targetStack, type);
 
-                Optional<RecipeEntry<AbstractToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
+                Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
 
                 // change recipe success indicator and recipe sound override
                 if (match.isPresent()) {
@@ -144,9 +139,9 @@ public abstract class ToolUsageRecipeLogic {
             }
 
             if (world instanceof ServerWorld serverWorld) {
-                RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
+                ToolUsageRecipeInput dummyInventory = new ToolUsageRecipeInput(toolStack, targetStack, type);
 
-                Optional<RecipeEntry<AbstractToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(type, dummyInventory, world);
+                Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
 
                 if (match.isPresent()) {
                     targetRecipeSuccess = true;
@@ -201,24 +196,6 @@ public abstract class ToolUsageRecipeLogic {
         // if we succeeded at any recipes, we win. also preserve original action result if we do nothing.
         // if cosmetic usage is enabled, we also succeed because yeah
         return recipeSuccess || canCosmeticUse ? ActionResult.SUCCESS : original;
-    }
-
-    private static @NotNull RecipeInput getRecipeInput(ItemStack targetStack, ItemStack toolStack) {
-        return new RecipeInput() {
-            @Override
-            public ItemStack getStackInSlot(int slot) {
-                return switch (slot) {
-                    case 0 -> toolStack;
-                    case 1 -> targetStack;
-                    default -> ItemStack.EMPTY;
-                };
-            }
-
-            @Override
-            public int getSize() {
-                return 2;
-            }
-        };
     }
 
     private static void clearCache() {

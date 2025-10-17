@@ -7,7 +7,7 @@
       }
     }
   ],
-  "type": "klaxon:hammering",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
     "item": "minecraft:end_rod"
   },
@@ -17,5 +17,6 @@
   },
   "sound_override": {
     "sound_id": "minecraft:block.piston.extend"
-  }
+  },
+  "tool_usage_recipe_type": "klaxon:hammering"
 }

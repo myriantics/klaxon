@@ -1,5 +1,5 @@
 {
-  "type": "klaxon:wirecutting",
+  "type": "klaxon:tool_usage",
   "input_ingredient": {
     "item": "minecraft:iron_bars"
   },
@@ -7,5 +7,6 @@
     "count": 2,
     "id": "minecraft:chain"
   },
-  "sound_override": {}
+  "sound_override": {},
+  "tool_usage_recipe_type": "klaxon:wirecutting"
 }

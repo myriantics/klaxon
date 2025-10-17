@@ -66,6 +66,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonParticleTypes.init();
 		KlaxonEntityTypes.init();
         KlaxonEntityAttributes.init();
+        KlaxonDynamicRegistries.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}
