@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -61,6 +62,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -73,7 +75,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     private int ticksSinceDamaged = 0;
 
     private static final TrackedData<Integer> GRAPPLED_ENTITY_ID = DataTracker.registerData(GrappleClawEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private final ArrayList<ItemEntity> draggedItems = new ArrayList<>();
+    private final HashSet<ItemEntity> draggedItems = new HashSet<>();
 
     private Entity grappledEntity = null;
     private PlayerEntity attachedPlayerEntity = null;
@@ -345,6 +347,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 1.0F,
                 1.0F / (this.getWorld().getRandom().nextFloat() * 0.4F + 1.2F)
         );
+
+        this.draggedItems.clear();
     }
 
     private void releaseGrappledEntity() {
@@ -368,6 +372,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         } else {
             // if a block was broken, we don't call the super method
             super.onBlockHit(blockHitResult);
+
+            this.draggedItems.clear();
 
             if (attachedPlayer != null) {
                 if (this.isWinchCableAttached) {
@@ -512,7 +518,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     this.draggedItems.addAll(world.getEntitiesByType(
                             TypeFilter.instanceOf(ItemEntity.class),
                             this.getBoundingBox().expand(this.getHeight()),
-                            (entity) -> !this.draggedItems.contains(entity)
+                            (entity) -> !entity.isRemoved()
                     ));
 
                     // purge removed item entities
@@ -522,8 +528,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     for (ItemEntity itemEntity : this.draggedItems) {
                         itemEntity.setPosition(this.getPos());
                     }
-                } else if (!this.draggedItems.isEmpty()) {
-                    this.draggedItems.clear();
                 }
             }
         }
@@ -573,12 +577,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
             default -> {
                 grappledEntity.addVelocity(velocityToAdd);
-            }
-        }
-
-        if (grappledEntity == null) {
-            if (!client) {
-                this.addVelocity(velocityToAdd);
             }
         }
     }
