@@ -78,18 +78,15 @@ public abstract class ToolUsageRecipeLogic {
      * @return
      * Returns ActionResult.SUCCESS if recipe succeeds - ActionResult.PASS otherwise.
      */
-    public static ActionResult runRecipeLogic(ItemUsageContext context, @Nullable ActionResult original) {
+    public static ActionResult runRecipeLogic(ItemUsageContext context) {
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
         Vec3d clickedPos = context.getHitPos();
         ItemStack toolStack = context.getStack();
         Hand usedHand = context.getHand();
 
-        // if we're not provided an action result, default to pass
-        if (original == null) original = ActionResult.PASS;
-
         // make sure player is valid for recipe processing before doing anything
-        if (!isPlayerValid(player)) return original;
+        if (!isPlayerValid(player)) return ActionResult.PASS;
 
         ToolUseRecipeConfigComponent component = ToolUseRecipeConfigComponent.get(toolStack);
         if (component == null) component = new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_STONE_BREAK);
@@ -106,7 +103,7 @@ public abstract class ToolUsageRecipeLogic {
 
         // if there aren't any dropped items in the targeted area, don't do anything
         if (selectedItems.isEmpty()) {
-            return original;
+            return ActionResult.PASS;
         }
 
         RegistryKey<ToolUsageRecipeType> type = getTool2RecipeTypeCache(world).get(toolStack.getItem());
@@ -195,7 +192,7 @@ public abstract class ToolUsageRecipeLogic {
 
         // if we succeeded at any recipes, we win. also preserve original action result if we do nothing.
         // if cosmetic usage is enabled, we also succeed because yeah
-        return recipeSuccess || canCosmeticUse ? ActionResult.SUCCESS : original;
+        return recipeSuccess || canCosmeticUse ? ActionResult.SUCCESS : ActionResult.PASS;
     }
 
     private static void clearCache() {
