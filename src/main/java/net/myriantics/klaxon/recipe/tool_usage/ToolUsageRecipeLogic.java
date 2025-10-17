@@ -10,8 +10,6 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -38,7 +36,6 @@ import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -46,28 +43,28 @@ import java.util.*;
 // Inspiration taken from AE2's Item Transformation system
 public abstract class ToolUsageRecipeLogic {
 
-    private static Map<Item, RegistryKey<ToolUsageRecipeType>> ITEM_2_RECIPE_TYPE_CACHE = new HashMap<>();
+    private static Set<Item> VALID_TOOLS_CACHE = new HashSet<>();
     public static final int MAX_SOUNDS_PER_ACTION = 4;
     public static final int MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION = 16;
 
     public static boolean test(World world, ItemStack stack) {
-        return getTool2RecipeTypeCache(world).containsKey(stack.getItem());
+        return getValidToolsCache(world).contains(stack.getItem());
     }
 
-    private static Map<Item, RegistryKey<ToolUsageRecipeType>> getTool2RecipeTypeCache(World world) {
-        if (ITEM_2_RECIPE_TYPE_CACHE.isEmpty()) {
-            Map<Item, RegistryKey<ToolUsageRecipeType>> newCache = new HashMap<>();
+    private static Set<Item> getValidToolsCache(World world) {
+        if (VALID_TOOLS_CACHE.isEmpty()) {
+            Set<Item> newCache = new HashSet<>();
             for (RegistryEntry<ToolUsageRecipeType> type : world.getRegistryManager().get(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).getIndexedEntries()) {
                 for (ItemStack stack : type.value().validTools().getMatchingStacks()) {
-                    type.getKey().ifPresent((key) -> newCache.put(stack.getItem(), key));
+                    newCache.add(stack.getItem());
                 }
             }
 
             // update stored cache
-            ITEM_2_RECIPE_TYPE_CACHE = newCache;
+            VALID_TOOLS_CACHE = newCache;
             return newCache;
         } else {
-            return ITEM_2_RECIPE_TYPE_CACHE;
+            return VALID_TOOLS_CACHE;
         }
     }
 
@@ -106,7 +103,17 @@ public abstract class ToolUsageRecipeLogic {
             return ActionResult.PASS;
         }
 
-        RegistryKey<ToolUsageRecipeType> type = getTool2RecipeTypeCache(world).get(toolStack.getItem());
+        RegistryKey<ToolUsageRecipeType> type = null;
+        for (RegistryEntry<ToolUsageRecipeType> entry : world.getRegistryManager().get(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).getIndexedEntries()) {
+            if (entry.value().validTools().test(toolStack) && entry.getKey().isPresent()) {
+                type = entry.getKey().get();
+                break;
+            }
+        }
+
+        if (type == null) {
+            return ActionResult.PASS;
+        }
 
         for (ItemEntity targetItemEntity : selectedItems) {
             ItemStack targetStack = targetItemEntity.getStack().copy();
@@ -196,7 +203,7 @@ public abstract class ToolUsageRecipeLogic {
     }
 
     private static void clearCache() {
-        ITEM_2_RECIPE_TYPE_CACHE.clear();
+        VALID_TOOLS_CACHE.clear();
     }
 
     public static void onServerStarted(MinecraftServer minecraftServer) {
