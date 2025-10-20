@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.EntityTypeTags;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -51,5 +52,9 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
                 .add(EntityType.ITEM)
                 .add(EntityType.ENDER_PEARL)
                 .add(EntityType.EYE_OF_ENDER);
+
+        // allow / denylist tags
+        getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_HOOKING_DENYLIST)
+                .add(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW);
     }
 }

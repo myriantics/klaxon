@@ -312,6 +312,7 @@
   "tag.damage_type.klaxon.electrical": "Electrical Damage",
   "tag.damage_type.klaxon.grapple_winch_cable_transmissible": "Grapple Winch Cable Transmissible Damage",
   "tag.entity_type.klaxon.ferromagnetic_entities": "Ferromagnetic Entities",
+  "tag.entity_type.klaxon.grapple_claw_hooking_denylist": "Grapple Claw Hooking Denylist",
   "tag.entity_type.klaxon.heavy_entities": "Heavy Entities",
   "tag.entity_type.klaxon.heavy_hitter_entities": "Heavy Hitting Entities",
   "tag.entity_type.klaxon.light_entities": "Light Entities",

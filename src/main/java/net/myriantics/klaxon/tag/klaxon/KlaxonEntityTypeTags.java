@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.tag.klaxon;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -19,6 +20,10 @@ public abstract class KlaxonEntityTypeTags {
             createTag("heavy_entities");
     public static final TagKey<EntityType<?>> LIGHT_ENTITIES =
             createTag("light_entities");
+
+    // allowlist / denylist tags
+    public static final TagKey<EntityType<?>> GRAPPLE_CLAW_HOOKING_DENYLIST =
+            createTag("grapple_claw_hooking_denylist");
 
     private static TagKey<EntityType<?>> createTag(String name) {
         return TagKey.of(RegistryKeys.ENTITY_TYPE, KlaxonCommon.locate(name));
