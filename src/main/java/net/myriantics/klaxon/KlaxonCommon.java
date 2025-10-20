@@ -20,6 +20,7 @@ import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.registry.worldgen.KlaxonWorldgenFeatures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongepowered.tools.agent.MixinAgent;
 
 public class KlaxonCommon implements ModInitializer {
 	public static final String MOD_ID = "klaxon";

@@ -15,11 +15,14 @@ public abstract class KlaxonTextures {
     public static final Identifier GRAPPLE_WINCH_3D_SPOOL = copyDir("spool", GRAPPLE_WINCH_3D_STRUCTURE);
     public static final Identifier GRAPPLE_WINCH_3D_CLAW = copyDir("claw", GRAPPLE_WINCH_3D_STRUCTURE);
 
-    private static Identifier copyDir(String path, Identifier parent) {
+    // Grapple Claw Entity
+    public static final Identifier STEEL_GRAPPLE_CLAW_ENTITY = ofEntity("grapple_claws/steel_grapple_claw");
+
+    public static Identifier copyDir(String path, Identifier parent) {
         return copyDir(path, parent.getPath());
     }
 
-    private static Identifier copyDir(String path, String parent) {
+    public static Identifier copyDir(String path, String parent) {
         int lastParentSlash = parent.lastIndexOf('/');
         return KlaxonCommon.locate(
                 lastParentSlash == -1
@@ -28,11 +31,15 @@ public abstract class KlaxonTextures {
         );
     }
 
-    private static Identifier ofGeneric(String path) {
+    public static Identifier ofGeneric(String path) {
         return KlaxonCommon.locate(path);
     }
 
-    private static Identifier ofItem(String path) {
+    public static Identifier ofItem(String path) {
         return KlaxonCommon.locate("item/" + path);
+    }
+
+    public static Identifier ofEntity(String path) {
+        return KlaxonCommon.locate("entity/" + path);
     }
 }
