@@ -6,6 +6,7 @@ import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
+import net.myriantics.klaxon.datagen.custom_providers.KlaxonDamageTypeProvider2;
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
@@ -17,11 +18,8 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 
-		// make modded items show up for datagen purposes
-
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
-		pack.addProvider(KlaxonDamageTypeProviderImpl::new);
 		pack.addProvider(KlaxonModelProvider::new);
 		pack.addProvider(KlaxonItemTagProvider::new);
 		pack.addProvider(KlaxonBlockTagProvider::new);
@@ -37,6 +35,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(KlaxonArmorTrimMaterialProvider::new);
 		pack.addProvider(KlaxonEnUsLanguageProvider::new);
         pack.addProvider(KlaxonToolUsageRecipeTypeProvider::new);
+        pack.addProvider(KlaxonDamageTypeProvider2::new);
 	}
 
 	@Override

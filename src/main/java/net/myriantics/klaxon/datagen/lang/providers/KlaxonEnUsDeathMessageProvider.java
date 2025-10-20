@@ -13,6 +13,7 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
     @Override
     public void generate() {
         generateMeleeDeathMessageTranslations();
+        generateRangedDeathMessageTranslations();
         generateMachineDeathMessageTranslations();
     }
 
@@ -46,6 +47,19 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
                 KlaxonDamageTypes.BLUDGEONING,
                 "%1$s was bludgeoned by %2$s",
                 "%1$s was bludgeoned by %2$s using %3$s"
+        );
+    }
+
+    private void generateRangedDeathMessageTranslations() {
+        addDeathMessage(
+                KlaxonDamageTypes.GRAPPLING,
+                "%1$s was grappled by %2$s",
+                "%1$s was grappled by %2$s using %3$s"
+        );
+        addDeathMessage(
+                KlaxonDamageTypes.RENDING,
+                "%1$s was rent apart by %2$s",
+                "%1$s was rent apart by %2$s using %3$s"
         );
     }
 

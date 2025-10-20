@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public abstract class KlaxonDamageTypes {
 
+    // melee
     public static final RegistryKey<DamageType> HAMMER_BONKING =
             createDamageType("hammer_bonking");
     public static final RegistryKey<DamageType> HAMMER_WALLOPING =
@@ -26,6 +27,12 @@ public abstract class KlaxonDamageTypes {
             createDamageType("wrench_overtuning");
     public static final RegistryKey<DamageType> BLUDGEONING =
             createDamageType("bludgeoning");
+
+    // projectile
+    public static final RegistryKey<DamageType> GRAPPLING =
+            createDamageType("grappling");
+    public static final RegistryKey<DamageType> RENDING =
+            createDamageType("rending");
 
     // to be added - will be used with Coring Drill
     public static final RegistryKey<DamageType> MINCING =

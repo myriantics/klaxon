@@ -94,7 +94,7 @@ public abstract class KlaxonEnUsLanguageSubProvider {
     }
 
     protected void addDeathMessage(RegistryKey<DamageType> type, String value, @Nullable String itemValue) {
-        String key = "death.attack." + type.getValue().getPath();
+        String key = "death.attack." + type.getValue().getNamespace() + "." + type.getValue().getPath();
 
         builder.add(key, value);
         if (itemValue != null) {

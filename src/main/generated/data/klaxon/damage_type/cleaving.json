@@ -1,5 +1,5 @@
 {
   "exhaustion": 0.4,
-  "message_id": "cleaving",
+  "message_id": "klaxon.cleaving",
   "scaling": "when_caused_by_living_non_player"
 }
