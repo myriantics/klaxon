@@ -1,5 +1,7 @@
 {
   "values": [
-    "#klaxon:instabreakable/hammer"
+    "#klaxon:instabreakable/hammer",
+    "minecraft:chorus_plant",
+    "minecraft:chorus_flower"
   ]
 }
