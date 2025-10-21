@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry.advancement;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
@@ -33,5 +34,8 @@ public abstract class KlaxonAdvancementTriggers {
     }
     public static void triggerGrappleWinchDeAnchorGrappleClaw(ServerPlayerEntity serverPlayer) {
         KlaxonAdvancementCriteria.DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION.trigger(serverPlayer);
+    }
+    public static void triggerEntityGrapple(ServerPlayerEntity serverPlayer, Entity grappledEntity) {
+        KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.trigger(serverPlayer, grappledEntity);
     }
 }

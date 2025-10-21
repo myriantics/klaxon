@@ -117,6 +117,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
                 "Spidey",
                 "Disconnect from an anchored Grapple Claw midair to maintain speed"
         );
+        addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON,
+                "Dragonhearted",
+                "Grapple onto an Ender Dragon and take flight"
+        );
 
         // level 6
         addStageOneAdvancement(

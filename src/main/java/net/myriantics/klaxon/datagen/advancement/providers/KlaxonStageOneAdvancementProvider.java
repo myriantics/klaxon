@@ -5,6 +5,7 @@ import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
@@ -46,6 +47,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     public static final String ROTATE_RAIL_WITH_WRENCH = "rotate_rail_with_wrench";
     public static final String OBTAIN_GRAPPLE_WINCH = "obtain_grapple_winch";
 
+    public static final String GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON = "grapple_ender_dragon";
     public static final String GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW = "grapple_winch_de_anchor_grapple_claw";
     public static final String GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE = "grapple_winch_intentionally_disconnect_cable";
 
@@ -86,6 +88,9 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
 
         AdvancementEntry grappleWinchDeAnchorGrappleClaw = addTask(obtainGrappleWinch, GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW, KlaxonItems.STEEL_GRAPPLE_CLAW, OneOffCriterion.Conditions.createDeAnchorGrappleClaw());
         AdvancementEntry grappleWinchIntentionallyDisconnectCable = addTask(obtainGrappleWinch, GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE, KlaxonItems.STEEL_WIRE, OneOffCriterion.Conditions.createGrappleWinchIntentionallyDisconnectCable());
+        ItemStack enchantedGrappleClawStack = new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
+        enchantedGrappleClawStack.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
+        AdvancementEntry grappleWinchGrappleEnderDragon = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON, enchantedGrappleClawStack, EntityGrappleCriterion.Conditions.create(EntityType.ENDER_DRAGON));
 
         AdvancementEntry grappleWinchVeinMine = addChallenge(grappleWinchDeAnchorGrappleClaw, GRAPPLE_WINCH_VEINMINE_GLOWSTONE, Items.GLOWSTONE, GrappleWinchVeinMineCriterion.Conditions.create(Blocks.GLOWSTONE));
     }

@@ -44,6 +44,7 @@ import net.myriantics.klaxon.api.Offset;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
@@ -367,6 +368,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         this.setGrappledEntity(entity);
         this.setVelocity(Vec3d.ZERO);
         this.setPosition(entity.getEyePos().subtract(0, this.getHeight() / 2, 0));
+
+        // pop advancement
+        if (this.getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
+            KlaxonAdvancementTriggers.triggerEntityGrapple(serverPlayer, entity);
+        }
 
         this.playSoundAtSelfAndThroughCableIfPossible(
                 KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
