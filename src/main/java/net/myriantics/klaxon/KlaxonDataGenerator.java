@@ -6,7 +6,7 @@ import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
-import net.myriantics.klaxon.datagen.custom_providers.KlaxonDamageTypeProvider2;
+import net.myriantics.klaxon.datagen.custom_providers.KlaxonDamageTypeProvider;
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
@@ -20,22 +20,26 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
+        pack.addProvider(KlaxonDamageTypeProvider::new);
 		pack.addProvider(KlaxonModelProvider::new);
-		pack.addProvider(KlaxonItemTagProvider::new);
-		pack.addProvider(KlaxonBlockTagProvider::new);
-		pack.addProvider(KlaxonDamageTypeTagProvider::new);
-		pack.addProvider(KlaxonEntityTypeTagProvider::new);
+
 		pack.addProvider(KlaxonBlockLootTableProvider::new);
 		pack.addProvider(KlaxonRecipeProvider::new);
 		pack.addProvider(KlaxonAdvancementProvider::new);
-		pack.addProvider(KlaxonStatusEffectTagProvider::new);
-		pack.addProvider(KlaxonBlockEntityTypeTagProvider::new);
-		pack.addProvider(KlaxonFluidTagProvider::new);
+
 		pack.addProvider(KlaxonFeatureProvider::new);
         pack.addProvider(KlaxonArmorTrimMaterialProvider::new);
 		pack.addProvider(KlaxonEnUsLanguageProvider::new);
         pack.addProvider(KlaxonToolUsageRecipeTypeProvider::new);
-        pack.addProvider(KlaxonDamageTypeProvider2::new);
+
+        // tags
+        pack.addProvider(KlaxonItemTagProvider::new);
+        pack.addProvider(KlaxonBlockTagProvider::new);
+        pack.addProvider(KlaxonDamageTypeTagProvider::new);
+        pack.addProvider(KlaxonEntityTypeTagProvider::new);
+        pack.addProvider(KlaxonFluidTagProvider::new);
+        pack.addProvider(KlaxonStatusEffectTagProvider::new);
+        pack.addProvider(KlaxonBlockEntityTypeTagProvider::new);
 	}
 
 	@Override

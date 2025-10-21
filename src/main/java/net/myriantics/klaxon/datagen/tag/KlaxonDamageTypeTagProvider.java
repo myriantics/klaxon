@@ -22,6 +22,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         getOrCreateTagBuilder(DamageTypeTags.BYPASSES_SHIELD);
 
+        // you have to use addOptional here because shit is fucky
+
         getOrCreateTagBuilder(DamageTypeTags.NO_KNOCKBACK)
                 .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING);
 
@@ -29,6 +31,12 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .forceAddTag(KlaxonDamageTypeTags.ELECTRICAL);
 
         getOrCreateTagBuilder(KlaxonDamageTypeTags.ELECTRICAL)
-                .add(DamageTypes.LIGHTNING_BOLT);
+                .addOptional(DamageTypes.LIGHTNING_BOLT);
+
+        getOrCreateTagBuilder(KlaxonDamageTypeTags.GRAPPLE_CLAW_DAMAGE_TYPES)
+                .addOptional(KlaxonDamageTypes.GRAPPLING)
+                .addOptional(KlaxonDamageTypes.RENDING);
+        getOrCreateTagBuilder(DamageTypeTags.IS_PROJECTILE)
+                .addOptionalTag(KlaxonDamageTypeTags.GRAPPLE_CLAW_DAMAGE_TYPES);
     }
 }

@@ -11,8 +11,8 @@ import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 
 import java.util.concurrent.CompletableFuture;
 
-public class KlaxonDamageTypeProvider2 extends FabricDynamicRegistryProvider {
-    public KlaxonDamageTypeProvider2(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+public class KlaxonDamageTypeProvider extends FabricDynamicRegistryProvider {
+    public KlaxonDamageTypeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
         super(output, registriesFuture);
     }
 

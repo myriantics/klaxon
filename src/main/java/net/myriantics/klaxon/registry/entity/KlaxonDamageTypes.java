@@ -41,7 +41,7 @@ public abstract class KlaxonDamageTypes {
             createDamageType("lobotomy");
 
     private static RegistryKey<DamageType> createDamageType(String name) {
-        return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(KlaxonCommon.MOD_ID, name));
+        return RegistryKey.of(RegistryKeys.DAMAGE_TYPE, KlaxonCommon.locate(name));
     }
 
     public static DamageSource getAttackingDamageSource(Entity attacker, RegistryKey<DamageType> damageType) {
