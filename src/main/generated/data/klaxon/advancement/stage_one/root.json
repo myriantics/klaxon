@@ -1,14 +1,7 @@
 {
   "criteria": {
     "root": {
-      "conditions": {
-        "items": [
-          {
-            "items": "#klaxon:root_advancement_granting_items"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
+      "trigger": "minecraft:tick"
     }
   },
   "display": {

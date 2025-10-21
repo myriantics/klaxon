@@ -1,7 +1,10 @@
 package net.myriantics.klaxon.datagen.advancement.providers;
 
 import net.minecraft.advancement.*;
+import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
+import net.minecraft.advancement.criterion.Criterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.advancement.criterion.TickCriterion;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
@@ -61,7 +64,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     }
 
     private AdvancementEntry generateRoot() {
-        return addRootAdvancement(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, AdvancementFrame.TASK, InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)));
+        return addRootAdvancement(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, AdvancementFrame.TASK, TickCriterion.Conditions.createTick());
     }
 
     private void generateAdvancements(AdvancementEntry root) {
