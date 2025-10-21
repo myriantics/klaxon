@@ -98,6 +98,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         Blocks.CALIBRATED_SCULK_SENSOR
                 )
                 .add(
+                        Blocks.CHORUS_FLOWER,
+                        Blocks.CHORUS_PLANT
+                )
+                .add(
                         KlaxonBlocks.RUBBER_BLOCK,
                         KlaxonBlocks.RUBBER_SHEET_BLOCK,
                         KlaxonBlocks.MOLTEN_RUBBER_BLOCK
