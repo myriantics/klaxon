@@ -5,6 +5,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -181,8 +183,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         @Nullable GrappleClawEntity grappleClaw = this.klaxon$getGrappleClaw();
         @Nullable ItemStack weaponStack = source.getWeaponStack();
 
+        Entity attackedEntity = instance instanceof EnderDragonPart part
+                ? part.owner.getBodyParts()[GrappleClawEntity.ENDER_DRAGON_BODY_INDEX]
+                : instance;
+
         // try to fast reload the grapple claw attached to the entity if it's attached
-        if (grappleClaw != null && weaponStack != null && instance.equals(grappleClaw.getGrappledEntity())) {
+        if (grappleClaw != null && weaponStack != null && attackedEntity.equals(grappleClaw.getGrappledEntity())) {
             if (grappleClaw.tryFastReload((PlayerEntity) (Object) this, weaponStack)) {
                 return false;
             }

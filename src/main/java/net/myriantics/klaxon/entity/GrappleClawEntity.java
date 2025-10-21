@@ -1,10 +1,8 @@
 package net.myriantics.klaxon.entity;
 
-import com.mojang.serialization.Codec;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
@@ -12,10 +10,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -24,8 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -79,6 +76,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     private int ticksSinceDamaged = 0;
 
     private static final TrackedData<Integer> GRAPPLED_ENTITY_ID = DataTracker.registerData(GrappleClawEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final int ENDER_DRAGON_BODY_INDEX = 2;
     private final HashSet<ItemEntity> draggedItems = new HashSet<>();
 
     private Entity grappledEntity = null;
@@ -114,7 +112,19 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             // id is offset by one to allow for entities with an id of 0
             // was initially confused by this when i saw it in the fishing bobber entity so im dropping this explanation here for myself or whatever future person reads this
-            this.setGrappledEntity(i > 0 ? this.getWorld().getEntityById(i - 1) : null);
+            if (i < 0) {
+                this.setGrappledEntity(null);
+            } else {
+                Entity entity = this.getWorld().getEntityById(i - 1);
+                switch (entity) {
+                    case EnderDragonEntity dragon -> {
+                        this.setGrappledEntity(dragon.getBodyParts()[ENDER_DRAGON_BODY_INDEX]);
+                    }
+                    case null, default -> {
+                        this.setGrappledEntity(entity);
+                    }
+                }
+            }
         }
 
         super.onTrackedDataSet(data);
@@ -314,8 +324,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         Entity hitEntity = entityHitResult.getEntity();
         @Nullable PlayerEntity attachedPlayer = this.getAttachedPlayer();
 
-        // don't bother reattaching to currently grappled entity
-        if (hitEntity.equals(this.grappledEntity)) {
+        // if we're already attached to an entity, don't process further
+        if (this.grappledEntity != null) {
             return;
         }
 
@@ -553,7 +563,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         if (this.grappledEntity == null) {
             super.tick();
         } else {
-            this.setPosition(this.grappledEntity.getEyePos().subtract(0, this.getHeight() / 2, 0));
+            Vec3d targetPos = this.grappledEntity instanceof EnderDragonPart
+                    ? this.grappledEntity.getPos().add(0, this.grappledEntity.getHeight() / 2, 0)
+                    : this.grappledEntity.getEyePos();
+            this.setPosition(targetPos.subtract(0, this.getHeight() / 2, 0));
             this.setVelocity(Vec3d.ZERO);
         }
 
@@ -564,11 +577,23 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     public void setGrappledEntity(@Nullable Entity entity) {
-        this.grappledEntity = entity;
+        this.grappledEntity = entity instanceof EnderDragonPart part
+                ? part.owner.getBodyParts()[ENDER_DRAGON_BODY_INDEX]
+                : entity;
         if (!this.getWorld().isClient()) {
             // id is offset by one to allow for entities with an id of 0
             // was initially confused by this when i saw it in the fishing bobber entity so im dropping this explanation here for myself or whatever future person reads this
-            this.getDataTracker().set(GRAPPLED_ENTITY_ID, entity == null ? 0 : entity.getId() + 1);
+            switch (entity) {
+                case EnderDragonPart part -> {
+                    this.getDataTracker().set(GRAPPLED_ENTITY_ID, part.owner.getId() + 1);
+                }
+                case null -> {
+                    this.getDataTracker().set(GRAPPLED_ENTITY_ID, 0);
+                }
+                default -> {
+                    this.getDataTracker().set(GRAPPLED_ENTITY_ID, entity.getId() + 1);
+                }
+            }
         }
     }
 
