@@ -73,36 +73,36 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
         MatrixStack.Entry entry = matrices.peek();
 
         // crossbeam at end
-        this.vertex(entry, vertexConsumer, 6, -8, -8, crossbeamMinU, crossbeamMinV, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, 6, -8, 8, crossbeamMaxU, crossbeamMinV, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, 6, 8, 8, crossbeamMaxU, crossbeamMaxV, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, 6, 8, -8, crossbeamMinU, crossbeamMaxV, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, 6, -6, -6, crossbeamMinU, crossbeamMinV, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, 6, -6, 6, crossbeamMaxU, crossbeamMinV, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, 6, 6, 6, crossbeamMaxU, crossbeamMaxV, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, 6, 6, -6, crossbeamMinU, crossbeamMaxV, -1, 0, 0, light);
 
-        this.vertex(entry, vertexConsumer, 6, 8, -8, crossbeamMinU, crossbeamMinV, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, 6, 8, 8, crossbeamMaxU, crossbeamMinV, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, 6, -8, 8, crossbeamMaxU, crossbeamMaxV, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, 6, -8, -8, crossbeamMinU, crossbeamMaxV, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, 6, 6, -6, crossbeamMinU, crossbeamMinV, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, 6, 6, 6, crossbeamMaxU, crossbeamMinV, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, 6, -6, 6, crossbeamMaxU, crossbeamMaxV, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, 6, -6, -6, crossbeamMinU, crossbeamMaxV, 1, 0, 0, light);
 
 
         // small nub at base
-        this.vertex(entry, vertexConsumer, -6, -2, -2, 0.0F, 12f/32, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -6, -2, 2, 4f/32, 12f/32, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -6, 2, 2, 4f/32, 16f/32, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -6, 2, -2, 0.0F, 16f/32, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, -2, -2, 0.0F, 12f/32, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, -2, 2, 4f/32, 12f/32, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, 2, 2, 4f/32, 16f/32, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, 2, -2, 0.0F, 16f/32, -1, 0, 0, light);
 
-        this.vertex(entry, vertexConsumer, -6, 2, -2, 0.0F, 12f/32, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -6, 2, 2, 4f/32, 12f/32, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -6, -2, 2, 4f/32, 16f/32, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -6, -2, -2, 0.0F, 16f/32, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, 2, -2, 0.0F, 12f/32, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, 2, 2, 4f/32, 12f/32, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, -2, 2, 4f/32, 16f/32, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, -2, -2, 0.0F, 16f/32, 1, 0, 0, light);
 
         // main claw
         for (int u = 0; u < 4; u++) {
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
 
-            this.vertex(entry, vertexConsumer, -8, -8, 0, 0.0F, 0.0F, 0, 1, 0, light);
-            this.vertex(entry, vertexConsumer, 8, -8, 0, 14f/32, 0.0F, 0, 1, 0, light);
-            this.vertex(entry, vertexConsumer, 8, 8, 0, 14f/32, 12f/32, 0, 1, 0, light);
-            this.vertex(entry, vertexConsumer, -8, 8, 0, 0.0F, 12f/32, 0, 1, 0, light);
+            this.vertex(entry, vertexConsumer, -6, -6, 0, 0.0F, 0.0F, 0, 1, 0, light);
+            this.vertex(entry, vertexConsumer, 8, -6, 0, 14f/32, 0.0F, 0, 1, 0, light);
+            this.vertex(entry, vertexConsumer, 8, 6, 0, 14f/32, 12f/32, 0, 1, 0, light);
+            this.vertex(entry, vertexConsumer, -6, 6, 0, 0.0F, 12f/32, 0, 1, 0, light);
         }
 
         matrices.pop();
