@@ -16,6 +16,7 @@ import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 
@@ -56,21 +57,23 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch())));
 
 
-        float crossbeamMinU = 16f/32;
-        float crossbeamMaxU = 28f/32;
-        float crossbeamMinV = 0f/32;
-        float crossbeamMaxV = 12f/32;
-
         float s = entity.shake - tickDelta;
         if (s > 0.0F) {
             float t = -MathHelper.sin(s * 3.0F) * s;
             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(t));
         }
 
+        // rotate the claw 45 degrees
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
         matrices.scale(0.05625F, 0.05625F, 0.05625F);
+
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity)));
         MatrixStack.Entry entry = matrices.peek();
+
+        float crossbeamMinU = 16f/32;
+        float crossbeamMaxU = 28f/32;
+        float crossbeamMinV = 0f/32;
+        float crossbeamMaxV = 12f/32;
 
         // crossbeam at end
         this.vertex(entry, vertexConsumer, 6, -6, -6, crossbeamMinU, crossbeamMinV, -1, 0, 0, light);
@@ -83,30 +86,46 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
         this.vertex(entry, vertexConsumer, 6, -6, 6, crossbeamMaxU, crossbeamMaxV, 1, 0, 0, light);
         this.vertex(entry, vertexConsumer, 6, -6, -6, crossbeamMinU, crossbeamMaxV, 1, 0, 0, light);
 
+        float nubMinU = 0f/32;
+        float nubMaxU = 4f/32;
+        float nubMinV = 12f/32;
+        float nubMaxV = 16f/32;
 
         // small nub at base
-        this.vertex(entry, vertexConsumer, -4, -2, -2, 0.0F, 12f/32, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -4, -2, 2, 4f/32, 12f/32, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -4, 2, 2, 4f/32, 16f/32, -1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -4, 2, -2, 0.0F, 16f/32, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, -2, -2, nubMinU, nubMinV, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, -2, 2, nubMaxU, nubMinV, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, 2, 2, nubMaxU, nubMaxV, -1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, 2, -2, nubMinU, nubMaxV, -1, 0, 0, light);
 
-        this.vertex(entry, vertexConsumer, -4, 2, -2, 0.0F, 12f/32, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -4, 2, 2, 4f/32, 12f/32, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -4, -2, 2, 4f/32, 16f/32, 1, 0, 0, light);
-        this.vertex(entry, vertexConsumer, -4, -2, -2, 0.0F, 16f/32, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, 2, -2, nubMinU, nubMinV, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, 2, 2, nubMaxU, nubMinV, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, -2, 2, nubMaxU, nubMaxV, 1, 0, 0, light);
+        this.vertex(entry, vertexConsumer, -4, -2, -2, nubMinU, nubMaxV, 1, 0, 0, light);
+
+        float clawMinU = 0f/32;
+        float clawMaxU = 14f/32;
+        float clawMinV = 0f/32;
+        float clawMaxV = 12f/32;
 
         // main claw
         for (int u = 0; u < 4; u++) {
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
 
-            this.vertex(entry, vertexConsumer, -6, -6, 0, 0.0F, 0.0F, 0, 1, 0, light);
-            this.vertex(entry, vertexConsumer, 8, -6, 0, 14f/32, 0.0F, 0, 1, 0, light);
-            this.vertex(entry, vertexConsumer, 8, 6, 0, 14f/32, 12f/32, 0, 1, 0, light);
-            this.vertex(entry, vertexConsumer, -6, 6, 0, 0.0F, 12f/32, 0, 1, 0, light);
+            this.vertex(entry, vertexConsumer, -6, -6, 0, clawMinU, clawMinV, 0, 1, 0, light);
+            this.vertex(entry, vertexConsumer, 8, -6, 0, clawMaxU, clawMinV, 0, 1, 0, light);
+            this.vertex(entry, vertexConsumer, 8, 6, 0, clawMaxU, clawMaxV, 0, 1, 0, light);
+            this.vertex(entry, vertexConsumer, -6, 6, 0, clawMinU, clawMaxV, 0, 1, 0, light);
         }
 
         matrices.pop();
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+    }
+
+    @Override
+    public Vec3d getPositionOffset(GrappleClawEntity entity, float tickDelta) {
+        return entity.getGrappledEntity() == null
+                ? super.getPositionOffset(entity, tickDelta)
+                : new Vec3d(0, entity.getEyeHeight(entity.getPose()), 0);
     }
 
     private void vertex(
