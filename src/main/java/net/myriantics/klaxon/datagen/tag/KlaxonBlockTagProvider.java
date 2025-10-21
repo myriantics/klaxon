@@ -278,7 +278,11 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE)
                 .forceAddTag(KlaxonBlockTags.CLEAVER_INSTABREAKABLE);
         getOrCreateTagBuilder(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE)
-                .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE);
+                .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
+                .add(
+                        Blocks.CHORUS_PLANT,
+                        Blocks.CHORUS_FLOWER
+                );
 
         getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
                 .add(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK)
