@@ -3,10 +3,8 @@ package net.myriantics.klaxon.compat.emi;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiRecipeSorting;
 import dev.emi.emi.api.render.EmiRenderable;
-import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -29,11 +27,15 @@ public abstract class KlaxonEmiRecipeCategories {
     );
     public static final EmiRecipeCategory ITEM_COOLING = register(
             KlaxonRecipeTypes.COOLING_RECIPE_ID,
-            EmiIngredient.of(Ingredient.ofItems(Items.WATER_BUCKET))
+            EmiStack.of(Items.WATER_BUCKET)
     );
     public static final EmiRecipeCategory NETHER_REACTION = register(
             KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
             EmiStack.of(KlaxonItems.NETHER_REACTOR_CORE)
+    );
+    public static final EmiRecipeCategory WORLD_ITEM_APPLICATION = register(
+            KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID,
+            EmiStack.of(Items.DISPENSER)
     );
 
     private static KlaxonCategory register(String name, EmiRenderable icon) {

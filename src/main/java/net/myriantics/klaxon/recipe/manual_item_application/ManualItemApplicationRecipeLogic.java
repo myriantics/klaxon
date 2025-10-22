@@ -37,7 +37,7 @@ public abstract class ManualItemApplicationRecipeLogic {
         if (APPLICABLE_ITEMS_CACHE.isEmpty()) {
 
             Set<Item> newCache = new HashSet<>();
-            for (RecipeEntry<ManualItemApplicationRecipe> entry : world.getRecipeManager().listAllOfType(KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION)) {
+            for (RecipeEntry<WorldItemApplicationRecipe> entry : world.getRecipeManager().listAllOfType(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION)) {
                 // add all the compatible items to the new cache
                 for (ItemStack stack : entry.value().getInputIngredient().getMatchingStacks()) {
                     newCache.add(stack.getItem());
@@ -55,8 +55,8 @@ public abstract class ManualItemApplicationRecipeLogic {
     public static Optional<BlockState> getResultState(World world, ManualItemApplicationRecipeInput recipeInput) {
         Optional<BlockState> output = Optional.empty();
 
-        Optional<RecipeEntry<ManualItemApplicationRecipe>> match =
-                world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION, recipeInput, world);
+        Optional<RecipeEntry<WorldItemApplicationRecipe>> match =
+                world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION, recipeInput, world);
 
         if (match.isPresent()) {
             // compatible properties are saved from input state

@@ -1,5 +1,5 @@
 {
-  "type": "klaxon:manual_item_application",
+  "type": "klaxon:world_item_application",
   "input_ingredient": {
     "item": "klaxon:hallnox_pod"
   },

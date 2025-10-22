@@ -24,7 +24,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
-import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
+import net.myriantics.klaxon.recipe.manual_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
@@ -101,6 +101,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.WORLD_ITEM_APPLICATION, EmiStack.of(Items.DISPENSER));
 
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(PotionContentsComponent.createStack(Items.SPLASH_POTION, Potions.WATER)));
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.POWDER_SNOW_BUCKET));
@@ -119,14 +120,19 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registerMiscRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.ITEM_COOLING, ItemCoolingEmiRecipe::new);
         addAllConditional(registry, KlaxonRecipeTypes.NETHER_REACTION, NetherReactionEmiRecipe::new, (recipeEntry -> !recipeEntry.id().getPath().contains("_wall_") && !KlaxonBlockItems.getBlockDisplayStack(recipeEntry.value().getOutputBlock()).getItem().equals(Items.BARRIER)));
-        addAll(registry, KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION, (entry) -> {
-            ManualItemApplicationRecipe recipe = entry.value();
-            return EmiWorldInteractionRecipe.builder()
+        addAll(registry, KlaxonRecipeTypes.WORLD_ITEM_APPLICATION, (entry) -> {
+            WorldItemApplicationRecipe recipe = entry.value();
+            return new EmiWorldInteractionRecipe(EmiWorldInteractionRecipe.builder()
                     .id(entry.id())
                     .leftInput(EmiIngredient.of(recipe.getValidBlockInputs()))
                     .rightInput(EmiIngredient.of(recipe.getInputIngredient()), false)
                     .output(EmiStack.of(recipe.getOutputBlock()))
-                    .build();
+            ) {
+                @Override
+                public EmiRecipeCategory getCategory() {
+                    return KlaxonEmiRecipeCategories.WORLD_ITEM_APPLICATION;
+                }
+            };
         });
     }
 

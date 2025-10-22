@@ -11,7 +11,7 @@ public abstract class KlaxonGameRules {
     );
 
     public static final GameRules.Key<GameRules.BooleanRule> DISPENSERS_PERFORM_ITEM_INTERACTION_RECIPES = registerBooleanRule(
-            "dispensersPerformItemInteractionRecipes", GameRules.Category.MISC, true
+            "dispensersPerformWorldItemInteractionRecipes", GameRules.Category.MISC, true
     );
 
     public static final GameRules.Key<GameRules.IntRule> GRAPPLE_CLAW_VEINMINE_RADIUS = registerIntRule(

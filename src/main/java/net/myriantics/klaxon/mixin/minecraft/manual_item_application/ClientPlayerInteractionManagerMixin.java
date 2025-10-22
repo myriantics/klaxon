@@ -25,7 +25,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
     private ItemActionResult klaxon$attemptManualItemApplication(BlockState instance, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult, Operation<ItemActionResult> original) {
         if (ManualItemApplicationRecipeLogic.test(world, stack)) {
             ManualItemApplicationRecipeInput recipeInput = new ManualItemApplicationRecipeInput(stack, instance);
-            if (world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION, recipeInput, world).isPresent()) {
+            if (world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION, recipeInput, world).isPresent()) {
                 return ItemActionResult.SUCCESS;
             }
         }

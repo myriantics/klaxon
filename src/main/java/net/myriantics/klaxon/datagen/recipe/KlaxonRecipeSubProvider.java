@@ -19,7 +19,7 @@ import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBe
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
+import net.myriantics.klaxon.recipe.manual_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
@@ -320,11 +320,11 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addManualItemApplicationRecipe(TagKey<Block> validBlockInputs, Ingredient ingredient, Block outputBlock, ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION_RECIPE_ID,
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID,
                 Registries.BLOCK.getId(outputBlock).getPath(),
                 conditions);
 
-        ManualItemApplicationRecipe recipe = new ManualItemApplicationRecipe(validBlockInputs, ingredient, outputBlock);
+        WorldItemApplicationRecipe recipe = new WorldItemApplicationRecipe(validBlockInputs, ingredient, outputBlock);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

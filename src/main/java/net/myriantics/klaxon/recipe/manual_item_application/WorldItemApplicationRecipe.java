@@ -11,12 +11,12 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
-public class ManualItemApplicationRecipe implements Recipe<ManualItemApplicationRecipeInput> {
+public class WorldItemApplicationRecipe implements Recipe<ManualItemApplicationRecipeInput> {
     private final Ingredient inputIngredient;
     private final TagKey<Block> validBlocks;
     private final Block outputBlock;
 
-    public ManualItemApplicationRecipe(TagKey<Block> validBlocks, Ingredient inputIngredient, Block outputBlock) {
+    public WorldItemApplicationRecipe(TagKey<Block> validBlocks, Ingredient inputIngredient, Block outputBlock) {
         this.inputIngredient = inputIngredient;
         this.validBlocks = validBlocks;
         this.outputBlock = outputBlock;
@@ -44,12 +44,12 @@ public class ManualItemApplicationRecipe implements Recipe<ManualItemApplication
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION_RECIPE_SERIALIZER;
+        return KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_SERIALIZER;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION;
+        return KlaxonRecipeTypes.WORLD_ITEM_APPLICATION;
     }
 
     public Ingredient getInputIngredient() {
