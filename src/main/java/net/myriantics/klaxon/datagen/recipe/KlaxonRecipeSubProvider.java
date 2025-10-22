@@ -23,7 +23,7 @@ import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
-import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import org.jetbrains.annotations.Nullable;
@@ -271,21 +271,21 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addItemExplosionPowerRecipeWithBehavior(NamedIngredient input, Identifier behaviorId,
-                                                        double explosionPower, boolean producesFire, boolean isHidden,
-                                                        final ResourceCondition... conditions) {
-        addItemExplosionPowerRecipe(input, explosionPower, producesFire, isHidden, conditions);
+    public void addExplosiveCatalystDefinitionRecipeWithBehavior(NamedIngredient input, Identifier behaviorId,
+                                                                 double explosionPower, boolean producesFire, boolean isHidden,
+                                                                 final ResourceCondition... conditions) {
+        addExplosiveCatalystDefinitionRecipe(input, explosionPower, producesFire, isHidden, conditions);
         addBlastProcessorBehaviorRecipe(input, behaviorId, conditions);
     }
 
-    public void addItemExplosionPowerRecipe(NamedIngredient input,
-                                            double explosionPower, boolean producesFire, boolean isHidden,  final ResourceCondition... conditions) {
+    public void addExplosiveCatalystDefinitionRecipe(NamedIngredient input,
+                                                     double explosionPower, boolean producesFire, boolean isHidden, final ResourceCondition... conditions) {
 
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID,
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
                 input.getName(),
                 conditions);
 
-        ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input.toIngredient(), explosionPower, producesFire, isHidden);
+        ExplosiveCatalystDefinitionRecipe recipe = new ExplosiveCatalystDefinitionRecipe(input.toIngredient(), explosionPower, producesFire, isHidden);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

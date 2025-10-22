@@ -12,13 +12,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
-import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
     private final List<EmiStack> outputStacks;
     private final EmiRegistry registry;
 
-    private final DefaultedList<ItemExplosionPowerRecipe> catalystData;
+    private final DefaultedList<ExplosiveCatalystDefinitionRecipe> catalystData;
     private final EmiIngredient catalysts;
 
     private final double explosionPowerMin;
@@ -50,14 +50,14 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         this.catalystData = getValidCatalysts();
         DefaultedList<EmiIngredient> catalystStacks = DefaultedList.ofSize(catalystData.size());
 
-        for (ItemExplosionPowerRecipe catalystRecipe : catalystData) {
+        for (ExplosiveCatalystDefinitionRecipe catalystRecipe : catalystData) {
             catalystStacks.add(EmiIngredient.of(catalystRecipe.getIngredient()));
         }
 
         // crude ass code but it works haha
         for (RecipeEntry<BlastProcessorBehaviorRecipe> behaviorRecipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
 
-            BlastProcessorCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorRecipe.value().getBehaviorId());
+            ExplosiveCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorRecipe.value().getBehaviorId());
 
             if (behavior == null) continue;
 
@@ -125,9 +125,9 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         }
     }
 
-    private DefaultedList<ItemExplosionPowerRecipe> getValidCatalysts() {
-        DefaultedList<ItemExplosionPowerRecipe> catalysts = DefaultedList.of();
-        for (RecipeEntry<ItemExplosionPowerRecipe> recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER)) {
+    private DefaultedList<ExplosiveCatalystDefinitionRecipe> getValidCatalysts() {
+        DefaultedList<ExplosiveCatalystDefinitionRecipe> catalysts = DefaultedList.of();
+        for (RecipeEntry<ExplosiveCatalystDefinitionRecipe> recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER)) {
             if (recipe.value().matchesConditions(explosionPowerMin, explosionPowerMax)) {
 
                 // dont show hidden recipes in the scroller

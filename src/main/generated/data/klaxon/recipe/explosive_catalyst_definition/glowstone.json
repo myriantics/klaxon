@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:explosive_catalyst_definition",
+  "explosion_power": 5.0,
+  "ingredient": {
+    "item": "minecraft:glowstone"
+  },
+  "is_hidden_from_emi": false,
+  "produces_fire": true
+}

@@ -6,11 +6,11 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
-import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import org.jetbrains.annotations.NotNull;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -45,9 +45,9 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
     @Override
     public @NotNull Double streamData(BlockAccessor blockAccessor) {
         if (blockAccessor.getBlockEntity() instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            ExplosiveCatalystRecipeInput recipeInventory = new ExplosiveCatalystRecipeInput(blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
+            ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-            BlastProcessorCatalystBehavior behavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(blockAccessor.getLevel(), recipeInventory);
+            ExplosiveCatalystBehavior behavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(blockAccessor.getLevel(), recipeInventory);
 
             return behavior.getExplosionPowerData(blockAccessor.getLevel(), blockAccessor.getPosition(), blastProcessor, recipeInventory).explosionPower();
         }

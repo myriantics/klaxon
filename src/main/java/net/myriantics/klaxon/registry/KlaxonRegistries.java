@@ -4,10 +4,10 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.registry.*;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 
 public abstract class KlaxonRegistries {
-    public static final Registry<BlastProcessorCatalystBehavior> BLAST_PROCESSOR_BEHAVIORS =
+    public static final Registry<ExplosiveCatalystBehavior> BLAST_PROCESSOR_BEHAVIORS =
             FabricRegistryBuilder.createSimple(KlaxonRegistryKeys.BLAST_PROCESSOR_BEHAVIORS).attribute(RegistryAttribute.SYNCED).buildAndRegister();
 
     public static void init() {

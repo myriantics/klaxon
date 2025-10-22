@@ -22,7 +22,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
@@ -34,7 +34,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -101,7 +101,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
     private void registerWorkstations(EmiRegistry registry) {
         registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_EXPLOSION_POWER, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
 
         registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(PotionContentsComponent.createStack(Items.SPLASH_POTION, Potions.WATER)));
@@ -116,7 +116,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerRecipes(EmiRegistry registry) {
-        addAllItemExplosionPower(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ItemExplosionPowerEmiInfoRecipe::new);
+        addAllItemExplosionPower(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ExplosiveCatalystDefinitionEmiRecipe::new);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.ITEM_COOLING, ItemCoolingEmiRecipe::new);
@@ -155,18 +155,18 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
 
             // dont show hidden recipes
-            if (recipeEntry.value() instanceof ItemExplosionPowerRecipe itemExplosionPowerRecipe) {
-                if (!itemExplosionPowerRecipe.isHidden()) {
+            if (recipeEntry.value() instanceof ExplosiveCatalystDefinitionRecipe explosiveCatalystDefinitionRecipe) {
+                if (!explosiveCatalystDefinitionRecipe.isHidden()) {
                     boolean behaviorSearchFailed = true;
                     // crude code to apply more advanced descriptions to recipes if needed
                     for (RecipeEntry<BlastProcessorBehaviorRecipe> behaviorRecipeEntry : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
-                        if (behaviorRecipeEntry.value().getIngredient().equals(itemExplosionPowerRecipe.getIngredient())) {
+                        if (behaviorRecipeEntry.value().getIngredient().equals(explosiveCatalystDefinitionRecipe.getIngredient())) {
                             Identifier behaviorId = behaviorRecipeEntry.value().getBehaviorId();
-                            BlastProcessorCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
+                            ExplosiveCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
                             if (behavior != null && behavior.isVariable()) {
-                                registry.addRecipe(new ItemExplosionPowerEmiInfoRecipe(new RecipeEntry<>(recipeEntry.id(), itemExplosionPowerRecipe), minFromBehaviorId(behaviorId), maxFromBehaviorId(behaviorId), descriptionFromBehaviorId(behaviorId)));
+                                registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeEntry<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), minFromBehaviorId(behaviorId), maxFromBehaviorId(behaviorId), descriptionFromBehaviorId(behaviorId)));
                             } else {
-                                registry.addRecipe(new ItemExplosionPowerEmiInfoRecipe(new RecipeEntry<>(recipeEntry.id(), itemExplosionPowerRecipe), descriptionFromBehaviorId(behaviorId)));
+                                registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeEntry<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), descriptionFromBehaviorId(behaviorId)));
                             }
                             behaviorSearchFailed = false;
                         }

@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:explosive_catalyst_definition",
+  "explosion_power": 0.5,
+  "ingredient": {
+    "item": "minecraft:blaze_powder"
+  },
+  "is_hidden_from_emi": false,
+  "produces_fire": true
+}

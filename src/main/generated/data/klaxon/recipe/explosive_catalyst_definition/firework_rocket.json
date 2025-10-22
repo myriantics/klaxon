@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:explosive_catalyst_definition",
+  "explosion_power": 0.0,
+  "ingredient": {
+    "item": "minecraft:firework_rocket"
+  },
+  "is_hidden_from_emi": false,
+  "produces_fire": false
+}

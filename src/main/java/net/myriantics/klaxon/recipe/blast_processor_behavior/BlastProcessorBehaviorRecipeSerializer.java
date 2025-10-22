@@ -7,7 +7,6 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
 
 public class BlastProcessorBehaviorRecipeSerializer implements RecipeSerializer<BlastProcessorBehaviorRecipe> {
     public BlastProcessorBehaviorRecipeSerializer() {

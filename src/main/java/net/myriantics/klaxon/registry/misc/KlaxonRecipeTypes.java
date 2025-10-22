@@ -16,8 +16,8 @@ import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeSerializer;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeSerializer;
-import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
-import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipeSerializer;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
@@ -62,11 +62,11 @@ public abstract class KlaxonRecipeTypes {
     public static RecipeType<ItemCoolingRecipe> ITEM_COOLING =
             registerRecipeType(COOLING_RECIPE_ID);
 
-    public static final String ITEM_EXPLOSION_POWER_RECIPE_ID = "item_explosion_power";
-    public static RecipeSerializer<ItemExplosionPowerRecipe> ITEM_EXPLOSION_POWER_RECIPE_SERIALIZER =
-            registerSerializer(ITEM_EXPLOSION_POWER_RECIPE_ID, new ItemExplosionPowerRecipeSerializer());
-    public static RecipeType<ItemExplosionPowerRecipe> ITEM_EXPLOSION_POWER =
-            registerRecipeType(ITEM_EXPLOSION_POWER_RECIPE_ID);
+    public static final String EXPLOSIVE_CATALYST_DEFINITION_ID = "explosive_catalyst_definition";
+    public static RecipeSerializer<ExplosiveCatalystDefinitionRecipe> EXPLOSIVE_CATALYST_DEFINITION_RECIPE_SERIALIZER =
+            registerSerializer(EXPLOSIVE_CATALYST_DEFINITION_ID, new ExplosiveCatalystDefinitionRecipeSerializer());
+    public static RecipeType<ExplosiveCatalystDefinitionRecipe> ITEM_EXPLOSION_POWER =
+            registerRecipeType(EXPLOSIVE_CATALYST_DEFINITION_ID);
 
     public static final String MAKESHIFT_SHAPED_CRAFTING_ID = "makeshift_shaped";
     public static RecipeSerializer<MakeshiftShapedCraftingRecipe> MAKESHIFT_SHAPED_CRAFTING_RECIPE_SERIALIZER =

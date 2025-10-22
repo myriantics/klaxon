@@ -34,7 +34,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         new KlaxonBlastProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonCraftingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonMakeshiftCraftingRecipeProvider(this, exporter).generateRecipes();
-        new KlaxonItemExplosionPowerRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonExplosiveCatalystDefinitionRecipeProvider(this, exporter).generateRecipes();
         new KlaxonSmeltingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonOreProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonRecipeOverrideProvider(this, exporter).generateRecipes();

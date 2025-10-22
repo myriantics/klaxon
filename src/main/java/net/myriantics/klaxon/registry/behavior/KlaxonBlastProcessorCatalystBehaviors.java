@@ -3,9 +3,9 @@ package net.myriantics.klaxon.registry.behavior;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.BlastProcessorCatalystBehavior;
-import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.ItemBlastProcessorCatalystBehavior;
-import net.myriantics.klaxon.api.behavior.blast_processor_catalyst.behaviors.*;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.ItemExplosiveCatalystBehavior;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.behaviors.*;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 
 public abstract class KlaxonBlastProcessorCatalystBehaviors {
@@ -20,32 +20,32 @@ public abstract class KlaxonBlastProcessorCatalystBehaviors {
     public static final Identifier END_CRYSTAL_ID = locateBehaviorId("end_crystal");
     public static final Identifier CREEPER_HEAD_ID = locateBehaviorId("creeper_head");
 
-    public static final BlastProcessorCatalystBehavior DEFAULT = registerBehavior(DEFAULT_ID,
-            new ItemBlastProcessorCatalystBehavior(DEFAULT_ID));
-    public static final BlastProcessorCatalystBehavior FIREWORK_ROCKET = registerBehavior(FIREWORK_ROCKET_ID,
-            new FireworkRocketBlastProcessorCatalystBehavior(FIREWORK_ROCKET_ID));
-    public static final BlastProcessorCatalystBehavior FIREWORK_STAR = registerBehavior(FIREWORK_STAR_ID,
-            new FireworkStarBlastProcessorCatalystBehavior(FIREWORK_STAR_ID));
-    public static final BlastProcessorCatalystBehavior BEDLIKE_EXPLODABLE = registerBehavior(BEDLIKE_EXPLODABLE_ID,
-            new BedlikeExplodableBlastProcessorCatalystBehavior(BEDLIKE_EXPLODABLE_ID));
-    public static final BlastProcessorCatalystBehavior WIND_CHARGE = registerBehavior(WIND_CHARGE_ID,
-            new WindChargeBlastProcessorCatalystBehavior(WIND_CHARGE_ID));
-    public static final BlastProcessorCatalystBehavior DRAGONS_BREATH = registerBehavior(DRAGONS_BREATH_ID,
-            new DragonsBreathBlastProcessorCatalystBehavior(DRAGONS_BREATH_ID));
-    public static final BlastProcessorCatalystBehavior GLOWSTONE_DUST = registerBehavior(GLOWSTONE_ID,
-            new GlowstoneBlastProcessorCatalystBehavior(GLOWSTONE_ID));
-    public static final BlastProcessorCatalystBehavior TNT_MINECART = registerBehavior(TNT_MINECART_ID,
-            new TntMinecartBlastProcessorCatalystBehavior(TNT_MINECART_ID));
-    public static final BlastProcessorCatalystBehavior END_CRYSTAL = registerBehavior(END_CRYSTAL_ID,
-            new EndCrystalBlastProcessorCatalystBehavior(END_CRYSTAL_ID));
-    public static final BlastProcessorCatalystBehavior CREEPER_HEAD = registerBehavior(CREEPER_HEAD_ID,
-            new CreeperHeadBlastProcessorCatalystBehavior(CREEPER_HEAD_ID));
+    public static final ExplosiveCatalystBehavior DEFAULT = registerBehavior(DEFAULT_ID,
+            new ItemExplosiveCatalystBehavior(DEFAULT_ID));
+    public static final ExplosiveCatalystBehavior FIREWORK_ROCKET = registerBehavior(FIREWORK_ROCKET_ID,
+            new FireworkRocketExplosiveCatalystBehavior(FIREWORK_ROCKET_ID));
+    public static final ExplosiveCatalystBehavior FIREWORK_STAR = registerBehavior(FIREWORK_STAR_ID,
+            new FireworkStarExplosiveCatalystBehavior(FIREWORK_STAR_ID));
+    public static final ExplosiveCatalystBehavior BEDLIKE_EXPLODABLE = registerBehavior(BEDLIKE_EXPLODABLE_ID,
+            new BedlikeExplodableExplosiveCatalystBehavior(BEDLIKE_EXPLODABLE_ID));
+    public static final ExplosiveCatalystBehavior WIND_CHARGE = registerBehavior(WIND_CHARGE_ID,
+            new WindChargeExplosiveCatalystBehavior(WIND_CHARGE_ID));
+    public static final ExplosiveCatalystBehavior DRAGONS_BREATH = registerBehavior(DRAGONS_BREATH_ID,
+            new DragonsBreathExplosiveCatalystBehavior(DRAGONS_BREATH_ID));
+    public static final ExplosiveCatalystBehavior GLOWSTONE_DUST = registerBehavior(GLOWSTONE_ID,
+            new GlowstoneExplosiveCatalystBehavior(GLOWSTONE_ID));
+    public static final ExplosiveCatalystBehavior TNT_MINECART = registerBehavior(TNT_MINECART_ID,
+            new TntMinecartExplosiveCatalystBehavior(TNT_MINECART_ID));
+    public static final ExplosiveCatalystBehavior END_CRYSTAL = registerBehavior(END_CRYSTAL_ID,
+            new EndCrystalExplosiveCatalystBehavior(END_CRYSTAL_ID));
+    public static final ExplosiveCatalystBehavior CREEPER_HEAD = registerBehavior(CREEPER_HEAD_ID,
+            new CreeperHeadExplosiveCatalystBehavior(CREEPER_HEAD_ID));
 
     private static Identifier locateBehaviorId(String name) {
         return KlaxonCommon.locate(name);
     }
 
-    private static BlastProcessorCatalystBehavior registerBehavior(Identifier id, BlastProcessorCatalystBehavior behavior) {
+    private static ExplosiveCatalystBehavior registerBehavior(Identifier id, ExplosiveCatalystBehavior behavior) {
         return Registry.register(KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS, id, behavior);
     }
 

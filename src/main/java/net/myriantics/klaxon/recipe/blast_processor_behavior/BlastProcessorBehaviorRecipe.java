@@ -8,10 +8,10 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.recipe.item_explosion_power.ExplosiveCatalystRecipeInput;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
-public class BlastProcessorBehaviorRecipe implements Recipe<ExplosiveCatalystRecipeInput> {
+public class BlastProcessorBehaviorRecipe implements Recipe<ExplosiveCatalystDefinitionRecipeInput> {
 
     private final Ingredient ingredient;
 
@@ -31,12 +31,12 @@ public class BlastProcessorBehaviorRecipe implements Recipe<ExplosiveCatalystRec
     }
 
     @Override
-    public boolean matches(ExplosiveCatalystRecipeInput input, World world) {
+    public boolean matches(ExplosiveCatalystDefinitionRecipeInput input, World world) {
         return ingredient.test(input.catalystStack());
     }
 
     @Override
-    public ItemStack craft(ExplosiveCatalystRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack craft(ExplosiveCatalystDefinitionRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
         return getResult(lookup).copy();
     }
 

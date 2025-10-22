@@ -5,22 +5,13 @@ import dev.emi.emi.api.recipe.EmiRecipeSorting;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.RegistryLoader;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
-import net.myriantics.klaxon.registry.KlaxonDynamicRegistries;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
-import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
-import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.ArrayList;
 
@@ -32,8 +23,8 @@ public abstract class KlaxonEmiRecipeCategories {
             KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
             EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR)
     );
-    public static final EmiRecipeCategory ITEM_EXPLOSION_POWER = register(
-            KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID,
+    public static final EmiRecipeCategory EXPLOSIVE_CATALYST_DEFINITION = register(
+            KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
             EmiStack.of(Items.TNT)
     );
     public static final EmiRecipeCategory ITEM_COOLING = register(

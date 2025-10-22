@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosion_power": 2.5,
-  "ingredient": {
-    "item": "minecraft:dragon_breath"
-  },
-  "is_hidden_from_emi": false,
-  "produces_fire": false
-}
