@@ -14,11 +14,10 @@ public class TntMinecartExplosiveCatalystBehavior extends ItemExplosiveCatalystB
     }
 
     @Override
-    public ExplosiveCatalystData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        ExplosiveCatalystData base = super.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
+    public ExplosiveCatalystData transformExplosiveCatalystData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
         int redstoneStrength = world.getReceivedStrongRedstonePower(pos);
 
-        return new ExplosiveCatalystData(base.explosionPower() + (double) redstoneStrength / 5, base.producesFire());
+        return new ExplosiveCatalystData(this, data.explosionPower() + (double) redstoneStrength / 5, data.producesFire());
     }
 
     @Override

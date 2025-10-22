@@ -1,5 +1,9 @@
 package net.myriantics.klaxon.api.behavior.explosive_catalyst;
 
+import com.mojang.serialization.Codec;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
@@ -10,6 +14,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 
 public interface ExplosiveCatalystBehavior {
 
@@ -17,7 +22,7 @@ public interface ExplosiveCatalystBehavior {
 
     void ejectItems(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData);
 
-    ExplosiveCatalystData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput recipeInventory);
+    ExplosiveCatalystData transformExplosiveCatalystData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data);
 
     BlastProcessingRecipeData getBlastProcessingPreviewData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory);
 
@@ -31,10 +36,11 @@ public interface ExplosiveCatalystBehavior {
         return getRegistryEntry().isIn(tagKey);
     }
 
+    Codec<RegistryEntry<ExplosiveCatalystBehavior>> ENTRY_CODEC = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.getEntryCodec();
+
+    PacketCodec<RegistryByteBuf, RegistryEntry<ExplosiveCatalystBehavior>> ENTRY_PACKET_CODEC = PacketCodecs.registryEntry(KlaxonRegistryKeys.BLAST_PROCESSOR_BEHAVIORS);
+
     default RegistryEntry<ExplosiveCatalystBehavior> getRegistryEntry() {
         return KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.getEntry(this);
     }
-
-    // long ass name go brrr
-    record BlastProcessorBehaviorItemExplosionPowerEmiDataCompound(double explosionPowerMin, double explosionPowerMax, net.minecraft.text.Text infoText, String path) {}
 }

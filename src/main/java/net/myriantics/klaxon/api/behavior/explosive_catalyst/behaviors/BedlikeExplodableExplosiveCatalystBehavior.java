@@ -14,15 +14,13 @@ public class BedlikeExplodableExplosiveCatalystBehavior extends ItemExplosiveCat
     }
 
     @Override
-    public ExplosiveCatalystData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        ExplosiveCatalystData base = super.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
-
-        // if the bed doesnt work in dimension, explode
-        if (!world.getDimension().bedWorks()) {
-            return base;
+    public ExplosiveCatalystData transformExplosiveCatalystData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
+        if (world.getDimension().bedWorks()) {
+            return ExplosiveCatalystData.ZERO;
         }
 
-        return new ExplosiveCatalystData(0, false);
+        // if the bed doesnt work in dimension, explode
+        return data;
     }
 
     @Override

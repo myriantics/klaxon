@@ -1,9 +1,12 @@
 {
   "type": "klaxon:explosive_catalyst_definition",
-  "explosion_power": 1.3,
+  "explosive_catalyst_data": {
+    "behavior": "klaxon:glowstone",
+    "explosion_power": 1.3,
+    "produces_fire": true
+  },
   "ingredient": {
     "item": "minecraft:glowstone_dust"
   },
-  "is_hidden_from_emi": false,
-  "produces_fire": true
+  "is_hidden_from_emi": false
 }

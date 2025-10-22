@@ -22,7 +22,7 @@ public class ExplosiveCatalystDefinitionEmiRecipe extends EmiInfoRecipe {
     public ExplosiveCatalystDefinitionEmiRecipe(RecipeEntry<ExplosiveCatalystDefinitionRecipe> recipeEntry) {
         super(List.of(EmiIngredient.of(recipeEntry.value().getIngredient())),
                 List.of(
-                        Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power.constant", recipeEntry.value().getExplosionPower()).setStyle(EXPLOSION_POWER_CONSTANT_STYLE)
+                        Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power.constant", recipeEntry.value().getData().explosionPower()).setStyle(EXPLOSION_POWER_CONSTANT_STYLE)
                 ),
                 recipeEntry.id());
     }
@@ -31,7 +31,7 @@ public class ExplosiveCatalystDefinitionEmiRecipe extends EmiInfoRecipe {
     public ExplosiveCatalystDefinitionEmiRecipe(RecipeEntry<ExplosiveCatalystDefinitionRecipe> recipeEntry, Text behaviorDescription) {
         super(List.of(EmiIngredient.of(recipeEntry.value().getIngredient())),
                 List.of(
-                        Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power.constant", recipeEntry.value().getExplosionPower()).setStyle(EXPLOSION_POWER_CONSTANT_STYLE),
+                        Text.translatable("klaxon.emi.text.explosion_power_info.explosion_power.constant", recipeEntry.value().getData().explosionPower()).setStyle(EXPLOSION_POWER_CONSTANT_STYLE),
                         behaviorDescription
                 ),
                 recipeEntry.id());

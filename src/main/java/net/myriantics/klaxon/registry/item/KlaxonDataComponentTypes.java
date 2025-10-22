@@ -91,7 +91,7 @@ public abstract class KlaxonDataComponentTypes {
                 return builder;
             });
 
-    public static final ComponentType<ExplosiveCatalystData> EXPLOSIVE_CATALYST_OVERRIDE_COMPONENT = register(
+    public static final ComponentType<ExplosiveCatalystData> EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT = register(
             "explosive_catalyst_override",
             builder -> builder
                     .codec(ExplosiveCatalystData.CODEC)

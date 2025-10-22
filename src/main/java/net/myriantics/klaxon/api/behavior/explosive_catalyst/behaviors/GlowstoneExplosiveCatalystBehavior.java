@@ -14,16 +14,14 @@ public class GlowstoneExplosiveCatalystBehavior extends ItemExplosiveCatalystBeh
     }
 
     @Override
-    public ExplosiveCatalystData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        ExplosiveCatalystData base = super.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
-
-        // if respawn anchor doesn't work in dimension, explode
-        if (!world.getDimension().respawnAnchorWorks()) {
-            return new ExplosiveCatalystData(base.explosionPower(), base.producesFire());
+    public ExplosiveCatalystData transformExplosiveCatalystData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
+        // if respawn anchor does work, tough luck. fail.
+        if (world.getDimension().respawnAnchorWorks()) {
+            return ExplosiveCatalystData.ZERO;
         }
 
-        // if respawn anchor does work, tough luck. fail.
-        return new ExplosiveCatalystData(0, false);
+        // if respawn anchor doesn't work in dimension, explode
+        return data;
     }
 
     @Override

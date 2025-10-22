@@ -1,9 +1,12 @@
 {
   "type": "klaxon:explosive_catalyst_definition",
-  "explosion_power": 6.0,
+  "explosive_catalyst_data": {
+    "behavior": "klaxon:creeper_head",
+    "explosion_power": 6.0,
+    "produces_fire": false
+  },
   "ingredient": {
     "item": "minecraft:creeper_head"
   },
-  "is_hidden_from_emi": false,
-  "produces_fire": false
+  "is_hidden_from_emi": false
 }

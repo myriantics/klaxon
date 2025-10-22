@@ -6,6 +6,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.RecipeOutputCompound;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
@@ -72,8 +73,8 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
     }
 
 
-    public boolean isCompatibleWithCatalyst(double explosionPower) {
-        return explosionPowerMin <= explosionPower && explosionPowerMax >= explosionPower;
+    public boolean isCompatibleWithCatalyst(ExplosiveCatalystData data) {
+        return data.matchesConditions(this.explosionPowerMin, this.explosionPowerMax);
     }
 
     @Override

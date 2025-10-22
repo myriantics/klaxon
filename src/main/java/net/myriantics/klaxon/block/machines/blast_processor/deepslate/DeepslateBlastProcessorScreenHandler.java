@@ -14,10 +14,9 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -67,11 +66,10 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
             this.context.run((world, pos) -> {
                 ExplosiveCatalystDefinitionRecipeInput catalystInput = new ExplosiveCatalystDefinitionRecipeInput(blockEntityInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-                ExplosiveCatalystBehavior blastProcessorBehavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, catalystInput);
-                this.powerData = blastProcessorBehavior.getExplosionPowerData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), catalystInput);
+                this.powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), catalystInput);
 
                 BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
-                this.blastProcessingData = blastProcessorBehavior.getBlastProcessingPreviewData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInput);
+                this.blastProcessingData = this.powerData.behavior().value().getBlastProcessingPreviewData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInput);
             });
         }
 
@@ -149,12 +147,11 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
 
         ExplosiveCatalystDefinitionRecipeInput catalystInput = new ExplosiveCatalystDefinitionRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-        ExplosiveCatalystBehavior blastProcessorBehavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, catalystInput);
 
         if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                ExplosiveCatalystData newPowerData = blastProcessorBehavior.getExplosionPowerData(world, pos, blastProcessor, catalystInput);
-                BlastProcessingRecipeData newBlastProcessingData = blastProcessorBehavior.getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
+                ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, blastProcessor, catalystInput);
+                BlastProcessingRecipeData newBlastProcessingData = newPowerData.behavior().value().getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
 
                 // Make sure we've changed something before sending an update packet
                 if (!newPowerData.equals(powerData) || !newBlastProcessingData.equals(this.blastProcessingData)) {

@@ -12,14 +12,12 @@ import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class ExplosiveCatalystDefinitionRecipe implements Recipe<ExplosiveCatalystDefinitionRecipeInput> {
     private final Ingredient ingredient;
-    private final double explosionPower;
-    private final boolean producesFire;
+    private final ExplosiveCatalystData data;
     private final boolean isHidden;
 
-    public ExplosiveCatalystDefinitionRecipe(Ingredient input, double explosionPower, boolean producesFire, boolean isHidden) {
+    public ExplosiveCatalystDefinitionRecipe(Ingredient input, ExplosiveCatalystData data, boolean isHidden) {
         this.ingredient = input;
-        this.explosionPower = explosionPower;
-        this.producesFire = producesFire;
+        this.data = data;
         this.isHidden = isHidden;
     }
 
@@ -49,21 +47,12 @@ public class ExplosiveCatalystDefinitionRecipe implements Recipe<ExplosiveCataly
         return ingredient;
     }
 
-    public double getExplosionPower() {
-        return explosionPower;
-    }
-
-    public boolean producesFire() {
-        return producesFire;
+    public ExplosiveCatalystData getData() {
+        return this.data;
     }
 
     public boolean isHidden() {
         return isHidden;
-    }
-
-    public boolean matchesConditions(double explosionPowerMin, double explosionPowerMax) {
-        //return requiresFire == producesFire || producesFire;
-        return explosionPowerMin <= explosionPower && explosionPower <= explosionPowerMax;
     }
 
     @Override
@@ -78,7 +67,6 @@ public class ExplosiveCatalystDefinitionRecipe implements Recipe<ExplosiveCataly
 
     @Override
     public RecipeType<?> getType() {
-        return KlaxonRecipeTypes.ITEM_EXPLOSION_POWER;
+        return KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION;
     }
-
 }

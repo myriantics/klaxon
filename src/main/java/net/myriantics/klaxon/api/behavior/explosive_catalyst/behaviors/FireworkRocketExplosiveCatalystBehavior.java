@@ -15,9 +15,9 @@ import net.myriantics.klaxon.api.behavior.explosive_catalyst.ItemExplosiveCataly
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors.FireworkRocketEntityInvoker;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 
 public class FireworkRocketExplosiveCatalystBehavior extends ItemExplosiveCatalystBehavior {
 
@@ -26,17 +26,15 @@ public class FireworkRocketExplosiveCatalystBehavior extends ItemExplosiveCataly
     }
 
     @Override
-    public ExplosiveCatalystData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput craftingInventory) {
-        ExplosiveCatalystData base = super.getExplosionPowerData(world, pos, blastProcessor, craftingInventory);
-        ItemStack stack = craftingInventory.catalystStack();
+    public ExplosiveCatalystData transformExplosiveCatalystData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
+        ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
         if (stack.get(DataComponentTypes.FIREWORKS) instanceof FireworksComponent component) {
-            boolean producesFire = base.producesFire();
-            double explosionPower = base.explosionPower();
+            boolean producesFire = data.producesFire();
+            double explosionPower = data.explosionPower();
 
             // compute explosion power data from gunpowder
-            ExplosiveCatalystDefinitionRecipeInput gunpowderRecipeInput = new ExplosiveCatalystDefinitionRecipeInput(new ItemStack(Items.GUNPOWDER));
-            ExplosiveCatalystData gunpowderData = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, gunpowderRecipeInput).getExplosionPowerData(world, pos, blastProcessor, gunpowderRecipeInput);
+            ExplosiveCatalystData gunpowderData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, blastProcessor, new ExplosiveCatalystDefinitionRecipeInput(new ItemStack(Items.GUNPOWDER)));
 
             // add explosion power for the flight duration
             producesFire = producesFire || gunpowderData.producesFire();
@@ -49,7 +47,7 @@ public class FireworkRocketExplosiveCatalystBehavior extends ItemExplosiveCataly
 
                 // get explosion power data from star stack
                 ExplosiveCatalystDefinitionRecipeInput fireworkStarRecipeInput = new ExplosiveCatalystDefinitionRecipeInput(starStack);
-                ExplosiveCatalystData fireworkStarData = BlastProcessorBehaviorRecipeLogic.computeBehavior(world, fireworkStarRecipeInput).getExplosionPowerData(world, pos, blastProcessor, fireworkStarRecipeInput);
+                ExplosiveCatalystData fireworkStarData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, blastProcessor, fireworkStarRecipeInput);
 
                 // append values to stats
                 producesFire = producesFire || fireworkStarData.producesFire();
@@ -59,10 +57,10 @@ public class FireworkRocketExplosiveCatalystBehavior extends ItemExplosiveCataly
             // each recipe produces 3 rockets, so our actual value is 1/3 of what was calculated - then round to the nearest tenth.
             explosionPower /= 3;
 
-            return new ExplosiveCatalystData(explosionPower, producesFire);
+            return new ExplosiveCatalystData(this, explosionPower, producesFire);
         }
 
-        return base;
+        return data;
     }
 
     @Override

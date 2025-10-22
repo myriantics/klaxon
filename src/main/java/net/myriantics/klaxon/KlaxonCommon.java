@@ -4,10 +4,9 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.datagen.KlaxonDatagenCompatIds;
 import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
-import net.myriantics.klaxon.registry.behavior.KlaxonBlastProcessorCatalystBehaviors;
+import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.behavior.KlaxonDispenserBehaviors;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
@@ -20,7 +19,6 @@ import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.registry.worldgen.KlaxonWorldgenFeatures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongepowered.tools.agent.MixinAgent;
 
 public class KlaxonCommon implements ModInitializer {
 	public static final String MOD_ID = "klaxon";
@@ -52,7 +50,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonPackets.initC2SRecievers();
 		KlaxonScreenHandlers.init();
 		KlaxonItemGroups.init();
-		KlaxonBlastProcessorCatalystBehaviors.init();
+		KlaxonExplosiveCatalystBehaviors.init();
 		KlaxonDataComponentTypes.init();
 		KlaxonAdvancementCriteria.init();
 		KlaxonStatusEffects.init();

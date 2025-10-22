@@ -8,8 +8,6 @@ import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeSerializer;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeSerializer;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeSerializer;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
@@ -32,12 +30,6 @@ public abstract class KlaxonRecipeTypes {
             registerSerializer(BLAST_PROCESSING_RECIPE_ID, new BlastProcessingRecipeSerializer());
     public static RecipeType<BlastProcessingRecipe> BLAST_PROCESSING =
             registerRecipeType(BLAST_PROCESSING_RECIPE_ID);
-
-    public static final String BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID = "blast_processor_behavior";
-    public static RecipeSerializer<BlastProcessorBehaviorRecipe> BLAST_PROCESSOR_BEHAVIOR_RECIPE_SERIALIZER =
-            registerSerializer(BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID, new BlastProcessorBehaviorRecipeSerializer());
-    public static RecipeType<BlastProcessorBehaviorRecipe> BLAST_PROCESSOR_BEHAVIOR =
-            registerRecipeType(BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID);
 
     public static final String TOOL_USAGE_RECIPE_ID = "tool_usage";
     public static RecipeSerializer<ToolUsageRecipe> TOOL_USAGE_RECIPE_SERIALIZER =
@@ -65,7 +57,7 @@ public abstract class KlaxonRecipeTypes {
     public static final String EXPLOSIVE_CATALYST_DEFINITION_ID = "explosive_catalyst_definition";
     public static RecipeSerializer<ExplosiveCatalystDefinitionRecipe> EXPLOSIVE_CATALYST_DEFINITION_RECIPE_SERIALIZER =
             registerSerializer(EXPLOSIVE_CATALYST_DEFINITION_ID, new ExplosiveCatalystDefinitionRecipeSerializer());
-    public static RecipeType<ExplosiveCatalystDefinitionRecipe> ITEM_EXPLOSION_POWER =
+    public static RecipeType<ExplosiveCatalystDefinitionRecipe> EXPLOSIVE_CATALYST_DEFINITION =
             registerRecipeType(EXPLOSIVE_CATALYST_DEFINITION_ID);
 
     public static final String MAKESHIFT_SHAPED_CRAFTING_ID = "makeshift_shaped";

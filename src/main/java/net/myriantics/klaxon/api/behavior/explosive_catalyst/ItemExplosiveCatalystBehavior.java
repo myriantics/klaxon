@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.BlastingRecipe;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -22,7 +21,6 @@ import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -102,24 +100,8 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
         blastProcessor.clear();
     }
 
-    public ExplosiveCatalystData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        // pop the override
-        if (recipeInventory.catalystStack().get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_OVERRIDE_COMPONENT) instanceof ExplosiveCatalystData data) {
-            return data;
-        }
-
-        RecipeManager recipeManager = world.getRecipeManager();
-
-        Optional<RecipeEntry<ExplosiveCatalystDefinitionRecipe>> itemExplosionPowerMatch = Optional.empty();
-
-        if (!recipeInventory.catalystStack().isEmpty()) {
-            itemExplosionPowerMatch = recipeManager.getFirstMatch(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, recipeInventory, world);
-        }
-
-        if (itemExplosionPowerMatch.isPresent()) {
-            return new ExplosiveCatalystData(itemExplosionPowerMatch.get().value().getExplosionPower(), itemExplosionPowerMatch.get().value().producesFire());
-        }
-        return new ExplosiveCatalystData(0.0, false);
+    public ExplosiveCatalystData transformExplosiveCatalystData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
+        return data;
     }
 
     public BlastProcessingRecipeData getBlastProcessingPreviewData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory) {
@@ -141,7 +123,7 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
 
             return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
         } else {
-            return new BlastProcessingRecipeData(0.0, 0.0, new ItemStack[0]);
+            return BlastProcessingRecipeData.ZERO;
         }
     }
 
@@ -164,7 +146,7 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
 
             return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
         } else {
-            return new BlastProcessingRecipeData(0.0, 0.0, new ItemStack[0]);
+            return BlastProcessingRecipeData.ZERO;
         }
     }
 
@@ -193,7 +175,7 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
         // if there's a catalyst, iterate through all matching recipes until you find the matching one with the least explosion power
         if (!recipeInventory.getStackInSlot(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
            for (BlastProcessingRecipe activeRecipe : recipes) {
-                if (activeRecipe.isCompatibleWithCatalyst(powerData.explosionPower())) {
+                if (activeRecipe.isCompatibleWithCatalyst(powerData)) {
                     return Optional.of(activeRecipe);
                 }
             }

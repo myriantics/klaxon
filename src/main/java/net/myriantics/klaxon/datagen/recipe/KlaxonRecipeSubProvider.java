@@ -15,11 +15,13 @@ import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.api.BlockIngredient;
 import net.myriantics.klaxon.api.NamedIngredient;
 import net.myriantics.klaxon.api.RecipeOutputCompound;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
+import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
@@ -271,21 +273,28 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addExplosiveCatalystDefinitionRecipeWithBehavior(NamedIngredient input, Identifier behaviorId,
-                                                                 double explosionPower, boolean producesFire, boolean isHidden,
-                                                                 final ResourceCondition... conditions) {
-        addExplosiveCatalystDefinitionRecipe(input, explosionPower, producesFire, isHidden, conditions);
-        addBlastProcessorBehaviorRecipe(input, behaviorId, conditions);
+    public void addExplosiveCatalystDefinitionRecipe(
+            NamedIngredient input,
+            double explosionPower, boolean producesFire,
+            boolean isHidden,
+            final ResourceCondition... conditions
+    ) {
+        this.addExplosiveCatalystDefinitionRecipe(input, KlaxonExplosiveCatalystBehaviors.DEFAULT, explosionPower, producesFire, isHidden, conditions);
     }
 
-    public void addExplosiveCatalystDefinitionRecipe(NamedIngredient input,
-                                                     double explosionPower, boolean producesFire, boolean isHidden, final ResourceCondition... conditions) {
+    public void addExplosiveCatalystDefinitionRecipe(
+            NamedIngredient input,
+            ExplosiveCatalystBehavior behavior,
+            double explosionPower, boolean producesFire,
+            boolean isHidden,
+            final ResourceCondition... conditions
+    ) {
 
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
                 input.getName(),
                 conditions);
 
-        ExplosiveCatalystDefinitionRecipe recipe = new ExplosiveCatalystDefinitionRecipe(input.toIngredient(), explosionPower, producesFire, isHidden);
+        ExplosiveCatalystDefinitionRecipe recipe = new ExplosiveCatalystDefinitionRecipe(input.toIngredient(), new ExplosiveCatalystData(behavior, explosionPower, producesFire), isHidden);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
@@ -380,16 +389,6 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addBlastProcessorBehaviorRecipe(NamedIngredient ingredient,
-                                                Identifier behaviorIdentifier, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID,
-                ingredient.getName(),
-                conditions);
-
-        BlastProcessorBehaviorRecipe recipe = new BlastProcessorBehaviorRecipe(ingredient.toIngredient(), behaviorIdentifier);
-
-        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
-    }
 
     public void addOverrideRecipe(Identifier id) {
         provider.acceptOverrideRecipe(exporter, id);

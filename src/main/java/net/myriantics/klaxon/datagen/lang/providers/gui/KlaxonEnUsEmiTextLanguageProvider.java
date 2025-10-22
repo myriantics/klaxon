@@ -58,14 +58,14 @@ public final class KlaxonEnUsEmiTextLanguageProvider extends KlaxonEnUsLanguageS
     }
 
     private void addBehaviorDescription(String key, String name) {
-        addEmiExplosionPowerInfo("behavior." + key + ".description", name);
+        addEmiExplosionPowerInfo("behavior.klaxon." + key + ".description", name);
     }
 
     private void addBehaviorMin(String key, String name) {
-        addEmiExplosionPowerInfo("behavior." + key + ".min", name);
+        addEmiExplosionPowerInfo("behavior.klaxon." + key + ".min", name);
     }
 
     private void addBehaviorMax(String key, String name) {
-        addEmiExplosionPowerInfo("behavior." + key + ".max", name);
+        addEmiExplosionPowerInfo("behavior.klaxon." + key + ".max", name);
     }
 }

@@ -14,7 +14,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
@@ -52,18 +51,6 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
         for (ExplosiveCatalystDefinitionRecipe catalystRecipe : catalystData) {
             catalystStacks.add(EmiIngredient.of(catalystRecipe.getIngredient()));
-        }
-
-        // crude ass code but it works haha
-        for (RecipeEntry<BlastProcessorBehaviorRecipe> behaviorRecipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
-
-            ExplosiveCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorRecipe.value().getBehaviorId());
-
-            if (behavior == null) continue;
-
-            if (behavior.isVariable()) {
-                catalystStacks.add(EmiIngredient.of(behaviorRecipe.value().getIngredient()));
-            }
         }
 
         this.catalysts = EmiIngredient.of(catalystStacks);
@@ -127,8 +114,8 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
 
     private DefaultedList<ExplosiveCatalystDefinitionRecipe> getValidCatalysts() {
         DefaultedList<ExplosiveCatalystDefinitionRecipe> catalysts = DefaultedList.of();
-        for (RecipeEntry<ExplosiveCatalystDefinitionRecipe> recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER)) {
-            if (recipe.value().matchesConditions(explosionPowerMin, explosionPowerMax)) {
+        for (RecipeEntry<ExplosiveCatalystDefinitionRecipe> recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION)) {
+            if (recipe.value().getData().matchesConditions(explosionPowerMin, explosionPowerMax)) {
 
                 // dont show hidden recipes in the scroller
                 if (!recipe.value().isHidden()) {

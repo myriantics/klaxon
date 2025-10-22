@@ -6,11 +6,10 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipeLogic;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 import org.jetbrains.annotations.NotNull;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -34,7 +33,7 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         double explosionPower = this.decodeFromData(blockAccessor).orElse(0.0);
-        iTooltip.add(Text.translatable("klaxon.jade.text.tooltip.blast_processor.explosion_power", explosionPower));
+        iTooltip.add(Text.translatable("klaxon.jade.text.blast_processor.explosion_power", explosionPower));
     }
 
     @Override
@@ -47,9 +46,8 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
         if (blockAccessor.getBlockEntity() instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
             ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
-            ExplosiveCatalystBehavior behavior = BlastProcessorBehaviorRecipeLogic.computeBehavior(blockAccessor.getLevel(), recipeInventory);
 
-            return behavior.getExplosionPowerData(blockAccessor.getLevel(), blockAccessor.getPosition(), blastProcessor, recipeInventory).explosionPower();
+            return ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blockAccessor.getLevel(), blockAccessor.getPosition(), blastProcessor, recipeInventory).explosionPower();
         }
         return 0.0;
     }

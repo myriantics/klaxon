@@ -8,19 +8,16 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 
 public class ExplosiveCatalystDefinitionRecipeSerializer implements RecipeSerializer<ExplosiveCatalystDefinitionRecipe> {
-    public ExplosiveCatalystDefinitionRecipeSerializer() {
-    }
 
-    private final MapCodec<ExplosiveCatalystDefinitionRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance) -> {
-        return recipeInstance.group(
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter(ExplosiveCatalystDefinitionRecipe::getIngredient),
-                PrimitiveCodec.DOUBLE.fieldOf("explosion_power").forGetter(ExplosiveCatalystDefinitionRecipe::getExplosionPower),
-                PrimitiveCodec.BOOL.fieldOf("produces_fire").forGetter(ExplosiveCatalystDefinitionRecipe::producesFire),
-                PrimitiveCodec.BOOL.fieldOf("is_hidden_from_emi").forGetter(ExplosiveCatalystDefinitionRecipe::isHidden)
-        ).apply(recipeInstance, ExplosiveCatalystDefinitionRecipe::new);
-    });
+    private final MapCodec<ExplosiveCatalystDefinitionRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance) -> recipeInstance.group(
+            Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter(ExplosiveCatalystDefinitionRecipe::getIngredient),
+            ExplosiveCatalystData.CODEC.fieldOf("explosive_catalyst_data").forGetter(ExplosiveCatalystDefinitionRecipe::getData),
+            PrimitiveCodec.BOOL.fieldOf("is_hidden_from_emi").forGetter(ExplosiveCatalystDefinitionRecipe::isHidden)
+    ).apply(recipeInstance, ExplosiveCatalystDefinitionRecipe::new));
 
     private final PacketCodec<RegistryByteBuf, ExplosiveCatalystDefinitionRecipe> PACKET_CODEC = PacketCodec.ofStatic(
             ExplosiveCatalystDefinitionRecipeSerializer::write, ExplosiveCatalystDefinitionRecipeSerializer::read
@@ -28,18 +25,16 @@ public class ExplosiveCatalystDefinitionRecipeSerializer implements RecipeSerial
 
     private static void write(RegistryByteBuf buf, ExplosiveCatalystDefinitionRecipe recipe) {
         Ingredient.PACKET_CODEC.encode(buf, recipe.getIngredient());
-        PacketCodecs.DOUBLE.encode(buf, recipe.getExplosionPower());
-        PacketCodecs.BOOL.encode(buf, recipe.producesFire());
+        ExplosiveCatalystData.PACKET_CODEC.encode(buf, recipe.getData());
         PacketCodecs.BOOL.encode(buf, recipe.isHidden());
     }
 
     private static ExplosiveCatalystDefinitionRecipe read(RegistryByteBuf buf) {
         Ingredient item = Ingredient.PACKET_CODEC.decode(buf);
-        double explosionPower = PacketCodecs.DOUBLE.decode(buf);
-        boolean producesFire = PacketCodecs.BOOL.decode(buf);
+        ExplosiveCatalystData data = ExplosiveCatalystData.PACKET_CODEC.decode(buf);
         boolean isHidden = PacketCodecs.BOOL.decode(buf);
 
-        return new ExplosiveCatalystDefinitionRecipe(item, explosionPower, producesFire, isHidden);
+        return new ExplosiveCatalystDefinitionRecipe(item, data, isHidden);
     }
 
     @Override

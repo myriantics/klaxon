@@ -18,15 +18,14 @@ public class EndCrystalExplosiveCatalystBehavior extends ItemExplosiveCatalystBe
     }
 
     @Override
-    public ExplosiveCatalystData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        ExplosiveCatalystData base = super.getExplosionPowerData(world, pos, blastProcessor, recipeInventory);
+    public ExplosiveCatalystData transformExplosiveCatalystData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
         BlockState blastProcessorState = world.getBlockState(pos);
         Direction facing = blastProcessorState.get(Properties.HORIZONTAL_FACING);
 
         // check to see if bedrock is under, in front of, or below the output position of blast processor
-        boolean fiery = base.producesFire() || isStateValid(world, pos.down()) || isStateValid(world, pos.offset(facing)) || isStateValid(world, pos.offset(facing).down());
+        boolean fiery = data.producesFire() || isStateValid(world, pos.down()) || isStateValid(world, pos.offset(facing)) || isStateValid(world, pos.offset(facing).down());
 
-        return new ExplosiveCatalystData(base.explosionPower(), base.producesFire() || fiery);
+        return new ExplosiveCatalystData(this, data.explosionPower(), data.producesFire() || fiery);
     }
 
     private boolean isStateValid(World world, BlockPos pos) {

@@ -24,11 +24,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
 import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
@@ -116,7 +114,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerRecipes(EmiRegistry registry) {
-        addAllItemExplosionPower(registry, KlaxonRecipeTypes.ITEM_EXPLOSION_POWER, ExplosiveCatalystDefinitionEmiRecipe::new);
+        addAllExplosiveCatalystDefinition(registry, KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, ExplosiveCatalystDefinitionEmiRecipe::new);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
         addAll(registry, KlaxonRecipeTypes.ITEM_COOLING, ItemCoolingEmiRecipe::new);
@@ -151,44 +149,37 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
 
-    public <C extends Recipe<V>, T extends RecipeEntry<C>, V extends RecipeInput> void addAllItemExplosionPower(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
+    public <C extends Recipe<V>, T extends RecipeEntry<C>, V extends RecipeInput> void addAllExplosiveCatalystDefinition(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
         for (RecipeEntry<C> recipeEntry : registry.getRecipeManager().listAllOfType(type)) {
 
             // dont show hidden recipes
             if (recipeEntry.value() instanceof ExplosiveCatalystDefinitionRecipe explosiveCatalystDefinitionRecipe) {
                 if (!explosiveCatalystDefinitionRecipe.isHidden()) {
-                    boolean behaviorSearchFailed = true;
-                    // crude code to apply more advanced descriptions to recipes if needed
-                    for (RecipeEntry<BlastProcessorBehaviorRecipe> behaviorRecipeEntry : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR)) {
-                        if (behaviorRecipeEntry.value().getIngredient().equals(explosiveCatalystDefinitionRecipe.getIngredient())) {
-                            Identifier behaviorId = behaviorRecipeEntry.value().getBehaviorId();
-                            ExplosiveCatalystBehavior behavior = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.get(behaviorId);
-                            if (behavior != null && behavior.isVariable()) {
-                                registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeEntry<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), minFromBehaviorId(behaviorId), maxFromBehaviorId(behaviorId), descriptionFromBehaviorId(behaviorId)));
-                            } else {
-                                registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeEntry<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), descriptionFromBehaviorId(behaviorId)));
-                            }
-                            behaviorSearchFailed = false;
-                        }
+                    RegistryEntry<ExplosiveCatalystBehavior> behavior = ((ExplosiveCatalystDefinitionRecipe) recipeEntry.value()).getData().behavior();
+                    String id = behavior.getIdAsString();
+                    if (behavior.value().isVariable()) {
+                        registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeEntry<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), minFromBehaviorId(id), maxFromBehaviorId(id), descriptionFromBehaviorId(id)));
+                    } else {
+                        registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeEntry<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), descriptionFromBehaviorId(id)));
                     }
-
-                    // if we couldn't find a matching behavior recipe, add regular one to registry
-                    if (behaviorSearchFailed) registry.addRecipe(constructor.apply(recipeEntry));
                 }
             }
         }
     }
 
-    private static Text maxFromBehaviorId(Identifier behaviorId) {
-        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.getPath() + ".max");
+    private static Text maxFromBehaviorId(String behaviorId) {
+        int dividerIndex = behaviorId.lastIndexOf(Identifier.NAMESPACE_SEPARATOR);
+        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.substring(0, dividerIndex) + "." + behaviorId.substring(dividerIndex + 1) + ".max");
     }
 
-    private static Text minFromBehaviorId(Identifier behaviorId) {
-        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.getPath() + ".min");
+    private static Text minFromBehaviorId(String behaviorId) {
+        int dividerIndex = behaviorId.lastIndexOf(Identifier.NAMESPACE_SEPARATOR);
+        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.substring(0, dividerIndex) + "." + behaviorId.substring(dividerIndex + 1) + ".min");
     }
 
-    private static Text descriptionFromBehaviorId(Identifier behaviorId) {
-        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.getPath() + ".description");
+    private static Text descriptionFromBehaviorId(String behaviorId) {
+        int dividerIndex = behaviorId.lastIndexOf(Identifier.NAMESPACE_SEPARATOR);
+        return Text.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.substring(0, dividerIndex) + "." + behaviorId.substring(dividerIndex + 1) + ".description");
     }
 
 }
