@@ -13,6 +13,7 @@ import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.*;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
 import java.util.function.UnaryOperator;
 
@@ -89,6 +90,13 @@ public abstract class KlaxonDataComponentTypes {
                 builder.packetCodec(InstabreakingToolComponent.PACKET_CODEC);
                 return builder;
             });
+
+    public static final ComponentType<ExplosiveCatalystData> EXPLOSIVE_CATALYST_OVERRIDE_COMPONENT = register(
+            "explosive_catalyst_override",
+            builder -> builder
+                    .codec(ExplosiveCatalystData.CODEC)
+                    .packetCodec(ExplosiveCatalystData.PACKET_CODEC)
+    );
 
     // Items with this component override the check that disallows both damage and stacking components coexisting.
     public static final ComponentType<Unit> DAMAGEABLE_AND_STACKABLE = registerUnit("damageable_and_stackable");

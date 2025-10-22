@@ -22,6 +22,7 @@ import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -102,6 +103,11 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
     }
 
     public ExplosiveCatalystData getExplosionPowerData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
+        // pop the override
+        if (recipeInventory.catalystStack().get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_OVERRIDE_COMPONENT) instanceof ExplosiveCatalystData data) {
+            return data;
+        }
+
         RecipeManager recipeManager = world.getRecipeManager();
 
         Optional<RecipeEntry<ExplosiveCatalystDefinitionRecipe>> itemExplosionPowerMatch = Optional.empty();
