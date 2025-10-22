@@ -396,7 +396,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.SHROOMLIGHT_CONVERTIBLE)
                 .forceAddTag(ConventionalBlockTags.PUMPKINS)
                 .add(Blocks.MELON)
-                .add(Blocks.COCOA);
+                .add(Blocks.COCOA)
+                .add(Blocks.BEE_NEST);
         getOrCreateTagBuilder(KlaxonBlockTags.BONE_BLOCK_CONVERTIBLE)
                 .add(Blocks.CACTUS);
 
