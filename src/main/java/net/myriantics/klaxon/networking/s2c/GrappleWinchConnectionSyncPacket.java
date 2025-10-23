@@ -8,6 +8,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawCableAttachmentHandler;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
@@ -39,6 +40,12 @@ public record GrappleWinchConnectionSyncPacket(GrappleWinchConnectionData connec
                     ((PlayerEntityGrappleAccess) player).klaxon$setConnectionData(connectionData);
                     ((PlayerEntityGrappleAccess) player).klaxon$setGrappleClaw(grappleClaw instanceof GrappleClawEntity ? (GrappleClawEntity) grappleClaw : null);
                     ((PlayerEntityGrappleAccess) player).klaxon$resetWinchCableLength();
+                }
+
+                // update owner so grapple claw knows who to actually play sounds to
+                if (grappleClaw instanceof GrappleClawEntity) {
+                    ((GrappleClawEntity) grappleClaw).setOwner(player);
+                    ((GrappleClawEntity) grappleClaw).cableAttachmentHandler.setAttachmentState(GrappleClawCableAttachmentHandler.AttachmentState.ATTACHED);
                 }
 
                 GrappleWinchClientConnectionManager.INSTANCE.addOrUpdateConnection(connectionData);

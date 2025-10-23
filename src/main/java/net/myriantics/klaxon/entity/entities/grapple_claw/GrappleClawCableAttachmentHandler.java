@@ -156,27 +156,16 @@ public class GrappleClawCableAttachmentHandler {
         return false;
     }
 
-    private void setAttachmentState(AttachmentState newState) {
+    public void setAttachmentState(AttachmentState newState) {
         this.attachmentState = newState;
     }
 
     public enum AttachmentState {
-        ATTACHED(true),
-        RETRACTING(true),
-        DETACHED(false);
-
-        private final boolean attached;
-
-        AttachmentState(boolean attached) {
-            this.attached = attached;
-        }
+        ATTACHED,
+        DETACHED;
 
         public boolean isAttached() {
-            return this.attached;
-        }
-
-        public boolean isRetracting() {
-            return this.equals(RETRACTING);
+            return this.equals(ATTACHED);
         }
     }
 }

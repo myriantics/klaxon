@@ -315,27 +315,27 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
         // prep variables
-        World world = getWorld();
         PlayerEntity attachedPlayer = this.getAttachedPlayer();
-
-        super.onBlockHit(blockHitResult);
-
-        this.draggedItems.clear();
-
         if (attachedPlayer != null) {
-            if (this.isCableAttached()) {
-                this.playSoundAtSelfAndThroughCableIfPossible(
-                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
-                        1.0F,
-                        1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F)
-                );
+            this.playSoundAtSelfAndThroughCableIfPossible(
+                    KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
+                    1.0F,
+                    1.0F / (getWorld().getRandom().nextFloat() * 0.4F + 1.2F)
+            );
 
-                // needs to be here to let client know about grapple claw coords if it lands outside client render distance
-                if (attachedPlayer instanceof ServerPlayerEntity serverPlayer) {
-                    GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
-                }
+            // needs to be here to let client know about grapple claw coords if it lands outside client render distance
+            if (attachedPlayer instanceof ServerPlayerEntity serverPlayer) {
+                GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
             }
         }
+
+        super.onBlockHit(blockHitResult);
+        this.draggedItems.clear();
+    }
+
+    @Override
+    protected SoundEvent getHitSound() {
+        return KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR;
     }
 
     @Override
@@ -538,17 +538,19 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         return attachedPlayer != null && attachedPlayer.equals(player) && this.equals(((PlayerEntityGrappleAccess) player).klaxon$getGrappleClaw());
     }
 
+    @Override
+    public SoundCategory getSoundCategory() {
+        return this.isCableAttached() ? SoundCategory.PLAYERS : super.getSoundCategory();
+    }
+
     protected void playSoundAtSelfAndThroughCableIfPossible(
             SoundEvent soundEvent,
             float volume,
             float pitch
     ) {
-        @Nullable PlayerEntity attachedPlayer = getAttachedPlayer();
-        SoundCategory category = attachedPlayer == null ? SoundCategory.NEUTRAL : SoundCategory.PLAYERS;
+        PlayerEntity attachedPlayer = this.getAttachedPlayer();
 
-        World world = this.getWorld();
-
-        if (attachedPlayer != null) {
+        if (attachedPlayer != null && attachedPlayer.getEyePos().distanceTo(this.getPos()) > 15) {
             attachedPlayer.playSound(
                     soundEvent,
                     volume,
@@ -556,13 +558,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             );
         }
 
-        world.playSound(
-                attachedPlayer,
-                this.getX(),
-                this.getY(),
-                this.getZ(),
+        this.playSound(
                 soundEvent,
-                category,
                 volume,
                 pitch
         );

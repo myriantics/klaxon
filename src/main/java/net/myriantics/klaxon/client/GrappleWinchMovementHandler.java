@@ -3,6 +3,8 @@ package net.myriantics.klaxon.client;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.ClientPlayerTickable;
 import net.minecraft.item.ItemStack;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawCableAttachmentHandler;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
@@ -30,6 +32,12 @@ public final class GrappleWinchMovementHandler implements ClientPlayerTickable {
     }
 
     private void detachGrappleCable() {
+        GrappleClawEntity claw = access().klaxon$getGrappleClaw();
+        if (claw == null) {
+            return;
+        }
+
+        claw.cableAttachmentHandler.setAttachmentState(GrappleClawCableAttachmentHandler.AttachmentState.DETACHED);
         access().klaxon$setGrappleClaw(null);
         access().klaxon$setConnectionData(null);
         GrappleWinchClientConnectionManager.INSTANCE.discardConnection(this.clientPlayer.getId());
