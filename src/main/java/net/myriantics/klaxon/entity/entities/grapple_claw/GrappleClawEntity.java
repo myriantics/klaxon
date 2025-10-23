@@ -442,8 +442,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     GameEvent.Emitter.of(pickupPlayer)
             );
 
-            this.discard();
-            this.cableAttachmentHandler.detachCable(true);
+            if (!this.getWorld().isClient()) {
+                this.discard();
+                this.cableAttachmentHandler.detachCable(true);
+            }
+
             return true;
         }
 
