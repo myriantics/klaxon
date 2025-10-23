@@ -5,17 +5,17 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import org.jetbrains.annotations.Nullable;
@@ -184,11 +184,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         @Nullable ItemStack weaponStack = source.getWeaponStack();
 
         Entity attackedEntity = instance instanceof EnderDragonPart part
-                ? part.owner.getBodyParts()[GrappleClawEntity.ENDER_DRAGON_BODY_INDEX]
+                ? ((EnderDragonEntityAccessor) part.owner).getBody()
                 : instance;
 
         // try to fast reload the grapple claw attached to the entity if it's attached
-        if (grappleClaw != null && weaponStack != null && attackedEntity.equals(grappleClaw.getGrappledEntity())) {
+        if (source.isDirect() && grappleClaw != null && weaponStack != null && grappleClaw.hookedEntityHandler.hookedEntityMatches(attackedEntity)) {
             if (grappleClaw.tryFastReload((PlayerEntity) (Object) this, weaponStack)) {
                 return false;
             }

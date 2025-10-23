@@ -8,7 +8,7 @@ import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateB
 import net.myriantics.klaxon.compat.jade.providers.GrappleClawProvider;
 import net.myriantics.klaxon.compat.jade.providers.HallnoxPodStatusProvider;
 import net.myriantics.klaxon.compat.jade.providers.DeepslateBlastProcessorProvider;
-import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import snownee.jade.addon.harvest.HarvestToolProvider;
 import snownee.jade.addon.harvest.SimpleToolHandler;

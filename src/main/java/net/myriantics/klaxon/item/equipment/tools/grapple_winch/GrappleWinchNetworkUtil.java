@@ -2,7 +2,7 @@ package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
 
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionDiscardPacket;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;

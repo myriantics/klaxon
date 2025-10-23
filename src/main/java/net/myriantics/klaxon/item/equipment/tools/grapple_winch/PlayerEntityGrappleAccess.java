@@ -1,6 +1,6 @@
 package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
 
-import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
 
 public interface PlayerEntityGrappleAccess {

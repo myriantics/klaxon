@@ -33,6 +33,7 @@
     "minecraft.grapple_winch.PlayerEntityMixin",
     "minecraft.grapple_winch.ServerPlayerEntityMixin",
     "minecraft.grapple_winch.ServerPlayNetworkHandlerMixin",
+    "minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor",
     "minecraft.grapple_winch.grapple_claw.EntityMixin",
     "minecraft.grapple_winch.grapple_winch.PlayerManagerMixin",
     "minecraft.hallnox_pod.FallingBlockEntityMixin",

@@ -6,7 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -20,7 +20,7 @@ public abstract class EntityMixin {
         original.call(instance, world, pos, entity);
 
         if (entity instanceof GrappleClawEntity grappleClaw) {
-            grappleClaw.onBlockPosIntersection(world, instance, pos);
+            grappleClaw.blockDestructionHandler.onBlockPosIntersection(world, instance, pos);
         }
     }
 }

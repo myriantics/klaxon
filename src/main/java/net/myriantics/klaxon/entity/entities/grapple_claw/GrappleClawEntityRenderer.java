@@ -1,13 +1,11 @@
-package net.myriantics.klaxon.entity;
+package net.myriantics.klaxon.entity.entities.grapple_claw;
 
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.ArrowEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.ProjectileEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -17,7 +15,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 
 import java.util.HashMap;
@@ -123,9 +120,9 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
 
     @Override
     public Vec3d getPositionOffset(GrappleClawEntity entity, float tickDelta) {
-        return entity.getGrappledEntity() == null
-                ? super.getPositionOffset(entity, tickDelta)
-                : new Vec3d(0, entity.getEyeHeight(entity.getPose()), 0);
+        return entity.hookedEntityHandler.hasHookedEntity()
+                ? new Vec3d(0, entity.getEyeHeight(entity.getPose()), 0)
+                : super.getPositionOffset(entity, tickDelta);
     }
 
     private void vertex(

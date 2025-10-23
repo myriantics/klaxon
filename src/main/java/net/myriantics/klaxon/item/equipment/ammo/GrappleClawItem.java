@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.item.equipment.ammo;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.Item;
@@ -10,7 +9,7 @@ import net.minecraft.item.ProjectileItem;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.entity.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class GrappleClawItem extends Item implements ProjectileItem {
