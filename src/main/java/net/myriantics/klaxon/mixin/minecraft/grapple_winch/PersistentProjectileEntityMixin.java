@@ -5,6 +5,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
@@ -39,5 +41,15 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
 
         // otherwise, gravity works as normal
         original.call(instance);
+    }
+
+    @WrapOperation(
+            method = "tick",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;raycast(Lnet/minecraft/world/RaycastContext;)Lnet/minecraft/util/hit/BlockHitResult;")
+    )
+    private BlockHitResult klaxon$replaceRaycastTypeIfNeeded(World instance, RaycastContext raycastContext, Operation<BlockHitResult> original) {
+        return (Object) this instanceof GrappleClawEntity grappleClaw
+                ? grappleClaw.blockDestructionHandler.raycast(raycastContext.getStart(), raycastContext.getEnd())
+                : original.call(instance, raycastContext);
     }
 }

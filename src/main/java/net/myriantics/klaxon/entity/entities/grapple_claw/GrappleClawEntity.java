@@ -316,30 +316,23 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     protected void onBlockHit(BlockHitResult blockHitResult) {
         // prep variables
         World world = getWorld();
-        BlockPos hitPos = blockHitResult.getBlockPos();
-        BlockState hitState = getWorld().getBlockState(hitPos);
         PlayerEntity attachedPlayer = this.getAttachedPlayer();
 
-        if (this.blockDestructionHandler.tryBreakingBlocks(world, hitState, hitPos)) {
-            this.setVelocity(this.getVelocity().multiply(0.85));
-        } else {
-            // if a block was broken, we don't call the super method
-            super.onBlockHit(blockHitResult);
+        super.onBlockHit(blockHitResult);
 
-            this.draggedItems.clear();
+        this.draggedItems.clear();
 
-            if (attachedPlayer != null) {
-                if (this.isCableAttached()) {
-                    this.playSoundAtSelfAndThroughCableIfPossible(
-                            KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
-                            1.0F,
-                            1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F)
-                    );
+        if (attachedPlayer != null) {
+            if (this.isCableAttached()) {
+                this.playSoundAtSelfAndThroughCableIfPossible(
+                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
+                        1.0F,
+                        1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F)
+                );
 
-                    // needs to be here to let client know about grapple claw coords if it lands outside client render distance
-                    if (attachedPlayer instanceof ServerPlayerEntity serverPlayer) {
-                        GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
-                    }
+                // needs to be here to let client know about grapple claw coords if it lands outside client render distance
+                if (attachedPlayer instanceof ServerPlayerEntity serverPlayer) {
+                    GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
                 }
             }
         }

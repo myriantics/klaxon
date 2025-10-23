@@ -10,10 +10,13 @@ import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.myriantics.klaxon.api.Offset;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
@@ -157,7 +160,7 @@ public class GrappleClawBlockDestructionHandler {
             world.breakBlock(targetPos, true, owner);
 
             if (owner instanceof ServerPlayerEntity serverPlayer) {
-                targetState.getBlock().afterBreak(world, serverPlayer, targetPos, targetState, world.getBlockEntity(targetPos), this.grappleClaw.getItemStack());
+                serverPlayer.incrementStat(Stats.MINED.getOrCreateStat(targetState.getBlock()));
             }
         }
     }
@@ -174,5 +177,32 @@ public class GrappleClawBlockDestructionHandler {
         }
 
         return state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0;
+    }
+
+    public BlockHitResult raycast(Vec3d start, Vec3d end) {
+        World world = this.grappleClaw.getWorld();
+
+        return BlockView.raycast(start, end, null, (s, blockPos) -> {
+            BlockState targetState = this.grappleClaw.getWorld().getBlockState(blockPos);
+            VoxelShape shape = targetState.getCollisionShape(world, blockPos);
+
+            BlockHitResult hitResult = world.raycastBlock(start, end, blockPos, shape, targetState);
+
+            // if we didn't collide with the block, cancel operation
+            if (hitResult == null) {
+                return null;
+            }
+
+            // ignore blocks that we can break - in fact, actually try to break them :)
+            if (this.canBreakBlock(world, targetState, blockPos)) {
+                this.tryBreakingBlocks(world, targetState, blockPos);
+                return null;
+            }
+
+            return hitResult;
+        }, (s) -> {
+            Vec3d vec = start.subtract(end);
+            return BlockHitResult.createMissed(end, Direction.getFacing(vec.getX(), vec.getY(), vec.getZ()), BlockPos.ofFloored(end));
+        });
     }
 }
