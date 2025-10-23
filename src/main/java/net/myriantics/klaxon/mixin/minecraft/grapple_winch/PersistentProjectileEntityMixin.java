@@ -49,7 +49,7 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
     )
     private BlockHitResult klaxon$replaceRaycastTypeIfNeeded(World instance, RaycastContext raycastContext, Operation<BlockHitResult> original) {
         return (Object) this instanceof GrappleClawEntity grappleClaw
-                ? grappleClaw.blockDestructionHandler.raycast(raycastContext.getStart(), raycastContext.getEnd())
+                ? grappleClaw.blockDestructionHandler.raycast(raycastContext.getStart(), raycastContext.getEnd(), true)
                 : original.call(instance, raycastContext);
     }
 }

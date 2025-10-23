@@ -502,15 +502,14 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     public boolean deAnchorIfPossible(Vec3d deAnchoringDirection) {
         boolean success = false;
         if (this.inGround) {
-            HitResult hitResult = this.getWorld().raycast(new RaycastContext(
+            BlockHitResult hitResult = this.blockDestructionHandler.raycast(
                     this.getPos(),
-                    this.getPos().add(deAnchoringDirection.normalize().multiply(0.05)),
-                    RaycastContext.ShapeType.COLLIDER,
-                    RaycastContext.FluidHandling.NONE,
-                    this
-            ));
+                    this.getPos().add(deAnchoringDirection),
+                    false
+            );
 
-            if (!hitResult.getType().equals(HitResult.Type.BLOCK)) {
+            // make sure it's either a miss or we've got space to move a significant amount
+            if (hitResult.getType().equals(HitResult.Type.MISS) || hitResult.getPos().distanceTo(this.getPos()) > 0.1) {
                 this.inGround = false;
                 success = true;
             }

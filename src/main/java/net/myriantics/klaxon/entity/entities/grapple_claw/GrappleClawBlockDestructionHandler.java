@@ -179,7 +179,7 @@ public class GrappleClawBlockDestructionHandler {
         return state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0;
     }
 
-    public BlockHitResult raycast(Vec3d start, Vec3d end) {
+    public BlockHitResult raycast(Vec3d start, Vec3d end, boolean destructive) {
         World world = this.grappleClaw.getWorld();
 
         return BlockView.raycast(start, end, null, (s, blockPos) -> {
@@ -195,7 +195,10 @@ public class GrappleClawBlockDestructionHandler {
 
             // ignore blocks that we can break - in fact, actually try to break them :)
             if (this.canBreakBlock(world, targetState, blockPos)) {
-                this.tryBreakingBlocks(world, targetState, blockPos);
+                // only break blocks if this raycast is declared as destructive tho
+                if (destructive) {
+                    this.tryBreakingBlocks(world, targetState, blockPos);
+                }
                 return null;
             }
 

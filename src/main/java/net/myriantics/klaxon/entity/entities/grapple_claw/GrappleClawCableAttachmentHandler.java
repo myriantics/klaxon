@@ -29,11 +29,11 @@ public class GrappleClawCableAttachmentHandler {
 
         Vec3d compiledVec = Vec3d.ZERO;
 
-        Vec3d clawEyePos = grappleClaw.getPos();
+        Vec3d clawPos = grappleClaw.getPos();
         Vec3d attachedEyePos = attachedPlayer.getEyePos();
-        Vec3d normalizedClaw2WielderVec = attachedEyePos.subtract(clawEyePos).normalize();
+        Vec3d normalizedClaw2WielderVec = attachedEyePos.subtract(clawPos).normalize();
 
-        double ownerDistance = clawEyePos.distanceTo(attachedEyePos);
+        double ownerDistance = clawPos.distanceTo(attachedEyePos);
         double currentWinchCableLength = attachedPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
 
         // limit fall distance to give players more leeway
@@ -65,7 +65,7 @@ public class GrappleClawCableAttachmentHandler {
                 );
                 world.emitGameEvent(
                         GameEvent.ENTITY_ACTION,
-                        clawEyePos,
+                        clawPos,
                         GameEvent.Emitter.of(attachedPlayer)
                 );
             }
