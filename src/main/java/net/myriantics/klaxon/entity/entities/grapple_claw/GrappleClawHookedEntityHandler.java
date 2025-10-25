@@ -3,6 +3,7 @@ package net.myriantics.klaxon.entity.entities.grapple_claw;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,6 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +56,7 @@ public class GrappleClawHookedEntityHandler {
         // clear grappled entity if it was removed
         if (hookedEntity != null) {
             if (hookedEntity.isRemoved()) {
-                this.releaseHookedEntity();
+                this.releaseHookedEntity(false);
             } else {
                 hookedEntity.limitFallDistance();
             }
@@ -134,6 +136,16 @@ public class GrappleClawHookedEntityHandler {
             KlaxonAdvancementTriggers.triggerEntityGrapple(serverPlayer, entity);
         }
 
+        // damage entity
+        entity.damage(
+                this.grappleClaw.getDamageSources().create(
+                        KlaxonDamageTypes.GRAPPLING,
+                        this.grappleClaw,
+                        this.grappleClaw.getOwner() == null ? this.grappleClaw : this.grappleClaw.getOwner()
+                ),
+                4.0f
+        );
+
         grappleClaw.playSoundAtSelfAndThroughCableIfPossible(
                 KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR,
                 1.0F,
@@ -155,9 +167,19 @@ public class GrappleClawHookedEntityHandler {
         this.grappleClaw.setPosition(targetPos.subtract(0, this.grappleClaw.getHeight() / 2, 0));
     }
 
-    protected void releaseHookedEntity() {
+    protected void releaseHookedEntity(boolean damage) {
         if (this.hasHookedEntity()) {
             this.grappleClaw.setVelocity(hookedEntity.getVelocity());
+            if (damage) {
+                this.hookedEntity.damage(
+                        this.grappleClaw.getWorld().getDamageSources().create(
+                                KlaxonDamageTypes.RENDING,
+                                this.grappleClaw,
+                                this.grappleClaw.getOwner() == null ? this.grappleClaw : this.grappleClaw.getOwner()
+                        ),
+                        4.0f
+                );
+            }
             this.setHookedEntity(null);
         }
     }

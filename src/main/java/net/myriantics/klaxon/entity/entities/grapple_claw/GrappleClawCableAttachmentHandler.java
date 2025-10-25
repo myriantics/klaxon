@@ -129,7 +129,7 @@ public class GrappleClawCableAttachmentHandler {
                 GrappleWinchNetworkUtil.clearFromClients(serverPlayer, this.grappleClaw);
             }
 
-            this.grappleClaw.hookedEntityHandler.releaseHookedEntity();
+            this.grappleClaw.hookedEntityHandler.releaseHookedEntity(false);
         }
 
         return false;

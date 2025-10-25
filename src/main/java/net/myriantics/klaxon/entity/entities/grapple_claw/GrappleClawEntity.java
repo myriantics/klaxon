@@ -517,7 +517,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 success = true;
             }
         } else if (this.hookedEntityHandler.isHookedEntityHeavy()) {
-            this.hookedEntityHandler.releaseHookedEntity();
+            this.hookedEntityHandler.releaseHookedEntity(true);
         }
 
         if (success) {
@@ -589,7 +589,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             this.cableAttachmentHandler.detachCable(true);
         }
         if (this.hookedEntityHandler.hasHookedEntity()) {
-            this.hookedEntityHandler.releaseHookedEntity();
+            this.hookedEntityHandler.releaseHookedEntity(false);
         }
         super.remove(reason);
     }
