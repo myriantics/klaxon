@@ -12,7 +12,10 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.StackReference;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.RangedWeaponItem;
+import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.screen.ScreenTexts;
@@ -25,6 +28,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.*;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -81,7 +85,8 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
     @Override
     protected void shoot(LivingEntity shooter, ProjectileEntity projectile, int index, float speed, float divergence, float yaw, @Nullable LivingEntity target) {
-        projectile.setVelocity(shooter, shooter.getPitch(), shooter.getYaw() + yaw, 0.0F, speed, divergence);
+        Vec3d projectileSpeed = Vec3d.fromPolar(shooter.getPitch(), shooter.getYaw());
+        projectile.setVelocity(projectileSpeed.x, projectileSpeed.y, projectileSpeed.z, (float)(shooter.getVelocity().length() + projectileSpeed.length()) * speed, divergence);
 
         // if this is the first projectile shot, attach the server player's cable to it.
         if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrappleClawEntity grappleClaw) {
