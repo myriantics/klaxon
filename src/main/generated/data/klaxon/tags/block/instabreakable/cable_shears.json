@@ -9,6 +9,8 @@
     "#minecraft:wool_carpets",
     "#minecraft:wool",
     "#minecraft:leaves",
+    "minecraft:chorus_plant",
+    "minecraft:chorus_flower",
     "minecraft:spawner",
     "minecraft:iron_bars"
   ]

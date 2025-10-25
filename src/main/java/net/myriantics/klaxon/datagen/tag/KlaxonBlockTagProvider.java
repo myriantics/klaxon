@@ -69,6 +69,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.WOOL_CARPETS)
                 .forceAddTag(BlockTags.WOOL)
                 .forceAddTag(BlockTags.LEAVES)
+                .add(
+                        Blocks.CHORUS_PLANT,
+                        Blocks.CHORUS_FLOWER
+                )
                 .add(Blocks.SPAWNER)
                 .add(Blocks.IRON_BARS);
 
