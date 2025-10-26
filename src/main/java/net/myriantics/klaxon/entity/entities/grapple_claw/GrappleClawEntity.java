@@ -854,7 +854,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                 if (attachedPlayer instanceof ServerPlayerEntity serverPlayer) {
                     GrappleWinchNetworkUtil.clearFromClients(serverPlayer, claw);
-                    KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(serverPlayer);
+                    KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(serverPlayer, reason);
                     claw.hookedEntityContainer.release(false);
                 }
             }

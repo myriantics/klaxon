@@ -16,7 +16,7 @@ public abstract class KlaxonAdvancementCriteria {
     public static final InstabreakToolInstabreakCriterion INSTABREAK_TOOL_INSTABREAK_CRITERION = register("instabreak_tool_instabreak", new InstabreakToolInstabreakCriterion());
     public static final GrappleWinchVeinMineCriterion GRAPPLE_WINCH_VEIN_MINE_CRITERION = register("grapple_winch_veinmine", new GrappleWinchVeinMineCriterion());
     public static final EntityGrappleCriterion ENTITY_GRAPPLE_CRITERION = register("entity_grapple", new EntityGrappleCriterion());
-    public static final OneOffCriterion INTENTIONALLY_DISCONNECT_GRAPPLE_WINCH_CABLE_CRITERION = register("intentionally_disconnect_grapple_winch_cable", new OneOffCriterion());
+    public static final GrappleWinchCableDisconnectCriterion GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION = register("grapple_winch_cable_disconnect_criterion", new GrappleWinchCableDisconnectCriterion());
     public static final OneOffCriterion DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION = register("de_anchor_grapple_winch_claw", new OneOffCriterion());
 
     private static <T extends Criterion<?>> T register(String name, T criterion) {

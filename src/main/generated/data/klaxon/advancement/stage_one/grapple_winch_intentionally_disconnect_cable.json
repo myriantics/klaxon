@@ -2,7 +2,10 @@
   "parent": "klaxon:stage_one/obtain_grapple_winch",
   "criteria": {
     "grapple_winch_intentionally_disconnect_cable": {
-      "trigger": "klaxon:intentionally_disconnect_grapple_winch_cable"
+      "conditions": {
+        "cable_detachment_reason": "invalid_held_items"
+      },
+      "trigger": "klaxon:grapple_winch_cable_disconnect_criterion"
     }
   },
   "display": {

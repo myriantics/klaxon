@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 
@@ -29,8 +30,8 @@ public abstract class KlaxonAdvancementTriggers {
     public static void triggerGrappleWinchVeinMine(ServerPlayerEntity serverPlayer, BlockState veinMinedState) {
         KlaxonAdvancementCriteria.GRAPPLE_WINCH_VEIN_MINE_CRITERION.trigger(serverPlayer, veinMinedState);
     }
-    public static void triggerGrappleWinchIntentionallyDisconnectCable(ServerPlayerEntity serverPlayer) {
-        KlaxonAdvancementCriteria.INTENTIONALLY_DISCONNECT_GRAPPLE_WINCH_CABLE_CRITERION.trigger(serverPlayer);
+    public static void triggerGrappleWinchIntentionallyDisconnectCable(ServerPlayerEntity serverPlayer, GrappleClawEntity.CableDetachmentReason reason) {
+        KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.trigger(serverPlayer, reason);
     }
     public static void triggerGrappleWinchDeAnchorGrappleClaw(ServerPlayerEntity serverPlayer) {
         KlaxonAdvancementCriteria.DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION.trigger(serverPlayer);

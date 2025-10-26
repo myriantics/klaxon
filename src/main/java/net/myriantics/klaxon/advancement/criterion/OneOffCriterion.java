@@ -29,12 +29,6 @@ public class OneOffCriterion extends AbstractCriterion<OneOffCriterion.Condition
                 ).apply(instance, OneOffCriterion.Conditions::new)
         );
 
-        public static AdvancementCriterion<OneOffCriterion.Conditions> createGrappleWinchIntentionallyDisconnectCable() {
-            return KlaxonAdvancementCriteria.INTENTIONALLY_DISCONNECT_GRAPPLE_WINCH_CABLE_CRITERION.create(new Conditions(
-                    Optional.empty()
-            ));
-        }
-
         public static AdvancementCriterion<OneOffCriterion.Conditions> createDeAnchorGrappleClaw() {
             return KlaxonAdvancementCriteria.DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION.create(new Conditions(
                     Optional.empty()
