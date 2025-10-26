@@ -188,7 +188,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 : instance;
 
         // try to fast reload the grapple claw attached to the entity if it's attached
-        if (source.isDirect() && grappleClaw != null && weaponStack != null && grappleClaw.hookedEntityHandler.hookedEntityMatches(attackedEntity)) {
+        if (source.isDirect() && grappleClaw != null && weaponStack != null && grappleClaw.hookedEntityContainer.matches(attackedEntity)) {
             if (grappleClaw.tryFastReload((PlayerEntity) (Object) this, weaponStack)) {
                 return false;
             }

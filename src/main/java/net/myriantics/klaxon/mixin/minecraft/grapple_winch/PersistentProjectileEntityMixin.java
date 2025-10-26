@@ -8,6 +8,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawBlockDestructionHelper;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,7 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
             }
 
             // don't apply gravity if it's being retracted
-            @Nullable PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) grappleClaw.getAttachedPlayer();
+            @Nullable PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) grappleClaw.cableAttachmentHandler.getAttachedPlayer();
             if (access != null && grappleClaw.equals(access.klaxon$getGrappleClaw()) && access.klaxon$isRetracting()) {
                 return;
             }
@@ -49,7 +50,7 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
     )
     private BlockHitResult klaxon$replaceRaycastTypeIfNeeded(World instance, RaycastContext raycastContext, Operation<BlockHitResult> original) {
         return (Object) this instanceof GrappleClawEntity grappleClaw
-                ? grappleClaw.blockDestructionHandler.raycast(raycastContext.getStart(), raycastContext.getEnd(), true)
+                ? GrappleClawBlockDestructionHelper.raycast(grappleClaw, raycastContext.getStart(), raycastContext.getEnd(), true)
                 : original.call(instance, raycastContext);
     }
 }

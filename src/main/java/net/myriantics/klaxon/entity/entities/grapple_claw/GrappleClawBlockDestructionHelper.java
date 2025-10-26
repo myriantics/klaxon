@@ -11,7 +11,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -28,56 +27,49 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GrappleClawBlockDestructionHandler {
-    private final GrappleClawEntity grappleClaw;
-
-    public GrappleClawBlockDestructionHandler(GrappleClawEntity grappleClaw) {
-        this.grappleClaw = grappleClaw;
-    }
+public abstract class GrappleClawBlockDestructionHelper {
 
     /**
      * Called while checking for block collision, for each currently colliding block.
      */
-    public void onBlockPosIntersection(World world, BlockState occupiedState, BlockPos pos) {
+    public static void onBlockPosIntersection(GrappleClawEntity grappleClaw, World world, BlockState occupiedState, BlockPos pos) {
         // make sure we're neither anchored nor removed
-        if (this.grappleClaw.isAnchored() || this.grappleClaw.isRemoved()) {
+        if (grappleClaw.isAnchored() || grappleClaw.isRemoved()) {
             return;
         }
 
         VoxelShape occupiedStateShape = occupiedState.getCollisionShape(world, pos);
 
         // make sure we actually collide with the target bounding box
-        if (occupiedStateShape.isEmpty() || !this.grappleClaw.getBoundingBox().intersects(occupiedStateShape.getBoundingBox().offset(pos))) {
+        if (occupiedStateShape.isEmpty() || !grappleClaw.getBoundingBox().intersects(occupiedStateShape.getBoundingBox().offset(pos))) {
             return;
         }
 
         // maybe pop a sound from this later
-        boolean success = this.tryBreakingBlocks(world, occupiedState, pos);
+        boolean success = tryBreakingBlocks(grappleClaw, world, occupiedState, pos);
     }
 
-    protected boolean tryBreakingBlocks(World world, BlockState occupiedState, BlockPos pos) {
+    protected static boolean tryBreakingBlocks(GrappleClawEntity grappleClaw, World world, BlockState occupiedState, BlockPos pos) {
         // make sure projectiles can break blocks
-        if (!this.canBreakBlock(world, occupiedState, pos)) {
+        if (!canBreakBlock(grappleClaw, world, occupiedState, pos)) {
             return false;
         }
 
-        PlayerEntity attachedPlayer = grappleClaw.getAttachedPlayer();
+        PlayerEntity attachedPlayer = grappleClaw.cableAttachmentHandler.getAttachedPlayer();
 
         // try to veinmine before breaking the block :)
-        if (this.veinmineBlocksIfValid(world, occupiedState, pos, attachedPlayer)) {
-            return this.veinmineBlocksIfValid(world, occupiedState, pos, attachedPlayer);
-        } else {
-            this.breakBlock(world, occupiedState, pos, grappleClaw.getOwner());
-            return true;
+        if (!veinmineBlocksIfValid(grappleClaw, world, occupiedState, pos, attachedPlayer)) {
+            breakBlock(grappleClaw, world, occupiedState, pos, grappleClaw.getOwner());
         }
+        return true;
     }
 
-    private boolean veinmineBlocksIfValid(World world, BlockState originState, BlockPos originPos, PlayerEntity owner) {
+    private static boolean veinmineBlocksIfValid(GrappleClawEntity grappleClaw, World world, BlockState originState, BlockPos originPos, PlayerEntity owner) {
         int radius = world.getGameRules().getInt(KlaxonGameRules.GRAPPLE_CLAW_VEINMINE_RADIUS);
 
         // don't veinmine anything if the source block is not veinmineable
         // also declare failure if radius is 0
-        if (radius == 0 || !canVeinmineBlock(world, originState, originPos, owner)) {
+        if (radius == 0 || !canVeinmineBlock(grappleClaw, world, originState, originPos, owner)) {
             return false;
         }
 
@@ -154,7 +146,7 @@ public class GrappleClawBlockDestructionHandler {
      * @param targetPos - block to break
      * @param owner - entity to credit block break to
      */
-    private void breakBlock(World world, BlockState targetState, BlockPos targetPos, @Nullable Entity owner) {
+    private static void breakBlock(GrappleClawEntity grappleClaw, World world, BlockState targetState, BlockPos targetPos, @Nullable Entity owner) {
         // don't break blocks on clientside
         if (!world.isClient()) {
             world.breakBlock(targetPos, true, owner);
@@ -165,13 +157,13 @@ public class GrappleClawBlockDestructionHandler {
         }
     }
 
-    private boolean canVeinmineBlock(World world, BlockState state, BlockPos pos, PlayerEntity attachedPlayer) {
-        boolean playerValid = this.grappleClaw.isCableAttached() && attachedPlayer != null && ((PlayerEntityGrappleAccess) attachedPlayer).klaxon$isRetracting();
+    private static boolean canVeinmineBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos, PlayerEntity attachedPlayer) {
+        boolean playerValid = grappleClaw.isCableAttached() && attachedPlayer != null && ((PlayerEntityGrappleAccess) attachedPlayer).klaxon$isRetracting();
 
         return playerValid && state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE);
     }
 
-    private boolean canBreakBlock(World world, BlockState state, BlockPos pos) {
+    private static boolean canBreakBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos) {
         if (!world.getGameRules().getBoolean(GameRules.PROJECTILES_CAN_BREAK_BLOCKS)) {
             return false;
         }
@@ -179,11 +171,11 @@ public class GrappleClawBlockDestructionHandler {
         return state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0;
     }
 
-    public BlockHitResult raycast(Vec3d start, Vec3d end, boolean destructive) {
-        World world = this.grappleClaw.getWorld();
+    public static BlockHitResult raycast(GrappleClawEntity grappleClaw, Vec3d start, Vec3d end, boolean destructive) {
+        World world = grappleClaw.getWorld();
 
         return BlockView.raycast(start, end, null, (s, blockPos) -> {
-            BlockState targetState = this.grappleClaw.getWorld().getBlockState(blockPos);
+            BlockState targetState = grappleClaw.getWorld().getBlockState(blockPos);
             VoxelShape shape = targetState.getCollisionShape(world, blockPos);
 
             BlockHitResult hitResult = world.raycastBlock(start, end, blockPos, shape, targetState);
@@ -194,10 +186,10 @@ public class GrappleClawBlockDestructionHandler {
             }
 
             // ignore blocks that we can break - in fact, actually try to break them :)
-            if (this.canBreakBlock(world, targetState, blockPos)) {
+            if (canBreakBlock(grappleClaw, world, targetState, blockPos)) {
                 // only break blocks if this raycast is declared as destructive tho
                 if (destructive) {
-                    this.tryBreakingBlocks(world, targetState, blockPos);
+                    tryBreakingBlocks(grappleClaw, world, targetState, blockPos);
                 }
                 return null;
             }
