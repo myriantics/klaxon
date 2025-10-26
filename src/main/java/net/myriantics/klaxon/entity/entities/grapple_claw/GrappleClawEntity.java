@@ -39,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
@@ -48,6 +49,7 @@ import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
@@ -674,7 +676,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                             claw,
                             claw.getOwner() == null ? claw : claw.getOwner()
                     ),
-                    4.0f
+                    claw.getItemStack().getOrDefault(
+                            KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
+                            GrappleClawComponent.DEFAULT
+                    ).computeGrappling(claw.getItemStack())
             );
 
             claw.playSoundAtSelfAndThroughCableIfPossible(
@@ -701,7 +706,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                                 claw,
                                 claw.getOwner() == null ? claw : claw.getOwner()
                         ),
-                        4.0f
+                        claw.getItemStack().getOrDefault(
+                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
+                                GrappleClawComponent.DEFAULT
+                        ).computeRending(claw.getItemStack())
                 );
             }
 

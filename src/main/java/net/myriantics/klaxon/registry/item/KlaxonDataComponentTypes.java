@@ -91,11 +91,14 @@ public abstract class KlaxonDataComponentTypes {
                 return builder;
             });
 
-    public static final ComponentType<ExplosiveCatalystData> EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT = register(
-            "explosive_catalyst_override",
-            builder -> builder
-                    .codec(ExplosiveCatalystData.CODEC)
-                    .packetCodec(ExplosiveCatalystData.PACKET_CODEC)
+    public static final ComponentType<GrappleClawComponent> GRAPPLE_CLAW_COMPONENT = register("grapple_claw", builder -> builder
+            .codec(GrappleClawComponent.CODEC)
+            .packetCodec(GrappleClawComponent.PACKET_CODEC)
+    );
+
+    public static final ComponentType<ExplosiveCatalystData> EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT = register("explosive_catalyst_override", builder -> builder
+            .codec(ExplosiveCatalystData.CODEC)
+            .packetCodec(ExplosiveCatalystData.PACKET_CODEC)
     );
 
     // Items with this component override the check that disallows both damage and stacking components coexisting.

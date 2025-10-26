@@ -65,6 +65,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
             new GrappleClawItem(new KlaxonItemSettings()
                     .maxCountMaxDamage(16, KlaxonToolMaterials.STEEL.getDurability())
+                    .grappleClaw(4.0f, 6.0f, 1.4f)
                     .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
                     .getSettings()
             ));

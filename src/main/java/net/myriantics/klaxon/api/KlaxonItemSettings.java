@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Unit;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
+import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -47,6 +48,11 @@ public class KlaxonItemSettings {
 
     public KlaxonItemSettings maxCount(int maxCount) {
         this.settings.maxCount(maxCount);
+        return this;
+    }
+
+    public KlaxonItemSettings grappleClaw(float baseGrapplingDamage, float baseRendingDamage, float durabilityDamageMultiplier) {
+        this.component(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT, new GrappleClawComponent(baseGrapplingDamage, baseRendingDamage, durabilityDamageMultiplier));
         return this;
     }
 
