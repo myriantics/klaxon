@@ -6,6 +6,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
@@ -13,12 +14,13 @@ import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConn
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
-public record GrappleWinchConnectionSyncPacket(GrappleWinchConnectionData connectionData) implements CustomPayload {
+public record GrappleWinchConnectionSyncPacket(GrappleWinchConnectionData connectionData, double winchCableLength) implements CustomPayload {
 
     public static final CustomPayload.Id<GrappleWinchConnectionSyncPacket> ID = new CustomPayload.Id<>(KlaxonPackets.GRAPPLE_WINCH_CONNECTION_SYNC_S2C_ID);
 
     public static final PacketCodec<RegistryByteBuf, GrappleWinchConnectionSyncPacket> PACKET_CODEC = PacketCodec.tuple(
             GrappleWinchConnectionData.PACKET_CODEC, GrappleWinchConnectionSyncPacket::connectionData,
+            PacketCodecs.DOUBLE, GrappleWinchConnectionSyncPacket::winchCableLength,
             GrappleWinchConnectionSyncPacket::new
     );
 
@@ -36,9 +38,15 @@ public record GrappleWinchConnectionSyncPacket(GrappleWinchConnectionData connec
                 Entity player = client.world.getEntityById(connectionData.playerId());
                 Entity grappleClaw = client.world.getEntityById(connectionData.grappleClawId());
                 if (player instanceof AbstractClientPlayerEntity) {
+                    PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) player;
+
+                    // only overwrite cable length if player isn't connected yet or it's not the main client player
+                    if (!access.klaxon$hasActiveConnection() || !player.equals(client.player)) {
+                        access.klaxon$setCurrentWinchCableLength(winchCableLength);
+                    }
+
                     ((PlayerEntityGrappleAccess) player).klaxon$setConnectionData(connectionData);
                     ((PlayerEntityGrappleAccess) player).klaxon$setGrappleClaw(grappleClaw instanceof GrappleClawEntity ? (GrappleClawEntity) grappleClaw : null);
-                    ((PlayerEntityGrappleAccess) player).klaxon$resetWinchCableLength();
 
                     // update owner so grapple claw knows who to actually play sounds to
                     if (grappleClaw instanceof GrappleClawEntity) {

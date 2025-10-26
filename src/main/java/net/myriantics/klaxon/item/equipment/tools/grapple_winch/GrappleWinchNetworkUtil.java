@@ -20,7 +20,9 @@ public abstract class GrappleWinchNetworkUtil {
                 serverPlayer.getPos(),
                 grappleClaw.getPos(),
                 grappleClaw.isAnchored()
-        ));
+        ),
+                ((PlayerEntityGrappleAccess) serverPlayer).klaxon$getCurrentWinchCableLength()
+        );
 
         // send the packet to all players tracking the connected player
         for (ServerPlayerEntity trackingPlayer : playerTrackingPlayers) {

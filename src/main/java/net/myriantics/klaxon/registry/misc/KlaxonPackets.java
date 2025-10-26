@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.networking.c2s.GrappleWinchCableForceDisconnectC2S;
+import net.myriantics.klaxon.networking.c2s.GrappleWinchCableLengthUpdateC2S;
 import net.myriantics.klaxon.networking.s2c.*;
 import net.myriantics.klaxon.networking.c2s.EntityDualWieldToggleC2SPacket;
 import net.myriantics.klaxon.networking.c2s.HammerWalljumpTriggerPacket;
@@ -15,6 +16,7 @@ public abstract class KlaxonPackets {
     public static final Identifier GRAPPLE_WINCH_CONNECTION_SYNC_S2C_ID = locateS2C("grapple_winch_connection_sync");
     public static final Identifier GRAPPLE_WINCH_CONNECTION_DISCARD_S2C_ID = locateS2C("grapple_winch_connection_discard");
     public static final Identifier GRAPPLE_WINCH_CABLE_FORCE_DISCONNECT_C2S_ID = locateC2S("grapple_winch_cable_force_disconnect");
+    public static final Identifier GRAPPLE_WINCH_CABLE_LENGTH_UPDATE_C2S_ID = locateC2S("grapple_winch_cable_length_update");
     public static final Identifier ITEM_USAGE_LOCKOUT_TRIGGER_S2C_ID = locateS2C("item_usage_lockout");
     public static final Identifier BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID = locateS2C("blast_processor_screen_sync");
     public static final Identifier KLAXON_WORLD_EVENT_TRIGGER_PACKET_S2C_ID = locateS2C("klaxon_world_event");
@@ -37,6 +39,7 @@ public abstract class KlaxonPackets {
         PayloadTypeRegistry.playC2S().register(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(EntityDualWieldToggleC2SPacket.ID, EntityDualWieldToggleC2SPacket.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(GrappleWinchCableForceDisconnectC2S.ID, GrappleWinchCableForceDisconnectC2S.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(GrappleWinchCableLengthUpdateC2S.ID, GrappleWinchCableLengthUpdateC2S.PACKET_CODEC);
     }
 
     // client only
@@ -54,6 +57,7 @@ public abstract class KlaxonPackets {
         ServerPlayNetworking.registerGlobalReceiver(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket::execute);
         ServerPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleC2SPacket.ID, EntityDualWieldToggleC2SPacket::execute);
         ServerPlayNetworking.registerGlobalReceiver(GrappleWinchCableForceDisconnectC2S.ID, GrappleWinchCableForceDisconnectC2S::execute);
+        ServerPlayNetworking.registerGlobalReceiver(GrappleWinchCableLengthUpdateC2S.ID, GrappleWinchCableLengthUpdateC2S::execute);
     }
 
     private static Identifier locateS2C(String name) {
