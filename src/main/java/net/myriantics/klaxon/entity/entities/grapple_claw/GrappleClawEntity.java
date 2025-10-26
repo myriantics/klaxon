@@ -762,6 +762,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     public class CableAttachmentHandler {
         private boolean attached = false;
+        private boolean canPlayReboundSound = true;
 
         private CableAttachmentHandler() {
         }
@@ -804,18 +805,28 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                 // retract grapple claw if it hits limit
                 if (ownerDistance >= currentWinchCableLength) {
+                    grappleClaw.setVelocity(grappleClaw.getVelocity().multiply(0.75));
                     compiledVec = compiledVec.add(normalizedClaw2WielderVec.multiply(4f/20));
 
-                    grappleClaw.playSoundAtSelfAndThroughCableIfPossible(
-                            KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
-                            1f + world.getRandom().nextFloat() * 0.3f,
-                            0.8f + world.getRandom().nextFloat() * 0.2f
-                    );
-                    world.emitGameEvent(
-                            GameEvent.ENTITY_ACTION,
-                            clawPos,
-                            GameEvent.Emitter.of(attachedPlayer)
-                    );
+                    // make sure we don't spam the shit out of the rebound sound
+                    if (this.canPlayReboundSound) {
+                        grappleClaw.playSoundAtSelfAndThroughCableIfPossible(
+                                KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
+                                1f + world.getRandom().nextFloat() * 0.3f,
+                                0.8f + world.getRandom().nextFloat() * 0.2f
+                        );
+                        world.emitGameEvent(
+                                GameEvent.ENTITY_ACTION,
+                                clawPos,
+                                GameEvent.Emitter.of(attachedPlayer)
+                        );
+
+                        this.canPlayReboundSound = false;
+                    }
+                } else if (ownerDistance < currentWinchCableLength * 0.95) {
+                    // if we go back in bounds, we can play the rebound sound again
+                    // this has a small deadzone because otherwise it would spam the shit out of the sound when dangling at the end of the cable.
+                    this.canPlayReboundSound = true;
                 }
             }
 
