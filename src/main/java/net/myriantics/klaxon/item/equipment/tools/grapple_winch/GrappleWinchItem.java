@@ -85,8 +85,13 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
     @Override
     protected void shoot(LivingEntity shooter, ProjectileEntity projectile, int index, float speed, float divergence, float yaw, @Nullable LivingEntity target) {
-        Vec3d projectileSpeed = Vec3d.fromPolar(shooter.getPitch(), shooter.getYaw());
-        projectile.setVelocity(projectileSpeed.x, projectileSpeed.y, projectileSpeed.z, (float)(shooter.getVelocity().length() + projectileSpeed.length()) * speed, divergence);
+        if (shooter.isFallFlying()) {
+            Vec3d projectileSpeed = Vec3d.fromPolar(shooter.getPitch(), shooter.getYaw());
+            projectile.setVelocity(projectileSpeed.x, projectileSpeed.y, projectileSpeed.z, (float)(shooter.getVelocity().length() + projectileSpeed.length()) * speed, divergence);
+        } else {
+            projectile.setVelocity(shooter, shooter.getPitch(), shooter.getYaw() + yaw, 0.0F, speed, divergence);
+        }
+
 
         // if this is the first projectile shot, attach the server player's cable to it.
         if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrappleClawEntity grappleClaw) {
