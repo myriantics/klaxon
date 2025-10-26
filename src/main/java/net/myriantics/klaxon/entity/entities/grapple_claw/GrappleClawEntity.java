@@ -805,7 +805,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                 // retract grapple claw if it hits limit
                 if (ownerDistance >= currentWinchCableLength) {
-                    grappleClaw.setVelocity(grappleClaw.getVelocity().multiply(0.75));
+
+                    if (ownerDistance >= currentWinchCableLength * 1.2) {
+                        grappleClaw.setVelocity(grappleClaw.getVelocity().multiply(0.85));
+                    }
+
                     compiledVec = compiledVec.add(normalizedClaw2WielderVec.multiply(4f/20));
 
                     // make sure we don't spam the shit out of the rebound sound
