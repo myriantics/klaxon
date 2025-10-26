@@ -326,6 +326,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
+        // this needs to be called BEFORE we it the ground, so isAnchored returns true when we sync data to the client :)
+        super.onBlockHit(blockHitResult);
+
         // prep variables
         PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
         if (attachedPlayer != null) {
@@ -341,7 +344,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
         }
 
-        super.onBlockHit(blockHitResult);
         this.draggedItems.clear();
     }
 
@@ -394,7 +396,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
 
         // sync to clients if attached and not in ground
-        if (!this.inGround && this.cableAttachmentHandler.getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
+        if (this.cableAttachmentHandler.getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
             GrappleWinchNetworkUtil.syncToClients(serverPlayer, this);
         }
     }
@@ -864,6 +866,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     GrappleWinchNetworkUtil.clearFromClients(serverPlayer, claw);
                     KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(serverPlayer, reason);
                     claw.hookedEntityContainer.release(false);
+                    claw.draggedItems.clear();
                 }
             }
         }
