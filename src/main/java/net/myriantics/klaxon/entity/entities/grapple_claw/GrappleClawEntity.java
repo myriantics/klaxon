@@ -81,11 +81,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     public GrappleClawEntity(World world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
-        super(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW, x, y, z, world, stack, shotFrom);
+        super(KlaxonEntityTypes.GRAPPLE_CLAW, x, y, z, world, stack, shotFrom);
     }
 
     public GrappleClawEntity(World world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
-        super(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW, owner, world, stack, shotFrom);
+        super(KlaxonEntityTypes.GRAPPLE_CLAW, owner, world, stack, shotFrom);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class KlaxonClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(KlaxonBlockEntities.CUSTOM_SIGN_BLOCK_ENTITY, SignBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(KlaxonBlockEntities.CUSTOM_HANGING_SIGN_BLOCK_ENTITY, HangingSignBlockEntityRenderer::new);
 
-        EntityRendererRegistry.register(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW, GrappleClawEntityRenderer::new);
+        EntityRendererRegistry.register(KlaxonEntityTypes.GRAPPLE_CLAW, GrappleClawEntityRenderer::new);
 
         // handled screens
         HandledScreens.register(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);

@@ -17,7 +17,7 @@ public final class KlaxonEnUsEntityTypeLanguageProvider extends KlaxonEnUsLangua
     }
 
     private void generateNonLivingEntities() {
-        addEntityType(KlaxonEntityTypes.STEEL_GRAPPLE_CLAW, "Steel Grapple Claw");
+        addEntityType(KlaxonEntityTypes.GRAPPLE_CLAW, "Steel Grapple Claw");
     }
 
     private void generateLivingEntities() {

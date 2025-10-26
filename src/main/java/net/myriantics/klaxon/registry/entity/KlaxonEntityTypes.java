@@ -10,8 +10,8 @@ import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 
 public abstract class KlaxonEntityTypes {
 
-    public static final EntityType<GrappleClawEntity> STEEL_GRAPPLE_CLAW = register(
-            "steel_grapple_claw",
+    public static final EntityType<GrappleClawEntity> GRAPPLE_CLAW = register(
+            "grapple_claw",
             EntityType.Builder.<GrappleClawEntity>create(GrappleClawEntity::new, SpawnGroup.MISC)
                     .dimensions(0.8f, 0.8f)
                     .eyeHeight(0.4f)
