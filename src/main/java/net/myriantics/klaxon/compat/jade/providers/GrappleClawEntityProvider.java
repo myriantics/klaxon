@@ -13,7 +13,7 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.IElement;
 import snownee.jade.api.ui.IElementHelper;
 
-public enum GrappleClawProvider implements IEntityComponentProvider, StreamServerDataProvider<EntityAccessor, ItemStack> {
+public enum GrappleClawEntityProvider implements IEntityComponentProvider, StreamServerDataProvider<EntityAccessor, ItemStack> {
     INSTANCE;
 
     private static final Identifier ID = KlaxonCommon.locate("grapple_claw");
@@ -23,7 +23,7 @@ public enum GrappleClawProvider implements IEntityComponentProvider, StreamServe
         ItemStack grappleClawStack = this.decodeFromData(entityAccessor).orElse(ItemStack.EMPTY);
         if (grappleClawStack.isDamageable()) {
             iTooltip.add(Text.translatable(
-                    "klaxon.jade.text.tooltip.grapple_claw.damage",
+                    "klaxon.jade.text.grapple_claw.damage",
                     grappleClawStack.getMaxDamage() - grappleClawStack.getDamage(),
                     grappleClawStack.getMaxDamage()
             ));

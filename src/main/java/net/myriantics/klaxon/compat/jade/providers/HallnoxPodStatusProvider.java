@@ -29,7 +29,7 @@ public enum HallnoxPodStatusProvider implements IBlockComponentProvider {
         BlockState podState = blockAccessor.getBlockState();
         boolean growthDisabled = podState.contains(KlaxonBlockStateProperties.GROWTH_DISABLED) && podState.get(KlaxonBlockStateProperties.GROWTH_DISABLED);
         if (growthDisabled) {
-            iTooltip.add(Text.translatable("klaxon.jade.text.tooltip.crop_growth_disabled").withColor(Colors.RED));
+            iTooltip.add(Text.translatable("klaxon.jade.text.crop_growth_disabled").withColor(Colors.RED));
         } else {
             World world = blockAccessor.getLevel();
             Direction podFacing = podState.get(HallnoxPodBlock.FACING);
@@ -37,7 +37,7 @@ public enum HallnoxPodStatusProvider implements IBlockComponentProvider {
             BlockState supportingState = world.getBlockState(supportingPos);
 
             if (supportingState.isIn(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)) {
-                iTooltip.add(Text.translatable("klaxon.jade.text.tooltip.natural_crop_growth_inhibited").withColor(Colors.YELLOW));
+                iTooltip.add(Text.translatable("klaxon.jade.text.natural_crop_growth_inhibited").withColor(Colors.YELLOW));
             }
         }
     }
