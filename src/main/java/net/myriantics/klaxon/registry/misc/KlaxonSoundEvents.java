@@ -28,6 +28,8 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT = register("entity.grapple_claw.rebound_at_limit", SoundEvents.ITEM_TRIDENT_RETURN);
     // nether reaction
     public static final RegistryEntry<SoundEvent> NETHER_REACTION_EXPLOSION = register("block.nether_reactor_core.explosion", SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE);
+    // crested steel helmet
+    public static final SoundEvent SNIFFER_DIG_METAL = register("entity.sniffer.dig_metal", SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE).value();
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");

@@ -8,10 +8,12 @@ import net.minecraft.entity.passive.SnifferEntity;
 import net.minecraft.loot.LootTable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.ReloadableRegistries;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.mechanics.crested_steel_helmet.CrestedSteelHelmetHelper;
 import net.myriantics.klaxon.mechanics.crested_steel_helmet.SnifferEntityMixinAccess;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -47,7 +49,7 @@ public abstract class SnifferEntityMixin extends AnimalEntity implements Sniffer
             at = @At(value = "HEAD")
     )
     private void klaxon$resetCrestedSteelHelmetTracking(SnifferEntity.State state, CallbackInfoReturnable<SnifferEntity> cir) {
-        if (this.klaxon$isTrackingCrestedSteelHelmet && this.getState().equals(SnifferEntity.State.DIGGING) && state.equals(SnifferEntity.State.RISING)) {
+        if (this.klaxon$isTrackingCrestedSteelHelmet && this.getState().equals(SnifferEntity.State.DIGGING)) {
             this.emitGameEvent(GameEvent.ENTITY_ACTION);
             this.discard();
         }
@@ -63,5 +65,15 @@ public abstract class SnifferEntityMixin extends AnimalEntity implements Sniffer
                 : original.call(instance, key);
     }
 
-
+    @WrapOperation(
+            method = "dropSeeds",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/SnifferEntity;playSound(Lnet/minecraft/sound/SoundEvent;FF)V")
+    )
+    private void klaxon$overrideSeedPickupSound(SnifferEntity instance, SoundEvent soundEvent, float v, float p, Operation<Void> original) {
+        if (this.klaxon$isTrackingCrestedSteelHelmet) {
+            original.call(instance, KlaxonSoundEvents.SNIFFER_DIG_METAL, v, p);
+        } else {
+            original.call(instance, soundEvent, v, p);
+        }
+    }
 }
