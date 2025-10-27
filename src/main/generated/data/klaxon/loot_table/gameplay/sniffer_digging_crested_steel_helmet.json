@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "klaxon:crested_steel_helmet"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

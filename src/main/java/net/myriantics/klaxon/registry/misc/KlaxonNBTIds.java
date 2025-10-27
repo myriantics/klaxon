@@ -10,4 +10,7 @@ public abstract class KlaxonNBTIds {
     // player
     public static final String ATTACHED_GRAPPLE_CLAW = KlaxonCommon.locateAlt("attached_grapple_claw");
     public static final String CURRENT_WINCH_CABLE_LENGTH = KlaxonCommon.locateAlt("current_winch_cable_length");
+
+    // sniffer
+    public static final String IS_TRACKING_CRESTED_STEEL_HELMET = KlaxonCommon.locateAlt("isTrackingCrestedSteelHelmet");
 }

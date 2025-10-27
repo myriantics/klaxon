@@ -7,6 +7,8 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Rarity;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.api.KlaxonItemSettings;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
@@ -81,22 +83,27 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             ));
 
     // armor
-    public static final Item STEEL_HELMET = registerItem("steel_helmet",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
-            ));
-    public static final Item STEEL_CHESTPLATE = registerItem("steel_chestplate",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
-            ));
-    public static final Item STEEL_LEGGINGS = registerItem("steel_leggings",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
-            ));
-    public static final Item STEEL_BOOTS = registerItem("steel_boots",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
-            ));
+    public static final Item CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+            .rarity(Rarity.UNCOMMON)
+            .getSettings()
+    ));
+    public static final Item STEEL_HELMET = registerItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+            .getSettings()
+    ));
+    public static final Item STEEL_CHESTPLATE = registerItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new KlaxonItemSettings()
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+            .getSettings()
+    ));
+    public static final Item STEEL_LEGGINGS = registerItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new KlaxonItemSettings()
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+            .getSettings()
+    ));
+    public static final Item STEEL_BOOTS = registerItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new KlaxonItemSettings()
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+            .getSettings()
+    ));
 
     // fractured materials
     public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");

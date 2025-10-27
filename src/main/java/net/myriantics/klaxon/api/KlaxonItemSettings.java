@@ -7,6 +7,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.Unit;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
@@ -30,6 +31,11 @@ public class KlaxonItemSettings {
 
     public <T> KlaxonItemSettings component(ComponentType<T> type, T value) {
         this.settings.component(type, value);
+        return this;
+    }
+
+    public KlaxonItemSettings rarity(Rarity rarity) {
+        this.settings.component(DataComponentTypes.RARITY, rarity);
         return this;
     }
 
