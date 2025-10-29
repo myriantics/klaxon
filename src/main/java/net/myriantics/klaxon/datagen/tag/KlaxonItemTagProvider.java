@@ -2,13 +2,10 @@ package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
-import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.compat.KlaxonCompatItemTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
@@ -49,6 +46,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         buildMechanicsTags();
         buildAnvilRelatedTags();
         buildBlastProcessorCatalystBehaviorTags();
+        buildEnchantableTags();
 
         // build categorical tags
         buildEquipmentCategoryTags();
@@ -56,6 +54,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         // build compat tags
         buildCompatTags();
     }
+
 
     private void buildWoodTags() {
         getOrCreateTagBuilder(ConventionalItemTags.STRIPPED_LOGS)
@@ -344,6 +343,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(ConventionalItemTags.SHEAR_TOOLS);
         getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS)
                 .add(KlaxonItems.STEEL_INGOT);
+    }
+
+    private void buildEnchantableTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.STREAMLINE_ENCHANTABLE)
+                .forceAddTag(ItemTags.CHEST_ARMOR_ENCHANTABLE);
     }
 
     private void buildAnvilRelatedTags() {

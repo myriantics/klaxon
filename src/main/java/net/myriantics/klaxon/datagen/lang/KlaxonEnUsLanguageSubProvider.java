@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.lang;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAttachments;
 import net.minecraft.entity.EntityType;
@@ -33,6 +34,10 @@ public abstract class KlaxonEnUsLanguageSubProvider {
 
     protected void addItem(ItemConvertible itemConvertible, String name) {
         builder.add(itemConvertible.asItem(), name);
+    }
+
+    protected void addEnchantment(RegistryKey<Enchantment> enchantment, String name) {
+        builder.addEnchantment(enchantment, name);
     }
 
     protected void addBlock(Block block, String name) {

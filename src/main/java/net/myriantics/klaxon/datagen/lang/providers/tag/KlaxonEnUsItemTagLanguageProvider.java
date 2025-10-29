@@ -13,10 +13,15 @@ public final class KlaxonEnUsItemTagLanguageProvider extends KlaxonEnUsLanguageS
     @Override
     public void generate() {
         generateMakeshiftCraftingTags();
+        generateEnchantableTagTranslations();
         generateCraftingLogisticsTags();
         generateAdvancementLogisticsTags();
         generateMechanicsTags();
         generateCategoryTags();
+    }
+
+    private void generateEnchantableTagTranslations() {
+        addTag(KlaxonItemTags.STREAMLINE_ENCHANTABLE, "Streamline Enchantable");
     }
 
     private void generateMakeshiftCraftingTags() {

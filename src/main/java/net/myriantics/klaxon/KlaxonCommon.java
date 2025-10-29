@@ -14,6 +14,8 @@ import net.myriantics.klaxon.registry.block.KlaxonOxidationRegistry;
 import net.myriantics.klaxon.registry.block.KlaxonStrippedBlocksRegistry;
 import net.myriantics.klaxon.registry.entity.*;
 import net.myriantics.klaxon.registry.item.*;
+import net.myriantics.klaxon.registry.loot.KlaxonLootContextTypes;
+import net.myriantics.klaxon.registry.loot.KlaxonLootNumberProviders;
 import net.myriantics.klaxon.registry.misc.*;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.registry.worldgen.KlaxonWorldgenFeatures;
@@ -34,9 +36,9 @@ public class KlaxonCommon implements ModInitializer {
 
     @Override
 	public void onInitialize() {
+        KlaxonEnchantmentEffectComponentTypes.init();
 		KlaxonWorldgenFeatures.init();
 		KlaxonSaplingGenerators.init();
-		// KlaxonEntityAttributes.init(); // Not currently used
 		KlaxonBlocks.init();
 		KlaxonBlockItems.init();
 		KlaxonBlockEntities.init();
@@ -66,6 +68,8 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonEntityTypes.init();
         KlaxonEntityAttributes.init();
         KlaxonDynamicRegistries.init();
+        KlaxonLootNumberProviders.init();
+        KlaxonLootContextTypes.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

@@ -38,5 +38,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .addOptional(KlaxonDamageTypes.RENDING);
         getOrCreateTagBuilder(DamageTypeTags.IS_PROJECTILE)
                 .addOptionalTag(KlaxonDamageTypeTags.GRAPPLE_CLAW_DAMAGE_TYPES);
+
+        getOrCreateTagBuilder(KlaxonDamageTypeTags.STREAMLINE_ENCHANTMENT_CANCELS_VELOCITY_UPDATE)
+                .addOptionalTag(DamageTypeTags.NO_KNOCKBACK);
     }
 }

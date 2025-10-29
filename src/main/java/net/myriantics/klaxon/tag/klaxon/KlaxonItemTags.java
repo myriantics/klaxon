@@ -66,6 +66,10 @@ public abstract class KlaxonItemTags {
     public static final TagKey<Item> GRAPPLE_WINCH_CABLE_DETACHERS =
             createTag("grapple_winch_cable_detachers");
 
+    // enchantment tags
+    public static final TagKey<Item> STREAMLINE_ENCHANTABLE =
+            createEnchantableTag("streamline");
+
     // gear categories
     public static final TagKey<Item> STEEL_ARMOR =
             createTag("steel_armor");
@@ -105,6 +109,10 @@ public abstract class KlaxonItemTags {
 
     private static TagKey<Item> createToolTag(String name) {
         return createTag("tools/" + name);
+    }
+
+    private static TagKey<Item> createEnchantableTag(String name) {
+        return createTag("enchantable/" + name);
     }
 
     private static TagKey<Item> createTag(String name) {

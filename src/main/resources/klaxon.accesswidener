@@ -12,3 +12,5 @@ accessible class net/minecraft/entity/passive/SnifferBrain$FinishDiggingTask
 accessible method net/minecraft/entity/passive/SnifferBrain$FinishDiggingTask <init> (I)V
 
 accessible method net/minecraft/entity/passive/SnifferEntity canDig ()Z
+
+accessible class net/minecraft/enchantment/EnchantmentHelper$ContextAwareConsumer

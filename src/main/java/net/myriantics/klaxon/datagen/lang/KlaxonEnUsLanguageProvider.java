@@ -3,12 +3,9 @@ package net.myriantics.klaxon.datagen.lang;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
-import net.myriantics.klaxon.datagen.lang.providers.KlaxonEnUsAdvancementLanguageProvider;
-import net.myriantics.klaxon.datagen.lang.providers.KlaxonEnUsBlockLanguageProvider;
-import net.myriantics.klaxon.datagen.lang.providers.KlaxonEnUsDeathMessageProvider;
+import net.myriantics.klaxon.datagen.lang.providers.*;
 import net.myriantics.klaxon.datagen.lang.providers.entity.KlaxonEnUsEntityAttributeProvider;
 import net.myriantics.klaxon.datagen.lang.providers.entity.KlaxonEnUsEntityTypeLanguageProvider;
-import net.myriantics.klaxon.datagen.lang.providers.KlaxonEnUsItemLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.providers.gui.*;
 import net.myriantics.klaxon.datagen.lang.providers.tag.*;
 
@@ -46,5 +43,6 @@ public final class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
         new KlaxonEnUsItemLanguageProvider(this, translationBuilder).generate();
         new KlaxonEnUsAdvancementLanguageProvider(this, translationBuilder).generate();
         new KlaxonEnUsDeathMessageProvider(this, translationBuilder).generate();
+        new KlaxonEnUsEnchantmentLanguageProvider(this, translationBuilder).generate();
     }
 }
