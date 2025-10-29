@@ -13,6 +13,7 @@ import net.myriantics.klaxon.block.decor.custom_sign.CustomSignBlock;
 import net.myriantics.klaxon.block.decor.custom_sign.CustomWallSignBlock;
 import net.myriantics.klaxon.block.functional.HallnoxPodBlock;
 import net.myriantics.klaxon.block.functional.MoltenRubberBlock;
+import net.myriantics.klaxon.block.machines.CasingBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
@@ -29,7 +30,7 @@ public abstract class KlaxonBlocks {
     public static final Block STEEL_PLATING_BLOCK = registerBlock("steel_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
     public static final Block STEEL_CASING = registerBlock("steel_casing",
-            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK)));
+            new CasingBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK)));
     public static final Block STEEL_WIRE_SPOOL_BLOCK = registerBlock("steel_wire_spool",
             new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
     public static final Block STEEL_DOOR = registerBlock("steel_door",
@@ -44,7 +45,7 @@ public abstract class KlaxonBlocks {
     public static final Block CRUDE_STEEL_PLATING_BLOCK = registerBlock("crude_steel_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK)));
     public static final Block CRUDE_STEEL_CASING = registerBlock("crude_steel_casing",
-            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_BLOCK)));
+            new CasingBlock(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_BLOCK)));
     public static final Block CRUDE_STEEL_DOOR = registerBlock("crude_steel_door",
             new SteelDoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK).nonOpaque()));
     public static final Block CRUDE_STEEL_TRAPDOOR = registerBlock("crude_steel_trapdoor",
