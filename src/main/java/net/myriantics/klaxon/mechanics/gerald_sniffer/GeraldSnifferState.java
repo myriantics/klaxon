@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.mechanics.gerald_sniffer;
 
+import net.minecraft.entity.passive.SnifferEntity;
 import net.minecraft.util.StringIdentifiable;
 
 public enum GeraldSnifferState implements StringIdentifiable {

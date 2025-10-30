@@ -24,12 +24,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SnifferEntity.class)
 public abstract class SnifferEntityMixin extends AnimalEntity implements SnifferEntityMixinAccess {
-
-    @Shadow
-    public abstract boolean isDiggingOrSearching();
 
     @Unique
     private GeraldSnifferState klaxon$geraldSnifferState = GeraldSnifferState.TRACKING_UNSUPPORTED;
@@ -95,6 +93,6 @@ public abstract class SnifferEntityMixin extends AnimalEntity implements Sniffer
             at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z")
     )
     private boolean klaxon$canAlwaysDigIfGeraldTrackingActive(BlockState instance, TagKey<Block> tagKey, Operation<Boolean> original) {
-        return this.klaxon$geraldSnifferState.isActivelyTracking() || original.call(instance, tagKey);
+        return !this.klaxon$geraldSnifferState.equals(GeraldSnifferState.TRACKING_UNSUPPORTED) || original.call(instance, tagKey);
     }
 }
