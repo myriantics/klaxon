@@ -155,7 +155,7 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
 
     private boolean isSupported(WorldView world, BlockPos pos, Direction facing) {
         BlockPos neighborPos = pos.offset(facing);
-        return world.getBlockState(neighborPos).isSideSolid(world, neighborPos, facing, SideShapeType.RIGID);
+        return world.getBlockState(neighborPos).isSideSolid(world, neighborPos, facing.getOpposite(), SideShapeType.RIGID);
     }
 
     @Override
