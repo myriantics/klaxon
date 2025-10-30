@@ -12,5 +12,5 @@ public abstract class KlaxonNBTIds {
     public static final String CURRENT_WINCH_CABLE_LENGTH = KlaxonCommon.locateAlt("current_winch_cable_length");
 
     // sniffer
-    public static final String IS_TRACKING_CRESTED_STEEL_HELMET = KlaxonCommon.locateAlt("isTrackingCrestedSteelHelmet");
+    public static final String GERALD_SNIFFER_STATE = KlaxonCommon.locateAlt("gerald_sniffer_state");
 }
