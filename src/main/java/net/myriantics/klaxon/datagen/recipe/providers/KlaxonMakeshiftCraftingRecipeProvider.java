@@ -47,11 +47,11 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
         addMakeshiftShapedCraftingRecipe(Map.of(
                         'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
-                        'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
+                        'C', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING)
                 ),
                 new String[]{
                         "I I",
-                        "PBP",
+                        "PCP",
                         "PPP"
                 },
                 List.of(),

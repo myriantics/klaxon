@@ -181,7 +181,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         "P P",
                         "IPI"
                 },
-                new ItemStack(KlaxonItems.CRUDE_STEEL_CASING, 4),
+                new ItemStack(KlaxonItems.CRUDE_STEEL_CASING),
                 CraftingRecipeCategory.REDSTONE,
                 "steel_casing"
         );
@@ -194,7 +194,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         "P P",
                         "IPI"
                 },
-                new ItemStack(KlaxonItems.STEEL_CASING, 4),
+                new ItemStack(KlaxonItems.STEEL_CASING),
                 CraftingRecipeCategory.REDSTONE,
                 "steel_casing"
         );

@@ -343,6 +343,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(ConventionalItemTags.SHEAR_TOOLS);
         getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS)
                 .add(KlaxonItems.STEEL_INGOT);
+        getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
+                .add(KlaxonItems.STEEL_HAMMER);
     }
 
     private void buildEnchantableTags() {
