@@ -19,7 +19,7 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
 
     @Override
     protected Optional<RailShape> applyManual(RailShape original, ManualWrenchInteractionContext context) {
-        Direction playerFacing = context.player().getFacing();
+        Direction playerFacing = context.player().getHorizontalFacing();
         BlockPos railPos = context.hitResult().getBlockPos();
         Position hitPos = context.hitResult().getPos();
 
