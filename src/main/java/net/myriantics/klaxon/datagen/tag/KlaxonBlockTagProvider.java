@@ -262,22 +262,30 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.PISTON)
                 .add(Blocks.STICKY_PISTON)
                 .add(Blocks.OBSERVER);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getAllowlistTag())
                 .add(Blocks.BLAST_FURNACE)
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.getAllowlistTag())
                 .add(Blocks.HOPPER);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.AXIS.getAllowlistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.AXIS.getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getAllowlistTag())
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE)
                 .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getAllowlistTag())
                 .add(Blocks.CRAFTER);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getAllowlistTag())
                 .forceAddTag(BlockTags.RAILS);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getAllowlistTag())
                 .forceAddTag(BlockTags.RAILS);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getDenylistTag());
     }
 
     private void buildBehaviorTags() {
@@ -289,6 +297,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE)
                 .forceAddTag(BlockTags.SNOW)
                 .add(Blocks.POWDER_SNOW);
+        getOrCreateTagBuilder(KlaxonBlockTags.HEAVY_FALLING_BLOCKS)
+                .add(Blocks.SAND);
 
         // hallnox pod
         getOrCreateTagBuilder(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)

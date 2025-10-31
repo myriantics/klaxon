@@ -73,6 +73,7 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
 
         // misc
         addTag(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING, "Hallnox Pod Natural Growth Inhibiting");
+        addTag(KlaxonBlockTags.HEAVY_FALLING_BLOCKS, "Heavy Falling Blocks");
     }
 
     private void generateNetherReactionTagTranslations() {

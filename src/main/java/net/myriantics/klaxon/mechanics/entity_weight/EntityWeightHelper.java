@@ -32,9 +32,9 @@ public abstract class EntityWeightHelper {
             return true;
         }
 
-        // Falling blocks are considered heavy if they block piston movement. This includes anvils by default.
-        if (entity instanceof FallingBlockEntity fallingBlockEntity) {
-            if (fallingBlockEntity.getBlockState().getPistonBehavior().equals(PistonBehavior.BLOCK)) {
+        // if an entity has implemented more advanced behavior, check that
+        if (entity instanceof AdvancedEntityWeightBehavior behavior) {
+            if (behavior.klaxon$isHeavy()) {
                 return true;
             }
         }

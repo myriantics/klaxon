@@ -28,6 +28,7 @@
     "minecraft.entity_attributes.ArmorItemMixin",
     "minecraft.entity_attributes.LivingEntityMixin",
     "minecraft.entity_attributes.PlayerEntityMixin",
+    "minecraft.entity_weight.FallingBlockEntityMixin",
     "minecraft.entity_weight.ItemStackMixin",
     "minecraft.gerald_sniffer.AnimalEntityMixin",
     "minecraft.gerald_sniffer.EntityMixin",

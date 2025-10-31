@@ -48,6 +48,8 @@ public abstract class KlaxonBlockTags {
             createTag("cold_blocks");
     public static final TagKey<Block> HALLNOX_POD_NATURAL_GROWTH_INHIBITING =
             createTag("hallnox_pod_natural_growth_inhibiting");
+    public static final TagKey<Block> HEAVY_FALLING_BLOCKS =
+            createTag("heavy_falling_blocks");
 
     // nether reaction tags
     public static final TagKey<Block> NETHER_REACTION_IMMUNE =
