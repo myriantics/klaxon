@@ -3,7 +3,6 @@ package net.myriantics.klaxon.item.equipment.tools;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.ChestType;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -15,12 +14,10 @@ import net.minecraft.item.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
@@ -35,7 +32,6 @@ import net.myriantics.klaxon.util.PermissionsHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 public class WrenchItem extends MiningToolItem {
     public WrenchItem(ToolMaterial material, Settings settings) {
@@ -124,7 +120,7 @@ public class WrenchItem extends MiningToolItem {
 
     public static boolean canRotate(BlockState targetState) {
         // blocks in the deny list cannot be rotated
-        if (targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)) {
+        if (targetState.isIn(KlaxonBlockTags.WRENCH_INTERACTION_GENERAL_DENYLIST)) {
             return false;
         }
 
@@ -132,11 +128,9 @@ public class WrenchItem extends MiningToolItem {
             return true;
         }
 
-        if (targetState.isIn(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)) {
-            for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
-                if (behavior.test(targetState)) {
-                    return true;
-                }
+        for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
+            if (behavior.test(targetState)) {
+                return true;
             }
         }
 

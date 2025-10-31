@@ -252,21 +252,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST)
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .add(Blocks.PISTON_HEAD);
-        getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)
-                .forceAddTag(KlaxonBlockTags.PIPE_MATRICES)
-                .forceAddTag(KlaxonBlockStateWrenchBehaviors.FACING.getAllowlistTag())
-                .forceAddTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getAllowlistTag())
-                .forceAddTag(KlaxonBlockStateWrenchBehaviors.AXIS.getAllowlistTag())
-                .forceAddTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getAllowlistTag())
-                .forceAddTag(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getAllowlistTag())
-                .forceAddTag(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getAllowlistTag())
-                .forceAddTag(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getAllowlistTag())
-                .add(KlaxonBlocks.STEEL_DOOR)
-                .add(KlaxonBlocks.STEEL_TRAPDOOR)
-                .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
-                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
-                .add(KlaxonBlocks.HALLNOX_BULB);
-        getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)
+        getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_INTERACTION_GENERAL_DENYLIST)
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .add(Blocks.LEVER)
                 .add(Blocks.PISTON_HEAD);
@@ -278,9 +264,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.OBSERVER);
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getAllowlistTag())
                 .add(Blocks.BLAST_FURNACE)
-                .add(Blocks.HOPPER)
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.getAllowlistTag())
+                .add(Blocks.HOPPER);
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.AXIS.getAllowlistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getAllowlistTag())
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE)

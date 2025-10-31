@@ -15,6 +15,7 @@ import java.util.function.Function;
 public abstract class KlaxonBlockStateWrenchBehaviors {
     public static final BlockStateWrenchBehavior<Direction> FACING = register("facing", FacingBlockStateWrenchBehavior::new);
     public static final BlockStateWrenchBehavior<Direction> HORIZONTAL_FACING = register("horizontal_facing", HorizontalFacingBlockStateWrenchBehavior::new);
+    public static final BlockStateWrenchBehavior<Direction> HOPPER_FACING = register("hopper_facing", HopperFacingBlockStateWrenchBehavior::new);
     public static final BlockStateWrenchBehavior<Direction.Axis> AXIS = register("axis", AxisBlockStateWrenchBehavior::new);
     public static final BlockStateWrenchBehavior<Direction.Axis> HORIZONTAL_AXIS = register("horizontal_axis", HorizontalAxisBlockStateWrenchBehavior::new);
     public static final BlockStateWrenchBehavior<Orientation> ORIENTATION = register("orientation", OrientationBlockStateWrenchBehavior::new);

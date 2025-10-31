@@ -40,10 +40,8 @@ public abstract class KlaxonBlockTags {
             createTag("wrench_pickup_allowlist");
     public static final TagKey<Block> WRENCH_PICKUP_DENYLIST =
             createTag("wrench_pickup_denylist");
-    public static final TagKey<Block> WRENCH_ROTATION_ALLOWLIST =
-            createTag("wrench_rotation_allowlist");
-    public static final TagKey<Block> WRENCH_ROTATION_DENYLIST =
-            createTag("wrench_interaction_denylist");
+    public static final TagKey<Block> WRENCH_INTERACTION_GENERAL_DENYLIST =
+            createTag("wrench_interaction_general_denylist");
     public static final TagKey<Block> FERROMAGNETIC_BLOCKS =
             createTag("ferromagnetic_blocks");
     public static final TagKey<Block> COLD_BLOCKS =

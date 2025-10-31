@@ -45,14 +45,15 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
         // wrench
         addTag(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST, "Wrench Pickup Allowlist");
         addTag(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST, "Wrench Pickup Denylist");
-        addTag(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST, "Wrench Rotation Allowlist");
-        addTag(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST, "Wrench Rotation Denylist");
+        addTag(KlaxonBlockTags.WRENCH_INTERACTION_GENERAL_DENYLIST, "Wrench Interaction General Denylist");
 
         // wrench block state behaviors
         addTag(KlaxonBlockStateWrenchBehaviors.FACING.getAllowlistTag(), "Facing Block State Wrench Behavior Allowlist");
         addTag(KlaxonBlockStateWrenchBehaviors.FACING.getDenylistTag(), "Facing Block State Wrench Behavior Denylist");
         addTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getAllowlistTag(), "Horizontal Facing Block State Wrench Behavior Allowlist");
         addTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getDenylistTag(), "Horizontal Facing Block State Wrench Behavior Denylist");
+        addTag(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.getAllowlistTag(), "Hopper Facing Block State Wrench Behavior Allowlist");
+        addTag(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.getDenylistTag(), "Hopper Facing Block State Wrench Behavior Denylist");
         addTag(KlaxonBlockStateWrenchBehaviors.AXIS.getAllowlistTag(), "Axis Block State Wrench Behavior Allowlist");
         addTag(KlaxonBlockStateWrenchBehaviors.AXIS.getDenylistTag(), "Axis Block State Wrench Behavior Denylist");
         addTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getAllowlistTag(), "Horizontal Axis Block State Wrench Behavior Allowlist");
