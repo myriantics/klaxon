@@ -7,28 +7,19 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.ManualItemApplicationResult;
-import net.myriantics.klaxon.api.Wrenchable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class NetherReactorCoreBlock extends Block implements Wrenchable, Waterloggable, ManualItemApplicationResult {
+public class NetherReactorCoreBlock extends Block implements Waterloggable, ManualItemApplicationResult {
     public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = Properties.HORIZONTAL_AXIS;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
@@ -93,46 +84,5 @@ public class NetherReactorCoreBlock extends Block implements Wrenchable, Waterlo
 
         // if both fail return empty, which causes original output state to be used
         return Optional.empty();
-    }
-
-    @Override
-    public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        BlockPos blockPos = hitResult.getBlockPos();
-        BlockState newState = targetState.cycle(HORIZONTAL_AXIS);
-
-        world.setBlockState(blockPos, newState);
-        world.playSound(
-                player,
-                blockPos,
-                this.soundGroup.getPlaceSound(),
-                SoundCategory.BLOCKS
-        );
-        world.emitGameEvent(
-                GameEvent.BLOCK_CHANGE,
-                blockPos,
-                GameEvent.Emitter.of(player, newState)
-        );
-
-        return ItemActionResult.SUCCESS;
-    }
-
-    @Override
-    public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
-        BlockState newState = targetState.cycle(HORIZONTAL_AXIS);
-
-        serverWorld.setBlockState(targetPos, newState);
-        serverWorld.playSound(
-                null,
-                targetPos,
-                this.soundGroup.getPlaceSound(),
-                SoundCategory.BLOCKS
-        );
-        serverWorld.emitGameEvent(
-                GameEvent.BLOCK_CHANGE,
-                targetPos,
-                GameEvent.Emitter.of(newState)
-        );
-
-        return ItemActionResult.SUCCESS;
     }
 }

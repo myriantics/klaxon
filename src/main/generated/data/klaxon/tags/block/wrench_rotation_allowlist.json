@@ -1,5 +1,17 @@
 {
   "values": [
-    "#klaxon:instabreakable/wrench"
+    "#klaxon:pipe_matrices",
+    "#klaxon:wrench_behavior/allowlist_facing",
+    "#klaxon:wrench_behavior/allowlist_horizontal_facing",
+    "#klaxon:wrench_behavior/allowlist_axis",
+    "#klaxon:wrench_behavior/allowlist_horizontal_axis",
+    "#klaxon:wrench_behavior/allowlist_orientation",
+    "#klaxon:wrench_behavior/allowlist_curving_rail_shape",
+    "#klaxon:wrench_behavior/allowlist_straight_rail_shape",
+    "klaxon:steel_door",
+    "klaxon:steel_trapdoor",
+    "klaxon:crude_steel_door",
+    "klaxon:crude_steel_trapdoor",
+    "klaxon:hallnox_bulb"
   ]
 }

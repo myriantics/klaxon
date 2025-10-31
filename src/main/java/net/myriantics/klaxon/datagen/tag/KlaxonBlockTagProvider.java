@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.myriantics.klaxon.registry.behavior.KlaxonBlockStateWrenchBehaviors;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.tag.compat.KlaxonCompatBlockTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalBlockTags;
@@ -22,6 +23,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         buildMiningTags();
         buildBehaviorTags();
+        buildWrenchTags();
         buildCategoricalTags();
         buildToolRequirementTags();
         buildCompatTags();
@@ -239,17 +241,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.HALLNOX_WART_BLOCK);
     }
 
-    private void buildBehaviorTags() {
-        getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
-                .add(KlaxonBlocks.STEEL_BLOCK);
-        getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
-                .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
-        getOrCreateTagBuilder(KlaxonBlockTags.COLD_BLOCKS)
-                .forceAddTag(BlockTags.ICE)
-                .forceAddTag(BlockTags.SNOW)
-                .add(Blocks.POWDER_SNOW);
-
-        // wrench
+    private void buildWrenchTags() {
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST)
                 .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE)
                 .forceAddTag(KlaxonConventionalBlockTags.GRATES)
@@ -261,13 +253,55 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
                 .add(Blocks.PISTON_HEAD);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST)
-                .forceAddTag(KlaxonBlockTags.WRENCH_INSTABREAKABLE);
+                .forceAddTag(KlaxonBlockTags.PIPE_MATRICES)
+                .forceAddTag(KlaxonBlockStateWrenchBehaviors.FACING.getAllowlistTag())
+                .forceAddTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getAllowlistTag())
+                .forceAddTag(KlaxonBlockStateWrenchBehaviors.AXIS.getAllowlistTag())
+                .forceAddTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getAllowlistTag())
+                .forceAddTag(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getAllowlistTag())
+                .forceAddTag(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getAllowlistTag())
+                .forceAddTag(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getAllowlistTag())
+                .add(KlaxonBlocks.STEEL_DOOR)
+                .add(KlaxonBlocks.STEEL_TRAPDOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_DOOR)
+                .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
+                .add(KlaxonBlocks.HALLNOX_BULB);
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST)
                 .forceAddTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
-                .forceAddTag(BlockTags.TRAPDOORS)
-                .forceAddTag(BlockTags.DOORS)
                 .add(Blocks.LEVER)
                 .add(Blocks.PISTON_HEAD);
+
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.getAllowlistTag())
+                .forceAddTag(BlockTags.SHULKER_BOXES)
+                .add(Blocks.PISTON)
+                .add(Blocks.STICKY_PISTON)
+                .add(Blocks.OBSERVER);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getAllowlistTag())
+                .add(Blocks.BLAST_FURNACE)
+                .add(Blocks.HOPPER)
+                .add(Blocks.REPEATER)
+                .add(Blocks.COMPARATOR);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.AXIS.getAllowlistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getAllowlistTag())
+                .add(KlaxonBlocks.NETHER_REACTOR_CORE)
+                .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getAllowlistTag())
+                .add(Blocks.CRAFTER);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getAllowlistTag())
+                .forceAddTag(BlockTags.RAILS);
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getAllowlistTag())
+                .forceAddTag(BlockTags.RAILS);
+    }
+
+    private void buildBehaviorTags() {
+        getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
+                .add(KlaxonBlocks.STEEL_BLOCK);
+        getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
+                .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
+        getOrCreateTagBuilder(KlaxonBlockTags.COLD_BLOCKS)
+                .forceAddTag(BlockTags.ICE)
+                .forceAddTag(BlockTags.SNOW)
+                .add(Blocks.POWDER_SNOW);
 
         // hallnox pod
         getOrCreateTagBuilder(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)

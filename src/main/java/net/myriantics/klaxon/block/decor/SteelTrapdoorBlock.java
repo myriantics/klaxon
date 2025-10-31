@@ -4,18 +4,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockSetType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapdoorBlock;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 
 public class SteelTrapdoorBlock extends TrapdoorBlock implements Wrenchable {
     public SteelTrapdoorBlock(BlockSetType type, Settings settings) {
@@ -46,21 +41,20 @@ public class SteelTrapdoorBlock extends TrapdoorBlock implements Wrenchable {
     }
 
     @Override
-    public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        BlockPos targetPos = hitResult.getBlockPos();
+    public ItemActionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
+        BlockPos targetPos = context.hitResult().getBlockPos();
 
-        this.playToggleSound(player, world, targetPos, !targetState.get(OPEN));
-        world.setBlockState(targetPos, targetState.cycle(OPEN));
+        this.playToggleSound(context.player(), context.world(), targetPos, !context.targetState().get(OPEN));
+        context.world().setBlockState(targetPos, context.targetState().cycle(OPEN));
 
         return ItemActionResult.SUCCESS;
     }
 
     @Override
-    public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
+    public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
+        this.playToggleSound(null, context.serverWorld(), context.targetPos(), !context.targetState().get(OPEN));
+        context.serverWorld().setBlockState(context.targetPos(), context.targetState().cycle(OPEN));
 
-        this.playToggleSound(null, serverWorld, targetPos, !targetState.get(OPEN));
-        serverWorld.setBlockState(targetPos, targetState.cycle(OPEN));
-
-        return ItemActionResult.SUCCESS;
+        return true;
     }
 }

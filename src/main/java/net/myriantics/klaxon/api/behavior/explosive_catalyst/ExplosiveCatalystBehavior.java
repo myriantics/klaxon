@@ -36,11 +36,11 @@ public interface ExplosiveCatalystBehavior {
         return getRegistryEntry().isIn(tagKey);
     }
 
-    Codec<RegistryEntry<ExplosiveCatalystBehavior>> ENTRY_CODEC = KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.getEntryCodec();
+    Codec<RegistryEntry<ExplosiveCatalystBehavior>> ENTRY_CODEC = KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIORS.getEntryCodec();
 
-    PacketCodec<RegistryByteBuf, RegistryEntry<ExplosiveCatalystBehavior>> ENTRY_PACKET_CODEC = PacketCodecs.registryEntry(KlaxonRegistryKeys.BLAST_PROCESSOR_BEHAVIORS);
+    PacketCodec<RegistryByteBuf, RegistryEntry<ExplosiveCatalystBehavior>> ENTRY_PACKET_CODEC = PacketCodecs.registryEntry(KlaxonRegistryKeys.EXPLOSIVE_CATALYST_BEHAVIOR);
 
     default RegistryEntry<ExplosiveCatalystBehavior> getRegistryEntry() {
-        return KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS.getEntry(this);
+        return KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIORS.getEntry(this);
     }
 }

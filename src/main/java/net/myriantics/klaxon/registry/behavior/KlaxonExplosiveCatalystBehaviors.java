@@ -23,7 +23,7 @@ public abstract class KlaxonExplosiveCatalystBehaviors {
 
     private static ExplosiveCatalystBehavior register(String name, ExplosiveCatalystBehaviorInitializer initializer) {
         Identifier id = KlaxonCommon.locate(name);
-        return Registry.register(KlaxonRegistries.BLAST_PROCESSOR_BEHAVIORS, id, initializer.apply(id));
+        return Registry.register(KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIORS, id, initializer.apply(id));
     }
 
     public static void init() {

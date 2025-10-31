@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.lang.providers.tag;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageSubProvider;
+import net.myriantics.klaxon.registry.behavior.KlaxonBlockStateWrenchBehaviors;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
@@ -46,6 +47,22 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
         addTag(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST, "Wrench Pickup Denylist");
         addTag(KlaxonBlockTags.WRENCH_ROTATION_ALLOWLIST, "Wrench Rotation Allowlist");
         addTag(KlaxonBlockTags.WRENCH_ROTATION_DENYLIST, "Wrench Rotation Denylist");
+
+        // wrench block state behaviors
+        addTag(KlaxonBlockStateWrenchBehaviors.FACING.getAllowlistTag(), "Facing Block State Wrench Behavior Allowlist");
+        addTag(KlaxonBlockStateWrenchBehaviors.FACING.getDenylistTag(), "Facing Block State Wrench Behavior Denylist");
+        addTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getAllowlistTag(), "Horizontal Facing Block State Wrench Behavior Allowlist");
+        addTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getDenylistTag(), "Horizontal Facing Block State Wrench Behavior Denylist");
+        addTag(KlaxonBlockStateWrenchBehaviors.AXIS.getAllowlistTag(), "Axis Block State Wrench Behavior Allowlist");
+        addTag(KlaxonBlockStateWrenchBehaviors.AXIS.getDenylistTag(), "Axis Block State Wrench Behavior Denylist");
+        addTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getAllowlistTag(), "Horizontal Axis Block State Wrench Behavior Allowlist");
+        addTag(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getDenylistTag(), "Horizontal Axis Block State Wrench Behavior Denylist");
+        addTag(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getAllowlistTag(), "Orientation Block State Wrench Behavior Allowlist");
+        addTag(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getDenylistTag(), "Orientation Block State Wrench Behavior Denylist");
+        addTag(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getAllowlistTag(), "Curving Rail Shape Block State Wrench Behavior Allowlist");
+        addTag(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getDenylistTag(), "Curving Rail Shape Block State Wrench Behavior Denylist");
+        addTag(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getAllowlistTag(), "Straight Rail Shape Block State Wrench Behavior Allowlist");
+        addTag(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getDenylistTag(), "Straight Rail Shape Block State Wrench Behavior Denylist");
 
         // ferromagnetism
         addTag(KlaxonBlockTags.FERROMAGNETIC_BLOCKS, "Ferromagnetic Blocks");

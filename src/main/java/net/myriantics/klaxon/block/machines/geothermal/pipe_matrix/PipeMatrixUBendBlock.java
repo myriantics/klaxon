@@ -2,28 +2,24 @@ package net.myriantics.klaxon.block.machines.geothermal.pipe_matrix;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.NeighborPlacementListener;
-import net.myriantics.klaxon.api.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
@@ -138,26 +134,26 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     }
 
     @Override
-    public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+    public ItemActionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
         if (getSegmentBlock() != null) {
-            BlockPos pos = hitResult.getBlockPos();
+            BlockPos pos = context.hitResult().getBlockPos();
 
-            world.setBlockState(
-                    hitResult.getBlockPos(),
-                    getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis())
+            context.world().setBlockState(
+                    context.hitResult().getBlockPos(),
+                    getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, context.targetState().get(FACING).getAxis())
             );
 
-            world.playSound(
-                    player,
+            context.world().playSound(
+                    context.player(),
                     pos,
                     soundGroup.getPlaceSound(),
-                    player.getSoundCategory(),
-                    0.8f + (0.2f * world.getRandom().nextFloat()),
-                    0.4f + (0.4f * world.getRandom().nextFloat())
+                    context.player().getSoundCategory(),
+                    0.8f + (0.2f * context.world().getRandom().nextFloat()),
+                    0.4f + (0.4f * context.world().getRandom().nextFloat())
             );
 
             // trip sculk sensors because it's funny
-            world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(player, targetState));
+            context.world().emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(context.player(), context.targetState()));
 
             return ItemActionResult.SUCCESS;
         } else {
@@ -166,28 +162,28 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     }
 
     @Override
-    public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
+    public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
         if (getSegmentBlock() != null) {
-            serverWorld.setBlockState(
-                    targetPos,
-                    getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, targetState.get(FACING).getAxis())
+            context.serverWorld().setBlockState(
+                    context.targetPos(),
+                    getSegmentBlock().getDefaultState().with(PipeMatrixSegmentBlock.AXIS, context.targetState().get(FACING).getAxis())
             );
 
-            serverWorld.playSound(
+            context.serverWorld().playSound(
                     null,
-                    targetPos,
+                    context.targetPos(),
                     soundGroup.getPlaceSound(),
                     SoundCategory.BLOCKS,
-                    0.8f + (0.2f * serverWorld.getRandom().nextFloat()),
-                    0.4f + (0.4f * serverWorld.getRandom().nextFloat())
+                    0.8f + (0.2f * context.serverWorld().getRandom().nextFloat()),
+                    0.4f + (0.4f * context.serverWorld().getRandom().nextFloat())
             );
 
             // trip sculk sensors because it's funny
-            serverWorld.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(targetState));
+            context.serverWorld().emitGameEvent(GameEvent.BLOCK_CHANGE, context.targetPos(), GameEvent.Emitter.of(context.targetState()));
 
-            return ItemActionResult.SUCCESS;
+            return true;
         } else {
-            return null;
+            return false;
         }
     }
 }

@@ -14,10 +14,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -28,7 +25,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.block.NeighborUpdater;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.api.NeighborPlacementListener;
-import net.myriantics.klaxon.api.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,10 +90,11 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
     }
 
     @Override
-    public ItemActionResult onWrenched(BlockState targetState, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        BlockPos targetPos = hitResult.getBlockPos();
+    public ItemActionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
+        BlockPos targetPos = context.hitResult().getBlockPos();
 
-        Vec3d hitPos = hitResult.getPos().subtract(Vec3d.ofCenter(targetPos));
+        World world = context.world();
+        Vec3d hitPos = context.hitResult().getPos().subtract(Vec3d.ofCenter(targetPos));
         Direction togglingDirection = Direction.getFacing(hitPos.getX(), hitPos.getY(), hitPos.getZ());
 
         BlockPos conjoiningPos = targetPos.offset(togglingDirection);
@@ -111,7 +111,7 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
                     conjoiningState.getBlock() instanceof HallnoxBulbBlock
                             // make sure the states match
                             && conjoiningState.get(conjoiningToggledProperty)
-                            .equals(targetState.get(toggledProperty)
+                            .equals(context.targetState().get(toggledProperty)
                             )
             ) {
                 world.setBlockState(
@@ -123,7 +123,7 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
             // cycle bulb connector state
             world.setBlockState(
                     targetPos,
-                    targetState.cycle(toggledProperty)
+                    context.targetState().cycle(toggledProperty)
             );
         }
 
@@ -131,9 +131,9 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
         BlockSoundGroup soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState().getSoundGroup();
 
         world.playSound(
-                player,
+                context.player(),
                 targetPos,
-                targetState.get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
+                context.targetState().get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
                 SoundCategory.BLOCKS,
                 0.6f + (0.2f * world.getRandom().nextFloat()),
                 0.2f + (0.4f * world.getRandom().nextFloat())
@@ -141,32 +141,33 @@ public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, 
 
         // this is a stub implementation in ClientWorld so it's fine
         // trip sculk sensors because it's funny
-        world.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(player, targetState));
+        world.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(context.player(), context.targetState()));
 
         return ItemActionResult.SUCCESS;
     }
 
     @Override
-    public ItemActionResult onDispenserWrenched(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction facing, BlockPointer pointer) {
-        BooleanProperty toggledProperty = FACING_PROPERTIES.get(facing.getOpposite());
+    public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
+        BooleanProperty toggledProperty = FACING_PROPERTIES.get(context.dispenserFacing().getOpposite());
+        ServerWorld serverWorld = context.serverWorld();
 
         // calculations are simpler here because dispensers can only face 6 ways - also can't click on random parts of the block
-        serverWorld.setBlockState(targetPos, targetState.cycle(toggledProperty));
+        serverWorld.setBlockState(context.targetPos(), context.targetState().cycle(toggledProperty));
 
         BlockSoundGroup soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState().getSoundGroup();
         serverWorld.playSound(
                 null,
-                targetPos,
-                targetState.get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
+                context.targetPos(),
+                context.targetState().get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
                 SoundCategory.BLOCKS,
                 0.6f + (0.2f * serverWorld.getRandom().nextFloat()),
                 0.2f + (0.4f * serverWorld.getRandom().nextFloat())
         );
 
         // proc sculk sensors
-        serverWorld.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(targetState));
+        serverWorld.emitGameEvent(GameEvent.BLOCK_CHANGE, context.targetPos(), GameEvent.Emitter.of(context.targetState()));
 
-        return ItemActionResult.SUCCESS;
+        return true;
     }
 
 
