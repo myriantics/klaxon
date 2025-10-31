@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -17,13 +18,23 @@ public abstract class ItemStackMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;useOnBlock(Lnet/minecraft/item/ItemUsageContext;)Lnet/minecraft/util/ActionResult;")
     )
     public ActionResult klaxon$runToolUsageRecipe(Item instance, ItemUsageContext context, Operation<ActionResult> original) {
-        ActionResult temp = ActionResult.PASS;
         if (ToolUsageRecipeLogic.test(context.getWorld(), (ItemStack) (Object) this)) {
-            temp = ToolUsageRecipeLogic.runRecipeLogic(context);
+            switch (ToolUsageRecipeLogic.runRecipeLogic(context)) {
+                case FAIL -> {
+                    return original.call(instance, context);
+                }
+                case SUCCESS -> {
+                    return ActionResult.SUCCESS;
+                }
+                case COSMETIC_SUCCESS -> {
+                    original.call(instance, context);
+                    return ActionResult.SUCCESS;
+                }
+            }
         }
 
         // If the recipe process failed, call the original interaction
-        return temp.equals(ActionResult.PASS) ? original.call(instance, context) : temp;
+        return original.call(instance, context);
     }
 
 }
