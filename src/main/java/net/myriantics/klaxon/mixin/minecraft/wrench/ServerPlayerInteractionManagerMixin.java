@@ -42,7 +42,7 @@ public abstract class ServerPlayerInteractionManagerMixin {
 
         // if we're in adventure and we can't do anything to the block, don't override anything
         if (!PermissionsHelper.canModifyWorld(player) && !usedStack.canPlaceOn(targetPos)) return original;
-        return original || (usedStack.getItem() instanceof WrenchItem && !WrenchItem.canRotate(targetState));
+        return original || (usedStack.getItem() instanceof WrenchItem && !WrenchItem.canRotate(player.getServerWorld().getServer().getReloadableRegistries().getRegistryManager(), targetState));
     }
 
     @WrapOperation(

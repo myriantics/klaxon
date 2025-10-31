@@ -11,6 +11,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -20,6 +21,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
@@ -90,7 +92,7 @@ public class WrenchItem extends MiningToolItem {
         }
 
         // Only requires CAN_PLACE_ON in adventure mode
-        if (allowDefaultRotationBehavior(targetState)) {
+        if (allowDefaultRotationBehavior(context.getWorld().getRegistryManager(), targetState)) {
             ManualWrenchInteractionContext wrenchContext = new ManualWrenchInteractionContext(targetState, wrenchStack, world, player, context.getHand(), new BlockHitResult(context.getHitPos(), context.getSide(), context.getBlockPos(), context.hitsInsideBlock()));
 
             BlockState newState = targetState;
@@ -118,9 +120,13 @@ public class WrenchItem extends MiningToolItem {
         return super.useOnBlock(context);
     }
 
-    public static boolean canRotate(BlockState targetState) {
+    public static boolean canRotate(DynamicRegistryManager manager, BlockState targetState) {
         // blocks in the deny list cannot be rotated
         if (targetState.isIn(KlaxonBlockTags.WRENCH_INTERACTION_GENERAL_DENYLIST)) {
+            return false;
+        }
+
+        if (WrenchInteractionDenialPredicate.wrenchInteractionBlocked(manager, targetState)) {
             return false;
         }
 
@@ -137,8 +143,8 @@ public class WrenchItem extends MiningToolItem {
         return false;
     }
 
-    public static boolean allowDefaultRotationBehavior(BlockState targetState) {
-        return !(targetState.getBlock() instanceof Wrenchable) && canRotate(targetState);
+    public static boolean allowDefaultRotationBehavior(DynamicRegistryManager manager, BlockState targetState) {
+        return !(targetState.getBlock() instanceof Wrenchable) && canRotate(manager, targetState);
     }
 
     public static boolean canPickup(BlockState targetState, BlockPos targetPos, World world, @Nullable PlayerEntity player, ItemStack wrenchStack) {

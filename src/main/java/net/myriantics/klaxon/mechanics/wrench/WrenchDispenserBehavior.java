@@ -23,6 +23,11 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
         setSuccess(false);
         shouldPlayEffects = true;
 
+        // cancel wrench interaction if a predicate blocks it
+        if (WrenchInteractionDenialPredicate.wrenchInteractionBlocked(serverWorld.getServer().getReloadableRegistries().getRegistryManager(), targetState)) {
+            return stack;
+        }
+
         DispenserWrenchInteractionContext context = new DispenserWrenchInteractionContext(targetState, targetPos, stack, serverWorld, facing, pointer);
 
         // run custom behavior if present

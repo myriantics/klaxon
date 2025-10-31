@@ -6,9 +6,10 @@ import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
-import net.myriantics.klaxon.datagen.custom_providers.KlaxonDamageTypeProvider;
-import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
-import net.myriantics.klaxon.datagen.custom_providers.KlaxonVeinmineGroupProvider;
+import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistryProvider;
+import net.myriantics.klaxon.datagen.custom.providers.KlaxonDamageTypeProvider;
+import net.myriantics.klaxon.datagen.custom.providers.KlaxonToolUsageRecipeTypeProvider;
+import net.myriantics.klaxon.datagen.custom.providers.KlaxonVeinmineGroupProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonGameplayLootTableProvider;
@@ -22,7 +23,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
-        pack.addProvider(KlaxonDamageTypeProvider::new);
+        pack.addProvider(KlaxonDynamicRegistryProvider::new);
 		pack.addProvider(KlaxonModelProvider::new);
 
         // loot tables
@@ -36,8 +37,6 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(KlaxonFeatureProvider::new);
         pack.addProvider(KlaxonArmorTrimMaterialProvider::new);
 		pack.addProvider(KlaxonEnUsLanguageProvider::new);
-        pack.addProvider(KlaxonToolUsageRecipeTypeProvider::new);
-        pack.addProvider(KlaxonVeinmineGroupProvider::new);
 
         // tags
         pack.addProvider(KlaxonItemTagProvider::new);

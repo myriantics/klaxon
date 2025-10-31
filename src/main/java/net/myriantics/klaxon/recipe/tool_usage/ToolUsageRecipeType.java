@@ -18,10 +18,21 @@ import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.registry.KlaxonDynamicRegistries;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public record ToolUsageRecipeType(Ingredient validTools, Optional<RegistryKey<Item>> display) {
+    public ToolUsageRecipeType(Ingredient validTools) {
+        this(validTools, Optional.empty());
+    }
+    public ToolUsageRecipeType(Ingredient validTools, @Nullable Item display) {
+        this(validTools, display == null ? Optional.empty() : Registries.ITEM.getKey(display));
+    }
+    public ToolUsageRecipeType(Ingredient validTools, @Nullable RegistryKey<Item> display) {
+        this(validTools, Optional.ofNullable(display));
+    }
+
     public static final Codec<RegistryKey<ToolUsageRecipeType>> KEY_CODEC = RegistryKey.createCodec(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE);
     public static final PacketCodec<ByteBuf, RegistryKey<ToolUsageRecipeType>> KEY_PACKET_CODEC = RegistryKey.createPacketCodec(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE);
 

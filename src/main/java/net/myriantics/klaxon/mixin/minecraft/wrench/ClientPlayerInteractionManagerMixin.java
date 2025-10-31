@@ -36,7 +36,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
 
         // if we're in adventure and we can't do anything to the block, don't override anything
         if (!PermissionsHelper.canModifyWorld(player) && !usedStack.canPlaceOn(targetPos)) return original;
-        return original || (usedStack.getItem() instanceof WrenchItem && !WrenchItem.canRotate(targetState));
+        return original || (usedStack.getItem() instanceof WrenchItem && !WrenchItem.canRotate(player.clientWorld.getRegistryManager(), targetState));
     }
 
     @WrapOperation(
