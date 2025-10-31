@@ -16,7 +16,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.api.NeighborPlacementListener;
+import net.myriantics.klaxon.block.decor.hallnox_bulb.NeighborPlacementListener;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
 import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;

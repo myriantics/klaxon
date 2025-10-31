@@ -2,14 +2,12 @@ package net.myriantics.klaxon.mixin.minecraft.neighbor_placement_listener;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.NeighborPlacementListener;
-import net.myriantics.klaxon.block.decor.HallnoxBulbBlock;
+import net.myriantics.klaxon.block.decor.hallnox_bulb.NeighborPlacementListener;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

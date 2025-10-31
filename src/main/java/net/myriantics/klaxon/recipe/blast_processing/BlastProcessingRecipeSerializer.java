@@ -3,12 +3,11 @@ package net.myriantics.klaxon.recipe.blast_processing;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.*;
-import net.myriantics.klaxon.api.RecipeOutputCompound;
+import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 
 public class BlastProcessingRecipeSerializer implements RecipeSerializer<BlastProcessingRecipe> {
     public BlastProcessingRecipeSerializer() {

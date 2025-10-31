@@ -2,7 +2,7 @@ package net.myriantics.klaxon.mixin.minecraft.dual_wielding;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.myriantics.klaxon.util.DualWieldHelper;
+import net.myriantics.klaxon.mechanics.dual_wielding.DualWieldHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

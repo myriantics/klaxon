@@ -14,7 +14,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.ManualItemApplicationResult;
+import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

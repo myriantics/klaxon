@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Arm;
-import net.myriantics.klaxon.util.LivingEntityMixinAccess;
+import net.myriantics.klaxon.mechanics.dual_wielding.LivingEntityMixinAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

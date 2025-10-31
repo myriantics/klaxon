@@ -11,7 +11,8 @@ import net.myriantics.klaxon.block.decor.custom_hanging_sign.CustomHangingSignBl
 import net.myriantics.klaxon.block.decor.custom_hanging_sign.CustomWallHangingSignBlock;
 import net.myriantics.klaxon.block.decor.custom_sign.CustomSignBlock;
 import net.myriantics.klaxon.block.decor.custom_sign.CustomWallSignBlock;
-import net.myriantics.klaxon.block.functional.HallnoxPodBlock;
+import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
+import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
 import net.myriantics.klaxon.block.functional.MoltenRubberBlock;
 import net.myriantics.klaxon.block.machines.CasingBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;

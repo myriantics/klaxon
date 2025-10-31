@@ -5,6 +5,9 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.criterion.*;
+import net.myriantics.klaxon.advancement.criterion.grapple_winch.EntityGrappleCriterion;
+import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchCableDisconnectCriterion;
+import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchVeinMineCriterion;
 
 public abstract class KlaxonAdvancementCriteria {
 

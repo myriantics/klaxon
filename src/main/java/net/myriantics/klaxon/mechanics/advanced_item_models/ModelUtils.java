@@ -1,13 +1,10 @@
 package net.myriantics.klaxon.mechanics.advanced_item_models;
 
-import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.*;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.myriantics.klaxon.mixin.minecraft.advanced_item_models.JsonUnbakedModelAccessor;
 import net.myriantics.klaxon.mixin.minecraft.advanced_item_models.ModelOverrideAccessor;
-import net.myriantics.klaxon.util.advanced_item_models.AdvancedItemModelHelper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 

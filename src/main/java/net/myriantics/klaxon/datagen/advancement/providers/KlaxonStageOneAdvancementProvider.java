@@ -1,8 +1,6 @@
 package net.myriantics.klaxon.datagen.advancement.providers;
 
 import net.minecraft.advancement.*;
-import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
-import net.minecraft.advancement.criterion.Criterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.advancement.criterion.TickCriterion;
 import net.minecraft.block.Blocks;
@@ -15,6 +13,9 @@ import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.BlockTags;
 import net.myriantics.klaxon.advancement.criterion.*;
+import net.myriantics.klaxon.advancement.criterion.grapple_winch.EntityGrappleCriterion;
+import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchCableDisconnectCriterion;
+import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchVeinMineCriterion;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementSubProvider;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;

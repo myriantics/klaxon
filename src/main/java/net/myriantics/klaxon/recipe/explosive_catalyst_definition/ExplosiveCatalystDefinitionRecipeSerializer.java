@@ -8,8 +8,6 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
 
 public class ExplosiveCatalystDefinitionRecipeSerializer implements RecipeSerializer<ExplosiveCatalystDefinitionRecipe> {
 

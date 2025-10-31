@@ -2,7 +2,7 @@ package net.myriantics.klaxon.datagen.recipe.providers;
 
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Items;
-import net.myriantics.klaxon.api.NamedIngredient;
+import net.myriantics.klaxon.datagen.NamedIngredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;

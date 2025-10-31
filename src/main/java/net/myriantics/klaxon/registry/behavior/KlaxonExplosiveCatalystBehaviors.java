@@ -3,9 +3,9 @@ package net.myriantics.klaxon.registry.behavior;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.behavior.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.api.behavior.explosive_catalyst.ItemExplosiveCatalystBehavior;
-import net.myriantics.klaxon.api.behavior.explosive_catalyst.behaviors.*;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ItemExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors.*;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 
 public abstract class KlaxonExplosiveCatalystBehaviors {

@@ -1,18 +1,14 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
-import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.myriantics.klaxon.api.NamedIngredient;
-import net.myriantics.klaxon.api.RecipeOutputCompound;
-import net.myriantics.klaxon.datagen.KlaxonDatagenCompatIds;
+import net.myriantics.klaxon.datagen.NamedIngredient;
+import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
-
-import java.util.List;
 
 public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider {
 

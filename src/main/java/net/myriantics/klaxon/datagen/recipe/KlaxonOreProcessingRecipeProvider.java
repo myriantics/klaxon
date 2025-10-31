@@ -6,8 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.myriantics.klaxon.api.NamedIngredient;
-import net.myriantics.klaxon.api.RecipeOutputCompound;
+import net.myriantics.klaxon.datagen.NamedIngredient;
+import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{

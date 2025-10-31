@@ -6,7 +6,7 @@ import net.minecraft.loot.provider.number.LootNumberProviderType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.loot.LootDamageAmountProvider;
+import net.myriantics.klaxon.loot.LootDamageAmountProvider;
 
 public abstract class KlaxonLootNumberProviders {
     public static LootNumberProviderType DAMAGE_AMOUNT = register("damage_amount", LootDamageAmountProvider.CODEC);

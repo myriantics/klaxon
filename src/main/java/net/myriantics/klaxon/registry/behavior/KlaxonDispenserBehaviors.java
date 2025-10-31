@@ -6,8 +6,8 @@ import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.block.dispenser.ShearsDispenserBehavior;
 import net.minecraft.item.ItemConvertible;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.behavior.dispenser.ManualItemApplicationDispenserBehavior;
-import net.myriantics.klaxon.api.behavior.dispenser.WrenchDispenserBehavior;
+import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationDispenserBehavior;
+import net.myriantics.klaxon.mechanics.wrench.WrenchDispenserBehavior;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public abstract class KlaxonDispenserBehaviors {

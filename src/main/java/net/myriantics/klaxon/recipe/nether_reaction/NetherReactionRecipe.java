@@ -6,9 +6,8 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.BlockIngredient;
+import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class NetherReactionRecipe implements Recipe<NetherReactionRecipeInput> {

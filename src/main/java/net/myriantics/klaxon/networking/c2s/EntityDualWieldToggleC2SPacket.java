@@ -7,7 +7,7 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
-import net.myriantics.klaxon.util.LivingEntityMixinAccess;
+import net.myriantics.klaxon.mechanics.dual_wielding.LivingEntityMixinAccess;
 
 public record EntityDualWieldToggleC2SPacket(boolean isDualWielding) implements CustomPayload {
 

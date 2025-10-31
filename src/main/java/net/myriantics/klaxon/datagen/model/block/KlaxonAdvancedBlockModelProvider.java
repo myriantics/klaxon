@@ -2,9 +2,7 @@ package net.myriantics.klaxon.datagen.model.block;
 
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ModelIds;
-import net.minecraft.registry.Registries;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.decor.HallnoxBulbBlock;
+import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.datagen.model.KlaxonBlockModelSubProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
 import net.myriantics.klaxon.registry.block.KlaxonBlockFamilies;

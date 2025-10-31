@@ -16,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.api.ManualItemApplicationResult;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;

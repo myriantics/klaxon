@@ -1,0 +1,58 @@
+package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
+
+import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Position;
+import net.minecraft.world.World;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ItemExplosiveCatalystBehavior;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
+
+public class DragonsBreathExplosiveCatalystBehavior extends ItemExplosiveCatalystBehavior {
+    public DragonsBreathExplosiveCatalystBehavior(Identifier id) {
+        super(id);
+    }
+
+    @Override
+    public void onExplosion(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData powerData, boolean shouldModifyWorld) {
+        Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).get(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
+
+        if (world instanceof ServerWorld serverWorld) {
+
+            AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(world, outputPos.getX(), outputPos.getY() - 0.25, outputPos.getZ());
+
+            float radius = (float) powerData.explosionPower() / 3;
+            float finalRadius = (float) powerData.explosionPower() / 2;
+
+            areaEffectCloudEntity.setParticleType(ParticleTypes.DRAGON_BREATH);
+            areaEffectCloudEntity.setRadius(radius);
+            areaEffectCloudEntity.setDuration(80);
+            areaEffectCloudEntity.setRadiusGrowth((finalRadius - radius) / areaEffectCloudEntity.getDuration());
+            areaEffectCloudEntity.addEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 1, 1));
+
+            KlaxonServerPlayNetworkHandler.syncWorldEvent(serverWorld, pos, KlaxonWorldEvents.DRAGONS_BREATH_EXPLOSIVE_CATALYST_CLOUD_SPAWNS, 1);
+            world.spawnEntity(areaEffectCloudEntity);
+
+            blastProcessor.removeStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+        }
+    }
+
+    @Override
+    public boolean shouldRunDispenserEffects(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
+        return false;
+    }
+
+    @Override
+    public boolean isVariable() {
+        return false;
+    }
+}

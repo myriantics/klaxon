@@ -6,8 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.tag.TagKey;
-import net.myriantics.klaxon.api.BlockIngredient;
+import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 
 public class NetherReactionRecipeSerializer implements RecipeSerializer<NetherReactionRecipe> {

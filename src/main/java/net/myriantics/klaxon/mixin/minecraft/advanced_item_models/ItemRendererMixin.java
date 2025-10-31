@@ -17,7 +17,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
-import net.myriantics.klaxon.util.advanced_item_models.AdvancedItemModelHelper;
+import net.myriantics.klaxon.mechanics.advanced_item_models.AdvancedItemModelHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
