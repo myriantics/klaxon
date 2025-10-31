@@ -17,6 +17,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
+import net.myriantics.klaxon.recipe.BlockIngredient;
+import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -25,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class GrappleClawBlockDestructionHelper {
 
@@ -72,10 +76,18 @@ public abstract class GrappleClawBlockDestructionHelper {
             return false;
         }
 
-        Block veinminedBlock = originState.getBlock();
-
         if (world.isClient) {
             return true;
+        }
+
+        Predicate<BlockState> veinminePredicate = (state) -> state.isOf(originState.getBlock());
+
+        // check for any matching veinmine groups
+        for (VeinmineGroup group : ((ServerWorld) world).getServer().getReloadableRegistries().getRegistryManager().get(KlaxonRegistryKeys.VEINMINE_GROUP)) {
+            if (group.ingredient().test(originState)) {
+                veinminePredicate = group.ingredient();
+                break;
+            }
         }
 
         // init loot context
@@ -106,7 +118,7 @@ public abstract class GrappleClawBlockDestructionHelper {
                     BlockState targetState = world.getBlockState(targetPos);
 
                     // make sure we haven't processed position before
-                    if (!processedPositions.contains(targetPos) && targetState.isOf(veinminedBlock)) {
+                    if (!processedPositions.contains(targetPos) && veinminePredicate.test(targetState)) {
                         // condense dropped stacks so we don't get 5 billion item entities
                         for (ItemStack droppedStack : world.getBlockState(targetPos).getDroppedStacks(lootContextBuilder)) {
                             KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);

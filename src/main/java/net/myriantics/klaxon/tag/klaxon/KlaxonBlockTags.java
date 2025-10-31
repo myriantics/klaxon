@@ -31,11 +31,24 @@ public abstract class KlaxonBlockTags {
     public static final TagKey<Block> INCORRECT_FOR_STEEL_TOOL =
             createTag("incorrect_for_steel_tool");
 
-    // behavior tags
+    // grapple claw tags
     public static final TagKey<Block> GRAPPLE_CLAW_BREAKABLE =
             createTag("grapple_claw_breakable");
     public static final TagKey<Block> GRAPPLE_CLAW_VEINMINEABLE =
             createTag("grapple_claw_veinmineable");
+
+    // veinmine group tags
+    public static final TagKey<Block> GLASS_VEINMINE_GROUP =
+            createVeinmineGroupTag("glass");
+    public static final TagKey<Block> CHORUS_VEINMINE_GROUP =
+            createVeinmineGroupTag("chorus");
+    public static final TagKey<Block> ICE_VEINMINE_GROUP =
+            createVeinmineGroupTag("ice");
+    public static final TagKey<Block> GLOWSTONE_VEINMINE_GROUP =
+            createVeinmineGroupTag("glowstone");
+
+
+    // behavior tags
     public static final TagKey<Block> WRENCH_PICKUP_ALLOWLIST =
             createTag("wrench_pickup_allowlist");
     public static final TagKey<Block> WRENCH_PICKUP_DENYLIST =
@@ -251,6 +264,10 @@ public abstract class KlaxonBlockTags {
 
     private static TagKey<Block> createWireSpoolsTag(String name) {
         return createTag("wire_spools/" + name);
+    }
+
+    private static TagKey<Block> createVeinmineGroupTag(String name) {
+        return createTag("veinmine_group/" + name);
     }
 
     private static TagKey<Block> createTag(String name) {

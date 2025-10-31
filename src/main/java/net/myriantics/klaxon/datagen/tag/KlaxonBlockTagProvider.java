@@ -22,6 +22,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         buildMiningTags();
+        buildVeinmineGroupTags();
         buildBehaviorTags();
         buildWrenchTags();
         buildCategoricalTags();
@@ -314,6 +315,10 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonBlockTags.CLEAVER_INSTABREAKABLE);
         getOrCreateTagBuilder(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE)
                 .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
+                .forceAddTag(KlaxonBlockTags.GLASS_VEINMINE_GROUP)
+                .forceAddTag(KlaxonBlockTags.GLOWSTONE_VEINMINE_GROUP)
+                .forceAddTag(KlaxonBlockTags.ICE_VEINMINE_GROUP)
+                .forceAddTag(KlaxonBlockTags.CHORUS_VEINMINE_GROUP)
                 .add(
                         Blocks.CHORUS_PLANT,
                         Blocks.CHORUS_FLOWER
@@ -322,6 +327,20 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
                 .add(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK)
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK);
+    }
+
+    private void buildVeinmineGroupTags() {
+        getOrCreateTagBuilder(KlaxonBlockTags.GLASS_VEINMINE_GROUP)
+                .forceAddTag(ConventionalBlockTags.GLASS_BLOCKS)
+                .forceAddTag(ConventionalBlockTags.GLASS_PANES);
+        getOrCreateTagBuilder(KlaxonBlockTags.CHORUS_VEINMINE_GROUP)
+                .add(Blocks.CHORUS_FLOWER)
+                .add(Blocks.CHORUS_PLANT);
+        getOrCreateTagBuilder(KlaxonBlockTags.ICE_VEINMINE_GROUP)
+                .add(Blocks.ICE)
+                .add(Blocks.FROSTED_ICE);
+        getOrCreateTagBuilder(KlaxonBlockTags.GLOWSTONE_VEINMINE_GROUP)
+                .add(Blocks.GLOWSTONE);
     }
 
     private void buildNetherReactionTags() {

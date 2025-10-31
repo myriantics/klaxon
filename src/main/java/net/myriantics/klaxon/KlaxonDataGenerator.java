@@ -8,6 +8,7 @@ import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonDamageTypeProvider;
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
+import net.myriantics.klaxon.datagen.custom_providers.KlaxonVeinmineGroupProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonGameplayLootTableProvider;
@@ -36,6 +37,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(KlaxonArmorTrimMaterialProvider::new);
 		pack.addProvider(KlaxonEnUsLanguageProvider::new);
         pack.addProvider(KlaxonToolUsageRecipeTypeProvider::new);
+        pack.addProvider(KlaxonVeinmineGroupProvider::new);
 
         // tags
         pack.addProvider(KlaxonItemTagProvider::new);
