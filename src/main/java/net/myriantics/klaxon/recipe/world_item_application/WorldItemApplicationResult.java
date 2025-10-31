@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.manual_item_application;
+package net.myriantics.klaxon.recipe.world_item_application;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,6 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public interface ManualItemApplicationResult {
+public interface WorldItemApplicationResult {
     Optional<BlockState> getResultState(World world, BlockState state, BlockPos pos, Direction clickDirection, @Nullable PlayerEntity lookDirection);
 }

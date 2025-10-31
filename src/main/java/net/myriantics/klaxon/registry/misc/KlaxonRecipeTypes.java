@@ -20,8 +20,8 @@ import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCra
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipeSerializer;
-import net.myriantics.klaxon.recipe.manual_item_application.WorldItemApplicationRecipe;
-import net.myriantics.klaxon.recipe.manual_item_application.WorldItemApplicationRecipeSerializer;
+import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
+import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeSerializer;
 
 // recipe code structure yoinked from spectrums github
 public abstract class KlaxonRecipeTypes {

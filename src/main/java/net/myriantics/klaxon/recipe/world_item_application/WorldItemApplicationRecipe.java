@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.manual_item_application;
+package net.myriantics.klaxon.recipe.world_item_application;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -11,7 +11,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
-public class WorldItemApplicationRecipe implements Recipe<ManualItemApplicationRecipeInput> {
+public class WorldItemApplicationRecipe implements Recipe<WorldItemApplicationRecipeInput> {
     private final Ingredient inputIngredient;
     private final TagKey<Block> validBlocks;
     private final Block outputBlock;
@@ -23,12 +23,12 @@ public class WorldItemApplicationRecipe implements Recipe<ManualItemApplicationR
     }
 
     @Override
-    public boolean matches(ManualItemApplicationRecipeInput input, World world) {
+    public boolean matches(WorldItemApplicationRecipeInput input, World world) {
         return inputIngredient.test(input.usedStack()) && input.inputState().isIn(validBlocks);
     }
 
     @Override
-    public ItemStack craft(ManualItemApplicationRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack craft(WorldItemApplicationRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
         return getResult(lookup);
     }
 

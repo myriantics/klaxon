@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.manual_item_application;
+package net.myriantics.klaxon.recipe.world_item_application;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class ManualItemApplicationRecipeLogic {
+public abstract class WorldItemApplicationRecipeLogic {
     private static Set<Item> APPLICABLE_ITEMS_CACHE = new HashSet<>();
 
     public static boolean test(World world, ItemStack stack) {
@@ -51,7 +51,7 @@ public abstract class ManualItemApplicationRecipeLogic {
         }
     }
 
-    public static Optional<BlockState> getResultState(World world, ManualItemApplicationRecipeInput recipeInput) {
+    public static Optional<BlockState> getResultState(World world, WorldItemApplicationRecipeInput recipeInput) {
         Optional<BlockState> output = Optional.empty();
 
         Optional<RecipeEntry<WorldItemApplicationRecipe>> match =
@@ -65,7 +65,7 @@ public abstract class ManualItemApplicationRecipeLogic {
         return output;
     }
 
-    public static void affectWorld(ServerWorld serverWorld, BlockPos targetPos, BlockState newState, Direction clickDirection, @Nullable PlayerEntity player, ManualItemApplicationRecipeInput recipeInput) {
+    public static void affectWorld(ServerWorld serverWorld, BlockPos targetPos, BlockState newState, Direction clickDirection, @Nullable PlayerEntity player, WorldItemApplicationRecipeInput recipeInput) {
         Random random = serverWorld.getRandom();
         ItemStack usedStack = recipeInput.usedStack();
         BlockState targetState = recipeInput.inputState();
@@ -84,7 +84,7 @@ public abstract class ManualItemApplicationRecipeLogic {
         );
 
         // apply modifications if possible
-        if (newState.getBlock() instanceof ManualItemApplicationResult result) {
+        if (newState.getBlock() instanceof WorldItemApplicationResult result) {
             newState = result.getResultState(serverWorld, newState, targetPos, clickDirection, player).orElse(newState);
         }
 

@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin.minecraft.manual_item_application;
+package net.myriantics.klaxon.mixin.minecraft.world_item_application;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -14,8 +14,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeInput;
-import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipeLogic;
+import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeInput;
+import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,13 +34,13 @@ public abstract class ServerPlayerInteractionManagerMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;onUseWithItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ItemActionResult;")
     )
     private ItemActionResult klaxon$attemptManualItemApplication(BlockState instance, ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hitResult, Operation<ItemActionResult> original) {
-        if (ManualItemApplicationRecipeLogic.test(world, stack)) {
-            ManualItemApplicationRecipeInput recipeInput = new ManualItemApplicationRecipeInput(stack, instance);
-            Optional<BlockState> newState = ManualItemApplicationRecipeLogic.getResultState(world, recipeInput);
+        if (WorldItemApplicationRecipeLogic.test(world, stack)) {
+            WorldItemApplicationRecipeInput recipeInput = new WorldItemApplicationRecipeInput(stack, instance);
+            Optional<BlockState> newState = WorldItemApplicationRecipeLogic.getResultState(world, recipeInput);
 
             if (newState.isPresent()) {
                 BlockPos targetPos = hitResult.getBlockPos();
-                ManualItemApplicationRecipeLogic.affectWorld(this.world, targetPos, newState.get(), hitResult.getSide(), player, recipeInput);
+                WorldItemApplicationRecipeLogic.affectWorld(this.world, targetPos, newState.get(), hitResult.getSide(), player, recipeInput);
 
                 // remainder fuckery
                 if (!player.isCreative()) {

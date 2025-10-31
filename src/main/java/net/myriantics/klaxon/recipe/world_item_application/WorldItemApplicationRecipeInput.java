@@ -1,10 +1,10 @@
-package net.myriantics.klaxon.recipe.manual_item_application;
+package net.myriantics.klaxon.recipe.world_item_application;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.input.RecipeInput;
 
-public record ManualItemApplicationRecipeInput(ItemStack usedStack, BlockState inputState) implements RecipeInput {
+public record WorldItemApplicationRecipeInput(ItemStack usedStack, BlockState inputState) implements RecipeInput {
 
     @Override
     public ItemStack getStackInSlot(int slot) {

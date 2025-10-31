@@ -14,12 +14,12 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationResult;
+import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class NetherReactorCoreBlock extends Block implements Waterloggable, ManualItemApplicationResult {
+public class NetherReactorCoreBlock extends Block implements Waterloggable, WorldItemApplicationResult {
     public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = Properties.HORIZONTAL_AXIS;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 

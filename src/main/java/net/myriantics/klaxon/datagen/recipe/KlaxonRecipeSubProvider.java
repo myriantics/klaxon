@@ -19,7 +19,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehav
 import net.myriantics.klaxon.datagen.custom_providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.manual_item_application.WorldItemApplicationRecipe;
+import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;

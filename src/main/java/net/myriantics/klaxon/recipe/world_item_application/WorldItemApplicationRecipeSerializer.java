@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.manual_item_application;
+package net.myriantics.klaxon.recipe.world_item_application;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
