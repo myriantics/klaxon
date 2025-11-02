@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "klaxon_gametest",
+	"version": "${version}",
+	"name": "KLAXON Tester",
+	"description": "For science ... you monster.",
+	"authors": [
+		"Myriantics"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/klaxon/",
+		"sources": "https://github.com/myriantics/klaxon/"
+	},
+	"license": "MIT",
+	"icon": "assets/klaxon/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+          "net.myriantics.klaxon_gametest.KlaxonGameTester"
+		]
+	},
+	"mixins": [
+		"klaxon_gametest.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "1.21.1",
+		"java": ">=21",
+		"fabric-api": ">=0.109.0"
+	}
+}

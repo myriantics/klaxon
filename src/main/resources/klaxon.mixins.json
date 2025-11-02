@@ -69,13 +69,13 @@
     "minecraft.loot.BoundedIntUnaryOperatorInvoker",
     "minecraft.loot.LootContextTypesAccessor",
     "minecraft.loot.LootContextTypesMixin",
-    "minecraft.world_item_application.DispenserBlockMixin",
-    "minecraft.world_item_application.ServerPlayerInteractionManagerMixin",
     "minecraft.neighbor_placement_listener.BlockItemMixin",
     "minecraft.nether_reaction.ExplosionMixin",
     "minecraft.tool_usage.ItemStackMixin",
     "minecraft.unenchantability.AnvilScreenHandlerMixin",
     "minecraft.unenchantability.EnchantmentMixin",
+    "minecraft.world_item_application.DispenserBlockMixin",
+    "minecraft.world_item_application.ServerPlayerInteractionManagerMixin",
     "minecraft.wrench.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
@@ -93,10 +93,10 @@
     "minecraft.item_components.walljump_ability.MinecraftClientMixin",
     "minecraft.item_usage_lockout.ClientPlayerEntityMixin",
     "minecraft.item_usage_lockout.MinecraftClientMixin",
-    "minecraft.world_item_application.ClientPlayerInteractionManagerMixin",
     "minecraft.nether_reaction.ExplosionEmitterParticleMixin",
     "minecraft.rendering.RenderLayerInvoker",
     "minecraft.splashes.SplashTextResourceSupplierMixin",
+    "minecraft.world_item_application.ClientPlayerInteractionManagerMixin",
     "minecraft.wrench.ClientPlayerInteractionManagerMixin"
   ],
   "server": [

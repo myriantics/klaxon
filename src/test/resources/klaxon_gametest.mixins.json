@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "net.myriantics.klaxon_gametest.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "minecraft.GameTestStateMixin",
+    "fabric.FabricGameTestModInitializerMixin"
+  ],
+  "client": [
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

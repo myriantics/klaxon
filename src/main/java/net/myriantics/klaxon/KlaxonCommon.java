@@ -3,6 +3,7 @@ package net.myriantics.klaxon;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
+import net.fabricmc.fabric.impl.gametest.FabricGameTestHelper;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
