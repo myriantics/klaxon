@@ -23,6 +23,7 @@ public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<D
     protected void build() {
         buildMeleeDamageTypes();
         buildRangedDamageTypes();
+        buildElectricalDamageTypes();
         buildEnvironmentalDamageTypes();
     }
 
@@ -50,6 +51,13 @@ public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<D
         addDamageType(
                 KlaxonDamageTypes.BLUDGEONING,
                 0.5f
+        );
+    }
+
+    private void buildElectricalDamageTypes() {
+        addDamageType(
+                KlaxonDamageTypes.GRAPPLE_CABLE_CONDUCTION,
+                0.2f
         );
     }
 

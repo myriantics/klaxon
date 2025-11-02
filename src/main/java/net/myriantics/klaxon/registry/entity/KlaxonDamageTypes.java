@@ -28,6 +28,10 @@ public abstract class KlaxonDamageTypes {
     public static final RegistryKey<DamageType> BLUDGEONING =
             createDamageType("bludgeoning");
 
+    // electrical
+    public static final RegistryKey<DamageType> GRAPPLE_CABLE_CONDUCTION =
+            createDamageType("grapple_cable_conduction");
+
     // projectile
     public static final RegistryKey<DamageType> GRAPPLING =
             createDamageType("grappling");

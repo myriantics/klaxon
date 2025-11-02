@@ -14,8 +14,10 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
     public void generate() {
         generateMeleeDeathMessageTranslations();
         generateRangedDeathMessageTranslations();
+        generateElectricalDeathMessageTranslations();
         generateMachineDeathMessageTranslations();
     }
+
 
     private void generateMeleeDeathMessageTranslations() {
         addDeathMessage(
@@ -47,6 +49,14 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
                 KlaxonDamageTypes.BLUDGEONING,
                 "%1$s was bludgeoned by %2$s",
                 "%1$s was bludgeoned by %2$s using %3$s"
+        );
+    }
+
+    private void generateElectricalDeathMessageTranslations() {
+        addDeathMessage(
+                KlaxonDamageTypes.GRAPPLE_CABLE_CONDUCTION,
+                "%1$s was zapped by %2$s",
+                "%1$s was zapped by %2$s using %3$s"
         );
     }
 

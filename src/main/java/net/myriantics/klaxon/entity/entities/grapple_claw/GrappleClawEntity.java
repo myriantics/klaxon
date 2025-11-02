@@ -6,12 +6,10 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -42,6 +40,8 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
+import net.myriantics.klaxon.mechanics.grapple_winch.AttachedGrappleClawContainer;
+import net.myriantics.klaxon.mechanics.grapple_winch.EntityGrappleClawContainerAccess;
 import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
@@ -63,6 +63,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
@@ -141,10 +142,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         World world = this.getWorld();
         @Nullable PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
 
-        // conduct electrical damage to the attached player if present because get trolled haha
-        if (source.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE) && attachedPlayer != null) {
-            attachedPlayer.damage(source, amount);
-        }
+        // try to conduct electrical damage if possible
+        this.conductElectricalDamage(this, source, amount);
 
         if (world.isClient() || this.isRemoved()) {
             return true;
@@ -409,6 +408,40 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
+    public void conductElectricalDamage(Entity originEntity, DamageSource damageSource, float amount) {
+        if (this.getWorld().isClient() || !this.isCableAttached() || damageSource.isOf(KlaxonDamageTypes.GRAPPLE_CABLE_CONDUCTION) || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
+            return;
+        }
+
+        PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
+        Entity hookedEntity = this.hookedEntityContainer.get();
+
+        DamageSource conductedDamageSource = new DamageSource(
+                this.getDamageSources().registry.getEntry(KlaxonDamageTypes.GRAPPLE_CABLE_CONDUCTION).get(),
+                damageSource.getSource(),
+                originEntity
+        );
+
+        for (Entity entity : new Entity[]{this, attachedPlayer, hookedEntity}) {
+            if (entity == null || entity.equals(originEntity)) {
+                continue;
+            }
+
+            entity.damage(conductedDamageSource, amount);
+
+            // mojang doesn't pass in the lightning entity as an argument when creating the damage source
+            // so it was a choice between overwriting the damage source to include the lightning entity
+            // or this
+            // i chose this because i didn't want to fuck with vanilla behavior much lol
+            try {
+                if (damageSource.isOf(DamageTypes.LIGHTNING_BOLT)) {
+                    entity.onStruckByLightning((ServerWorld) this.getWorld(), null);
+                }
+            } catch (NullPointerException ignored) {
+            }
+        }
+    }
+
     /**
      * Attempt to perform a fast-reloading operation. Plays a sound, emits game event, discards self, and detaches grapple cable if successful.
      * @param pickupPlayer - Player that is attempting to fast-reload this Grapple Claw into their Grapple Winch
@@ -639,6 +672,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
 
         private void setHookedEntity(Entity entity) {
+            if (entity == null) {
+                Optional.ofNullable(((EntityGrappleClawContainerAccess) this.hookedEntity).klaxon$get()).ifPresent(AttachedGrappleClawContainer::clear);
+            } else {
+                ((EntityGrappleClawContainerAccess) entity).klaxon$get().setGrappleClaw(GrappleClawEntity.this);
+            }
+
             this.hookedEntity = entity;
         }
 
