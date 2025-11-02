@@ -72,8 +72,6 @@
     "minecraft.neighbor_placement_listener.BlockItemMixin",
     "minecraft.nether_reaction.ExplosionMixin",
     "minecraft.tool_usage.ItemStackMixin",
-    "minecraft.unenchantability.AnvilScreenHandlerMixin",
-    "minecraft.unenchantability.EnchantmentMixin",
     "minecraft.world_item_application.DispenserBlockMixin",
     "minecraft.world_item_application.ServerPlayerInteractionManagerMixin",
     "minecraft.wrench.ServerPlayerInteractionManagerMixin"
