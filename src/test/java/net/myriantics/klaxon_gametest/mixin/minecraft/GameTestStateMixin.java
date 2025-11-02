@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.test.GameTestState;
 import net.minecraft.test.TestContext;
 import net.minecraft.test.TestFunction;
-import net.myriantics.klaxon_gametest.KlaxonTestContext;
+import net.myriantics.klaxon_gametest.util.KlaxonTestContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
