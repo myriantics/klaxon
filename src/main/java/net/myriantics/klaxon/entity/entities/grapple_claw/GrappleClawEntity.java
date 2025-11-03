@@ -61,10 +61,7 @@ import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrap
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class GrappleClawEntity extends PersistentProjectileEntity {
@@ -409,17 +406,23 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
-    public void conductLightningEffects(ServerWorld serverWorld, List<Entity> struckEntities, LightningEntity lightningEntity) {
+    public Entity[] conductLightningEffects(ServerWorld serverWorld, List<Entity> struckEntities, LightningEntity lightningEntity) {
         @Nullable PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
         @Nullable Entity hookedEntity = this.hookedEntityContainer.get();
 
-        for (Entity entity : new Entity[] {this, attachedPlayer, hookedEntity}) {
-            if (entity == null || struckEntities.contains(entity)) {
-                continue;
-            }
+        Entity[] conductionTargets = new Entity[] {this, attachedPlayer, hookedEntity};
 
-            entity.onStruckByLightning(serverWorld, lightningEntity);
+        for (int i = 0; i < conductionTargets.length; i++) {
+            Entity target = conductionTargets[i];
+
+            if (target == null || struckEntities.contains(target)) {
+                conductionTargets[i] = null;
+            } else {
+                target.onStruckByLightning(serverWorld, lightningEntity);
+            }
         }
+
+        return conductionTargets;
     }
 
     public void conductElectricalDamage(Entity originEntity, DamageSource damageSource, float amount) {
