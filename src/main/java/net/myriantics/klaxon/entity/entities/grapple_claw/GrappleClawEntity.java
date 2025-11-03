@@ -676,9 +676,20 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
         private void setHookedEntity(Entity entity) {
             if (entity == null) {
-                Optional.ofNullable(((EntityGrappleClawContainerAccess) this.hookedEntity).klaxon$get()).ifPresent(AttachedGrappleClawContainer::clear);
+                if (this.hookedEntity != null) {
+                    Optional.ofNullable(((EntityGrappleClawContainerAccess) this.hookedEntity).klaxon$get()).ifPresent(AttachedGrappleClawContainer::clear);
+                }
             } else {
                 ((EntityGrappleClawContainerAccess) entity).klaxon$get().setGrappleClaw(GrappleClawEntity.this);
+            }
+
+            switch (entity) {
+                case EnderDragonPart part -> {
+                    GrappleClawEntity.this.getDataTracker().set(GrappleClawEntity.HOOKED_ENTITY_ID, part.owner.getId() + 1);
+                }
+                case null, default -> {
+                    GrappleClawEntity.this.getDataTracker().set(GrappleClawEntity.HOOKED_ENTITY_ID, entity == null ? 0 : entity.getId() + 1);
+                }
             }
 
             this.hookedEntity = entity;

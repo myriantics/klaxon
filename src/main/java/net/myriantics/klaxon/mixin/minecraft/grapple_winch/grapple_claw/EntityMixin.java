@@ -4,6 +4,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.util.math.BlockPos;
@@ -16,6 +18,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -50,5 +53,17 @@ public abstract class EntityMixin implements EntityGrappleClawContainerAccess {
     )
     private void klaxon$transmitElectricalDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         klaxon$get().getOptionalGrappleClaw().ifPresent((grappleClaw -> grappleClaw.conductElectricalDamage((Entity) (Object) this, source, amount)));
+    }
+
+    @Mixin(EnderDragonPart.class)
+    private static class EnderDragonPartMixin extends EntityMixin {
+        @Shadow
+        @Final
+        public EnderDragonEntity owner;
+
+        @Override
+        public AttachedGrappleClawContainer klaxon$get() {
+            return ((EntityGrappleClawContainerAccess) owner).klaxon$get();
+        }
     }
 }
