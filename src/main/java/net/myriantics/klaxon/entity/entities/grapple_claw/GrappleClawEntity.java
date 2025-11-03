@@ -62,6 +62,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -408,18 +409,31 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
+    public void conductLightningEffects(ServerWorld serverWorld, List<Entity> struckEntities, LightningEntity lightningEntity) {
+        @Nullable PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
+        @Nullable Entity hookedEntity = this.hookedEntityContainer.get();
+
+        for (Entity entity : new Entity[] {this, attachedPlayer, hookedEntity}) {
+            if (entity == null || struckEntities.contains(entity)) {
+                continue;
+            }
+
+            entity.onStruckByLightning(serverWorld, lightningEntity);
+        }
+    }
+
     public void conductElectricalDamage(Entity originEntity, DamageSource damageSource, float amount) {
-        if (this.getWorld().isClient() || !this.isCableAttached() || damageSource.isOf(KlaxonDamageTypes.GRAPPLE_CABLE_CONDUCTION) || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
+        if (this.getWorld().isClient() || !this.isCableAttached() || originEntity.equals(this) || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
             return;
         }
 
-        PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
-        Entity hookedEntity = this.hookedEntityContainer.get();
+        @Nullable PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
+        @Nullable Entity hookedEntity = this.hookedEntityContainer.get();
 
         DamageSource conductedDamageSource = new DamageSource(
                 this.getDamageSources().registry.getEntry(KlaxonDamageTypes.GRAPPLE_CABLE_CONDUCTION).get(),
                 damageSource.getSource(),
-                originEntity
+                this
         );
 
         for (Entity entity : new Entity[]{this, attachedPlayer, hookedEntity}) {
@@ -428,17 +442,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
 
             entity.damage(conductedDamageSource, amount);
-
-            // mojang doesn't pass in the lightning entity as an argument when creating the damage source
-            // so it was a choice between overwriting the damage source to include the lightning entity
-            // or this
-            // i chose this because i didn't want to fuck with vanilla behavior much lol
-            try {
-                if (damageSource.isOf(DamageTypes.LIGHTNING_BOLT)) {
-                    entity.onStruckByLightning((ServerWorld) this.getWorld(), null);
-                }
-            } catch (NullPointerException ignored) {
-            }
         }
     }
 
