@@ -7,15 +7,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawBlockDestructionHelper;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.mechanics.grapple_winch.AttachedGrappleClawContainer;
 import net.myriantics.klaxon.mechanics.grapple_winch.EntityGrappleClawContainerAccess;
-import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,7 +49,7 @@ public abstract class EntityMixin implements EntityGrappleClawContainerAccess {
             at = @At(value = "HEAD")
     )
     private void klaxon$transmitElectricalDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        klaxon$get().getOptionalGrappleClaw().ifPresent((grappleClaw -> grappleClaw.conductElectricalDamage((Entity) (Object) this, source, amount)));
+        klaxon$get().getOptionalGrappleClaw().ifPresent((grappleClaw -> grappleClaw.tryConductElectricalDamage((Entity) (Object) this, source, amount)));
     }
 
     @Mixin(EnderDragonPart.class)

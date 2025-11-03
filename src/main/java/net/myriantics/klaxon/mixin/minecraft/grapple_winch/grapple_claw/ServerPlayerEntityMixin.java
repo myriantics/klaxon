@@ -36,7 +36,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         Optional.ofNullable(
                 ((PlayerEntityGrappleAccess) this).klaxon$getGrappleClaw()
         ).ifPresent(
-                (grappleClaw -> grappleClaw.conductElectricalDamage(this, source, amount))
+                (grappleClaw -> grappleClaw.tryConductElectricalDamage(this, source, amount))
         );
     }
 

@@ -9,7 +9,6 @@ import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -106,7 +105,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        return super.isInvulnerableTo(damageSource) || damageSource.isIn(DamageTypeTags.BYPASSES_ARMOR);
+        return super.isInvulnerableTo(damageSource) || damageSource.isIn(DamageTypeTags.BYPASSES_ARMOR) || damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE);
     }
 
     @Override
@@ -141,7 +140,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         @Nullable PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
 
         // try to conduct electrical damage if possible
-        this.conductElectricalDamage(this, source, amount);
+        this.tryConductElectricalDamage(this, source, amount);
 
         if (world.isClient() || this.isRemoved()) {
             return true;
@@ -287,6 +286,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     @Override
+    public void onStruckByLightning(ServerWorld world, LightningEntity lightning) {
+    }
+
+    @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         Entity hitEntity = entityHitResult.getEntity();
         @Nullable PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
@@ -425,7 +428,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         return conductionTargets;
     }
 
-    public void conductElectricalDamage(Entity originEntity, DamageSource damageSource, float amount) {
+    public void tryConductElectricalDamage(Entity originEntity, DamageSource damageSource, float amount) {
         if (this.getWorld().isClient() || !this.isCableAttached() || originEntity.equals(this) || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
             return;
         }
