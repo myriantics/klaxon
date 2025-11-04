@@ -1,4 +1,4 @@
-package net.myriantics.klaxon_gametest.test.block;
+package net.myriantics.klaxon_gametest.test;
 
 import net.myriantics.klaxon_gametest.KlaxonGameTester;
 import net.myriantics.klaxon_gametest.test.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockTester;

@@ -1,4 +1,4 @@
-package net.myriantics.klaxon_gametest.test.item;
+package net.myriantics.klaxon_gametest.test;
 
 import net.myriantics.klaxon_gametest.KlaxonGameTester;
 import net.myriantics.klaxon_gametest.test.item.equipment.tools.WrenchItemTester;

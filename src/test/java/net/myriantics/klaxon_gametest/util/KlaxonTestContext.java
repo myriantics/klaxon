@@ -2,6 +2,7 @@ package net.myriantics.klaxon_gametest.util;
 
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.test.GameTestException;
 import net.minecraft.test.GameTestState;
@@ -9,6 +10,7 @@ import net.minecraft.test.TestContext;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 
 import java.util.UUID;
@@ -29,6 +31,7 @@ public class KlaxonTestContext extends TestContext {
     public KlaxonTestPlayer createFakePlayer(GameMode gameMode) {
         KlaxonTestPlayer testPlayer = new KlaxonTestPlayer(test.getWorld(), this);
         testPlayer.changeGameMode(gameMode);
+        testPlayer.setPosition(this.getAbsolute(BlockPos.ORIGIN.toCenterPos()));
         return testPlayer;
     }
 
