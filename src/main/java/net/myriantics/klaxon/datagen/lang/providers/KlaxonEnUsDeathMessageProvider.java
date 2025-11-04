@@ -3,7 +3,7 @@ package net.myriantics.klaxon.datagen.lang.providers;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageSubProvider;
-import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
+import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 
 public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubProvider {
     public KlaxonEnUsDeathMessageProvider(KlaxonEnUsLanguageProvider provider, FabricLanguageProvider.TranslationBuilder builder) {

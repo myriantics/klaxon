@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry.entity;
+package net.myriantics.klaxon.registry.dynamic;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -6,7 +6,6 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 

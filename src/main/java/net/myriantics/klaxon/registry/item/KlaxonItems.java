@@ -17,7 +17,7 @@ import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.registry.dynamic.KlaxonEnchantments;
-import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
+import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 
 import java.util.ArrayList;
 import java.util.Map;

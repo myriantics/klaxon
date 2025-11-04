@@ -45,7 +45,7 @@ import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDra
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
-import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
+import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
@@ -428,6 +428,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
 
         // Returned array is used to count these entities towards channeling advancement
+        // Top 10 things people will notice ... unless this caused a crash or weird issue ... then my bad haha i thought channeling lightning onto yourself while attached to a villager should proc the advancement
         return conductionTargets;
     }
 
@@ -783,7 +784,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 return false;
             }
 
-            return !entity.getType().isIn(KlaxonEntityTypeTags.GRAPPLE_CLAW_HOOKING_DENYLIST);
+            if (((EntityGrappleClawContainerAccess) entity).klaxon$get().isPresent()) {
+                return false;
+            }
+
+            return entity.canBeHitByProjectile() && !entity.getType().isIn(KlaxonEntityTypeTags.GRAPPLE_CLAW_HOOKING_DENYLIST);
         }
 
         public void snapClawToHookPos() {
