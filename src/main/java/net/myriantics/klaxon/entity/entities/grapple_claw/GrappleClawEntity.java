@@ -301,8 +301,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             return;
         }
 
-        // check that we're attached to a cable
-        if (this.isCableAttached()) {
+        // check that we're attached to a cable and that the target entity can be hooked
+        if (this.isCableAttached() && this.hookedEntityContainer.canHookEntity(hitEntity)) {
             // if we hit the attached player, attempt to fast reload
             if (hitEntity.equals(attachedPlayer)) {
                 // attempt to pickup items into attached player when hitting
@@ -322,6 +322,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
         } else {
             this.hookedEntityContainer.snapClawToHookPos(hitEntity);
+            //TODO: Replace the super call here with logic like TridentEntity - so it rebounds off of entities instead of attaching an arrow
             super.onEntityHit(entityHitResult);
         }
     }
@@ -713,11 +714,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             entity = entity instanceof EnderDragonPart part
                     ? ((EnderDragonEntityAccessor) part.owner).getBody()
                     : entity;
-
-            // cancel if we can't hook onto the entity
-            if (!this.canHookEntity(entity)) {
-                return;
-            }
 
             // hook onto entity
             this.setHookedEntity(entity);
