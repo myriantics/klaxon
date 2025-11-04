@@ -74,6 +74,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
     protected final HashSet<ItemEntity> draggedItems = new HashSet<>();
 
+    private DamageSource lastTransmittedDamageSource = null;
+
     public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -425,30 +427,27 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
             }
         }
 
+        // Returned array is used to count these entities towards channeling advancement
         return conductionTargets;
     }
 
     public void tryConductElectricalDamage(Entity originEntity, DamageSource damageSource, float amount) {
-        if (this.getWorld().isClient() || !this.isCableAttached() || originEntity.equals(this) || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
+        if (this.getWorld().isClient() || !this.isCableAttached() || damageSource == lastTransmittedDamageSource || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
             return;
         }
 
         @Nullable PlayerEntity attachedPlayer = this.cableAttachmentHandler.getAttachedPlayer();
         @Nullable Entity hookedEntity = this.hookedEntityContainer.get();
 
-        DamageSource conductedDamageSource = new DamageSource(
-                this.getDamageSources().registry.getEntry(KlaxonDamageTypes.GRAPPLE_CABLE_CONDUCTION).get(),
-                damageSource.getSource(),
-                this
-        );
-
         for (Entity entity : new Entity[]{this, attachedPlayer, hookedEntity}) {
             if (entity == null || entity.equals(originEntity)) {
                 continue;
             }
 
-            entity.damage(conductedDamageSource, amount);
+            entity.damage(damageSource, amount);
         }
+
+        this.lastTransmittedDamageSource = damageSource;
     }
 
     /**
