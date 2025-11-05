@@ -826,6 +826,19 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         private CableAttachmentHandler() {
         }
 
+        /**
+         * Tests if the grapple claw is valid - disconnects with reason if invalid
+         * @return True if valid and still connected, false if invalid and disconnection was performed
+         */
+        public boolean validate() {
+            @Nullable CableDetachmentReason reason = this.testValidity();
+            if (reason != null) {
+                this.detach(reason);
+                return false;
+            }
+            return true;
+        }
+
         protected void tick(World world, @NotNull PlayerEntity attachedPlayer, boolean retracting) {
             CableDetachmentReason reason = this.testValidity();
             if (reason != null) {

@@ -29,7 +29,9 @@ public abstract class PlayerManagerMixin {
     )
     private void klaxon$discardGrappleClawWhenLoggingOut(ServerPlayerEntity player, CallbackInfo ci) {
         if (((PlayerEntityGrappleAccess) player).klaxon$getGrappleClaw() instanceof GrappleClawEntity grappleClaw) {
-            grappleClaw.setRemoved(Entity.RemovalReason.UNLOADED_WITH_PLAYER);
+            if (!grappleClaw.cableAttachmentHandler.validate()) {
+                grappleClaw.setRemoved(Entity.RemovalReason.UNLOADED_WITH_PLAYER);
+            }
         }
     }
 

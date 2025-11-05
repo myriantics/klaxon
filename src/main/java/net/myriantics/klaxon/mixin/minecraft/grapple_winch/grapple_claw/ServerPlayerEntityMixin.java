@@ -50,7 +50,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         @Nullable GrappleClawEntity grappleClaw = access.klaxon$getGrappleClaw();
 
         // write grapple claw data to player nbt like you would a vehicle
-        if (grappleClaw != null) {
+        if (grappleClaw != null && grappleClaw.cableAttachmentHandler.validate()) {
             NbtCompound grappleClawCompound = new NbtCompound();
             grappleClaw.saveNbt(grappleClawCompound);
             nbt.put(KlaxonNBTIds.ATTACHED_GRAPPLE_CLAW, grappleClawCompound);
