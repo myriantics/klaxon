@@ -15,11 +15,19 @@ public abstract class SplashTextResourceSupplierMixin {
             at = @At(value = "RETURN")
     )
     private List<String> klaxon$appendSplashTexts(List<String> original) {
+
         // original.add("We Love The Company!");
+        // mod name
         original.add("Klaxons blaring!");
-        // original.add("Bioluminescent");
+        // hallnox fungus / "i'm heading out of my mind" - dan bull
+        original.add("Bioluminescent");
+        // mabel - gravity falls
+        original.add("GRAPPLING HOOK!");
+        // "the production line" the stupendium
         original.add("Steel, Iron, Nuts and Bolts");
+        // my signature catchphrase
         original.add("But um yeah.");
+        // minecraft manga book funny moments
         original.add("THIS IS MY CRAFT!!!");
         original.add("OH MY BLOCKS!!!");
         return original;
