@@ -11,7 +11,7 @@ public class KlaxonTestPlayer extends FakePlayer {
     protected KlaxonTestPlayer(ServerWorld world, KlaxonTestContext context) {
         super(
                 world,
-                new GameProfile(UUID.randomUUID(), "KlaxonTestPlayer" + world.getRandom().nextBetween(1, 999))
+                new GameProfile(DEFAULT_UUID, "KlaxonTestPlayer" + world.getRandom().nextBetween(1, 999))
         );
     }
 }

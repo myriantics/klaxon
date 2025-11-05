@@ -469,7 +469,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         ChargedProjectilesComponent projectiles = winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
 
         // make sure that the grapple winch is empty and that we're either unattached or being loaded into the attached player's grapple winch
-        if (projectiles.isEmpty() && this.isAttachedToPlayer(pickupPlayer)) {
+        if (projectiles.isEmpty() && (!this.isCableAttached() || this.isAttachedToPlayer(pickupPlayer))) {
             // this is needed so players can choose whether they want to recast grapple claw or not
             // only trigger this if pickup occurred while retracting
             if (pickupPlayer instanceof ServerPlayerEntity serverPlayer && ((PlayerEntityGrappleAccess) serverPlayer).klaxon$isRetracting()) {

@@ -19,16 +19,22 @@ import net.myriantics.klaxon_gametest.util.KlaxonTestPlayer;
 public class GrappleClawEntityTester {
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
     public static void testGrappleClawFastReload(KlaxonTestContext context) {
-        GrappleClawEntity grappleClaw = context.spawnEntity(KlaxonEntityTypes.GRAPPLE_CLAW, new Vec3d(3, 3, 3));
+        GrappleClawEntity grappleClaw = context.spawnEntity(KlaxonEntityTypes.GRAPPLE_CLAW, new Vec3d(3, 0, 3));
         KlaxonTestPlayer player = context.createFakePlayer(GameMode.SURVIVAL);
         player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, grappleClaw.getEyePos());
         context.getWorld().spawnEntity(player);
 
-        player.setStackInHand(Hand.MAIN_HAND, new ItemStack(KlaxonItems.GRAPPLE_WINCH));
-        player.attack(grappleClaw);
-        context.expectBoolean(false, player.getStackInHand(Hand.MAIN_HAND).getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty(), "Grapple Winch Charged Projectiles empty when it shouldn't be!");
+        context.runAtEveryTick(() -> {
+            if (grappleClaw.isAnchored()) {
+                player.setStackInHand(Hand.MAIN_HAND, new ItemStack(KlaxonItems.GRAPPLE_WINCH));
+                player.attack(grappleClaw);
 
-        player.kill();
-        context.complete();
+                context.dontExpectEntity(KlaxonEntityTypes.GRAPPLE_CLAW);
+                context.expectBoolean(false, player.getStackInHand(Hand.MAIN_HAND).getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty(), "Grapple Winch Charged Projectiles empty when it shouldn't be!");
+
+                player.kill();
+                context.complete();
+            }
+        });
     }
 }

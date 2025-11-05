@@ -13,10 +13,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class KlaxonTestContext extends TestContext {
     private final GameTestState test;
+    private final ArrayList<KlaxonTestPlayer> players = new ArrayList<>();
 
     public KlaxonTestContext(GameTestState test) {
         super(test);
@@ -32,6 +34,7 @@ public class KlaxonTestContext extends TestContext {
         KlaxonTestPlayer testPlayer = new KlaxonTestPlayer(test.getWorld(), this);
         testPlayer.changeGameMode(gameMode);
         testPlayer.setPosition(this.getAbsolute(BlockPos.ORIGIN.toCenterPos()));
+        this.players.add(testPlayer);
         return testPlayer;
     }
 
@@ -54,5 +57,13 @@ public class KlaxonTestContext extends TestContext {
         if (expected != result) {
             throw new GameTestException(message + " Expected: " + expected + " Got: " + result);
         }
+    }
+
+    @Override
+    public void complete() {
+        for (KlaxonTestPlayer player : this.players) {
+            // player.kill();
+        }
+        super.complete();
     }
 }
