@@ -1,7 +1,5 @@
 package net.myriantics.klaxon.entity.entities.grapple_claw;
 
-import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
@@ -17,8 +15,6 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -27,7 +23,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -39,8 +34,12 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
-import net.myriantics.klaxon.mechanics.grapple_winch.AttachedGrappleClawContainer;
-import net.myriantics.klaxon.mechanics.grapple_winch.EntityGrappleClawContainerAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
+import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnection;
+import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
+import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawContainer;
 import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
@@ -63,7 +62,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class GrappleClawEntity extends PersistentProjectileEntity {
+public class GrappleClawEntity extends PersistentProjectileEntity implements GrapplingHook {
 
     protected static final TrackedData<Integer> HOOKED_ENTITY_ID = DataTracker.registerData(GrappleClawEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final int HIT_INVINCIBILITY_TICKS = 5;
@@ -114,7 +113,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     public ActionResult interact(PlayerEntity player, Hand hand) {
         ItemStack handStack = player.getStackInHand(hand);
 
-        if (this.isCableAttached() || this.equals(((PlayerEntityGrappleAccess)player).klaxon$getGrappleClaw())) {
+        if (this.isConnected()) {
             // attempt to detach grapple winch cable if shears are used on it
             if (handStack.isIn(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)) {
                 if (player instanceof ServerPlayerEntity) {
@@ -161,7 +160,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
             // make sure the attacker is a player entity - then, check if we're either not attached or the player is the attached player
             // if this passes, attempt fast reloading - and return true if that passes.
-            if (weaponStack != null && attacker instanceof PlayerEntity player && (!this.isCableAttached() || player.equals(attachedPlayer)) && this.tryFastReload(player, weaponStack)) {
+            if (weaponStack != null && attacker instanceof PlayerEntity player && (!this.isConnected() || player.equals(attachedPlayer)) && this.tryFastReload(player, weaponStack)) {
                 return true;
             }
 
@@ -302,7 +301,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
 
         // check that we're attached to a cable and that the target entity can be hooked
-        if (this.isCableAttached() && this.hookedEntityContainer.canHookEntity(hitEntity)) {
+        if (this.isConnected() && this.hookedEntityContainer.canHookEntity(hitEntity)) {
             // if we hit the attached player, attempt to fast reload
             if (hitEntity.equals(attachedPlayer)) {
                 // attempt to pickup items into attached player when hitting
@@ -407,7 +406,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     @Override
     protected void age() {
         // only age up if in ground and disconnected
-        if (inGround && !this.isCableAttached()) {
+        if (inGround && !this.isConnected()) {
             super.age();
         }
     }
@@ -434,7 +433,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     public void tryConductElectricalDamage(Entity originEntity, DamageSource damageSource, float amount) {
-        if (this.getWorld().isClient() || !this.isCableAttached() || damageSource == lastTransmittedDamageSource || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
+        if (this.getWorld().isClient() || !this.isConnected() || damageSource == lastTransmittedDamageSource || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
             return;
         }
 
@@ -469,7 +468,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         ChargedProjectilesComponent projectiles = winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
 
         // make sure that the grapple winch is empty and that we're either unattached or being loaded into the attached player's grapple winch
-        if (projectiles.isEmpty() && (!this.isCableAttached() || this.isAttachedToPlayer(pickupPlayer))) {
+        if (projectiles.isEmpty() && (!this.isConnected() || this.isAttachedToPlayer(pickupPlayer))) {
             // this is needed so players can choose whether they want to recast grapple claw or not
             // only trigger this if pickup occurred while retracting
             if (pickupPlayer instanceof ServerPlayerEntity serverPlayer && ((PlayerEntityGrappleAccess) serverPlayer).klaxon$isRetracting()) {
@@ -517,7 +516,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         boolean isAttachedToPickupPlayer = this.equals(access.klaxon$getGrappleClaw());
 
         // don't allow players to pick up attached grapple claws that aren't theirs
-        if (this.isCableAttached()) {
+        if (this.isConnected()) {
             if (isAttachedToPickupPlayer) {
                 BlockPos steppingPos = pickupPlayer.getSteppingPos();
                 BlockPos anchoredPos = this.getBlockPos();
@@ -533,47 +532,25 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
         // if we're allowed to be picked up by this player, only return false if this was handled by fast loading!
         if (super.tryPickup(pickupPlayer)) {
-            return !this.isCableAttached() || !(this.tryFastReload(pickupPlayer, pickupPlayer.getMainHandStack()) || this.tryFastReload(pickupPlayer, pickupPlayer.getOffHandStack()));
+            return !this.isConnected() || !(this.tryFastReload(pickupPlayer, pickupPlayer.getMainHandStack()) || this.tryFastReload(pickupPlayer, pickupPlayer.getOffHandStack()));
         }
 
         // if all else failed, we can't be picked up - return false
         return false;
     }
 
-    public void deAnchorIfPossible(Vec3d deAnchoringDirection) {
-        if (this.getWorld().isClient()) {
-            return;
-        }
-
-        boolean success = false;
-        if (this.inGround) {
-            BlockHitResult hitResult = GrappleClawBlockDestructionHelper.raycast(
-                    this,
-                    this.getPos(),
-                    this.getPos().add(deAnchoringDirection),
-                    false
-            );
-
-            // make sure it's either a miss or we've got space to move a significant amount
-            if (hitResult.getType().equals(HitResult.Type.MISS) || hitResult.getPos().distanceTo(this.getPos()) > 0.1) {
-                this.inGround = false;
-                success = true;
-            }
-        } else if (this.hookedEntityContainer.isHeavy()) {
-            success = this.hookedEntityContainer.release(true);
-        }
-
-        if (success) {
-            KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) this.cableAttachmentHandler.getAttachedPlayer());
-        }
-    }
-
     public void attachCable(ServerPlayerEntity serverPlayer) {
         this.cableAttachmentHandler.attach(serverPlayer);
     }
 
-    public boolean isCableAttached() {
-        return this.cableAttachmentHandler.isAttached();
+    public boolean isConnected() {
+        if (this.getWorld() instanceof GrappleWinchConnectionManager.ServerAccess access) {
+            return access.klaxon$get().fromHookId(this.getId()) != null;
+        } else if (this.getWorld() instanceof GrappleWinchConnectionManager.ClientAccess access) {
+            return access.klaxon$get().fromHookId(this.getId()) != null;
+        }
+
+        return false;
     }
 
     public boolean isAttachedToPlayer(PlayerEntity player) {
@@ -582,8 +559,18 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     @Override
+    public void setVelocity(Vec3d velocity) {
+        if (this.hookedEntityContainer.isPresent()) {
+            this.hookedEntityContainer.get().setVelocity(velocity);
+            super.setVelocity(Vec3d.ZERO);
+        } else {
+            super.setVelocity(velocity);
+        }
+    }
+
+    @Override
     public SoundCategory getSoundCategory() {
-        return this.isCableAttached() ? SoundCategory.PLAYERS : super.getSoundCategory();
+        return this.isConnected() ? SoundCategory.PLAYERS : super.getSoundCategory();
     }
 
     protected void playSoundAtSelfAndThroughCableIfPossible(
@@ -631,6 +618,78 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
         this.hookedEntityContainer.release(false);
         super.remove(reason);
+    }
+
+    @Override
+    public int klaxon$getId() {
+        return this.getId();
+    }
+
+    @Override
+    public void klaxon$onConnect(ServerPlayerEntity serverPlayer) {
+        this.setOwner(serverPlayer);
+    }
+
+    @Override
+    public void klaxon$onDisconnect() {
+
+    }
+
+    @Override
+    public UUID klaxon$getUUID() {
+        return this.getUuid();
+    }
+
+    @Override
+    public boolean klaxon$isAnchored() {
+        return this.inGround || this.hookedEntityContainer.isPresent() && EntityWeightHelper.isHeavy(this.hookedEntityContainer.get());
+    }
+
+    @Override
+    public boolean klaxon$deAnchor(Vec3d deAnchoringDirection) {
+        boolean success = false;
+        if (this.inGround) {
+            BlockHitResult hitResult = GrappleClawBlockDestructionHelper.raycast(
+                    this,
+                    this.getPos(),
+                    this.getPos().add(deAnchoringDirection),
+                    false
+            );
+
+            // make sure it's either a miss or we've got space to move a significant amount
+            if (hitResult.getType().equals(HitResult.Type.MISS) || hitResult.getPos().distanceTo(this.getPos()) > 0.1) {
+                this.inGround = false;
+                success = true;
+            }
+        } else if (this.hookedEntityContainer.isHeavy()) {
+            success = this.hookedEntityContainer.release(true);
+        }
+
+        if (success) {
+            KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) this.cableAttachmentHandler.getAttachedPlayer());
+        }
+
+        return success;
+    }
+
+    @Override
+    public boolean klaxon$isRemoved() {
+        return this.isRemoved();
+    }
+
+    @Override
+    public Vec3d klaxon$getPos() {
+        return this.getPos();
+    }
+
+    @Override
+    public void klaxon$setVelocity(Vec3d velocity) {
+        this.setVelocity(velocity);
+    }
+
+    @Override
+    public Vec3d klaxon$getVelocity() {
+        return this.getVelocity();
     }
 
     public class HookedEntityContainer {
@@ -684,10 +743,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         private void setHookedEntity(Entity entity) {
             if (entity == null) {
                 if (this.hookedEntity != null) {
-                    Optional.ofNullable(((EntityGrappleClawContainerAccess) this.hookedEntity).klaxon$get()).ifPresent(AttachedGrappleClawContainer::clear);
+                    Optional.ofNullable(((HookingGrappleClawAccess) this.hookedEntity).klaxon$get()).ifPresent(HookingGrappleClawContainer::clear);
                 }
             } else {
-                ((EntityGrappleClawContainerAccess) entity).klaxon$get().setGrappleClaw(GrappleClawEntity.this);
+                ((HookingGrappleClawAccess) entity).klaxon$get().setGrappleClaw(GrappleClawEntity.this);
             }
 
             switch (entity) {
@@ -780,7 +839,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 return false;
             }
 
-            if (((EntityGrappleClawContainerAccess) entity).klaxon$get().isPresent()) {
+            if (((HookingGrappleClawAccess) entity).klaxon$get().isPresent()) {
                 return false;
             }
 
@@ -820,8 +879,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
     }
 
     public class CableAttachmentHandler {
-        private boolean attached = false;
-        private boolean canPlayReboundSound = true;
 
         private CableAttachmentHandler() {
         }
@@ -845,81 +902,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                 this.detach(reason);
                 return;
             }
-
-            GrappleClawEntity grappleClaw = GrappleClawEntity.this;
-
-            Vec3d compiledVec = Vec3d.ZERO;
-
-            Vec3d clawPos = grappleClaw.getPos();
-            Vec3d attachedEyePos = attachedPlayer.getEyePos();
-            Vec3d normalizedClaw2WielderVec = attachedEyePos.subtract(clawPos).normalize();
-
-            double ownerDistance = clawPos.distanceTo(attachedEyePos);
-            double currentWinchCableLength = attachedPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
-
-            // limit fall distance to give players more leeway
-            if (attachedPlayer.getVelocity().getY() > -1 && attachedPlayer.fallDistance > 1.0F) {
-                attachedPlayer.fallDistance = 1.0F;
-            }
-
-            // if the attached player is heavy and retracting, de-anchor and pop advancement if succeeded
-            if (!world.isClient() && retracting && EntityWeightHelper.isHeavy(attachedPlayer)) {
-                grappleClaw.deAnchorIfPossible(normalizedClaw2WielderVec);
-            }
-
-            // owner being heavy overrides anchoring
-            if (!grappleClaw.isAnchored()) {
-
-                // retract grapple claw if owner pulls back before landing
-                if (retracting) {
-                    compiledVec = compiledVec.add(normalizedClaw2WielderVec.multiply(4f/20));
-                }
-
-                // retract grapple claw if it hits limit
-                if (ownerDistance >= currentWinchCableLength) {
-
-                    if (ownerDistance >= currentWinchCableLength * 1.2) {
-                        grappleClaw.setVelocity(grappleClaw.getVelocity().multiply(0.85));
-                    }
-
-                    compiledVec = compiledVec.add(normalizedClaw2WielderVec.multiply(4f/20));
-
-                    // make sure we don't spam the shit out of the rebound sound
-                    if (this.canPlayReboundSound) {
-                        grappleClaw.playSoundAtSelfAndThroughCableIfPossible(
-                                KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
-                                1f + world.getRandom().nextFloat() * 0.3f,
-                                0.8f + world.getRandom().nextFloat() * 0.2f
-                        );
-                        world.emitGameEvent(
-                                GameEvent.ENTITY_ACTION,
-                                clawPos,
-                                GameEvent.Emitter.of(attachedPlayer)
-                        );
-
-                        this.canPlayReboundSound = false;
-                    }
-                } else if (ownerDistance < currentWinchCableLength * 0.95) {
-                    // if we go back in bounds, we can play the rebound sound again
-                    // this has a small deadzone because otherwise it would spam the shit out of the sound when dangling at the end of the cable.
-                    this.canPlayReboundSound = true;
-                }
-            }
-
-            // commit the total velocity edits to self or whatever entity we're attached to
-            if (grappleClaw.hookedEntityContainer.isPresent()) {
-                grappleClaw.hookedEntityContainer.tick(compiledVec);
-            } else {
-                grappleClaw.addVelocity(compiledVec);
-            }
         }
 
         public boolean canAttach(ServerPlayerEntity serverPlayer) {
             return !GrappleClawEntity.this.isRemoved() && !serverPlayer.equals(this.getAttachedPlayer());
-        }
-
-        public void setAttached(boolean attached) {
-            this.attached = attached;
         }
 
         public void attach(ServerPlayerEntity serverPlayer) {
@@ -928,7 +914,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
 
                 ((PlayerEntityGrappleAccess) serverPlayer).klaxon$setGrappleClaw(claw);
                 claw.setOwner(serverPlayer);
-                this.attached = true;
                 GrappleWinchNetworkUtil.syncToClients(serverPlayer, claw);
             }
         }
@@ -956,10 +941,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
                     claw.draggedItems.clear();
                 }
             }
-        }
-
-        public boolean isAttached() {
-            return attached;
         }
 
         public @Nullable PlayerEntity getAttachedPlayer() {
@@ -1021,41 +1002,5 @@ public class GrappleClawEntity extends PersistentProjectileEntity {
         }
     }
 
-    public enum CableDetachmentReason implements StringIdentifiable {
-        INVALID_HELD_ITEMS(0, true),
-        PLAYER_REMOVED(1, false),
-        PLAYER_DIED(2, false),
-        PLAYER_SPECTATOR(3, false),
-        PLAYER_TELEPORTED(4, true),
-        WORLD_MISMATCH(5, false),
-        MANUAL_DISCONNECT(6, true),
-        CABLE_TOO_LONG(7, true),
-        FAST_RELOADED(8, false),
-        PICKUP_RELOADED(9, false),
-        PICKUP(10, false),
-        GENERIC_DISCONNECT(11, false);
 
-        public static final Codec<CableDetachmentReason> CODEC = StringIdentifiable.createCodec(CableDetachmentReason::values);
-        public static final PacketCodec<ByteBuf, CableDetachmentReason> PACKET_CODEC = PacketCodecs.indexed(
-                (index) -> CableDetachmentReason.values()[index],
-                CableDetachmentReason::getIndex
-        );
-
-        private final int index;
-        public final boolean playsDetachmentSound;
-
-        CableDetachmentReason(int index, boolean playsDetachmentSound) {
-            this.index = index;
-            this.playsDetachmentSound = playsDetachmentSound;
-        }
-
-        public int getIndex() {
-            return this.index;
-        }
-
-        @Override
-        public String asString() {
-            return this.name().toLowerCase();
-        }
-    }
 }

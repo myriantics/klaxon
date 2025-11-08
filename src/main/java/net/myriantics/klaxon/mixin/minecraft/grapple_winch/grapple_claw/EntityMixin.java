@@ -11,8 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawBlockDestructionHelper;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
-import net.myriantics.klaxon.mechanics.grapple_winch.AttachedGrappleClawContainer;
-import net.myriantics.klaxon.mechanics.grapple_winch.EntityGrappleClawContainerAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawContainer;
+import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,14 +22,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityGrappleClawContainerAccess {
+public abstract class EntityMixin implements HookingGrappleClawAccess {
 
     @Unique
-    private final AttachedGrappleClawContainer klaxon$attachedGrappleClawContainer = new AttachedGrappleClawContainer();
+    private final HookingGrappleClawContainer klaxon$hookingGrappleClawContainer = new HookingGrappleClawContainer();
 
     @Override
-    public AttachedGrappleClawContainer klaxon$get() {
-        return klaxon$attachedGrappleClawContainer;
+    public HookingGrappleClawContainer klaxon$get() {
+        return klaxon$hookingGrappleClawContainer;
     }
 
     @WrapOperation(
@@ -59,8 +59,8 @@ public abstract class EntityMixin implements EntityGrappleClawContainerAccess {
         public EnderDragonEntity owner;
 
         @Override
-        public AttachedGrappleClawContainer klaxon$get() {
-            return ((EntityGrappleClawContainerAccess) owner).klaxon$get();
+        public HookingGrappleClawContainer klaxon$get() {
+            return ((HookingGrappleClawAccess) owner).klaxon$get();
         }
     }
 }

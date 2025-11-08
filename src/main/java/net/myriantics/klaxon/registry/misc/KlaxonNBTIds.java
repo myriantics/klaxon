@@ -13,4 +13,9 @@ public abstract class KlaxonNBTIds {
 
     // sniffer
     public static final String GERALD_SNIFFER_STATE = KlaxonCommon.locateAlt("gerald_sniffer_state");
+
+    // grapple winch connection
+    public static final String GRAPPLE_WINCH_CONNECTIONS = KlaxonCommon.locateAlt("grapple_winch_connections");
+    public static final String PLAYER_UUID = KlaxonCommon.locateAlt("player_uuid");
+    public static final String HOOK_UUID = KlaxonCommon.locateAlt("hook_uuid");
 }

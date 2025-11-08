@@ -11,7 +11,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
-import net.myriantics.klaxon.mechanics.grapple_winch.EntityGrappleClawContainerAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Mixin(LightningEntity.class)
@@ -67,7 +66,7 @@ public abstract class LightningEntityMixin extends Entity {
         }
 
         // check to see if we've struck an entity hooked by a grapple claw
-        if (grappleClaw == null && struckEntity instanceof EntityGrappleClawContainerAccess access) {
+        if (grappleClaw == null && struckEntity instanceof HookingGrappleClawAccess access) {
             grappleClaw = access.klaxon$get().getOptionalGrappleClaw().orElse(null);
         }
 

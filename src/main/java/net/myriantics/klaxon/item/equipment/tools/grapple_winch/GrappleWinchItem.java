@@ -34,6 +34,7 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
+import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
@@ -95,7 +96,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
         // if this is the first projectile shot, attach the server player's cable to it.
         if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrappleClawEntity grappleClaw) {
-            grappleClaw.attachCable(serverPlayer);
+            ((GrappleWinchConnectionManager.ServerAccess) serverPlayer.getServerWorld()).klaxon$get().connect(serverPlayer, grappleClaw);
         }
     }
 

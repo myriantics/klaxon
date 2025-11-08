@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.entity.entities.grapple_claw;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,8 +16,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
 import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnection;
+import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
-import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
@@ -169,9 +169,14 @@ public abstract class GrappleClawBlockDestructionHelper {
     }
 
     private static boolean canVeinmineBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos, PlayerEntity attachedPlayer) {
-        boolean playerValid = grappleClaw.isCableAttached() && attachedPlayer != null && ((PlayerEntityGrappleAccess) attachedPlayer).klaxon$isRetracting();
+        GrappleWinchConnection<?> connection = null;
+        if (world instanceof GrappleWinchConnectionManager.ServerAccess access) {
+            connection = access.klaxon$get().fromHookId(grappleClaw.klaxon$getId());
+        } else if (world instanceof GrappleWinchConnectionManager.ClientAccess access) {
+            connection = access.klaxon$get().fromHookId(grappleClaw.klaxon$getId());
+        }
 
-        return playerValid && state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE);
+        return connection != null && connection.isRetracting() && state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE);
     }
 
     private static boolean canBreakBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos) {
