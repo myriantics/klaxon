@@ -31,6 +31,7 @@ public record GrappleWinchConnectionDiscardPacket(int connectionId, CableDetachm
             if (client.world instanceof ClientGrappleWinchConnectionManager.Access access) {
                 ClientGrappleWinchConnectionManager manager = access.klaxon$get();
                 manager.disconnect(this.connectionId(), this.reason());
+                manager.resetTicksSinceUpdated();
             }
         });
     }

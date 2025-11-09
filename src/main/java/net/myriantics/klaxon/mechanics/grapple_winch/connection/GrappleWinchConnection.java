@@ -14,6 +14,7 @@ public abstract sealed class GrappleWinchConnection permits ClientGrappleWinchCo
     protected boolean retracting = false;
     protected boolean hookAnchored = false;
     protected double cableLength;
+    protected double maxCableLength;
 
     public GrappleWinchConnection(int connectionId) {
         this.connectionId = connectionId;
@@ -46,7 +47,9 @@ public abstract sealed class GrappleWinchConnection permits ClientGrappleWinchCo
         return this.cableLength;
     }
 
-    public abstract void setCableLength(double cableLength);
+    public void setCableLength(double cableLength) {
+        this.cableLength = Math.clamp(cableLength, 0, this.maxCableLength);
+    }
 
     public abstract void resetCableLength();
 

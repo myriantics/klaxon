@@ -14,6 +14,8 @@ import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
+import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionDiscardPacket;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
@@ -26,8 +28,6 @@ import java.util.UUID;
 public final class ServerGrappleWinchConnectionManager extends GrappleWinchConnectionManager {
 
     private final Map<Integer, ServerGrappleWinchConnection> connectionId2Connection = new HashMap<>();
-    private final Map<UUID, ServerGrappleWinchConnection> playerUUID2Connection = new HashMap<>();
-    private final Map<UUID, ServerGrappleWinchConnection> hookUUID2Connection = new HashMap<>();
 
     private int currentConnectionId = 0;
 
@@ -42,27 +42,42 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
 
     @Override
     public @Nullable ServerGrappleWinchConnection fromPlayer(PlayerEntity player) {
-        ServerGrappleWinchConnection connection = this.playerUUID2Connection.get(player.getUuid());
-        return connection.isDormant() ? null : connection;
+        for (ServerGrappleWinchConnection connection : this.connectionId2Connection.values()) {
+            if (connection.playerUUID.equals(player.getUuid()) && !connection.isDormant()) {
+                return connection;
+            }
+        }
+
+        return null;
     }
 
     @Override
     public @Nullable ServerGrappleWinchConnection fromConnectionId(int connectionId) {
         ServerGrappleWinchConnection connection = this.connectionId2Connection.get(connectionId);
-        return connection.isDormant() ? null : connection;
+        return connection == null
+                ? null
+                : connection.isDormant() ? null : connection;
     }
 
     @Override
     public @Nullable ServerGrappleWinchConnection fromHook(GrapplingHook hook) {
-        ServerGrappleWinchConnection connection = this.hookUUID2Connection.get(hook.klaxon$asEntity().getUuid());
-        return connection.isDormant() ? null : connection;
+        for (ServerGrappleWinchConnection connection : this.connectionId2Connection.values()) {
+            if (connection.hookUUID.equals(hook.klaxon$asEntity().getUuid()) && !connection.isDormant()) {
+                return connection;
+            }
+        }
+
+        return null;
     }
 
     public void connect(ServerPlayerEntity serverPlayer, GrapplingHook hook) {
-        int playerId = serverPlayer.getId();
-        int hookId = hook.klaxon$asEntity().getId();
-
         ServerGrappleWinchConnection connection = new ServerGrappleWinchConnection(this, this.currentConnectionId, serverPlayer.getUuid(), hook.klaxon$asEntity().getUuid());
+        for (ServerGrappleWinchConnection existing : this.connectionId2Connection.values()) {
+            if (existing.playerUUID.equals(connection.playerUUID) || existing.hookUUID.equals(connection.playerUUID)) {
+                this.disconnect(existing.getId(), CableDetachmentReason.GENERIC_DISCONNECT);
+            }
+        }
+
         this.connectionId2Connection.put(connection.getId(), connection);
         this.currentConnectionId++;
 
@@ -71,8 +86,8 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
     }
 
     @Override
-    public void disconnect(int connectionId, CableDetachmentReason reason) {
-        ServerGrappleWinchConnection connection = this.connectionId2Connection.get(connectionId);
+    protected void disconnectInternal(int connectionId, CableDetachmentReason reason) {
+        ServerGrappleWinchConnection connection = this.connectionId2Connection.remove(connectionId);
         if (connection != null) {
             KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(
                     connection.getPlayer(),
@@ -85,10 +100,12 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
                         0.7f + this.world.getRandom().nextFloat() * 0.3f
                 );
             }
+            connection.sendToTracking(new GrappleWinchConnectionDiscardPacket(connectionId, reason));
         }
     }
 
     public void tick() {
+        super.tick();
         for (ServerGrappleWinchConnection connection : this.connectionId2Connection.values()) {
             connection.tick();
         }

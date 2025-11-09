@@ -69,6 +69,7 @@ public record GrappleWinchConnectionSyncPacket(
                 } else {
                     connection.sync(this);
                 }
+                manager.resetTicksSinceUpdated();
             }
         });
     }

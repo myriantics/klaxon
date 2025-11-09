@@ -8,13 +8,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
+import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
-
     private Vec3d playerFallbackPos;
     private Vec3d playerFallbackPrevPos;
     private Vec3d hookFallbackPos;
@@ -22,21 +23,26 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
 
     private final int playerId;
     private final int hookId;
+    private final ClientGrappleWinchConnectionManager manager;
 
+    private int ticksSinceUpdated;
     private AbstractClientPlayerEntity player = null;
     private GrapplingHook hook = null;
 
-    public ClientGrappleWinchConnection(int connectionId, int playerId, int hookId) {
+    public ClientGrappleWinchConnection(ClientGrappleWinchConnectionManager manager, int connectionId, int playerId, int hookId) {
         super(connectionId);
         this.playerId = playerId;
         this.hookId = hookId;
+        this.manager = manager;
+        this.updateEntities();
     }
 
-    public ClientGrappleWinchConnection(GrappleWinchConnectionSyncPacket packet) {
-        this(packet.connectionId(), packet.playerId(), packet.hookId());
+    public ClientGrappleWinchConnection(ClientGrappleWinchConnectionManager manager, GrappleWinchConnectionSyncPacket packet) {
+        this(manager, packet.connectionId(), packet.playerId(), packet.hookId());
         this.playerFallbackPos = packet.playerFallbackPos();
         this.hookFallbackPos = packet.hookFallbackPos();
         this.hookAnchored = packet.hookAnchored();
+        this.updateEntities();
     }
 
     public void sync(GrappleWinchConnectionSyncPacket packet) {
@@ -48,11 +54,21 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
         if (this.player != null && !this.player.equals(MinecraftClient.getInstance().player)) {
             this.cableLength = packet.cableLength();
         }
+        this.updateEntities();
+        this.ticksSinceUpdated = 0;
     }
 
     @Override
     public void tick() {
+        this.ticksSinceUpdated++;
+
+        if (this.ticksSinceUpdated > manager.ticksSinceUpdated()) {
+            this.manager.disconnect(this.getId(), CableDetachmentReason.GENERIC_DISCONNECT);
+        }
+
         this.retracting = player.isUsingItem() && player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
+
+        this.updateEntities();
 
         super.tick();
 
@@ -122,6 +138,11 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
         return stack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(stack);
     }
 
+    private void updateEntities() {
+        this.player = (AbstractClientPlayerEntity) this.manager.getWorld().getEntityById(this.playerId);
+        this.hook = (GrapplingHook) this.manager.getWorld().getEntityById(this.hookId);
+    }
+
     @Override
     public int getPlayerId() {
         return playerId;
@@ -144,12 +165,12 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
 
     @Override
     public Vec3d getHookPos() {
-        return this.hook.klaxon$asEntity().isRemoved() ? this.hookFallbackPos : this.hook.klaxon$asEntity().getPos();
+        return this.hook == null || this.hook.klaxon$asEntity().isRemoved() ? this.hookFallbackPos : this.hook.klaxon$asEntity().getPos();
     }
 
     @Override
     public Vec3d getPlayerPos() {
-        return this.player.isRemoved() ? this.playerFallbackPos : this.player.getPos();
+        return this.player == null || this.player.isRemoved() ? this.playerFallbackPos : this.player.getPos();
     }
 
     public Vec3d getLerpedPlayerPos(float delta) {
@@ -176,6 +197,6 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
 
     @Override
     public void resetCableLength() {
-        this.cableLength = this.player.getEyePos().distanceTo(this.hook.klaxon$asEntity().getPos());
+        this.setCableLength(this.getPlayerPos().distanceTo(this.getHookPos()));
     }
 }

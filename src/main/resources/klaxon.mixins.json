@@ -88,7 +88,6 @@
     "minecraft.dual_wielding.ClientPlayerInteractionManagerMixin",
     "minecraft.dual_wielding.HeldItemRendererMixin",
     "minecraft.dual_wielding.MinecraftClientMixin",
-    "minecraft.grapple_winch.ClientPlayerEntityMixin",
     "minecraft.grapple_winch.ClientPlayerInteractionManagerMixin",
     "minecraft.grapple_winch.connection.WorldRendererMixin",
     "minecraft.grapple_winch.connection.ClientWorldMixin",

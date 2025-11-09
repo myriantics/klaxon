@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -28,8 +29,8 @@ import java.util.*;
 public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
     private final ServerGrappleWinchConnectionManager manager;
-    private final UUID playerUUID;
-    private final UUID hookUUID;
+    public final UUID playerUUID;
+    public final UUID hookUUID;
 
     private ServerPlayerEntity player;
     private GrapplingHook hook;
@@ -82,11 +83,6 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
     @Override
     public Vec3d getHookPos() {
         return this.hook.klaxon$asEntity().getPos();
-    }
-
-    @Override
-    public void setCableLength(double cableLength) {
-        this.cableLength = cableLength;
     }
 
     public boolean isDormant() {
@@ -179,17 +175,6 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
             this.player.fallDistance = 1.0F;
         }
 
-        this.sync();
-    }
-
-    public void sync() {
-        assert !this.state.equals(State.DORMANT);
-
-        // gather all the players tracking this connection
-        HashSet<ServerPlayerEntity> tracking = new HashSet<>();
-        tracking.addAll(PlayerLookup.tracking(this.player));
-        tracking.addAll(PlayerLookup.tracking(this.hook.klaxon$asEntity()));
-
         // init the packet
         GrappleWinchConnectionSyncPacket packet = new GrappleWinchConnectionSyncPacket(
                 this.connectionId,
@@ -201,9 +186,20 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
                 this.cableLength
         );
 
+        this.sendToTracking(packet);
+    }
+
+    public void sendToTracking(CustomPayload customPayload) {
+        assert !this.state.equals(State.DORMANT);
+
+        // gather all the players tracking this connection
+        HashSet<ServerPlayerEntity> tracking = new HashSet<>();
+        tracking.addAll(PlayerLookup.tracking(this.player));
+        tracking.addAll(PlayerLookup.tracking(this.hook.klaxon$asEntity()));
+
         // send the packet off to all tracking players
         for (ServerPlayerEntity serverPlayer : tracking) {
-            KlaxonServerPlayNetworkHandler.send(serverPlayer, packet);
+            KlaxonServerPlayNetworkHandler.send(serverPlayer, customPayload);
         }
     }
 
@@ -212,17 +208,23 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
             return false;
         }
 
-        if (this.manager.getWorld().getEntity(this.playerUUID) instanceof ServerPlayerEntity serverPlayer) {
-            assert dormantHookNbt != null;
-            Entity entity = EntityType.loadEntityWithPassengers(
-                    dormantHookNbt,
-                    manager.getWorld(),
-                    grapplingHook -> !manager.getWorld().tryLoadEntity(grapplingHook) ? null : grapplingHook
-            );
+        Entity maybePlayer = this.manager.getWorld().getEntity(this.playerUUID);
+        Entity maybeHook;
 
-            if (entity instanceof GrapplingHook grapplingHook) {
-                this.player = serverPlayer;
-                this.hook = grapplingHook;
+        if (maybePlayer instanceof ServerPlayerEntity player) {
+            if (this.dormantHookNbt != null) {
+                maybeHook = EntityType.loadEntityWithPassengers(
+                        this.dormantHookNbt,
+                        this.manager.getWorld(),
+                        grapplingHook -> !this.manager.getWorld().tryLoadEntity(grapplingHook) ? null : grapplingHook
+                );
+            } else {
+                maybeHook = this.manager.getWorld().getEntity(this.hookUUID);
+            }
+
+            if (maybeHook instanceof GrapplingHook hook) {
+                this.player = player;
+                this.hook = hook;
                 this.state = State.ACTIVE;
                 return true;
             }

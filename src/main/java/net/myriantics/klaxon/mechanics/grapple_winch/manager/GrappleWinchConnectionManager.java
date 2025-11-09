@@ -10,14 +10,21 @@ import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedList;
+
 public abstract sealed class GrappleWinchConnectionManager extends PersistentState permits ClientGrappleWinchConnectionManager, ServerGrappleWinchConnectionManager {
     protected final World world;
+    protected final LinkedList<Runnable> disconnectQueue = new LinkedList<>();
 
     protected GrappleWinchConnectionManager(World world) {
         this.world = world;
     }
 
-    public abstract void tick();
+    public void tick() {
+        while (!this.disconnectQueue.isEmpty()) {
+            this.disconnectQueue.removeFirst().run();
+        }
+    }
 
     public World getWorld() {
         return this.world;
@@ -29,8 +36,11 @@ public abstract sealed class GrappleWinchConnectionManager extends PersistentSta
 
     public abstract @Nullable GrappleWinchConnection fromHook(GrapplingHook hook);
 
-    public void disconnect(int connectionId, CableDetachmentReason reason) {
+    public final void disconnect(int connectionId, CableDetachmentReason reason) {
+        this.disconnectQueue.add(() -> this.disconnectInternal(connectionId, reason));
     }
+
+    protected abstract void disconnectInternal(int connectionId, CableDetachmentReason reason);
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {

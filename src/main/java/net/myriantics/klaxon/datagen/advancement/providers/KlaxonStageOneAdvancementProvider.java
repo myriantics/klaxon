@@ -18,6 +18,7 @@ import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchCab
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchVeinMineCriterion;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementSubProvider;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
+import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
@@ -92,7 +93,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementEntry obtainGrappleWinch = addTask(cableShearCraftMetalWire, OBTAIN_GRAPPLE_WINCH, loadedGrappleWinch, InventoryChangedCriterion.Conditions.items(KlaxonItems.GRAPPLE_WINCH));
 
         AdvancementEntry grappleWinchDeAnchorGrappleClaw = addTask(obtainGrappleWinch, GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW, KlaxonItems.STEEL_GRAPPLE_CLAW, OneOffCriterion.Conditions.createDeAnchorGrappleClaw());
-        AdvancementEntry grappleWinchIntentionallyDisconnectCable = addTask(obtainGrappleWinch, GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE, KlaxonItems.STEEL_WIRE, GrappleWinchCableDisconnectCriterion.Conditions.create(GrappleClawEntity.CableDetachmentReason.INVALID_HELD_ITEMS));
+        AdvancementEntry grappleWinchIntentionallyDisconnectCable = addTask(obtainGrappleWinch, GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE, KlaxonItems.STEEL_WIRE, GrappleWinchCableDisconnectCriterion.Conditions.create(CableDetachmentReason.INVALID_HELD_ITEMS));
         ItemStack enchantedGrappleClawStack = new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
         enchantedGrappleClawStack.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
         AdvancementEntry grappleWinchGrappleEnderDragon = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON, enchantedGrappleClawStack, EntityGrappleCriterion.Conditions.create(EntityType.ENDER_DRAGON));

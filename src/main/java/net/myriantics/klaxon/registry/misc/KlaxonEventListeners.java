@@ -42,6 +42,5 @@ public abstract class KlaxonEventListeners {
     }
 
     public static void initClient() {
-        ClientTickEvents.END_CLIENT_TICK.register(GrappleWinchClientConnectionManager.INSTANCE::clientTick);
     }
 }

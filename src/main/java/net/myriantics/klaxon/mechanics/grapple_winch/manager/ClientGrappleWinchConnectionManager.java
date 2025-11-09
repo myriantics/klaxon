@@ -18,15 +18,13 @@ import net.myriantics.klaxon.networking.c2s.GrappleWinchCableForceDisconnectC2S;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionManager {
-    private final Map<Integer, ClientGrappleWinchConnection> playerId2Connection = new HashMap<>();
-    private final Map<Integer, ClientGrappleWinchConnection> hookId2Connection = new HashMap<>();
     private final Map<Integer, ClientGrappleWinchConnection> connectionId2Connection = new HashMap<>();
+    public final GrappleWinchCableRenderer renderer = new GrappleWinchCableRenderer();
 
-    public final GrappleWinchCableRenderer renderer = new GrappleWinchCableRenderer();;
+    private int ticksSinceUpdated = 0;
 
     float daylightMultiplier = 1.0f;
     boolean clientPlayerHasNightVision = false;
@@ -37,7 +35,11 @@ public final class ClientGrappleWinchConnectionManager extends GrappleWinchConne
 
     @Override
     public void tick() {
-        for (ClientGrappleWinchConnection connection : connectionId2Connection.values()) {
+        this.ticksSinceUpdated++;
+
+        super.tick();
+
+        for (ClientGrappleWinchConnection connection : this.connectionId2Connection.values()) {
             if (connection.getPlayer() == MinecraftClient.getInstance().player && !connection.validate()) {
                 //TODO: Unhardcode this to allow for more disconnection reasons
                 this.forceDisconnect(CableDetachmentReason.INVALID_HELD_ITEMS);
@@ -76,6 +78,14 @@ public final class ClientGrappleWinchConnectionManager extends GrappleWinchConne
         );
     }
 
+    public int ticksSinceUpdated() {
+        return ticksSinceUpdated;
+    }
+
+    public void resetTicksSinceUpdated() {
+        this.ticksSinceUpdated = 0;
+    }
+
     @Override
     public ClientWorld getWorld() {
         return (ClientWorld) this.world;
@@ -83,7 +93,12 @@ public final class ClientGrappleWinchConnectionManager extends GrappleWinchConne
 
     @Override
     public @Nullable ClientGrappleWinchConnection fromPlayer(PlayerEntity player) {
-        return this.playerId2Connection.get(player.getId());
+        for (ClientGrappleWinchConnection connection : this.connectionId2Connection.values()) {
+            if (connection.getPlayerId() == player.getId()) {
+                return connection;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -93,14 +108,23 @@ public final class ClientGrappleWinchConnectionManager extends GrappleWinchConne
 
     @Override
     public @Nullable ClientGrappleWinchConnection fromHook(GrapplingHook hook) {
-        return this.hookId2Connection.get(hook.klaxon$asEntity().getId());
+        for (ClientGrappleWinchConnection connection : this.connectionId2Connection.values()) {
+            if (connection.getHookId() == hook.klaxon$asEntity().getId()) {
+                return connection;
+            }
+        }
+        return null;
     }
 
     public void connect(GrappleWinchConnectionSyncPacket packet) {
-        ClientGrappleWinchConnection connection = new ClientGrappleWinchConnection(packet);
+        ClientGrappleWinchConnection connection = new ClientGrappleWinchConnection(this, packet);
+        for (ClientGrappleWinchConnection existing : this.connectionId2Connection.values()) {
+            if (existing.getPlayerId() == connection.getPlayerId() || existing.getHookId() == connection.getHookId()) {
+                this.disconnect(existing.getId(), CableDetachmentReason.GENERIC_DISCONNECT);
+            }
+        }
+
         this.connectionId2Connection.put(packet.connectionId(), connection);
-        this.playerId2Connection.put(packet.playerId(), connection);
-        this.hookId2Connection.put(packet.hookId(), connection);
     }
 
     public void forceDisconnect(CableDetachmentReason reason) {
@@ -112,11 +136,11 @@ public final class ClientGrappleWinchConnectionManager extends GrappleWinchConne
         }
     }
 
-    public void disconnect(int connectionId, CableDetachmentReason reason) {
-        ClientGrappleWinchConnection connection = this.connectionId2Connection.remove(connectionId);
-        this.playerId2Connection.remove(connection.getPlayerId());
-        this.hookId2Connection.remove(connection.getHookId());
-        connection.getHook().klaxon$onDisconnect(reason);
+    protected void disconnectInternal(int connectionId, CableDetachmentReason reason) {
+        @Nullable ClientGrappleWinchConnection connection = this.connectionId2Connection.remove(connectionId);
+        if (connection != null) {
+            if (connection.getHook() != null) connection.getHook().klaxon$onDisconnect(reason);
+        }
     }
 
     public interface Access extends GrappleWinchConnectionManager.Access {
