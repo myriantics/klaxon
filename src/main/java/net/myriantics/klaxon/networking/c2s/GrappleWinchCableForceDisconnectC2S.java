@@ -3,19 +3,17 @@ package net.myriantics.klaxon.networking.c2s;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.StringIdentifiable;
-import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
+import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
-import org.jetbrains.annotations.Nullable;
 
-public record GrappleWinchCableForceDisconnectC2S(GrappleClawEntity.CableDetachmentReason reason) implements CustomPayload {
+public record GrappleWinchCableForceDisconnectC2S(CableDetachmentReason reason) implements CustomPayload {
     public static final CustomPayload.Id<GrappleWinchCableForceDisconnectC2S> ID = new Id<>(KlaxonPackets.GRAPPLE_WINCH_CABLE_FORCE_DISCONNECT_C2S_ID);
 
     public static final PacketCodec<RegistryByteBuf, GrappleWinchCableForceDisconnectC2S> PACKET_CODEC = PacketCodec.tuple(
-            GrappleClawEntity.CableDetachmentReason.PACKET_CODEC, GrappleWinchCableForceDisconnectC2S::reason,
+            CableDetachmentReason.PACKET_CODEC, GrappleWinchCableForceDisconnectC2S::reason,
             GrappleWinchCableForceDisconnectC2S::new
     );
 
@@ -27,9 +25,10 @@ public record GrappleWinchCableForceDisconnectC2S(GrappleClawEntity.CableDetachm
     public void execute(ServerPlayNetworking.Context context) {
         // detach the player's grapple cable if they wish it to be detached
         context.server().execute(() -> {
-            @Nullable GrappleClawEntity grappleClaw = ((PlayerEntityGrappleAccess) context.player()).klaxon$getGrappleClaw();
-            if (grappleClaw != null) {
-                grappleClaw.cableAttachmentHandler.detach(reason);
+            ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) context.player().getServerWorld()).klaxon$get();
+            ServerGrappleWinchConnection connection = manager.fromPlayer(context.player());
+            if (connection != null) {
+                manager.disconnect(connection.getId(), reason);
             }
         });
     }

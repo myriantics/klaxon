@@ -1,28 +1,34 @@
 package net.myriantics.klaxon.mechanics.grapple_winch;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public interface GrapplingHook {
-    int klaxon$getId();
-
     void klaxon$onConnect(ServerPlayerEntity serverPlayer);
 
-    void klaxon$onDisconnect();
-
-    UUID klaxon$getUUID();
+    void klaxon$onDisconnect(CableDetachmentReason reason);
 
     boolean klaxon$isAnchored();
 
     boolean klaxon$deAnchor(Vec3d deAnchoringDirection);
 
-    boolean klaxon$isRemoved();
+    Entity klaxon$asEntity();
 
-    Vec3d klaxon$getPos();
+    /**
+     * Attempt to perform a fast-reloading operation. Plays a sound, emits game event, discards self, and detaches grapple cable if successful.
+     * @param player - Player that is attempting to fast-reload this Grappling Hook into their Grapple Winch
+     * @param winchStack - Stack that we're attempting to load into
+     * @return Whether the fast loading succeeded or not
+     */
+    boolean klaxon$tryFastReload(PlayerEntity player, ItemStack winchStack);
 
-    void klaxon$setVelocity(Vec3d velocity);
-
-    Vec3d klaxon$getVelocity();
+    @Nullable Entity klaxon$getHookedEntity();
 }

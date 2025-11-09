@@ -10,7 +10,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon_gametest.util.KlaxonTestContext;

@@ -7,13 +7,14 @@ import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
+import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 
 import java.util.Optional;
 
 public class GrappleWinchCableDisconnectCriterion extends AbstractCriterion<GrappleWinchCableDisconnectCriterion.Conditions> {
 
-    public void trigger(ServerPlayerEntity serverPlayer, GrappleClawEntity.CableDetachmentReason reason) {
+    public void trigger(ServerPlayerEntity serverPlayer, CableDetachmentReason reason) {
         this.trigger(serverPlayer, (conditions) -> conditions.test(reason));
     }
 
@@ -22,17 +23,17 @@ public class GrappleWinchCableDisconnectCriterion extends AbstractCriterion<Grap
         return Conditions.CODEC;
     }
 
-    public record Conditions(Optional<LootContextPredicate> player, Optional<GrappleClawEntity.CableDetachmentReason> detachmentReason) implements AbstractCriterion.Conditions {
+    public record Conditions(Optional<LootContextPredicate> player, Optional<CableDetachmentReason> detachmentReason) implements AbstractCriterion.Conditions {
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 LootContextPredicate.CODEC.optionalFieldOf("player").forGetter(Conditions::player),
-                GrappleClawEntity.CableDetachmentReason.CODEC.optionalFieldOf("cable_detachment_reason").forGetter(Conditions::detachmentReason)
+                CableDetachmentReason.CODEC.optionalFieldOf("cable_detachment_reason").forGetter(Conditions::detachmentReason)
         ).apply(instance, Conditions::new));
 
         public static AdvancementCriterion<Conditions> createWildcard() {
             return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.create(new Conditions(Optional.empty(), Optional.empty()));
         }
 
-        public static AdvancementCriterion<Conditions> create(GrappleClawEntity.CableDetachmentReason reason) {
+        public static AdvancementCriterion<Conditions> create(CableDetachmentReason reason) {
             return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.create(new Conditions(Optional.empty(), Optional.of(reason)));
         }
 
@@ -41,7 +42,7 @@ public class GrappleWinchCableDisconnectCriterion extends AbstractCriterion<Grap
             return player;
         }
 
-        public boolean test(GrappleClawEntity.CableDetachmentReason reason) {
+        public boolean test(CableDetachmentReason reason) {
             return detachmentReason.isEmpty() || detachmentReason.get().equals(reason);
         }
     }

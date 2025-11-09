@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.item.v1.EnchantmentEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.util.TriState;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeLogic;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;

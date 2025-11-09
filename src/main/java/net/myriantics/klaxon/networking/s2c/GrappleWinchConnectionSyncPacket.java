@@ -3,19 +3,13 @@ package net.myriantics.klaxon.networking.s2c;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.Vec3d;
-import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
-import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchConnectionData;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
-import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnection;
-import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.mechanics.grapple_winch.connection.ClientGrappleWinchConnection;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,9 +61,9 @@ public record GrappleWinchConnectionSyncPacket(
         MinecraftClient client = context.client();
 
         client.execute(() -> {
-            if (client.world instanceof GrappleWinchConnectionManager.ClientAccess access) {
-                GrappleWinchConnectionManager.Client manager = access.klaxon$get();
-                @Nullable GrappleWinchConnection.Client connection = manager.fromConnectionId(this.connectionId);
+            if (client.world instanceof ClientGrappleWinchConnectionManager.Access access) {
+                ClientGrappleWinchConnectionManager manager = access.klaxon$get();
+                @Nullable ClientGrappleWinchConnection connection = manager.fromConnectionId(this.connectionId);
                 if (connection == null) {
                     manager.connect(this);
                 } else {

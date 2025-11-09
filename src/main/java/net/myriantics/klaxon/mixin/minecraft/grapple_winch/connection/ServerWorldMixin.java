@@ -15,10 +15,7 @@ import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
-import net.minecraft.world.spawner.SpecialSpawner;
-import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnectionManager;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,16 +25,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin extends World implements GrappleWinchConnectionManager.ServerAccess {
+public abstract class ServerWorldMixin extends World implements ServerGrappleWinchConnectionManager.Access {
 
     @Shadow
     public abstract PersistentStateManager getPersistentStateManager();
 
     @Unique
-    private GrappleWinchConnectionManager.Server klaxon$connectionManager;
+    private ServerGrappleWinchConnectionManager klaxon$connectionManager;
 
     protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
@@ -48,11 +46,21 @@ public abstract class ServerWorldMixin extends World implements GrappleWinchConn
             at = @At(value = "TAIL")
     )
     private void klaxon$initGrappleWinchConnectionManager(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List spawners, boolean shouldTickTime, RandomSequencesState randomSequencesState, CallbackInfo ci) {
-        this.klaxon$connectionManager = this.getPersistentStateManager().getOrCreate(GrappleWinchConnectionManager.Server.getPersistentStateType((ServerWorld) (Object) this), GrappleWinchConnectionManager.nameFor(this.getDimensionEntry()));
+        this.klaxon$connectionManager = this.getPersistentStateManager().getOrCreate(ServerGrappleWinchConnectionManager.getPersistentStateType((ServerWorld) (Object) this), ServerGrappleWinchConnectionManager.nameFor(this.getDimensionEntry()));
+    }
+
+    @Inject(
+            method = "tick",
+            at = @At(value = "TAIL")
+    )
+    private void klaxon$tickGrappleWinchConnectionManager(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
+        this.getProfiler().push("server_grapple_winch_connection_manager");
+        this.klaxon$connectionManager.tick();
+        this.getProfiler().pop();
     }
 
     @Override
-    public GrappleWinchConnectionManager.Server klaxon$get() {
+    public ServerGrappleWinchConnectionManager klaxon$get() {
         return this.klaxon$connectionManager;
     }
 }

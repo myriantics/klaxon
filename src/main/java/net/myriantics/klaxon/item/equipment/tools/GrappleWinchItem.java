@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.item.equipment.tools.grapple_winch;
+package net.myriantics.klaxon.item.equipment.tools;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -34,7 +34,11 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
-import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.mechanics.grapple_winch.connection.ClientGrappleWinchConnection;
+import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.ClientGrappleWinchConnectionManager;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
@@ -96,7 +100,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
         // if this is the first projectile shot, attach the server player's cable to it.
         if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrappleClawEntity grappleClaw) {
-            ((GrappleWinchConnectionManager.ServerAccess) serverPlayer.getServerWorld()).klaxon$get().connect(serverPlayer, grappleClaw);
+            ((ServerGrappleWinchConnectionManager.Access) serverPlayer.getServerWorld()).klaxon$get().connect(serverPlayer, grappleClaw);
         }
     }
 
@@ -110,9 +114,11 @@ public class GrappleWinchItem extends RangedWeaponItem {
     @Override
     public void onStoppedUsing(ItemStack winchStack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity playerEntity) {
-            PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) playerEntity;
+            GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
+            assert manager != null;
+            @Nullable GrappleWinchConnection connection = manager.fromPlayer(playerEntity);
 
-            if (!access.klaxon$hasActiveConnection()) {
+            if (connection == null) {
                 int i = this.getMaxUseTime(winchStack, user) - remainingUseTicks;
                 float f = getPullProgress(i);
                 if (!(f < 0.1)) {
@@ -158,27 +164,29 @@ public class GrappleWinchItem extends RangedWeaponItem {
                         playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                     }
                 }
-            } else if (access.klaxon$hasActiveConnection()) {
-                access.klaxon$resetWinchCableLength();
+            } else {
+                connection.resetCableLength();
             }
         }
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        PlayerEntityGrappleAccess access = (PlayerEntityGrappleAccess) user;
+        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
+        assert manager != null;
+        @Nullable GrappleWinchConnection connection = manager.fromPlayer(user);
+
         ItemStack winchStack = user.getStackInHand(hand);
         ItemStack offhandStack = user.getStackInHand(hand.equals(Hand.OFF_HAND) ? Hand.MAIN_HAND : Hand.OFF_HAND);
         boolean supportsCable = this.canSupportCable(winchStack);
         boolean offhandSupportsCable = offhandStack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(offhandStack);
-        boolean activeConnection = access.klaxon$hasActiveConnection();
         ItemStack ammoStack = user.getProjectileType(winchStack);
         ChargedProjectilesComponent chargedProjectilesComponent = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
         boolean isLoaded = chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty();
 
         // proceed if connection is active or winch has a grapple claw stored
         // make sure offhand cannot support cable before trying to charge back
-        if ((activeConnection && supportsCable) || (isLoaded && !offhandSupportsCable)) {
+        if ((connection != null && supportsCable) || (isLoaded && !offhandSupportsCable)) {
             user.setCurrentHand(hand);
             return TypedActionResult.consume(winchStack);
         } else if (!isLoaded && !ammoStack.isEmpty()) {
@@ -219,9 +227,14 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) player.getWorld()).klaxon$get();
+        assert manager != null;
+        @Nullable GrappleWinchConnection connection = manager.fromPlayer(player);
+
         if (clickType.equals(ClickType.RIGHT) && slot.canTakePartial(player)) {
+
             // don't allow any right click item movements or actions when a connection is active
-            if (((PlayerEntityGrappleAccess) player).klaxon$hasActiveConnection()) {
+            if (connection != null) {
                 return true;
             }
 
@@ -329,6 +342,9 @@ public class GrappleWinchItem extends RangedWeaponItem {
                 return;
             }
 
+            ClientGrappleWinchConnectionManager manager = ((ClientGrappleWinchConnectionManager.Access) player.getWorld()).klaxon$get();
+            @Nullable ClientGrappleWinchConnection connection = manager.fromPlayer(player);
+
             // initialize max cable length
             double maxCableLength = player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
 
@@ -336,8 +352,8 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
             // only render live numbers if cable length is greater than 0
             // ensures no divide by 0
-            if (maxCableLength > 0 && ((PlayerEntityGrappleAccess) player).klaxon$hasActiveConnection()) {
-                double truncatedCableLength = KlaxonMathHelper.roundToTenth(((PlayerEntityGrappleAccess) player).klaxon$getCurrentWinchCableLength());
+            if (maxCableLength > 0 && connection != null) {
+                double truncatedCableLength = KlaxonMathHelper.roundToTenth(connection.getCableLength());
                 double ratio = truncatedCableLength / maxCableLength;
 
                 valuesText = Texts.bracketed(Text.literal(truncatedCableLength + "/" + maxCableLength));

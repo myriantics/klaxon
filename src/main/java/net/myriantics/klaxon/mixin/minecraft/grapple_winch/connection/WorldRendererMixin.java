@@ -1,12 +1,13 @@
-package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
+package net.myriantics.klaxon.mixin.minecraft.grapple_winch.connection;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.myriantics.klaxon.client.GrappleWinchClientConnectionManager;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.profiler.Profiler;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.ClientGrappleWinchConnectionManager;
 import org.joml.Matrix4f;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,8 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
+
     @Shadow
-    private @Nullable ClientWorld world;
+    @Final
+    private MinecraftClient client;
 
     @Inject(
             method = "render",
@@ -32,12 +35,13 @@ public abstract class WorldRendererMixin {
             Matrix4f matrix4f2,
             CallbackInfo ci,
             @Local MatrixStack matrixStack,
-            @Local VertexConsumerProvider.Immediate immediate
-            ) {
-        if (world != null) {
-            world.getProfiler().push("grapple_winch_cables");
-            GrappleWinchClientConnectionManager.INSTANCE.renderGrappleWinchCable(world, camera, tickCounter, matrixStack, immediate);
-            world.getProfiler().pop();
-        }
+            @Local VertexConsumerProvider.Immediate immediate,
+            @Local Profiler profiler
+    ) {
+        profiler.push("grapple_winch_cable");
+        assert this.client.world != null;
+        ClientGrappleWinchConnectionManager manager = ((ClientGrappleWinchConnectionManager.Access) this.client.world).klaxon$get();
+        manager.render(this.client.world, camera, tickCounter, matrixStack, immediate);
+        profiler.pop();
     }
 }

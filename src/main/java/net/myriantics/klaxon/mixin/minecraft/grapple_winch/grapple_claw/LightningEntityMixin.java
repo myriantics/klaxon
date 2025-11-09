@@ -10,8 +10,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawAccess;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,12 +58,17 @@ public abstract class LightningEntityMixin extends Entity {
             @Local List<Entity> struckEntities,
             @Share(namespace = "klaxon", value = "conductionTargets") LocalRef<ArrayList<Entity>> allConductionTargets
     ) {
+
         // check to see if we've directly struck a grapple claw
         @Nullable GrappleClawEntity grappleClaw = struckEntity instanceof GrappleClawEntity ? (GrappleClawEntity) struckEntity : null;
 
         // check to see if we've struck a player wielding a grapple cable
-        if (grappleClaw == null && struckEntity instanceof PlayerEntityGrappleAccess access) {
-            grappleClaw = access.klaxon$getGrappleClaw();
+        if (grappleClaw == null && struckEntity instanceof ServerPlayerEntity serverPlayer) {
+            ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
+            @Nullable ServerGrappleWinchConnection connection = manager.fromPlayer(serverPlayer);
+            if (connection != null && connection.getHook() instanceof GrappleClawEntity claw) {
+                grappleClaw = claw;
+            }
         }
 
         // check to see if we've struck an entity hooked by a grapple claw

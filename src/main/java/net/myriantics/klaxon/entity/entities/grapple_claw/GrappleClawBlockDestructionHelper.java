@@ -15,10 +15,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.PlayerEntityGrappleAccess;
-import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnection;
-import net.myriantics.klaxon.mechanics.grapple_winch.GrappleWinchConnectionManager;
+import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
@@ -58,7 +57,7 @@ public abstract class GrappleClawBlockDestructionHelper {
             return false;
         }
 
-        PlayerEntity attachedPlayer = grappleClaw.cableAttachmentHandler.getAttachedPlayer();
+        PlayerEntity attachedPlayer = grappleClaw.getAttachedPlayer();
 
         // try to veinmine before breaking the block :)
         if (!veinmineBlocksIfValid(grappleClaw, world, occupiedState, pos, attachedPlayer)) {
@@ -169,13 +168,10 @@ public abstract class GrappleClawBlockDestructionHelper {
     }
 
     private static boolean canVeinmineBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos, PlayerEntity attachedPlayer) {
-        GrappleWinchConnection<?> connection = null;
-        if (world instanceof GrappleWinchConnectionManager.ServerAccess access) {
-            connection = access.klaxon$get().fromHookId(grappleClaw.klaxon$getId());
-        } else if (world instanceof GrappleWinchConnectionManager.ClientAccess access) {
-            connection = access.klaxon$get().fromHookId(grappleClaw.klaxon$getId());
+        if (attachedPlayer == null) {
+            return false;
         }
-
+        GrappleWinchConnection connection = ((GrappleWinchConnectionManager.Access) grappleClaw.getWorld()).klaxon$get().fromHook(grappleClaw);
         return connection != null && connection.isRetracting() && state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE);
     }
 

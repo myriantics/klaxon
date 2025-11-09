@@ -15,7 +15,7 @@ import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
-import net.myriantics.klaxon.item.equipment.tools.grapple_winch.GrappleWinchItem;
+import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.registry.dynamic.KlaxonEnchantments;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 
