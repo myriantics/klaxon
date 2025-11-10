@@ -197,8 +197,13 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
         // gather all the players tracking this connection
         HashSet<ServerPlayerEntity> tracking = new HashSet<>();
-        tracking.addAll(PlayerLookup.tracking(this.player));
-        tracking.addAll(PlayerLookup.tracking(this.hook.klaxon$asEntity()));
+        if (this.player != null) {
+            tracking.add(this.player);
+            tracking.addAll(PlayerLookup.tracking(this.player));
+        }
+        if (this.hook != null) {
+            tracking.addAll(PlayerLookup.tracking(this.hook.klaxon$asEntity()));
+        }
 
         // send the packet off to all tracking players
         for (ServerPlayerEntity serverPlayer : tracking) {
@@ -263,6 +268,10 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
         if (!this.player.isAlive()) {
             return CableDetachmentReason.PLAYER_DIED;
+        }
+
+        if (this.hook.klaxon$asEntity().isRemoved()) {
+            return CableDetachmentReason.HOOK_REMOVED;
         }
 
         if (this.player.isSpectator()) {

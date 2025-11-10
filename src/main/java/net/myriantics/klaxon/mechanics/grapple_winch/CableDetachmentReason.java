@@ -8,7 +8,7 @@ import net.minecraft.util.StringIdentifiable;
 
 public enum CableDetachmentReason implements StringIdentifiable {
     INVALID_HELD_ITEMS(0, true),
-    PLAYER_REMOVED(1, false),
+    HOOK_REMOVED(1, false),
     PLAYER_DIED(2, false),
     PLAYER_SPECTATOR(3, false),
     PLAYER_TELEPORTED(4, true),

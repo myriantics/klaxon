@@ -3,6 +3,7 @@ package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -50,5 +51,18 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
         return (Object) this instanceof GrappleClawEntity grappleClaw
                 ? GrappleClawBlockDestructionHelper.raycast(grappleClaw, raycastContext.getStart(), raycastContext.getEnd(), true)
                 : original.call(instance, raycastContext);
+    }
+
+    @WrapOperation(
+            method = "onPlayerCollision",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;tryPickup(Lnet/minecraft/entity/player/PlayerEntity;)Z")
+    )
+    private boolean klaxon$tryFastReload(PersistentProjectileEntity instance, PlayerEntity player, Operation<Boolean> original) {
+        if (instance instanceof GrapplingHook hook) {
+            if (hook.klaxon$tryFastReload(player, player.getMainHandStack()) || hook.klaxon$tryFastReload(player, player.getOffHandStack())) {
+                return false;
+            }
+        }
+        return original.call(instance, player);
     }
 }

@@ -518,65 +518,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
-    public boolean klaxon$tryFastReload(PlayerEntity player, ItemStack winchStack) {
-        World world = player.getWorld();
-
-        // check if the winch stack is a grapple winch
-        if (!(winchStack.getItem() instanceof GrappleWinchItem)) {
-            return false;
-        }
-
-        @Nullable GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
-        @Nullable GrappleWinchConnection connection = manager == null ? null : manager.fromHook(this);
-
-        ChargedProjectilesComponent projectiles = winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
-
-        // make sure that the grapple winch is empty and that we're either unattached or being loaded into the attached player's grapple winch
-        if (projectiles.isEmpty() && (connection == null || player.equals(connection.getPlayer()))) {
-            // this is needed so players can choose whether they want to recast grapple claw or not
-            // only trigger this if pickup occurred while retracting
-            if (player instanceof ServerPlayerEntity serverPlayer && (connection == null || connection.isRetracting())) {
-                // update usage lockout if true
-                KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
-            }
-
-            // if we're on the server, update the grapple winch's components to include this one
-            if (!world.isClient()) {
-                winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.getItemStack()));
-            }
-
-            // play sounds and emit game event
-            world.playSound(
-                    null,
-                    player.getX(),
-                    player.getEyeY(),
-                    player.getZ(),
-                    KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_FAST_LOAD,
-                    SoundCategory.PLAYERS,
-                    0.7f + world.getRandom().nextFloat() * 0.3f,
-                    0.7f + world.getRandom().nextFloat() * 0.3f
-            );
-            world.emitGameEvent(
-                    GameEvent.ENTITY_ACTION,
-                    player.getEyePos(),
-                    GameEvent.Emitter.of(player)
-            );
-
-            if (!this.getWorld().isClient()) {
-                assert manager != null;
-                this.discard();
-                if (connection != null) {
-                    manager.disconnect(connection.getId(), CableDetachmentReason.FAST_RELOADED);
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
     public @Nullable Entity klaxon$getHookedEntity() {
         return this.hookedEntityContainer.get();
     }
@@ -593,12 +534,17 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
+    public ItemStack klaxon$getItemStack() {
+        return this.getItemStack();
+    }
+
+    @Override
     public boolean klaxon$isAnchored() {
         return this.inGround || this.hookedEntityContainer.isPresent() && EntityWeightHelper.isHeavy(this.hookedEntityContainer.get());
     }
 
     @Override
-    public boolean klaxon$deAnchor(Vec3d deAnchoringDirection) {
+    public void klaxon$deAnchor(Vec3d deAnchoringDirection) {
         boolean success = false;
         if (this.inGround) {
             BlockHitResult hitResult = GrappleClawBlockDestructionHelper.raycast(
@@ -621,7 +567,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) this.getAttachedPlayer());
         }
 
-        return success;
     }
 
     public class HookedEntityContainer {

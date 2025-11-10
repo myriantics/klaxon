@@ -3,21 +3,20 @@ package net.myriantics.klaxon.item.equipment.tools;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ChargedProjectilesComponent;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.StackReference;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.RangedWeaponItem;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.predicate.item.*;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,6 +33,7 @@ import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
+import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ClientGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ClientGrappleWinchConnectionManager;
@@ -51,7 +51,17 @@ import java.util.function.Predicate;
 
 public class GrappleWinchItem extends RangedWeaponItem {
 
-    protected static final ItemPredicate PROJECTILES = ItemPredicate.Builder.create().tag(KlaxonItemTags.GRAPPLE_CLAWS).build();
+    private static final Predicate<ItemStack> PROJECTILES = (stack -> {
+        if (stack.isIn(KlaxonItemTags.GRAPPLE_CLAWS)) {
+            return true;
+        }
+
+        if (stack.isOf(Items.TRIDENT) && !EnchantmentHelper.hasAnyEnchantmentsWith(stack, EnchantmentEffectComponentTypes.TRIDENT_SPIN_ATTACK_STRENGTH)) {
+            return true;
+        }
+
+        return false;
+    });
 
     private static final Identifier BASE_WINCH_CABLE_LENGTH = KlaxonCommon.locate("base_winch_cable_length");
 
@@ -99,16 +109,15 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
 
         // if this is the first projectile shot, attach the server player's cable to it.
-        if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrappleClawEntity grappleClaw) {
-            ((ServerGrappleWinchConnectionManager.Access) serverPlayer.getServerWorld()).klaxon$get().connect(serverPlayer, grappleClaw);
+        if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrapplingHook hook) {
+            ((ServerGrappleWinchConnectionManager.Access) serverPlayer.getServerWorld()).klaxon$get().connect(serverPlayer, hook);
         }
     }
 
     @Override
     protected ProjectileEntity createArrowEntity(World world, LivingEntity shooter, ItemStack weaponStack, ItemStack projectileStack, boolean critical) {
-        GrappleClawItem clawItem = projectileStack.getItem() instanceof GrappleClawItem item ? item : (GrappleClawItem) KlaxonItems.STEEL_GRAPPLE_CLAW;
-
-        return clawItem.createGrappleClaw(world, projectileStack, shooter, weaponStack);
+        ProjectileItem projItem = projectileStack.getItem() instanceof ProjectileItem item ? item : (GrappleClawItem) KlaxonItems.STEEL_GRAPPLE_CLAW;
+        return projItem.createEntity(world, shooter.getEyePos(), projectileStack, shooter.getFacing());
     }
 
     @Override
