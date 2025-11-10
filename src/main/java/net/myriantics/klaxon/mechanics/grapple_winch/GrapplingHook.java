@@ -46,15 +46,20 @@ public interface GrapplingHook {
         }
 
         @Nullable GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
-        @Nullable GrappleWinchConnection connection = manager == null ? null : manager.fromHook(this);
+        @Nullable GrappleWinchConnection playerConnection = manager == null ? null : manager.fromPlayer(player);
+        @Nullable GrappleWinchConnection selfConnection = manager == null ? null : manager.fromHook(this);
 
+        // make sure grapple winch is empty - so there's space to reload into
         ChargedProjectilesComponent projectiles = winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
+        if (!projectiles.isEmpty()) {
+            return false;
+        }
 
-        // make sure that the grapple winch is empty and that we're either unattached or being loaded into the attached player's grapple winch
-        if (projectiles.isEmpty() && (connection == null || player.equals(connection.getPlayer()))) {
+        // this tests for the connections being present and matching - or not present at all.
+        if (playerConnection == selfConnection) {
             // this is needed so players can choose whether they want to recast grapple claw or not
             // only trigger this if pickup occurred while retracting
-            if (player instanceof ServerPlayerEntity serverPlayer && (connection == null || connection.isRetracting())) {
+            if (player instanceof ServerPlayerEntity serverPlayer && (selfConnection == null || selfConnection.isRetracting())) {
                 // update usage lockout if true
                 KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
             }
@@ -84,8 +89,8 @@ public interface GrapplingHook {
             if (!this.klaxon$asEntity().getWorld().isClient()) {
                 assert manager != null;
                 this.klaxon$asEntity().discard();
-                if (connection != null) {
-                    manager.disconnect(connection.getId(), CableDetachmentReason.FAST_RELOADED);
+                if (selfConnection != null) {
+                    manager.disconnect(selfConnection.getId(), CableDetachmentReason.FAST_RELOADED);
                 }
             }
 
