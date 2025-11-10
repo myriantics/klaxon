@@ -26,11 +26,8 @@ public abstract class KlaxonItemModelPredicates {
             @Nullable ClientGrappleWinchConnection connection = manager.fromPlayer(player);
 
             if (connection != null) {
-
-                AttributeContainer attributes = player.getAttributes();
-
-                if (attributes.hasAttribute(KlaxonEntityAttributes.WINCH_CABLE_LENGTH)) {
-                    return  (float) (connection.getCableLength() / entity.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH));
+                if (connection.getMaxCableLength() > 0) {
+                    return  (float) (connection.getCableLength() / connection.getMaxCableLength());
                 }
             }
         }

@@ -346,13 +346,14 @@ public class GrappleWinchItem extends RangedWeaponItem {
             @Nullable ClientGrappleWinchConnection connection = manager.fromPlayer(player);
 
             // initialize max cable length
-            double maxCableLength = player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
+            double maxCableLength = connection == null ? -1 : connection.getMaxCableLength();
 
             MutableText valuesText;
 
             // only render live numbers if cable length is greater than 0
             // ensures no divide by 0
-            if (maxCableLength > 0 && connection != null) {
+            // connection not being present also
+            if (maxCableLength > 0) {
                 double truncatedCableLength = KlaxonMathHelper.roundToTenth(connection.getCableLength());
                 double ratio = truncatedCableLength / maxCableLength;
 

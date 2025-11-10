@@ -46,16 +46,22 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     public void sync(GrappleWinchConnectionSyncPacket packet) {
+        // update fallback positions
         this.playerFallbackPrevPos = this.playerFallbackPos;
         this.playerFallbackPos = packet.playerFallbackPos();
         this.hookFallbackPrevPos = this.hookFallbackPos;
         this.hookFallbackPos = packet.hookFallbackPos();
+
         this.hookAnchored = packet.hookAnchored();
+
+        // update cable length
         if (this.player != null && !this.player.equals(MinecraftClient.getInstance().player)) {
-            this.cableLength = packet.cableLength();
+            this.setCableLength(packet.cableLength());
         }
-        this.updateEntities();
+        this.maxCableLength = packet.maxCableLength();
+
         this.ticksSinceUpdated = 0;
+        this.updateEntities();
     }
 
     @Override
@@ -76,10 +82,8 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
         if (this.player.equals(MinecraftClient.getInstance().player)) {
             Vec3d compiledPlayerVec = Vec3d.ZERO;
 
-            double maxWinchCableLength = player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
-
             // initialize values
-            Vec3d playerToHookVec = this.getHookPos().subtract(this.getPlayerPos().add(0, player.getEyeY(), 0));
+            Vec3d playerToHookVec = this.getHookPos().subtract(this.getPlayerPos().add(0, this.player.getEyeHeight(this.player.getPose()), 0));
             double clawDistance = playerToHookVec.length();
 
             // update winch cable length
@@ -112,8 +116,8 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
                 // retraction is only capped at the max range
                 // cable length is also less regulated when sneaking & retracting so that players can descend with the grapple winch
                 if (clawDistance > ((this.player.isSneaking() && this.retracting) || this.player.isOnGround()
-                        ? maxWinchCableLength
-                        : Math.min(maxWinchCableLength, cableLength)
+                        ? this.maxCableLength
+                        : Math.min(this.maxCableLength, cableLength)
                 )) {
                     Vec3d playerRangeCorrectionVec = playerToHookVec.multiply(0.1);
                     playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, player.getFinalGravity(), 0);

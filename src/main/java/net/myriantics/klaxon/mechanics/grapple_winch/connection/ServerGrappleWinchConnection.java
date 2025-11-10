@@ -47,6 +47,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         this.hookUUID = hookUUID;
         this.dormantHookNbt = dormantHookNbt;
         this.tryActivate();
+        this.resetMaxCableLength();
     }
 
     public ServerGrappleWinchConnection(ServerGrappleWinchConnectionManager manager, int connectionId, UUID playerUUID, UUID hookUUID) {
@@ -100,6 +101,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         }
 
         this.retracting = this.player.isUsingItem() && this.player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
+        this.resetMaxCableLength();
 
         Vec3d compiledHookVec = Vec3d.ZERO;
 
@@ -108,7 +110,6 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         Vec3d normalizedHook2WielderVec = playerEyePos.subtract(hookPos).normalize();
 
         double wielderDistance = hookPos.distanceTo(playerEyePos);
-        double maxCableLength = player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
 
         // try to deanchor
         if (this.hookAnchored && this.retracting && EntityWeightHelper.isHeavy(this.player)) {
@@ -126,6 +127,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
                 );
             }
         }
+
         this.hookAnchored = this.hook.klaxon$isAnchored();
 
 
@@ -138,7 +140,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
             }
 
             // retract grapple claw if it hits limit
-            if (wielderDistance >= maxCableLength) {
+            if (wielderDistance >= this.maxCableLength) {
 
                 if (wielderDistance >= maxCableLength * 1.2) {
                     this.hook.klaxon$asEntity().setVelocity(this.hook.klaxon$asEntity().getVelocity().multiply(0.85));
@@ -183,7 +185,8 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
                 this.player.getPos(),
                 this.hook.klaxon$asEntity().getPos(),
                 this.hookAnchored,
-                this.cableLength
+                this.cableLength,
+                this.maxCableLength
         );
 
         this.sendToTracking(packet);
@@ -211,7 +214,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         Entity maybePlayer = this.manager.getWorld().getEntity(this.playerUUID);
         Entity maybeHook;
 
-        if (maybePlayer instanceof ServerPlayerEntity player) {
+        if (maybePlayer instanceof ServerPlayerEntity serverPlayer) {
             if (this.dormantHookNbt != null) {
                 maybeHook = EntityType.loadEntityWithPassengers(
                         this.dormantHookNbt,
@@ -222,10 +225,11 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
                 maybeHook = this.manager.getWorld().getEntity(this.hookUUID);
             }
 
-            if (maybeHook instanceof GrapplingHook hook) {
-                this.player = player;
-                this.hook = hook;
+            if (maybeHook instanceof GrapplingHook grapplingHook) {
+                this.player = serverPlayer;
+                this.hook = grapplingHook;
                 this.state = State.ACTIVE;
+                this.resetMaxCableLength();
                 return true;
             }
         }
@@ -242,6 +246,11 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     public boolean validate() {
+        // don't invalidate dormant connections
+        if (this.state.equals(State.DORMANT)) {
+            return true;
+        }
+
         @Nullable CableDetachmentReason reason = this.testValidity();
         if (reason != null) {
             this.manager.disconnect(this.connectionId, reason);
@@ -274,7 +283,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
             return CableDetachmentReason.INVALID_HELD_ITEMS;
         }
 
-        boolean cableTooLong = this.hook.klaxon$asEntity().getPos().distanceTo(this.player.getEyePos()) > this.player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH) * 1.5f;
+        boolean cableTooLong = this.hook.klaxon$asEntity().getPos().distanceTo(this.player.getEyePos()) > this.getMaxCableLength() * 1.5f;
 
         if (cableTooLong) {
             return CableDetachmentReason.CABLE_TOO_LONG;
@@ -286,6 +295,10 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
     public void playSoundAtBothCableEnds(SoundEvent soundEvent, float pitch, float volume) {
 
+    }
+
+    private void resetMaxCableLength() {
+        this.maxCableLength = this.player == null ? -1 : this.player.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH);
     }
 
     @Override

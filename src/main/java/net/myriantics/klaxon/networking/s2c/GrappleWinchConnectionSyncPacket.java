@@ -20,14 +20,15 @@ public record GrappleWinchConnectionSyncPacket(
        Vec3d playerFallbackPos,
        Vec3d hookFallbackPos,
        boolean hookAnchored,
-       double cableLength
+       double cableLength,
+       double maxCableLength
 ) implements CustomPayload {
 
     public static final CustomPayload.Id<GrappleWinchConnectionSyncPacket> ID = new CustomPayload.Id<>(KlaxonPackets.GRAPPLE_WINCH_CONNECTION_SYNC_S2C_ID);
 
     private static final PacketCodec<ByteBuf, Vec3d> VEC3D_PACKET_CODEC = PacketCodecs.VECTOR3F.xmap(Vec3d::new, Vec3d::toVector3f);
 
-    public static final PacketCodec<RegistryByteBuf, GrappleWinchConnectionSyncPacket> PACKET_CODEC = new PacketCodec<RegistryByteBuf, GrappleWinchConnectionSyncPacket>() {
+    public static final PacketCodec<RegistryByteBuf, GrappleWinchConnectionSyncPacket> PACKET_CODEC = new PacketCodec<>() {
         @Override
         public GrappleWinchConnectionSyncPacket decode(RegistryByteBuf buf) {
             int connectionId = PacketCodecs.VAR_INT.decode(buf);
@@ -37,7 +38,8 @@ public record GrappleWinchConnectionSyncPacket(
             Vec3d hookFallbackPos = VEC3D_PACKET_CODEC.decode(buf);
             boolean hookAnchored = PacketCodecs.BOOL.decode(buf);
             double cableLength = PacketCodecs.DOUBLE.decode(buf);
-            return new GrappleWinchConnectionSyncPacket(connectionId, playerId, hookId, playerFallbackPos, hookFallbackPos, hookAnchored, cableLength);
+            double maxCableLength = PacketCodecs.DOUBLE.decode(buf);
+            return new GrappleWinchConnectionSyncPacket(connectionId, playerId, hookId, playerFallbackPos, hookFallbackPos, hookAnchored, cableLength, maxCableLength);
         }
 
         @Override
@@ -46,9 +48,10 @@ public record GrappleWinchConnectionSyncPacket(
             PacketCodecs.VAR_INT.encode(buf, packet.playerId());
             PacketCodecs.VAR_INT.encode(buf, packet.hookId());
             VEC3D_PACKET_CODEC.encode(buf, packet.playerFallbackPos());
-            VEC3D_PACKET_CODEC.encode(buf, packet.hookFallbackPos);
+            VEC3D_PACKET_CODEC.encode(buf, packet.hookFallbackPos());
             PacketCodecs.BOOL.encode(buf, packet.hookAnchored());
             PacketCodecs.DOUBLE.encode(buf, packet.cableLength());
+            PacketCodecs.DOUBLE.encode(buf, packet.maxCableLength());
         }
     };
 
