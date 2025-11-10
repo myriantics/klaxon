@@ -106,7 +106,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         Vec3d compiledHookVec = Vec3d.ZERO;
 
         Vec3d hookPos = this.getHookPos();
-        Vec3d playerEyePos = this.getPlayerPos();
+        Vec3d playerEyePos = this.player.getEyePos();
         Vec3d normalizedHook2WielderVec = playerEyePos.subtract(hookPos).normalize();
 
         double wielderDistance = hookPos.distanceTo(playerEyePos);
