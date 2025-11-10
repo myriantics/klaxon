@@ -1,11 +1,13 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch.hook;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
@@ -16,17 +18,17 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawBlockDestructionHelper;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
+import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
+import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin extends PersistentProjectileEntity implements GrapplingHook {
@@ -54,7 +56,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
 
     @Override
     public boolean klaxon$isAnchored() {
-        return this.inGround;
+        return this.inGround && !this.isNoClip();
     }
 
     @Override
@@ -120,5 +122,19 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
             }
         }
         original.call(instance);
+    }
+
+    @Definition(id = "dealtDamage", field = "Lnet/minecraft/entity/projectile/TridentEntity;dealtDamage:Z")
+    @Expression("this.dealtDamage")
+    @ModifyExpressionValue(
+            method = "tick",
+            at = @At(value = "MIXINEXTRAS:EXPRESSION")
+    )
+    private boolean klaxon$dontReturnWithLoyaltyIfRetracting(boolean original) {
+        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
+        @Nullable GrappleWinchConnection connection = manager.fromHook(this);
+        // this makes it so that loyalty tridents are actually useful as a grappling hook
+        // you just have to start retracting right before they land and then release when you want them to be recalled
+        return original && (connection == null || !connection.isRetracting());
     }
 }
