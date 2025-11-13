@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.Ingredient;
@@ -11,19 +12,22 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.dynamic.Codecs;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class KlaxonCodecUtils {
 
     public static final Codec<List<Ingredient>> INGREDIENT_LIST_CODEC = Codec.list(Ingredient.ALLOW_EMPTY_CODEC);
-    public static final PacketCodec<ByteBuf, List<Ingredient>> INGREDIENT_LIST_PACKET_CODEC = PacketCodecs.codec(INGREDIENT_LIST_CODEC);
+    public static final PacketCodec<RegistryByteBuf, List<Ingredient>> INGREDIENT_LIST_PACKET_CODEC = Ingredient.PACKET_CODEC.collect(PacketCodecs.toList());
     public static final Codec<SoundEvent> OPTIONAL_SOUND_EVENT_CODEC = Codecs.optional(SoundEvent.CODEC)
             .xmap(
                     soundEvent -> soundEvent.orElse(SoundEvents.INTENTIONALLY_EMPTY),
