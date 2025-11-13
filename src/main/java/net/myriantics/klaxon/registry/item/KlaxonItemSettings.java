@@ -55,8 +55,8 @@ public class KlaxonItemSettings {
         return this;
     }
 
-    public KlaxonItemSettings grappleClaw(float baseGrapplingDamage, float baseRendingDamage, float durabilityDamageMultiplier) {
-        this.component(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT, new GrappleClawComponent(baseGrapplingDamage, baseRendingDamage, durabilityDamageMultiplier));
+    public KlaxonItemSettings grappleClaw(float baseGrapplingDamage, float baseRendingDamage) {
+        this.component(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT, new GrappleClawComponent(baseGrapplingDamage, baseRendingDamage));
         return this;
     }
 

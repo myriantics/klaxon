@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -346,7 +345,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
             ItemStack itemStack = chargedProjectilesComponent.getProjectiles().get(0);
             tooltip.add(Text.translatable("klaxon.text.tooltip.grapple_winch.projectile").append(ScreenTexts.SPACE).append(itemStack.toHoverableText()));
         } else {
-            ClientPlayerEntity player = MinecraftClient.getInstance().player;
+            PlayerEntity player = MinecraftClient.getInstance().player;
             if (player == null) {
                 return;
             }

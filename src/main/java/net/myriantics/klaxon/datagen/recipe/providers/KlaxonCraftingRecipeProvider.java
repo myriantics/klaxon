@@ -2,7 +2,6 @@ package net.myriantics.klaxon.datagen.recipe.providers;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -10,9 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.collection.DefaultedList;
-import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -35,6 +32,22 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         buildDecorationCraftingRecipes();
         buildRedstoneCraftingRecipes();
         buildWoodCraftingRecipes();
+        buildEquipmentCraftingRecipes();
+    }
+
+    private void buildEquipmentCraftingRecipes() {
+        addGrappleClawRecipes(
+                Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES),
+                Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS),
+                Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS),
+                new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW, 1)
+        );
+        addGrappleClawRecipes(
+                Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
+                Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
+                Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_NUGGETS),
+                new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW, 4)
+        );
     }
 
     private void buildWoodCraftingRecipes() {
@@ -525,6 +538,43 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 result,
                 CraftingRecipeCategory.MISC,
                 "wire_spools",
+                conditions
+        );
+    }
+
+    private void addGrappleClawRecipes(Ingredient plate, Ingredient ingot, Ingredient nugget, ItemStack result, ResourceCondition... conditions) {
+        Map<Character, Ingredient> map = Map.of(
+                'P', plate,
+                'I', ingot,
+                'N', nugget
+                // g
+                // a
+                // s
+                // !
+        );
+
+        addShapedCraftingRecipe(
+                map,
+                new String[] {
+                        " P ",
+                        "PNP",
+                        "IP "
+                },
+                result,
+                CraftingRecipeCategory.EQUIPMENT,
+                "grapple_claw",
+                conditions
+        );
+        addShapedCraftingRecipe(
+                map,
+                new String[] {
+                        "IP ",
+                        "PNP",
+                        " P "
+                },
+                result,
+                CraftingRecipeCategory.EQUIPMENT,
+                "grapple_claw",
                 conditions
         );
     }

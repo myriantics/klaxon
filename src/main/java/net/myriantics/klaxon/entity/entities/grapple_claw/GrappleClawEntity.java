@@ -87,6 +87,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
+        // i can't delegate this to the hooked entity container because this method is called before the container is initialized!!! madge
         builder.add(HOOKED_ENTITY_ID, 0);
     }
 
@@ -181,25 +182,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)) {
                 damage *= 2;
             }
-
-            // damage claw stack and trigger kill advancement if needed
-            // also return the value
-            return damageClawStack((ServerWorld) getWorld(), source, damage, (item -> {
-                if (source.getAttacker() instanceof ServerPlayerEntity serverPlayer) {
-                    Criteria.PLAYER_KILLED_ENTITY.trigger(serverPlayer, this, source);
-                }
-
-                // play destroy sound
-                this.getWorld().playSound(
-                        null,
-                        getBlockPos(),
-                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DESTROY,
-                        SoundCategory.PLAYERS,
-                        0.7f + getWorld().getRandom().nextFloat() * 0.3f,
-                        0.7f + getWorld().getRandom().nextFloat() * 0.3f
-                );
-            }));
         }
+
+        return false;
     }
 
     @Override
@@ -208,66 +193,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             this.dropStack(getItemStack());
         }
         super.kill();
-    }
-
-    /**
-     * Damages the contained ItemStack, and returns whether any damage was successfully dealt or not.
-     * @param serverWorld needed for cool stuff
-     * @param source Optionally the damage source
-     * @param damage The raw amount of damage to deal to the grapple claw stack
-     * @param consumer Consumer run on item break
-     * @return Whether the stack was successfully damaged or not
-     */
-    private boolean damageClawStack(ServerWorld serverWorld, @Nullable DamageSource source, int damage, Consumer<Item> consumer) {
-        ItemStack grappleClawStack = this.getItemStack();
-
-        int appliedDamage = grappleClawStack.getDamage();
-
-        grappleClawStack.damage(
-                damage,
-                serverWorld,
-                source != null && source.getAttacker() instanceof ServerPlayerEntity serverPlayer ? serverPlayer : null,
-                (item) -> {
-                    // increment broken stat if needed
-                    if (source != null && source.getAttacker() instanceof ServerPlayerEntity serverPlayer) {
-                        serverPlayer.incrementStat(Stats.BROKEN.getOrCreateStat(item));
-                    }
-
-                    consumer.accept(item);
-                    this.kill();
-                }
-        );
-
-        // play damage sound if grapple claw wasn't killed
-        if (!grappleClawStack.isEmpty()) {
-            this.getWorld().playSound(
-                    null,
-                    getBlockPos(),
-                    KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DAMAGE,
-                    SoundCategory.PLAYERS,
-                    0.8f + getWorld().getRandom().nextFloat() * 0.2f,
-                    0.7f + getWorld().getRandom().nextFloat() * 0.3f
-            );
-            this.getWorld().emitGameEvent(
-                    GameEvent.ENTITY_DAMAGE,
-                    this.getEyePos(),
-                    source == null ? GameEvent.Emitter.of(this) : GameEvent.Emitter.of(source.getAttacker())
-            );
-        }
-
-        // determine the amount that was actually applied
-        appliedDamage -= grappleClawStack.getDamage();
-
-        // proc entity hurt advancement - registers as blocked if stack is unbreakable
-        if (source != null && source.getAttacker() instanceof ServerPlayerEntity serverPlayer) {
-            Criteria.PLAYER_HURT_ENTITY.trigger(serverPlayer, this, source, damage, appliedDamage, !grappleClawStack.isDamageable());
-        }
-
-        if (appliedDamage > 0) {
-            this.ticksSinceDamaged = 0;
-        }
-
-        return appliedDamage > 0;
     }
 
     @Override

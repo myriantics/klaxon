@@ -63,17 +63,17 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             ));
     public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
             new GrappleClawItem(new KlaxonItemSettings()
-                    .maxCountMaxDamage(16, KlaxonToolMaterials.STEEL.getDurability())
-                    .grappleClaw(4.0f, 6.0f, 1.4f)
-                    .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+                    .maxCount(16)
+                    .grappleClaw(4.0f, 6.0f)
                     .getSettings()
             ));
     public static final Item GRAPPLE_WINCH = registerItem("grapple_winch",
             new GrappleWinchItem(new KlaxonItemSettings()
-                    .maxCount(1)
+                    .maxDamage(KlaxonToolMaterials.STEEL_PLATE.getDurability())
                     .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
                     .damageTypeOverride(KlaxonDamageTypes.BLUDGEONING)
                     .attributeModifiers(GrappleWinchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 0, -3.2f))
+                    .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
                     .with3dHandModel()
                     .withMirroredLeftHandModel()
                     .getSettings()
@@ -81,24 +81,24 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
 
     // armor
     public static final Item CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
-            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4, Enchantments.PROTECTION, 2))
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
             .rarity(Rarity.UNCOMMON)
             .getSettings()
     ));
     public static final Item STEEL_HELMET = registerItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
-            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4, Enchantments.PROTECTION, 2))
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
             .getSettings()
     ));
     public static final Item STEEL_CHESTPLATE = registerItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new KlaxonItemSettings()
-            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4, Enchantments.PROTECTION, 2, KlaxonEnchantments.STREAMLINE, 1))
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4, KlaxonEnchantments.STREAMLINE, 1))
             .getSettings()
     ));
     public static final Item STEEL_LEGGINGS = registerItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new KlaxonItemSettings()
-            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4, Enchantments.PROTECTION, 2))
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
             .getSettings()
     ));
     public static final Item STEEL_BOOTS = registerItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new KlaxonItemSettings()
-            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4, Enchantments.PROTECTION, 2))
+            .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
             .getSettings()
     ));
 
