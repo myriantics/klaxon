@@ -13,6 +13,8 @@ accessible method net/minecraft/entity/passive/SnifferBrain$FinishDiggingTask <i
 
 accessible method net/minecraft/entity/passive/SnifferEntity canDig ()Z
 
+accessible method net/minecraft/entity/Entity getSavedEntityId ()Ljava/lang/String;
+
 accessible class net/minecraft/enchantment/EnchantmentHelper$ContextAwareConsumer
 
 accessible class net/minecraft/predicate/StatePredicate$Condition

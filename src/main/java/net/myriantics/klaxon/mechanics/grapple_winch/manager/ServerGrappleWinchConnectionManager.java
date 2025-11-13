@@ -2,14 +2,18 @@ package net.myriantics.klaxon.mechanics.grapple_winch.manager;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.PersistentState;
+import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
@@ -83,16 +87,20 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
 
         // run on connect effects (mainly just setting owner)
         hook.klaxon$onConnect(serverPlayer);
+        this.markDirty();
     }
 
     @Override
     protected void disconnectInternal(int connectionId, CableDetachmentReason reason) {
         ServerGrappleWinchConnection connection = this.connectionId2Connection.remove(connectionId);
         if (connection != null) {
-            KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(
-                    connection.getPlayer(),
-                    reason
-            );
+            if (connection.getPlayer() != null) {
+                KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(
+                        connection.getPlayer(),
+                        reason
+                );
+            }
+
             if (reason.playsDetachmentSound) {
                 connection.playSoundAtBothCableEnds(
                         KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DETACH,
@@ -102,6 +110,7 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
             }
             connection.sendToTracking(new GrappleWinchConnectionDiscardPacket(connectionId, reason));
         }
+        this.markDirty();
     }
 
     public void tick() {
@@ -119,13 +128,9 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
         );
     }
 
-    public static String nameFor(RegistryEntry<DimensionType> dimensionTypeEntry) {
-        if (dimensionTypeEntry.getKey().isPresent()) {
-            Identifier id = dimensionTypeEntry.getKey().get().getValue();
-
-            return id.getNamespace() + "_" + id.getPath() + "_grapple_winch_connection_manager";
-        }
-        return "grapple_winch_connection_manager";
+    public static String nameFor(RegistryKey<World> worldKey) {
+        Identifier id = worldKey.getValue();
+        return id.getNamespace() + "_" + id.getPath() + "_grapple_winch_connection_manager";
     }
 
     @Override
@@ -144,19 +149,25 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
     public static ServerGrappleWinchConnectionManager fromNbt(ServerWorld serverWorld, NbtCompound nbt) {
         ServerGrappleWinchConnectionManager manager = new ServerGrappleWinchConnectionManager(serverWorld);
 
-        int currentConnectionId = 0;
+        int currentId = 0;
 
         // read all the stored connections and init the maps
         if (nbt.get(KlaxonNBTIds.GRAPPLE_WINCH_CONNECTIONS) instanceof NbtList connections) {
-            for (int i = 0; i < connections.size(); i++) {
-                ServerGrappleWinchConnection connection = ServerGrappleWinchConnection.fromNbt(manager, connections.getCompound(i), currentConnectionId);
-                manager.connectionId2Connection.put(connection.getId(), connection);
-                currentConnectionId++;
+            for (NbtElement element : connections) {
+                if (element instanceof NbtCompound compound) {
+                    ServerGrappleWinchConnection connection = ServerGrappleWinchConnection.fromNbt(manager, compound, currentId);
+                    manager.connectionId2Connection.put(currentId, connection);
+                    currentId++;
+                }
             }
         }
 
         // initialize connection id to include all the startup connections
-        manager.currentConnectionId = currentConnectionId;
+        manager.currentConnectionId = currentId;
+
+        if (currentId > 0) {
+            KlaxonCommon.LOGGER.info("Loaded {} Dormant Grapple Winch Connections!", currentId);
+        }
 
         return manager;
     }

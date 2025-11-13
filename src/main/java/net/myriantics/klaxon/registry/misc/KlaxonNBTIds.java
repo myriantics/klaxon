@@ -17,5 +17,7 @@ public abstract class KlaxonNBTIds {
     public static final String GRAPPLE_WINCH_CONNECTIONS = KlaxonCommon.locateAlt("grapple_winch_connections");
     public static final String GRAPPLING_HOOK = KlaxonCommon.locateAlt("grappling_hook");
     public static final String PLAYER_UUID = KlaxonCommon.locateAlt("player_uuid");
-    public static final String HOOK_UUID = KlaxonCommon.locateAlt("hook_uuid");
+    public static final String CABLE_LENGTH = KlaxonCommon.locateAlt("cable_length");
+    public static final String MAX_CABLE_LENGTH = KlaxonCommon.locateAlt("max_cable_length");
+    public static final String HOOK_ANCHORED = KlaxonCommon.locateAlt("hook_anchored");
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
+import net.minecraft.world.spawner.SpecialSpawner;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,8 +46,11 @@ public abstract class ServerWorldMixin extends World implements ServerGrappleWin
             method = "<init>",
             at = @At(value = "TAIL")
     )
-    private void klaxon$initGrappleWinchConnectionManager(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List spawners, boolean shouldTickTime, RandomSequencesState randomSequencesState, CallbackInfo ci) {
-        this.klaxon$connectionManager = this.getPersistentStateManager().getOrCreate(ServerGrappleWinchConnectionManager.getPersistentStateType((ServerWorld) (Object) this), ServerGrappleWinchConnectionManager.nameFor(this.getDimensionEntry()));
+    private void klaxon$initGrappleWinchConnectionManager(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, RandomSequencesState randomSequencesState, CallbackInfo ci) {
+        this.klaxon$connectionManager = this.getPersistentStateManager().getOrCreate(
+                ServerGrappleWinchConnectionManager.getPersistentStateType((ServerWorld) (Object) this),
+                ServerGrappleWinchConnectionManager.nameFor(worldKey)
+        );
     }
 
     @Inject(

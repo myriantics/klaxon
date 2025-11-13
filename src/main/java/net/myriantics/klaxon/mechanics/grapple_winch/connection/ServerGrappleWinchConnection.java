@@ -40,7 +40,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
     private boolean canPlayReboundSound = true;
     private State state = State.DORMANT;
 
-    public ServerGrappleWinchConnection(ServerGrappleWinchConnectionManager manager, int connectionId, UUID playerUUID, UUID hookUUID, NbtCompound dormantHookNbt) {
+    private ServerGrappleWinchConnection(ServerGrappleWinchConnectionManager manager, int connectionId, UUID playerUUID, UUID hookUUID, NbtCompound dormantHookNbt) {
         super(connectionId);
         this.manager = manager;
         this.playerUUID = playerUUID;
@@ -216,18 +216,22 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
             return false;
         }
 
-        Entity maybePlayer = this.manager.getWorld().getEntity(this.playerUUID);
+        Entity maybePlayer = this.manager.getWorld().getServer().getPlayerManager().getPlayer(this.playerUUID);
         Entity maybeHook;
 
-        if (maybePlayer instanceof ServerPlayerEntity serverPlayer) {
+        // we have to delay activation until the player's winch cable length attribute loads
+        // otherwise the connection gets ganked as soon as it's created due to a max cable length of 0.
+        if (maybePlayer instanceof ServerPlayerEntity serverPlayer && serverPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH) > 0) {
             if (this.dormantHookNbt != null) {
                 maybeHook = EntityType.loadEntityWithPassengers(
                         this.dormantHookNbt,
                         this.manager.getWorld(),
-                        grapplingHook -> !this.manager.getWorld().tryLoadEntity(grapplingHook) ? null : grapplingHook
+                        grapplingHook -> this.manager.getWorld().tryLoadEntity(grapplingHook) ? grapplingHook : null
                 );
-            } else {
+            } else if (this.hookUUID != null) {
                 maybeHook = this.manager.getWorld().getEntity(this.hookUUID);
+            } else {
+                throw new AssertionError();
             }
 
             if (maybeHook instanceof GrapplingHook grapplingHook) {
@@ -245,8 +249,6 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
     public void makeDormant() {
         ((Entity) this.hook).remove(Entity.RemovalReason.UNLOADED_WITH_PLAYER);
         this.dormantHookNbt = ((Entity) this.hook).writeNbt(new NbtCompound());
-        this.player = null;
-        this.hook = null;
         this.state = State.DORMANT;
     }
 
@@ -315,8 +317,28 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        // store uuid and grappling hook data
         nbt.putUuid(KlaxonNBTIds.PLAYER_UUID, this.playerUUID);
-        nbt.put(KlaxonNBTIds.GRAPPLING_HOOK, this.hook.klaxon$asEntity().writeNbt(new NbtCompound()));
+        if (this.dormantHookNbt != null) {
+            nbt.put(KlaxonNBTIds.GRAPPLING_HOOK, this.dormantHookNbt);
+        } else if (this.hook != null) {
+            NbtCompound newHookNbt = new NbtCompound();
+            // needed to know what entity type to use when decoding entity - don't appreciate having to use an access widener for this method haha
+            String id = this.hook.klaxon$asEntity().getSavedEntityId();
+            newHookNbt.putString("id", id);
+            // save main hook data to grappling hook compound
+            this.hook.klaxon$asEntity().writeNbt(newHookNbt);
+            // commit grappling hook data to main compound
+            nbt.put(KlaxonNBTIds.GRAPPLING_HOOK, newHookNbt);
+        } else {
+            throw new AssertionError("Error while saving Grapple Winch Connection! Expected cached Grappling Hook NBT or active Grappling Hook, both were null!");
+        }
+
+        // store other misc data
+        nbt.putDouble(KlaxonNBTIds.CABLE_LENGTH, this.cableLength);
+        nbt.putDouble(KlaxonNBTIds.MAX_CABLE_LENGTH, this.maxCableLength);
+        nbt.putBoolean(KlaxonNBTIds.HOOK_ANCHORED, this.hookAnchored);
+
         return nbt;
     }
 
@@ -324,7 +346,16 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         UUID playerUUID = nbt.getUuid(KlaxonNBTIds.PLAYER_UUID);
         NbtCompound hookNbt = nbt.getCompound(KlaxonNBTIds.GRAPPLING_HOOK);
         UUID hookUUID = hookNbt.getUuid("UUID");
-        return new ServerGrappleWinchConnection(manager, currentId, playerUUID, hookUUID, hookNbt);
+
+        double cableLength = nbt.getDouble(KlaxonNBTIds.CABLE_LENGTH);
+        double maxCableLength = nbt.getDouble(KlaxonNBTIds.MAX_CABLE_LENGTH);
+        boolean hookAnchored = nbt.getBoolean(KlaxonNBTIds.HOOK_ANCHORED);
+
+        ServerGrappleWinchConnection connection = new ServerGrappleWinchConnection(manager, currentId, playerUUID, hookUUID, hookNbt);
+        connection.maxCableLength = maxCableLength;
+        connection.setCableLength(cableLength);
+        connection.hookAnchored = hookAnchored;
+        return connection;
     }
 
     public enum State {

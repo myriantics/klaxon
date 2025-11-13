@@ -46,6 +46,7 @@
     "minecraft.grapple_winch.grapple_claw.LightningEntityMixin",
     "minecraft.grapple_winch.grapple_claw.ServerPlayerEntityMixin",
     "minecraft.grapple_winch.grapple_winch.PlayerManagerMixin",
+    "minecraft.grapple_winch.hook.EntityMixin",
     "minecraft.grapple_winch.hook.TridentEntityMixin",
     "minecraft.hallnox_pod.FallingBlockEntityMixin",
     "minecraft.hallnox_pod.ShearsItemMixin",

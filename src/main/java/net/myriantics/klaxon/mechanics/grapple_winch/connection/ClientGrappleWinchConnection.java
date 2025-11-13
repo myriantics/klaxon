@@ -40,7 +40,9 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
     public ClientGrappleWinchConnection(ClientGrappleWinchConnectionManager manager, GrappleWinchConnectionSyncPacket packet) {
         this(manager, packet.connectionId(), packet.playerId(), packet.hookId());
         this.playerFallbackPos = packet.playerFallbackPos();
+        this.playerFallbackPrevPos = packet.playerFallbackPos();
         this.hookFallbackPos = packet.hookFallbackPos();
+        this.hookFallbackPrevPos = packet.hookFallbackPos();
         this.hookAnchored = packet.hookAnchored();
         this.updateEntities();
     }
