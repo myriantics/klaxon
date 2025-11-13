@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.mechanics.grapple_winch.connection;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,9 +12,12 @@ import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ClientGrappleWinchConnectionManager;
+import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
+import net.myriantics.klaxon.networking.c2s.GrappleWinchCableLengthUpdateC2S;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
     private Vec3d playerFallbackPos;
@@ -199,6 +203,12 @@ public final class ClientGrappleWinchConnection extends GrappleWinchConnection {
         double lerpedY = MathHelper.lerp(delta, this.hookFallbackPrevPos.getY(), this.hookFallbackPos.getY());
         double lerpedZ = MathHelper.lerp(delta, this.hookFallbackPrevPos.getZ(), this.hookFallbackPos.getZ());
         return new Vec3d(lerpedX, lerpedY, lerpedZ);
+    }
+
+    @Override
+    public void setCableLength(double cableLength) {
+        super.setCableLength(cableLength);
+        ClientPlayNetworking.send(new GrappleWinchCableLengthUpdateC2S(this.cableLength));
     }
 
     @Override
