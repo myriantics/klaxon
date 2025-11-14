@@ -42,6 +42,8 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
         this.playerFallbackPrevPos = packet.playerFallbackPos();
         this.hookFallbackPos = packet.hookFallbackPos();
         this.hookFallbackPrevPos = packet.hookFallbackPos();
+        this.maxCableLength = packet.maxCableLength();
+        this.setCableLength(packet.cableLength());
         this.hookAnchored = packet.hookAnchored();
         this.updateEntities();
     }
@@ -56,7 +58,7 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
         this.hookAnchored = packet.hookAnchored();
 
         // update cable length
-        if (this.player != null && !this.player.equals(MinecraftClient.getInstance().player)) {
+        if (this.player != null && (this.cableLength == -1 || !this.player.isMainPlayer())) {
             this.setCableLength(packet.cableLength());
         }
         this.maxCableLength = packet.maxCableLength();
