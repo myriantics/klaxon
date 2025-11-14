@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.registry.misc;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
@@ -8,7 +7,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.networking.c2s.GrappleWinchCableForceDisconnectC2S;
 import net.myriantics.klaxon.networking.c2s.GrappleWinchCableLengthUpdateC2S;
 import net.myriantics.klaxon.networking.s2c.*;
-import net.myriantics.klaxon.networking.c2s.EntityDualWieldToggleC2SPacket;
+import net.myriantics.klaxon.networking.c2s.DualWieldToggleC2SPacket;
 import net.myriantics.klaxon.networking.c2s.HammerWalljumpTriggerPacket;
 
 public abstract class KlaxonPackets {
@@ -37,25 +36,15 @@ public abstract class KlaxonPackets {
 
         // c2s
         PayloadTypeRegistry.playC2S().register(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket.PACKET_CODEC);
-        PayloadTypeRegistry.playC2S().register(EntityDualWieldToggleC2SPacket.ID, EntityDualWieldToggleC2SPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(DualWieldToggleC2SPacket.ID, DualWieldToggleC2SPacket.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(GrappleWinchCableForceDisconnectC2S.ID, GrappleWinchCableForceDisconnectC2S.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(GrappleWinchCableLengthUpdateC2S.ID, GrappleWinchCableLengthUpdateC2S.PACKET_CODEC);
-    }
-
-    // client only
-    public static void registerS2CPacketRecievers() {
-        ClientPlayNetworking.registerGlobalReceiver(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket::execute);
-        ClientPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleS2CPacket.ID, EntityDualWieldToggleS2CPacket::execute);
-        ClientPlayNetworking.registerGlobalReceiver(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket::execute);
-        ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket::execute);
-        ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket::execute);
-        ClientPlayNetworking.registerGlobalReceiver(ItemUsageLockoutTrigger.ID, ItemUsageLockoutTrigger::execute);
     }
 
     // server only
     public static void initC2SRecievers() {
         ServerPlayNetworking.registerGlobalReceiver(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket::execute);
-        ServerPlayNetworking.registerGlobalReceiver(EntityDualWieldToggleC2SPacket.ID, EntityDualWieldToggleC2SPacket::execute);
+        ServerPlayNetworking.registerGlobalReceiver(DualWieldToggleC2SPacket.ID, DualWieldToggleC2SPacket::execute);
         ServerPlayNetworking.registerGlobalReceiver(GrappleWinchCableForceDisconnectC2S.ID, GrappleWinchCableForceDisconnectC2S::execute);
         ServerPlayNetworking.registerGlobalReceiver(GrappleWinchCableLengthUpdateC2S.ID, GrappleWinchCableLengthUpdateC2S::execute);
     }

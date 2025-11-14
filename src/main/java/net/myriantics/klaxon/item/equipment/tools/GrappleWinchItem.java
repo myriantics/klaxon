@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -15,7 +14,6 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.*;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.predicate.item.*;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -30,12 +28,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
-import net.myriantics.klaxon.mechanics.grapple_winch.connection.ClientGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
-import net.myriantics.klaxon.mechanics.grapple_winch.manager.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
@@ -345,47 +340,18 @@ public class GrappleWinchItem extends RangedWeaponItem {
             ItemStack itemStack = chargedProjectilesComponent.getProjectiles().get(0);
             tooltip.add(Text.translatable("klaxon.text.tooltip.grapple_winch.projectile").append(ScreenTexts.SPACE).append(itemStack.toHoverableText()));
         } else {
-            PlayerEntity player = MinecraftClient.getInstance().player;
-            if (player == null) {
-                return;
-            }
-
-            ClientGrappleWinchConnectionManager manager = ((ClientGrappleWinchConnectionManager.Access) player.getWorld()).klaxon$get();
-            @Nullable ClientGrappleWinchConnection connection = manager.fromPlayer(player);
-
-            // initialize max cable length
-            double maxCableLength = connection == null ? -1 : connection.getMaxCableLength();
-
-            MutableText valuesText;
-
-            // only render live numbers if cable length is greater than 0
-            // ensures no divide by 0
-            // connection not being present also
-            if (maxCableLength > 0) {
-                double truncatedCableLength = KlaxonMathHelper.roundToTenth(connection.getCableLength());
-                double ratio = truncatedCableLength / maxCableLength;
-
-                valuesText = Texts.bracketed(Text.literal(truncatedCableLength + "/" + maxCableLength));
-
-                // format text according to cable ratio
-                if (ratio >= 1.0) {
-                    valuesText = valuesText.formatted(Formatting.RED);
-                } else if (ratio >= 0.75) {
-                    valuesText = valuesText.formatted(Formatting.YELLOW);
-                } else {
-                    valuesText = valuesText.formatted(Formatting.GREEN);
-                }
-            } else {
-                valuesText = Texts.bracketed(Text.literal("--/--"));
-            }
-
             // add the tooltip
-            tooltip.add(Text.translatable("klaxon.text.tooltip.grapple_winch.cable_length")
+            // additional advanced logic is defined in client self-mixin
+            tooltip.add(
+                    Text.translatable("klaxon.text.tooltip.grapple_winch.cable_length.prefix")
                     .formatted(Formatting.GRAY)
-                    .append(ScreenTexts.SPACE)
-                    .append(valuesText)
+                    .append(createCableLengthDisplayText())
             );
         }
+    }
+
+    private static MutableText createCableLengthDisplayText() {
+        return Texts.bracketed(Text.translatable("klaxon.text.tooltip.grapple_winch.cable_length.display", "--", "--"));
     }
 
     @Override

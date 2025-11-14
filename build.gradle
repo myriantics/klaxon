@@ -36,6 +36,7 @@ repositories {
 
 loom {
     accessWidenerPath = file("src/main/resources/klaxon.accesswidener")
+    splitEnvironmentSourceSets()
 }
 
 fabricApi {

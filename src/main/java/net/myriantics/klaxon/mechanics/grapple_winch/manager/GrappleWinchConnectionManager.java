@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 
-public abstract sealed class GrappleWinchConnectionManager extends PersistentState permits ClientGrappleWinchConnectionManager, ServerGrappleWinchConnectionManager {
+public abstract class GrappleWinchConnectionManager extends PersistentState {
     protected final World world;
     protected final LinkedList<Runnable> disconnectQueue = new LinkedList<>();
 

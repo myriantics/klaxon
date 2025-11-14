@@ -1,14 +1,10 @@
 package net.myriantics.klaxon.mechanics.grapple_winch.connection;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
-import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
 
-import java.util.Objects;
-
-public abstract sealed class GrappleWinchConnection permits ClientGrappleWinchConnection, ServerGrappleWinchConnection {
+public abstract class GrappleWinchConnection {
     protected final int connectionId;
 
     protected boolean retracting = false;

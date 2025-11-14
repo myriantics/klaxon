@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.registry.misc;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
@@ -39,8 +38,5 @@ public abstract class KlaxonEventListeners {
         EnchantmentEvents.ALLOW_ENCHANTING.register((enchantment, target, context) -> target.isIn(KlaxonItemTags.UNENCHANTABLE) ? TriState.FALSE : TriState.DEFAULT);
 
         KlaxonCommon.LOGGER.info("Registered KLAXON's Event Listeners!");
-    }
-
-    public static void initClient() {
     }
 }

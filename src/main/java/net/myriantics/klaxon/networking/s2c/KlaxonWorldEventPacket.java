@@ -1,12 +1,10 @@
 package net.myriantics.klaxon.networking.s2c;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.network.packet.s2c.play.WorldEventS2CPacket;
 import net.minecraft.util.math.BlockPos;
-import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public record KlaxonWorldEventPacket(WorldEventS2CPacket packet) implements CustomPayload{
@@ -24,11 +22,5 @@ public record KlaxonWorldEventPacket(WorldEventS2CPacket packet) implements Cust
     @Override
     public Id<? extends CustomPayload> getId() {
         return ID;
-    }
-
-    public void execute(ClientPlayNetworking.Context context) {
-        context.client().execute(() -> {
-            KlaxonClientPlayNetworkHandler.processKlaxonWorldEvent(packet.getEventId(), packet.getPos(), packet.getData());
-        });
     }
 }

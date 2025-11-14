@@ -21,7 +21,8 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
         addTooltipText("missing_block_item", "Missing Block Item");
         addTooltipText("heavy_equipment", "Heavy Equipment");
         addTooltipText("grapple_winch.projectile", "Projectile:");
-        addTooltipText("grapple_winch.cable_length", "Cable Length:");
+        addTooltipText("grapple_winch.cable_length.prefix", "Cable Length: ");
+        addTooltipText("grapple_winch.cable_length.display", "%1$s/%2$s");
     }
 
     private void generateMiscText() {

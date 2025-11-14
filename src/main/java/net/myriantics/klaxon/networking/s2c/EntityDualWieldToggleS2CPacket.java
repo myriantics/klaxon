@@ -1,7 +1,5 @@
 package net.myriantics.klaxon.networking.s2c;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -22,15 +20,5 @@ public record EntityDualWieldToggleS2CPacket(int entityId, boolean isDualWieldin
     @Override
     public Id<? extends CustomPayload> getId() {
         return ID;
-    }
-
-    public void execute(ClientPlayNetworking.Context context) {
-        context.client().execute(() -> {
-            MinecraftClient client = context.client();
-
-            if (client.world != null && client.world.getEntityById(entityId) instanceof LivingEntityMixinAccess access) {
-                access.klaxon$setDualWielding(isDualWielding);
-            }
-        });
     }
 }

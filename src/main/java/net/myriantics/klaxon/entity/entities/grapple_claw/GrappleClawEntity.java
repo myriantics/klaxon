@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.entity.entities.grapple_claw;
 
 import net.minecraft.advancement.criterion.Criteria;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.*;
@@ -533,11 +532,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 this.hookedEntity.limitFallDistance();
             }
 
-            if (Objects.requireNonNull(this.hookedEntity) instanceof PlayerEntity player) {
-                if (player instanceof ClientPlayerEntity) {
-                    player.addVelocity(compiledVec);
-                }
-            } else {
+            if (Objects.requireNonNull(this.hookedEntity).isLogicalSideForUpdatingMovement()) {
                 this.hookedEntity.addVelocity(compiledVec);
             }
         }

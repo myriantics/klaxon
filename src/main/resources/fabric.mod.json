@@ -25,7 +25,7 @@
 			"net.myriantics.klaxon.KlaxonDataGenerator"
 		],
 		"emi": [
-			"net.myriantics.klaxon.compat.emi.KlaxonEmiPlugin"
+          "net.myriantics.klaxon.compat.emi.KlaxonEmiPlugin"
 		],
 		"jade": [
 			"net.myriantics.klaxon.compat.jade.KlaxonJadePlugin"
@@ -33,7 +33,11 @@
 	},
     "accessWidener": "klaxon.accesswidener",
 	"mixins": [
-		"klaxon.mixins.json"
+		"klaxon.mixins.json",
+        {
+           "config": "klaxon.client.mixins.json",
+           "environment": "client"
+        }
 	],
 	"depends": {
 		"fabricloader": ">=0.16.9",

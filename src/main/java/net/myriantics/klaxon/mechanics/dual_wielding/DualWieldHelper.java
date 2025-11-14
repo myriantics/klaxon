@@ -1,12 +1,11 @@
 package net.myriantics.klaxon.mechanics.dual_wielding;
 
 import com.mojang.serialization.Codec;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.StringIdentifiable;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.networking.c2s.EntityDualWieldToggleC2SPacket;
+import net.myriantics.klaxon.networking.c2s.DualWieldToggleC2SPacket;
 import net.myriantics.klaxon.networking.s2c.EntityDualWieldToggleS2CPacket;
 
 /**
@@ -24,7 +23,8 @@ public abstract class DualWieldHelper {
         if (!isDualWielding) return;
 
         if (entity.getWorld().isClient()) {
-            ClientPlayNetworking.send(new EntityDualWieldToggleC2SPacket(isDualWielding));
+            //TODO: fix
+            // ClientPlayNetworking.send(new DualWieldToggleC2SPacket(isDualWielding));
         } else if (entity.getWorld() instanceof ServerWorld serverWorld) {
             KlaxonServerPlayNetworkHandler.sendToTracking(serverWorld, entity, new EntityDualWieldToggleS2CPacket(entity.getId(), isDualWielding));
         }
