@@ -12,12 +12,12 @@ import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectio
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(
-        value = GrappleWinchItem.class,
-        remap = false
+        value = GrappleWinchItem.class
 )
 public abstract class GrappleWinchItemMixin {
 
@@ -25,10 +25,10 @@ public abstract class GrappleWinchItemMixin {
             method = "createCableLengthDisplayText",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;")
     )
-    private static MutableText klaxon$addCableLengthDataToTooltip(String key, Object[] params, Operation<MutableText> original) {
+    private static MutableText klaxon$addCableLengthDataToTooltip(String key, Object[] args, Operation<MutableText> original) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) {
-            return original.call(key, params);
+            return original.call(key, args);
         }
 
         // yoink the connection
@@ -57,6 +57,6 @@ public abstract class GrappleWinchItemMixin {
             }
         }
 
-        return original.call(key, params);
+        return original.call(key, args);
     }
 }

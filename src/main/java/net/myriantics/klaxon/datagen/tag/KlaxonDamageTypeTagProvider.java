@@ -41,5 +41,15 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
 
         getOrCreateTagBuilder(KlaxonDamageTypeTags.STREAMLINE_ENCHANTMENT_CANCELS_VELOCITY_UPDATE)
                 .addOptionalTag(DamageTypeTags.NO_KNOCKBACK);
+
+        getOrCreateTagBuilder(DamageTypeTags.CAN_BREAK_ARMOR_STAND)
+                .addOptional(KlaxonDamageTypes.HAMMER_BONKING)
+                .addOptional(KlaxonDamageTypes.HAMMER_WALLOPING)
+                .addOptional(KlaxonDamageTypes.CLEAVING)
+                .addOptional(KlaxonDamageTypes.FLINT_AND_STEEELING);
+
+        getOrCreateTagBuilder(DamageTypeTags.ALWAYS_KILLS_ARMOR_STANDS)
+                .addOptional(KlaxonDamageTypes.BLUDGEONING)
+                .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING);
     }
 }
