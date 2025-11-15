@@ -398,13 +398,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
-    public void setVelocity(Vec3d velocity) {
-        if (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isLogicalSideForUpdatingMovement()) {
-            this.hookedEntityContainer.get().setVelocity(velocity);
-            super.setVelocity(Vec3d.ZERO);
-        } else {
-            super.setVelocity(velocity);
+    public void addVelocity(double deltaX, double deltaY, double deltaZ) {
+        if (this.hookedEntityContainer.isPresent() && this.isLogicalSideForUpdatingMovement()) {
+            this.hookedEntityContainer.get().addVelocity(deltaX, deltaY, deltaZ);
         }
+        super.addVelocity(deltaX, deltaY, deltaZ);
     }
 
     @Override
