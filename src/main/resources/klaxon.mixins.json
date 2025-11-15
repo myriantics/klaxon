@@ -42,7 +42,6 @@
     "minecraft.grapple_winch.connection.ServerWorldMixin",
     "minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor",
     "minecraft.grapple_winch.grapple_claw.EntityMixin",
-    "minecraft.grapple_winch.grapple_claw.EntityMixin$EnderDragonPartMixin",
     "minecraft.grapple_winch.grapple_claw.LightningEntityMixin",
     "minecraft.grapple_winch.grapple_claw.ServerPlayerEntityMixin",
     "minecraft.grapple_winch.grapple_winch.PlayerManagerMixin",

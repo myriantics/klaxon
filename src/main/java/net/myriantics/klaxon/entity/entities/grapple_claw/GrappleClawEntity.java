@@ -37,8 +37,6 @@ import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
-import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawAccess;
-import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawContainer;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
@@ -57,7 +55,6 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class GrappleClawEntity extends PersistentProjectileEntity implements GrapplingHook {
 
@@ -65,7 +62,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     private static final int HIT_INVINCIBILITY_TICKS = 5;
 
     private int ticksSinceDamaged = 0;
-    public final HookedEntityContainer hookedEntityContainer = new HookedEntityContainer();
+    private final HookedEntityContainer hookedEntityContainer = new HookedEntityContainer();
 
     protected final HashSet<ItemEntity> draggedItems = new HashSet<>();
 
@@ -298,10 +295,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         }
 
         // only tick if we're not attached to an entity
-        if (!this.hookedEntityContainer.isPresent()) {
-            super.tick();
-        } else {
+        if (this.hookedEntityContainer.isPresent()) {
             this.hookedEntityContainer.snapClawToHookPos();
+            this.hookedEntityContainer.tick();
+        } else {
+            super.tick();
         }
     }
 
@@ -401,7 +399,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     @Override
     public void setVelocity(Vec3d velocity) {
-        if (this.hookedEntityContainer.isPresent()) {
+        if (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isLogicalSideForUpdatingMovement()) {
             this.hookedEntityContainer.get().setVelocity(velocity);
             super.setVelocity(Vec3d.ZERO);
         } else {
@@ -434,6 +432,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     public void remove(RemovalReason reason) {
         this.hookedEntityContainer.release(false);
         super.remove(reason);
+    }
+
+    public boolean hasHookedEntity() {
+        return this.hookedEntityContainer.isPresent();
     }
 
     @Override
@@ -493,7 +495,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     }
 
-    public class HookedEntityContainer {
+    private class HookedEntityContainer {
         private Entity hookedEntity = null;
 
         private HookedEntityContainer() {
@@ -504,47 +506,40 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 return;
             }
 
-            int id = GrappleClawEntity.this.getDataTracker().get(GrappleClawEntity.HOOKED_ENTITY_ID);
-
             // id is offset by one to allow for entities with an id of 0
             // was initially confused by this when i saw it in the fishing bobber entity so im dropping this explanation here for myself or whatever future person reads this
+            int id = GrappleClawEntity.this.getDataTracker().get(GrappleClawEntity.HOOKED_ENTITY_ID) - 1;
+
             if (id < 0) {
-                this.setHookedEntity(null);
+                this.hookedEntity = null;
             } else {
-                Entity entity = GrappleClawEntity.this.getWorld().getEntityById(id - 1);
+                Entity entity = GrappleClawEntity.this.getWorld().getEntityById(id);
                 switch (entity) {
                     case EnderDragonEntityAccessor access -> this.setHookedEntity(access.getBody());
-                    case null, default -> this.setHookedEntity(entity);
+                    case null, default -> this.hookedEntity = entity;
                 }
             }
         }
 
-        public void tick(Vec3d compiledVec) {
+        public void tick() {
             if (!this.isPresent()) {
                 return;
             }
 
+            GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) GrappleClawEntity.this.getWorld()).klaxon$get();
+            assert manager != null;
+            @Nullable GrappleWinchConnection connection = manager.fromHook(GrappleClawEntity.this);
+
             // clear grappled entity if it was removed
-            if (this.hookedEntity.isRemoved() || !this.hookedEntity.isAlive()) {
+            if (connection == null || this.hookedEntity.isRemoved() || !this.hookedEntity.isAlive()) {
                 this.release(false);
                 return;
             } else {
                 this.hookedEntity.limitFallDistance();
             }
-
-            if (Objects.requireNonNull(this.hookedEntity).isLogicalSideForUpdatingMovement()) {
-                this.hookedEntity.addVelocity(compiledVec);
-            }
         }
 
         private void setHookedEntity(Entity entity) {
-            if (entity == null) {
-                if (this.hookedEntity != null) {
-                    Optional.ofNullable(((HookingGrappleClawAccess) this.hookedEntity).klaxon$get()).ifPresent(HookingGrappleClawContainer::clear);
-                }
-            } else {
-                ((HookingGrappleClawAccess) entity).klaxon$get().setGrappleClaw(GrappleClawEntity.this);
-            }
 
             switch (entity) {
                 case EnderDragonPart part -> {
@@ -605,7 +600,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
             GrappleClawEntity claw = GrappleClawEntity.this;
 
-            claw.setVelocity(hookedEntity.getVelocity());
             if (damage) {
                 hookedEntity.damage(
                         claw.getWorld().getDamageSources().create(
@@ -620,17 +614,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 );
             }
 
+            Vec3d hookedVelocity = this.hookedEntity.getVelocity();
             this.setHookedEntity(null);
+            claw.setVelocity(hookedVelocity);
 
             return true;
         }
 
         public boolean canHookEntity(Entity entity) {
             if (entity == null || this.isPresent()) {
-                return false;
-            }
-
-            if (((HookingGrappleClawAccess) entity).klaxon$get().isPresent()) {
                 return false;
             }
 

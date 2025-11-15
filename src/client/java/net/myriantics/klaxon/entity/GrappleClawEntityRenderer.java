@@ -121,7 +121,7 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
 
     @Override
     public Vec3d getPositionOffset(GrappleClawEntity entity, float tickDelta) {
-        return entity.hookedEntityContainer.isPresent()
+        return entity.hasHookedEntity()
                 ? new Vec3d(0, entity.getEyeHeight(entity.getPose()), 0)
                 : super.getPositionOffset(entity, tickDelta);
     }

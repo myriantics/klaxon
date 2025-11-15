@@ -11,8 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawBlockDestructionHelper;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
-import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawContainer;
-import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,15 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements HookingGrappleClawAccess {
-
-    @Unique
-    private final HookingGrappleClawContainer klaxon$hookingGrappleClawContainer = new HookingGrappleClawContainer();
-
-    @Override
-    public HookingGrappleClawContainer klaxon$get() {
-        return klaxon$hookingGrappleClawContainer;
-    }
+public abstract class EntityMixin {
 
     @WrapOperation(
             method = "checkBlockCollision",
@@ -41,26 +31,6 @@ public abstract class EntityMixin implements HookingGrappleClawAccess {
 
         if (entity instanceof GrappleClawEntity grappleClaw) {
             GrappleClawBlockDestructionHelper.onBlockPosIntersection(grappleClaw, world, instance, pos);
-        }
-    }
-
-    @Inject(
-            method = "damage",
-            at = @At(value = "HEAD")
-    )
-    private void klaxon$transmitElectricalDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        klaxon$get().getOptionalGrappleClaw().ifPresent((grappleClaw -> grappleClaw.tryConductElectricalDamage((Entity) (Object) this, source, amount)));
-    }
-
-    @Mixin(EnderDragonPart.class)
-    private static class EnderDragonPartMixin extends EntityMixin {
-        @Shadow
-        @Final
-        public EnderDragonEntity owner;
-
-        @Override
-        public HookingGrappleClawContainer klaxon$get() {
-            return ((HookingGrappleClawAccess) owner).klaxon$get();
         }
     }
 }

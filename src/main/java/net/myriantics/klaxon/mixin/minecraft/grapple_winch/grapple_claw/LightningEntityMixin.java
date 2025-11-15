@@ -11,7 +11,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
-import net.myriantics.klaxon.mechanics.grapple_winch.hooking.HookingGrappleClawAccess;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -69,11 +68,6 @@ public abstract class LightningEntityMixin extends Entity {
             if (connection != null && connection.getHook() instanceof GrappleClawEntity claw) {
                 grappleClaw = claw;
             }
-        }
-
-        // check to see if we've struck an entity hooked by a grapple claw
-        if (grappleClaw == null && struckEntity instanceof HookingGrappleClawAccess access) {
-            grappleClaw = access.klaxon$get().getOptionalGrappleClaw().orElse(null);
         }
 
         // if we've found a grapple claw, run its lightning conduction logic
