@@ -123,7 +123,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         } else {
             // attempt to pick up / load the attached grapple claw
             // if that fails, just pick self up and discard
-            if (!this.klaxon$tryFastReload(player, player.getStackInHand(hand))) {
+            if (this.tryPickup(player)) {
                 player.sendPickup(this, 1);
                 this.discard();
             }
@@ -359,11 +359,19 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     @Override
     protected boolean tryPickup(PlayerEntity pickupPlayer) {
-        boolean isAttachedToPickupPlayer = this.isAttachedToPlayer(pickupPlayer);
+        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
+        assert manager != null;
+        @Nullable GrappleWinchConnection fromHook = manager.fromHook(this);
+        @Nullable GrappleWinchConnection fromPlayer = manager.fromPlayer(pickupPlayer);
 
-        // don't allow players to pick up attached grapple claws that aren't theirs
-        if (this.isConnected()) {
-            if (isAttachedToPickupPlayer) {
+        boolean pickupTypeValid = true;
+        switch (this.pickupType) {
+            case DISALLOWED -> pickupTypeValid = false;
+            case CREATIVE_ONLY -> pickupTypeValid = pickupPlayer.isCreative();
+        }
+
+        if (fromHook == fromPlayer) {
+            if (fromHook != null && pickupTypeValid) {
                 BlockPos steppingPos = pickupPlayer.getSteppingPos();
                 BlockPos anchoredPos = this.getBlockPos();
 
@@ -371,18 +379,16 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 if ((!pickupPlayer.isOnGround() && anchoredPos.getY() > steppingPos.getY())) {
                     return false;
                 }
-            } else {
-                return false;
+
+                if (this.klaxon$tryFastReload(pickupPlayer, pickupPlayer.getMainHandStack()) || this.klaxon$tryFastReload(pickupPlayer, pickupPlayer.getOffHandStack())) {
+                    return true;
+                }
             }
-        }
 
-        // if we're allowed to be picked up by this player, only return false if this was handled by fast loading!
-        if (super.tryPickup(pickupPlayer)) {
-            return !this.isConnected() || !(this.klaxon$tryFastReload(pickupPlayer, pickupPlayer.getMainHandStack()) || this.klaxon$tryFastReload(pickupPlayer, pickupPlayer.getOffHandStack()));
+            return super.tryPickup(pickupPlayer);
+        } else { // don't permit pickups if there's a connection mismatch between hook & player
+            return false;
         }
-
-        // if all else failed, we can't be picked up - return false
-        return false;
     }
 
     public boolean isConnected() {
