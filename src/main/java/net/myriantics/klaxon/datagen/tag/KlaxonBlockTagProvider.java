@@ -312,7 +312,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // grapple winch
         getOrCreateTagBuilder(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE)
                 .forceAddTag(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE)
-                .forceAddTag(KlaxonBlockTags.CLEAVER_INSTABREAKABLE);
+                .forceAddTag(KlaxonBlockTags.CLEAVER_INSTABREAKABLE)
+                .add(Blocks.POINTED_DRIPSTONE);
         getOrCreateTagBuilder(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE)
                 .forceAddTag(KlaxonBlockTags.HAMMER_INSTABREAKABLE)
                 .forceAddTag(KlaxonBlockTags.GLASS_VEINMINE_GROUP)

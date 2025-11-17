@@ -52,7 +52,7 @@ public abstract class GrappleClawBlockDestructionHelper {
     }
 
     protected static boolean tryBreakingBlocks(GrappleClawEntity grappleClaw, World world, BlockState occupiedState, BlockPos pos) {
-        // make sure projectiles can break blocks
+        // make sure grapple claw can break block
         if (!canBreakBlock(grappleClaw, world, occupiedState, pos)) {
             return false;
         }
@@ -176,13 +176,18 @@ public abstract class GrappleClawBlockDestructionHelper {
     }
 
     private static boolean canBreakBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos) {
-        if (!world.getGameRules().getBoolean(GameRules.PROJECTILES_CAN_BREAK_BLOCKS)) {
-            return false;
-        }
-
-        return state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0;
+        return grappleClaw.canBreakBlocks(world)
+                && (state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0);
     }
 
+    /**
+     *
+     * @param grappleClaw
+     * @param start
+     * @param end
+     * @param destructive - Used to determine if this raycast is being used for movement calculations & destruction OR collision checking when de-anchoring. It is intended that this parameter not collide with breakable blocks - as the grapple claw will penetrate through them once de-anchored.
+     * @return
+     */
     public static BlockHitResult raycast(GrappleClawEntity grappleClaw, Vec3d start, Vec3d end, boolean destructive) {
         World world = grappleClaw.getWorld();
 
@@ -197,10 +202,13 @@ public abstract class GrappleClawBlockDestructionHelper {
                 return null;
             }
 
+
             // ignore blocks that we can break - in fact, actually try to break them :)
             if (canBreakBlock(grappleClaw, world, targetState, blockPos)) {
                 // only break blocks if this raycast is declared as destructive tho
                 if (destructive) {
+                    // proc projectile hit effects
+                    targetState.onProjectileHit(world, targetState, hitResult, grappleClaw);
                     tryBreakingBlocks(grappleClaw, world, targetState, blockPos);
                 }
                 return null;

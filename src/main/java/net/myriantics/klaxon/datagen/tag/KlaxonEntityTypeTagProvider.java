@@ -56,5 +56,8 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
         // allow / denylist tags
         getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_HOOKING_DENYLIST)
                 .add(KlaxonEntityTypes.GRAPPLE_CLAW);
+
+        getOrCreateTagBuilder(EntityTypeTags.IMPACT_PROJECTILES)
+                .add(KlaxonEntityTypes.GRAPPLE_CLAW);
     }
 }
