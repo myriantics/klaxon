@@ -50,9 +50,10 @@ public class GrappleWinchItem extends RangedWeaponItem {
             return true;
         }
 
+        /*
         if (stack.isOf(Items.TRIDENT) && !EnchantmentHelper.hasAnyEnchantmentsWith(stack, EnchantmentEffectComponentTypes.TRIDENT_SPIN_ATTACK_STRENGTH)) {
             return true;
-        }
+        }*/
 
         return false;
     });
