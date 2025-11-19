@@ -1,11 +1,9 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -37,7 +35,6 @@ import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
-import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -88,7 +85,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
                 )
                 .add(
                         KlaxonEntityAttributes.WINCH_CABLE_LENGTH,
-                        new EntityAttributeModifier(BASE_WINCH_CABLE_LENGTH, 48, EntityAttributeModifier.Operation.ADD_VALUE),
+                        new EntityAttributeModifier(BASE_WINCH_CABLE_LENGTH, 64, EntityAttributeModifier.Operation.ADD_VALUE),
                         AttributeModifierSlot.HAND
                 ).build();
     }
@@ -124,8 +121,8 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
             if (connection == null) {
                 int i = this.getMaxUseTime(winchStack, user) - remainingUseTicks;
-                float f = getPullProgress(i);
-                if (!(f < 0.1)) {
+                float pullProgress = getPullProgress(i);
+                if (!(pullProgress < 0.1)) {
                     ChargedProjectilesComponent chargedProjectilesComponent = winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
 
                     if (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty()) {
@@ -140,7 +137,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
                                     playerEntity.getActiveHand(),
                                     winchStack,
                                     chargedProjectilesComponent.getProjectiles(),
-                                    2.5f,
+                                    50f/20 + (pullProgress * 10f/20) + (playerEntity.isFallFlying() ? 10f/20 : 0),
                                     1.0f,
                                     true,
                                     null
@@ -156,7 +153,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
                                 KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LAUNCH,
                                 SoundCategory.PLAYERS,
                                 1.0F,
-                                1.0F / (world.getRandom().nextFloat() * 0.8F + 1.2F) + f * 0.5F
+                                1.0F / (world.getRandom().nextFloat() * 0.8F + 1.2F) + pullProgress * 0.5F
                         );
                         world.emitGameEvent(
                                 GameEvent.ENTITY_ACTION,
