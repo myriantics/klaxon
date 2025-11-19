@@ -1,20 +1,17 @@
 package net.myriantics.klaxon.datagen.model.item;
 
-import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.fabricmc.loader.impl.lib.tinyremapper.extension.mixin.common.MapUtility;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Model;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.myriantics.klaxon.mixin.minecraft.datagen.ModelAccessor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -90,33 +87,39 @@ public final class FancierItemModelBuilder {
             overrideCount *= override.values.length;
         }
 
-        JsonArray overrides = new JsonArray();
+        JsonArray overrides = new JsonArray(0);
 
-        // iterate through all the overrides and make a builder for each one
-        for (int i = 0; i < overrideCount; i++) {
-            Model overrideModel = model;
-            HashMap<TextureKey, Identifier> textureMap = HashMap.newHashMap(defaultTextureMap.size());
-            textureMap.putAll(defaultTextureMap);
+        int[] max = new int[this.overrides.size()];
+        for (int i = 0; i < max.length; i++) {
+            max[i] = this.overrides.get(i).values.length;
+        }
 
-            StringBuilder pathBuilder = new StringBuilder(modelId.getPath() + "/");
-
-            int selector = i;
+        int[] incrementor = new int[this.overrides.size()];
+        while (incrementor.length > 0 && incrementor[incrementor.length - 1] != max[max.length - 1]) {
+            Model overrideModel = this.model;
+            HashMap<TextureKey, Identifier> textureMap = HashMap.newHashMap(this.defaultTextureMap.size());
+            textureMap.putAll(this.defaultTextureMap);
 
             JsonObject predicates = new JsonObject();
 
-            // apply all the overrides
-            for (FancyOverride override : this.overrides) {
+            StringBuilder pathBuilder = new StringBuilder(modelId.getPath() + "/");
+
+            for (int i = 0; i < this.overrides.size(); i++) {
+                FancyOverride override = this.overrides.get(i);
+
                 String predicateId = override.predicateId.lastIndexOf(Identifier.NAMESPACE_SEPARATOR) == -1 ? override.predicateId : override.predicateId.substring(override.predicateId.lastIndexOf(Identifier.NAMESPACE_SEPARATOR) + 1);
-                int selectedIndex = selector % override.values.length;
-                Number selectedValue = override.values[selectedIndex];
+                Number selectedValue = override.values[incrementor[i]];
                 if (override instanceof FancyModelOverride modelOverride) {
-                    overrideModel = modelOverride.getModel(selectedIndex);
+
+                    overrideModel = modelOverride.getModel(incrementor[i]);
                     pathBuilder.append(predicateId).append("_").append(selectedValue).append("/");
+
                 } else if (override instanceof FancyTextureOverride textureOverride) {
+
                     boolean succeeded = false;
                     for (TextureKey textureKey : textureMap.keySet()) {
                         if (textureKey.getName().equals(textureOverride.textureKey)) {
-                            textureMap.replace(textureKey, textureOverride.getTexture(selectedIndex));
+                            textureMap.replace(textureKey, textureOverride.getTexture(incrementor[i]));
                             succeeded = true;
                             break;
                         }
@@ -130,8 +133,6 @@ public final class FancierItemModelBuilder {
                     }
                     pathBuilder.append(predicateId).append('_').append(selectedValue);
                 }
-                selector -= selectedIndex;
-
                 // add the property to the predicate list
                 predicates.addProperty(override.predicateId, selectedValue);
             }
@@ -146,6 +147,16 @@ public final class FancierItemModelBuilder {
             override.add("predicate", predicates);
             override.addProperty("model", modelId.toString());
             overrides.add(override);
+
+            // update the incrementor for the next go-round
+            for (int i = 0; i < incrementor.length; i++) {
+                incrementor[i]++;
+                if (incrementor[i] < max[i]) {
+                    break;
+                } else if (i != incrementor.length - 1) {
+                    incrementor[i] = 0;
+                }
+            }
         }
 
         // build the parent model, overrides and all

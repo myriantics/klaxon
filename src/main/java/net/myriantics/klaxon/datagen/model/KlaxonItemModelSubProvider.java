@@ -54,28 +54,35 @@ public abstract class KlaxonItemModelSubProvider {
 
         // predicates
         Identifier chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
+        Identifier retractingPredicate = KlaxonItemModelPredicateIds.RETRACTING;
         Identifier winchCableLengthPredicate = KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH;
 
         // texture keys
-        TextureKey structure = TextureKey.of("structure");
-        TextureKey claw = TextureKey.of("claw");
-        TextureKey spool = TextureKey.of("spool");
+        TextureKey structure = TextureKey.of("5");
+        TextureKey claw = TextureKey.of("3");
+        TextureKey spool = TextureKey.of("4");
 
         FancierItemModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_4, modelId, Map.of(
                         structure, KlaxonTextures.GRAPPLE_WINCH_3D_STRUCTURE,
                         claw, KlaxonTextures.EMPTY,
-                        spool, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL
+                        spool, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL_RETRACTING
                 ))
-                .modelOverride(winchCableLengthPredicate, 5)
-                .add(0, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_4)
-                .add(0.25, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_3)
-                .add(0.5, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_2)
-                .add(0.75, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_1)
-                .add(1, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_0)
+                .modelOverride(winchCableLengthPredicate, 7)
+                .add(0f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_6)
+                .add(1f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_5)
+                .add(2f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_4)
+                .add(3f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_3)
+                .add(4f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_2)
+                .add(5f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_1)
+                .add(6f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_0)
                 .build()
                 .textureOverride(chargedPredicate, claw.getName(), 2)
                 .add(0, KlaxonTextures.EMPTY)
-                .add(1, KlaxonTextures.GRAPPLE_WINCH_3D_CLAW)
+                .add(1, KlaxonTextures.GRAPPLE_WINCH_STEEL_GRAPPLE_CLAW)
+                .build()
+                .textureOverride(retractingPredicate, spool.getName(), 2)
+                .add(0, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL)
+                .add(1, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL_RETRACTING)
                 .build()
                 .build(generator);
     }

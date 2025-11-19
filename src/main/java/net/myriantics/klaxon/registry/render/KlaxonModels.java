@@ -10,15 +10,17 @@ import java.util.Optional;
 
 public abstract class KlaxonModels {
 
-    public static final Model GRAPPLE_WINCH_3D_SPOOL_4 = item("grapple_winch_3d/spool_4",
+    public static final Model GRAPPLE_WINCH_3D_SPOOL_6 = item("grapple_winch_3d/spool_6",
             TextureKey.of("structure"),
             TextureKey.of("spool"),
             TextureKey.of("claw")
     );
-    public static final Model GRAPPLE_WINCH_3D_SPOOL_3 = copyTextureMap("grapple_winch_3d/spool_3", GRAPPLE_WINCH_3D_SPOOL_4);
-    public static final Model GRAPPLE_WINCH_3D_SPOOL_2 = copyTextureMap("grapple_winch_3d/spool_2", GRAPPLE_WINCH_3D_SPOOL_4);
-    public static final Model GRAPPLE_WINCH_3D_SPOOL_1 = copyTextureMap("grapple_winch_3d/spool_1", GRAPPLE_WINCH_3D_SPOOL_4);
-    public static final Model GRAPPLE_WINCH_3D_SPOOL_0 = copyTextureMap("grapple_winch_3d/spool_0", GRAPPLE_WINCH_3D_SPOOL_4);
+    public static final Model GRAPPLE_WINCH_3D_SPOOL_5 = copyTextureMap("grapple_winch_3d/spool_5", GRAPPLE_WINCH_3D_SPOOL_6);
+    public static final Model GRAPPLE_WINCH_3D_SPOOL_4 = copyTextureMap("grapple_winch_3d/spool_4", GRAPPLE_WINCH_3D_SPOOL_6);
+    public static final Model GRAPPLE_WINCH_3D_SPOOL_3 = copyTextureMap("grapple_winch_3d/spool_3", GRAPPLE_WINCH_3D_SPOOL_6);
+    public static final Model GRAPPLE_WINCH_3D_SPOOL_2 = copyTextureMap("grapple_winch_3d/spool_2", GRAPPLE_WINCH_3D_SPOOL_6);
+    public static final Model GRAPPLE_WINCH_3D_SPOOL_1 = copyTextureMap("grapple_winch_3d/spool_1", GRAPPLE_WINCH_3D_SPOOL_6);
+    public static final Model GRAPPLE_WINCH_3D_SPOOL_0 = copyTextureMap("grapple_winch_3d/spool_0", GRAPPLE_WINCH_3D_SPOOL_6);
 
     public static final Model PIPE_MATRIX_U_BEND_X_POSITIVE = block("pipe_matrix_u_bend/x_positive",
             TextureKey.TOP,

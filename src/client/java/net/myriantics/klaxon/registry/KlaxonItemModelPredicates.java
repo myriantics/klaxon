@@ -5,6 +5,7 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -43,6 +44,14 @@ public abstract class KlaxonItemModelPredicates {
             return 1;
         }
     }));
+
+    public static final Identifier GRAPPLE_WINCH_RETRACTING = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.RETRACTING, (((stack, world, entity, seed) -> {
+        ClientGrappleWinchConnectionManager manager = ((ClientGrappleWinchConnectionManager.Access) world).klaxon$get();
+        /*if (entity instanceof PlayerEntity player && manager.fromPlayer(player) instanceof ClientGrappleWinchConnection connection && connection.isRetracting()) {
+            return 1.0f;
+        }*/
+        return 0;
+    })));
 
     private static Identifier register(Item item, Identifier id, ClampedModelPredicateProvider provider) {
         ModelPredicateProviderRegistry.register(item, id, provider);

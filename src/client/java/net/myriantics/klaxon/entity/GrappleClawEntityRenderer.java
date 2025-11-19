@@ -25,7 +25,7 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
         super(context);
     }
 
-    private final Identifier DEFAULT_STEEL_GRAPPLE_CLAW_TEXTURE = KlaxonTextures.STEEL_GRAPPLE_CLAW_ENTITY.withPath((path) -> "textures/" + path + ".png");
+    private final Identifier DEFAULT_STEEL_GRAPPLE_CLAW_TEXTURE = KlaxonTextures.decorate(KlaxonTextures.STEEL_GRAPPLE_CLAW_ENTITY);
     private final HashMap<Item, Identifier> ITEM_2_TEXTURE_MAP = new HashMap<>();
 
     @Override

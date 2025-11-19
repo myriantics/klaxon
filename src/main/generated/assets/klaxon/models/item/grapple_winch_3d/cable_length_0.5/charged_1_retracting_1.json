@@ -1,0 +1,8 @@
+{
+  "parent": "klaxon:item/grapple_winch_3d/spool_3",
+  "textures": {
+    "3": "klaxon:item/grapple_winch_3d/steel_grapple_claw",
+    "4": "klaxon:item/grapple_winch_3d/spool_retracting",
+    "5": "klaxon:item/grapple_winch_3d/structure"
+  }
+}

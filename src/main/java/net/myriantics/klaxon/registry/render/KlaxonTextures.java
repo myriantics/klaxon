@@ -13,7 +13,8 @@ public abstract class KlaxonTextures {
     // 3D Grapple Winch
     public static final Identifier GRAPPLE_WINCH_3D_STRUCTURE = ofItem("grapple_winch_3d/structure");
     public static final Identifier GRAPPLE_WINCH_3D_SPOOL = copyDir("spool", GRAPPLE_WINCH_3D_STRUCTURE);
-    public static final Identifier GRAPPLE_WINCH_3D_CLAW = copyDir("claw", GRAPPLE_WINCH_3D_STRUCTURE);
+    public static final Identifier GRAPPLE_WINCH_3D_SPOOL_RETRACTING = copyDir("spool_retracting", GRAPPLE_WINCH_3D_STRUCTURE);
+    public static final Identifier GRAPPLE_WINCH_STEEL_GRAPPLE_CLAW = copyDir("steel_grapple_claw", GRAPPLE_WINCH_3D_STRUCTURE);
 
     // Grapple Claw Entity
     public static final Identifier STEEL_GRAPPLE_CLAW_ENTITY = ofEntity("grapple_claws/steel_grapple_claw");
@@ -41,5 +42,9 @@ public abstract class KlaxonTextures {
 
     public static Identifier ofEntity(String path) {
         return KlaxonCommon.locate("entity/" + path);
+    }
+
+    public static Identifier decorate(Identifier id) {
+        return id.withPath((path) -> "textures/" + path + ".png");
     }
 }
