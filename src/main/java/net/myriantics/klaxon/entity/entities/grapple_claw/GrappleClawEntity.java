@@ -77,7 +77,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
-        // i can't delegate this to the hooked entity container because this method is called before the container is initialized!!! madge
         builder.add(HOOKED_ENTITY_ID, 0);
         builder.add(DRAGGED_ITEM_IDS, List.of());
     }
@@ -120,7 +119,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
                 return ActionResult.SUCCESS;
             }
-        } else {
+        } else if (this.isOnGround()) {
             // attempt to pick up / load the attached grapple claw
             // if that fails, just pick self up and discard
             if (!this.getWorld().isClient() && this.tryPickup(player)) {
@@ -261,6 +260,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
+    public void updateTrackedPositionAndAngles(double x, double y, double z, float yaw, float pitch, int interpolationSteps) {
+        // needed so that it doesn't look like jittery bullshit when hooking an entity
+        if (!hookedEntityContainer.isPresent()) {
+            this.setPosition(x, y, z);
+        }
+        this.setRotation(yaw, pitch);
+    }
+
+    @Override
     public void tick() {
         // update damage reset ticker
         ticksSinceDamaged++;
@@ -274,13 +282,14 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             this.draggedItemsContainer.tick(connection);
         }
 
-        // only tick if we're not attached to an entity
         if (this.hookedEntityContainer.isPresent()) {
-            this.hookedEntityContainer.snapClawToHookPos();
             this.hookedEntityContainer.tick();
-        } else {
-            super.tick();
         }
+
+        // important to call this after the hooked entity container resets our velocity to 0 - it updates position in the super method
+        super.tick();
+
+        this.refreshPosition();
     }
 
     @Override
@@ -385,10 +394,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     @Override
     public void addVelocity(double deltaX, double deltaY, double deltaZ) {
-        if (this.hookedEntityContainer.isPresent() && this.isLogicalSideForUpdatingMovement()) {
+        if (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isLogicalSideForUpdatingMovement()) {
             this.hookedEntityContainer.get().addVelocity(deltaX, deltaY, deltaZ);
+        } else {
+            super.addVelocity(deltaX, deltaY, deltaZ);
         }
-        super.addVelocity(deltaX, deltaY, deltaZ);
     }
 
     @Override
@@ -582,7 +592,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 this.release(false);
                 return;
             } else {
+                this.snapClawToHookPos();
                 this.hookedEntity.limitFallDistance();
+                GrappleClawEntity.this.setVelocity(Vec3d.ZERO);
             }
         }
 
@@ -687,7 +699,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
             GrappleClawEntity grappleClaw = GrappleClawEntity.this;
 
-            grappleClaw.setVelocity(Vec3d.ZERO);
             grappleClaw.setPosition(targetPos.subtract(0, grappleClaw.getHeight() / 2, 0));
         }
 
