@@ -159,7 +159,7 @@ public class WrenchItem extends MiningToolItem {
         }
 
         // if the state isn't in the allowlist, fail pickup
-        if (!targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST)) {
+        if (!targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST)) {
             return false;
         }
 
