@@ -1,31 +1,40 @@
 package net.myriantics.klaxon.mechanics.grapple_winch;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Colors;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonColors;
-import net.myriantics.klaxon.registry.KlaxonRenderLayers;
+import net.myriantics.klaxon.registry.render.KlaxonTextures;
+import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.awt.*;
 import java.util.Collection;
 
 public final class GrappleWinchCableRenderer {
+
+    private static final Identifier CABLE_SEGMENT_TEXTURE = KlaxonTextures.decorate(KlaxonTextures.STEEL_CABLE_SEGMENT);
+
+    private static final float TEXTURE_U_MIN = 0f/16;
+    private static final float TEXTURE_U_MAX = 16f/16;
+    private static final float TEXTURE_V_MIN = 0f/16;
+    private static final float TEXTURE_V_MAX = 3f/16;
 
     public void render(
             ClientWorld clientWorld,
@@ -37,6 +46,7 @@ public final class GrappleWinchCableRenderer {
             float daylightMultiplier,
             boolean clientPlayerHasNightVision
     ) {
+        VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getEntityCutoutNoCull(CABLE_SEGMENT_TEXTURE));
         Vec3d cameraPos = camera.getPos();
 
         for (ClientGrappleWinchConnection connection : connections) {
@@ -101,15 +111,21 @@ public final class GrappleWinchCableRenderer {
 
             matrices.push();
             matrices.translate(lerpedX - cameraPos.getX(), lerpedY - cameraPos.getY(), lerpedZ - cameraPos.getZ());
-            matrices.translate(cableOriginPos.getX() - lerpedX, cableOriginPos.getY() - lerpedY, cableOriginPos.getZ() - lerpedZ);
+            matrices.translate(cableEndpointPos.getX() - lerpedX, cableEndpointPos.getY() - lerpedY, cableEndpointPos.getZ() - lerpedZ);
 
-            VertexConsumer vertexConsumer = immediate.getBuffer(KlaxonRenderLayers.getGrappleWinchCable());
             MatrixStack.Entry entry = matrices.peek();
 
-            int distance = (int) cableOriginPos.distanceTo(cableEndpointPos);
-            int maxSegments = distance * 4;
+            double distance = cableOriginPos.distanceTo(cableEndpointPos);
+            int maxSegments = (int) (distance + 0.5);
 
             Vector3f origin2Endpoint = cableEndpointPos.subtract(cableOriginPos).toVector3f();
+
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90 - KlaxonMathHelper.yawBetween(cableOriginPos, cableEndpointPos)));
+            matrices.multiply(
+                    RotationAxis.POSITIVE_Z.rotationDegrees(KlaxonMathHelper.pitchBetween(cableOriginPos, cableEndpointPos))
+            );
+            // matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(KlaxonMathHelper.yawBetween(cableOriginPos, cableEndpointPos)));
+            matrices.scale(1f/16, 1f/16, 1f/16);
 
             // yonk the HSB arrays
             float[] lightSteelHSB = KlaxonColors.toHSBArray(KlaxonColors.STEEL_LIGHT);
@@ -117,9 +133,21 @@ public final class GrappleWinchCableRenderer {
 
             // cable segments are 2 per block of distance
             for (int segmentIndex = 0; segmentIndex <= maxSegments; segmentIndex++) {
+                if (segmentIndex != 0) {
+                    matrices.translate(
+                            -16,
+                            0,
+                            0
+                    );
+                }
+
+                matrices.push();
 
                 renderCableSegment(
-                        origin2Endpoint,
+                        // makes it seem like the cable is actually streaming out of the grapple winch
+                        segmentIndex == maxSegments
+                                ? (float) (distance % maxSegments)
+                                : 0,
                         vertexConsumer,
                         originBlockLight,
                         originSkyLight,
@@ -127,9 +155,11 @@ public final class GrappleWinchCableRenderer {
                         endpointSkyLight,
                         segmentIndex % 2 == 0 ? mediumSteelHSB : lightSteelHSB,
                         entry,
+                        matrices,
                         (float) segmentIndex / maxSegments,
                         (float) (segmentIndex + 1) / maxSegments
                 );
+                matrices.pop();
             }
 
             matrices.pop();
@@ -137,43 +167,31 @@ public final class GrappleWinchCableRenderer {
     }
 
     private void renderCableSegment(
-            Vector3f cableBegin2End,
+            float lengthToRender,
             VertexConsumer vertexConsumer,
             int cableOriginBlockLight,
             int cableOriginSkyLight,
             int cableEndpointBlockLight,
             int cableEndpointSkyLight,
             float[] segmentHSB,
-            MatrixStack.Entry matrices,
+            MatrixStack.Entry entry,
+            MatrixStack matrices,
             float segmentStartPercentage,
             float segmentEndPercentage
     ) {
         // do lighting calculations
         int lerpedBlockLight = MathHelper.lerp(segmentStartPercentage, cableOriginBlockLight, cableEndpointBlockLight);
         int lerpedSkyLight = MathHelper.lerp(segmentStartPercentage, cableOriginSkyLight, cableEndpointSkyLight);
-        float lightingPercentage = (float) Math.clamp(lerpedSkyLight + lerpedBlockLight, 0, 15) / 15;
+        int light = Math.clamp(lerpedSkyLight + lerpedBlockLight, 0, 15);
 
-        // do position calculations
-        float startX = cableBegin2End.x() * segmentStartPercentage;
-        float startY = cableBegin2End.y() * segmentStartPercentage;
-        float startZ = cableBegin2End.z() * segmentStartPercentage;
-        float endX = cableBegin2End.x() * segmentEndPercentage;
-        float endY = cableBegin2End.y() * segmentEndPercentage;
-        float endZ = cableBegin2End.z() * segmentEndPercentage;
-        float l = MathHelper.sqrt(endX * endX + endY * endY + endZ * endZ);
-        endX /= l;
-        endY /= l;
-        endZ /= l;
+        for (int i = 0; i < 4; i++) {
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90));
 
-        vertexConsumer.vertex(matrices, startX, startY, startZ)
-                .color(
-                        Color.getHSBColor(
-                                segmentHSB[0],
-                                segmentHSB[1],
-                                segmentHSB[2] * (0.35f + 0.65f * lightingPercentage)
-                        ).getRGB()
-                )
-                .normal(matrices, endX, endY, endZ);
+            this.vertex(entry, vertexConsumer, 0, 1.5f, 0, TEXTURE_U_MIN, TEXTURE_V_MIN, 0, 0, 0, light);
+            this.vertex(entry, vertexConsumer, 16, 1.5f, 0, TEXTURE_U_MAX, TEXTURE_V_MIN, 0, 0, 0, light);
+            this.vertex(entry, vertexConsumer, 16, -1.5f, 0, TEXTURE_U_MAX, TEXTURE_V_MAX, 0, 0, 0, light);
+            this.vertex(entry, vertexConsumer, 0, -1.5f, 0, TEXTURE_U_MIN, TEXTURE_V_MAX, 0, 0, 0, light);
+        }
     }
 
     public Vec3d getHandPos(PlayerEntity player, Camera camera, float f, float tickDelta) {
@@ -240,5 +258,16 @@ public final class GrappleWinchCableRenderer {
 
             return player.getCameraPosVec(tickDelta).add(vec3d.subtract(0, 0.45, 0));
         }
+    }
+
+    private void vertex(
+            MatrixStack.Entry matrix, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, float normalX, float normalZ, float normalY, int light
+    ) {
+        vertexConsumer.vertex(matrix, x, y, z)
+                .color(Colors.WHITE)
+                .texture(u, v)
+                .overlay(OverlayTexture.DEFAULT_UV)
+                .light(light)
+                .normal(matrix, normalX, normalY, normalZ);
     }
 }

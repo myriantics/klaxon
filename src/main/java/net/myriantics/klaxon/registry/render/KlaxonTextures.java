@@ -19,6 +19,9 @@ public abstract class KlaxonTextures {
     // Grapple Claw Entity
     public static final Identifier STEEL_GRAPPLE_CLAW_ENTITY = ofEntity("grapple_claws/steel_grapple_claw");
 
+    // Grapple Cable
+    public static final Identifier STEEL_CABLE_SEGMENT = ofEntity("grapple_cable/steel");
+
     public static Identifier copyDir(String path, Identifier parent) {
         return copyDir(path, parent.getPath());
     }
