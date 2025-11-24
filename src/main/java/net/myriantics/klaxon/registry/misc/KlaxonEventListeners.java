@@ -26,6 +26,8 @@ public abstract class KlaxonEventListeners {
 
         ServerLifecycleEvents.SERVER_STARTED.register(DefaultInnateItemEnchantmentsComponent::onServerStarted);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(DefaultInnateItemEnchantmentsComponent::onDataPackReload);
+        CommonLifecycleEvents.TAGS_LOADED.register(DefaultInnateItemEnchantmentsComponent::onTagsLoaded);
+
 
         KlaxonCommon.LOGGER.info("Registered KLAXON's Event Listeners!");
     }
