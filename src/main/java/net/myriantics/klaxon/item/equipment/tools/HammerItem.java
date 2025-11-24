@@ -136,6 +136,11 @@ public class HammerItem extends MiningToolItem {
         return didAnvilMimicrySucceed ? ActionResult.SUCCESS : ActionResult.PASS;
     }
 
+    @Override
+    public void postDamageEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        stack.damage(1, attacker, EquipmentSlot.MAINHAND);
+    }
+
     private static void damageItem(ItemStack stack, LivingEntity attacker) {
         stack.damage(1, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
     }
