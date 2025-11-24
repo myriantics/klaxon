@@ -28,6 +28,10 @@ public abstract class KlaxonItemStackHelper {
     }
 
     public static ItemStack combineStacksIfPossible(ItemStack stackA, ItemStack stackB) {
+        if (stackA.isEmpty()) {
+            throw new AssertionError("Cannot merge into an empty stack! Tried to merge " + stackA + " into " + stackB);
+        }
+
         if (canStacksMerge(stackA, stackB)) {
             int maxAcceptedItems = stackA.getMaxCount() - stackA.getCount();
             int transferredItems = Math.min(stackB.getCount(), maxAcceptedItems);
@@ -39,7 +43,7 @@ public abstract class KlaxonItemStackHelper {
     }
 
     public static boolean canStacksMerge(ItemStack stackA, ItemStack stackB) {
-        return stackA.getCount() <= stackA.getMaxCount() && ItemStack.areItemsAndComponentsEqual(stackA, stackB);
+        return stackA.getCount() <= stackA.getMaxCount() && (stackA.isEmpty() || stackB.isEmpty() || ItemStack.areItemsAndComponentsEqual(stackA, stackB));
     }
 
     public static boolean hasStackedToMax(ItemStack stack) {
