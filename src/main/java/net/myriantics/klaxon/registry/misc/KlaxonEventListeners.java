@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.util.TriState;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
-import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeLogic;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
 import net.myriantics.klaxon.registry.item.KlaxonDefaultItemComponentModifications;
@@ -19,10 +18,6 @@ public abstract class KlaxonEventListeners {
         DefaultItemComponentEvents.MODIFY.register(KlaxonDefaultItemComponentModifications::modify);
 
         LootTableEvents.MODIFY.register(KlaxonLootTableModifications::modify);
-
-        ServerLifecycleEvents.SERVER_STARTED.register(ItemCoolingRecipeLogic::onServerStarted);
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(ItemCoolingRecipeLogic::onDatapackReload);
-        CommonLifecycleEvents.TAGS_LOADED.register(ItemCoolingRecipeLogic::onTagsLoaded);
 
         ServerLifecycleEvents.SERVER_STARTED.register(ToolUsageRecipeLogic::onServerStarted);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(ToolUsageRecipeLogic::onDatapackReload);

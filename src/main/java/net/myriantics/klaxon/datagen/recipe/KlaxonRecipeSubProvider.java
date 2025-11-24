@@ -16,8 +16,6 @@ import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.datagen.NamedIngredient;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonToolUsageRecipeTypeProvider;
-import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
@@ -340,16 +338,6 @@ public abstract class KlaxonRecipeSubProvider {
                 conditions);
 
         NetherReactionRecipe recipe = new NetherReactionRecipe(blockIngredient, outputBlock);
-
-        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
-    }
-
-    public void addItemCoolingRecipe(Ingredient input, ItemConvertible output, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.COOLING_RECIPE_ID,
-                getItemPath(output.asItem()),
-                conditions);
-
-        ItemCoolingRecipe recipe = new ItemCoolingRecipe(input, new ItemStack(output));
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

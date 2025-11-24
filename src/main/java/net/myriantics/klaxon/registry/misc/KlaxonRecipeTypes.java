@@ -8,8 +8,6 @@ import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeSerializer;
-import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
-import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipeSerializer;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeSerializer;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
@@ -47,12 +45,6 @@ public abstract class KlaxonRecipeTypes {
             registerSerializer(NETHER_REACTION_RECIPE_ID, new NetherReactionRecipeSerializer());
     public static RecipeType<NetherReactionRecipe> NETHER_REACTION =
             registerRecipeType(NETHER_REACTION_RECIPE_ID);
-
-    public static final String COOLING_RECIPE_ID = "item_cooling";
-    public static RecipeSerializer<ItemCoolingRecipe> COOLING_RECIPE_SERIALIZER =
-            registerSerializer(COOLING_RECIPE_ID, new ItemCoolingRecipeSerializer());
-    public static RecipeType<ItemCoolingRecipe> ITEM_COOLING =
-            registerRecipeType(COOLING_RECIPE_ID);
 
     public static final String EXPLOSIVE_CATALYST_DEFINITION_ID = "explosive_catalyst_definition";
     public static RecipeSerializer<ExplosiveCatalystDefinitionRecipe> EXPLOSIVE_CATALYST_DEFINITION_RECIPE_SERIALIZER =
