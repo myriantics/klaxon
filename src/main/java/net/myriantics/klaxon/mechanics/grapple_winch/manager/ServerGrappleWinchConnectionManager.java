@@ -166,7 +166,7 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
         manager.currentConnectionId = currentId;
 
         if (currentId > 0) {
-            KlaxonCommon.LOGGER.info("Loaded {} Dormant Grapple Winch Connections!", currentId);
+            KlaxonCommon.LOGGER.info("Loaded {} Dormant Grapple Winch Connections in {}!", currentId, manager.world);
         }
 
         return manager;

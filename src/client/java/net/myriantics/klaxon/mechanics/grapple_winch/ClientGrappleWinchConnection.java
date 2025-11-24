@@ -14,6 +14,8 @@ import net.myriantics.klaxon.networking.c2s.GrappleWinchCableLengthUpdateC2S;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 
+import java.util.Objects;
+
 public class ClientGrappleWinchConnection extends GrappleWinchConnection {
     private Vec3d playerFallbackPos;
     private Vec3d playerFallbackPrevPos;
@@ -75,14 +77,16 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
             this.manager.disconnect(this.getId(), CableDetachmentReason.GENERIC_DISCONNECT);
         }
 
-        this.retracting = player.isUsingItem() && player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
+        if (this.player != null) {
+            this.retracting = player.isUsingItem() && player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
+        }
 
         this.updateEntities();
 
         super.tick();
 
         // only do movement stuff if we're the client main player
-        if (this.player.equals(MinecraftClient.getInstance().player)) {
+        if (Objects.equals(this.player, MinecraftClient.getInstance().player)) {
             Vec3d compiledPlayerVec = Vec3d.ZERO;
 
             // initialize values
