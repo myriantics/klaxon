@@ -84,6 +84,15 @@ public abstract class KlaxonRecipeSubProvider {
         addShapedCraftingRecipe(Map.of('x', input), pattern, output, category, group, conditions);
     }
 
+    public void addOmniSmeltingRecipe(Ingredient input, ItemStack output,
+                                      float experience, int cookingTime,
+                                      @Nullable CookingRecipeCategory category, @Nullable String group,
+                                      final ResourceCondition... conditions) {
+        addSmeltingRecipe(input, output, experience, cookingTime, category, group, conditions);
+        addSmokingSmeltingRecipe(input, output, experience, (int) (cookingTime * 0.5), category, group, conditions);
+        addBlastingSmeltingRecipe(input, output, experience, (int) (cookingTime * 0.5), category, group, conditions);
+    }
+
     public void addFoodProcessingCookingRecipe(Ingredient input, ItemStack output,
                                                float experience, int cookingTime,
                                                @Nullable String group,

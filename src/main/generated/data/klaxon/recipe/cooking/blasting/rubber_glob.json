@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 75,
+  "experience": 1.0,
+  "group": "rubber_glob",
+  "ingredient": {
+    "tag": "klaxon:low_yield_rubber_extractable_logs"
+  },
+  "result": {
+    "id": "klaxon:rubber_glob"
+  }
+}

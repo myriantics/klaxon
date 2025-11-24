@@ -121,7 +121,6 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item CRUDE_STEEL_INGOT = registerReallySimpleItem("crude_steel_ingot");
     public static final Item CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
     public static final Item RUBBER_GLOB = registerReallySimpleItem("rubber_glob");
-    public static final Item MOLTEN_RUBBER_GLOB = registerReallySimpleItem("molten_rubber_glob");
     public static final Item COPPER_NUGGET = registerReallySimpleItem("copper_nugget");
 
     // plates / sheets
@@ -131,7 +130,6 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item GOLD_PLATE = registerReallySimpleItem("gold_plate");
     public static final Item COPPER_PLATE = registerReallySimpleItem("copper_plate");
     public static final Item RUBBER_SHEET = registerReallySimpleItem("rubber_sheet");
-    public static final Item MOLTEN_RUBBER_SHEET = registerReallySimpleItem("molten_rubber_sheet");
 
     // wires
     public static final Item STEEL_WIRE = registerReallySimpleItem("steel_wire");

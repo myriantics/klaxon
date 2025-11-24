@@ -37,8 +37,8 @@ public final class KlaxonEnUsItemTagLanguageProvider extends KlaxonEnUsLanguageS
 
     private void generateCraftingLogisticsTags() {
         // crafting
-        addTag(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS, "Overworld Rubber-Extractable Logs");
-        addTag(KlaxonItemTags.NETHER_RUBBER_EXTRACTABLE_LOGS, "Nether Rubber-Extractable Logs");
+        addTag(KlaxonItemTags.LOW_YIELD_RUBBER_EXTRACTABLE_LOGS, "Low Yield Rubber-Extractable Logs");
+        addTag(KlaxonItemTags.HIGH_YIELD_RUBBER_EXTRACTABLE_LOGS, "High Yield Rubber-Extractable Logs");
         addTag(KlaxonItemTags.HALLNOX_STEMS, "Hallnox Stems");
         addTag(KlaxonItemTags.GEAR_GRIP_MATERIALS, "Gear Grip Materials");
 

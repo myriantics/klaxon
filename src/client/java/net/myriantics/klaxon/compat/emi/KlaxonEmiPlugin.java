@@ -103,11 +103,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addWorkstation(KlaxonEmiRecipeCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
         registry.addWorkstation(KlaxonEmiRecipeCategories.WORLD_ITEM_APPLICATION, EmiStack.of(Items.DISPENSER));
 
-        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(PotionContentsComponent.createStack(Items.SPLASH_POTION, Potions.WATER)));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.POWDER_SNOW_BUCKET));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.WATER_BUCKET));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.ITEM_COOLING, EmiStack.of(Items.CAULDRON));
-
         // Steel Hammer can mimic AnvilScreenHandler functionality
         registry.addWorkstation(VanillaEmiRecipeCategories.ANVIL_REPAIRING, EmiStack.of(KlaxonItems.STEEL_HAMMER));
         // Blast Processors can mimic Blasting Smelting functionality when using a catalyst that produces Fire

@@ -16,7 +16,6 @@ public final class KlaxonEnUsEmiRecipeCategoryLanguageProvider extends KlaxonEnU
     public void generate() {
         addEmiRecipeCategory(KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID, "Nether Reaction");
         addEmiRecipeCategory(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID, "Explosive Catalysts");
-        addEmiRecipeCategory(KlaxonRecipeTypes.COOLING_RECIPE_ID, "Item Cooling");
         addEmiRecipeCategory(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID, "Blast Processing");
         addEmiRecipeCategory(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID, "World Item Application");
         addEmiRecipeCategory(KlaxonToolUsageRecipeTypes.HAMMERING.getValue().getPath(), "Hammering");

@@ -25,10 +25,6 @@ public abstract class KlaxonEmiRecipeCategories {
             KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
             EmiStack.of(Items.TNT)
     );
-    public static final EmiRecipeCategory ITEM_COOLING = register(
-            KlaxonRecipeTypes.COOLING_RECIPE_ID,
-            EmiStack.of(Items.WATER_BUCKET)
-    );
     public static final EmiRecipeCategory NETHER_REACTION = register(
             KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
             EmiStack.of(KlaxonItems.NETHER_REACTOR_CORE)

@@ -34,10 +34,6 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
         // misc
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.COAL), 0.3, 1.4, RecipeOutputCompound.of(KlaxonItems.FRACTURED_COAL, 1.0, KlaxonItems.FRACTURED_COAL, 0.5));
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.CHARCOAL), 0.2, 1.2, RecipeOutputCompound.of(KlaxonItems.FRACTURED_CHARCOAL, 1.0, KlaxonItems.FRACTURED_CHARCOAL, 0.4));
-
-        // rubber extraction
-        addBlastProcessingRecipe(NamedIngredient.fromTag(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS), 0.8, 1.9, new ItemStack(KlaxonItems.RUBBER_GLOB, 5));
-        addBlastProcessingRecipe(NamedIngredient.fromTag(KlaxonItemTags.NETHER_RUBBER_EXTRACTABLE_LOGS), 1.2, 2.5, new ItemStack(KlaxonItems.MOLTEN_RUBBER_GLOB, 5));
     }
 
     private void buildExplosiveDisassemblyRecipes() {

@@ -35,7 +35,7 @@ public class KlaxonToolUsageRecipeProvider extends KlaxonRecipeSubProvider {
         addHammeringRecipe(Ingredient.ofItems(Items.GOLD_INGOT), new ItemStack(KlaxonItems.GOLD_PLATE));
         addHammeringRecipe(Ingredient.ofItems(Items.COPPER_INGOT), new ItemStack(KlaxonItems.COPPER_PLATE));
 
-        addHammeringRecipe(Ingredient.ofItems(KlaxonItems.MOLTEN_RUBBER_GLOB), new ItemStack(KlaxonItems.MOLTEN_RUBBER_SHEET));
+        addHammeringRecipe(Ingredient.ofItems(KlaxonItems.RUBBER_GLOB), new ItemStack(KlaxonItems.RUBBER_SHEET));
     }
 
     private void buildWirecuttingRecipes() {

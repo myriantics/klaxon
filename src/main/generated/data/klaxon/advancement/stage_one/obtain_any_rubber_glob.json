@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#klaxon:molten_inclusive_rubber_globs"
+            "items": "klaxon:rubber_glob"
           }
         ]
       },

@@ -30,7 +30,6 @@ public class KlaxonConventionalItemTags {
 
     // materials
     public static final TagKey<Item> RUBBER_GLOBS = createConventionalGlobTag("rubber");
-    public static final TagKey<Item> MOLTEN_RUBBER_GLOBS = createConventionalGlobTag("molten_rubber");
 
     // ingots
     public static final TagKey<Item> STEEL_INGOTS = createConventionalIngotTag("steel");
@@ -51,7 +50,6 @@ public class KlaxonConventionalItemTags {
 
     // sheets
     public static final TagKey<Item> RUBBER_SHEETS = createConventionalSheetTag("rubber");
-    public static final TagKey<Item> MOLTEN_RUBBER_SHEETS = createConventionalSheetTag("molten_rubber");
 
     // tools
     public static final TagKey<Item> CLEAVER = createConventionalToolTag("cleaver");

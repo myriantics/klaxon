@@ -78,11 +78,9 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
 
         // globs
         addItem(KlaxonItems.RUBBER_GLOB, "Rubber Glob");
-        addItem(KlaxonItems.MOLTEN_RUBBER_GLOB, "Molten Rubber Glob");
 
         // sheets
         addItem(KlaxonItems.RUBBER_SHEET, "Rubber Sheet");
-        addItem(KlaxonItems.MOLTEN_RUBBER_SHEET, "Molten Rubber Sheet");
 
         // wires
         addItem(KlaxonItems.STEEL_WIRE, "Steel Wire");

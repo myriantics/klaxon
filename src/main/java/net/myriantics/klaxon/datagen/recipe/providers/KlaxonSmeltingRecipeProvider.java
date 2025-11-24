@@ -19,7 +19,7 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
     @Override
     public void generateRecipes() {
         buildRecyclingRecipes();
-        buildBlastingSmeltingRecipes();
+        buildOmniSmeltingRecipes();
         buildCookingRecipes();
     }
 
@@ -36,11 +36,10 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
         addBlastingSmeltingRecipe(Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_INGOT), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, 150, null, null);
     }
 
-    private void buildBlastingSmeltingRecipes() {
-        addRubberMeltingRecipe(Ingredient.ofItems(KlaxonItems.RUBBER_GLOB), KlaxonItems.MOLTEN_RUBBER_GLOB);
-        addRubberMeltingRecipe(Ingredient.ofItems(KlaxonItems.RUBBER_SHEET), KlaxonItems.MOLTEN_RUBBER_SHEET);
-        addRubberMeltingRecipe(Ingredient.ofItems(KlaxonItems.RUBBER_BLOCK), KlaxonItems.MOLTEN_RUBBER_BLOCK);
-        addRubberMeltingRecipe(Ingredient.ofItems(KlaxonItems.RUBBER_SHEET_BLOCK), KlaxonItems.MOLTEN_RUBBER_BLOCK);
+    // WHERE'S OMNIMAN WHERE IS HE
+    private void buildOmniSmeltingRecipes() {
+        addOmniSmeltingRecipe(Ingredient.fromTag(KlaxonItemTags.HIGH_YIELD_RUBBER_EXTRACTABLE_LOGS), new ItemStack(KlaxonItems.RUBBER_BLOCK), 1.0f, 150, null, null);
+        addOmniSmeltingRecipe(Ingredient.fromTag(KlaxonItemTags.LOW_YIELD_RUBBER_EXTRACTABLE_LOGS), new ItemStack(KlaxonItems.RUBBER_GLOB), 1.0f, 150, null, null);
     }
 
     private void buildCookingRecipes() {

@@ -91,7 +91,6 @@ public abstract class KlaxonItemGroups {
 
                 // raw materials
                 entries.add(KlaxonItems.RUBBER_GLOB);
-                entries.add(KlaxonItems.MOLTEN_RUBBER_GLOB);
 
                 // hallnox
                 entries.add(KlaxonItems.HALLNOX_POD);
@@ -103,7 +102,6 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.CRUDE_STEEL_PLATE);
                 entries.add(KlaxonItems.STEEL_PLATE);
                 entries.add(KlaxonItems.RUBBER_SHEET);
-                entries.add(KlaxonItems.MOLTEN_RUBBER_SHEET);
 
                 // wires
                 entries.add(KlaxonItems.STEEL_WIRE);

@@ -484,8 +484,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         // storage blocks
         add3x3IngotNuggetBlockCompressionDecompressionRecipes(KlaxonItems.STEEL_NUGGET, KlaxonItems.STEEL_INGOT, KlaxonItems.STEEL_BLOCK);
         add3x3IngotNuggetBlockCompressionDecompressionRecipes(KlaxonItems.CRUDE_STEEL_NUGGET, KlaxonItems.CRUDE_STEEL_INGOT, KlaxonItems.CRUDE_STEEL_BLOCK);
-        add3x3CompressionDecompressionRecipes(KlaxonItems.MOLTEN_RUBBER_GLOB, KlaxonItems.MOLTEN_RUBBER_BLOCK);
-        add3x3PackingRecipe(Ingredient.ofItems(KlaxonItems.MOLTEN_RUBBER_SHEET), new ItemStack(KlaxonItems.MOLTEN_RUBBER_BLOCK), null, null);
+        add3x3CompressionDecompressionRecipes(KlaxonItems.RUBBER_GLOB, KlaxonItems.RUBBER_BLOCK);
         add3x3CompressionDecompressionRecipes(KlaxonItems.RUBBER_SHEET, KlaxonItems.RUBBER_SHEET_BLOCK);
 
         // ingot / nugget

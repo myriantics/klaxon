@@ -76,7 +76,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
 
         AdvancementEntry watchNetherReactorCoreActivate = addTask(obtainHallnoxPod, WATCH_NETHER_REACTOR_CORE_ACTIVATE, KlaxonItems.NETHER_REACTOR_CORE, BlockActivationCriterion.Conditions.create(KlaxonBlockTags.NETHER_REACTOR_CORES));
         AdvancementEntry hammerCraftMetalPlate = addTask(watchBlastProcessorCraft, USE_HAMMER_TO_MAKE_METAL_PLATE, KlaxonItems.CRUDE_STEEL_PLATE, ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.fromTag(KlaxonConventionalItemTags.PLATES)));
-        AdvancementEntry obtainAnyRubberGlob = addTask(watchBlastProcessorCraft, OBTAIN_ANY_RUBBER_GLOB, KlaxonItems.RUBBER_GLOB, InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_GLOBS)));
+        AdvancementEntry obtainAnyRubberGlob = addTask(watchBlastProcessorCraft, OBTAIN_ANY_RUBBER_GLOB, KlaxonItems.RUBBER_GLOB, InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().items(KlaxonItems.RUBBER_GLOB)));
         AdvancementEntry normalHammerWalljump = addTask(watchBlastProcessorCraft, HAMMER_WALLJUMP_NORMAL, KlaxonItems.STEEL_HAMMER, WalljumpAbilityCriterion.Conditions.createNormalWalljump());
         AdvancementEntry makeshiftItemFullRepair = addTask(watchBlastProcessorCraft, MAKESHIFT_ITEM_FULL_REPAIR, Items.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
 

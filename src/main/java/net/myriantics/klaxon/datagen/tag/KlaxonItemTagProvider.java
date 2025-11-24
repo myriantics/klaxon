@@ -2,14 +2,12 @@ package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.compat.KlaxonCompatItemTags;
-import net.myriantics.klaxon.tag.convention.KlaxonConventionalBlockTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -125,12 +123,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     private void buildMaterialGlobTags() {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.GLOBS)
-                .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS)
-                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS);
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_GLOBS)
                 .add(KlaxonItems.RUBBER_GLOB);
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS)
-                .add(KlaxonItems.MOLTEN_RUBBER_GLOB);
     }
 
     private void buildMaterialStorageBlockTags() {
@@ -198,15 +193,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING)
                 .add(KlaxonItems.STEEL_CASING)
                 .add(KlaxonItems.CRUDE_STEEL_CASING);
-        getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_GLOBS)
-                .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS)
-                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS);
         getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.RUBBER_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS);
-        getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_SHEETS)
-                .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS)
-                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS);
     }
 
     private void buildMaterialPlateTags() {
@@ -256,12 +245,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     private void buildMaterialSheetTags() {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEETS)
-                .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS)
-                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS);
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_SHEETS)
                 .add(KlaxonItems.RUBBER_SHEET);
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS)
-                .add(KlaxonItems.MOLTEN_RUBBER_SHEET);
     }
 
     private void buildMakeshiftCraftingLogisticsTags() {
@@ -270,21 +256,20 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.CRUDE_STEEL_INGOT)
                 .add(KlaxonItems.CRUDE_STEEL_BLOCK)
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET)
-                .add(KlaxonItems.MOLTEN_RUBBER_SHEET)
-                .add(KlaxonItems.MOLTEN_RUBBER_GLOB)
                 .add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_REPAIR_MATERIALS)
                 .forceAddTag(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS);
     }
 
     private void buildCraftingTags() {
-        getOrCreateTagBuilder(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS)
+        getOrCreateTagBuilder(KlaxonItemTags.HIGH_YIELD_RUBBER_EXTRACTABLE_LOGS)
+                .forceAddTag(ItemTags.CRIMSON_STEMS)
+                .forceAddTag(ItemTags.WARPED_STEMS)
+                .forceAddTag(KlaxonItemTags.HALLNOX_STEMS);
+        getOrCreateTagBuilder(KlaxonItemTags.LOW_YIELD_RUBBER_EXTRACTABLE_LOGS)
                 .forceAddTag(ItemTags.JUNGLE_LOGS)
                 .forceAddTag(ItemTags.ACACIA_LOGS)
                 .forceAddTag(ItemTags.MANGROVE_LOGS);
-        getOrCreateTagBuilder(KlaxonItemTags.NETHER_RUBBER_EXTRACTABLE_LOGS)
-                .forceAddTag(ItemTags.CRIMSON_STEMS)
-                .forceAddTag(ItemTags.WARPED_STEMS);
         getOrCreateTagBuilder(KlaxonItemTags.GEAR_GRIP_MATERIALS)
                 .add(Items.LEATHER)
                 .add(KlaxonItems.RUBBER_SHEET);
