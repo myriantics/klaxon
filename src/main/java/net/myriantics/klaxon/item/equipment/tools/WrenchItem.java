@@ -16,6 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +31,7 @@ import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,9 +77,15 @@ public class WrenchItem extends MiningToolItem {
                 if (!outputStacks.isEmpty()) {
                     for (ItemStack stack : outputStacks) {
                         // don't insert the stack if player is already creative - unless it's valuable, then do
-                        if (!player.isCreative() || stack.contains(DataComponentTypes.CONTAINER) || stack.contains(DataComponentTypes.CONTAINER_LOOT)) {
+                        if (!stack.isEmpty() && (!player.isCreative() || stack.contains(DataComponentTypes.CONTAINER) || stack.contains(DataComponentTypes.CONTAINER_LOOT))) {
                             // dump the rest of the stack into the world if it doesn't fit into player's inventory
-                            if (!player.getInventory().insertStack(stack) && !stack.isEmpty()) Block.dropStack(serverWorld, targetPos, stack);
+                            if (context.getHand().equals(Hand.MAIN_HAND) && (player.getOffHandStack().isEmpty() || KlaxonItemStackHelper.canStacksMerge(player.getOffHandStack(), stack))) {
+                                player.setStackInHand(Hand.OFF_HAND, KlaxonItemStackHelper.combineStacksIfPossible(stack, player.getOffHandStack()));
+                            } else if (!player.getInventory().insertStack(stack)) {
+                                if (!stack.isEmpty()) {
+                                    Block.dropStack(serverWorld, targetPos, stack);
+                                }
+                            }
                         }
                     }
                 }
