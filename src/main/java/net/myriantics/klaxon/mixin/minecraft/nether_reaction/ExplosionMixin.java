@@ -5,14 +5,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.block.entity.SignText;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -20,12 +18,10 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -33,7 +29,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
-import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionConversionListener;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeLogic;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
@@ -45,7 +41,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -174,8 +169,13 @@ public abstract class ExplosionMixin {
 
         if (world instanceof ServerWorld serverWorld) {
             BlockState newState = NetherReactionRecipeLogic.getOutputState(instance, pos, serverWorld, explosion);
+
             // make sure we've changed something before setting the blockstate
             if (!instance.equals(newState)) {
+                if (targetBlockEntity instanceof NetherReactionConversionListener listener) {
+                    listener.klaxon$beforeConversion(instance, newState);
+                }
+
                 serverWorld.setBlockState(pos, newState);
                 // tick stuff so it doesnt get stuck
                 serverWorld.scheduleBlockTick(pos, newState.getBlock(), 1);

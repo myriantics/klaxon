@@ -73,6 +73,7 @@
     "minecraft.loot.LootContextTypesAccessor",
     "minecraft.loot.LootContextTypesMixin",
     "minecraft.neighbor_placement_listener.BlockItemMixin",
+    "minecraft.nether_reaction.BeehiveBlockEntityMixin",
     "minecraft.nether_reaction.ExplosionMixin",
     "minecraft.tool_usage.ItemStackMixin",
     "minecraft.world_item_application.DispenserBlockMixin",
