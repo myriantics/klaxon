@@ -564,11 +564,11 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.VINE)
                 .add(Blocks.GLOW_LICHEN);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_STEM_CONVERTIBLE)
-                .forceAddTag(KlaxonConventionalBlockTags.LOGS_WITH_BARK);
+                .forceAddTag(KlaxonConventionalBlockTags.NATURAL_WOODS);
         getOrCreateTagBuilder(KlaxonBlockTags.STRIPPED_CRIMSON_STEM_CONVERTIBLE)
                 .forceAddTag(ConventionalBlockTags.STRIPPED_LOGS);
         getOrCreateTagBuilder(KlaxonBlockTags.CRIMSON_HYPHAE_CONVERTIBLE)
-                .forceAddTag(KlaxonConventionalBlockTags.WOODS_WITH_BARK)
+                .forceAddTag(KlaxonConventionalBlockTags.NATURAL_LOGS)
                 .add(Blocks.MANGROVE_ROOTS);
         getOrCreateTagBuilder(KlaxonBlockTags.STRIPPED_CRIMSON_HYPHAE_CONVERTIBLE)
                 .forceAddTag(ConventionalBlockTags.STRIPPED_WOODS);
@@ -760,7 +760,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
         getOrCreateTagBuilder(BlockTags.WART_BLOCKS)
                 .add(KlaxonBlocks.HALLNOX_WART_BLOCK);
-        getOrCreateTagBuilder(KlaxonConventionalBlockTags.WOODS_WITH_BARK)
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.NATURAL_LOGS)
                 .add(
                         Blocks.OAK_WOOD,
                         Blocks.SPRUCE_WOOD,
@@ -776,7 +776,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         Blocks.WARPED_HYPHAE,
                         KlaxonBlocks.HALLNOX_HYPHAE
                 );
-        getOrCreateTagBuilder(KlaxonConventionalBlockTags.LOGS_WITH_BARK)
+        getOrCreateTagBuilder(KlaxonConventionalBlockTags.NATURAL_WOODS)
                 .add(
                         Blocks.OAK_LOG,
                         Blocks.SPRUCE_LOG,

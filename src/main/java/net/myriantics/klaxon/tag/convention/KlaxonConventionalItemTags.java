@@ -13,9 +13,14 @@ public class KlaxonConventionalItemTags {
     public static final TagKey<Item> SHEETS = createConventionalItemTag("sheets");
     public static final TagKey<Item> GLOBS = createConventionalItemTag("globs");
 
+    // logs
+    public static final TagKey<Item> NATURAL_LOGS = createConventionalItemTag("natural_logs");
+    public static final TagKey<Item> NATURAL_WOODS = createConventionalItemTag("natural_woods");
+
     // nuggies
     public static final TagKey<Item> STEEL_NUGGETS = createConventionalNuggetTag("steel");
     public static final TagKey<Item> CRUDE_STEEL_NUGGETS = createConventionalNuggetTag("crude_steel");
+    public static final TagKey<Item> COPPER_NUGGETS = createConventionalNuggetTag("copper");
 
     // storage blocks
     public static final TagKey<Item> STEEL_BLOCKS = createConventionalStorageBlockTag("steel");

@@ -159,8 +159,8 @@ public final class KlaxonEnUsBlockTagLanguageProvider extends KlaxonEnUsLanguage
         addTag(KlaxonBlockTags.MACHINES, "KLAXON's Machines");
 
         // logs & woods with bark
-        addTag(KlaxonConventionalBlockTags.LOGS_WITH_BARK, "Logs With Bark");
-        addTag(KlaxonConventionalBlockTags.WOODS_WITH_BARK, "Woods With Bark");
+        addTag(KlaxonConventionalBlockTags.NATURAL_WOODS, "Natural Woods");
+        addTag(KlaxonConventionalBlockTags.NATURAL_LOGS, "Natural Logs");
 
         // plating blocks
         addTag(KlaxonBlockTags.PLATING_BLOCKS, "Plating Blocks");

@@ -2,12 +2,14 @@ package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.compat.KlaxonCompatItemTags;
+import net.myriantics.klaxon.tag.convention.KlaxonConventionalBlockTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -151,11 +153,14 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     private void buildMaterialNuggetTags() {
         getOrCreateTagBuilder(ConventionalItemTags.NUGGETS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_NUGGETS)
-                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS);
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)
+                .forceAddTag(KlaxonConventionalItemTags.COPPER_NUGGETS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_NUGGETS)
                 .add(KlaxonItems.STEEL_NUGGET);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_NUGGETS)
+                .add(KlaxonItems.COPPER_NUGGET);
     }
 
     private void buildMaterialWireTags() {
@@ -172,6 +177,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.GOLD_WIRE);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_WIRES)
                 .add(KlaxonItems.COPPER_WIRE);
+        getOrCreateTagBuilder(KlaxonItemTags.WAXING_STATUS_INCLUSIVE_COPPER_WIRE_SPOOL_BLOCKS)
+                .add(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK)
+                .add(KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK);
     }
 
     private void buildMakeshiftCraftingIngredientTags() {

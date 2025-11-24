@@ -2,12 +2,12 @@
   "type": "minecraft:blasting",
   "category": "misc",
   "cookingtime": 150,
-  "experience": 3.0,
-  "group": "steel_nugget",
+  "experience": 1.0,
+  "group": "gold_nugget",
   "ingredient": {
-    "item": "minecraft:flint_and_steel"
+    "item": "klaxon:gold_wire"
   },
   "result": {
-    "id": "klaxon:steel_nugget"
+    "id": "minecraft:gold_nugget"
   }
 }

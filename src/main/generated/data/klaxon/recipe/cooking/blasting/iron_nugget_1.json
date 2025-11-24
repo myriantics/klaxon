@@ -2,12 +2,12 @@
   "type": "minecraft:blasting",
   "category": "misc",
   "cookingtime": 150,
-  "experience": 3.0,
-  "group": "steel_nugget",
+  "experience": 1.0,
+  "group": "iron_nugget",
   "ingredient": {
-    "tag": "klaxon:steel_equipment"
+    "item": "klaxon:iron_plate"
   },
   "result": {
-    "id": "klaxon:steel_nugget"
+    "id": "minecraft:iron_nugget"
   }
 }

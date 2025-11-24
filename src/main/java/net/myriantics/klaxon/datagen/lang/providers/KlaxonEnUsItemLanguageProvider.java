@@ -67,6 +67,7 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
         // nuggets
         addItem(KlaxonItems.STEEL_NUGGET, "Steel Nugget");
         addItem(KlaxonItems.CRUDE_STEEL_NUGGET, "Crude Steel Nugget");
+        addItem(KlaxonItems.COPPER_NUGGET, "Copper Nugget");
 
         // plates
         addItem(KlaxonItems.STEEL_PLATE, "Steel Plate");

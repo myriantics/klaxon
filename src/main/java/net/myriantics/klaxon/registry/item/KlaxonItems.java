@@ -122,6 +122,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
     public static final Item RUBBER_GLOB = registerReallySimpleItem("rubber_glob");
     public static final Item MOLTEN_RUBBER_GLOB = registerReallySimpleItem("molten_rubber_glob");
+    public static final Item COPPER_NUGGET = registerReallySimpleItem("copper_nugget");
 
     // plates / sheets
     public static final Item STEEL_PLATE = registerReallySimpleItem("steel_plate");

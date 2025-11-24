@@ -4,13 +4,12 @@
   "group": "copper_ingot",
   "key": {
     "x": {
-      "tag": "c:nuggets/copper"
+      "item": "klaxon:fractured_copper"
     }
   },
   "pattern": [
-    "xxx",
-    "xxx",
-    "xxx"
+    "xx",
+    "xx"
   ],
   "result": {
     "count": 1,

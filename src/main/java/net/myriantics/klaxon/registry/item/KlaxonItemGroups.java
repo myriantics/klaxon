@@ -87,6 +87,7 @@ public abstract class KlaxonItemGroups {
                 // nuggets
                 entries.add(KlaxonItems.STEEL_NUGGET);
                 entries.add(KlaxonItems.CRUDE_STEEL_NUGGET);
+                entries.add(KlaxonItems.COPPER_NUGGET);
 
                 // raw materials
                 entries.add(KlaxonItems.RUBBER_GLOB);
