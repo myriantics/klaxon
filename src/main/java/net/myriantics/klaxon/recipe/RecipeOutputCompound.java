@@ -78,6 +78,8 @@ public final class RecipeOutputCompound {
             ));
             if (count > 0) {
                 outputList[i] = stack.copyWithCount(count);
+            } else {
+                outputList[i] = ItemStack.EMPTY;
             }
         }
 

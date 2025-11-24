@@ -86,7 +86,9 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
             double advancementGrantRange = 17.0;
 
             for (ItemStack stack : recipeData.outputStacks()) {
-                ItemDispenserBehavior.spawnItem(world, stack, 8, facing, itemOutputPos);
+                if (!stack.isEmpty()) {
+                    ItemDispenserBehavior.spawnItem(world, stack, 8, facing, itemOutputPos);
+                }
             }
 
             // proc blast processor crafting advancement
