@@ -214,6 +214,10 @@ public abstract class ToolUsageRecipeLogic {
 
     // yoinked from living entity
     public static void spawnToolUseParticleEffects(World world, ItemStack stack, int count, Entity source) {
+        if (stack.isEmpty()) {
+            return;
+        }
+
         Random random = source.getRandom();
         float pitch = source.getPitch();
         float yaw = source.getYaw();
