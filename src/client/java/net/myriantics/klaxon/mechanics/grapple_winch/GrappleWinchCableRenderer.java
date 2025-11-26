@@ -21,10 +21,8 @@ import net.myriantics.klaxon.registry.misc.KlaxonColors;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.awt.*;
 import java.util.Collection;
 
 public final class GrappleWinchCableRenderer {
@@ -113,23 +111,14 @@ public final class GrappleWinchCableRenderer {
             matrices.translate(lerpedX - cameraPos.getX(), lerpedY - cameraPos.getY(), lerpedZ - cameraPos.getZ());
             matrices.translate(cableEndpointPos.getX() - lerpedX, cableEndpointPos.getY() - lerpedY, cableEndpointPos.getZ() - lerpedZ);
 
-            MatrixStack.Entry entry = matrices.peek();
-
             double distance = cableOriginPos.distanceTo(cableEndpointPos);
-            int maxSegments = (int) (distance + 0.5);
-
-            Vector3f origin2Endpoint = cableEndpointPos.subtract(cableOriginPos).toVector3f();
+            int maxSegments = (int) (distance + 1);
 
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90 - KlaxonMathHelper.yawBetween(cableOriginPos, cableEndpointPos)));
             matrices.multiply(
                     RotationAxis.POSITIVE_Z.rotationDegrees(KlaxonMathHelper.pitchBetween(cableOriginPos, cableEndpointPos))
             );
-            // matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(KlaxonMathHelper.yawBetween(cableOriginPos, cableEndpointPos)));
             matrices.scale(1f/16, 1f/16, 1f/16);
-
-            // yonk the HSB arrays
-            float[] lightSteelHSB = KlaxonColors.toHSBArray(KlaxonColors.STEEL_LIGHT);
-            float[] mediumSteelHSB = KlaxonColors.toHSBArray(KlaxonColors.STEEL_MEDIUM);
 
             // cable segments are 2 per block of distance
             for (int segmentIndex = 0; segmentIndex <= maxSegments; segmentIndex++) {
@@ -146,18 +135,15 @@ public final class GrappleWinchCableRenderer {
                 renderCableSegment(
                         // makes it seem like the cable is actually streaming out of the grapple winch
                         segmentIndex == maxSegments
-                                ? (float) (distance % maxSegments)
-                                : 0,
+                                ? (float) (distance % (int) distance)
+                                : 1,
                         vertexConsumer,
                         originBlockLight,
                         originSkyLight,
                         endpointBlockLight,
                         endpointSkyLight,
-                        segmentIndex % 2 == 0 ? mediumSteelHSB : lightSteelHSB,
-                        entry,
                         matrices,
-                        (float) segmentIndex / maxSegments,
-                        (float) (segmentIndex + 1) / maxSegments
+                        (float) segmentIndex / maxSegments
                 );
                 matrices.pop();
             }
@@ -173,24 +159,27 @@ public final class GrappleWinchCableRenderer {
             int cableOriginSkyLight,
             int cableEndpointBlockLight,
             int cableEndpointSkyLight,
-            float[] segmentHSB,
-            MatrixStack.Entry entry,
             MatrixStack matrices,
-            float segmentStartPercentage,
-            float segmentEndPercentage
+            float segmentStartPercentage
     ) {
         // do lighting calculations
         int lerpedBlockLight = MathHelper.lerp(segmentStartPercentage, cableOriginBlockLight, cableEndpointBlockLight);
         int lerpedSkyLight = MathHelper.lerp(segmentStartPercentage, cableOriginSkyLight, cableEndpointSkyLight);
         int light = Math.clamp(lerpedSkyLight + lerpedBlockLight, 0, 15);
 
-        for (int i = 0; i < 4; i++) {
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45));
 
-            this.vertex(entry, vertexConsumer, 0, 1.5f, 0, TEXTURE_U_MIN, TEXTURE_V_MIN, 0, 0, 0, light);
-            this.vertex(entry, vertexConsumer, 16, 1.5f, 0, TEXTURE_U_MAX, TEXTURE_V_MIN, 0, 0, 0, light);
-            this.vertex(entry, vertexConsumer, 16, -1.5f, 0, TEXTURE_U_MAX, TEXTURE_V_MAX, 0, 0, 0, light);
-            this.vertex(entry, vertexConsumer, 0, -1.5f, 0, TEXTURE_U_MIN, TEXTURE_V_MAX, 0, 0, 0, light);
+        float uMin = TEXTURE_U_MAX * (1.0f - lengthToRender);
+        float xFrom = 16 * (1.0f - lengthToRender);
+
+        for (int i = 0; i < 2; i++) {
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
+            MatrixStack.Entry entry2 = matrices.peek();
+
+            this.vertex(entry2, vertexConsumer, xFrom, 1.5f, 0, uMin, TEXTURE_V_MIN, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, 16, 1.5f, 0, TEXTURE_U_MAX, TEXTURE_V_MIN, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, 16, -1.5f, 0, TEXTURE_U_MAX, TEXTURE_V_MAX, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, xFrom, -1.5f, 0, uMin, TEXTURE_V_MAX, 0, 0, 0, light);
         }
     }
 
