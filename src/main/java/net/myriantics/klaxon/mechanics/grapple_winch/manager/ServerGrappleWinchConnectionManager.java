@@ -1,6 +1,8 @@
 package net.myriantics.klaxon.mechanics.grapple_winch.manager;
 
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -14,6 +16,7 @@ import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
@@ -94,11 +97,31 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
     protected void disconnectInternal(int connectionId, CableDetachmentReason reason) {
         ServerGrappleWinchConnection connection = this.connectionId2Connection.remove(connectionId);
         if (connection != null) {
-            if (connection.getPlayer() != null) {
+            @Nullable ServerPlayerEntity player = connection.getPlayer();
+
+            if (player != null) {
                 KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(
                         connection.getPlayer(),
                         reason
                 );
+
+                ItemStack grappleWinchStack = null;
+                ItemStack mainHandStack = player.getMainHandStack();
+                ItemStack offHandStack = player.getOffHandStack();
+
+                if (mainHandStack.getItem() instanceof GrappleWinchItem grappleWinchItem && grappleWinchItem.canSupportCable(mainHandStack)) {
+                    grappleWinchStack = mainHandStack;
+                } else if (offHandStack.getItem() instanceof GrappleWinchItem grappleWinchItem && grappleWinchItem.canSupportCable(offHandStack)) {
+                    grappleWinchStack = offHandStack;
+                }
+
+                if (grappleWinchStack != null) {
+                    grappleWinchStack.damage(
+                            (int) (connection.getCableLength() / connection.getMaxCableLength()) * 4,
+                            player,
+                            grappleWinchStack == mainHandStack ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND
+                    );
+                }
             }
 
             if (reason.playsDetachmentSound) {
