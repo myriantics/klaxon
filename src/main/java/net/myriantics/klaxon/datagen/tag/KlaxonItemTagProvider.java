@@ -44,6 +44,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // build mechanics tags
         buildMechanicsTags();
+        buildRepairTags();
         buildAnvilRelatedTags();
         buildBlastProcessorCatalystBehaviorTags();
         buildEnchantableTags();
@@ -338,6 +339,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_INGOT);
         getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
                 .add(KlaxonItems.STEEL_HAMMER);
+    }
+
+    private void buildRepairTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_WINCH_REPAIR_MATERIALS)
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_WIRES);
     }
 
     private void buildEnchantableTags() {

@@ -62,6 +62,10 @@ public abstract class KlaxonItemTags {
     public static final TagKey<Item> GRAPPLE_WINCH_CABLE_DETACHERS =
             createTag("grapple_winch_cable_detachers");
 
+    // repair tags
+    public static final TagKey<Item> GRAPPLE_WINCH_REPAIR_MATERIALS =
+            createTag("grapple_winch_repair_materials");
+
     // enchantment tags
     public static final TagKey<Item> STREAMLINE_ENCHANTABLE =
             createEnchantableTag("streamline");
