@@ -3,7 +3,15 @@
   "criteria": {
     "grapple_winch_intentionally_disconnect_cable": {
       "conditions": {
-        "cable_detachment_reason": "invalid_held_items"
+        "cable_detachment_reason": "invalid_held_items",
+        "player_entity_predicate": {
+          "type": "minecraft:player",
+          "movement": {
+            "speed": {
+              "min": 0.25
+            }
+          }
+        }
       },
       "trigger": "klaxon:grapple_winch_cable_disconnect_criterion"
     }

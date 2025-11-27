@@ -102,6 +102,7 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
             if (player != null) {
                 KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(
                         connection.getPlayer(),
+                        connection.getHook(),
                         reason
                 );
 

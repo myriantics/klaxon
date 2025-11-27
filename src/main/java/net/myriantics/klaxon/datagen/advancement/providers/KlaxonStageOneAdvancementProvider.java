@@ -9,6 +9,10 @@ import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.predicate.NumberRange;
+import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LocationPredicate;
+import net.minecraft.predicate.entity.MovementPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.BlockTags;
@@ -93,7 +97,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementEntry obtainGrappleWinch = addTask(cableShearCraftMetalWire, OBTAIN_GRAPPLE_WINCH, loadedGrappleWinch, InventoryChangedCriterion.Conditions.items(KlaxonItems.GRAPPLE_WINCH));
 
         AdvancementEntry grappleWinchDeAnchorGrappleClaw = addTask(obtainGrappleWinch, GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW, KlaxonItems.STEEL_GRAPPLE_CLAW, OneOffCriterion.Conditions.createDeAnchorGrappleClaw());
-        AdvancementEntry grappleWinchIntentionallyDisconnectCable = addTask(obtainGrappleWinch, GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE, KlaxonItems.STEEL_WIRE, GrappleWinchCableDisconnectCriterion.Conditions.create(CableDetachmentReason.INVALID_HELD_ITEMS));
+        AdvancementEntry grappleWinchIntentionallyDisconnectCable = addTask(obtainGrappleWinch, GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE, KlaxonItems.STEEL_WIRE, GrappleWinchCableDisconnectCriterion.Conditions.createPlayer(CableDetachmentReason.INVALID_HELD_ITEMS, EntityPredicate.Builder.create().type(EntityType.PLAYER).movement(MovementPredicate.speed(NumberRange.DoubleRange.atLeast(5f/20))).build()));
         ItemStack enchantedGrappleClawStack = new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
         enchantedGrappleClawStack.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
         AdvancementEntry grappleWinchGrappleEnderDragon = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON, enchantedGrappleClawStack, EntityGrappleCriterion.Conditions.create(EntityType.ENDER_DRAGON));
