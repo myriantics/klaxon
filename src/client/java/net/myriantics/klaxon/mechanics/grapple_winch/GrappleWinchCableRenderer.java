@@ -163,9 +163,11 @@ public final class GrappleWinchCableRenderer {
             float segmentStartPercentage
     ) {
         // do lighting calculations
-        int lerpedBlockLight = MathHelper.lerp(segmentStartPercentage, cableOriginBlockLight, cableEndpointBlockLight);
-        int lerpedSkyLight = MathHelper.lerp(segmentStartPercentage, cableOriginSkyLight, cableEndpointSkyLight);
-        int light = Math.clamp(lerpedSkyLight + lerpedBlockLight, 0, 15);
+        int lerpedBlockLight = MathHelper.lerp(segmentStartPercentage, cableEndpointBlockLight, cableOriginBlockLight);
+        int lerpedSkyLight = MathHelper.lerp(segmentStartPercentage, cableEndpointSkyLight, cableOriginSkyLight);
+        int light = LightmapTextureManager.pack(lerpedBlockLight, lerpedSkyLight);
+
+
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45));
 
