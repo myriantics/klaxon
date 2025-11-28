@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
@@ -14,6 +15,11 @@ import net.myriantics.klaxon.util.StatusEffectHelper;
 public abstract class EntityWeightHelper {
     public static boolean isHeavy(Entity entity) {
         EntityType<? extends Entity> type = entity.getType();
+
+        // mobs with no AI are heavy because they can't move
+        if (entity instanceof MobEntity mobEntity && mobEntity.isAiDisabled()) {
+            return true;
+        }
 
         // The light_entities tag cancels out all weight modifiers - entity is always light
         if (type.isIn(KlaxonEntityTypeTags.LIGHT_ENTITIES)) {
