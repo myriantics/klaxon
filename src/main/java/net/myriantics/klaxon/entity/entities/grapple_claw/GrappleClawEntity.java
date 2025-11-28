@@ -289,6 +289,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         // important to call this after the hooked entity container resets our velocity to 0 - it updates position in the super method
         super.tick();
 
+        // boom look at me using &= how snazzy
+        this.inGround &= !this.hookedEntityContainer.isPresent();
+
         this.refreshPosition();
     }
 
@@ -398,6 +401,20 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             this.hookedEntityContainer.get().addVelocity(deltaX, deltaY, deltaZ);
         } else {
             super.addVelocity(deltaX, deltaY, deltaZ);
+        }
+    }
+
+    @Override
+    public void setYaw(float yaw) {
+        if (!this.hookedEntityContainer.isPresent()) {
+            super.setYaw(yaw);
+        }
+    }
+
+    @Override
+    public void setPitch(float pitch) {
+        if (!this.hookedEntityContainer.isPresent()) {
+            super.setPitch(pitch);
         }
     }
 
