@@ -176,7 +176,7 @@ public abstract class GrappleClawBlockDestructionHelper {
     }
 
     private static boolean canBreakBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos) {
-        return grappleClaw.canBreakBlocks(world)
+        return grappleClaw.canModifyAt(world, pos)
                 && (state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0);
     }
 
