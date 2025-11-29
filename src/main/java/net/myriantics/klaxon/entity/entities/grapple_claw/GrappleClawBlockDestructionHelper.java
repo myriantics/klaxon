@@ -15,11 +15,14 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
+import net.myriantics.klaxon.KlaxonDataGenerator;
+import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
@@ -67,11 +70,11 @@ public abstract class GrappleClawBlockDestructionHelper {
     }
 
     private static boolean veinmineBlocksIfValid(GrappleClawEntity grappleClaw, World world, BlockState originState, BlockPos originPos, PlayerEntity owner) {
-        int radius = world.getGameRules().getInt(KlaxonGameRules.GRAPPLE_CLAW_VEINMINE_RADIUS);
+        int maxVeinminedBlocks = grappleClaw.getItemStack().getOrDefault(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT, GrappleClawComponent.DEFAULT).veinmineCap();
 
         // don't veinmine anything if the source block is not veinmineable
         // also declare failure if radius is 0
-        if (radius == 0 || !canVeinmineBlock(grappleClaw, world, originState, originPos, owner)) {
+        if (maxVeinminedBlocks == 0 || !canVeinmineBlock(grappleClaw, world, originState, originPos, owner)) {
             return false;
         }
 
@@ -97,37 +100,35 @@ public abstract class GrappleClawBlockDestructionHelper {
         // Output stacks to be merged and output at the grapple winch's position
         ArrayList<ItemStack> outputStacks = new ArrayList<>();
 
-        // Positions we've already checked through and destroyed if possible - to be ignored when checking for new positions.
-        ArrayList<BlockPos> processedPositions = new ArrayList<>();
-
         // Contains all of the positions to check on the next pass
         List<BlockPos> targetPositions = List.of(originPos);
 
         // counts how many blocks we've broken - used to increment stat at the end
         int blocksBroken = 0;
 
-        for (int x = 0; x < radius; x++) {
+        while (!targetPositions.isEmpty() && blocksBroken < maxVeinminedBlocks) {
             ArrayList<BlockPos> newTargetPositions = new ArrayList<>();
 
             // iterate through the current target positions
-            for (BlockPos newOriginPos : targetPositions) {
-                // iterate through all offset directions from the checking pos
-                for (Offset offset : Offset.values()) {
-                    BlockPos targetPos = newOriginPos.add(offset.getOffsetVector());
-                    BlockState targetState = world.getBlockState(targetPos);
+            for (BlockPos targetPos : targetPositions) {
+                BlockState targetState = world.getBlockState(targetPos);
 
-                    // make sure we haven't processed position before
-                    if (!processedPositions.contains(targetPos) && veinminePredicate.test(targetState)) {
-                        // condense dropped stacks so we don't get 5 billion item entities
-                        for (ItemStack droppedStack : world.getBlockState(targetPos).getDroppedStacks(lootContextBuilder)) {
-                            KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);
-                        }
+                if (veinminePredicate.test(targetState)) {
+                    // condense dropped stacks so we don't get 5 billion item entities
+                    for (ItemStack droppedStack : world.getBlockState(targetPos).getDroppedStacks(lootContextBuilder)) {
+                        KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);
+                    }
 
-                        world.breakBlock(targetPos, false, owner);
+                    world.breakBlock(targetPos, false, owner);
 
-                        blocksBroken++;
-                        processedPositions.add(targetPos);
-                        newTargetPositions.add(targetPos);
+                    // cancel operation if we've exceeded the max blocks broken
+                    if (blocksBroken++ > maxVeinminedBlocks) {
+                        break;
+                    }
+
+                    // add the next round of target positions
+                    for (Offset offset : Offset.values()) {
+                        newTargetPositions.add(targetPos.add(offset.getOffsetVector()));
                     }
                 }
             }

@@ -64,7 +64,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
             new GrappleClawItem(new KlaxonItemSettings()
                     .maxCount(16)
-                    .grappleClaw(4.0f, 6.0f)
+                    .grappleClaw(4.0f, 6.0f, 67)
                     .getSettings()
             ));
     public static final Item GRAPPLE_WINCH = registerItem("grapple_winch",
