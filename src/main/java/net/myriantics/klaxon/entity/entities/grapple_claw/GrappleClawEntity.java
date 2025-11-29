@@ -396,6 +396,16 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
+    public Vec3d getVelocity() {
+        // don't override velocity if hooked entity is main player because that makes the grapple claw desync from hooked player's eye position in their client view
+        if (this.hookedEntityContainer.isPresent() && !(this.hookedEntityContainer.get() instanceof PlayerEntity player && player.isMainPlayer())) {
+            return this.hookedEntityContainer.get().getVelocity();
+        } else {
+            return super.getVelocity();
+        }
+    }
+
+    @Override
     public void addVelocity(double deltaX, double deltaY, double deltaZ) {
         if (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isLogicalSideForUpdatingMovement()) {
             this.hookedEntityContainer.get().addVelocity(deltaX, deltaY, deltaZ);
@@ -416,6 +426,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         if (!this.hookedEntityContainer.isPresent()) {
             super.setPitch(pitch);
         }
+    }
+
+    @Override
+    public boolean isLogicalSideForUpdatingMovement() {
+        return super.isLogicalSideForUpdatingMovement() || (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isLogicalSideForUpdatingMovement());
     }
 
     @Override
@@ -692,7 +707,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
             Vec3d hookedVelocity = this.hookedEntity.getVelocity();
             this.setHookedEntity(null);
-            claw.setVelocity(hookedVelocity);
+            if (!damage) {
+                claw.setVelocity(hookedVelocity);
+            }
 
             return true;
         }

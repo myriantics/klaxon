@@ -37,7 +37,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
     private @Nullable NbtCompound dormantHookNbt;
 
-    private boolean canPlayReboundSound = true;
+    boolean canPlayReboundSound = true;
     private State state = State.DORMANT;
 
     private ServerGrappleWinchConnection(ServerGrappleWinchConnectionManager manager, int connectionId, UUID playerUUID, UUID hookUUID, NbtCompound dormantHookNbt) {
@@ -77,8 +77,8 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     @Override
-    public Vec3d getPlayerPos() {
-        return this.player.getPos();
+    public Vec3d getPlayerEyePos() {
+        return this.player.getEyePos();
     }
 
     @Override
@@ -88,6 +88,24 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
     public boolean isDormant() {
         return this.state.equals(State.DORMANT);
+    }
+
+    void tryPlayReboundSound() {
+        // make sure we don't spam the shit out of the rebound sound
+        if (this.canPlayReboundSound) {
+            this.playSoundAtBothCableEnds(
+                    KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
+                    1f + this.manager.getWorld().getRandom().nextFloat() * 0.3f,
+                    0.8f + this.manager.getWorld().getRandom().nextFloat() * 0.2f
+            );
+            this.manager.getWorld().emitGameEvent(
+                    GameEvent.ENTITY_ACTION,
+                    this.hook.klaxon$asEntity().getPos(),
+                    GameEvent.Emitter.of(player)
+            );
+
+            this.canPlayReboundSound = false;
+        }
     }
 
     public void tick() {
@@ -103,13 +121,9 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         this.retracting = this.player.isUsingItem() && this.player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
         this.resetMaxCableLength();
 
-        Vec3d compiledHookVec = Vec3d.ZERO;
-
         Vec3d hookPos = this.getHookPos();
         Vec3d playerEyePos = this.player.getEyePos();
         Vec3d normalizedHook2WielderVec = playerEyePos.subtract(hookPos).normalize();
-
-        double wielderDistance = hookPos.distanceTo(playerEyePos);
 
         // try to deanchor
         if (this.hookAnchored && this.retracting && EntityWeightHelper.isHeavy(this.player)) {
@@ -130,59 +144,19 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
         this.hookAnchored = this.hook.klaxon$isAnchored();
 
-
-        // if we're not anchored, move the grappling hook
-        if (!this.isHookAnchored()) {
-
-            // retract grapple claw if owner pulls back before landing
-            if (this.retracting) {
-                compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.multiply(4f/20));
-            }
-
-            // retract grapple claw if it hits limit
-            if (wielderDistance >= this.maxCableLength) {
-
-                if (wielderDistance >= maxCableLength * 1.2) {
-                    this.hook.klaxon$asEntity().setVelocity(this.hook.klaxon$asEntity().getVelocity().multiply(0.85));
-                }
-
-                compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.multiply(4f/20));
-
-                // make sure we don't spam the shit out of the rebound sound
-                if (this.canPlayReboundSound) {
-                    this.playSoundAtBothCableEnds(
-                            KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
-                            1f + this.manager.getWorld().getRandom().nextFloat() * 0.3f,
-                            0.8f + this.manager.getWorld().getRandom().nextFloat() * 0.2f
-                    );
-                    this.manager.getWorld().emitGameEvent(
-                            GameEvent.ENTITY_ACTION,
-                            this.hook.klaxon$asEntity().getPos(),
-                            GameEvent.Emitter.of(player)
-                    );
-
-                    this.canPlayReboundSound = false;
-                }
-            } else if (wielderDistance < maxCableLength * 0.95) {
-                // if we go back in bounds, we can play the rebound sound again
-                // this has a small deadzone because otherwise it would spam the shit out of the sound when dangling at the end of the cable.
-                this.canPlayReboundSound = true;
-            }
-        }
-
-        this.hook.klaxon$asEntity().addVelocity(compiledHookVec);
-
         // limit fall distance to give players more leeway
         if (this.player.getVelocity().getY() > -1 && this.player.fallDistance > 1.0F) {
             this.player.fallDistance = 1.0F;
         }
+
+        super.tick();
 
         // init the packet
         GrappleWinchConnectionSyncPacket packet = new GrappleWinchConnectionSyncPacket(
                 this.connectionId,
                 this.getPlayerId(),
                 this.getHookId(),
-                this.player.getPos(),
+                this.player.getEyePos(),
                 this.hook.klaxon$asEntity().getPos(),
                 this.hookAnchored,
                 this.cableLength,

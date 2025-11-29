@@ -17,6 +17,45 @@ public abstract class GrappleWinchConnection {
     }
 
     public void tick() {
+        Vec3d compiledHookVec = Vec3d.ZERO;
+        Vec3d hookPos = this.getHookPos();
+        Vec3d playerEyePos = this.getPlayerEyePos();
+
+        Vec3d normalizedHook2WielderVec = playerEyePos.subtract(hookPos).normalize();
+        double wielderDistance = hookPos.distanceTo(playerEyePos);
+
+
+        if (!this.hookAnchored && this.getHook() != null && this.getHook().klaxon$asEntity().isLogicalSideForUpdatingMovement()) {
+
+            // if we're not anchored, move the grappling hook
+            if (!this.isHookAnchored()) {
+
+                // retract grapple claw if owner pulls back before landing
+                if (this.retracting) {
+                    compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.multiply(4f/20));
+                }
+
+                // retract grapple claw if it hits limit
+                if (wielderDistance >= this.maxCableLength) {
+
+                    if (this.getHook().klaxon$asEntity().isLogicalSideForUpdatingMovement() && wielderDistance >= maxCableLength * 1.2) {
+                        this.getHook().klaxon$asEntity().addVelocity(this.getHook().klaxon$asEntity().getVelocity().multiply(-0.15));
+                    }
+
+                    compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.multiply(4f/20));
+
+                    if (this instanceof ServerGrappleWinchConnection connection) {
+                        connection.tryPlayReboundSound();
+                    }
+                } else if (wielderDistance < maxCableLength * 0.95 && this instanceof ServerGrappleWinchConnection connection) {
+                    // if we go back in bounds, we can play the rebound sound again
+                    // this has a small deadzone because otherwise it would spam the shit out of the sound when dangling at the end of the cable.
+                    connection.canPlayReboundSound = true;
+                }
+            }
+
+            this.getHook().klaxon$asEntity().addVelocity(compiledHookVec);
+        }
     }
 
     public int getId() {
@@ -31,7 +70,7 @@ public abstract class GrappleWinchConnection {
 
     public abstract GrapplingHook getHook();
 
-    public abstract Vec3d getPlayerPos();
+    public abstract Vec3d getPlayerEyePos();
 
     public abstract Vec3d getHookPos();
 

@@ -90,7 +90,7 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
             Vec3d compiledPlayerVec = Vec3d.ZERO;
 
             // initialize values
-            Vec3d playerToHookVec = this.getHookPos().subtract(this.getPlayerPos().add(0, this.player.getEyeHeight(this.player.getPose()), 0));
+            Vec3d playerToHookVec = this.getHookPos().subtract(this.getPlayerEyePos());
             double clawDistance = playerToHookVec.length();
 
             // update winch cable length
@@ -180,7 +180,7 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     @Override
-    public Vec3d getPlayerPos() {
+    public Vec3d getPlayerEyePos() {
         return this.player == null || this.player.isRemoved() ? this.playerFallbackPos : this.player.getPos();
     }
 
@@ -214,6 +214,6 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
 
     @Override
     public void resetCableLength() {
-        this.setCableLength(this.getPlayerPos().distanceTo(this.getHookPos()));
+        this.setCableLength(this.getPlayerEyePos().distanceTo(this.getHookPos()));
     }
 }
