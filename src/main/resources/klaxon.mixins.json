@@ -53,6 +53,7 @@
     "minecraft.innate_enchantments.EnchantmentHelperMixin",
     "minecraft.innate_enchantments.EnchantmentsPredicateMixin",
     "minecraft.innate_enchantments.ItemAccessor",
+    "minecraft.innate_enchantments.pick_stack_tweak.PlayerInventoryMixin",
     "minecraft.instabreaking.AbstractBlockStateMixin",
     "minecraft.item_components.DamageSourceMixin",
     "minecraft.item_components.MobEntityMixin",

@@ -34,6 +34,8 @@ public record InnateItemEnchantmentsComponent(ItemEnchantmentsComponent enchantm
             InnateItemEnchantmentsComponent::enchantments
     );
 
+    public static final InnateItemEnchantmentsComponent DEFAULT = new InnateItemEnchantmentsComponent(ItemEnchantmentsComponent.DEFAULT);
+
     public static @Nullable InnateItemEnchantmentsComponent get(ItemStack stack) {
         return stack.getComponents().get(KlaxonDataComponentTypes.INNATE_ENCHANTMENTS);
     }
