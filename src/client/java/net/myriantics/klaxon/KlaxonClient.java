@@ -15,6 +15,7 @@ import net.myriantics.klaxon.particle.NetherReactionExplosionLargeParticle;
 import net.myriantics.klaxon.entity.GrappleClawEntityRenderer;
 import net.myriantics.klaxon.registry.KlaxonClientEventListeners;
 import net.myriantics.klaxon.registry.KlaxonClientPackets;
+import net.myriantics.klaxon.registry.KlaxonEntityModelLayers;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
@@ -55,6 +56,9 @@ public class KlaxonClient implements ClientModInitializer {
 
         // model predicates
         KlaxonItemModelPredicates.init();
+
+        // entity model layers
+        KlaxonEntityModelLayers.init();
 
         // particles
         ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.HALLNOX_POD_DRIP, HallnoxDripParticle.HallnoxDripParticleFactory::new);

@@ -13,4 +13,8 @@ public abstract class KlaxonEntityModelLayers {
         EntityModelLayerRegistry.registerModelLayer(layer, provider);
         return layer;
     }
+
+    public static void init() {
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Entity Model Layers!");
+    }
 }

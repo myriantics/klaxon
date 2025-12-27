@@ -7,6 +7,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Rarity;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
@@ -82,6 +83,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     // armor
     public static final Item CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
             .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
+            .component(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT, Colors.LIGHT_RED)
             .rarity(Rarity.UNCOMMON)
             .getSettings()
     ));

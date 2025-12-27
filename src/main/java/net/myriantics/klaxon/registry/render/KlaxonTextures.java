@@ -22,6 +22,9 @@ public abstract class KlaxonTextures {
     // Grapple Cable
     public static final Identifier STEEL_CABLE_SEGMENT = ofEntity("grapple_cable/steel");
 
+    // Helmet Crest
+    public static final Identifier HELMET_CREST = ofEntity("helmet_crest");
+
     public static Identifier copyDir(String path, Identifier parent) {
         return copyDir(path, parent.getPath());
     }

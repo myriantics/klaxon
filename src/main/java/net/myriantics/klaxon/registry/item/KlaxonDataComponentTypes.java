@@ -122,6 +122,12 @@ public abstract class KlaxonDataComponentTypes {
         return builder;
     });
 
+
+    public static final ComponentType<Integer> HELMET_CREST_COMPONENT = register("helmet_crest", builder -> builder
+                    .codec(Codec.INT)
+                    .packetCodec(PacketCodecs.INTEGER)
+    );
+
     private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());
     }
