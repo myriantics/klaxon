@@ -290,6 +290,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildMechanicsTags() {
+        getOrCreateTagBuilder(ItemTags.DYEABLE)
+                .add(KlaxonItems.CRESTED_STEEL_HELMET);
         getOrCreateTagBuilder(KlaxonItemTags.HEAVY_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.NETHERITE_HELMET)
@@ -373,6 +375,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_WRENCH);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET)
+                .add(KlaxonItems.CRESTED_STEEL_HELMET)
                 .add(KlaxonItems.STEEL_CHESTPLATE)
                 .add(KlaxonItems.STEEL_LEGGINGS)
                 .add(KlaxonItems.STEEL_BOOTS);
