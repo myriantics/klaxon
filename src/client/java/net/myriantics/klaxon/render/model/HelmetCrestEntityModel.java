@@ -10,37 +10,17 @@ import net.myriantics.klaxon.registry.KlaxonEntityModelPartNames;
 
 public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<T> {
 
-    private final ImmutableList<ModelPart> allParts;
-    private final ImmutableList<ModelPart> crestParts; // parts to be dyed
-    private final ImmutableList<ModelPart> supportAndBaseParts; // parts that shalt not be dyed
+    private final ImmutableList<ModelPart> parts;
 
-    private final ModelPart crestUpper;
-    private final ModelPart crestBack;
-    private final ModelPart crestBaseUpper;
-    private final ModelPart crestBaseBack;
-    private final ModelPart upperSupport;
-    private final ModelPart edgeSupport;
-    private final ModelPart backSupport;
+    private final ModelPart dyeableCrest;
+    private final ModelPart staticCrestSupports;
 
     public HelmetCrestEntityModel(ModelPart root) {
-        this.crestUpper = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_UPPER);
-        this.crestBack = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_BACK);
-        this.crestBaseUpper = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_BASE_UPPER);
-        this.crestBaseBack = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_BASE_BACK);
-        this.upperSupport = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_UPPER_SUPPORT);
-        this.edgeSupport = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_EDGE_SUPPORT);
-        this.backSupport = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_BACK_SUPPORT);
-        this.allParts = ImmutableList.of(
-                this.crestUpper, this.crestBack,
-                this.crestBaseUpper, this.crestBaseBack,
-                this.upperSupport, this.edgeSupport, this.backSupport
-        );
-        this.crestParts = ImmutableList.of(
-                this.crestUpper, this.crestBack
-        );
-        this.supportAndBaseParts = ImmutableList.of(
-                this.crestBaseUpper, this.crestBaseBack,
-                this.upperSupport, this.edgeSupport, this.backSupport
+        this.dyeableCrest = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_DYEABLE);
+        this.staticCrestSupports = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_STATIC_SUPPORT);
+
+        this.parts = ImmutableList.of(
+                this.dyeableCrest, this.staticCrestSupports
         );
     }
 
@@ -52,54 +32,123 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        Dilation dilation = new Dilation(1.0F);
+        Dilation dilation = Dilation.NONE;
+
+        // init builder for dyeable crest parts
+        ModelPartBuilder dyeableCrestBuilder = ModelPartBuilder.create();
+
+        // dimensions for upper crest
+        final float crestUpperX = 2f;
+        final float crestUpperY = 3f;
+        final float crestUpperZ = 12f;
+
+        // add upper crest to builder
+        dyeableCrestBuilder
+                .uv(0, 0)
+                .cuboid(
+                        -(crestUpperX / 2), 0f, 0f,
+                        crestUpperX, crestUpperY, crestUpperZ,
+                        dilation
+                );
+
+        // dimensions for back crest
+        final float crestBackX = 2f;
+        final float crestBackY = 8f;
+        final float crestBackZ = 3f;
+
+        // add back crest to builder
+        dyeableCrestBuilder
+                .uv(0, 0)
+                .cuboid(
+                        -(crestBackX / 2), -crestBackY, crestUpperZ - crestBackZ,
+                        crestBackX, crestBackY, crestBackZ,
+                        dilation
+                );
+
+        // commit the dyed crest segments to the model part data
         modelPartData.addChild(
-                KlaxonEntityModelPartNames.HELMET_CREST_UPPER,
-                ModelPartBuilder.create()
-                        .uv(0, 32)
-                        .cuboid(-1.501f, 2.8122f, -7.8115f, 3.002f, 3.751f, 15f, dilation),
+                KlaxonEntityModelPartNames.HELMET_CREST_DYEABLE,
+                dyeableCrestBuilder,
                 ModelTransform.NONE
         );
+
+        // init the builder for the non dyed crest segments
+        ModelPartBuilder staticCrestSupportBuilder = ModelPartBuilder.create();
+
+        // dimensions for upper crest base
+        final float crestBaseUpperX = 4f;
+        final float crestBaseUpperY = 1f;
+        final float crestBaseUpperZ = 9f;
+
+        // add upper crest base to crest support builder
+        staticCrestSupportBuilder
+                .uv(0, 0)
+                .cuboid(
+                        -(crestBaseUpperX / 2), -crestBaseUpperY, 0f,
+                        crestBaseUpperX, crestBaseUpperY, crestBaseUpperZ,
+                        dilation
+                );
+
+        // dimensions for back crest base
+        final float crestBaseBackX = 4f;
+        final float crestBaseBackY = 8f;
+        final float crestBaseBackZ = 1f;
+
+        // add back crest base to crest support builder
+        staticCrestSupportBuilder
+                .uv(0, 0)
+                .cuboid(
+                        -(crestBaseBackX / 2), -crestBaseBackY, crestUpperZ - crestBackZ - crestBaseBackZ,
+                        crestBaseBackX, crestBaseBackY, crestBaseBackZ,
+                        dilation
+                );
+
+        // dimensions for upper crest support
+        final float crestUpperSupportX = 4f;
+        final float crestUpperSupportY = 1f;
+        final float crestUpperSupportZ = 4f;
+
+        // add upper crest support to crest support builder
+        staticCrestSupportBuilder
+                .uv(0, 0)
+                .cuboid(
+                        -(crestUpperSupportX / 2), -(crestBaseUpperY + crestUpperSupportY), 0f,
+                        crestUpperSupportX, crestUpperSupportY, crestUpperSupportZ,
+                        dilation
+                );
+
+        // dimensions for edge crest support
+        final float crestEdgeSupportX = 4f;
+        final float crestEdgeSupportY = 3f;
+        final float crestEdgeSupportZ = 3f;
+
+        // add edge crest support to crest support builder
+        staticCrestSupportBuilder
+                .uv(0, 0)
+                .cuboid(
+                        -(crestEdgeSupportX / 2), -crestEdgeSupportY, crestBaseUpperZ - crestEdgeSupportZ,
+                        crestEdgeSupportX, crestEdgeSupportY, crestEdgeSupportZ,
+                        dilation
+                );
+
+        // dimensions for back crest support
+        final float crestBackSupportX = 4f;
+        final float crestBackSupportY = 4f;
+        final float crestBackSupportZ = 1f;
+
+        // add back crest support to crest support builder
+        staticCrestSupportBuilder
+                .uv(0, 0)
+                .cuboid(
+                        -(crestBackSupportX / 2), -crestBaseBackY, crestUpperZ - crestBackZ - crestBaseBackZ - crestBackSupportZ,
+                        crestBackSupportX, crestBackSupportY, crestBackSupportZ,
+                        dilation
+                );
+
+        // commit the static crest supports to the model part data
         modelPartData.addChild(
-                KlaxonEntityModelPartNames.HELMET_CREST_BACK,
-                ModelPartBuilder.create()
-                        .uv(0, 32)
-                        .cuboid(-1.5f, -7.1888f, 3.4375f, 3f, 13.751f, 3.75f, dilation),
-                ModelTransform.NONE
-        );
-        modelPartData.addChild(
-                KlaxonEntityModelPartNames.HELMET_CREST_BASE_UPPER,
-                ModelPartBuilder.create()
-                        .uv(0, 32)
-                        .cuboid(-2.501f, 1.5622f, -7.8125f, 5f, 1.251f, 11.251f, dilation),
-                ModelTransform.NONE
-        );
-        modelPartData.addChild(
-                KlaxonEntityModelPartNames.HELMET_CREST_BASE_BACK,
-                ModelPartBuilder.create()
-                        .uv(0, 32)
-                        .cuboid(-2.5f, -7.1878f, 2.1875f, 5f, 10f, 1.25f, dilation),
-                ModelTransform.NONE
-        );
-        modelPartData.addChild(
-                KlaxonEntityModelPartNames.HELMET_CREST_UPPER_SUPPORT,
-                ModelPartBuilder.create()
-                        .uv(0, 32)
-                        .cuboid(-2.5f, 0.3113f, -7.8125f, 5f, 1.25f, 5f, dilation),
-                ModelTransform.NONE
-        );
-        modelPartData.addChild(
-                KlaxonEntityModelPartNames.HELMET_CREST_EDGE_SUPPORT,
-                ModelPartBuilder.create()
-                        .uv(0, 32)
-                        .cuboid(-2.499f, -0.9378f, -0.3125f, 5f, 3.75f, 3.75f, dilation),
-                ModelTransform.NONE
-        );
-        modelPartData.addChild(
-                KlaxonEntityModelPartNames.HELMET_CREST_BACK_SUPPORT,
-                ModelPartBuilder.create()
-                        .uv(0, 32)
-                        .cuboid(-2.5f, -7.1878f, 0.9365f, 5f, 5f, 1.25f, dilation),
+                KlaxonEntityModelPartNames.HELMET_CREST_STATIC_SUPPORT,
+                staticCrestSupportBuilder,
                 ModelTransform.NONE
         );
 
@@ -108,17 +157,15 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
-        // rendered dyed
-        this.crestParts.forEach(modelPart -> modelPart.render(matrices, vertices, light, overlay, color));
-        // not rendered dyed
-        this.supportAndBaseParts.forEach(modelPart -> modelPart.render(matrices, vertices, light, overlay));
+        this.dyeableCrest.render(matrices, vertices, light, overlay, color);
+        this.staticCrestSupports.render(matrices, vertices, light, overlay);
     }
 
     @Override
     protected Iterable<ModelPart> getHeadParts() {
         // probably good practice to still have this return something in case something uses it
         // even though it's not used by me for rendering
-        return this.allParts;
+        return this.parts;
     }
 
     @Override

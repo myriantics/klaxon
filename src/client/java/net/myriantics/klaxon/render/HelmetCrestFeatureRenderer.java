@@ -58,8 +58,6 @@ public class HelmetCrestFeatureRenderer<T extends LivingEntity, M extends Entity
 
             boolean villager = livingEntity instanceof VillagerEntity || livingEntity instanceof ZombieVillagerEntity;
             if (livingEntity.isBaby() && !(livingEntity instanceof VillagerEntity)) {
-                float m = 2.0F;
-                float n = 1.4F;
                 matrices.translate(0f, 1f/32, 0f);
                 matrices.scale(0.7f, 0.7f, 0.7f);
                 matrices.translate(0.0f, 1.0f, 0.0f);
