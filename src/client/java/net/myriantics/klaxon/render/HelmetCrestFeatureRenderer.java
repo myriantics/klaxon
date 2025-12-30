@@ -12,6 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
@@ -31,6 +32,8 @@ public class HelmetCrestFeatureRenderer<T extends LivingEntity, M extends Entity
     private final float scaleZ;
     private final HelmetCrestEntityModel<T> helmetCrestEntityModel;
     private static final Identifier TEXTURE = KlaxonTextures.decorate(KlaxonTextures.HELMET_CREST);
+
+    private static final float ARMOR_SCALE = 2f;
 
     private static final int DEFAULT_HELMET_CREST_COLOR = Colors.RED;
 
@@ -54,6 +57,7 @@ public class HelmetCrestFeatureRenderer<T extends LivingEntity, M extends Entity
             int crestColor = ColorHelper.Argb.fullAlpha(DyedColorComponent.getColor(helmetStack, DEFAULT_HELMET_CREST_COLOR));
 
             matrices.push();
+            matrices.scale(ARMOR_SCALE, ARMOR_SCALE, ARMOR_SCALE);
             matrices.scale(this.scaleX, this.scaleY, this.scaleZ);
 
             boolean villager = livingEntity instanceof VillagerEntity || livingEntity instanceof ZombieVillagerEntity;
@@ -61,6 +65,10 @@ public class HelmetCrestFeatureRenderer<T extends LivingEntity, M extends Entity
                 matrices.translate(0f, 1f/32, 0f);
                 matrices.scale(0.7f, 0.7f, 0.7f);
                 matrices.translate(0.0f, 1.0f, 0.0f);
+            }
+
+            if (livingEntity instanceof ArmorStandEntity) {
+                matrices.translate(0, -0.03929, 0);
             }
 
             // this is kind of ugly but generics are fucked so whatevs

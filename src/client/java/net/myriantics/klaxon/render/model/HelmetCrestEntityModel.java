@@ -33,6 +33,10 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
         Dilation dilation = Dilation.NONE;
+        // go go gadget guess and check in spectator
+        // magic numbers go brrr
+        // also they're the '99s to stop z fighting
+        ModelTransform transform = ModelTransform.pivot(0f, 2.601f, -2.999f);
 
         // init builder for dyeable crest parts
         ModelPartBuilder dyeableCrestBuilder = ModelPartBuilder.create();
@@ -69,7 +73,7 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
         modelPartData.addChild(
                 KlaxonEntityModelPartNames.HELMET_CREST_DYEABLE,
                 dyeableCrestBuilder,
-                ModelTransform.NONE
+                transform
         );
 
         // init the builder for the non dyed crest segments
@@ -149,7 +153,7 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
         modelPartData.addChild(
                 KlaxonEntityModelPartNames.HELMET_CREST_STATIC_SUPPORT,
                 staticCrestSupportBuilder,
-                ModelTransform.NONE
+                transform
         );
 
         return TexturedModelData.of(modelData, 32, 32);
