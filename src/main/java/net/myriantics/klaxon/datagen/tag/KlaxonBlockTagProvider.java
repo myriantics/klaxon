@@ -298,8 +298,13 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE)
                 .forceAddTag(BlockTags.SNOW)
                 .add(Blocks.POWDER_SNOW);
-        getOrCreateTagBuilder(KlaxonBlockTags.HEAVY_FALLING_BLOCKS)
-                .add(Blocks.SAND);
+
+        getOrCreateTagBuilder(BlockTags.OCCLUDES_VIBRATION_SIGNALS)
+                .add(KlaxonBlocks.RUBBER_BLOCK)
+                .add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
+        getOrCreateTagBuilder(BlockTags.DAMPENS_VIBRATIONS)
+                .add(KlaxonBlocks.RUBBER_BLOCK)
+                .add(KlaxonBlocks.RUBBER_SHEET_BLOCK);
 
         // hallnox pod
         getOrCreateTagBuilder(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)
