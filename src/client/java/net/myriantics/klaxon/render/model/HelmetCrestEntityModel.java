@@ -10,7 +10,9 @@ import net.myriantics.klaxon.registry.KlaxonEntityModelPartNames;
 
 public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<T> {
 
-    private final ImmutableList<ModelPart> headParts;
+    private final ImmutableList<ModelPart> allParts;
+    private final ImmutableList<ModelPart> crestParts; // parts to be dyed
+    private final ImmutableList<ModelPart> supportAndBaseParts; // parts that shalt not be dyed
 
     private final ModelPart crestUpper;
     private final ModelPart crestBack;
@@ -28,7 +30,18 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
         this.upperSupport = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_UPPER_SUPPORT);
         this.edgeSupport = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_EDGE_SUPPORT);
         this.backSupport = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_BACK_SUPPORT);
-        this.headParts = ImmutableList.of(this.crestUpper, this.crestBack, this.crestBaseUpper, this.crestBaseBack, this.upperSupport, this.edgeSupport, this.backSupport);
+        this.allParts = ImmutableList.of(
+                this.crestUpper, this.crestBack,
+                this.crestBaseUpper, this.crestBaseBack,
+                this.upperSupport, this.edgeSupport, this.backSupport
+        );
+        this.crestParts = ImmutableList.of(
+                this.crestUpper, this.crestBack
+        );
+        this.supportAndBaseParts = ImmutableList.of(
+                this.crestBaseUpper, this.crestBaseBack,
+                this.upperSupport, this.edgeSupport, this.backSupport
+        );
     }
 
     @Override
@@ -92,9 +105,20 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         return TexturedModelData.of(modelData, 32, 32);
     }
+
+    @Override
+    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+        // rendered dyed
+        this.crestParts.forEach(modelPart -> modelPart.render(matrices, vertices, light, overlay, color));
+        // not rendered dyed
+        this.supportAndBaseParts.forEach(modelPart -> modelPart.render(matrices, vertices, light, overlay));
+    }
+
     @Override
     protected Iterable<ModelPart> getHeadParts() {
-        return this.headParts;
+        // probably good practice to still have this return something in case something uses it
+        // even though it's not used by me for rendering
+        return this.allParts;
     }
 
     @Override
