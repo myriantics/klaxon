@@ -86,7 +86,7 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add upper crest base to crest support builder
         staticCrestSupportBuilder
-                .uv(0, 0)
+                .uv(0, 22)
                 .cuboid(
                         -(crestBaseUpperX / 2), -crestBaseUpperY, 0f,
                         crestBaseUpperX, crestBaseUpperY, crestBaseUpperZ,
@@ -100,7 +100,7 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add back crest base to crest support builder
         staticCrestSupportBuilder
-                .uv(0, 0)
+                .uv(17, 0)
                 .cuboid(
                         -(crestBaseBackX / 2), -crestBaseBackY, crestUpperZ - crestBackZ - crestBaseBackZ,
                         crestBaseBackX, crestBaseBackY, crestBaseBackZ,
@@ -114,7 +114,7 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add upper crest support to crest support builder
         staticCrestSupportBuilder
-                .uv(0, 0)
+                .uv(11, 16)
                 .cuboid(
                         -(crestUpperSupportX / 2), -(crestBaseUpperY + crestUpperSupportY), 0f,
                         crestUpperSupportX, crestUpperSupportY, crestUpperSupportZ,
@@ -128,7 +128,7 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add edge crest support to crest support builder
         staticCrestSupportBuilder
-                .uv(0, 0)
+                .uv(18, 22)
                 .cuboid(
                         -(crestEdgeSupportX / 2), -crestEdgeSupportY, crestBaseUpperZ - crestEdgeSupportZ,
                         crestEdgeSupportX, crestEdgeSupportY, crestEdgeSupportZ,
@@ -142,7 +142,7 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add back crest support to crest support builder
         staticCrestSupportBuilder
-                .uv(0, 0)
+                .uv(0, 16)
                 .cuboid(
                         -(crestBackSupportX / 2), -crestBaseBackY, crestUpperZ - crestBackZ - crestBaseBackZ - crestBackSupportZ,
                         crestBackSupportX, crestBackSupportY, crestBackSupportZ,
