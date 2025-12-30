@@ -123,10 +123,7 @@ public abstract class KlaxonDataComponentTypes {
     });
 
 
-    public static final ComponentType<Integer> HELMET_CREST_COMPONENT = register("helmet_crest", builder -> builder
-                    .codec(Codec.INT)
-                    .packetCodec(PacketCodecs.INTEGER)
-    );
+    public static final ComponentType<Unit> HELMET_CREST_COMPONENT = registerUnit("helmet_crest");
 
     private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());

@@ -3,10 +3,13 @@ package net.myriantics.klaxon.registry.item;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Colors;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.Unit;
 import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
@@ -29,6 +32,11 @@ public class KlaxonItemSettings {
 
     public <T> KlaxonItemSettings component(ComponentType<T> type, T value) {
         this.settings.component(type, value);
+        return this;
+    }
+
+    public KlaxonItemSettings helmetCrest() {
+        this.settings.component(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT, Unit.INSTANCE);
         return this;
     }
 

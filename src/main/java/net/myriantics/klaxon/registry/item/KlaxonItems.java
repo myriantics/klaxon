@@ -83,7 +83,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     // armor
     public static final Item CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
             .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
-            .component(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT, Colors.LIGHT_RED)
+            .helmetCrest()
             .rarity(Rarity.UNCOMMON)
             .getSettings()
     ));

@@ -4,19 +4,20 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.*;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.myriantics.klaxon.registry.KlaxonEntityModelLayers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
@@ -30,6 +31,8 @@ public class HelmetCrestFeatureRenderer<T extends LivingEntity, M extends Entity
     private final float scaleZ;
     private final HelmetCrestEntityModel<T> helmetCrestEntityModel;
     private static final Identifier TEXTURE = KlaxonTextures.decorate(KlaxonTextures.HELMET_CREST);
+
+    private static final int DEFAULT_HELMET_CREST_COLOR = Colors.RED;
 
     public HelmetCrestFeatureRenderer(FeatureRendererContext<T, M> context, EntityModelLoader modelLoader) {
         this(context, modelLoader, 1.0f, 1.0f, 1.0f);
@@ -48,9 +51,7 @@ public class HelmetCrestFeatureRenderer<T extends LivingEntity, M extends Entity
         ItemStack helmetStack = livingEntity.getEquippedStack(EquipmentSlot.HEAD);
 
         if (helmetStack.contains(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT)) {
-            int crestColor = helmetStack.contains(DataComponentTypes.DYED_COLOR)
-                    ? helmetStack.get(DataComponentTypes.DYED_COLOR).rgb()
-                    : helmetStack.get(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT);
+            int crestColor = ColorHelper.Argb.fullAlpha(DyedColorComponent.getColor(helmetStack, DEFAULT_HELMET_CREST_COLOR));
 
             matrices.push();
             matrices.scale(this.scaleX, this.scaleY, this.scaleZ);
