@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.behavior.KlaxonBlockStateWrenchBehaviors;
+import net.myriantics.klaxon.registry.behavior.KlaxonCauldronBehaviors;
 import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.behavior.KlaxonDispenserBehaviors;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
@@ -73,6 +74,7 @@ public class KlaxonCommon implements ModInitializer {
         KlaxonLootNumberProviders.init();
         KlaxonLootContextTypes.init();
         KlaxonBlockStateWrenchBehaviors.init();
+		KlaxonCauldronBehaviors.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}
