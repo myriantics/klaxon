@@ -420,7 +420,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
         getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)
-                .add(KlaxonItems.STEEL_HELMET);
+                .add(KlaxonItems.STEEL_HELMET)
+                .add(KlaxonItems.CRESTED_STEEL_HELMET);
         getOrCreateTagBuilder(ItemTags.CHEST_ARMOR)
                 .add(KlaxonItems.STEEL_CHESTPLATE);
         getOrCreateTagBuilder(ItemTags.LEG_ARMOR)
