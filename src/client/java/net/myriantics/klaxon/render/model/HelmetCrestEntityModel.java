@@ -10,10 +10,10 @@ import net.myriantics.klaxon.registry.KlaxonEntityModelPartNames;
 
 public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<T> {
 
-    private final ImmutableList<ModelPart> parts;
+    public final ImmutableList<ModelPart> parts;
 
-    private final ModelPart dyeableCrest;
-    private final ModelPart staticCrestSupports;
+    public final ModelPart dyeableCrest;
+    public final ModelPart staticCrestSupports;
 
     public HelmetCrestEntityModel(ModelPart root) {
         this.dyeableCrest = root.getChild(KlaxonEntityModelPartNames.HELMET_CREST_DYEABLE);
@@ -36,7 +36,7 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
         // go go gadget guess and check in spectator
         // magic numbers go brrr
         // also they're the '99s to stop z fighting
-        ModelTransform transform = ModelTransform.pivot(0f, 2.601f, -2.999f);
+        ModelTransform transform = ModelTransform.pivot(0f, 9.201f, -2.999f);
 
         // init builder for dyeable crest parts
         ModelPartBuilder dyeableCrestBuilder = ModelPartBuilder.create();
@@ -161,8 +161,11 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+        matrices.push();
+
         this.dyeableCrest.render(matrices, vertices, light, overlay, color);
         this.staticCrestSupports.render(matrices, vertices, light, overlay);
+        matrices.pop();
     }
 
     @Override
