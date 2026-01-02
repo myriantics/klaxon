@@ -22,6 +22,7 @@
     "minecraft.cable_shears.WolfEntityMixin",
     "minecraft.damageable_and_stackable.ItemMixin",
     "minecraft.damageable_and_stackable.ItemStackMixin",
+    "minecraft.datagen.ItemModelGeneratorMixin",
     "minecraft.datagen.ModelAccessor",
     "minecraft.dual_wielding.LivingEntityMixin",
     "minecraft.enchantments.gyro.LivingEntityMixin",

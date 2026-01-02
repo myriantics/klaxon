@@ -13,16 +13,13 @@ import net.myriantics.klaxon.particle.HallnoxDripParticle;
 import net.myriantics.klaxon.particle.NetherReactionExplosionEmitterParticle;
 import net.myriantics.klaxon.particle.NetherReactionExplosionLargeParticle;
 import net.myriantics.klaxon.entity.GrappleClawEntityRenderer;
-import net.myriantics.klaxon.registry.KlaxonClientEventListeners;
-import net.myriantics.klaxon.registry.KlaxonClientPackets;
-import net.myriantics.klaxon.registry.KlaxonEntityModelLayers;
+import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.screen.DeepslateBlastProcessorScreen;
 import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
-import net.myriantics.klaxon.registry.KlaxonItemModelPredicates;
 
 public class KlaxonClient implements ClientModInitializer {
 
@@ -64,5 +61,8 @@ public class KlaxonClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.HALLNOX_POD_DRIP, HallnoxDripParticle.HallnoxDripParticleFactory::new);
         ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.NETHER_REACTION_EXPLOSION, NetherReactionExplosionLargeParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.NETHER_REACTION_EXPLOSION_EMITTER, new NetherReactionExplosionEmitterParticle.Factory());
+
+        // item tinting
+        KlaxonItemColors.init();
     }
 }
