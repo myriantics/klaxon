@@ -231,7 +231,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             // if we hit the attached player, attempt to fast reload
             if (hitEntity.equals(connection.getPlayer())) {
                 // attempt to pickup items into attached player when hitting
-                this.draggedItemsContainer.forEach((itemEntity -> itemEntity.onPlayerCollision(connection.getPlayer())));
+                this.draggedItemsContainer.forEach((itemEntity -> {
+                    if (!itemEntity.isRemoved()) {
+                        itemEntity.onPlayerCollision(connection.getPlayer());
+                    }
+                }));
 
                 if (!(this.klaxon$tryFastReload(connection.getPlayer(), connection.getPlayer().getMainHandStack()) || this.klaxon$tryFastReload(connection.getPlayer(), connection.getPlayer().getOffHandStack()))) {
                     // if we can't be picked up, bonk all velocity
@@ -503,7 +507,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                     this,
                     this.getPos(),
                     this.getPos().add(deAnchoringDirection),
-                    false
+                    true
             );
 
             // make sure it's either a miss or we've got space to move a significant amount
