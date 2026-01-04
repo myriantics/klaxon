@@ -29,6 +29,7 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
 
         // armor
         addItem(KlaxonItems.STEEL_HELMET, "Steel Helmet");
+        addItem(KlaxonItems.CRESTED_STEEL_HELMET, "Crested Steel Helmet");
         addItem(KlaxonItems.STEEL_CHESTPLATE, "Steel Chestplate");
         addItem(KlaxonItems.STEEL_LEGGINGS, "Steel Leggings");
         addItem(KlaxonItems.STEEL_BOOTS, "Steel Boots");

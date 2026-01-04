@@ -35,6 +35,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.STEEL_CHESTPLATE);
                 entries.add(KlaxonItems.STEEL_LEGGINGS);
                 entries.add(KlaxonItems.STEEL_BOOTS);
+                entries.add(KlaxonItems.CRESTED_STEEL_HELMET);
 
                 entries.add(KlaxonItems.GRAPPLE_WINCH);
                 entries.add(KlaxonItems.STEEL_GRAPPLE_CLAW);
