@@ -17,11 +17,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon.registry.misc.KlaxonColors;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.Collection;
 
@@ -172,16 +170,19 @@ public final class GrappleWinchCableRenderer {
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45));
 
         float uMin = TEXTURE_U_MAX * (1.0f - lengthToRender);
-        float xFrom = 16 * (1.0f - lengthToRender);
+        float xTo = -16 * lengthToRender;
+
+        // cable thickness is 3 pixels, but it must be divided by 2 for it to be centered
+        float cableThickness = 3f;
 
         for (int i = 0; i < 2; i++) {
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
             MatrixStack.Entry entry2 = matrices.peek();
 
-            this.vertex(entry2, vertexConsumer, xFrom, 1.5f, 0, uMin, TEXTURE_V_MIN, 0, 0, 0, light);
-            this.vertex(entry2, vertexConsumer, 16, 1.5f, 0, TEXTURE_U_MAX, TEXTURE_V_MIN, 0, 0, 0, light);
-            this.vertex(entry2, vertexConsumer, 16, -1.5f, 0, TEXTURE_U_MAX, TEXTURE_V_MAX, 0, 0, 0, light);
-            this.vertex(entry2, vertexConsumer, xFrom, -1.5f, 0, uMin, TEXTURE_V_MAX, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, 0, cableThickness / 2, 0, uMin, TEXTURE_V_MIN, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, xTo, cableThickness / 2, 0, TEXTURE_U_MAX, TEXTURE_V_MIN, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, xTo, -cableThickness / 2, 0, TEXTURE_U_MAX, TEXTURE_V_MAX, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, 0, -cableThickness / 2, 0, uMin, TEXTURE_V_MAX, 0, 0, 0, light);
         }
     }
 
