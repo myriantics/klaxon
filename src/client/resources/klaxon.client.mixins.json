@@ -21,7 +21,7 @@
     "minecraft.rendering.AnimalModelAccessor",
     "minecraft.rendering.ArmorFeatureRendererMixin",
     "minecraft.rendering.RenderLayerInvoker",
-    "minecraft.splashes.SplashTextResourceSupplierMixin",
+    "minecraft.splashes.SplashTextResourceSupplierAccessor",
     "minecraft.world_item_application.ClientPlayerInteractionManagerMixin",
     "minecraft.wrench.ClientPlayerInteractionManagerMixin",
     "self.grapple_winch.tooltip.GrappleWinchItemMixin"
