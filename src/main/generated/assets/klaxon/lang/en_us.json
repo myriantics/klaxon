@@ -372,6 +372,7 @@
   "tag.item.klaxon.makeshift_crafting_ingredients": "Makeshift Crafting Ingredients",
   "tag.item.klaxon.makeshift_repair_materials": "Makeshift Repair Materials",
   "tag.item.klaxon.no_xp_cost_repairable": "Items Repairable With No EXP",
+  "tag.item.klaxon.pick_block_slot_replacement_discouraged": "Pick Block Slot Replacement Discouraged",
   "tag.item.klaxon.recipe_processing_hammers": "Recipe Processing Hammers",
   "tag.item.klaxon.recipe_processing_wirecutters": "Recipe Processing Wirecutters",
   "tag.item.klaxon.root_advancement_granting_items": "KLAXON - Initialization Root Advancement Granting Items",

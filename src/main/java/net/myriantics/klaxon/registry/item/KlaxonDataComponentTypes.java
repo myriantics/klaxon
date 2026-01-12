@@ -59,22 +59,6 @@ public abstract class KlaxonDataComponentTypes {
                 return builder;
             });
 
-    // Stores enchantments independently from other enchantments. Non-transferable and cannot be removed via traditional disenchanting. Enchantments function as normal and stack with their non-innate counterparts.
-    public static final ComponentType<InnateItemEnchantmentsComponent> INNATE_ENCHANTMENTS = register("innate_enchantments",
-            builder -> {
-                builder.codec(InnateItemEnchantmentsComponent.CODEC);
-                builder.packetCodec(InnateItemEnchantmentsComponent.PACKET_CODEC);
-                return builder;
-            });
-
-    // Used instead of Innate Enchantments Component when assigning default components to an item.
-    public static final ComponentType<DefaultInnateItemEnchantmentsComponent> DEFAULT_INNATE_ENCHANTMENTS = register("default_innate_enchantments",
-            builder -> {
-                builder.codec(DefaultInnateItemEnchantmentsComponent.CODEC);
-                builder.packetCodec(DefaultInnateItemEnchantmentsComponent.PACKET_CODEC);
-                return builder;
-            });
-
     // Determines the default sound used for a given ToolUsageRecipe. Also determines if you can cosmetically use the tool - i.e. hammering items to no effect, just to make the noise.
     public static final ComponentType<ToolUseRecipeConfigComponent> TOOL_USE_RECIPE_CONFIG = register("tool_usage_config",
             builder -> {

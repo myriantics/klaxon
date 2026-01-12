@@ -65,4 +65,9 @@ public class CableShearsItem extends ShearsItem {
     public void postDamageEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.damage(2, attacker, EquipmentSlot.MAINHAND);
     }
+
+    @Override
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
+        return this.material.getRepairIngredient().test(ingredient) || super.canRepair(stack, ingredient);
+    }
 }

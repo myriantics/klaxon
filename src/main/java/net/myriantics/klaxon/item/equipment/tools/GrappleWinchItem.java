@@ -361,9 +361,4 @@ public class GrappleWinchItem extends RangedWeaponItem {
     public int getMaxUseTime(ItemStack stack, LivingEntity user) {
         return 72000;
     }
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return super.canRepair(stack, ingredient) || ingredient.isIn(KlaxonItemTags.GRAPPLE_WINCH_REPAIR_MATERIALS);
-    }
 }

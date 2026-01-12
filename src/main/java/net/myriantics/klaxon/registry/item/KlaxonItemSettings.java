@@ -12,7 +12,6 @@ import net.minecraft.util.Colors;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.Unit;
-import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 
@@ -75,11 +74,6 @@ public class KlaxonItemSettings {
 
     public KlaxonItemSettings damageTypeOverride(RegistryKey<DamageType> damageTypeKey) {
         this.settings.component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(damageTypeKey));
-        return this;
-    }
-
-    public KlaxonItemSettings innateEnchantments(Map<RegistryKey<Enchantment>, Integer> enchantments) {
-        this.settings.component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(enchantments));
         return this;
     }
 

@@ -67,6 +67,9 @@ public final class KlaxonEnUsItemTagLanguageProvider extends KlaxonEnUsLanguageS
         // ferromagnetism
         addTag(KlaxonItemTags.FERROMAGNETIC_ITEMS, "Ferromagnetic Items");
         addTag(KlaxonItemTags.FERROMAGNETIC_ITEM_BLACKLIST, "Ferromagnetic Item Blacklist");
+
+        // misc
+        addTag(KlaxonItemTags.PICK_BLOCK_SLOT_REPLACEMENT_DISCOURAGED,"Pick Block Slot Replacement Discouraged");
     }
 
     private void generateCategoryTags() {

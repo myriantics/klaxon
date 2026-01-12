@@ -6,7 +6,6 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
-import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
@@ -27,10 +26,6 @@ public abstract class KlaxonDefaultItemComponentModifications {
                     .add(
                             KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE,
                             new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.FLINT_AND_STEEELING)
-                    )
-                    .add(
-                            KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS,
-                            new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4))
                     )
                     .add(
                             DataComponentTypes.MAX_DAMAGE,

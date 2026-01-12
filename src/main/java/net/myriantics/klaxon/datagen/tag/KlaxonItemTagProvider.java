@@ -341,11 +341,15 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_INGOT);
         getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
                 .add(KlaxonItems.STEEL_HAMMER);
+        getOrCreateTagBuilder(KlaxonItemTags.PICK_BLOCK_SLOT_REPLACEMENT_DISCOURAGED)
+                .add(KlaxonItems.STEEL_CLEAVER)
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(KlaxonItems.STEEL_WRENCH)
+                .add(KlaxonItems.STEEL_CABLE_SHEARS)
+                .add(KlaxonItems.GRAPPLE_WINCH);
     }
 
     private void buildRepairTags() {
-        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_WINCH_REPAIR_MATERIALS)
-                .forceAddTag(KlaxonConventionalItemTags.STEEL_WIRES);
     }
 
     private void buildEnchantableTags() {
