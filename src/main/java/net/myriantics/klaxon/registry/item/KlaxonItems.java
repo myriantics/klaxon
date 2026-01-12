@@ -70,11 +70,9 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             ));
     public static final Item GRAPPLE_WINCH = registerItem("grapple_winch",
             new GrappleWinchItem(new KlaxonItemSettings()
-                    .maxDamage(KlaxonToolMaterials.STEEL_PLATE.getDurability())
                     .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
                     .damageTypeOverride(KlaxonDamageTypes.BLUDGEONING)
                     .attributeModifiers(GrappleWinchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 0, -3.2f))
-                    .innateEnchantments(Map.of(Enchantments.UNBREAKING, 4))
                     .with3dHandModel()
                     .withMirroredLeftHandModel()
                     .getSettings()
