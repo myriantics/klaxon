@@ -344,8 +344,6 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildRepairTags() {
-        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_WINCH_REPAIR_MATERIALS)
-                .forceAddTag(KlaxonConventionalItemTags.STEEL_WIRES);
     }
 
     private void buildEnchantableTags() {
