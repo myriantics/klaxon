@@ -15,6 +15,7 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
         generateMeleeDeathMessageTranslations();
         generateRangedDeathMessageTranslations();
         generateElectricalDeathMessageTranslations();
+        generateEnvironmentalDeathMessageTranslations();
         generateMachineDeathMessageTranslations();
     }
 
@@ -70,6 +71,14 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
                 KlaxonDamageTypes.RENDING,
                 "%1$s was rent apart by %2$s",
                 "%1$s was rent apart by %2$s using %3$s"
+        );
+    }
+
+    private void generateEnvironmentalDeathMessageTranslations() {
+        addDeathMessage(
+                KlaxonDamageTypes.HALLNOX_POD_DOMED,
+                "%1$s was domed by a Hallnox Pod",
+                null
         );
     }
 

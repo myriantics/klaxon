@@ -37,6 +37,10 @@ public abstract class KlaxonDamageTypes {
     public static final RegistryKey<DamageType> RENDING =
             createDamageType("rending");
 
+    // environmental
+    public static final RegistryKey<DamageType> HALLNOX_POD_DOMED =
+            createDamageType("hallnox_pod_domed");
+
     // to be added - will be used with Coring Drill
     public static final RegistryKey<DamageType> MINCING =
             createDamageType("mincing");

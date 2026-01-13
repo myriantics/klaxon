@@ -70,6 +70,10 @@ public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<D
 
     private void buildEnvironmentalDamageTypes() {
         addEnvironmentalDamageType(
+                KlaxonDamageTypes.HALLNOX_POD_DOMED,
+                0.3f
+        );
+        addEnvironmentalDamageType(
                 KlaxonDamageTypes.MINCING,
                 0.6f
         );

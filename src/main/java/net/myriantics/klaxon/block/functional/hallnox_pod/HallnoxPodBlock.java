@@ -2,11 +2,15 @@ package net.myriantics.klaxon.block.functional.hallnox_pod;
 
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -23,10 +27,13 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.block.NeighborUpdater;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Waterloggable {
 
@@ -109,6 +116,14 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
 
         // if we've made changes, update block state
         if (!newState.equals(fallingBlockState)) world.setBlockState(pos, newState);
+    }
+
+    @Override
+    public DamageSource getDamageSource(Entity attacker) {
+        Optional<RegistryEntry.Reference<DamageType>> domed = attacker.getDamageSources().registry.getEntry(KlaxonDamageTypes.HALLNOX_POD_DOMED);
+        return domed.isPresent()
+                ? new DamageSource(domed.get(), attacker)
+                : LandingBlock.super.getDamageSource(attacker);
     }
 
     @Override

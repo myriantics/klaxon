@@ -130,6 +130,7 @@
   "death.attack.klaxon.grapple_cable_conduction.item": "%1$s was zapped by %2$s using %3$s",
   "death.attack.klaxon.grappling": "%1$s was grappled by %2$s",
   "death.attack.klaxon.grappling.item": "%1$s was grappled by %2$s using %3$s",
+  "death.attack.klaxon.hallnox_pod_domed": "%1$s was domed by a Hallnox Pod",
   "death.attack.klaxon.hammer_bonking": "%1$s was bonked by %2$s",
   "death.attack.klaxon.hammer_bonking.item": "%1$s was bonked by %2$s using %3$s",
   "death.attack.klaxon.hammer_walloping": "%1$s was walloped by %2$s",
