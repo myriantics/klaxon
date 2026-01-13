@@ -61,6 +61,7 @@ public abstract class KlaxonItemTags {
             createTag("grapple_claw_retrievers");
     public static final TagKey<Item> GRAPPLE_WINCH_CABLE_DETACHERS =
             createTag("grapple_winch_cable_detachers");
+
     public static final TagKey<Item> PICK_BLOCK_SLOT_REPLACEMENT_DISCOURAGED =
             createTag("pick_block_slot_replacement_discouraged");
 
