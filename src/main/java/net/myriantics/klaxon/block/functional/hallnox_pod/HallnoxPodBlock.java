@@ -173,19 +173,6 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     }
 
     @Override
-    protected void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
-        if (world instanceof ServerWorld serverWorld) {
-            BlockPos targetPos = hit.getBlockPos();
-            Direction facing = state.get(FACING);
-
-            // try to fall if it's not supported or is not resting on the ground
-            if (!facing.equals(Direction.DOWN) || !isSupported(world, targetPos, facing)) {
-                tryFall(serverWorld, targetPos, state);
-            }
-        }
-    }
-
-    @Override
     protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         super.scheduledTick(state, world, pos, random);
         if (!isSupported(world, pos, state.get(FACING))) {
