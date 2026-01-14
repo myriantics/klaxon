@@ -41,10 +41,6 @@ public class KlaxonClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.NETHER_REACTOR_CORE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, RenderLayer.getCutout());
 
-        // block entity renderers
-        BlockEntityRendererFactories.register(KlaxonBlockEntities.CUSTOM_SIGN_BLOCK_ENTITY, SignBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(KlaxonBlockEntities.CUSTOM_HANGING_SIGN_BLOCK_ENTITY, HangingSignBlockEntityRenderer::new);
-
         EntityRendererRegistry.register(KlaxonEntityTypes.GRAPPLE_CLAW, GrappleClawEntityRenderer::new);
 
         // handled screens

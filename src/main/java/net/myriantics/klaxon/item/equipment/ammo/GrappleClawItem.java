@@ -24,7 +24,7 @@ public class GrappleClawItem extends Item implements ProjectileItem {
 
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
-        GrappleClawEntity grappleClawEntity = new GrappleClawEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack, null);
+        GrappleClawEntity grappleClawEntity = new GrappleClawEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1), null);
         grappleClawEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
         return grappleClawEntity;
     }
