@@ -218,26 +218,26 @@ public abstract class KlaxonBlocks {
                     .strength(3.0f, 4.0f))
     );
     public static final Block HALLNOX_SIGN = registerBlock("hallnox_sign",
-            new CustomSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_SIGN)
+            new SignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
             )
     );
     public static final Block HALLNOX_WALL_SIGN = registerBlock("hallnox_wall_sign",
-            new CustomWallSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_SIGN)
+            new WallSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
                     .dropsLike(HALLNOX_SIGN)
             )
     );
     public static final Block HALLNOX_HANGING_SIGN = registerBlock("hallnox_hanging_sign",
-            new CustomHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_HANGING_SIGN)
+            new HangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_HANGING_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
             )
     );
     public static final Block HALLNOX_WALL_HANGING_SIGN = registerBlock("hallnox_wall_hanging_sign",
-            new CustomWallHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_HANGING_SIGN)
+            new WallHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_HANGING_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
                     .dropsLike(HALLNOX_HANGING_SIGN))

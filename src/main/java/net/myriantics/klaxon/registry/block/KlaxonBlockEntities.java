@@ -35,6 +35,10 @@ public abstract class KlaxonBlockEntities {
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Block Entities!");
+        BlockEntityType.SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_SIGN);
+        BlockEntityType.SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_WALL_SIGN);
+        BlockEntityType.HANGING_SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_HANGING_SIGN);
+        BlockEntityType.HANGING_SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> register(String id, Block block, BlockEntityType.BlockEntityFactory<T> factory) {
