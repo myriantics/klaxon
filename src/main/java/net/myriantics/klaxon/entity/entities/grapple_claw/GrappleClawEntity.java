@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.entity.entities.grapple_claw;
 
+import net.minecraft.block.Portal;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
@@ -433,6 +434,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
+    public boolean canUsePortals(boolean allowVehicles) {
+        return !this.hookedEntityContainer.isPresent();
+    }
+
+    @Override
     public boolean isLogicalSideForUpdatingMovement() {
         return super.isLogicalSideForUpdatingMovement() || (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isLogicalSideForUpdatingMovement());
     }
@@ -626,6 +632,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             // clear grappled entity if it was removed
             if (connection == null || this.hookedEntity.isRemoved() || !this.hookedEntity.isAlive()) {
                 this.release(false);
+                if (this.hookedEntity.getRemovalReason() == RemovalReason.CHANGED_DIMENSION) {
+                    GrappleClawEntity.this.resetPortalCooldown();
+                }
                 return;
             } else {
                 this.snapClawToHookPos();
