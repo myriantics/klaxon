@@ -475,6 +475,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
+    public @Nullable ItemStack getPickBlockStack() {
+        return this.getItemStack().copy();
+    }
+
+    @Override
     public Entity klaxon$asEntity() {
         return this;
     }
