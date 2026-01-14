@@ -144,8 +144,8 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
         this.hookAnchored = this.hook.klaxon$isAnchored();
 
-        // limit fall distance to give players more leeway
-        if (this.player.getVelocity().getY() > -1 && this.player.fallDistance > 1.0F) {
+        // limit fall distance to give players more leeway - ONLY IF ANCHORED THO
+        if (this.hookAnchored && this.player.getVelocity().getY() > -1 && this.player.fallDistance > 1.0F) {
             this.player.fallDistance = 1.0F;
         }
 
