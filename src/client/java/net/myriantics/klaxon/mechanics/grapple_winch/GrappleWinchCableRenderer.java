@@ -110,7 +110,7 @@ public final class GrappleWinchCableRenderer {
             matrices.translate(cableEndpointPos.getX() - lerpedX, cableEndpointPos.getY() - lerpedY, cableEndpointPos.getZ() - lerpedZ);
 
             double distance = cableOriginPos.distanceTo(cableEndpointPos);
-            int maxSegments = (int) (distance + 1);
+            int maxSegments = (int) distance;
 
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90 - KlaxonMathHelper.yawBetween(cableOriginPos, cableEndpointPos)));
             matrices.multiply(
@@ -133,7 +133,7 @@ public final class GrappleWinchCableRenderer {
                 renderCableSegment(
                         // makes it seem like the cable is actually streaming out of the grapple winch
                         segmentIndex == maxSegments
-                                ? (float) (distance % (int) distance)
+                                ? (float) (distance - (int) distance)
                                 : 1,
                         vertexConsumer,
                         originBlockLight,
@@ -169,7 +169,8 @@ public final class GrappleWinchCableRenderer {
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45));
 
-        float uMin = TEXTURE_U_MAX * (1.0f - lengthToRender);
+        float uMin = TEXTURE_U_MIN;
+        float uMax = TEXTURE_U_MAX * lengthToRender;
         float xTo = -16 * lengthToRender;
 
         // cable thickness is 3 pixels, but it must be divided by 2 for it to be centered
@@ -180,8 +181,8 @@ public final class GrappleWinchCableRenderer {
             MatrixStack.Entry entry2 = matrices.peek();
 
             this.vertex(entry2, vertexConsumer, 0, cableThickness / 2, 0, uMin, TEXTURE_V_MIN, 0, 0, 0, light);
-            this.vertex(entry2, vertexConsumer, xTo, cableThickness / 2, 0, TEXTURE_U_MAX, TEXTURE_V_MIN, 0, 0, 0, light);
-            this.vertex(entry2, vertexConsumer, xTo, -cableThickness / 2, 0, TEXTURE_U_MAX, TEXTURE_V_MAX, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, xTo, cableThickness / 2, 0, uMax, TEXTURE_V_MIN, 0, 0, 0, light);
+            this.vertex(entry2, vertexConsumer, xTo, -cableThickness / 2, 0, uMax, TEXTURE_V_MAX, 0, 0, 0, light);
             this.vertex(entry2, vertexConsumer, 0, -cableThickness / 2, 0, uMin, TEXTURE_V_MAX, 0, 0, 0, light);
         }
     }
