@@ -67,6 +67,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item GRAPPLE_WINCH = registerItem("grapple_winch",
             new GrappleWinchItem(new KlaxonItemSettings()
                     .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
+                    .maxCount(1)
                     .damageTypeOverride(KlaxonDamageTypes.BLUDGEONING)
                     .attributeModifiers(GrappleWinchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 0, -3.2f))
                     .with3dHandModel()
