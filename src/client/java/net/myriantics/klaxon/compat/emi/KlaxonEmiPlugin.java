@@ -132,6 +132,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
     private void registerMiscRecipes(EmiRegistry registry) {
         registry.addRecipe(new KlaxonEMIAnvilRecipe(EmiStack.of(Items.FLINT_AND_STEEL), EmiIngredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS), "flint_and_steel"));
+        registry.addRecipe(new KlaxonEMIAnvilRecipe(EmiStack.of(KlaxonItems.STEEL_CABLE_SHEARS), EmiIngredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES), "steel_cable_shears"));
     }
 
     public <C extends Recipe<V>, T extends RecipeEntry<C>, V extends RecipeInput> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeEntry<C>, EmiRecipe> constructor) {
