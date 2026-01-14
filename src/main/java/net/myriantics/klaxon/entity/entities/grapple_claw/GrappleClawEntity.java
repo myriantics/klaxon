@@ -631,10 +631,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
             // clear grappled entity if it was removed
             if (connection == null || this.hookedEntity.isRemoved() || !this.hookedEntity.isAlive()) {
-                this.release(false);
                 if (this.hookedEntity.getRemovalReason() == RemovalReason.CHANGED_DIMENSION) {
                     GrappleClawEntity.this.resetPortalCooldown();
                 }
+                this.release(false);
                 return;
             } else {
                 this.snapClawToHookPos();
