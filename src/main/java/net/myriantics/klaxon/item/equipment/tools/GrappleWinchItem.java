@@ -174,9 +174,10 @@ public class GrappleWinchItem extends RangedWeaponItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
-        assert manager != null;
+        if (manager == null) {
+            throw new AssertionError("Grapple Winch Connection Manager not found in world " + world);
+        }
         @Nullable GrappleWinchConnection connection = manager.fromPlayer(user);
-
         ItemStack winchStack = user.getStackInHand(hand);
         ItemStack offhandStack = user.getStackInHand(hand.equals(Hand.OFF_HAND) ? Hand.MAIN_HAND : Hand.OFF_HAND);
         boolean supportsCable = this.canSupportCable(winchStack);
@@ -350,6 +351,11 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
     private static MutableText createCableLengthDisplayText() {
         return Texts.bracketed(Text.translatable("klaxon.text.tooltip.grapple_winch.cable_length.display", "--", "--"));
+    }
+
+    @Override
+    public boolean isUsedOnRelease(ItemStack stack) {
+        return stack.isOf(this) && !stack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty();
     }
 
     @Override

@@ -61,7 +61,7 @@ public interface GrapplingHook {
             // only trigger this if pickup occurred while retracting
             if (player instanceof ServerPlayerEntity serverPlayer && (selfConnection == null || selfConnection.isRetracting())) {
                 // update usage lockout if true
-                KlaxonServerPlayNetworkHandler.send(serverPlayer, new ItemUsageLockoutTrigger());
+                KlaxonServerPlayNetworkHandler.triggerItemLockout(serverPlayer);
             }
 
             // if we're on the server, update the grapple winch's components to include this one
