@@ -15,6 +15,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
@@ -66,6 +67,10 @@ public final class GrappleWinchCableRenderer {
             Vec3d clawPos = hook == null || hook.klaxon$asEntity().isRemoved() ? connection.getLerpedHookPos(tickDelta) : hook.klaxon$asEntity().getLerpedPos(tickDelta);
             BlockPos playerBlockPos = BlockPos.ofFloored(playerPos);
             BlockPos clawBlockPos = BlockPos.ofFloored(clawPos);
+
+            if (hook instanceof GrappleClawEntity grappleClaw && grappleClaw.hasHookedEntity()) {
+                clawPos = clawPos.add(0, grappleClaw.getEyeHeight(grappleClaw.getPose()), 0);
+            }
 
             // gather light values
             int originBlockLight = clientWorld.getLightLevel(LightType.BLOCK, playerBlockPos);
