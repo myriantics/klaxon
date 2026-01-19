@@ -687,13 +687,15 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
             // try to damage entity
             // this causes endermen to tp
-            entity.damage(
+            if (!entity.damage(
                     claw.createDamageSource(KlaxonDamageTypes.GRAPPLING),
                     claw.getItemStack().getOrDefault(
                             KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
                             GrappleClawComponent.DEFAULT
                     ).computeGrappling(claw.getItemStack())
-            );
+            )) {
+                return false;
+            }
 
             if (!this.canHookEntity(entity)) {
                 return false;
