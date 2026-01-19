@@ -7,6 +7,7 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -686,8 +687,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                     : entity;
 
             // try to damage entity
+            // EXCEPT if the entity is an item frame
+            // this allows you to yoink it off the wall in a cool way instead of just dropping its item on initial hit
+            // top 10 changes people will notice
             // this causes endermen to tp
-            if (!entity.damage(
+            if (entity instanceof ItemFrameEntity || !entity.damage(
                     claw.createDamageSource(KlaxonDamageTypes.GRAPPLING),
                     claw.getItemStack().getOrDefault(
                             KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
