@@ -368,7 +368,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     @Override
     protected boolean tryPickup(PlayerEntity pickupPlayer) {
         GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
-        assert manager != null;
+        if (manager == null) {
+            throw new AssertionError();
+        }
         @Nullable GrappleWinchConnection fromHook = manager.fromHook(this);
         @Nullable GrappleWinchConnection fromPlayer = manager.fromPlayer(pickupPlayer);
 
@@ -382,6 +384,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             if (fromHook != null && pickupTypeValid) {
                 BlockPos steppingPos = pickupPlayer.getSteppingPos();
                 BlockPos anchoredPos = this.getBlockPos();
+
+                // don't pick up grapple claws that are hooked into entities.
+                if (this.hookedEntityContainer.isPresent()) {
+                    return false;
+                }
 
                 // don't pick up grapple claw while you're being supported by it
                 if ((!pickupPlayer.isOnGround() && anchoredPos.getY() > steppingPos.getY())) {
