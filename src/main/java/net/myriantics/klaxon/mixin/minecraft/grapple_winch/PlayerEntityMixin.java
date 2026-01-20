@@ -27,28 +27,30 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @WrapOperation(
             method = "attack",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;handleAttack(Lnet/minecraft/entity/Entity;)Z")
     )
-    private boolean klaxon$tryFastReloadWhenHittingEntity(Entity instance, DamageSource source, float amount, Operation<Boolean> original) {
+    private boolean klaxon$tryFastReloadWhenHittingEntity(Entity instance, Entity attacker, Operation<Boolean> original) {
         @Nullable GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
-        assert manager != null;
+        if (manager == null) {
+            throw new AssertionError();
+        }
 
         if (manager.fromPlayer((PlayerEntity) (Object) this) instanceof ServerGrappleWinchConnection connection) {
             @Nullable GrapplingHook hook = connection.getHook();
-            @Nullable ItemStack weaponStack = source.getWeaponStack();
+            @Nullable ItemStack weaponStack = attacker.getWeaponStack();
 
             Entity attackedEntity = instance instanceof EnderDragonPart part
                     ? ((EnderDragonEntityAccessor) part.owner).getBody()
                     : instance;
 
             // try to fast reload the grapple claw attached to the entity if it's attached
-            if (source.isDirect() && hook != null && weaponStack != null && attackedEntity.equals(hook.klaxon$getHookedEntity())) {
+            if (hook != null && weaponStack != null && attackedEntity.equals(hook.klaxon$getHookedEntity())) {
                 if (hook.klaxon$tryFastReload((PlayerEntity) (Object) this, weaponStack)) {
-                    return false;
+                    return true;
                 }
             }
         }
 
-        return original.call(instance, source, amount);
+        return original.call(instance, attacker);
     }
 }

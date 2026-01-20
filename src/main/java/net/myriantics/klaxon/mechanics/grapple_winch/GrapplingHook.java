@@ -87,7 +87,9 @@ public interface GrapplingHook {
             );
 
             if (!this.klaxon$asEntity().getWorld().isClient()) {
-                assert manager != null;
+                if (manager == null) {
+                    throw new AssertionError();
+                }
                 this.klaxon$asEntity().discard();
                 if (selfConnection != null) {
                     manager.disconnect(selfConnection.getId(), CableDetachmentReason.FAST_RELOADED);
