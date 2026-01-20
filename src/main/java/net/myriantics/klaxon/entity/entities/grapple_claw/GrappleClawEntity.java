@@ -7,6 +7,7 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.decoration.BlockAttachedEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -649,7 +650,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             }
 
             GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) GrappleClawEntity.this.getWorld()).klaxon$get();
-            assert manager != null;
+            if (manager == null) {
+                throw new AssertionError();
+            }
             @Nullable GrappleWinchConnection connection = manager.fromHook(GrappleClawEntity.this);
 
             // clear grappled entity if it was removed
@@ -704,7 +707,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             // this allows you to yoink it off the wall in a cool way instead of just dropping its item on initial hit
             // top 10 changes people will notice
             // this causes endermen to tp
-            if (!(entity instanceof ItemFrameEntity)) {
+            if (!(entity instanceof BlockAttachedEntity)) {
                 entity.damage(
                         source,
                         claw.getItemStack().getOrDefault(
@@ -714,12 +717,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 );
             }
 
-            // update position
-            this.snapClawToHookPos(entity);
-
             if (!this.canHookEntity(entity)) {
                 return false;
             }
+
+            // update position
+            this.snapClawToHookPos(entity);
 
             // hook onto entity
             this.setHookedEntity(entity);
