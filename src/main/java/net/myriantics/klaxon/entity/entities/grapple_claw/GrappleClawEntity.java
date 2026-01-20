@@ -754,6 +754,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 );
             }
 
+            // make sure claws aren't stuck in blocks when releasing entities
+            // now you can pull item frames off the floor
+            if (!claw.getWorld().isSpaceEmpty(Box.of(claw.getPos(), 0.01, 0.01, 0.01))) {
+                claw.setPosition(claw.getX(), this.hookedEntity.getBoundingBox().minY, claw.getZ());
+            }
+
             Vec3d hookedVelocity = this.hookedEntity.getVelocity();
             this.setHookedEntity(null);
             if (!damage) {
