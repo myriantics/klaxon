@@ -54,15 +54,27 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         this(manager, connectionId, playerUUID, hookUUID, null);
     }
 
+    public ServerGrappleWinchConnection(ServerGrappleWinchConnectionManager manager, int connectionId, ServerPlayerEntity serverPlayer, GrapplingHook grapplingHook) {
+        this(manager, connectionId, serverPlayer.getUuid(), grapplingHook.klaxon$asEntity().getUuid(), null);
+        this.player = serverPlayer;
+        this.hook = grapplingHook;
+        this.state = State.ACTIVE;
+        this.resetMaxCableLength();
+    }
+
     @Override
     public int getPlayerId() {
-        assert this.state.equals(State.ACTIVE);
+        if (this.isDormant()) {
+            throw new AssertionError();
+        }
         return this.player.getId();
     }
 
     @Override
     public int getHookId() {
-        assert this.state.equals(State.ACTIVE);
+        if (this.isDormant()) {
+            throw new AssertionError();
+        }
         return this.hook.klaxon$asEntity().getId();
     }
 

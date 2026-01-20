@@ -78,7 +78,7 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
     }
 
     public void connect(ServerPlayerEntity serverPlayer, GrapplingHook hook) {
-        ServerGrappleWinchConnection connection = new ServerGrappleWinchConnection(this, this.currentConnectionId, serverPlayer.getUuid(), hook.klaxon$asEntity().getUuid());
+        ServerGrappleWinchConnection connection = new ServerGrappleWinchConnection(this, this.currentConnectionId, serverPlayer, hook);
         for (ServerGrappleWinchConnection existing : this.connectionId2Connection.values()) {
             if (existing.playerUUID.equals(connection.playerUUID) || existing.hookUUID.equals(connection.playerUUID)) {
                 this.disconnect(existing.getId(), CableDetachmentReason.GENERIC_DISCONNECT);
