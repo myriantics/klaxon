@@ -200,15 +200,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
-    public boolean isAttackable() {
-        return !this.hookedEntityContainer.isPresent() || (this.hookedEntityContainer.get() instanceof PlayerEntity player && (this.getWorld().isClient() || player.isMainPlayer()));
-    }
-
-    public boolean isAnchored() {
-        return this.inGround || this.hookedEntityContainer.isHeavy();
-    }
-
-    @Override
     public float getTargetingMargin() {
         return 0.0f;
     }

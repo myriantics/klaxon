@@ -39,7 +39,7 @@ public abstract class GrappleClawBlockDestructionHelper {
      */
     public static void onBlockPosIntersection(GrappleClawEntity grappleClaw, World world, BlockState occupiedState, BlockPos pos) {
         // make sure we're neither anchored nor removed
-        if (grappleClaw.isAnchored() || grappleClaw.isRemoved()) {
+        if (grappleClaw.klaxon$isAnchored() || grappleClaw.isRemoved()) {
             return;
         }
 

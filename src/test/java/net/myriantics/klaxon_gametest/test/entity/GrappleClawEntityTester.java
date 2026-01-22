@@ -24,7 +24,7 @@ public class GrappleClawEntityTester {
         context.getWorld().spawnEntity(player);
 
         context.runAtEveryTick(() -> {
-            if (grappleClaw.isAnchored()) {
+            if (grappleClaw.klaxon$isAnchored()) {
                 player.setStackInHand(Hand.MAIN_HAND, new ItemStack(KlaxonItems.GRAPPLE_WINCH));
                 player.attack(grappleClaw);
 
