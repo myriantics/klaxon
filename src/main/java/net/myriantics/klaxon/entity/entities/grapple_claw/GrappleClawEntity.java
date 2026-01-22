@@ -64,8 +64,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     private final HookedEntityContainer hookedEntityContainer = new HookedEntityContainer();
     public final DraggedItemsContainer draggedItemsContainer = new DraggedItemsContainer();
 
-    private DamageSource lastTransmittedDamageSource = null;
-
     public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -140,9 +138,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     public boolean damage(DamageSource source, float amount) {
         World world = this.getWorld();
 
-        // try to conduct electrical damage if possible
-        this.tryConductElectricalDamage(this, source, amount);
-
         if (world.isClient() || this.isRemoved()) {
             return true;
         } else if (this.isInvulnerableTo(source) || ticksSinceDamaged < HIT_INVINCIBILITY_TICKS) {
@@ -197,6 +192,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     @Override
     public boolean canHit() {
         return !this.hookedEntityContainer.isPresent();
+    }
+
+    @Override
+    public boolean isAttackable() {
+        return true;
     }
 
     @Override
@@ -309,52 +309,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         if (inGround && !this.isConnected()) {
             super.age();
         }
-    }
-
-    public Entity[] conductLightningEffects(ServerWorld serverWorld, List<Entity> struckEntities, LightningEntity lightningEntity) {
-        ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) serverWorld).klaxon$get();
-        @Nullable ServerGrappleWinchConnection connection = manager.fromHook(this);
-
-        @Nullable PlayerEntity attachedPlayer = connection == null ? null : connection.getPlayer();
-        @Nullable Entity hookedEntity = this.hookedEntityContainer.get();
-
-        Entity[] conductionTargets = new Entity[] {this, attachedPlayer, hookedEntity};
-
-        for (int i = 0; i < conductionTargets.length; i++) {
-            Entity target = conductionTargets[i];
-
-            if (target == null || struckEntities.contains(target)) {
-                conductionTargets[i] = null;
-            } else {
-                target.onStruckByLightning(serverWorld, lightningEntity);
-            }
-        }
-
-        // Returned array is used to count these entities towards channeling advancement
-        // Top 10 things people will notice ... unless this caused a crash or weird issue ... then my bad haha i thought channeling lightning onto yourself while attached to a villager should proc the advancement
-        return conductionTargets;
-    }
-
-    public void tryConductElectricalDamage(Entity originEntity, DamageSource damageSource, float amount) {
-        if (this.getWorld().isClient() || !this.isConnected() || damageSource == lastTransmittedDamageSource || !damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)) {
-            return;
-        }
-
-        ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
-        @Nullable ServerGrappleWinchConnection connection = manager.fromHook(this);
-
-        @Nullable PlayerEntity attachedPlayer = connection == null ? null : connection.getPlayer();
-        @Nullable Entity hookedEntity = this.hookedEntityContainer.get();
-
-        for (Entity entity : new Entity[]{this, attachedPlayer, hookedEntity}) {
-            if (entity == null || entity.equals(originEntity)) {
-                continue;
-            }
-
-            entity.damage(damageSource, amount);
-        }
-
-        this.lastTransmittedDamageSource = damageSource;
     }
 
     @Override
