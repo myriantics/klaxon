@@ -707,7 +707,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             // this allows you to yoink it off the wall in a cool way instead of just dropping its item on initial hit
             // top 10 changes people will notice
             // this causes endermen to tp
-            if (!(entity instanceof BlockAttachedEntity)) {
+            if (!entity.getType().isIn(KlaxonEntityTypeTags.GRAPPLE_CLAW_GRAPPLING_DAMAGE_DENYLIST)) {
                 entity.damage(
                         source,
                         claw.getItemStack().getOrDefault(
