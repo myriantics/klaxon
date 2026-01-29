@@ -332,9 +332,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.CRUDE_STEEL_INGOT);
         getOrCreateTagBuilder(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)
                 .forceAddTag(ConventionalItemTags.MINING_TOOL_TOOLS);
-        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAW_RETRIEVERS)
-                .forceAddTag(KlaxonConventionalItemTags.WRENCH)
-                .forceAddTag(KlaxonConventionalItemTags.WRENCHES);
+        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAW_INSTAKILL)
+                .forceAddTag(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)
+                .forceAddTag(ConventionalItemTags.MELEE_WEAPON_TOOLS);
         getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)
                 .forceAddTag(ConventionalItemTags.SHEAR_TOOLS);
         getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS)

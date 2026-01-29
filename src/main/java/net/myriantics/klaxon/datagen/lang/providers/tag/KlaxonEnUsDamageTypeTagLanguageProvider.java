@@ -14,7 +14,6 @@ public final class KlaxonEnUsDamageTypeTagLanguageProvider extends KlaxonEnUsLan
     public void generate() {
         addTag(KlaxonDamageTypeTags.STREAMLINE_ENCHANTMENT_CANCELS_VELOCITY_UPDATE, "Streamline Enchantment Velocity Update Cancelled");
         addTag(KlaxonDamageTypeTags.ELECTRICAL, "Electrical Damage");
-        addTag(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE, "Grapple Winch Cable Transmissible Damage");
         addTag(KlaxonDamageTypeTags.GRAPPLE_CLAW_DAMAGE_TYPES, "Grapple Claw Damage Types");
     }
 }

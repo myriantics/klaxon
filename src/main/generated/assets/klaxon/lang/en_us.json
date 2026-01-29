@@ -335,7 +335,6 @@
   "tag.block.klaxon.wrench_pickup_denylist": "Wrench Pickup Denylist",
   "tag.block_entity_type.klaxon.nether_reaction_overwritable": "Nether Reaction Overwritable Block Entities",
   "tag.damage_type.klaxon.electrical": "Electrical Damage",
-  "tag.damage_type.klaxon.grapple_winch_cable_transmissible": "Grapple Winch Cable Transmissible Damage",
   "tag.damage_type.klaxon.grapple_winch_projectile": "Grapple Claw Damage Types",
   "tag.damage_type.klaxon.gyro_enchantment_cancels_velocity_update": "Streamline Enchantment Velocity Update Cancelled",
   "tag.entity_type.klaxon.ferromagnetic_entities": "Ferromagnetic Entities",

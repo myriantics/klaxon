@@ -58,9 +58,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     protected static final TrackedData<Integer> HOOKED_ENTITY_ID = DataTracker.registerData(GrappleClawEntity.class, TrackedDataHandlerRegistry.INTEGER);
     protected static final TrackedData<List<Integer>> DRAGGED_ITEM_IDS = DataTracker.registerData(GrappleClawEntity.class, KlaxonTrackedDataHandlerRegistry.INT_LIST);
-    private static final int HIT_INVINCIBILITY_TICKS = 5;
 
-    private int ticksSinceDamaged = 0;
     private final HookedEntityContainer hookedEntityContainer = new HookedEntityContainer();
     public final DraggedItemsContainer draggedItemsContainer = new DraggedItemsContainer();
 
@@ -101,7 +99,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        return super.isInvulnerableTo(damageSource) || damageSource.isIn(DamageTypeTags.BYPASSES_ARMOR) || damageSource.isIn(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE);
+        return super.isInvulnerableTo(damageSource) || damageSource.isIn(DamageTypeTags.BYPASSES_ARMOR);
     }
 
     @Override
@@ -140,14 +138,14 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
         if (world.isClient() || this.isRemoved()) {
             return true;
-        } else if (this.isInvulnerableTo(source) || ticksSinceDamaged < HIT_INVINCIBILITY_TICKS) {
+        } else if (this.isInvulnerableTo(source)) {
             return false;
         } else {
 
             ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) world).klaxon$get();
             @Nullable GrappleWinchConnection connection = manager.fromHook(this);
 
-            // players in creative can instantly kill grapple claws
+            // players in creative can instantly kill grapple claws with no drop
             if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).getAbilities().creativeMode) {
                 this.discard();
                 return true;
@@ -162,19 +160,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 return true;
             }
 
-            // retrievers do not damage grapple claw - make sure to return so we don't do damage anyways
-            if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.GRAPPLE_CLAW_RETRIEVERS)) {
+            // any properly tagged items instakill grapple claws
+            // by default includes mining tools and melee weapons
+            if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.GRAPPLE_CLAW_INSTAKILL)) {
                 this.kill();
                 return true;
-            }
-
-            ItemStack grappleClawStack = this.getItemStack();
-
-            int damage = grappleClawStack.isDamageable() ? grappleClawStack.getMaxDamage() / 12 : 0;
-
-            // unless hit with a tool
-            if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)) {
-                damage *= 2;
             }
         }
 
@@ -276,9 +266,6 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     @Override
     public void tick() {
-        // update damage reset ticker
-        ticksSinceDamaged++;
-
         World world = this.getWorld();
 
         GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
@@ -415,17 +402,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-
-        if (nbt.contains(KlaxonNBTIds.TICKS_SINCE_DAMAGED)) {
-            ticksSinceDamaged = nbt.getInt(KlaxonNBTIds.TICKS_SINCE_DAMAGED);
-        }
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-
-        nbt.putInt(KlaxonNBTIds.TICKS_SINCE_DAMAGED, ticksSinceDamaged);
     }
 
     @Override
