@@ -473,21 +473,19 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.ROOTED_DIRT)
                 .add(Blocks.MUDDY_MANGROVE_ROOTS);
         getOrCreateTagBuilder(KlaxonBlockTags.NETHER_GOLD_ORE_CONVERTIBLE)
-                .forceAddTag(BlockTags.COPPER_ORES)
-                .forceAddTag(BlockTags.IRON_ORES)
-                .forceAddTag(BlockTags.GOLD_ORES)
-                .forceAddTag(BlockTags.LAPIS_ORES);
+                .forceAddTag(ConventionalBlockTags.COPPER_ORES)
+                .forceAddTag(ConventionalBlockTags.IRON_ORES)
+                .forceAddTag(ConventionalBlockTags.GOLD_ORES)
+                .forceAddTag(ConventionalBlockTags.LAPIS_ORES);
         getOrCreateTagBuilder(KlaxonBlockTags.NETHER_QUARTZ_ORE_CONVERTIBLE)
-                .forceAddTag(BlockTags.COAL_ORES)
-                .forceAddTag(BlockTags.REDSTONE_ORES)
-                .forceAddTag(BlockTags.DIAMOND_ORES)
-                .forceAddTag(BlockTags.EMERALD_ORES);
+                .forceAddTag(ConventionalBlockTags.COAL_ORES)
+                .forceAddTag(ConventionalBlockTags.REDSTONE_ORES)
+                .forceAddTag(ConventionalBlockTags.DIAMOND_ORES)
+                .forceAddTag(ConventionalBlockTags.EMERALD_ORES);
 
         // soul stuff
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_SAND_CONVERTIBLE)
-                .add(Blocks.SAND)
-                .add(Blocks.RED_SAND)
-                .add(Blocks.SUSPICIOUS_SAND);
+                .forceAddTag(ConventionalBlockTags.SANDS);
         getOrCreateTagBuilder(KlaxonBlockTags.SOUL_SOIL_CONVERTIBLE)
                 .add(Blocks.CLAY)
                 .add(Blocks.MUD)
