@@ -369,14 +369,15 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     private void buildEquipmentCategoryTags() {
         getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAWS)
                 .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
-
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.FLINT_AND_STEEL)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS)
                 .add(KlaxonItems.STEEL_CLEAVER)
-                .add(KlaxonItems.STEEL_WRENCH);
+                .add(KlaxonItems.STEEL_WRENCH)
+                .add(KlaxonItems.GRAPPLE_WINCH)
+                .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET)
                 .add(KlaxonItems.CRESTED_STEEL_HELMET)
@@ -384,7 +385,6 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_LEGGINGS)
                 .add(KlaxonItems.STEEL_BOOTS);
         getOrCreateTagBuilder(ConventionalItemTags.TOOLS)
-                .forceAddTag(KlaxonItemTags.GRAPPLE_CLAWS)
                 .add(KlaxonItems.GRAPPLE_WINCH);
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER)

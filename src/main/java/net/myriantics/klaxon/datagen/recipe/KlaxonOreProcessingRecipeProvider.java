@@ -34,7 +34,7 @@ public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
         addBlastProcessingRecipe(NamedIngredient.ofItems(oreIngotItem), 0.5, 1.7, RecipeOutputCompound.of(new ItemStack(fracturedOreFragmentsItem)), conditions);
 
         // smelting
-        addOreProcessingCookingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(fracturedOreFragmentsItem), 1.0f, 150, null, "fractured_ores", conditions);
+        addBlastingAndSmeltingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(fracturedOreFragmentsItem), 1.0f, 150, null, "fractured_ores", conditions);
 
         // crafting
         add2x2PackingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(rawOreItem), null, null, conditions);

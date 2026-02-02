@@ -1,11 +1,11 @@
 {
-  "type": "minecraft:blasting",
+  "type": "minecraft:smelting",
   "category": "misc",
-  "cookingtime": 100,
-  "experience": 3.0,
+  "cookingtime": 200,
+  "experience": 1.0,
   "group": "steel_nugget",
   "ingredient": {
-    "tag": "klaxon:steel_equipment"
+    "item": "klaxon:crude_steel_ingot"
   },
   "result": {
     "id": "klaxon:steel_nugget"
