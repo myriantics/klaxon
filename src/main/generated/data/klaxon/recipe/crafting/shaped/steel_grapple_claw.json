@@ -6,16 +6,13 @@
     "I": {
       "tag": "c:ingots/crude_steel"
     },
-    "N": {
-      "tag": "c:nuggets/crude_steel"
-    },
     "P": {
       "tag": "c:plates/crude_steel"
     }
   },
   "pattern": [
     " P ",
-    "PNP",
+    "PIP",
     "IP "
   ],
   "result": {

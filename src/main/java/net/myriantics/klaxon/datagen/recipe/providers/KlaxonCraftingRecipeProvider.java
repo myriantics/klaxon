@@ -16,6 +16,7 @@ import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.List;
 import java.util.Map;
 
 public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
@@ -36,17 +37,22 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     private void buildEquipmentCraftingRecipes() {
-        addGrappleClawRecipes(
+        addGrappleClawRecipe(
                 Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES),
                 Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS),
-                Ingredient.fromTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS),
                 new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW, 1)
         );
-        addGrappleClawRecipes(
+        addGrappleClawRecipe(
                 Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_PLATES),
                 Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_INGOTS),
-                Ingredient.fromTag(KlaxonConventionalItemTags.STEEL_NUGGETS),
                 new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW, 4)
+        );
+        addGrappleWinchRecipe(
+                Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING),
+                Ingredient.ofItems(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK),
+                Ingredient.fromTag(KlaxonItemTags.GEAR_GRIP_MATERIALS),
+                new ItemStack(KlaxonItems.GRAPPLE_WINCH)
         );
     }
 
@@ -545,11 +551,11 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         );
     }
 
-    private void addGrappleClawRecipes(Ingredient plate, Ingredient ingot, Ingredient nugget, ItemStack result, ResourceCondition... conditions) {
+    private void addGrappleClawRecipe(Ingredient plate, Ingredient ingot, ItemStack result, ResourceCondition... conditions) {
         Map<Character, Ingredient> map = Map.of(
                 'P', plate,
-                'I', ingot,
-                'N', nugget
+                'I', ingot
+                // n
                 // g
                 // a
                 // s
@@ -560,7 +566,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 map,
                 new String[] {
                         " P ",
-                        "PNP",
+                        "PIP",
                         "IP "
                 },
                 result,
@@ -568,17 +574,22 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 "grapple_claw",
                 conditions
         );
-        addShapedCraftingRecipe(
-                map,
+    }
+    private void addGrappleWinchRecipe(Ingredient plate, Ingredient casing, Ingredient spool, Ingredient grip, ItemStack result) {
+        addShapedCraftingRecipe(Map.of(
+                        'P', plate,
+                        'R', grip,
+                        'S', spool,
+                        'C', casing
+                ),
                 new String[] {
-                        "IP ",
-                        "PNP",
-                        " P "
+                        "RS ",
+                        "PC ",
+                        "PR "
                 },
                 result,
                 CraftingRecipeCategory.EQUIPMENT,
-                "grapple_claw",
-                conditions
+                "grapple_winch"
         );
     }
 }

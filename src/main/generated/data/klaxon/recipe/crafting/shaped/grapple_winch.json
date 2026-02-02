@@ -1,14 +1,6 @@
 {
-  "type": "klaxon:makeshift_shaped",
+  "type": "minecraft:crafting_shaped",
   "category": "equipment",
-  "constant_ingredients": [
-    {
-      "tag": "klaxon:gear_grip_materials"
-    },
-    {
-      "item": "klaxon:steel_wire_spool"
-    }
-  ],
   "group": "grapple_winch",
   "key": {
     "C": {
@@ -32,6 +24,5 @@
   "result": {
     "count": 1,
     "id": "klaxon:grapple_winch"
-  },
-  "show_notification": false
+  }
 }

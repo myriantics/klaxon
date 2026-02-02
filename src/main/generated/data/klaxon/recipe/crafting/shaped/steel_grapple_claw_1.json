@@ -4,22 +4,19 @@
   "group": "grapple_claw",
   "key": {
     "I": {
-      "tag": "c:ingots/crude_steel"
-    },
-    "N": {
-      "tag": "c:nuggets/crude_steel"
+      "tag": "c:ingots/steel"
     },
     "P": {
-      "tag": "c:plates/crude_steel"
+      "tag": "c:plates/steel"
     }
   },
   "pattern": [
-    "IP ",
-    "PNP",
-    " P "
+    " P ",
+    "PIP",
+    "IP "
   ],
   "result": {
-    "count": 1,
+    "count": 4,
     "id": "klaxon:steel_grapple_claw"
   }
 }
