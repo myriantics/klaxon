@@ -58,6 +58,13 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
                     .getSettings()
             ));
+    public static final Item REINFORCED_FLINT_AND_STEEL = registerSimpleItem("reinforced_flint_and_steel",
+            new ReinforcedFlintAndSteelItem(new KlaxonItemSettings()
+                    .damageTypeOverride(KlaxonDamageTypes.FLINT_AND_STEEELING)
+                    .getSettings(),
+                    KlaxonToolMaterials.STEEL_NUGGET
+            )
+    );
     public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
             new GrappleClawItem(new KlaxonItemSettings()
                     .maxCount(16)

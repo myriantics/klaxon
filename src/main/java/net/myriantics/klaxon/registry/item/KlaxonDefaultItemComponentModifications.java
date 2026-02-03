@@ -20,16 +20,8 @@ public abstract class KlaxonDefaultItemComponentModifications {
         // make flint and steel repairable with steel nuggets
         context.modify(Items.FLINT_AND_STEEL, builder -> {
             builder.add(
-                            KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE,
-                            new RepairIngredientOverrideComponent(Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS))
-                    )
-                    .add(
                             KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE,
                             new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.FLINT_AND_STEEELING)
-                    )
-                    .add(
-                            DataComponentTypes.MAX_DAMAGE,
-                            KlaxonToolMaterials.STEEL_NUGGET.getDurability()
                     );
         });
 

@@ -155,7 +155,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 DefaultedList.copyOf(Ingredient.EMPTY,
                         Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
                         Ingredient.ofItems(Items.FLINT)),
-                new ItemStack(Items.FLINT_AND_STEEL),
+                new ItemStack(KlaxonItems.REINFORCED_FLINT_AND_STEEL),
                 List.of(Ingredient.ofItems(Items.FLINT)),
                 null, null);
     }

@@ -29,7 +29,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.STEEL_CABLE_SHEARS);
                 entries.add(KlaxonItems.STEEL_WRENCH);
                 entries.add(KlaxonItems.STEEL_CLEAVER);
-                entries.add(Items.FLINT_AND_STEEL);
+                entries.add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
 
                 entries.add(KlaxonItems.STEEL_HELMET);
                 entries.add(KlaxonItems.STEEL_CHESTPLATE);

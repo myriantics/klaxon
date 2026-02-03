@@ -347,6 +347,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_WRENCH)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS)
                 .add(KlaxonItems.GRAPPLE_WINCH);
+        getOrCreateTagBuilder(ItemTags.CREEPER_IGNITERS)
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
     }
 
     private void buildRepairTags() {
@@ -371,11 +373,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
-                .add(Items.FLINT_AND_STEEL)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS)
                 .add(KlaxonItems.STEEL_CLEAVER)
                 .add(KlaxonItems.STEEL_WRENCH)
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL)
                 .add(KlaxonItems.GRAPPLE_WINCH)
                 .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
@@ -432,6 +434,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_LEGGINGS);
         getOrCreateTagBuilder(ItemTags.FOOT_ARMOR)
                 .add(KlaxonItems.STEEL_BOOTS);
+
+        getOrCreateTagBuilder(ConventionalItemTags.IGNITER_TOOLS)
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
     }
 
     private void buildBlastProcessorCatalystBehaviorTags() {
