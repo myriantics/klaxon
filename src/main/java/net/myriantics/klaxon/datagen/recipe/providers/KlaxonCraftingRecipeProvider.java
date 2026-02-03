@@ -179,20 +179,6 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         );
 
         addShapedCraftingRecipe(Map.of(
-                '#', Ingredient.ofItems(Items.SMOOTH_STONE),
-                'S', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
-                'X', Ingredient.ofItems(Items.FURNACE)),
-                new String[]{
-                        "SSS",
-                        "SXS",
-                        "###"
-                },
-                new ItemStack(Items.BLAST_FURNACE),
-                CraftingRecipeCategory.REDSTONE,
-                null
-        );
-
-        addShapedCraftingRecipe(Map.of(
                 'P', Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_PLATE),
                 'I', Ingredient.ofItems(KlaxonItems.CRUDE_STEEL_INGOT)),
                 new String[]{

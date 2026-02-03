@@ -17,6 +17,5 @@ public class KlaxonRecipeOverrideProvider extends KlaxonRecipeSubProvider {
 
     private void buildOverrideRecipes() {
         addOverrideRecipe(Identifier.ofVanilla("flint_and_steel"));
-        addOverrideRecipe(Identifier.ofVanilla("blast_furnace"));
     }
 }
