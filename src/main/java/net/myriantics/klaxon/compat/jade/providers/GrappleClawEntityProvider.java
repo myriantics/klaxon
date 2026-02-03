@@ -19,25 +19,13 @@ public enum GrappleClawEntityProvider implements IEntityComponentProvider, Strea
     private static final Identifier ID = KlaxonCommon.locate("grapple_claw");
 
     @Override
-    public void appendTooltip(ITooltip iTooltip, EntityAccessor entityAccessor, IPluginConfig iPluginConfig) {
-        ItemStack grappleClawStack = this.decodeFromData(entityAccessor).orElse(ItemStack.EMPTY);
-        if (grappleClawStack.isDamageable()) {
-            iTooltip.add(Text.translatable(
-                    "klaxon.jade.text.grapple_claw.damage",
-                    grappleClawStack.getMaxDamage() - grappleClawStack.getDamage(),
-                    grappleClawStack.getMaxDamage()
-            ));
-        } else if (!grappleClawStack.isEmpty()) {
-            iTooltip.add(Text.translatable("item.unbreakable"));
-        } else {
-            iTooltip.add(Text.translatable("tooltip.jade.empty"));
-        }
-    }
-
-    @Override
     public @Nullable IElement getIcon(EntityAccessor accessor, IPluginConfig config, IElement currentIcon) {
         ItemStack grappleClawStack = this.decodeFromData(accessor).orElse(ItemStack.EMPTY);
         return grappleClawStack.isEmpty() ? currentIcon : IElementHelper.get().item(grappleClawStack);
+    }
+
+    @Override
+    public void appendTooltip(ITooltip iTooltip, EntityAccessor entityAccessor, IPluginConfig iPluginConfig) {
     }
 
     @Override

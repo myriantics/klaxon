@@ -19,8 +19,6 @@ public final class KlaxonEnUsJadeTextProvider extends KlaxonEnUsLanguageSubProvi
         addJadeTooltipText("blast_processor.explosion_power", "Explosion Power: %s");
         addJadeTooltipText("crop_growth_disabled", "Crop Growth Disabled");
         addJadeTooltipText("natural_crop_growth_inhibited", "Natural Crop Growth Inhibited");
-        addJadeTooltipText("grapple_claw.unbreakable", "Unbreakable");
-        addJadeTooltipText("grapple_claw.damage", "Durability: %1$s/%2$s");
     }
 
     private void generateConfigTextTranslations() {

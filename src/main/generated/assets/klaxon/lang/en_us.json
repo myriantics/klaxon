@@ -217,8 +217,6 @@
   "klaxon.emi.text.tool_usage.use_compact": "Use Tool On Item",
   "klaxon.jade.text.blast_processor.explosion_power": "Explosion Power: %s",
   "klaxon.jade.text.crop_growth_disabled": "Crop Growth Disabled",
-  "klaxon.jade.text.grapple_claw.damage": "Durability: %1$s/%2$s",
-  "klaxon.jade.text.grapple_claw.unbreakable": "Unbreakable",
   "klaxon.jade.text.natural_crop_growth_inhibited": "Natural Crop Growth Inhibited",
   "klaxon.text.blast_processor_creeper_name": "a Blast Processor mimicking a Charged Creeper. Expensive death right there.",
   "klaxon.text.tooltip.grapple_winch.cable_length.display": "%1$s/%2$s",
