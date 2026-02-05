@@ -136,7 +136,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.BAMBOO)
                 .add(Blocks.HONEYCOMB_BLOCK)
                 .add(Blocks.GLOW_LICHEN)
-                .add(Blocks.CAKE);
+                .add(Blocks.CAKE)
+                .add(Blocks.CACTUS);
 
         // wrench
         getOrCreateTagBuilder(KlaxonBlockTags.WRENCH_MINEABLE)
