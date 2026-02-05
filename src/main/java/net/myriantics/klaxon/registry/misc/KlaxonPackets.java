@@ -7,7 +7,6 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.networking.c2s.GrappleWinchCableForceDisconnectC2S;
 import net.myriantics.klaxon.networking.c2s.GrappleWinchCableLengthUpdateC2S;
 import net.myriantics.klaxon.networking.s2c.*;
-import net.myriantics.klaxon.networking.c2s.DualWieldToggleC2SPacket;
 import net.myriantics.klaxon.networking.c2s.HammerWalljumpTriggerPacket;
 
 public abstract class KlaxonPackets {
@@ -20,15 +19,12 @@ public abstract class KlaxonPackets {
     public static final Identifier BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID = locateS2C("blast_processor_screen_sync");
     public static final Identifier KLAXON_WORLD_EVENT_TRIGGER_PACKET_S2C_ID = locateS2C("klaxon_world_event");
     public static final Identifier HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID = locateC2S("hammer_walljump_trigger_packet");
-    public static final Identifier DUAL_WIELD_TOGGLE_S2C_PACKET = locateS2C("dual_wield_toggle");
-    public static final Identifier DUAL_WIELD_TOGGLE_C2S_PACKET = locateC2S("dual_wield_toggle");
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Packets!");
 
         // s2c
         PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.PACKET_CODEC);
-        PayloadTypeRegistry.playS2C().register(EntityDualWieldToggleS2CPacket.ID, EntityDualWieldToggleS2CPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket.PACKET_CODEC);
@@ -36,7 +32,6 @@ public abstract class KlaxonPackets {
 
         // c2s
         PayloadTypeRegistry.playC2S().register(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket.PACKET_CODEC);
-        PayloadTypeRegistry.playC2S().register(DualWieldToggleC2SPacket.ID, DualWieldToggleC2SPacket.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(GrappleWinchCableForceDisconnectC2S.ID, GrappleWinchCableForceDisconnectC2S.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(GrappleWinchCableLengthUpdateC2S.ID, GrappleWinchCableLengthUpdateC2S.PACKET_CODEC);
     }
@@ -44,7 +39,6 @@ public abstract class KlaxonPackets {
     // server only
     public static void initC2SRecievers() {
         ServerPlayNetworking.registerGlobalReceiver(HammerWalljumpTriggerPacket.ID, HammerWalljumpTriggerPacket::execute);
-        ServerPlayNetworking.registerGlobalReceiver(DualWieldToggleC2SPacket.ID, DualWieldToggleC2SPacket::execute);
         ServerPlayNetworking.registerGlobalReceiver(GrappleWinchCableForceDisconnectC2S.ID, GrappleWinchCableForceDisconnectC2S::execute);
         ServerPlayNetworking.registerGlobalReceiver(GrappleWinchCableLengthUpdateC2S.ID, GrappleWinchCableLengthUpdateC2S::execute);
     }

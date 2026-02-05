@@ -110,9 +110,8 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
             player.onLanding();
             player.resetLastAttackedTicks();
 
-            // damage both main hand walljump stack and offhand one if present
+            // damage main hand walljumping stack
             walljumpStack.damage(1, player, EquipmentSlot.MAINHAND);
-            if (get(player.getOffHandStack()) != null) player.getOffHandStack().damage(1, player, EquipmentSlot.OFFHAND);
         }
     }
 
@@ -122,17 +121,8 @@ public record WalljumpAbilityComponent(float velocityMultiplier, boolean shouldU
         walljumpStrength *= sourcePlayer.getAttackCooldownProgress(0.5f);
         walljumpStrength *= AbilityModifierCalculator.calculateHammerWalljumpMultiplier(sourcePlayer, launchedEntity);
 
-        float totalMultiplier = this.velocityMultiplier;
-
-        WalljumpAbilityComponent offhand = get(sourcePlayer.getOffHandStack());
-
-        // if we've got a walljump component in offhand, add its velocity multiplier to base - divided by 2 so it's not crazy op.
-        if (offhand != null) {
-            totalMultiplier += offhand.velocityMultiplier / 2;
-        }
-
         // commit total multiplier to walljump strength value
-        walljumpStrength *= totalMultiplier;
+        walljumpStrength *= this.velocityMultiplier;
 
         return walljumpStrength;
     }

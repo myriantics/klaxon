@@ -16,7 +16,6 @@ import net.minecraft.util.math.random.Random;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
-import net.myriantics.klaxon.mechanics.dual_wielding.LivingEntityMixinAccess;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
@@ -78,16 +77,6 @@ public abstract class KlaxonClientPlayNetworkHandler {
                         packet.explosionPowerMax(),
                         packet.producesFire()
                 );
-            }
-        });
-    }
-
-    public static void toggleDualWielding(EntityDualWieldToggleS2CPacket packet, ClientPlayNetworking.Context context) {
-        context.client().execute(() -> {
-            MinecraftClient client = context.client();
-
-            if (client.world != null && client.world.getEntityById(packet.entityId()) instanceof LivingEntityMixinAccess access) {
-                access.klaxon$setDualWielding(packet.isDualWielding());
             }
         });
     }

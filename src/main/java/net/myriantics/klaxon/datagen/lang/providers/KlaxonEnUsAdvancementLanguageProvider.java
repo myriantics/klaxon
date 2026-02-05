@@ -71,7 +71,7 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
         addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.HAMMER_WALLJUMP_BOOSTED,
                 "Unstoppable Force",
-                "Perform a Boosted Walljump via Strength or Dual Wielding"
+                "Enhance your Walljump with Strength"
         );
         addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.HAMMER_WALLJUMP_MINECART,

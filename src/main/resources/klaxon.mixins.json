@@ -24,7 +24,6 @@
     "minecraft.damageable_and_stackable.ItemStackMixin",
     "minecraft.datagen.ItemModelGeneratorMixin",
     "minecraft.datagen.ModelAccessor",
-    "minecraft.dual_wielding.LivingEntityMixin",
     "minecraft.enchantments.gyro.LivingEntityMixin",
     "minecraft.entity_attributes.ArmorItemMixin",
     "minecraft.entity_attributes.LivingEntityMixin",
