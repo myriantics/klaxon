@@ -17,8 +17,6 @@ import net.myriantics.klaxon.registry.block.KlaxonStrippedBlocksRegistry;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.*;
 import net.myriantics.klaxon.registry.item.*;
-import net.myriantics.klaxon.registry.loot.KlaxonLootContextTypes;
-import net.myriantics.klaxon.registry.loot.KlaxonLootNumberProviders;
 import net.myriantics.klaxon.registry.misc.*;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.registry.worldgen.KlaxonWorldgenFeatures;
@@ -71,8 +69,6 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonEntityTypes.init();
         KlaxonEntityAttributes.init();
         KlaxonDynamicRegistries.init();
-        KlaxonLootNumberProviders.init();
-        KlaxonLootContextTypes.init();
         KlaxonBlockStateWrenchBehaviors.init();
 		KlaxonCauldronBehaviors.init();
 
