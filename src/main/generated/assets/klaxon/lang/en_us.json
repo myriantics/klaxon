@@ -211,7 +211,7 @@
   "klaxon.emi.text.explosion_power_info.explosion_power.constant": "Explosion power: %1$s",
   "klaxon.emi.text.explosion_power_info.explosion_power.max": "Exp. Power Max: %1$s",
   "klaxon.emi.text.explosion_power_info.explosion_power.min": "Exp. Power Min: %1$s",
-  "klaxon.emi.text.item_cooling.description": "Drop item into anything that extinguishes fire.",
+  "klaxon.emi.text.nether_reaction.hover": "Detonate any Explosive inside a Nether Reactor Core to activate it.",
   "klaxon.emi.text.tool_usage.dropped_item": "Dropped Item",
   "klaxon.emi.text.tool_usage.tool": "Tool needed to perform recipe",
   "klaxon.emi.text.tool_usage.use": "Use Tool Near Dropped Item",

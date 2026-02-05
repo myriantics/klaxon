@@ -11,9 +11,13 @@ public final class KlaxonEnUsEmiTextLanguageProvider extends KlaxonEnUsLanguageS
 
     @Override
     public void generate() {
+        generateNetherReactionTranslations();
         generateExplosionPowerInfoTranslations();
         generateToolUsageTranslations();
-        generateItemCoolingTranslations();
+    }
+
+    private void generateNetherReactionTranslations() {
+        addEmiText("nether_reaction.hover", "Detonate any Explosive inside a Nether Reactor Core to activate it.");
     }
 
     private void generateExplosionPowerInfoTranslations() {
@@ -51,10 +55,6 @@ public final class KlaxonEnUsEmiTextLanguageProvider extends KlaxonEnUsLanguageS
         addEmiText("tool_usage.tool", "Tool needed to perform recipe");
         addEmiText("tool_usage.use", "Use Tool Near Dropped Item");
         addEmiText("tool_usage.use_compact", "Use Tool On Item");
-    }
-
-    private void generateItemCoolingTranslations() {
-        addEmiText("item_cooling.description", "Drop item into anything that extinguishes fire.");
     }
 
     private void addBehaviorDescription(String key, String name) {

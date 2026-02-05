@@ -25,6 +25,9 @@ public abstract class KlaxonTextures {
     // Helmet Crest
     public static final Identifier HELMET_CREST = ofEntity("helmet_crest");
 
+    // Nether Reaction EMI Background
+    public static final Identifier NETHER_REACTION_EMI_BACKGROUND = ofGui("emi/nether_reaction");
+
     public static Identifier copyDir(String path, Identifier parent) {
         return copyDir(path, parent.getPath());
     }
@@ -48,6 +51,10 @@ public abstract class KlaxonTextures {
 
     public static Identifier ofEntity(String path) {
         return KlaxonCommon.locate("entity/" + path);
+    }
+
+    private static Identifier ofGui(String path) {
+        return KlaxonCommon.locate("gui/" + path);
     }
 
     public static Identifier decorate(Identifier id) {
