@@ -77,7 +77,7 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
 
         if (recipeData.outputStacks().length == 0) {
             if (powerData.explosionPower() <= 0 || powerData.explosionPower() < recipeData.explosionPowerMin()) {
-                for (ItemStack ejectedStack : blastProcessor.getItems()) {
+                for (ItemStack ejectedStack : blastProcessor.getHeldStacks()) {
                     ItemDispenserBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
                 }
             }

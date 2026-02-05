@@ -27,31 +27,25 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
-import net.myriantics.klaxon.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
 import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.*;
 
-public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, ImplementedInventory, SidedInventory {
+public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, SidedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
     public static final int INGREDIENT_INDEX = 0;
     public static final int CATALYST_INDEX = 1;
     private static final int[] INGREDIENT_ITEM_SLOTS = new int[]{INGREDIENT_INDEX};
     private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
-    public static final int MaxItemStackCount = 1;
+    public static final int MAX_HELD_STACK_COUNT = 1;
 
-    private ArrayList<DeepslateBlastProcessorScreenHandler> activeScreenHandlers = new ArrayList<>();
+    private final ArrayList<DeepslateBlastProcessorScreenHandler> activeScreenHandlers = new ArrayList<>();
 
     public DeepslateBlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-    }
-
-    @Override
-    public DefaultedList<ItemStack> getItems() {
-        return inventory;
     }
 
     @Override
@@ -78,7 +72,7 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
     }
 
     @Override
-    protected DefaultedList<ItemStack> getHeldStacks() {
+    public DefaultedList<ItemStack> getHeldStacks() {
         return inventory;
     }
 
@@ -93,12 +87,7 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
     @Override
     public int getMaxCountPerStack() {
-        return MaxItemStackCount;
-    }
-
-    @Override
-    public boolean canTransferTo(Inventory hopperInventory, int slot, ItemStack stack) {
-        return ImplementedInventory.super.canTransferTo(hopperInventory, slot, stack);
+        return MAX_HELD_STACK_COUNT;
     }
 
     @Override

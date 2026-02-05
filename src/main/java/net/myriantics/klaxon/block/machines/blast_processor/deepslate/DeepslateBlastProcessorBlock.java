@@ -146,7 +146,7 @@ public class DeepslateBlastProcessorBlock extends BlockWithEntity {
             }
 
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                DefaultedList<ItemStack> inventory = blastProcessor.getItems();
+                DefaultedList<ItemStack> inventory = blastProcessor.getHeldStacks();
 
                 boolean hatchOpen = appendedState.get(DeepslateBlastProcessorBlock.HATCH_OPEN);
                 boolean fueled = appendedState.get(DeepslateBlastProcessorBlock.FUELED);

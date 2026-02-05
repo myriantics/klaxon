@@ -203,7 +203,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
                     if (this.slots.get(i).hasStack() || !this.slots.get(i).canInsert(originalStack)) {
                         continue;
                     }
-                    ItemStack filteredStack = originalStack.split(DeepslateBlastProcessorBlockEntity.MaxItemStackCount);
+                    ItemStack filteredStack = originalStack.split(DeepslateBlastProcessorBlockEntity.MAX_HELD_STACK_COUNT);
                     this.slots.get(i).setStack(filteredStack);
                     break;
                 }
