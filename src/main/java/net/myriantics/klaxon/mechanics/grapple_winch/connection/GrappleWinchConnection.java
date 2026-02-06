@@ -3,14 +3,15 @@ package net.myriantics.klaxon.mechanics.grapple_winch.connection;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 
 public abstract class GrappleWinchConnection {
     protected final int connectionId;
 
     protected boolean retracting = false;
     protected boolean hookAnchored = false;
-    protected double cableLength = -1;
-    protected double maxCableLength = -1;
+    protected double cableLength = 64;
+    protected double maxCableLength = 64;
 
     public GrappleWinchConnection(int connectionId) {
         this.connectionId = connectionId;
@@ -31,12 +32,16 @@ public abstract class GrappleWinchConnection {
             if (!this.isHookAnchored()) {
 
                 // retract grapple claw if owner pulls back before landing
-                if (this.retracting) {
+                if (this.retracting && !this.getPlayer().isSneaking()) {
                     compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.multiply(4f/20));
                 }
 
+                double activeCableLength = this.retracting && this.getPlayer().isSneaking()
+                        ? this.getMaxCableLength()
+                        : this.getCableLength();
+
                 // retract grapple claw if it hits limit
-                if (wielderDistance >= this.maxCableLength) {
+                if (wielderDistance >= activeCableLength) {
 
                     if (this.getHook().klaxon$asEntity().isLogicalSideForUpdatingMovement() && wielderDistance >= maxCableLength * 1.2) {
                         this.getHook().klaxon$asEntity().addVelocity(this.getHook().klaxon$asEntity().getVelocity().multiply(-0.15));
@@ -47,7 +52,7 @@ public abstract class GrappleWinchConnection {
                     if (this instanceof ServerGrappleWinchConnection connection) {
                         connection.tryPlayReboundSound();
                     }
-                } else if (wielderDistance < maxCableLength * 0.95 && this instanceof ServerGrappleWinchConnection connection) {
+                } else if (wielderDistance < activeCableLength * 0.95 && this instanceof ServerGrappleWinchConnection connection) {
                     // if we go back in bounds, we can play the rebound sound again
                     // this has a small deadzone because otherwise it would spam the shit out of the sound when dangling at the end of the cable.
                     connection.canPlayReboundSound = true;
