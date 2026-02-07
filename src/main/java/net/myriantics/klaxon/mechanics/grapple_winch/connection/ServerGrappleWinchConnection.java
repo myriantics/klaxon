@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.event.GameEvent;
@@ -291,7 +292,8 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     public void playSoundAtBothCableEnds(SoundEvent soundEvent, float pitch, float volume) {
-
+        this.player.playSoundToPlayer(soundEvent, SoundCategory.PLAYERS, pitch, volume);
+        this.hook.klaxon$asEntity().playSound(soundEvent, pitch, volume);
     }
 
     private void resetMaxCableLength() {
