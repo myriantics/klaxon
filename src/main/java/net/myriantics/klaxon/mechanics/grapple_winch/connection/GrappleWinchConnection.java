@@ -52,7 +52,7 @@ public abstract class GrappleWinchConnection {
                     if (this instanceof ServerGrappleWinchConnection connection) {
                         connection.tryPlayReboundSound();
                     }
-                } else if (wielderDistance < activeCableLength * 0.95 && this instanceof ServerGrappleWinchConnection connection) {
+                } else if (wielderDistance + 3 < activeCableLength * 0.90 && this instanceof ServerGrappleWinchConnection connection) {
                     // if we go back in bounds, we can play the rebound sound again
                     // this has a small deadzone because otherwise it would spam the shit out of the sound when dangling at the end of the cable.
                     connection.canPlayReboundSound = true;

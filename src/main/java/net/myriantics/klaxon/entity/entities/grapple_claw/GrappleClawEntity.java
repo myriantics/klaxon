@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
@@ -164,11 +165,29 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             // by default includes mining tools and melee weapons
             if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.GRAPPLE_CLAW_INSTAKILL)) {
                 this.kill();
+                this.playSoundAtBothCableEndsIfPossible(
+                        KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DESTROY,
+                        0.8f + this.getWorld().getRandom().nextFloat() * 0.2f,
+                        0.7f + this.getWorld().getRandom().nextFloat() * 0.3f
+                );
+                this.getWorld().emitGameEvent(this, GameEvent.ENTITY_DAMAGE, this.getPos());
                 return true;
             }
         }
 
         return false;
+    }
+
+    private void playSoundAtBothCableEndsIfPossible(SoundEvent soundEvent, float volume, float pitch) {
+        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
+        if (manager instanceof ServerGrappleWinchConnectionManager serverManager) {
+            ServerGrappleWinchConnection connection = serverManager.fromHook(this);
+            if (connection == null) {
+                this.playSound(soundEvent, volume, pitch);
+            } else {
+                connection.playSoundAtBothCableEnds(soundEvent, volume, pitch);
+            }
+        }
     }
 
     @Override
@@ -659,6 +678,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             }
 
             GrappleClawEntity.this.draggedItemsContainer.clear();
+
+            // play sound
+            claw.playSoundAtBothCableEndsIfPossible(
+                    KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_HOOK,
+                    0.8f + claw.getWorld().getRandom().nextFloat() * 0.2f,
+                    0.7f + claw.getWorld().getRandom().nextFloat() * 0.3f
+            );
 
             return true;
         }

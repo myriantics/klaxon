@@ -25,6 +25,7 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_DAMAGE = register("entity.grapple_claw.damage", SoundEvents.BLOCK_METAL_HIT);
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_DESTROY = register("entity.grapple_claw.destroy", SoundEvents.ENTITY_ITEM_BREAK);
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_DETACH = register("entity.grapple_claw.detach", SoundEvents.ENTITY_ITEM_BREAK);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_HOOK = register("entity.grapple_claw.hook", SoundEvents.BLOCK_CHAIN_BREAK);
     public static final SoundEvent ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT = register("entity.grapple_claw.rebound_at_limit", SoundEvents.ITEM_TRIDENT_RETURN);
     // nether reaction
     public static final RegistryEntry<SoundEvent> NETHER_REACTION_EXPLOSION = register("block.nether_reactor_core.explosion", SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE);
