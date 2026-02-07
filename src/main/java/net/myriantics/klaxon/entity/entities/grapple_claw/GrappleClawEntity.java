@@ -439,6 +439,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
+    public boolean canModifyAt(World world, BlockPos pos) {
+        return !super.canModifyAt(world, pos) || !(this.getOwner() instanceof PlayerEntity player) || player.canModifyBlocks();
+    }
+
+    @Override
     public @Nullable ItemStack getPickBlockStack() {
         return this.getItemStack().copy();
     }
