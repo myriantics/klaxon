@@ -146,7 +146,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             @Nullable GrappleWinchConnection connection = manager.fromHook(this);
 
             // players in creative can instantly kill grapple claws with no drop
-            if (source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).getAbilities().creativeMode) {
+            if (source.getAttacker() instanceof PlayerEntity player && player.getAbilities().creativeMode) {
                 this.discard();
                 return true;
             }
