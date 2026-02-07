@@ -186,6 +186,12 @@ public class GrappleWinchItem extends RangedWeaponItem {
         ChargedProjectilesComponent chargedProjectilesComponent = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
         boolean isLoaded = chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty();
 
+        // creative mode players can load intangible grapple claws in whenever, even if they don't have claws
+        if (!PROJECTILES.test(ammoStack) && user.isCreative()) {
+            ammoStack = new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
+            ammoStack.set(DataComponentTypes.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
+        }
+
         // proceed if connection is active or winch has a grapple claw stored
         // make sure offhand cannot support cable before trying to charge back
         if ((connection != null && supportsCable) || (isLoaded && !offhandSupportsCable)) {
