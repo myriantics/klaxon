@@ -53,6 +53,7 @@
     "minecraft.item_components.MobEntityMixin",
     "minecraft.item_components.PlayerEntityMixin",
     "minecraft.item_components.knockback_hit_modifier.PlayerEntityMixin",
+    "minecraft.item_components.recipe_output_lore.ItemStackMixin",
     "minecraft.item_components.repair_material_override.AnvilScreenHandlerMixin",
     "minecraft.item_components.repair_material_override.ItemMixin",
     "minecraft.item_components.shield_breaching.LivingEntityMixin",

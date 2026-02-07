@@ -226,7 +226,7 @@
   "klaxon.text.tooltip.heavy_equipment": "Heavy Equipment",
   "klaxon.text.tooltip.innate_enchantment_prefix": "Innate %1$s",
   "klaxon.text.tooltip.missing_block_item": "Missing Block Item",
-  "klaxon.text.tooltip.recipe_output_lore": "Chance: %1$s",
+  "klaxon.text.tooltip.recipe_output_lore.chance": "Chance: %1$s",
   "tag.block.c.natural_logs": "Natural Logs",
   "tag.block.c.natural_woods": "Natural Woods",
   "tag.block.klaxon.blast_processors": "Blast Processors",

@@ -17,7 +17,7 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
 
     private void generateTooltipText() {
         addTooltipText("innate_enchantment_prefix", "Innate %1$s");
-        addTooltipText("recipe_output_lore", "Chance: %1$s");
+        addTooltipText("recipe_output_lore.chance", "Chance: %1$s");
         addTooltipText("missing_block_item", "Missing Block Item");
         addTooltipText("heavy_equipment", "Heavy Equipment");
         addTooltipText("grapple_winch.projectile", "Projectile:");
