@@ -245,21 +245,19 @@ public class GrappleWinchItem extends RangedWeaponItem {
             List<ItemStack> projectiles = stack.get(DataComponentTypes.CHARGED_PROJECTILES) instanceof ChargedProjectilesComponent component ? component.getProjectiles() : List.of();
 
             if (!projectiles.isEmpty()) {
-                if (!world.isClient()) {
-                    ItemStack firstProjectileStack = projectiles.getFirst();
+                ItemStack firstProjectileStack = projectiles.getFirst();
 
-                    if (!firstProjectileStack.contains(DataComponentTypes.INTANGIBLE_PROJECTILE)) {
-                        if (ItemStack.areItemsAndComponentsEqual(firstProjectileStack, otherStack)) {
-                            otherStack.increment(firstProjectileStack.getCount());
-                        } else if (otherStack.isEmpty()) {
-                            cursorStackReference.set(firstProjectileStack);
-                        }
+                if (!firstProjectileStack.contains(DataComponentTypes.INTANGIBLE_PROJECTILE)) {
+                    if (ItemStack.areItemsAndComponentsEqual(firstProjectileStack, otherStack)) {
+                        otherStack.increment(firstProjectileStack.getCount());
+                    } else if (otherStack.isEmpty()) {
+                        cursorStackReference.set(firstProjectileStack);
                     }
-
-                    // replace projectiles component with a new one that has everything but the first element
-                    List<ItemStack> newProjectiles = projectiles.subList(1, projectiles.size());
-                    stack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(newProjectiles));
                 }
+
+                // replace projectiles component with a new one that has everything but the first element
+                List<ItemStack> newProjectiles = projectiles.subList(1, projectiles.size());
+                stack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(newProjectiles));
 
                 world.playSound(
                         player,
