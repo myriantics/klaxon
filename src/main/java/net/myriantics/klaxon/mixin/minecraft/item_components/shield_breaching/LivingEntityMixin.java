@@ -28,7 +28,7 @@ public abstract class LivingEntityMixin {
         // make sure shield would've blocked attack
         if (original
                 // make sure attack is actually shield breaching
-                && ((DamageSourceMixinAccess) damageSource).klaxon$getShieldBreachingComponent() != null
+                && ((DamageSourceMixinAccess) damageSource).klaxon$isShieldBreaching()
                 && damageSource.getAttacker() instanceof LivingEntity attacker
         ) {
             damageShield(amount);

@@ -1,20 +1,33 @@
 package net.myriantics.klaxon.mixin.minecraft.item_components;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.component.EnchantmentEffectComponentTypes;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.world.World;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
+import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import java.util.Optional;
+
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin {
+public abstract class PlayerEntityMixin extends LivingEntity {
+    protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+        super(entityType, world);
+    }
 
     // for future reference
     // bl in PlayerEntity tells if attack is fully charged
@@ -39,20 +52,27 @@ public abstract class PlayerEntityMixin {
         // check for overridden damage type on weapon stack - if so, apply the override
         MeleeDamageTypeOverrideComponent damageTypeOverride = MeleeDamageTypeOverrideComponent.get(weaponStack);
         if (damageTypeOverride != null) {
-            KlaxonDamageTypes.modifyDamageSourceType(original, damageTypeOverride.damageType());
+            this.getDamageSources().registry.getEntry(damageTypeOverride.damageType()).ifPresent(
+                    entry -> KlaxonDamageTypes.modifyDamageSourceType(original, entry
+            ));
         }
 
-        // test for shield penetration component - check if it should run based on critical hit status
-        ShieldBreachingComponent shieldBreaching = ShieldBreachingComponent.get(weaponStack);
-        if (shieldBreaching != null && shieldBreaching.shouldFire(willCrit, fullyCharged, knockbackHit)) {
-            if (shieldBreaching.damageType().isPresent()) KlaxonDamageTypes.modifyDamageSourceType(original, shieldBreaching.damageType().get());
-            ((DamageSourceMixinAccess) original).klaxon$setShieldBreachingComponent(shieldBreaching);
+        // replace damage type with shield breaching variant if present
+        ShieldBreachingComponent shieldBreachingComponent = ShieldBreachingComponent.get(weaponStack);
+        if (shieldBreachingComponent != null && shieldBreachingComponent.shouldFire(willCrit, fullyCharged, knockbackHit)) {
+            if (shieldBreachingComponent.damageType().isPresent()) {
+                Optional<RegistryEntry.Reference<DamageType>> entry = this.getDamageSources().registry.getEntry(shieldBreachingComponent.damageType().get());
+                entry.ifPresent(damageTypeReference -> KlaxonDamageTypes.modifyDamageSourceType(original, damageTypeReference));
+            }
+            ((DamageSourceMixinAccess) original).klaxon$setShieldBreaching(true);
         }
 
         // check for knockback modifier component - change damage type if present
         KnockbackHitModifierComponent knockbackModifier = KnockbackHitModifierComponent.get(weaponStack);
         if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit)) {
-            if (knockbackModifier.damageType().isPresent()) KlaxonDamageTypes.modifyDamageSourceType(original, knockbackModifier.damageType().get());
+            this.getDamageSources().registry.getEntry(knockbackModifier.damageType().get()).ifPresent(
+                    entry -> KlaxonDamageTypes.modifyDamageSourceType(original, entry
+            ));
         }
 
         return original;

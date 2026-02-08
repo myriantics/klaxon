@@ -14,18 +14,18 @@ public abstract class DamageSourceMixin implements DamageSourceMixinAccess {
     @Shadow @Final private RegistryEntry<DamageType> type;
 
     @Unique
-    private ShieldBreachingComponent klaxaon$shieldBreachingComponent = null;
+    private boolean klaxon$shieldBreaching = false;
 
     @Unique
     @Override
-    public @Nullable ShieldBreachingComponent klaxon$getShieldBreachingComponent() {
-        return klaxaon$shieldBreachingComponent;
+    public boolean klaxon$isShieldBreaching() {
+        return this.klaxon$shieldBreaching;
     }
 
     @Unique
     @Override
-    public void klaxon$setShieldBreachingComponent(ShieldBreachingComponent shieldBreachingComponent) {
-        this.klaxaon$shieldBreachingComponent = shieldBreachingComponent;
+    public void klaxon$setShieldBreaching(boolean breaching) {
+        this.klaxon$shieldBreaching = breaching;
     }
 
     @Override

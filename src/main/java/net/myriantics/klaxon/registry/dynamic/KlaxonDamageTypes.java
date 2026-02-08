@@ -9,8 +9,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 
-import java.util.Optional;
-
 public abstract class KlaxonDamageTypes {
 
     // melee
@@ -59,13 +57,10 @@ public abstract class KlaxonDamageTypes {
      * Utility method to swap out damage types of damage sources.
      *
      * @param damageSource The damage source that you're overwriting the damage type of.
-     * @param damageType   The damage type key to write to the damage source. Nothing happens if key is invalid.
+     * @param entry   The damage type key to write to the damage source. Nothing happens if key is invalid.
      */
-    public static void modifyDamageSourceType(DamageSource damageSource, RegistryKey<DamageType> damageType) {
-        if (damageSource.getSource() instanceof Entity attacker) {
-            Optional<RegistryEntry.Reference<DamageType>> entry = attacker.getWorld().getDamageSources().registry.getEntry(damageType);
-            if (entry.isPresent()) ((DamageSourceMixinAccess) damageSource).klaxon$setDamageType(entry.get());
-        }
+    public static void modifyDamageSourceType(DamageSource damageSource, RegistryEntry<DamageType> entry) {
+        ((DamageSourceMixinAccess) damageSource).klaxon$setDamageType(entry);
     }
 
     public static void init() {
