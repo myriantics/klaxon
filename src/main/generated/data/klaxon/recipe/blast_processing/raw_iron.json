@@ -12,6 +12,13 @@
         "count": 1,
         "id": "klaxon:fractured_raw_iron"
       }
+    },
+    {
+      "chance": 0.3333333333333333,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:fractured_raw_iron"
+      }
     }
   ]
 }

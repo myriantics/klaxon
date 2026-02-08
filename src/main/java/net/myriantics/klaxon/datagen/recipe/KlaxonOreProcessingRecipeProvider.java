@@ -30,8 +30,18 @@ public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
     public void addFracturedOreProcessingRecipes(Item fracturedRawOreItem, Item rawOreItem, Item fracturedOreFragmentsItem, Item oreIngotItem,
                                                  final ResourceCondition... conditions) {
         // blast processing
-        addBlastProcessingRecipe(NamedIngredient.ofItems(rawOreItem), 0.4, 1.4, RecipeOutputCompound.of(new ItemStack(fracturedRawOreItem)), conditions);
-        addBlastProcessingRecipe(NamedIngredient.ofItems(oreIngotItem), 0.5, 1.7, RecipeOutputCompound.of(new ItemStack(fracturedOreFragmentsItem)), conditions);
+        addBlastProcessingRecipe(NamedIngredient.ofItems(rawOreItem), 0.4, 1.4,
+                builder -> builder
+                        .guaranteed(new ItemStack(fracturedRawOreItem))
+                        .chance(new ItemStack(fracturedRawOreItem), 1d/3),
+                conditions
+        );
+        addBlastProcessingRecipe(NamedIngredient.ofItems(oreIngotItem), 0.5, 1.7,
+                builder -> builder
+                        .guaranteed(new ItemStack(fracturedOreFragmentsItem))
+                        .chance(new ItemStack(fracturedOreFragmentsItem), 1d/3),
+                conditions
+        );
 
         // smelting
         addBlastingAndSmeltingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(fracturedOreFragmentsItem), 1.0f, 150, null, "fractured_ores", conditions);
