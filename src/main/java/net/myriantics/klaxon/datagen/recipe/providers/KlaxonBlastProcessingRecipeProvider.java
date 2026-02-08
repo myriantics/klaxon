@@ -34,6 +34,8 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
         // misc
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.COAL), 0.3, 1.4, RecipeOutputCompound.of(KlaxonItems.FRACTURED_COAL, 1.0, KlaxonItems.FRACTURED_COAL, 0.5));
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.CHARCOAL), 0.2, 1.2, RecipeOutputCompound.of(KlaxonItems.FRACTURED_CHARCOAL, 1.0, KlaxonItems.FRACTURED_CHARCOAL, 0.4));
+        addBlastProcessingRecipe(NamedIngredient.fromTag(KlaxonItemTags.HIGH_YIELD_RUBBER_EXTRACTABLE_LOGS), 0.8, 2.0, builder -> builder.guaranteed(new ItemStack(KlaxonItems.RUBBER_GLOB, 3)).chance(new ItemStack(KlaxonItems.RUBBER_GLOB, 3), 0.5));
+        addBlastProcessingRecipe(NamedIngredient.fromTag(KlaxonItemTags.LOW_YIELD_RUBBER_EXTRACTABLE_LOGS), 0.8, 2.0, builder -> builder.guaranteed(new ItemStack(KlaxonItems.RUBBER_GLOB)).chance(new ItemStack(KlaxonItems.RUBBER_GLOB, 2), 0.4));
     }
 
     private void buildExplosiveDisassemblyRecipes() {
