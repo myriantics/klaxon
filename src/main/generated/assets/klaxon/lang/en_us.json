@@ -195,6 +195,7 @@
   "klaxon.attribute.name.player.winch_cable_length": "Winch Cable Length",
   "klaxon.emi.text.explosion_power_info.behavior.klaxon.bedlike_explodable.description": "Only explodes where a Bed would.",
   "klaxon.emi.text.explosion_power_info.behavior.klaxon.creeper_head.description": "Mimicks a Charged Creeper Explosion.",
+  "klaxon.emi.text.explosion_power_info.behavior.klaxon.default.description": "Always spawns a normal explosion.",
   "klaxon.emi.text.explosion_power_info.behavior.klaxon.dragons_breath.description": "Summons a cloud of Dragon's Breath.",
   "klaxon.emi.text.explosion_power_info.behavior.klaxon.end_crystal.description": "Becomes fiery when near Bedrock.",
   "klaxon.emi.text.explosion_power_info.behavior.klaxon.firework_rocket.description": "Explosion power based on firework ingredients. Creates firework explosion.",
