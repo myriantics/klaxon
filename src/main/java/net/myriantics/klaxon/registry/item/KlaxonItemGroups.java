@@ -61,7 +61,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.STEEL_BLOCK);
                 entries.add(KlaxonItems.CRUDE_STEEL_BLOCK);
                 entries.add(KlaxonItems.RUBBER_BLOCK);
-                entries.add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
+                // entries.add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
 
                 // plating storage blocks
                 entries.add(KlaxonItems.STEEL_PLATING_BLOCK);
@@ -163,6 +163,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
 
                 // pipe matrices
+                /*
                 entries.add(KlaxonItems.COPPER_PIPE_MATRIX);
                 entries.add(KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);
                 entries.add(KlaxonItems.WEATHERED_COPPER_PIPE_MATRIX);
@@ -171,6 +172,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_PIPE_MATRIX);
                 entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_PIPE_MATRIX);
                 entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_PIPE_MATRIX);
+                 */
 
                 // casings
                 entries.add(KlaxonItems.STEEL_CASING);
