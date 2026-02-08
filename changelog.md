@@ -1,3 +1,4 @@
+# KLAXON v0.5.0
 # Reworks
 - ### Entity Weight
   - No longer Attribute Modifier-based.
@@ -58,6 +59,9 @@
   - Detonating an explosive that produces a vanilla explosion within either of these blocks will trigger a Nether Reaction Explosion.
   - The main difference between the two Nether Reactor Cores is that the Steel one leaves the casing behind after activation, while the Crude one is destroyed.
     - This makes the proper Nether Reactor Core easier to automate, as replacement Hallnox Pods can be applied via Dispenser.
+- ### Steel Casing
+  - Obligatory tech mod casing block
+  - Currently only used to make Nether Reactor Cores, Steel Chestplates, and Grapple Winches, but will be of grater use in the future.
 - ### Wires & Wire Spool Blocks
   - Prepping for adding machines. It's coming soon, trust me haha.
   - Right now the Steel Wire Spool is used to make the Grapple Winch.

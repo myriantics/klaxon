@@ -50,7 +50,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.CRUDE_NETHER_REACTOR_CORE);
                 entries.add(KlaxonItems.STEEL_CASING);
                 entries.add(KlaxonItems.CRUDE_STEEL_CASING);
-                entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
+                // entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
             })).build();
 
     public static final ItemGroup KLAXON_MATERIALS = FabricItemGroup.builder()
