@@ -39,7 +39,7 @@ public abstract class ClientWorldMixin extends World implements ClientGrappleWin
     }
 
     @Override
-    public ClientGrappleWinchConnectionManager klaxon$get() {
+    public ClientGrappleWinchConnectionManager klaxon$getGrappleWinchConnectionManager() {
         return this.klaxon$grappleWinchConnectionManager;
     }
 }

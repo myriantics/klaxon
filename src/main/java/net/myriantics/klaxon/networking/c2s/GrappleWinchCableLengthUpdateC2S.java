@@ -25,7 +25,7 @@ public record GrappleWinchCableLengthUpdateC2S(double cableLength) implements Cu
 
     public void execute(ServerPlayNetworking.Context context) {
         context.server().execute(() -> {
-            ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) context.player().getServerWorld()).klaxon$get();
+            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get(context.player().getServerWorld());
             @Nullable ServerGrappleWinchConnection connection = manager.fromPlayer(context.player());
             if (connection != null) {
                 connection.setCableLength(this.cableLength);

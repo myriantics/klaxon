@@ -85,8 +85,8 @@ public abstract class KlaxonClientPlayNetworkHandler {
         MinecraftClient client = context.client();
 
         client.execute(() -> {
-            if (client.world instanceof ClientGrappleWinchConnectionManager.Access access) {
-                ClientGrappleWinchConnectionManager manager = access.klaxon$get();
+            if (client.world != null) {
+                ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(client.world);
                 @Nullable ClientGrappleWinchConnection connection = manager.fromConnectionId(packet.connectionId());
                 if (connection == null) {
                     manager.connect(packet);
@@ -102,8 +102,8 @@ public abstract class KlaxonClientPlayNetworkHandler {
         MinecraftClient client = context.client();
 
         client.execute(() -> {
-            if (client.world instanceof ClientGrappleWinchConnectionManager.Access access) {
-                ClientGrappleWinchConnectionManager manager = access.klaxon$get();
+            if (client.world != null) {
+                ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(client.world);
                 manager.disconnect(packet.connectionId(), packet.reason());
                 manager.resetTicksSinceUpdated();
             }

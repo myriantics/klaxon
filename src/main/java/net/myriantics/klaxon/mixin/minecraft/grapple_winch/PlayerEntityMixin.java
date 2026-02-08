@@ -6,7 +6,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -30,10 +29,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;handleAttack(Lnet/minecraft/entity/Entity;)Z")
     )
     private boolean klaxon$tryFastReloadWhenHittingEntity(Entity instance, Entity attacker, Operation<Boolean> original) {
-        @Nullable GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
-        if (manager == null) {
-            throw new AssertionError();
-        }
+        @Nullable GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
 
         if (manager.fromPlayer((PlayerEntity) (Object) this) instanceof ServerGrappleWinchConnection connection) {
             @Nullable GrapplingHook hook = connection.getHook();

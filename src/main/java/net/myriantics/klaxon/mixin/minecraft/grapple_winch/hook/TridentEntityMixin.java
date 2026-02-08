@@ -12,6 +12,7 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -98,7 +99,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     )
     private void klaxon$attemptFastReloading(EntityHitResult entityHitResult, Operation<Void> original) {
         if (entityHitResult.getEntity() instanceof ServerPlayerEntity serverPlayer) {
-            ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) serverPlayer.getServerWorld()).klaxon$get();
+            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get(serverPlayer.getServerWorld());
             @Nullable ServerGrappleWinchConnection connection = manager.fromHook(this);
             if (connection != null && serverPlayer.equals(connection.getPlayer())) {
                 if (this.klaxon$tryFastReload(serverPlayer, serverPlayer.getMainHandStack()) || this.klaxon$tryFastReload(serverPlayer, serverPlayer.getOffHandStack())) {
@@ -115,8 +116,8 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     )
     private void klaxon$preventAgingIfGrappleWinchConnectionPresent(TridentEntity instance, Operation<Void> original) {
         // check if we have a connection - if we do, return early and don't age.
-        if (instance.getWorld() instanceof ServerGrappleWinchConnectionManager.Access access) {
-            ServerGrappleWinchConnectionManager manager = access.klaxon$get();
+        if (instance.getWorld() instanceof ServerWorld serverWorld) {
+            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get(serverWorld);
             if (manager.fromHook(this) != null) {
                 return;
             }
@@ -131,7 +132,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
             at = @At(value = "MIXINEXTRAS:EXPRESSION")
     )
     private boolean klaxon$dontReturnWithLoyaltyIfRetracting(boolean original) {
-        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
         // this makes it so that loyalty tridents are actually useful as a grappling hook
         // you just have to start retracting right before they land and then release when you want them to be recalled

@@ -197,6 +197,15 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
     }
 
     public interface Access extends GrappleWinchConnectionManager.Access {
-        ServerGrappleWinchConnectionManager klaxon$get();
+        ServerGrappleWinchConnectionManager klaxon$getGrappleWinchConnectionManager();
+    }
+
+    public static ServerGrappleWinchConnectionManager get(ServerWorld world) {
+        @Nullable ServerGrappleWinchConnectionManager manager = ((Access) world).klaxon$getGrappleWinchConnectionManager();
+        if (manager == null) {
+            throw new AssertionError("Grapple Winch Connection Manager not present in " + world + '.');
+        } else {
+            return manager;
+        }
     }
 }

@@ -22,7 +22,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     public void klaxon$resetGrappleWinchTargetPosition(ClientCommandC2SPacket packet, CallbackInfo ci) {
         if (!player.isOnGround()) {
-            ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) player.getServerWorld()).klaxon$get();
+            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get(player.getServerWorld());
             @Nullable ServerGrappleWinchConnection connection = manager.fromPlayer(this.player);
             if (connection != null) {
                 connection.resetCableLength();

@@ -25,7 +25,7 @@ public record GrappleWinchCableForceDisconnectC2S(CableDetachmentReason reason) 
     public void execute(ServerPlayNetworking.Context context) {
         // detach the player's grapple cable if they wish it to be detached
         context.server().execute(() -> {
-            ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) context.player().getServerWorld()).klaxon$get();
+            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get(context.player().getServerWorld());
             ServerGrappleWinchConnection connection = manager.fromPlayer(context.player());
             if (connection != null) {
                 manager.disconnect(connection.getId(), reason);

@@ -25,7 +25,7 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
     )
     private float klaxon$cancelRotationUpdatesWhenRetracting(float val1, float val2, Operation<Float> original) {
         if (this instanceof GrapplingHook hook) {
-            GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
+            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
             @Nullable GrappleWinchConnection connection = manager.fromHook(hook);
             if (connection != null && connection.isRetracting()) {
                 return -val2;

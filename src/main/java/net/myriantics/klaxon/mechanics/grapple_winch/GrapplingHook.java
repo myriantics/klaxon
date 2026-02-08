@@ -14,7 +14,6 @@ import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,9 +44,9 @@ public interface GrapplingHook {
             return false;
         }
 
-        @Nullable GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
-        @Nullable GrappleWinchConnection playerConnection = manager == null ? null : manager.fromPlayer(player);
-        @Nullable GrappleWinchConnection selfConnection = manager == null ? null : manager.fromHook(this);
+        @Nullable GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
+        @Nullable GrappleWinchConnection playerConnection = manager.fromPlayer(player);
+        @Nullable GrappleWinchConnection selfConnection = manager.fromHook(this);
 
         // make sure grapple winch is empty - so there's space to reload into
         ChargedProjectilesComponent projectiles = winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);

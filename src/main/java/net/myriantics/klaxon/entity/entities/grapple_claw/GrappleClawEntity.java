@@ -7,8 +7,6 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.decoration.BlockAttachedEntity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -45,9 +43,7 @@ import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonTrackedDataHandlerRegistry;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
-import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
@@ -107,8 +103,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     public ActionResult interact(PlayerEntity player, Hand hand) {
         ItemStack handStack = player.getStackInHand(hand);
 
-        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) player.getWorld()).klaxon$get();
-        assert manager != null;
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(player.getWorld());
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
 
         if (connection != null) {
@@ -143,7 +138,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             return false;
         } else {
 
-            ServerGrappleWinchConnectionManager manager = ((ServerGrappleWinchConnectionManager.Access) world).klaxon$get();
+            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get((ServerWorld) world);
             @Nullable GrappleWinchConnection connection = manager.fromHook(this);
 
             // players in creative can instantly kill grapple claws with no drop
@@ -179,7 +174,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     private void playSoundAtBothCableEndsIfPossible(SoundEvent soundEvent, float volume, float pitch) {
-        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
         if (manager instanceof ServerGrappleWinchConnectionManager serverManager) {
             ServerGrappleWinchConnection connection = serverManager.fromHook(this);
             if (connection == null) {
@@ -226,10 +221,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             return;
         }
 
-        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
-        if (manager == null) {
-            throw new AssertionError();
-        }
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
 
         // if we hit the attached player, attempt to fast reload
@@ -287,10 +279,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     public void tick() {
         World world = this.getWorld();
 
-        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
-        if (manager == null) {
-            throw new AssertionError();
-        }
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
         if (connection != null && connection.isRetracting()) {
             this.draggedItemsContainer.tick(connection);
@@ -319,10 +308,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     @Override
     protected boolean tryPickup(PlayerEntity pickupPlayer) {
-        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
-        if (manager == null) {
-            throw new AssertionError();
-        }
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
         @Nullable GrappleWinchConnection fromHook = manager.fromHook(this);
         @Nullable GrappleWinchConnection fromPlayer = manager.fromPlayer(pickupPlayer);
 
@@ -359,7 +345,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     public boolean isConnected() {
-        return ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get().fromHook(this) != null;
+        return GrappleWinchConnectionManager.get(this.getWorld()).fromHook(this) != null;
     }
 
     public boolean isAttachedToPlayer(PlayerEntity player) {
@@ -367,7 +353,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     public @Nullable PlayerEntity getAttachedPlayer() {
-        return ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get().fromHook(this) instanceof GrappleWinchConnection connection ? connection.getPlayer() : null;
+        return GrappleWinchConnectionManager.get(this.getWorld()).fromHook(this) instanceof GrappleWinchConnection connection ? connection.getPlayer() : null;
     }
 
     @Override
@@ -599,10 +585,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 return;
             }
 
-            GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) GrappleClawEntity.this.getWorld()).klaxon$get();
-            if (manager == null) {
-                throw new AssertionError();
-            }
+            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(GrappleClawEntity.this.getWorld());
             @Nullable GrappleWinchConnection connection = manager.fromHook(GrappleClawEntity.this);
 
             // clear grappled entity if it was removed
@@ -731,7 +714,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 return false;
             }
 
-            GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) GrappleClawEntity.this.getWorld()).klaxon$get();
+            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(GrappleClawEntity.this.getWorld());
             if (manager == null) {
                 throw new AssertionError();
             }

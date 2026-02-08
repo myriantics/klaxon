@@ -27,8 +27,7 @@ public abstract class EntityMixin {
     public void klaxon$cancelDamageVelocityIfMidairWithGrappleWinch(CallbackInfo ci) {
         // this is here to fix an issue with players being flung downwards if they get damaged at all when grappling.
         if (!isOnGround() && (Object) this instanceof PlayerEntity player) {
-            GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) this.getWorld()).klaxon$get();
-            assert manager != null;
+            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
             @Nullable GrappleWinchConnection connection = manager.fromPlayer(player);
             if (connection != null) {
                 ci.cancel();

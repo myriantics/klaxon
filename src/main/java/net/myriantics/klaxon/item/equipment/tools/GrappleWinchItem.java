@@ -102,7 +102,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
         // if this is the first projectile shot, attach the server player's cable to it.
         if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrapplingHook hook) {
-            ((ServerGrappleWinchConnectionManager.Access) serverPlayer.getServerWorld()).klaxon$get().connect(serverPlayer, hook);
+            ServerGrappleWinchConnectionManager.get(serverPlayer.getServerWorld()).connect(serverPlayer, hook);
         }
     }
 
@@ -115,8 +115,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
     @Override
     public void onStoppedUsing(ItemStack winchStack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity playerEntity) {
-            GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
-            assert manager != null;
+            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
             @Nullable GrappleWinchConnection connection = manager.fromPlayer(playerEntity);
 
             if (connection == null) {
@@ -173,10 +172,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) world).klaxon$get();
-        if (manager == null) {
-            throw new AssertionError("Grapple Winch Connection Manager not found in world " + world);
-        }
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
         @Nullable GrappleWinchConnection connection = manager.fromPlayer(user);
         ItemStack winchStack = user.getStackInHand(hand);
         ItemStack offhandStack = user.getStackInHand(hand.equals(Hand.OFF_HAND) ? Hand.MAIN_HAND : Hand.OFF_HAND);
@@ -235,8 +231,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        GrappleWinchConnectionManager manager = ((GrappleWinchConnectionManager.Access) player.getWorld()).klaxon$get();
-        assert manager != null;
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(player.getWorld());
         @Nullable GrappleWinchConnection connection = manager.fromPlayer(player);
 
         if (clickType.equals(ClickType.RIGHT) && slot.canTakePartial(player)) {

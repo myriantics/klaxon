@@ -18,7 +18,7 @@ public abstract class PlayerManagerMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;hasVehicle()Z")
     )
     private void klaxon$markConnectionAsDormantWhenLoggingOut(ServerPlayerEntity player, CallbackInfo ci) {
-        @Nullable ServerGrappleWinchConnection connection = ((ServerGrappleWinchConnectionManager.Access) player.getServerWorld()).klaxon$get().fromPlayer(player);
+        @Nullable ServerGrappleWinchConnection connection = ServerGrappleWinchConnectionManager.get(player.getServerWorld()).fromPlayer(player);
         if (connection != null) {
             connection.makeDormant();
         }

@@ -64,7 +64,7 @@ public abstract class ServerWorldMixin extends World implements ServerGrappleWin
     }
 
     @Override
-    public ServerGrappleWinchConnectionManager klaxon$get() {
+    public ServerGrappleWinchConnectionManager klaxon$getGrappleWinchConnectionManager() {
         return this.klaxon$connectionManager;
     }
 }

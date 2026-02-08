@@ -9,6 +9,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
 import net.myriantics.klaxon.networking.c2s.GrappleWinchCableForceDisconnectC2S;
@@ -141,6 +142,15 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
     }
 
     public interface Access extends GrappleWinchConnectionManager.Access {
-        ClientGrappleWinchConnectionManager klaxon$get();
+        ClientGrappleWinchConnectionManager klaxon$getGrappleWinchConnectionManager();
+    }
+
+    public static ClientGrappleWinchConnectionManager get(ClientWorld world) {
+        @Nullable ClientGrappleWinchConnectionManager manager = ((Access) world).klaxon$getGrappleWinchConnectionManager();
+        if (manager == null) {
+            throw new AssertionError("Grapple Winch Connection Manager not present in " + world + '.');
+        } else {
+            return manager;
+        }
     }
 }

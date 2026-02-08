@@ -5,7 +5,6 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -22,7 +21,7 @@ public abstract class KlaxonItemModelPredicates {
         boolean supportsCable = stack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(stack);
 
         if (entity instanceof AbstractClientPlayerEntity player && supportsCable) {
-            ClientGrappleWinchConnectionManager manager = ((ClientGrappleWinchConnectionManager.Access) player.getWorld()).klaxon$get();
+            ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(world);
             @Nullable ClientGrappleWinchConnection connection = manager.fromPlayer(player);
 
             if (connection != null) {
@@ -46,7 +45,7 @@ public abstract class KlaxonItemModelPredicates {
     }));
 
     public static final Identifier GRAPPLE_WINCH_RETRACTING = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.RETRACTING, (((stack, world, entity, seed) -> {
-        ClientGrappleWinchConnectionManager manager = ((ClientGrappleWinchConnectionManager.Access) world).klaxon$get();
+        ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(world);
         /*if (entity instanceof PlayerEntity player && manager.fromPlayer(player) instanceof ClientGrappleWinchConnection connection && connection.isRetracting()) {
             return 1.0f;
         }*/

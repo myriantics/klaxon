@@ -32,7 +32,7 @@ public abstract class PersistentProjectileEntityMixin extends ProjectileEntity {
     private void klaxon$cancelGravityIfRetracting(PersistentProjectileEntity instance, Operation<Void> original) {
 
         if (instance instanceof GrapplingHook hook && this.getWorld() instanceof ServerWorld serverWorld) {
-            ServerGrappleWinchConnection connection = ((ServerGrappleWinchConnectionManager.Access) serverWorld).klaxon$get().fromHook(hook);
+            ServerGrappleWinchConnection connection = ServerGrappleWinchConnectionManager.get(serverWorld).fromHook(hook);
 
             if (connection != null && (connection.isHookAnchored() || connection.isRetracting())) {
                 return;

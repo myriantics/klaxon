@@ -15,7 +15,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
-import net.myriantics.klaxon.KlaxonDataGenerator;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
@@ -23,7 +22,6 @@ import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnect
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
-import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import org.jetbrains.annotations.Nullable;
@@ -172,7 +170,7 @@ public abstract class GrappleClawBlockDestructionHelper {
         if (attachedPlayer == null) {
             return false;
         }
-        GrappleWinchConnection connection = ((GrappleWinchConnectionManager.Access) grappleClaw.getWorld()).klaxon$get().fromHook(grappleClaw);
+        GrappleWinchConnection connection = GrappleWinchConnectionManager.get(world).fromHook(grappleClaw);
         return connection != null && connection.isRetracting() && state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE);
     }
 

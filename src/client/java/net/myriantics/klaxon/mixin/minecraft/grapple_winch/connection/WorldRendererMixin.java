@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch.connection;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
@@ -9,7 +8,6 @@ import net.minecraft.util.profiler.Profiler;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,8 +38,7 @@ public abstract class WorldRendererMixin {
             @Local Profiler profiler
     ) {
         profiler.push("grapple_winch_cable");
-        assert this.world != null;
-        ClientGrappleWinchConnectionManager manager = ((ClientGrappleWinchConnectionManager.Access) this.world).klaxon$get();
+        ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(this.world);
         manager.render(this.world, camera, tickCounter, matrixStack, immediate);
         profiler.pop();
     }

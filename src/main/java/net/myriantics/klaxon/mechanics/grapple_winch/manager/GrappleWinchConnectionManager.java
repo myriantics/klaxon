@@ -48,8 +48,17 @@ public abstract class GrappleWinchConnectionManager extends PersistentState {
     }
 
     public interface Access {
-        default GrappleWinchConnectionManager klaxon$get() {
+        default GrappleWinchConnectionManager klaxon$getGrappleWinchConnectionManager() {
             return null;
+        }
+    }
+
+    public static GrappleWinchConnectionManager get(World world) {
+        @Nullable GrappleWinchConnectionManager manager = ((Access) world).klaxon$getGrappleWinchConnectionManager();
+        if (manager == null) {
+            throw new AssertionError("Grapple Winch Connection Manager not present in " + world + '.');
+        } else {
+            return manager;
         }
     }
 }

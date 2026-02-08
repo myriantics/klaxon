@@ -5,14 +5,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -32,7 +30,7 @@ public abstract class GrappleWinchItemMixin {
         }
 
         // yoink the connection
-        ClientGrappleWinchConnectionManager manager = ((ClientGrappleWinchConnectionManager.Access) player.getWorld()).klaxon$get();
+        ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(MinecraftClient.getInstance().world);
         @Nullable ClientGrappleWinchConnection connection = manager.fromPlayer(player);
 
         // initialize max cable length
