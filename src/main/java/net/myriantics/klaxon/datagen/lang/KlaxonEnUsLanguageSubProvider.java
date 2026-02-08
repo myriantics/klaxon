@@ -9,6 +9,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.trim.ArmorTrimMaterial;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
@@ -33,6 +34,10 @@ public abstract class KlaxonEnUsLanguageSubProvider {
 
     protected void addEnchantment(RegistryKey<Enchantment> enchantment, String name) {
         builder.addEnchantment(enchantment, name);
+    }
+
+    protected void addTrimMaterial(RegistryKey<ArmorTrimMaterial> material, String name) {
+        builder.add("trim_material." + material.getValue().getNamespace() + "." + material.getValue().getPath(), name);
     }
 
     protected void addBlock(Block block, String name) {

@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.lang.providers.gui;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageSubProvider;
+import net.myriantics.klaxon.registry.item.KlaxonArmorTrimMaterials;
 
 public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubProvider {
     public KlaxonEnUsTextLanguageProvider(KlaxonEnUsLanguageProvider provider, FabricLanguageProvider.TranslationBuilder builder) {
@@ -27,5 +28,6 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
 
     private void generateMiscText() {
         addText("blast_processor_creeper_name", "a Blast Processor mimicking a Charged Creeper. Expensive death right there.");
+        addTrimMaterial(KlaxonArmorTrimMaterials.STEEL, "Steel Material");
     }
 }

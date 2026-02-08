@@ -383,5 +383,6 @@
   "tag.mob_effect.klaxon.hastening_effects": "Hastening Effects",
   "tag.mob_effect.klaxon.heavy_effects": "Heavy Effects",
   "tag.mob_effect.klaxon.strengthening_effects": "Strengthening Effects",
-  "tag.mob_effect.klaxon.weakening_effects": "Weakening Effects"
+  "tag.mob_effect.klaxon.weakening_effects": "Weakening Effects",
+  "trim_material.klaxon.steel": "Steel Material"
 }

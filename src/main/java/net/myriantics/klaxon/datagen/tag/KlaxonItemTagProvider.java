@@ -328,8 +328,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
         getOrCreateTagBuilder(ItemTags.TRIM_MATERIALS)
-                .add(KlaxonItems.STEEL_INGOT)
-                .add(KlaxonItems.CRUDE_STEEL_INGOT);
+                .add(KlaxonItems.STEEL_INGOT);
         getOrCreateTagBuilder(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)
                 .forceAddTag(ConventionalItemTags.MINING_TOOL_TOOLS);
         getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAW_INSTAKILL)

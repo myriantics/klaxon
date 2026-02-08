@@ -38,13 +38,6 @@ public class KlaxonArmorTrimMaterialProvider extends FabricDynamicRegistryProvid
                 Style.EMPTY.withColor(7300466),
                 0.3f
         );
-        register(
-                registry,
-                KlaxonArmorTrimMaterials.CRUDE_STEEL,
-                KlaxonItems.CRUDE_STEEL_INGOT,
-                Style.EMPTY.withColor(7632002),
-                0.2f
-        );
     }
 
     private static void register(Registerable<ArmorTrimMaterial> registry, RegistryKey<ArmorTrimMaterial> key, Item ingredient, Style style, float itemModelIndex) {
