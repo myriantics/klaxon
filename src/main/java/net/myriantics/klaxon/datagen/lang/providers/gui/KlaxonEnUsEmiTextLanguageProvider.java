@@ -25,6 +25,8 @@ public final class KlaxonEnUsEmiTextLanguageProvider extends KlaxonEnUsLanguageS
         addEmiExplosionPowerInfo("explosion_power.min", "Exp. Power Min: %1$s");
         addEmiExplosionPowerInfo("explosion_power.max", "Exp. Power Max: %1$s");
 
+        addBehaviorDescription("default", "Always spawns a normal explosion.");
+
         addBehaviorDescription("bedlike_explodable", "Only explodes where a Bed would.");
 
         addBehaviorDescription("glowstone", "Only explodes where a Respawn Anchor would.");
