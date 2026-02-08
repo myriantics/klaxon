@@ -14,10 +14,6 @@ public abstract class KlaxonGameRules {
             "dispensersPerformWorldItemInteractionRecipes", GameRules.Category.MISC, true
     );
 
-    public static final GameRules.Key<GameRules.IntRule> GRAPPLE_CLAW_VEINMINE_RADIUS = registerIntRule(
-            "grappleClawVeinmineRadius", GameRules.Category.PLAYER, 8, 0, 64
-    );
-
     private static GameRules.Key<GameRules.BooleanRule> registerBooleanRule(String name, GameRules.Category category, boolean defaultValue) {
         return GameRuleRegistry.register(KlaxonCommon.locateAlt(name), category, GameRuleFactory.createBooleanRule(defaultValue));
     }
