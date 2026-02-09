@@ -1,0 +1,16 @@
+# Nether Reaction
+
+This recipe type is used by KLAXON's **Nether Reactor Cores**. It is triggered via a vanilla explosion originating from within a **Nether Reactor Core**, which overrides the explosion behavior to convert all blocks that would be destroyed into their **Nether-reacted counterparts**.
+
+### Example Nether Reaction Recipe JSON
+
+```
+{
+  "type": "klaxon:nether_reaction",
+  "output_block": "minecraft:crimson_nylium",
+  "valid_blocks_tag": "#klaxon:nether_reaction/crimson_nylium_convertible"
+}
+```
+
+### Good To Know
+- **Crude Nether Reactor Cores** are fully destroyed upon use, while **Nether Reactor Cores** leave their casing behind for reloading and reuse.

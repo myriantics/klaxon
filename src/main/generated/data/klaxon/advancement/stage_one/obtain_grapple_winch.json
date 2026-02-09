@@ -1,0 +1,41 @@
+{
+  "parent": "klaxon:stage_one/use_cable_shears_to_make_metal_wire",
+  "criteria": {
+    "obtain_grapple_winch": {
+      "conditions": {
+        "items": [
+          {
+            "items": "klaxon:grapple_winch"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.obtain_grapple_winch.description"
+    },
+    "icon": {
+      "components": {
+        "minecraft:charged_projectiles": [
+          {
+            "count": 1,
+            "id": "klaxon:steel_grapple_claw"
+          }
+        ]
+      },
+      "count": 1,
+      "id": "klaxon:grapple_winch"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.obtain_grapple_winch.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_grapple_winch"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

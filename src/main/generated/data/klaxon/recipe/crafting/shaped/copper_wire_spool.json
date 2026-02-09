@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "wire_spools",
+  "key": {
+    "F": {
+      "tag": "c:fences/wooden"
+    },
+    "W": {
+      "item": "klaxon:copper_wire"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "WFW",
+    "WWW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:copper_wire_spool"
+  }
+}

@@ -4,7 +4,6 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 
 public abstract class KlaxonItemTags {
     // makeshift tags
@@ -24,20 +23,18 @@ public abstract class KlaxonItemTags {
             createTag("crude_inclusive_steel_blocks");
     public static final TagKey<Item> CRUDE_INCLUSIVE_STEEL_CASING =
             createTag("crude_inclusive_steel_casings");
-    public static final TagKey<Item> MOLTEN_INCLUSIVE_RUBBER_GLOBS =
-            createTag("molten_inclusive_rubber_globs");
-    public static final TagKey<Item> MOLTEN_INCLUSIVE_RUBBER_SHEETS =
-            createTag("molten_inclusive_rubber_sheets");
     public static final TagKey<Item> MOLTEN_INCLUSIVE_RUBBER_BLOCKS =
             createTag("molten_inclusive_rubber_blocks");
 
     // crafting tags
-    public static final TagKey<Item> OVERWORLD_RUBBER_EXTRACTABLE_LOGS =
-            createTag("overworld_rubber_extractable_logs");
-    public static final TagKey<Item> NETHER_RUBBER_EXTRACTABLE_LOGS =
-            createTag("nether_rubber_extractable_logs");
+    public static final TagKey<Item> LOW_YIELD_RUBBER_EXTRACTABLE_LOGS =
+            createTag("low_yield_rubber_extractable_logs");
+    public static final TagKey<Item> HIGH_YIELD_RUBBER_EXTRACTABLE_LOGS =
+            createTag("high_yield_rubber_extractable_logs");
     public static final TagKey<Item> GEAR_GRIP_MATERIALS =
             createTag("gear_grip_materials");
+    public static final TagKey<Item> WAXING_STATUS_INCLUSIVE_COPPER_WIRE_SPOOL_BLOCKS =
+            createTag("waxing_status_inclusive_copper_wire_spool_blocks");
 
     // anvil related tags
     public static final TagKey<Item> INFINITELY_REPAIRABLE =
@@ -46,8 +43,6 @@ public abstract class KlaxonItemTags {
             createTag("no_xp_cost_repairable");
     public static final TagKey<Item> UNENCHANTABLE =
             createTag("unenchantable");
-    public static final TagKey<Item> STEEL_REPAIRABLE_FLINT_AND_STEEL =
-            createTag("steel_repairable_flint_and_steel");
 
     // behavior tags
     public static final TagKey<Item> HEAVY_EQUIPMENT =
@@ -60,8 +55,19 @@ public abstract class KlaxonItemTags {
             createTag("recipe_processing_hammers");
     public static final TagKey<Item> RECIPE_PROCESSING_WIRECUTTERS =
             createTag("recipe_processing_wirecutters");
-    public static final TagKey<Item> RECIPE_PROCESSING_SHEARS =
-            createTag("recipe_processing_shears");
+    public static final TagKey<Item> EFFECTIVE_AGAINST_METAL_ENTITIES =
+            createTag("effective_against_metal_entities");
+    public static final TagKey<Item> GRAPPLE_CLAW_INSTAKILL =
+            createTag("grapple_claw_instakill");
+    public static final TagKey<Item> GRAPPLE_WINCH_CABLE_DETACHERS =
+            createTag("grapple_winch_cable_detachers");
+
+    public static final TagKey<Item> PICK_BLOCK_SLOT_REPLACEMENT_DISCOURAGED =
+            createTag("pick_block_slot_replacement_discouraged");
+
+    // enchantment tags
+    public static final TagKey<Item> STREAMLINE_ENCHANTABLE =
+            createEnchantableTag("streamline");
 
     // gear categories
     public static final TagKey<Item> STEEL_ARMOR =
@@ -82,6 +88,7 @@ public abstract class KlaxonItemTags {
 
     // category tags
     public static final TagKey<Item> FRACTURED_MATERIALS = createTag("fractured_materials");
+    public static final TagKey<Item> GRAPPLE_CLAWS = createTag("grapple_claws");
 
     // fractured materials
     public static final TagKey<Item> FRACTURED_COALS = createFracturedMaterialTag("coal");
@@ -101,6 +108,10 @@ public abstract class KlaxonItemTags {
 
     private static TagKey<Item> createToolTag(String name) {
         return createTag("tools/" + name);
+    }
+
+    private static TagKey<Item> createEnchantableTag(String name) {
+        return createTag("enchantable/" + name);
     }
 
     private static TagKey<Item> createTag(String name) {

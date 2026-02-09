@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "#minecraft:no_knockback",
+      "required": false
+    }
+  ]
+}

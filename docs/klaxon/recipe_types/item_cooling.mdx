@@ -1,0 +1,22 @@
+# Item Cooling
+
+A recipe type that lets you cool items down into a more usable state.
+
+This recipe is performed with dropped items - these items are treates as if they were on fire, and a **Cooling Recipe** is performed whenever they are extinguished.
+
+### Example Item Cooling Recipe JSON
+
+```
+{
+  "type": "klaxon:item_cooling",
+  "input_ingredient": {
+    "item": "klaxon:molten_rubber_sheet"
+  },
+  "output_item": {
+    "id": "klaxon:rubber_sheet"
+  }
+}
+```
+
+### Good To Know
+- Item Cooling recipes can be performed with anything that extinguishes fire.

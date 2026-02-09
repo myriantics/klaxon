@@ -1,5 +1,7 @@
 {
   "type": "klaxon:nether_reaction",
-  "output_block": "minecraft:soul_soil",
-  "valid_blocks": "#klaxon:nether_reaction/soul_soil_convertible"
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/soul_soil_convertible"
+  },
+  "output_block": "minecraft:soul_soil"
 }

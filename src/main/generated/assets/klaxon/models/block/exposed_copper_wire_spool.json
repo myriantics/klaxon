@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "klaxon:block/exposed_copper_wire_spool_top",
+    "side": "klaxon:block/exposed_copper_wire_spool_side"
+  }
+}

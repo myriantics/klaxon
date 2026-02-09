@@ -1,0 +1,6 @@
+{
+  "parent": "klaxon:item/grapple_winch",
+  "textures": {
+    "layer0": "klaxon:item/grapple_winch/unloaded"
+  }
+}

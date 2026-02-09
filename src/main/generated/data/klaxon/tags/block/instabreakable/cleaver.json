@@ -1,7 +1,5 @@
 {
   "values": [
-    "#c:rubber",
-    "#c:sculk",
     "#c:vines",
     "#c:pumpkins",
     "#c:ropes",
@@ -13,8 +11,20 @@
     "#minecraft:beehives",
     "#minecraft:candles",
     "#minecraft:leaves",
-    "klaxon:hallnox_pod",
-    "minecraft:cocoa",
+    "minecraft:sculk_vein",
+    "minecraft:sculk",
+    "minecraft:sculk_catalyst",
+    "minecraft:sculk_sensor",
+    "minecraft:sculk_shrieker",
+    "minecraft:calibrated_sculk_sensor",
+    "minecraft:chorus_flower",
+    "minecraft:chorus_plant",
+    "klaxon:rubber_block",
+    "klaxon:rubber_sheet_block",
+    "klaxon:molten_rubber_block",
+    "minecraft:mushroom_stem",
+    "minecraft:red_mushroom_block",
+    "minecraft:brown_mushroom_block",
     "minecraft:ochre_froglight",
     "minecraft:pearlescent_froglight",
     "minecraft:verdant_froglight",
@@ -22,11 +32,14 @@
     "minecraft:moss_carpet",
     "minecraft:azalea",
     "minecraft:flowering_azalea",
+    "klaxon:hallnox_pod",
+    "minecraft:cocoa",
     "minecraft:shroomlight",
     "minecraft:melon",
     "minecraft:bamboo",
     "minecraft:honeycomb_block",
     "minecraft:glow_lichen",
-    "minecraft:cake"
+    "minecraft:cake",
+    "minecraft:cactus"
   ]
 }

@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosionPower": 6.0,
-  "ingredient": {
-    "item": "minecraft:creeper_head"
-  },
-  "isHidden": false,
-  "producesFire": false
-}

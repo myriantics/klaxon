@@ -1,0 +1,25 @@
+# Entity Weight
+
+Entity Weight is a system in KLAXON that changes how several different abilities, items, and mechanics behave. It's inspired by ULTRAKILL's system of heavy and light enemies.
+
+Whether an entity is considered heavy or not depends on several factors, including **worn equipment, entity width, and status effects**.
+Several tags are also offered to allow for more fine-tuned configuration of Entity Weight.
+
+## How Entity Weight is calculated, in order of priority:
+- If the given entity type is in the **```#klaxon:light_entities```** tag, it is considered **LIGHT** and calculations stop there.
+- If the previous check fails and the given entity type is in the **```#klaxon:heavy_entities```** tag, it is considered **HEAVY**.
+- If the entity is **wider than a boat**, it is considered **HEAVY**.
+- If the entity is a **falling block that cannot be moved by pistons when solid**, it is considered **HEAVY**.
+- If the entity is **wearing anything in the ```#klaxon:heavy_equipment``` tag**, it is considered **HEAVY**.
+- If the entity has **any status effect in the ```#klaxon:heavy_effects``` tag**, it is considered **HEAVY**.
+- If all of the above checks fail (besides the first one), an entity is considered **LIGHT**.
+
+## Effects of Entity Weight
+- **Hammer WallJumping**
+    - If the hammer wielder or the wielder's mount is **HEAVY**, WallJump strength is cut in half. Combined with a Weakness debuff, this can disable Hammer WallJumping completely.
+- **Grapple Winch**
+    - When an entity is **HEAVY**, it is NOT movable by the Grapple Winch in any way.
+    - If the wielder is **HEAVY**, they can de-anchor a connected, anchored Grapple Claw.
+
+## Trivia
+- Originally, Entity Weight operated on a scaling value, however now it is a simple binary condition - an entity is either **heavy** or **light**. It was even an attribute modifier at one point!

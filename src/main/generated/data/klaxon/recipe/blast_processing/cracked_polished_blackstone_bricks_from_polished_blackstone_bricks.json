@@ -1,0 +1,17 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosion_power_max": 0.8,
+  "explosion_power_min": 0.3,
+  "input_ingredient": {
+    "item": "minecraft:polished_blackstone_bricks"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:cracked_polished_blackstone_bricks"
+      }
+    }
+  ]
+}

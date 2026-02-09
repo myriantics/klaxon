@@ -22,20 +22,7 @@ public abstract class KlaxonAttributeModifierComponentModifications {
             original = SteelArmorItem.appendAttributeModifiers(original, AttributeModifierSlot.forEquipmentSlot(slot));
         }
 
-        // apply netherite armor modifiers if it's netherite armor
-        if (material.equals(ArmorMaterials.NETHERITE)) {
-            original = applyNetheriteArmorComponentModifications(original, AttributeModifierSlot.forEquipmentSlot(slot));
-        }
-
         return original;
-    }
-
-    private static AttributeModifiersComponent applyNetheriteArmorComponentModifications(AttributeModifiersComponent component, AttributeModifierSlot slot) {
-        return component.with(
-                KlaxonEntityAttributes.GENERIC_WEIGHT,
-                new EntityAttributeModifier(idFromSlot(KlaxonCommon.locate("netherite_armor_weight_modifier_id"), slot), 0.25f, EntityAttributeModifier.Operation.ADD_VALUE),
-                slot
-        );
     }
 
     public static Identifier idFromSlot(Identifier id, AttributeModifierSlot slot) {

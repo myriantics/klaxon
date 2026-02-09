@@ -2,7 +2,7 @@ package net.myriantics.klaxon.registry.worldgen;
 
 import net.minecraft.block.SaplingGenerator;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.api.DirectionalSaplingGenerator;
+import net.myriantics.klaxon.block.functional.hallnox_pod.DirectionalSaplingGenerator;
 import net.myriantics.klaxon.datagen.KlaxonFeatureProvider;
 
 import java.util.Optional;

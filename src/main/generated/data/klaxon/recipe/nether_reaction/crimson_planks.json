@@ -1,5 +1,7 @@
 {
   "type": "klaxon:nether_reaction",
-  "output_block": "minecraft:crimson_planks",
-  "valid_blocks": "#klaxon:nether_reaction/crimson_planks_convertible"
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/crimson_planks_convertible"
+  },
+  "output_block": "minecraft:crimson_planks"
 }

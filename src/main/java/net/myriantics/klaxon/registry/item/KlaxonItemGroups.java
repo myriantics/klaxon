@@ -1,6 +1,8 @@
 package net.myriantics.klaxon.registry.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -27,13 +29,16 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.STEEL_CABLE_SHEARS);
                 entries.add(KlaxonItems.STEEL_WRENCH);
                 entries.add(KlaxonItems.STEEL_CLEAVER);
-                entries.add(Items.FLINT_AND_STEEL);
+                entries.add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
 
                 entries.add(KlaxonItems.STEEL_HELMET);
                 entries.add(KlaxonItems.STEEL_CHESTPLATE);
                 entries.add(KlaxonItems.STEEL_LEGGINGS);
                 entries.add(KlaxonItems.STEEL_BOOTS);
+                entries.add(KlaxonItems.CRESTED_STEEL_HELMET);
 
+                entries.add(KlaxonItems.GRAPPLE_WINCH);
+                entries.add(KlaxonItems.STEEL_GRAPPLE_CLAW);
             })).build();
 
     public static final ItemGroup KLAXON_MACHINES = FabricItemGroup.builder()
@@ -45,6 +50,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.CRUDE_NETHER_REACTOR_CORE);
                 entries.add(KlaxonItems.STEEL_CASING);
                 entries.add(KlaxonItems.CRUDE_STEEL_CASING);
+                // entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
             })).build();
 
     public static final ItemGroup KLAXON_MATERIALS = FabricItemGroup.builder()
@@ -55,7 +61,7 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.STEEL_BLOCK);
                 entries.add(KlaxonItems.CRUDE_STEEL_BLOCK);
                 entries.add(KlaxonItems.RUBBER_BLOCK);
-                entries.add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
+                // entries.add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
 
                 // plating storage blocks
                 entries.add(KlaxonItems.STEEL_PLATING_BLOCK);
@@ -64,6 +70,12 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.GOLD_PLATING_BLOCK);
                 entries.add(KlaxonItems.COPPER_PLATING_BLOCK);
                 entries.add(KlaxonItems.RUBBER_SHEET_BLOCK);
+
+                // wire spools / wire storage blocks
+                entries.add(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.IRON_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK);
 
                 // casings and hulls
                 entries.add(KlaxonItems.STEEL_CASING);
@@ -76,10 +88,10 @@ public abstract class KlaxonItemGroups {
                 // nuggets
                 entries.add(KlaxonItems.STEEL_NUGGET);
                 entries.add(KlaxonItems.CRUDE_STEEL_NUGGET);
+                entries.add(KlaxonItems.COPPER_NUGGET);
 
                 // raw materials
                 entries.add(KlaxonItems.RUBBER_GLOB);
-                entries.add(KlaxonItems.MOLTEN_RUBBER_GLOB);
 
                 // hallnox
                 entries.add(KlaxonItems.HALLNOX_POD);
@@ -91,7 +103,12 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.CRUDE_STEEL_PLATE);
                 entries.add(KlaxonItems.STEEL_PLATE);
                 entries.add(KlaxonItems.RUBBER_SHEET);
-                entries.add(KlaxonItems.MOLTEN_RUBBER_SHEET);
+
+                // wires
+                entries.add(KlaxonItems.STEEL_WIRE);
+                entries.add(KlaxonItems.IRON_WIRE);
+                entries.add(KlaxonItems.GOLD_WIRE);
+                entries.add(KlaxonItems.COPPER_WIRE);
 
                 // blends
                 entries.add(KlaxonItems.CRUDE_STEEL_MIXTURE);
@@ -131,6 +148,31 @@ public abstract class KlaxonItemGroups {
                 entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
                 entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
                 entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+
+                // wire spool blocks
+                entries.add(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.IRON_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+
+                // pipe matrices
+                /*
+                entries.add(KlaxonItems.COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WEATHERED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.OXIDIZED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WAXED_EXPOSED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WAXED_WEATHERED_COPPER_PIPE_MATRIX);
+                entries.add(KlaxonItems.WAXED_OXIDIZED_COPPER_PIPE_MATRIX);
+                 */
 
                 // casings
                 entries.add(KlaxonItems.STEEL_CASING);

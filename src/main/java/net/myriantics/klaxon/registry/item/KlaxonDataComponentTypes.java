@@ -1,14 +1,19 @@
 package net.myriantics.klaxon.registry.item;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.component.ComponentType;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Unit;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.*;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
 import java.util.function.UnaryOperator;
 
@@ -54,22 +59,6 @@ public abstract class KlaxonDataComponentTypes {
                 return builder;
             });
 
-    // Stores enchantments independently from other enchantments. Non-transferable and cannot be removed via traditional disenchanting. Enchantments function as normal and stack with their non-innate counterparts.
-    public static final ComponentType<InnateItemEnchantmentsComponent> INNATE_ENCHANTMENTS = register("innate_enchantments",
-            builder -> {
-                builder.codec(InnateItemEnchantmentsComponent.CODEC);
-                builder.packetCodec(InnateItemEnchantmentsComponent.PACKET_CODEC);
-                return builder;
-            });
-
-    // Used instead of Innate Enchantments Component when assigning default components to an item.
-    public static final ComponentType<DefaultInnateItemEnchantmentsComponent> DEFAULT_INNATE_ENCHANTMENTS = register("default_innate_enchantments",
-            builder -> {
-                builder.codec(DefaultInnateItemEnchantmentsComponent.CODEC);
-                builder.packetCodec(DefaultInnateItemEnchantmentsComponent.PACKET_CODEC);
-                return builder;
-            });
-
     // Determines the default sound used for a given ToolUsageRecipe. Also determines if you can cosmetically use the tool - i.e. hammering items to no effect, just to make the noise.
     public static final ComponentType<ToolUseRecipeConfigComponent> TOOL_USE_RECIPE_CONFIG = register("tool_usage_config",
             builder -> {
@@ -86,8 +75,46 @@ public abstract class KlaxonDataComponentTypes {
                 return builder;
             });
 
+    public static final ComponentType<GrappleClawComponent> GRAPPLE_CLAW_COMPONENT = register("grapple_claw", builder -> builder
+            .codec(GrappleClawComponent.CODEC)
+            .packetCodec(GrappleClawComponent.PACKET_CODEC)
+    );
+
+    public static final ComponentType<ExplosiveCatalystData> EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT = register("explosive_catalyst_override", builder -> builder
+            .codec(ExplosiveCatalystData.CODEC)
+            .packetCodec(ExplosiveCatalystData.PACKET_CODEC)
+    );
+
+    // Items with this component override the check that disallows both damage and stacking components coexisting.
+    public static final ComponentType<Unit> DAMAGEABLE_AND_STACKABLE = registerUnit("damageable_and_stackable");
+
+    // Items with this component replace their held item model "x:example_model" with "x:example_model_[YOUR_STRING_HERE]" under certain conditions
+    public static final ComponentType<String> ALT_HAND_MODEL = register("alt_hand_model",
+            builder ->  {
+                builder.codec(Codec.STRING);
+                builder.packetCodec(PacketCodecs.STRING);
+                return builder;
+            });
+
+    // Items with this component flip their held item model when held in the left hand
+    public static final ComponentType<Unit> MIRRORED_LEFT_HAND_MODEL = registerUnit("mirrored_left_hand_model");
+
+    public static final ComponentType<Double> RECIPE_OUTPUT_CHANCE_LORE = register("recipe_output_chance_lore",
+            builder -> {
+        builder.codec(Codec.DOUBLE);
+        builder.packetCodec(PacketCodecs.DOUBLE);
+        return builder;
+    });
+
+
+    public static final ComponentType<Unit> HELMET_CREST_COMPONENT = registerUnit("helmet_crest");
+
     private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());
+    }
+
+    private static ComponentType<Unit> registerUnit(String name) {
+        return register(name, unitBuilder -> unitBuilder.codec(Codec.unit(Unit.INSTANCE)).packetCodec(PacketCodec.unit(Unit.INSTANCE)));
     }
 
     public static void init() {

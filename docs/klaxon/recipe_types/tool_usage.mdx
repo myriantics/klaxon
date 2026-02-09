@@ -1,0 +1,30 @@
+# Tool Usage
+
+A recipe type that allows the **required tool** to convert **dropped items** near the interaction point into the **output** defined in the recipe.
+
+By default, this recipe is used by the **Steel Hammer**, **Steel Cable Shears**, and **Vanilla Shears**.
+
+### Example Tool Usage Recipe JSON
+
+```
+{
+  "type": "klaxon:tool_usage",
+  "input_ingredient": {
+    "item": "klaxon:steel_ingot"
+  },
+  "output_stack": {
+    "count": 1,
+    "id": "klaxon:steel_plate"
+  },
+  "required_tool": {
+    "tag": "klaxon:recipe_processing_hammers"
+  },
+  "sound_override": {
+    "sound_id": "minecraft:block.anvil.land"
+  }
+}
+```
+
+### Good To Know
+- Tool Usage recipes are more efficient when multiple separate **Item Entities** are on the ground.
+- The **Steel Hammer** can attempt to be used on any dropped items, even when there is no valid recipe. This plays a sound and consumes durability, because it's funny.

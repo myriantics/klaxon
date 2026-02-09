@@ -1,0 +1,12 @@
+{
+  "values": [
+    "klaxon:copper_wire_spool",
+    "klaxon:exposed_copper_wire_spool",
+    "klaxon:weathered_copper_wire_spool",
+    "klaxon:oxidized_copper_wire_spool",
+    "klaxon:waxed_copper_wire_spool",
+    "klaxon:waxed_exposed_copper_wire_spool",
+    "klaxon:waxed_weathered_copper_wire_spool",
+    "klaxon:waxed_oxidized_copper_wire_spool"
+  ]
+}

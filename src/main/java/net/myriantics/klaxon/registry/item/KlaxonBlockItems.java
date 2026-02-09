@@ -1,14 +1,18 @@
 package net.myriantics.klaxon.registry.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.HangingSignItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.SignItem;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+
+import java.util.List;
 
 // KlaxonItems inherits this so you can access all the item fields from KlaxonItems.
 public abstract class KlaxonBlockItems {
@@ -17,6 +21,7 @@ public abstract class KlaxonBlockItems {
     public static final Item STEEL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_BLOCK);
     public static final Item STEEL_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_PLATING_BLOCK);
     public static final Item STEEL_CASING = registerBlockItem(KlaxonBlocks.STEEL_CASING);
+    public static final Item STEEL_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
     public static final Item STEEL_DOOR = registerBlockItem(KlaxonBlocks.STEEL_DOOR);
     public static final Item STEEL_TRAPDOOR = registerBlockItem(KlaxonBlocks.STEEL_TRAPDOOR);
 
@@ -29,9 +34,11 @@ public abstract class KlaxonBlockItems {
 
     // iron
     public static final Item IRON_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.IRON_PLATING_BLOCK);
+    public static final Item IRON_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK);
 
     // gold
     public static final Item GOLD_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.GOLD_PLATING_BLOCK);
+    public static final Item GOLD_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK);
 
     // copper
     public static final Item COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.COPPER_PLATING_BLOCK);
@@ -42,6 +49,15 @@ public abstract class KlaxonBlockItems {
     public static final Item WAXED_EXPOSED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
     public static final Item WAXED_WEATHERED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
     public static final Item WAXED_OXIDIZED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+
+    public static final Item COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WAXED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Item WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
 
     // rubber
     public static final Item RUBBER_BLOCK = registerBlockItem(KlaxonBlocks.RUBBER_BLOCK);
@@ -54,6 +70,16 @@ public abstract class KlaxonBlockItems {
     public static final Item DEEPSLATE_BLAST_PROCESSOR = registerBlockItem(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
     public static final Item NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.NETHER_REACTOR_CORE);
     public static final Item CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
+
+    // copper pipe matrices
+    public static final Item COPPER_PIPE_MATRIX = registerBlockItem("copper_pipe_matrix", KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("exposed_copper_pipe_matrix", KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WEATHERED_COPPER_PIPE_MATRIX = registerBlockItem("weathered_copper_pipe_matrix", KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item OXIDIZED_COPPER_PIPE_MATRIX = registerBlockItem("oxidized_copper_pipe_matrix", KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WAXED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_copper_pipe_matrix", KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WAXED_EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_exposed_copper_pipe_matrix", KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WAXED_WEATHERED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_weathered_copper_pipe_matrix", KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Item WAXED_OXIDIZED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_oxidized_copper_pipe_matrix", KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
 
     // hallnox
     public static final Item HALLNOX_POD = registerBlockItem(KlaxonBlocks.HALLNOX_POD);
@@ -87,6 +113,10 @@ public abstract class KlaxonBlockItems {
     );
     public static final Item HALLNOX_BULB = registerBlockItem(KlaxonBlocks.HALLNOX_BULB);
 
+    private static Item registerBlockItem(String name, Block block) {
+        return registerBlockItem(name, new AliasedBlockItem(block, new Item.Settings()));
+    }
+
     private static Item registerBlockItem(Block block) {
         return registerBlockItem(block, new BlockItem(block, new Item.Settings()));
     }
@@ -97,6 +127,48 @@ public abstract class KlaxonBlockItems {
 
     private static Item registerBlockItem(String name, BlockItem blockItem) {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), blockItem);
+    }
+
+    /**
+     * Creates an ItemStack that illustrates the given block, for use in recipe viewers and machine output displays.
+     * @param block The block to attempt item yonkage on.
+     * @return New ItemStack of block's item with size 1 if block has an associated BlockItem, and outputs a barrier with lore if no BlockItem is present.
+     */
+    public static ItemStack getBlockDisplayStack(Block block) {
+        Item item = block.asItem();
+
+        // try to yonk the pick stack
+        if (item == null || item.equals(Items.AIR)) {
+            try {
+                item = block.getPickStack(null, null, null).getItem();
+            } catch (Exception ignored) {
+
+            }
+        }
+
+        // create items based off of blockitems if possible.
+        // if a block doesn't have a blockitem, fall back to barrier with lore
+        if (item == null || item.equals(Items.AIR)) {
+            ItemStack displayStack = new ItemStack(Items.BARRIER);
+
+            // apply components
+            displayStack.applyComponentsFrom(ComponentMap.builder()
+                    .add(DataComponentTypes.ITEM_NAME, block.getName().formatted(Formatting.RED))
+                    .add(DataComponentTypes.LORE, new LoreComponent(
+                            List.of(Text.translatable("klaxon.text.tooltip.missing_block_item")
+                                    .formatted(Formatting.BOLD))
+                    )).build()
+            );
+
+            return displayStack;
+        } else {
+            ItemStack displayStack = new ItemStack(item);
+            displayStack.applyComponentsFrom(ComponentMap.builder()
+                    .add(DataComponentTypes.ITEM_NAME, block.getName())
+                    .build()
+            );
+            return displayStack;
+        }
     }
 
     public static void init() {

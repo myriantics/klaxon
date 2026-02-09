@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "grapple_winch",
+  "key": {
+    "C": {
+      "tag": "klaxon:crude_inclusive_steel_casings"
+    },
+    "P": {
+      "tag": "klaxon:crude_inclusive_steel_plates"
+    },
+    "R": {
+      "tag": "klaxon:gear_grip_materials"
+    },
+    "S": {
+      "item": "klaxon:steel_wire_spool"
+    }
+  },
+  "pattern": [
+    "RS ",
+    "PC ",
+    "PR "
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:grapple_winch"
+  }
+}

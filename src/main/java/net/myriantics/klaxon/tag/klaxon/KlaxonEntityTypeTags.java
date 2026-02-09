@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.tag.klaxon;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -17,12 +18,16 @@ public abstract class KlaxonEntityTypeTags {
     // entity weight logistics tags
     public static final TagKey<EntityType<?>> HEAVY_ENTITIES =
             createTag("heavy_entities");
-    public static final TagKey<EntityType<?>> ULTRA_HEAVY_ENTITIES =
-            createTag("ultra_heavy_entities");
     public static final TagKey<EntityType<?>> LIGHT_ENTITIES =
             createTag("light_entities");
-    public static final TagKey<EntityType<?>> ULTRA_LIGHT_ENTITIES =
-            createTag("ultra_light_entities");
+
+    // allowlist / denylist tags
+    public static final TagKey<EntityType<?>> GRAPPLE_CLAW_GRAPPLING_DAMAGE_DENYLIST =
+            createTag("grapple_claw_grappling_damage_denylist");
+    public static final TagKey<EntityType<?>> GRAPPLE_CLAW_HOOKING_DENYLIST =
+            createTag("grapple_claw_hooking_denylist");
+    public static final TagKey<EntityType<?>> GRAPPLE_CLAW_COLLISION_DENYLIST =
+            createTag("grapple_claw_collision_denylist");
 
     private static TagKey<EntityType<?>> createTag(String name) {
         return TagKey.of(RegistryKeys.ENTITY_TYPE, KlaxonCommon.locate(name));

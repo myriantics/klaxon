@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:tool_usage",
+  "input_ingredient": {
+    "tag": "c:plates/copper"
+  },
+  "output_stack": {
+    "count": 3,
+    "id": "klaxon:copper_wire"
+  },
+  "sound_override": {},
+  "tool_usage_recipe_type": "klaxon:wirecutting"
+}

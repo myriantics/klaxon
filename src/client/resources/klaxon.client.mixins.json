@@ -1,0 +1,31 @@
+{
+  "required": true,
+  "package": "net.myriantics.klaxon.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "minecraft.advanced_item_models.ItemRendererMixin",
+    "minecraft.advanced_item_models.JsonUnbakedModelAccessor",
+    "minecraft.advanced_item_models.ModelLoaderMixin",
+    "minecraft.advanced_item_models.ModelOverrideAccessor",
+    "minecraft.grapple_winch.ClientPlayerInteractionManagerMixin",
+    "minecraft.grapple_winch.connection.ClientWorldMixin",
+    "minecraft.grapple_winch.connection.WorldRendererMixin",
+    "minecraft.item_component.walljump_ability.MinecraftClientMixin",
+    "minecraft.item_usage_lockout.ClientPlayerEntityMixin",
+    "minecraft.item_usage_lockout.MinecraftClientMixin",
+    "minecraft.nether_reaction.ExplosionEmitterParticleMixin",
+    "minecraft.rendering.AnimalModelAccessor",
+    "minecraft.rendering.ArmorFeatureRendererMixin",
+    "minecraft.rendering.RenderLayerInvoker",
+    "minecraft.splashes.SplashTextResourceSupplierAccessor",
+    "minecraft.world_item_application.ClientPlayerInteractionManagerMixin",
+    "minecraft.wrench.ClientPlayerInteractionManagerMixin",
+    "self.grapple_winch.tooltip.GrappleWinchItemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixinextras": {
+    "minVersion": "0.5.0-beta.1"
+  }
+}

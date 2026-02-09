@@ -25,20 +25,25 @@
 			"net.myriantics.klaxon.KlaxonDataGenerator"
 		],
 		"emi": [
-			"net.myriantics.klaxon.compat.emi.KlaxonEmiPlugin"
+          "net.myriantics.klaxon.compat.emi.KlaxonEmiPlugin"
 		],
 		"jade": [
 			"net.myriantics.klaxon.compat.jade.KlaxonJadePlugin"
 		]
 	},
+    "accessWidener": "klaxon.accesswidener",
 	"mixins": [
-		"klaxon.mixins.json"
+		"klaxon.mixins.json",
+        {
+           "config": "klaxon.client.mixins.json",
+           "environment": "client"
+        }
 	],
 	"depends": {
-		"fabricloader": ">=0.16.9",
+		"fabricloader": ">=0.17.3",
 		"minecraft": "1.21.1",
 		"java": ">=21",
-		"fabric-api": ">=0.109.0"
+		"fabric-api": ">=0.116.7"
 	},
 	"suggests": {
 		"EMI": "emi",

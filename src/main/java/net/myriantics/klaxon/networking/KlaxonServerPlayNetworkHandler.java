@@ -7,11 +7,25 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.myriantics.klaxon.networking.s2c.EntityDualWieldToggleS2CPacket;
+import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.networking.s2c.KlaxonWorldEventPacket;
 
 public abstract class KlaxonServerPlayNetworkHandler {
+
+    /**
+     * Clears the player's active item and triggers item lockout on the client.
+     * This makes it so that the player must release their use key and press it again in order to use the item again.
+     * @param serverPlayer the player to trigger it on
+     */
+    public static void triggerItemLockout(ServerPlayerEntity serverPlayer) {
+        serverPlayer.clearActiveItem();
+        send(serverPlayer, new ItemUsageLockoutTrigger());
+    }
+
+    public static void send(ServerPlayerEntity serverPlayer, CustomPayload customPayload) {
+        ServerPlayNetworking.send(serverPlayer, customPayload);
+    }
+
     public static void sendToTracking(ServerWorld serverWorld, BlockPos pos, CustomPayload customPayload) {
         for (ServerPlayerEntity player : PlayerLookup.tracking(serverWorld, pos)) {
             ServerPlayNetworking.send(player, customPayload);

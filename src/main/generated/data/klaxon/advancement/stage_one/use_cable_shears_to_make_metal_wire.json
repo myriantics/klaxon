@@ -1,0 +1,34 @@
+{
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
+  "criteria": {
+    "use_cable_shears_to_make_metal_wire": {
+      "conditions": {
+        "required_tool": {
+          "tag": "klaxon:recipe_processing_wirecutters"
+        },
+        "result_ingredient": {
+          "tag": "c:wires"
+        }
+      },
+      "trigger": "klaxon:tool_usage_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.use_cable_shears_to_make_metal_wire.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_cable_shears"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.use_cable_shears_to_make_metal_wire.title"
+    }
+  },
+  "requirements": [
+    [
+      "use_cable_shears_to_make_metal_wire"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

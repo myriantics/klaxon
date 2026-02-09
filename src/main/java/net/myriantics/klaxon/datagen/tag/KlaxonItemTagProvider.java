@@ -2,13 +2,10 @@ package net.myriantics.klaxon.datagen.tag;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
-import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.compat.KlaxonCompatItemTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
@@ -30,6 +27,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         buildMaterialStorageBlockTags();
         buildMaterialNuggetTags();
         buildMaterialPlateTags();
+        buildMaterialWireTags();
         buildMaterialSheetTags();
         buildFracturedMaterialTags();
         buildWoodTags();
@@ -46,8 +44,10 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // build mechanics tags
         buildMechanicsTags();
+        buildRepairTags();
         buildAnvilRelatedTags();
         buildBlastProcessorCatalystBehaviorTags();
+        buildEnchantableTags();
 
         // build categorical tags
         buildEquipmentCategoryTags();
@@ -55,6 +55,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         // build compat tags
         buildCompatTags();
     }
+
 
     private void buildWoodTags() {
         getOrCreateTagBuilder(ConventionalItemTags.STRIPPED_LOGS)
@@ -96,6 +97,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.HALLNOX_DOOR);
         getOrCreateTagBuilder(ItemTags.WOODEN_TRAPDOORS)
                 .add(KlaxonItems.HALLNOX_TRAPDOOR);
+        getOrCreateTagBuilder(ItemTags.WOODEN_FENCES)
+                .add(KlaxonItems.HALLNOX_FENCE);
         getOrCreateTagBuilder(ConventionalItemTags.WOODEN_FENCES)
                 .add(KlaxonItems.HALLNOX_FENCE);
         getOrCreateTagBuilder(ConventionalItemTags.WOODEN_FENCE_GATES)
@@ -121,12 +124,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     private void buildMaterialGlobTags() {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.GLOBS)
-                .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS)
-                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS);
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_GLOBS)
                 .add(KlaxonItems.RUBBER_GLOB);
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS)
-                .add(KlaxonItems.MOLTEN_RUBBER_GLOB);
     }
 
     private void buildMaterialStorageBlockTags() {
@@ -149,11 +149,33 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     private void buildMaterialNuggetTags() {
         getOrCreateTagBuilder(ConventionalItemTags.NUGGETS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_NUGGETS)
-                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS);
+                .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)
+                .forceAddTag(KlaxonConventionalItemTags.COPPER_NUGGETS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_NUGGETS)
                 .add(KlaxonItems.STEEL_NUGGET);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_NUGGETS)
+                .add(KlaxonItems.COPPER_NUGGET);
+    }
+
+    private void buildMaterialWireTags() {
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.WIRES)
+                .forceAddTag(KlaxonConventionalItemTags.STEEL_WIRES)
+                .forceAddTag(KlaxonConventionalItemTags.IRON_WIRES)
+                .forceAddTag(KlaxonConventionalItemTags.GOLD_WIRES)
+                .forceAddTag(KlaxonConventionalItemTags.COPPER_WIRES);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_WIRES)
+                .add(KlaxonItems.STEEL_WIRE);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.IRON_WIRES)
+                .add(KlaxonItems.IRON_WIRE);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_WIRES)
+                .add(KlaxonItems.GOLD_WIRE);
+        getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_WIRES)
+                .add(KlaxonItems.COPPER_WIRE);
+        getOrCreateTagBuilder(KlaxonItemTags.WAXING_STATUS_INCLUSIVE_COPPER_WIRE_SPOOL_BLOCKS)
+                .add(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK)
+                .add(KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK);
     }
 
     private void buildMakeshiftCraftingIngredientTags() {
@@ -172,15 +194,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING)
                 .add(KlaxonItems.STEEL_CASING)
                 .add(KlaxonItems.CRUDE_STEEL_CASING);
-        getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_GLOBS)
-                .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS)
-                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_GLOBS);
         getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.RUBBER_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS);
-        getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_SHEETS)
-                .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS)
-                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS);
     }
 
     private void buildMaterialPlateTags() {
@@ -230,12 +246,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     private void buildMaterialSheetTags() {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEETS)
-                .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS)
-                .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS);
+                .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_SHEETS)
                 .add(KlaxonItems.RUBBER_SHEET);
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_SHEETS)
-                .add(KlaxonItems.MOLTEN_RUBBER_SHEET);
     }
 
     private void buildMakeshiftCraftingLogisticsTags() {
@@ -244,21 +257,20 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.CRUDE_STEEL_INGOT)
                 .add(KlaxonItems.CRUDE_STEEL_BLOCK)
                 .add(KlaxonItems.CRUDE_STEEL_NUGGET)
-                .add(KlaxonItems.MOLTEN_RUBBER_SHEET)
-                .add(KlaxonItems.MOLTEN_RUBBER_GLOB)
                 .add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_REPAIR_MATERIALS)
                 .forceAddTag(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS);
     }
 
     private void buildCraftingTags() {
-        getOrCreateTagBuilder(KlaxonItemTags.OVERWORLD_RUBBER_EXTRACTABLE_LOGS)
+        getOrCreateTagBuilder(KlaxonItemTags.HIGH_YIELD_RUBBER_EXTRACTABLE_LOGS)
+                .forceAddTag(ItemTags.CRIMSON_STEMS)
+                .forceAddTag(ItemTags.WARPED_STEMS)
+                .forceAddTag(KlaxonItemTags.HALLNOX_STEMS);
+        getOrCreateTagBuilder(KlaxonItemTags.LOW_YIELD_RUBBER_EXTRACTABLE_LOGS)
                 .forceAddTag(ItemTags.JUNGLE_LOGS)
                 .forceAddTag(ItemTags.ACACIA_LOGS)
                 .forceAddTag(ItemTags.MANGROVE_LOGS);
-        getOrCreateTagBuilder(KlaxonItemTags.NETHER_RUBBER_EXTRACTABLE_LOGS)
-                .forceAddTag(ItemTags.CRIMSON_STEMS)
-                .forceAddTag(ItemTags.WARPED_STEMS);
         getOrCreateTagBuilder(KlaxonItemTags.GEAR_GRIP_MATERIALS)
                 .add(Items.LEATHER)
                 .add(KlaxonItems.RUBBER_SHEET);
@@ -278,6 +290,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildMechanicsTags() {
+        getOrCreateTagBuilder(ItemTags.DYEABLE)
+                .add(KlaxonItems.CRESTED_STEEL_HELMET);
         getOrCreateTagBuilder(KlaxonItemTags.HEAVY_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.NETHERITE_HELMET)
@@ -302,7 +316,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.GOLD_PLATE)
                 .add(KlaxonItems.FRACTURED_RAW_GOLD)
                 .add(KlaxonItems.FRACTURED_GOLD)
-                .add(KlaxonItems.GOLD_PLATING_BLOCK);
+                .add(KlaxonItems.GOLD_PLATING_BLOCK)
+                .add(KlaxonItems.GOLD_WIRE)
+                .add(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK);
         getOrCreateTagBuilder(ItemTags.BREAKS_DECORATED_POTS)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(KlaxonItems.STEEL_CLEAVER)
@@ -311,9 +327,35 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_HAMMER);
         getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
-        getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_SHEARS)
+        getOrCreateTagBuilder(ItemTags.TRIM_MATERIALS)
+                .add(KlaxonItems.STEEL_INGOT);
+        getOrCreateTagBuilder(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)
+                .forceAddTag(ConventionalItemTags.MINING_TOOL_TOOLS);
+        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAW_INSTAKILL)
+                .forceAddTag(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)
+                .forceAddTag(ConventionalItemTags.MELEE_WEAPON_TOOLS);
+        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)
+                .forceAddTag(ConventionalItemTags.SHEAR_TOOLS);
+        getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS)
+                .add(KlaxonItems.STEEL_INGOT);
+        getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
+                .add(KlaxonItems.STEEL_HAMMER);
+        getOrCreateTagBuilder(KlaxonItemTags.PICK_BLOCK_SLOT_REPLACEMENT_DISCOURAGED)
+                .add(KlaxonItems.STEEL_CLEAVER)
+                .add(KlaxonItems.STEEL_HAMMER)
+                .add(KlaxonItems.STEEL_WRENCH)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS)
-                .add(Items.SHEARS);
+                .add(KlaxonItems.GRAPPLE_WINCH);
+        getOrCreateTagBuilder(ItemTags.CREEPER_IGNITERS)
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
+    }
+
+    private void buildRepairTags() {
+    }
+
+    private void buildEnchantableTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.STREAMLINE_ENCHANTABLE)
+                .forceAddTag(ItemTags.CHEST_ARMOR_ENCHANTABLE);
     }
 
     private void buildAnvilRelatedTags() {
@@ -326,18 +368,25 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildEquipmentCategoryTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAWS)
+                .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
-                .add(Items.FLINT_AND_STEEL)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS)
                 .add(KlaxonItems.STEEL_CLEAVER)
-                .add(KlaxonItems.STEEL_WRENCH);
+                .add(KlaxonItems.STEEL_WRENCH)
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL)
+                .add(KlaxonItems.GRAPPLE_WINCH)
+                .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_HELMET)
+                .add(KlaxonItems.CRESTED_STEEL_HELMET)
                 .add(KlaxonItems.STEEL_CHESTPLATE)
                 .add(KlaxonItems.STEEL_LEGGINGS)
                 .add(KlaxonItems.STEEL_BOOTS);
+        getOrCreateTagBuilder(ConventionalItemTags.TOOLS)
+                .add(KlaxonItems.GRAPPLE_WINCH);
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
                 .add(KlaxonItems.STEEL_HAMMER)
                 .add(KlaxonItems.STEEL_CLEAVER)
@@ -368,7 +417,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCH)
                 .add(KlaxonItems.STEEL_WRENCH);
 
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEARS)
+        getOrCreateTagBuilder(ConventionalItemTags.SHEAR_TOOLS)
                 .forceAddTag(KlaxonItemTags.CABLE_SHEARS);
         getOrCreateTagBuilder(KlaxonItemTags.CABLE_SHEARS)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
@@ -376,13 +425,17 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
         getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)
-                .add(KlaxonItems.STEEL_HELMET);
+                .add(KlaxonItems.STEEL_HELMET)
+                .add(KlaxonItems.CRESTED_STEEL_HELMET);
         getOrCreateTagBuilder(ItemTags.CHEST_ARMOR)
                 .add(KlaxonItems.STEEL_CHESTPLATE);
         getOrCreateTagBuilder(ItemTags.LEG_ARMOR)
                 .add(KlaxonItems.STEEL_LEGGINGS);
         getOrCreateTagBuilder(ItemTags.FOOT_ARMOR)
                 .add(KlaxonItems.STEEL_BOOTS);
+
+        getOrCreateTagBuilder(ConventionalItemTags.IGNITER_TOOLS)
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
     }
 
     private void buildBlastProcessorCatalystBehaviorTags() {

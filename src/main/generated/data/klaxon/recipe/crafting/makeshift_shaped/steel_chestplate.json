@@ -4,8 +4,8 @@
   "constant_ingredients": [],
   "group": "steel_chestplate",
   "key": {
-    "B": {
-      "tag": "klaxon:crude_inclusive_steel_blocks"
+    "C": {
+      "tag": "klaxon:crude_inclusive_steel_casings"
     },
     "I": {
       "tag": "klaxon:crude_inclusive_steel_ingots"
@@ -16,7 +16,7 @@
   },
   "pattern": [
     "I I",
-    "PBP",
+    "PCP",
     "PPP"
   ],
   "result": {

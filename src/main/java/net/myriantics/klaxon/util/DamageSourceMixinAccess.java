@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.Unique;
 
 public interface DamageSourceMixinAccess {
     @Unique
-    @Nullable ShieldBreachingComponent klaxon$getShieldBreachingComponent();
+    boolean klaxon$isShieldBreaching();
 
     @Unique
-    void klaxon$setShieldBreachingComponent(ShieldBreachingComponent shieldBreachingComponent);
+    void klaxon$setShieldBreaching(boolean breaching);
 
     @Unique
     void klaxon$setDamageType(RegistryEntry<DamageType> damageType);

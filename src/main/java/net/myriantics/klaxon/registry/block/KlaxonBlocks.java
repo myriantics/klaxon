@@ -6,15 +6,17 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.decor.*;
-import net.myriantics.klaxon.block.customblocks.decor.custom_hanging_sign.CustomHangingSignBlock;
-import net.myriantics.klaxon.block.customblocks.decor.custom_hanging_sign.CustomWallHangingSignBlock;
-import net.myriantics.klaxon.block.customblocks.decor.custom_sign.CustomSignBlock;
-import net.myriantics.klaxon.block.customblocks.decor.custom_sign.CustomWallSignBlock;
-import net.myriantics.klaxon.block.customblocks.functional.HallnoxPodBlock;
-import net.myriantics.klaxon.block.customblocks.functional.MoltenRubberBlock;
-import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.block.customblocks.machines.nether_reactor_core.NetherReactorCoreBlock;
+import net.myriantics.klaxon.block.decor.*;
+import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
+import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
+import net.myriantics.klaxon.block.functional.MoltenRubberBlock;
+import net.myriantics.klaxon.block.machines.CasingBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
+import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 
 public abstract class KlaxonBlocks {
@@ -25,7 +27,9 @@ public abstract class KlaxonBlocks {
     public static final Block STEEL_PLATING_BLOCK = registerBlock("steel_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
     public static final Block STEEL_CASING = registerBlock("steel_casing",
-            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK)));
+            new CasingBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_BLOCK)));
+    public static final Block STEEL_WIRE_SPOOL_BLOCK = registerBlock("steel_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(STEEL_BLOCK)));
     public static final Block STEEL_DOOR = registerBlock("steel_door",
             new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, AbstractBlock.Settings.copy(STEEL_BLOCK).nonOpaque()));
     public static final Block STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
@@ -38,7 +42,7 @@ public abstract class KlaxonBlocks {
     public static final Block CRUDE_STEEL_PLATING_BLOCK = registerBlock("crude_steel_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK)));
     public static final Block CRUDE_STEEL_CASING = registerBlock("crude_steel_casing",
-            new Block(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_BLOCK)));
+            new CasingBlock(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_BLOCK)));
     public static final Block CRUDE_STEEL_DOOR = registerBlock("crude_steel_door",
             new SteelDoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, AbstractBlock.Settings.copy(CRUDE_STEEL_BLOCK).nonOpaque()));
     public static final Block CRUDE_STEEL_TRAPDOOR = registerBlock("crude_steel_trapdoor",
@@ -52,6 +56,105 @@ public abstract class KlaxonBlocks {
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.STEEL_CASING).luminance((state) -> 15).nonOpaque()));
     public static final Block CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
             new NetherReactorCoreBlock(AbstractBlock.Settings.copy(KlaxonBlocks.CRUDE_STEEL_CASING).luminance((state) -> 12).nonOpaque()));
+
+    // pipe matrices
+    public static final Block COPPER_PIPE_MATRIX_U_BEND = registerBlock("copper_pipe_matrix_u_bend",
+            new OxidizablePipeMatrixUBendBlock(
+                    Oxidizable.OxidationLevel.UNAFFECTED,
+                    AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)
+            )
+    );
+    public static final Block COPPER_PIPE_MATRIX_SEGMENT = registerBlock("copper_pipe_matrix_segment",
+            new OxidizablePipeMatrixSegmentBlock(
+                    Oxidizable.OxidationLevel.UNAFFECTED,
+                    AbstractBlock.Settings.copy(COPPER_PIPE_MATRIX_U_BEND),
+                    COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block EXPOSED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("exposed_copper_pipe_matrix_u_bend",
+            new OxidizablePipeMatrixUBendBlock(
+                    Oxidizable.OxidationLevel.EXPOSED,
+                    AbstractBlock.Settings.copy(Blocks.EXPOSED_COPPER)
+            )
+    );
+    public static final Block EXPOSED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("exposed_copper_pipe_matrix_segment",
+            new OxidizablePipeMatrixSegmentBlock(
+                    Oxidizable.OxidationLevel.EXPOSED,
+                    AbstractBlock.Settings.copy(EXPOSED_COPPER_PIPE_MATRIX_U_BEND),
+                    EXPOSED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WEATHERED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("weathered_copper_pipe_matrix_u_bend",
+            new OxidizablePipeMatrixUBendBlock(
+                    Oxidizable.OxidationLevel.WEATHERED,
+                    AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER)
+            )
+    );
+    public static final Block WEATHERED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("weathered_copper_pipe_matrix_segment",
+            new OxidizablePipeMatrixSegmentBlock(
+                    Oxidizable.OxidationLevel.WEATHERED,
+                    AbstractBlock.Settings.copy(WEATHERED_COPPER_PIPE_MATRIX_U_BEND),
+                    WEATHERED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block OXIDIZED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("oxidized_copper_pipe_matrix_u_bend",
+            new OxidizablePipeMatrixUBendBlock(
+                    Oxidizable.OxidationLevel.OXIDIZED,
+                    AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER)
+            )
+    );
+    public static final Block OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("oxidized_copper_pipe_matrix_segment",
+            new OxidizablePipeMatrixSegmentBlock(
+                    Oxidizable.OxidationLevel.OXIDIZED,
+                    AbstractBlock.Settings.copy(OXIDIZED_COPPER_PIPE_MATRIX_U_BEND),
+                    OXIDIZED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WAXED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("waxed_copper_pipe_matrix_u_bend",
+            new PipeMatrixUBendBlock(
+                    AbstractBlock.Settings.copy(Blocks.WAXED_COPPER_BLOCK)
+            )
+    );
+    public static final Block WAXED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("waxed_copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(
+                    AbstractBlock.Settings.copy(WAXED_COPPER_PIPE_MATRIX_U_BEND),
+                    WAXED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("waxed_exposed_copper_pipe_matrix_u_bend",
+            new PipeMatrixUBendBlock(
+                    AbstractBlock.Settings.copy(Blocks.WAXED_EXPOSED_COPPER)
+            )
+    );
+    public static final Block WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("waxed_exposed_copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(
+                    AbstractBlock.Settings.copy(WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND),
+                    WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("waxed_weathered_copper_pipe_matrix_u_bend",
+            new PipeMatrixUBendBlock(
+                    AbstractBlock.Settings.copy(Blocks.WAXED_WEATHERED_COPPER)
+            )
+    );
+    public static final Block WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("waxed_weathered_copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(
+                    AbstractBlock.Settings.copy(WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND),
+                    WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+    public static final Block WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND = registerBlock("waxed_oxidized_copper_pipe_matrix_u_bend",
+            new PipeMatrixUBendBlock(
+                    AbstractBlock.Settings.copy(Blocks.WAXED_OXIDIZED_COPPER)
+            )
+    );
+    public static final Block WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT = registerBlock("waxed_oxidized_copper_pipe_matrix_segment",
+            new PipeMatrixSegmentBlock(
+                    AbstractBlock.Settings.copy(WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND),
+                    WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND
+            )
+    );
+
 
     // hallnox
     public static final Block HALLNOX_POD = registerBlock("hallnox_pod",
@@ -111,26 +214,26 @@ public abstract class KlaxonBlocks {
                     .strength(3.0f, 4.0f))
     );
     public static final Block HALLNOX_SIGN = registerBlock("hallnox_sign",
-            new CustomSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_SIGN)
+            new SignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
             )
     );
     public static final Block HALLNOX_WALL_SIGN = registerBlock("hallnox_wall_sign",
-            new CustomWallSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_SIGN)
+            new WallSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
                     .dropsLike(HALLNOX_SIGN)
             )
     );
     public static final Block HALLNOX_HANGING_SIGN = registerBlock("hallnox_hanging_sign",
-            new CustomHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_HANGING_SIGN)
+            new HangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_HANGING_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
             )
     );
     public static final Block HALLNOX_WALL_HANGING_SIGN = registerBlock("hallnox_wall_hanging_sign",
-            new CustomWallHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_HANGING_SIGN)
+            new WallHangingSignBlock(KlaxonWoodTypes.HALLNOX, AbstractBlock.Settings.copy(Blocks.WARPED_WALL_HANGING_SIGN)
                     .mapColor(MapColor.TERRACOTTA_GRAY)
                     .strength(2.0f, 3.0f)
                     .dropsLike(HALLNOX_HANGING_SIGN))
@@ -153,12 +256,16 @@ public abstract class KlaxonBlocks {
     // iron
     public static final Block IRON_PLATING_BLOCK = registerBlock("iron_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+    public static final Block IRON_WIRE_SPOOL_BLOCK = registerBlock("iron_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
 
     // gold
     public static final Block GOLD_PLATING_BLOCK = registerBlock("gold_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.GOLD_BLOCK)));
+    public static final Block GOLD_WIRE_SPOOL_BLOCK = registerBlock("gold_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.GOLD_BLOCK)));
 
-    // copper
+    // copper plating blocks
     public static final Block COPPER_PLATING_BLOCK = registerBlock("copper_plating_block",
             new OxidizablePillarBlock(Oxidizable.OxidationLevel.UNAFFECTED, AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)));
     public static final Block EXPOSED_COPPER_PLATING_BLOCK = registerBlock("exposed_copper_plating_block",
@@ -175,6 +282,23 @@ public abstract class KlaxonBlocks {
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER)));
     public static final Block WAXED_OXIDIZED_COPPER_PLATING_BLOCK = registerBlock("waxed_oxidized_copper_plating_block",
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER)));
+    // copper wire spool
+    public static final Block COPPER_WIRE_SPOOL_BLOCK = registerBlock("copper_wire_spool",
+            new OxidizablePillarBlock(Oxidizable.OxidationLevel.UNAFFECTED, AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK)));
+    public static final Block EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("exposed_copper_wire_spool",
+            new OxidizablePillarBlock(Oxidizable.OxidationLevel.EXPOSED, AbstractBlock.Settings.copy(Blocks.EXPOSED_COPPER)));
+    public static final Block WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("weathered_copper_wire_spool",
+            new OxidizablePillarBlock(Oxidizable.OxidationLevel.WEATHERED, AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER)));
+    public static final Block OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("oxidized_copper_wire_spool",
+            new OxidizablePillarBlock(Oxidizable.OxidationLevel.OXIDIZED, AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER)));
+    public static final Block WAXED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("waxed_copper_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WAXED_COPPER_BLOCK)));
+    public static final Block WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("waxed_exposed_copper_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WAXED_EXPOSED_COPPER)));
+    public static final Block WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("waxed_weathered_copper_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WAXED_WEATHERED_COPPER)));
+    public static final Block WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlock("waxed_oxidized_copper_wire_spool",
+            new PillarBlock(AbstractBlock.Settings.copy(Blocks.WAXED_OXIDIZED_COPPER)));
 
     // rubber
     public static final Block RUBBER_BLOCK = registerBlock("rubber_block",

@@ -2,18 +2,18 @@ package net.myriantics.klaxon.recipe.blast_processing;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.input.RecipeInput;
-import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerData;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
 public class BlastProcessingRecipeInput implements RecipeInput {
-    private final ItemExplosionPowerData powerData;
+    private final ExplosiveCatalystData powerData;
     private final ItemStack inputStack;
 
-    public BlastProcessingRecipeInput(ItemStack inputStack, ItemExplosionPowerData powerData) {
+    public BlastProcessingRecipeInput(ItemStack inputStack, ExplosiveCatalystData powerData) {
         this.inputStack = inputStack;
         this.powerData = powerData;
     }
 
-    public ItemExplosionPowerData getPowerData() {
+    public ExplosiveCatalystData getPowerData() {
         return powerData;
     }
 

@@ -1,0 +1,10 @@
+{
+  "parent": "klaxon:block/pipe_matrix_u_bend/x_positive",
+  "textures": {
+    "particle": "klaxon:block/copper_pipe_matrix/u_bend_side_positive",
+    "top": "klaxon:block/copper_pipe_matrix/exposed_pipes",
+    "u_bend_bottom": "klaxon:block/copper_pipe_matrix/u_bend_bottom",
+    "u_bend_curve": "klaxon:block/copper_pipe_matrix/u_bend_curve_positive",
+    "u_bend_side": "klaxon:block/copper_pipe_matrix/u_bend_side_positive"
+  }
+}

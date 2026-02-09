@@ -1,6 +1,5 @@
 {
   "values": [
-    "#c:rubber",
     "klaxon:hallnox_pod",
     "klaxon:hallnox_stem",
     "klaxon:stripped_hallnox_stem",
@@ -18,6 +17,9 @@
     "klaxon:hallnox_hanging_sign",
     "klaxon:hallnox_wall_hanging_sign",
     "klaxon:hallnox_fence",
-    "klaxon:hallnox_fence_gate"
+    "klaxon:hallnox_fence_gate",
+    "klaxon:rubber_block",
+    "klaxon:rubber_sheet_block",
+    "klaxon:molten_rubber_block"
   ]
 }

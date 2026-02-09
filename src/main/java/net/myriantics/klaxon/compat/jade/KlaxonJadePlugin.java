@@ -3,10 +3,12 @@ package net.myriantics.klaxon.compat.jade;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.functional.HallnoxPodBlock;
-import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.compat.jade.providers.GrappleClawEntityProvider;
 import net.myriantics.klaxon.compat.jade.providers.HallnoxPodStatusProvider;
 import net.myriantics.klaxon.compat.jade.providers.DeepslateBlastProcessorProvider;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import snownee.jade.addon.harvest.HarvestToolProvider;
 import snownee.jade.addon.harvest.SimpleToolHandler;
@@ -21,6 +23,7 @@ public class KlaxonJadePlugin implements IWailaPlugin {
     @Override
     public void register(IWailaCommonRegistration registration) {
         registration.registerBlockDataProvider(DeepslateBlastProcessorProvider.INSTANCE, DeepslateBlastProcessorBlock.class);
+        registration.registerEntityDataProvider(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
         IWailaPlugin.super.register(registration);
     }
 
@@ -41,6 +44,8 @@ public class KlaxonJadePlugin implements IWailaPlugin {
 
         registration.registerBlockComponent(DeepslateBlastProcessorProvider.INSTANCE, DeepslateBlastProcessorBlock.class);
         registration.registerBlockComponent(HallnoxPodStatusProvider.INSTANCE, HallnoxPodBlock.class);
+        registration.registerEntityComponent(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
+        registration.registerEntityIcon(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
 
         IWailaPlugin.super.registerClient(registration);
     }

@@ -1,0 +1,244 @@
+package net.myriantics.klaxon.block.decor.hallnox_bulb;
+
+import com.mojang.serialization.MapCodec;
+import net.minecraft.block.*;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.ItemActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.block.NeighborUpdater;
+import net.minecraft.world.event.GameEvent;
+import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
+import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import org.jetbrains.annotations.Nullable;
+
+public class HallnoxBulbBlock extends ConnectingBlock implements Waterloggable, Wrenchable, NeighborPlacementListener {
+
+    public static final MapCodec<HallnoxBulbBlock> CODEC = createCodec(HallnoxBulbBlock::new);
+
+    private static final float RADIUS = 0.3125f; // 5/16 pixels
+    private static final VoxelShape BASE_SHAPE = Block.createCuboidShape(2, 2, 2, 14, 14, 14);
+
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+
+    protected final VoxelShape[] facingsToFusedShape = new VoxelShape[64];
+
+    public HallnoxBulbBlock(Settings settings) {
+        super(RADIUS, settings);
+        this.setDefaultState(getDefaultState()
+                .with(WATERLOGGED, false)
+                .with(UP, false)
+                .with(DOWN, false)
+                .with(NORTH, false)
+                .with(EAST, false)
+                .with(SOUTH, false)
+                .with(WEST, false)
+        );
+    }
+
+
+    @Override
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        int mask = getConnectionMask(state);
+
+        if (facingsToFusedShape[mask] == null) {
+            facingsToFusedShape[mask] = VoxelShapes.union(BASE_SHAPE, facingsToShape[mask]);
+        }
+
+        return facingsToFusedShape[mask];
+    }
+
+    protected boolean shouldConnect(World world, BlockState targetState, BlockPos targetPos, Direction offsetDir) {
+        return targetState.isSideSolid(world, targetPos, offsetDir.getOpposite(), SideShapeType.CENTER) || targetState.getBlock() instanceof HallnoxBulbBlock;
+    }
+
+    @Override
+    public void onAdjacentPlaceOnSide(World world, BlockPos clickedPos, BlockState clickedState, BlockPos placedPos, BlockState placedState, ItemPlacementContext context) {
+        if (context.getPlayer() == null || context.getPlayer().isSneaking()) {
+            return;
+        }
+
+        if (shouldConnect(world, placedState, placedPos, context.getSide())) {
+            world.setBlockState(clickedPos, clickedState.with(FACING_PROPERTIES.get(context.getSide()), true));
+        }
+    }
+
+
+    public void onAdjacentPlaceOnSideWhileNotCrouching(World world, BlockPos bulbPos, BlockState bulbState, BlockPos placedPos, BlockState placedState, Direction clickedSide) {
+        if (shouldConnect(world, placedState, placedPos, clickedSide)) {
+            world.setBlockState(bulbPos, bulbState.with(FACING_PROPERTIES.get(clickedSide), true));
+        }
+    }
+
+    @Override
+    public ItemActionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
+        BlockPos targetPos = context.hitResult().getBlockPos();
+
+        World world = context.world();
+        Vec3d hitPos = context.hitResult().getPos().subtract(Vec3d.ofCenter(targetPos));
+        Direction togglingDirection = Direction.getFacing(hitPos.getX(), hitPos.getY(), hitPos.getZ());
+
+        BlockPos conjoiningPos = targetPos.offset(togglingDirection);
+        BlockState conjoiningState = world.getBlockState(conjoiningPos);
+
+        BooleanProperty toggledProperty = FACING_PROPERTIES.get(togglingDirection);
+        BooleanProperty conjoiningToggledProperty = FACING_PROPERTIES.get(togglingDirection.getOpposite());
+
+        // don't update block states on the client
+        if (!world.isClient()) {
+            // cycle conjoining bulb connector state if possible
+            if (
+                // make sure conjoining state is also a hallnox bulb
+                    conjoiningState.getBlock() instanceof HallnoxBulbBlock
+                            // make sure the states match
+                            && conjoiningState.get(conjoiningToggledProperty)
+                            .equals(context.targetState().get(toggledProperty)
+                            )
+            ) {
+                world.setBlockState(
+                        conjoiningPos,
+                        conjoiningState.cycle(conjoiningToggledProperty)
+                );
+            }
+
+            // cycle bulb connector state
+            world.setBlockState(
+                    targetPos,
+                    context.targetState().cycle(toggledProperty)
+            );
+        }
+
+
+        BlockSoundGroup soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState().getSoundGroup();
+
+        world.playSound(
+                context.player(),
+                targetPos,
+                context.targetState().get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
+                SoundCategory.BLOCKS,
+                0.6f + (0.2f * world.getRandom().nextFloat()),
+                0.2f + (0.4f * world.getRandom().nextFloat())
+        );
+
+        // this is a stub implementation in ClientWorld so it's fine
+        // trip sculk sensors because it's funny
+        world.emitGameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Emitter.of(context.player(), context.targetState()));
+
+        return ItemActionResult.SUCCESS;
+    }
+
+    @Override
+    public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
+        BooleanProperty toggledProperty = FACING_PROPERTIES.get(context.dispenserFacing().getOpposite());
+        ServerWorld serverWorld = context.serverWorld();
+
+        // calculations are simpler here because dispensers can only face 6 ways - also can't click on random parts of the block
+        serverWorld.setBlockState(context.targetPos(), context.targetState().cycle(toggledProperty));
+
+        BlockSoundGroup soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.getDefaultState().getSoundGroup();
+        serverWorld.playSound(
+                null,
+                context.targetPos(),
+                context.targetState().get(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
+                SoundCategory.BLOCKS,
+                0.6f + (0.2f * serverWorld.getRandom().nextFloat()),
+                0.2f + (0.4f * serverWorld.getRandom().nextFloat())
+        );
+
+        // proc sculk sensors
+        serverWorld.emitGameEvent(GameEvent.BLOCK_CHANGE, context.targetPos(), GameEvent.Emitter.of(context.targetState()));
+
+        return true;
+    }
+
+
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        // only update neighbors on placement if placement was actually successful
+        for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
+            BlockPos neighborPos = pos.offset(direction);
+            BlockState neighborState = world.getBlockState(neighborPos);
+
+            if (neighborState.getBlock() instanceof HallnoxBulbBlock && state.get(FACING_PROPERTIES.get(direction))) {
+                world.setBlockState(neighborPos, neighborState.with(FACING_PROPERTIES.get(direction.getOpposite()), true));
+            }
+        }
+
+        super.onPlaced(world, pos, state, placer, itemStack);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        BlockState newState = super.getPlacementState(ctx);
+
+        // silence, intellij warnings
+        if (newState != null) {
+            World world = ctx.getWorld();
+            BlockPos pos = ctx.getBlockPos();
+            Direction clickedFace = ctx.getSide();
+            Direction offsetDir = clickedFace.getOpposite();
+            PlayerEntity player = ctx.getPlayer();
+
+            newState = newState.with(WATERLOGGED, world.getFluidState(pos).isOf(Fluids.WATER.getStill()));
+
+            // just so we don't have to repeatedly check for this
+            if (player == null) return newState;
+
+            // don't autoconnect to anything if holding shift
+            BlockState clickedState = world.getBlockState(pos.offset(offsetDir));
+            if (player.isSneaking()) {
+                // connect to blocks with solid center
+                if (shouldConnect(world, clickedState, pos.offset(clickedFace.getOpposite()), clickedFace.getOpposite())) {
+                    newState = newState.with(FACING_PROPERTIES.get(offsetDir), true);
+                }
+            } else {
+                // automatically connect to other hallnox bulbs - updates them to connect, too
+                for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
+                    BlockPos neighborPos = pos.offset(direction);
+                    BlockState neighborState = world.getBlockState(neighborPos);
+                    if (shouldConnect(world, neighborState, neighborPos, direction)) {
+                        newState = newState.with(FACING_PROPERTIES.get(direction), true);
+                    }
+                }
+            }
+        }
+
+        return newState;
+    }
+
+    @Override
+    protected MapCodec<HallnoxBulbBlock> getCodec() {
+        return CODEC;
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(WATERLOGGED, UP, DOWN, NORTH, EAST, SOUTH, WEST);
+    }
+
+    @Override
+    protected FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+}

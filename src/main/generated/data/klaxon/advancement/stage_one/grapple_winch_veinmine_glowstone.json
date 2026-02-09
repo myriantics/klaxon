@@ -1,0 +1,32 @@
+{
+  "parent": "klaxon:stage_one/grapple_winch_de_anchor_grapple_claw",
+  "criteria": {
+    "grapple_winch_veinmine_glowstone": {
+      "conditions": {
+        "block_ingredient": {
+          "block": "minecraft:glowstone"
+        }
+      },
+      "trigger": "klaxon:grapple_winch_veinmine"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_veinmine_glowstone.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:glowstone"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_veinmine_glowstone.title"
+    }
+  },
+  "requirements": [
+    [
+      "grapple_winch_veinmine_glowstone"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosionPower": 0.0,
-  "ingredient": {
-    "item": "minecraft:wind_charge"
-  },
-  "isHidden": false,
-  "producesFire": false
-}

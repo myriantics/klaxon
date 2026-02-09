@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
-import net.myriantics.klaxon.mixin.anvil_emulation.AnvilScreenHandlerInvoker;
+import net.myriantics.klaxon.mixin.minecraft.anvil_emulation.AnvilScreenHandlerInvoker;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
@@ -136,6 +136,11 @@ public class HammerItem extends MiningToolItem {
         return didAnvilMimicrySucceed ? ActionResult.SUCCESS : ActionResult.PASS;
     }
 
+    @Override
+    public void postDamageEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        stack.damage(1, attacker, EquipmentSlot.MAINHAND);
+    }
+
     private static void damageItem(ItemStack stack, LivingEntity attacker) {
         stack.damage(1, attacker, EquipmentSlotHelper.convert(attacker.getActiveHand()));
     }
@@ -163,10 +168,9 @@ public class HammerItem extends MiningToolItem {
     }
 
     public enum UsageType implements StringIdentifiable {
-        WALLJUMP_SUCCEEDED,
-        STRENGTH_WALLJUMP_SUCCEEDED,
-        WALLJUMP_FAILED,
-        MINECART_WALLJUMP_SUCCESS;
+        NORMAL_WALLJUMP,
+        BOOSTED_WALLJUMP,
+        MINECART_WALLJUMP;
 
         private static final Codec<UsageType> CODEC = StringIdentifiable.createCodec(UsageType::values);
 

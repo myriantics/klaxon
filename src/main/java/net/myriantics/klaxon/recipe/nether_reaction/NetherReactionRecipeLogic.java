@@ -33,8 +33,12 @@ public abstract class NetherReactionRecipeLogic {
      * @return
      * The output BlockState. This is immediately set into the world.
      */
-    public static BlockState getOutputState(BlockState targetState, BlockPos targetPos, ServerWorld serverWorld, Explosion explosion) {
-
+    public static BlockState getOutputState(
+            BlockState targetState,
+            BlockPos targetPos,
+            ServerWorld serverWorld,
+            Explosion explosion
+    ) {
         List<RecipeEntry<NetherReactionRecipe>> matches = serverWorld.getRecipeManager().getAllMatches(KlaxonRecipeTypes.NETHER_REACTION, new NetherReactionRecipeInput(targetState), serverWorld);
 
         Vec3d center = Vec3d.ofCenter(targetPos);

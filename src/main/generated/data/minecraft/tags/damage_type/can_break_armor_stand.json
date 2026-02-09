@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "klaxon:hammer_bonking",
+      "required": false
+    },
+    {
+      "id": "klaxon:hammer_walloping",
+      "required": false
+    },
+    {
+      "id": "klaxon:cleaving",
+      "required": false
+    },
+    {
+      "id": "klaxon:flint_and_steeeling",
+      "required": false
+    }
+  ]
+}

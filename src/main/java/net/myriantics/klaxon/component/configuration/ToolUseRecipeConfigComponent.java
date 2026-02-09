@@ -8,6 +8,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,8 @@ public record ToolUseRecipeConfigComponent(SoundEvent usageSound, boolean canCos
     public ToolUseRecipeConfigComponent(SoundEvent usageSound) {
         this(usageSound, false);
     }
+
+    public static final ToolUseRecipeConfigComponent DEFAULT = new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_STONE_BREAK);
 
     public static final Codec<ToolUseRecipeConfigComponent> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(

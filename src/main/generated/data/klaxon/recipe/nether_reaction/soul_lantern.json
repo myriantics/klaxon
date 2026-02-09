@@ -1,5 +1,7 @@
 {
   "type": "klaxon:nether_reaction",
-  "output_block": "minecraft:soul_lantern",
-  "valid_blocks": "#klaxon:nether_reaction/soul_lantern_convertible"
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/soul_lantern_convertible"
+  },
+  "output_block": "minecraft:soul_lantern"
 }

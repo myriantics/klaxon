@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:explosive_catalyst_definition",
+  "explosive_catalyst_data": {
+    "behavior": "klaxon:default",
+    "explosion_power": 0.8,
+    "produces_fire": false
+  },
+  "ingredient": {
+    "item": "minecraft:gunpowder"
+  },
+  "is_hidden_from_emi": false
+}

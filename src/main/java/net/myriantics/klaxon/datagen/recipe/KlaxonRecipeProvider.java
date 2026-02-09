@@ -10,10 +10,13 @@ import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.*;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.datagen.custom.providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.datagen.recipe.providers.*;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
+import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -32,11 +35,10 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         new KlaxonBlastProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonCraftingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonMakeshiftCraftingRecipeProvider(this, exporter).generateRecipes();
-        new KlaxonItemExplosionPowerRecipeProvider(this, exporter).generateRecipes();
+        new KlaxonExplosiveCatalystDefinitionRecipeProvider(this, exporter).generateRecipes();
         new KlaxonSmeltingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonOreProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonRecipeOverrideProvider(this, exporter).generateRecipes();
-        new KlaxonItemCoolingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonNetherReactionRecipeProvider(this, exporter).generateRecipes();
         new KlaxonManualItemApplicationRecipeProvider(this, exporter).generateRecipes();
     }
@@ -87,7 +89,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
     public void acceptOverrideRecipe(RecipeExporter exporter, Identifier id) {
         // accept a REALLY FUNNY recipe with the "never loads" resource condition
         withConditions(exporter, new NotResourceCondition(new TrueResourceCondition()))
-                .accept(id, new ToolUsageRecipe(Ingredient.ofItems(Items.PISTON), Ingredient.ofItems(Items.END_ROD), new ItemStack(Items.SHEEP_SPAWN_EGG)), null);
+                .accept(id, new ToolUsageRecipe(KlaxonToolUsageRecipeTypes.HAMMERING, Ingredient.ofItems(Items.END_ROD), new ItemStack(Items.SHEEP_SPAWN_EGG), SoundEvents.BLOCK_PISTON_EXTEND), null);
     }
 
     // gotcha stinker

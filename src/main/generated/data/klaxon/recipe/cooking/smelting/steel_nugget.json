@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 3.0,
+  "group": "steel_nugget",
+  "ingredient": {
+    "tag": "klaxon:steel_equipment"
+  },
+  "result": {
+    "id": "klaxon:steel_nugget"
+  }
+}

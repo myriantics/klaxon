@@ -1,0 +1,20 @@
+accessWidener v2 named
+
+accessible method net/minecraft/client/particle/ExplosionEmitterParticle <init> (Lnet/minecraft/client/world/ClientWorld;DDD)V
+
+accessible class net/minecraft/entity/passive/SnifferBrain$SearchingTask
+accessible method net/minecraft/entity/passive/SnifferBrain$SearchingTask <init> ()V
+
+accessible class net/minecraft/entity/passive/SnifferBrain$DiggingTask
+accessible method net/minecraft/entity/passive/SnifferBrain$DiggingTask <init> (II)V
+
+accessible class net/minecraft/entity/passive/SnifferBrain$FinishDiggingTask
+accessible method net/minecraft/entity/passive/SnifferBrain$FinishDiggingTask <init> (I)V
+
+accessible method net/minecraft/entity/passive/SnifferEntity canDig ()Z
+
+accessible method net/minecraft/entity/Entity getSavedEntityId ()Ljava/lang/String;
+
+accessible class net/minecraft/enchantment/EnchantmentHelper$ContextAwareConsumer
+
+accessible class net/minecraft/predicate/StatePredicate$Condition

@@ -3,23 +3,26 @@ package net.myriantics.klaxon.recipe.blast_processing;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.myriantics.klaxon.recipe.RecipeOutputCompound;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
-import static net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
+import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
 public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput> {
     private final Ingredient ingredientItem;
     private final double explosionPowerMin;
     private final double explosionPowerMax;
-    private final ItemStack result;
+    private final RecipeOutputCompound recipeOutputCompound;
 
-    public BlastProcessingRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, ItemStack result) {
+    public BlastProcessingRecipe(Ingredient inputA, double explosionPowerMin, double explosionPowerMax, RecipeOutputCompound result) {
         this.ingredientItem = inputA;
         this.explosionPowerMin = explosionPowerMin;
         this.explosionPowerMax = explosionPowerMax;
-        this.result = result;
+        this.recipeOutputCompound = result;
     }
 
     @Override
@@ -29,14 +32,18 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
     @Override
     public ItemStack craft(BlastProcessingRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+        return ItemStack.EMPTY;
+    }
+
+    public ItemStack[] craft(BlastProcessingRecipeInput input, RegistryWrapper.WrapperLookup lookup, Random random) {
         double explosionPower = input.getPowerData().explosionPower();
 
         // check if explosion power exists and is within bounds
         if (explosionPower > 0 && explosionPower >= explosionPowerMin && explosionPower <= explosionPowerMax) {
-            return result.copy();
+            return recipeOutputCompound.computeDrops(random);
         }
 
-        return ItemStack.EMPTY;
+        return new ItemStack[0];
     }
 
     @Override
@@ -46,7 +53,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
     @Override
     public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
-        return this.result;
+        return ItemStack.EMPTY;
     }
 
     public Ingredient getIngredientItem() {
@@ -61,9 +68,13 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
         return explosionPowerMax;
     }
 
+    public RecipeOutputCompound getRecipeOutputCompound() {
+        return recipeOutputCompound;
+    }
 
-    public boolean isCompatibleWithCatalyst(double explosionPower) {
-        return explosionPowerMin <= explosionPower && explosionPowerMax >= explosionPower;
+
+    public boolean isCompatibleWithCatalyst(ExplosiveCatalystData data) {
+        return data.matchesConditions(this.explosionPowerMin, this.explosionPowerMax);
     }
 
     @Override

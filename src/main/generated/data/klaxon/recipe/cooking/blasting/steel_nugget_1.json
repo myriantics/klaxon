@@ -1,11 +1,11 @@
 {
   "type": "minecraft:blasting",
   "category": "misc",
-  "cookingtime": 150,
-  "experience": 3.0,
+  "cookingtime": 100,
+  "experience": 1.0,
   "group": "steel_nugget",
   "ingredient": {
-    "item": "klaxon:steel_cleaver"
+    "item": "klaxon:steel_wire"
   },
   "result": {
     "id": "klaxon:steel_nugget"

@@ -24,6 +24,7 @@ public class KlaxonBlockEntityTypeTagProvider extends FabricTagProvider<BlockEnt
                 .add(BlockEntityType.DAYLIGHT_DETECTOR)
                 .add(BlockEntityType.SKULL)
                 .add(BlockEntityType.ENCHANTING_TABLE)
-                .add(BlockEntityType.ENDER_CHEST);
+                .add(BlockEntityType.ENDER_CHEST)
+                .add(BlockEntityType.BEEHIVE);
     }
 }

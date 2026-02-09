@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "klaxon:grappling",
+      "required": false
+    },
+    {
+      "id": "klaxon:rending",
+      "required": false
+    }
+  ]
+}

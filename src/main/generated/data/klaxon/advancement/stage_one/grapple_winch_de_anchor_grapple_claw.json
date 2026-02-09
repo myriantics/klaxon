@@ -1,0 +1,26 @@
+{
+  "parent": "klaxon:stage_one/obtain_grapple_winch",
+  "criteria": {
+    "grapple_winch_de_anchor_grapple_claw": {
+      "trigger": "klaxon:de_anchor_grapple_winch_claw"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_de_anchor_grapple_claw.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_grapple_claw"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_de_anchor_grapple_claw.title"
+    }
+  },
+  "requirements": [
+    [
+      "grapple_winch_de_anchor_grapple_claw"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

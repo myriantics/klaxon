@@ -1,0 +1,140 @@
+# KLAXON v0.5.0
+# Reworks
+- ### Entity Weight
+  - No longer Attribute Modifier-based.
+  - Now is a simple boolean yes/no. An entity is either heavy or light.
+  - Read the Wiki page for more info.
+- ### Blast Processing Recipes
+  - Now supports Chance Outputs!
+  - Several existing recipes have been upgraded with a chance at extra outputs
+- ### Steel Armor
+  - Has been completely retextured!
+  - Steel Chestplate now requires a Steel Casing instead of a Steel Block to craft.
+- ### Steel Wrench
+  - Now supports Steel & Crude Steel Doors & Trapdoors.
+  - "Wrenchable" interface now exists which allows addition of wrench support to more blocks more easily. Currently only used for the above mentioned and the Hallnox Bulb.
+- ### Steel Cable Shears
+  - Now acts like Shears when processing loot tables.
+- ### GameRules
+  - **shouldBlastProcessorExplosionsModifyWorld** GameRule now uses the klaxon.\[NAME] naming convention.
+- ### Hammer Walljumping
+  - Is no longer fully disabled by Heavy Equipment.
+- ### Tool Usage Recipes
+  - Have been datafied in a better way for improved UI/UX.
+# Features
+## Content
+- ### Hallnox Fungus / Blockset
+  - An inert derivative of Warped & Crimson Fungus that can thrive in any environment, from the deepest depths of the ocean to the farthest reaches of space.
+  - While it does not directly retain the special properties of its predecessors, some form of magic seems to linger within.
+  - **Hallnox Woodset**
+    - Due to being a derivative of Nether Fungus, the Hallnox Woodset does not have a boat. However, it is fireproof.
+  - **Hallnox Pod**
+    - The stylish sapling-ish-thing of Hallnox Fungus. It's an instance of SaplingBlock, so that kinda counts.
+    - Currently obtainable from Sniffers, although that might change in the future. Wink wink.
+    - Can grow in all directions. Upright, sideways, and downright have different tree shapes.
+    - Growth is disabled automatically when attached to Hallnox Wart, Hyphae, or Stems. Can also be disabled manually via Shears.
+    - Can be used on any quality of Steel Casing to create a Nether Reactor Core.
+  - **Hallnox Bulb**
+    - Stylish fusion of Hallnox Pods, Glass, and Steel. (Can be crafted with any plate, though, because yeah)
+    - A light fixture sure to wow any houseguests.
+    - Automatically connects to other Bulbs when placing. You'll figure out how it works.
+    - Connections can be toggled with the Steel Wrench.
+- ### Grapple Winch & Steel Grapple Claw
+  - **Grapple Winch**
+    - The latest & greatest pseudolegendary item offered by KLAXON.
+    - Uses Steel Grapple Claws as Ammo
+  - **Steel Grapple Claw**
+    - Ammunition for the Grapple Winch, although it can exist while disconnected.
+    - Instantly destroys any valid blocks in its path. By default, this includes Cleaver and Hammer-Instabreakable blocks among other things.
+    - Can stack to 16.
+  - Can veinmine hammer-instabreakable blocks on its return journey
+    - This feature is enhanced by data-driven Veinmine Groups - an example of which includes the ability to veinmine all blocks in the #c:glass tag.
+  - Can drag items along with it
+  - Anchored Grapple Claws can be yanked out of the ground if wielder is wearing **Heavy Equipment**. 
+  - Can hook and pull Entities
+  - Has been finetuned and polished for like 6 months.
+  - Taught me several new things about modding, networking and rendering.
+  - Try this thing out, it's epic.
+- ### Nether Reactor Core (and the Crude Variant)
+  - Detonating an explosive that produces a vanilla explosion within either of these blocks will trigger a Nether Reaction Explosion.
+  - The main difference between the two Nether Reactor Cores is that the Steel one leaves the casing behind after activation, while the Crude one is destroyed.
+    - This makes the proper Nether Reactor Core easier to automate, as replacement Hallnox Pods can be applied via Dispenser.
+- ### Steel Casing
+  - Obligatory tech mod casing block
+  - Currently only used to make Nether Reactor Cores, Steel Chestplates, and Grapple Winches, but will be of grater use in the future.
+- ### Wires & Wire Spool Blocks
+  - Prepping for adding machines. It's coming soon, trust me haha.
+  - Right now the Steel Wire Spool is used to make the Grapple Winch.
+  - Wire Spool Blocks are crafted with Fences, because I'm evil.
+  - There's also full oxidation stages for the Copper Wire Spools, which look pretty cool.
+- ### Crested Steel Helmet
+  - A special variant of the Steel Helmet
+  - Has a dyeable cosmetic crest
+  - Obtainable in a special way - one hint is that it's a reference to a Minecraft server :)
+- ### Armor Trims
+  - Steel is now usable as an Armor Trim Material.
+## Recipe Types
+- ### Nether Reaction
+  - Hijacks an explosion that goes off within a Nether Reactor Core, then turns all nearby valid blocks into their Nether counterparts.
+  - Put in as a progression failsafe against Nether biome mods - Warped & Crimson Fungi will be vital to progression in the future.
+- ### World Item Application
+  - TOTALLY not ripping off Create. Definitely not.
+  - Allows you to use an item on a block to transform it into another block. 100% original.
+  - Is currently only used to make Nether Reactor Cores.
+  - Has a unique feature in that all KLAXON Manual Item Application recipes can be performed by Dispensers.
+## GameRules
+ - ### klaxon.dispensersPerformWorldItemApplicationRecipes
+   - Allows server admins and pack devs to decide if they want to have Dispensers be able to perform Manual Item Interaction recipes or not.
+## Advancements
+- Advancement Page renamed from "KLAXON - Prelude" to "KLAXON - Initialization". Mainly because I felt that was ripping off ULTRAKILL a bit too much.
+  - This will wipe any advancements you may have from before this update. Won't happen again, as internally it's now called "klaxon:stage_one/whatever", but sorry about that.
+- ### Uses 96 Batteries
+  - Obtain a Hallnox Pod.
+- ### THE NETHER.
+  - Activate a Nether Reactor Core by detonating an exposion within the block.
+- ### Wire So Shearious
+  - Craft Metal Wire by using Steel Cable Shears on a Metal Plate
+- ### Boring Mining Tool
+  - Obtain the Grapple Winch
+- ### Spidey
+  - Intentionally disconnect a Grapple Cable while moving. This is an expensive way to move around, but it's cool so that makes up for it.
+- ### Smash And Grab
+  - Veinmine Glowstone by retracting an attached Grapple Claw with the Grapple Winch
+- ### Dragonhearted
+  - Grapple onto an Ender Dragon.
+  - I added specialized compat for this - you know you're suffering from feature creep when you're adding special handling for ender dragons and item frames in the same class.
+## Splashes
+- Splashes are now resource-driven instead of hardcoded. So you can remove them if you don't like them.
+- ### OH MY BLOCKS!
+  - Sourced from a Minecraft manga book that my friends and I picked up. Thought it was funny enough to add.
+- ### THIS IS MY CRAFT!
+  - Same as above. :)
+- ### Diabolical!
+  - Ref to The Boys
+- ### Phenomenal
+  - Ref to Dispatch
+- ### [TITLE CARD]
+  - Ref to [TITLE CARD]
+# Removals
+- ### Removed Innate Enchantments
+  - They were hard to maintain, brittle, and not that fun.
+  - To compensate, the durability of all Steel Equipment has been greatly increased.
+- ### Removed Dual Wielding
+  - Needless, not-useful complexity that I didn't want to maintain
+- ### Removed Item Cooling
+  - It was an unfun and intrusive mechanic that provided too little of a challenge to be interesting - alongside being way too wack to maintain.
+- ### Removed Molten Rubber
+  - Again, kinda unfun. This streamlines gameplay a bit
+- ### Removed Vanilla Recipe Overwriting
+  - Blast Furni and Flint & Steel no longer require Steel / Crude Steel to craft.
+  - I did a test playthrough and this ticked me off
+  - Also not my place to be overwriting this kinda stuff haha. That's up to packdevs.
+# Compat
+### Jade
+- Added Jade tooltip for Hallnox Pod growth status. Indicates whether growth is inhibited by supporting block or has been disabled with Shears.
+- Steel Cleaver is now registered under the Axe category - no longer will the icon show up when highlighting any axe-mineable block.
+- Steel Grapple Claws now have an icon when looked at with Jade
+### EMI
+- Tool Usage recipes are now dynamically added as new categories - you can datapack some in if you like!
+- Added compat for Nether Reaction recipes
+- Added compat for Manual Item Application Recipes

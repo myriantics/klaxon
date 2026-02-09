@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "klaxon:block/oxidized_copper_pipe_matrix/exposed_pipes",
+    "side": "klaxon:block/oxidized_copper_pipe_matrix/segment_side",
+    "top": "klaxon:block/oxidized_copper_pipe_matrix/exposed_pipes"
+  }
+}

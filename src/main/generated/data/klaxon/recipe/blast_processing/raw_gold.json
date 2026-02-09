@@ -1,0 +1,24 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosion_power_max": 1.4,
+  "explosion_power_min": 0.4,
+  "input_ingredient": {
+    "item": "minecraft:raw_gold"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:fractured_raw_gold"
+      }
+    },
+    {
+      "chance": 0.3333333333333333,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:fractured_raw_gold"
+      }
+    }
+  ]
+}

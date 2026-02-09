@@ -1,9 +1,12 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
+import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RawShapedRecipe;
+import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.collection.DefaultedList;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
@@ -11,6 +14,7 @@ import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -43,11 +47,11 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
         addMakeshiftShapedCraftingRecipe(Map.of(
                         'P', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                         'I', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
-                        'B', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_BLOCKS)
+                        'C', Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING)
                 ),
                 new String[]{
                         "I I",
-                        "PBP",
+                        "PCP",
                         "PPP"
                 },
                 List.of(),
@@ -151,7 +155,7 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 DefaultedList.copyOf(Ingredient.EMPTY,
                         Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
                         Ingredient.ofItems(Items.FLINT)),
-                new ItemStack(Items.FLINT_AND_STEEL),
+                new ItemStack(KlaxonItems.REINFORCED_FLINT_AND_STEEL),
                 List.of(Ingredient.ofItems(Items.FLINT)),
                 null, null);
     }

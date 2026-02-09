@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "grapple_claw",
+  "key": {
+    "I": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    " P ",
+    "PIP",
+    "IP "
+  ],
+  "result": {
+    "count": 4,
+    "id": "klaxon:steel_grapple_claw"
+  }
+}

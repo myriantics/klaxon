@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosionPower": 1.3,
-  "ingredient": {
-    "item": "minecraft:glowstone_dust"
-  },
-  "isHidden": false,
-  "producesFire": true
-}

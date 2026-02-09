@@ -1,0 +1,30 @@
+{
+  "parent": "klaxon:stage_one/hammer_walljump_normal",
+  "criteria": {
+    "hammer_walljump_boosted": {
+      "conditions": {
+        "usageType": "boosted_walljump"
+      },
+      "trigger": "klaxon:walljump_ability"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.hammer_walljump_boosted.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:blaze_powder"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.hammer_walljump_boosted.title"
+    }
+  },
+  "requirements": [
+    [
+      "hammer_walljump_boosted"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

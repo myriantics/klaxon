@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry.misc;
 
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -12,6 +13,24 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent ITEM_HAMMER_USAGE = register("item.hammer.usage", SoundEvents.BLOCK_ANVIL_LAND);
     public static final SoundEvent ITEM_CABLE_SHEARS_USAGE = register("item.cable_shears.usage", SoundEvents.BLOCK_CHAIN_BREAK);
     public static final SoundEvent ITEM_SHEARS_USAGE = register("item.shears.usage", SoundEvents.ENTITY_SHEEP_SHEAR);
+    // grapple winch
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_LAUNCH = register("item.grapple_winch.launch", SoundEvents.ITEM_TRIDENT_THROW.value());
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_EXTRUDING = register("item.grapple_winch.extrude", SoundEvents.ENTITY_MINECART_INSIDE_UNDERWATER);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_RETRACTING = register("item.grapple_winch.retracting", SoundEvents.ENTITY_MINECART_RIDING);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_LOAD = register("item.grapple_winch.load", SoundEvents.BLOCK_PISTON_CONTRACT);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_UNLOAD = register("item.grapple_winch.load", SoundEvents.BLOCK_PISTON_EXTEND);
+    public static final SoundEvent ITEM_GRAPPLE_WINCH_FAST_LOAD = register("item.grapple_winch.fast_load", SoundEvents.BLOCK_PISTON_CONTRACT);
+    // grapple claw
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_ANCHOR = register("entity.grapple_claw.anchor", SoundEvents.ITEM_TRIDENT_THUNDER.value());
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DAMAGE = register("entity.grapple_claw.damage", SoundEvents.BLOCK_METAL_HIT);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DESTROY = register("entity.grapple_claw.destroy", SoundEvents.ENTITY_ITEM_BREAK);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_DETACH = register("entity.grapple_claw.detach", SoundEvents.ENTITY_ITEM_BREAK);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_HOOK = register("entity.grapple_claw.hook", SoundEvents.BLOCK_CHAIN_BREAK);
+    public static final SoundEvent ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT = register("entity.grapple_claw.rebound_at_limit", SoundEvents.ITEM_TRIDENT_RETURN);
+    // nether reaction
+    public static final RegistryEntry<SoundEvent> NETHER_REACTION_EXPLOSION = register("block.nether_reactor_core.explosion", SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE);
+    // crested steel helmet
+    public static final SoundEvent SNIFFER_DIG_METAL = register("entity.sniffer.dig_metal", SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE).value();
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");
@@ -19,6 +38,11 @@ public abstract class KlaxonSoundEvents {
 
     // this doesnt actually register anything in order to prevent a crash when our custom sound files are missing
     private static SoundEvent register(String name, SoundEvent soundEvent) {
+        return soundEvent;
+        // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), soundEvent);
+    }
+
+    private static RegistryEntry<SoundEvent> register(String name, RegistryEntry<SoundEvent> soundEvent) {
         return soundEvent;
         // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), soundEvent);
     }

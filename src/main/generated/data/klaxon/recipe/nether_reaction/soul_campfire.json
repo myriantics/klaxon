@@ -1,5 +1,7 @@
 {
   "type": "klaxon:nether_reaction",
-  "output_block": "minecraft:soul_campfire",
-  "valid_blocks": "#klaxon:nether_reaction/soul_campfire_convertible"
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/soul_campfire_convertible"
+  },
+  "output_block": "minecraft:soul_campfire"
 }

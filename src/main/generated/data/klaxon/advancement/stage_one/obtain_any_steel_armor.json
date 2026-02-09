@@ -1,0 +1,34 @@
+{
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
+  "criteria": {
+    "obtain_any_steel_armor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#klaxon:steel_armor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.obtain_any_steel_armor.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_chestplate"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.obtain_any_steel_armor.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_any_steel_armor"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "root": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "klaxon:textures/gui/advancements/backgrounds/stage_one.png",
+    "description": {
+      "translate": "advancements.klaxon.stage_one.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:deepslate_blast_processor"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.klaxon.stage_one.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "root"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

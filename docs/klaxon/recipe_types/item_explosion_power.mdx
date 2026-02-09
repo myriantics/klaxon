@@ -1,0 +1,22 @@
+# Item Explosion Power
+
+One of the 3 recipe types used by **Blast Processors**, alongside **Blast Processing** and **Explosive Catalyst Behavior** recipes.
+
+Item Explosion Power recipes define the **base explosion power & fiery status** of a given recipe process. Explosive Catalyst Behaviors may modify these values if changed from the default.
+
+### Example Item Explosion Power Recipe JSON
+
+```
+{
+  "type": "klaxon:item_explosion_power",
+  "explosion_power": 5.0,
+  "ingredient": {
+    "tag": "klaxon:bedlike_explodables"
+  },
+  "is_hidden_from_emi": false,
+  "produces_fire": true
+}
+```
+
+### Good To Know
+- Item Explosion Power recipes have an "isHidden" field that determines whether they're registered to EMI or not. This is used for easter egg recipes that use spawn eggs.

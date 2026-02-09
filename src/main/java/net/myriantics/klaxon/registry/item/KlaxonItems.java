@@ -1,22 +1,24 @@
 package net.myriantics.klaxon.registry.item;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Colors;
+import net.minecraft.util.Rarity;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import net.myriantics.klaxon.component.configuration.DefaultInnateItemEnchantmentsComponent;
-import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
-import net.myriantics.klaxon.item.equipment.tools.CleaverItem;
-import net.myriantics.klaxon.item.equipment.tools.HammerItem;
-import net.myriantics.klaxon.item.equipment.tools.CableShearsItem;
-import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
-import net.myriantics.klaxon.registry.entity.KlaxonDamageTypes;
+import net.myriantics.klaxon.item.equipment.tools.*;
+import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
+import net.myriantics.klaxon.registry.dynamic.KlaxonEnchantments;
+import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -28,51 +30,76 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
 
     // tools
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer",
-            new HammerItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+            new HammerItem(KlaxonToolMaterials.STEEL, new KlaxonItemSettings()
                     .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
-                    .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.HAMMER_BONKING))
+                    .damageTypeOverride(KlaxonDamageTypes.HAMMER_BONKING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING))
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), ShieldBreachingComponent.Condition.KNOCKBACK))
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .with3dHandModel()
+                    .getSettings()
             ));
-    public static final Item STEEL_CABLE_SHEARS = registerItem("steel_cable_shears",
-            new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
+    public static final Item STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
+            new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
                     .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1.0f, -2.8f))
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .getSettings()
             ));
     public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
-            new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new Item.Settings()
+            new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
                     .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
-                    .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.CLEAVING))
+                    .damageTypeOverride(KlaxonDamageTypes.CLEAVING)
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), ShieldBreachingComponent.Condition.CRITICAL))
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.LOOTING, 1, Enchantments.UNBREAKING, 4)))
+                    .getSettings()
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
-            new WrenchItem(KlaxonToolMaterials.STEEL, new Item.Settings()
+            new WrenchItem(KlaxonToolMaterials.STEEL, new KlaxonItemSettings()
                     .attributeModifiers(WrenchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 0f, -2.6f))
-                    .component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.WRENCH_OVERTUNING))
+                    .damageTypeOverride(KlaxonDamageTypes.WRENCH_OVERTUNING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
+                    .getSettings()
+            ));
+    public static final Item REINFORCED_FLINT_AND_STEEL = registerSimpleItem("reinforced_flint_and_steel",
+            new ReinforcedFlintAndSteelItem(new KlaxonItemSettings()
+                    .damageTypeOverride(KlaxonDamageTypes.FLINT_AND_STEEELING)
+                    .getSettings(),
+                    KlaxonToolMaterials.STEEL_NUGGET
+            )
+    );
+    public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
+            new GrappleClawItem(new KlaxonItemSettings()
+                    .maxCount(16)
+                    .grappleClaw(4.0f, 6.0f, 67)
+                    .getSettings()
+            ));
+    public static final Item GRAPPLE_WINCH = registerItem("grapple_winch",
+            new GrappleWinchItem(new KlaxonItemSettings()
+                    .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
+                    .maxCount(1)
+                    .damageTypeOverride(KlaxonDamageTypes.BLUDGEONING)
+                    .attributeModifiers(GrappleWinchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 0, -3.2f))
+                    .with3dHandModel()
+                    .withMirroredLeftHandModel()
+                    .getSettings()
             ));
 
     // armor
-    public static final Item STEEL_HELMET = registerSimpleItem("steel_helmet",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
-            ));
-    public static final Item STEEL_CHESTPLATE = registerSimpleItem("steel_chestplate",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
-            ));
-    public static final Item STEEL_LEGGINGS = registerSimpleItem("steel_leggings",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
-            ));
-    public static final Item STEEL_BOOTS = registerSimpleItem("steel_boots",
-            new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new Item.Settings()
-                    .component(KlaxonDataComponentTypes.DEFAULT_INNATE_ENCHANTMENTS, new DefaultInnateItemEnchantmentsComponent(Map.of(Enchantments.UNBREAKING, 4)))
-            ));
+    public static final Item CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
+            .helmetCrest()
+            .rarity(Rarity.UNCOMMON)
+            .getSettings()
+    ));
+    public static final Item STEEL_HELMET = registerItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
+            .getSettings()
+    ));
+    public static final Item STEEL_CHESTPLATE = registerItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new KlaxonItemSettings()
+            .getSettings()
+    ));
+    public static final Item STEEL_LEGGINGS = registerItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new KlaxonItemSettings()
+            .getSettings()
+    ));
+    public static final Item STEEL_BOOTS = registerItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new KlaxonItemSettings()
+            .getSettings()
+    ));
 
     // fractured materials
     public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");
@@ -93,7 +120,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item CRUDE_STEEL_INGOT = registerReallySimpleItem("crude_steel_ingot");
     public static final Item CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
     public static final Item RUBBER_GLOB = registerReallySimpleItem("rubber_glob");
-    public static final Item MOLTEN_RUBBER_GLOB = registerReallySimpleItem("molten_rubber_glob");
+    public static final Item COPPER_NUGGET = registerReallySimpleItem("copper_nugget");
 
     // plates / sheets
     public static final Item STEEL_PLATE = registerReallySimpleItem("steel_plate");
@@ -102,7 +129,12 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item GOLD_PLATE = registerReallySimpleItem("gold_plate");
     public static final Item COPPER_PLATE = registerReallySimpleItem("copper_plate");
     public static final Item RUBBER_SHEET = registerReallySimpleItem("rubber_sheet");
-    public static final Item MOLTEN_RUBBER_SHEET = registerReallySimpleItem("molten_rubber_sheet");
+
+    // wires
+    public static final Item STEEL_WIRE = registerReallySimpleItem("steel_wire");
+    public static final Item IRON_WIRE = registerReallySimpleItem("iron_wire");
+    public static final Item GOLD_WIRE = registerReallySimpleItem("gold_wire");
+    public static final Item COPPER_WIRE = registerReallySimpleItem("copper_wire");
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);

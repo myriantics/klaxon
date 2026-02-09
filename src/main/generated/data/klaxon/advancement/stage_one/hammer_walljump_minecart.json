@@ -1,0 +1,30 @@
+{
+  "parent": "klaxon:stage_one/hammer_walljump_normal",
+  "criteria": {
+    "hammer_walljump_minecart": {
+      "conditions": {
+        "usageType": "minecart_walljump"
+      },
+      "trigger": "klaxon:walljump_ability"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.hammer_walljump_minecart.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:cauldron"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.hammer_walljump_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "hammer_walljump_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -6,6 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.myriantics.klaxon.datagen.NamedIngredient;
+import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
@@ -28,11 +30,21 @@ public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
     public void addFracturedOreProcessingRecipes(Item fracturedRawOreItem, Item rawOreItem, Item fracturedOreFragmentsItem, Item oreIngotItem,
                                                  final ResourceCondition... conditions) {
         // blast processing
-        addBlastProcessingRecipe(Ingredient.ofItems(rawOreItem), 0.4, 1.4, new ItemStack(fracturedRawOreItem), conditions);
-        addBlastProcessingRecipe(Ingredient.ofItems(oreIngotItem), 0.5, 1.7, new ItemStack(fracturedOreFragmentsItem), conditions);
+        addBlastProcessingRecipe(NamedIngredient.ofItems(rawOreItem), 0.4, 1.4,
+                builder -> builder
+                        .guaranteed(new ItemStack(fracturedRawOreItem))
+                        .chance(new ItemStack(fracturedRawOreItem), 1d/3),
+                conditions
+        );
+        addBlastProcessingRecipe(NamedIngredient.ofItems(oreIngotItem), 0.5, 1.7,
+                builder -> builder
+                        .guaranteed(new ItemStack(fracturedOreFragmentsItem))
+                        .chance(new ItemStack(fracturedOreFragmentsItem), 1d/3),
+                conditions
+        );
 
         // smelting
-        addOreProcessingCookingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(fracturedOreFragmentsItem), 1.0f, 150, null, "fractured_ores", conditions);
+        addBlastingAndSmeltingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(fracturedOreFragmentsItem), 1.0f, 150, null, "fractured_ores", conditions);
 
         // crafting
         add2x2PackingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(rawOreItem), null, null, conditions);

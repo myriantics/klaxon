@@ -1,0 +1,23 @@
+package net.myriantics.klaxon.registry.misc;
+
+import net.myriantics.klaxon.KlaxonCommon;
+
+public abstract class KlaxonNBTIds {
+
+    // grapple claw
+    public static final String TICKS_SINCE_DAMAGED = KlaxonCommon.locateAlt("ticks_since_damaged");
+
+    // player
+    public static final String CURRENT_WINCH_CABLE_LENGTH = KlaxonCommon.locateAlt("current_winch_cable_length");
+
+    // sniffer
+    public static final String GERALD_SNIFFER_STATE = KlaxonCommon.locateAlt("gerald_sniffer_state");
+
+    // grapple winch connection
+    public static final String GRAPPLE_WINCH_CONNECTIONS = KlaxonCommon.locateAlt("grapple_winch_connections");
+    public static final String GRAPPLING_HOOK = KlaxonCommon.locateAlt("grappling_hook");
+    public static final String PLAYER_UUID = KlaxonCommon.locateAlt("player_uuid");
+    public static final String CABLE_LENGTH = KlaxonCommon.locateAlt("cable_length");
+    public static final String MAX_CABLE_LENGTH = KlaxonCommon.locateAlt("max_cable_length");
+    public static final String HOOK_ANCHORED = KlaxonCommon.locateAlt("hook_anchored");
+}

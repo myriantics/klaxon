@@ -1,5 +1,7 @@
 {
   "type": "klaxon:nether_reaction",
-  "output_block": "minecraft:bone_block",
-  "valid_blocks": "#klaxon:nether_reaction/bone_block_convertible"
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/bone_block_convertible"
+  },
+  "output_block": "minecraft:bone_block"
 }

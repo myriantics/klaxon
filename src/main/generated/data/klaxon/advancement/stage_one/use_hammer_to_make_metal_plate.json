@@ -1,0 +1,34 @@
+{
+  "parent": "klaxon:stage_one/watch_blast_processor_craft",
+  "criteria": {
+    "use_hammer_to_make_metal_plate": {
+      "conditions": {
+        "required_tool": {
+          "tag": "klaxon:recipe_processing_hammers"
+        },
+        "result_ingredient": {
+          "tag": "c:plates"
+        }
+      },
+      "trigger": "klaxon:tool_usage_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.use_hammer_to_make_metal_plate.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:crude_steel_plate"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.use_hammer_to_make_metal_plate.title"
+    }
+  },
+  "requirements": [
+    [
+      "use_hammer_to_make_metal_plate"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

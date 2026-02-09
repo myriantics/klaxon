@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "copper_wire",
+  "ingredients": [
+    {
+      "tag": "klaxon:waxing_status_inclusive_copper_wire_spool_blocks"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "id": "klaxon:copper_wire"
+  }
+}

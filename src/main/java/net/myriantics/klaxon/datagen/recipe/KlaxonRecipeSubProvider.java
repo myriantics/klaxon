@@ -10,25 +10,27 @@ import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.myriantics.klaxon.api.NamedIngredient;
-import net.myriantics.klaxon.recipe.blast_processor_behavior.BlastProcessorBehaviorRecipe;
-import net.myriantics.klaxon.recipe.cooling.ItemCoolingRecipe;
-import net.myriantics.klaxon.recipe.manual_item_application.ManualItemApplicationRecipe;
+import net.myriantics.klaxon.recipe.BlockIngredient;
+import net.myriantics.klaxon.datagen.NamedIngredient;
+import net.myriantics.klaxon.recipe.RecipeOutputCompound;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
+import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
+import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
-import net.myriantics.klaxon.recipe.item_explosion_power.ItemExplosionPowerRecipe;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
-import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static net.minecraft.data.server.recipe.RecipeProvider.getItemPath;
 
@@ -92,10 +94,18 @@ public abstract class KlaxonRecipeSubProvider {
         addSmeltingRecipe(input, output, experience, cookingTime, CookingRecipeCategory.FOOD, group, conditions);
     }
 
-    public void addOreProcessingCookingRecipe(Ingredient input, ItemStack output,
-                                              float experience, int cookingTime,
-                                              @Nullable CookingRecipeCategory category, @Nullable String group,
-                                              final ResourceCondition... conditions) {
+    public void addBlastingAndSmeltingRecipe(Ingredient input, ItemStack output,
+                                             float experience,
+                                             @Nullable CookingRecipeCategory category, @Nullable String group,
+                                             final ResourceCondition... conditions) {
+        addBlastingAndSmeltingRecipe(input, output, experience, 200, category, group, conditions);
+    }
+
+
+    public void addBlastingAndSmeltingRecipe(Ingredient input, ItemStack output,
+                                             float experience, int cookingTime,
+                                             @Nullable CookingRecipeCategory category, @Nullable String group,
+                                             final ResourceCondition... conditions) {
         addBlastingSmeltingRecipe(
                 input, output, experience, (int) (cookingTime * 0.5),
                 category, group, conditions);
@@ -145,7 +155,7 @@ public abstract class KlaxonRecipeSubProvider {
             group = outputPath;
         }
 
-        BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
+        SmokingRecipe recipe = new SmokingRecipe(group, category, input, output, experience, cookingTime);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
@@ -172,6 +182,12 @@ public abstract class KlaxonRecipeSubProvider {
         BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addShapelessCraftingRecipe(Ingredient input, ItemStack output,
+                                           @Nullable CraftingRecipeCategory category, @Nullable String group,
+                                           final ResourceCondition... conditions) {
+        addShapelessCraftingRecipe(DefaultedList.copyOf(Ingredient.EMPTY, input), output, category, group, conditions);
     }
 
     public void addShapelessCraftingRecipe(DefaultedList<Ingredient> input, ItemStack output,
@@ -264,103 +280,112 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addItemExplosionPowerRecipeWithBehavior(NamedIngredient input, Identifier behaviorId,
-                                                        double explosionPower, boolean producesFire, boolean isHidden,
-                                                        final ResourceCondition... conditions) {
-        addItemExplosionPowerRecipe(input, explosionPower, producesFire, isHidden, conditions);
-        addBlastProcessorBehaviorRecipe(input, behaviorId, conditions);
+    public void addExplosiveCatalystDefinitionRecipe(
+            NamedIngredient input,
+            double explosionPower, boolean producesFire,
+            boolean isHidden,
+            final ResourceCondition... conditions
+    ) {
+        this.addExplosiveCatalystDefinitionRecipe(input, KlaxonExplosiveCatalystBehaviors.DEFAULT, explosionPower, producesFire, isHidden, conditions);
     }
 
-    public void addItemExplosionPowerRecipe(NamedIngredient input,
-                                            double explosionPower, boolean producesFire, boolean isHidden,  final ResourceCondition... conditions) {
+    public void addExplosiveCatalystDefinitionRecipe(
+            NamedIngredient input,
+            ExplosiveCatalystBehavior behavior,
+            double explosionPower, boolean producesFire,
+            boolean isHidden,
+            final ResourceCondition... conditions
+    ) {
 
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.ITEM_EXPLOSION_POWER_RECIPE_ID,
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
                 input.getName(),
                 conditions);
 
-        ItemExplosionPowerRecipe recipe = new ItemExplosionPowerRecipe(input.toIngredient(), explosionPower, producesFire, isHidden);
+        ExplosiveCatalystDefinitionRecipe recipe = new ExplosiveCatalystDefinitionRecipe(input.toIngredient(), new ExplosiveCatalystData(behavior, explosionPower, producesFire), isHidden);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     public void addHammeringRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS), input, output, SoundEvents.BLOCK_ANVIL_LAND, conditions);
-    }
-
-    public void addWirecuttingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS), input, output, SoundEvents.BLOCK_CHAIN_BREAK, conditions);
-    }
-
-    public void addShearingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(NamedIngredient.fromTag(KlaxonItemTags.RECIPE_PROCESSING_SHEARS), input, output, SoundEvents.ENTITY_SHEEP_SHEAR, conditions);
-    }
-
-    public void addToolUsageRecipe(NamedIngredient requiredTool, Ingredient input, ItemStack output, final ResourceCondition... conditions) {
-        addToolUsageRecipe(requiredTool, input, output, null, conditions);
-    }
-
-    public void addToolUsageRecipe(NamedIngredient requiredTool, Ingredient input, ItemStack output, SoundEvent soundOverride, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.TOOL_USAGE_RECIPE_ID + "/" + requiredTool.getName(),
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonToolUsageRecipeTypes.HAMMERING.getValue().getPath(),
                 getItemPath(output.getItem()),
                 conditions);
 
-        ToolUsageRecipe recipe = new ToolUsageRecipe(requiredTool.toIngredient(), input, output, soundOverride);
+        ToolUsageRecipe recipe = new ToolUsageRecipe(KlaxonToolUsageRecipeTypes.HAMMERING, input, output, null);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addWirecuttingRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonToolUsageRecipeTypes.WIRECUTTING.getValue().getPath(),
+                getItemPath(output.getItem()),
+                conditions);
+
+        ToolUsageRecipe recipe = new ToolUsageRecipe(KlaxonToolUsageRecipeTypes.WIRECUTTING, input, output, null);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     public void addManualItemApplicationRecipe(TagKey<Block> validBlockInputs, Ingredient ingredient, Block outputBlock, ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.MANUAL_ITEM_APPLICATION_RECIPE_ID,
+        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID,
                 Registries.BLOCK.getId(outputBlock).getPath(),
                 conditions);
 
-        ManualItemApplicationRecipe recipe = new ManualItemApplicationRecipe(validBlockInputs, ingredient, outputBlock);
+        WorldItemApplicationRecipe recipe = new WorldItemApplicationRecipe(validBlockInputs, ingredient, outputBlock);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addNetherReactionRecipe(TagKey<Block> validBlockInputs, Block outputBlock, ResourceCondition... conditions) {
+    public void addNetherReactionRecipe(TagKey<Block> blockTag, Block outputBlock, ResourceCondition... conditions) {
+        addNetherReactionRecipe(BlockIngredient.fromTag(blockTag), outputBlock, conditions);
+    }
+
+    public void addNetherReactionRecipe(BlockIngredient blockIngredient, Block outputBlock, ResourceCondition... conditions) {
         Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
                 Registries.BLOCK.getId(outputBlock).getPath(),
                 conditions);
 
-        NetherReactionRecipe recipe = new NetherReactionRecipe(validBlockInputs, outputBlock);
+        NetherReactionRecipe recipe = new NetherReactionRecipe(blockIngredient, outputBlock);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addItemCoolingRecipe(Ingredient input, ItemConvertible output, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.COOLING_RECIPE_ID,
-                getItemPath(output.asItem()),
-                conditions);
-
-        ItemCoolingRecipe recipe = new ItemCoolingRecipe(input, new ItemStack(output));
-
-        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
-    }
-
-    public void addBlastProcessingRecipe(Ingredient input,
+    public void addBlastProcessingRecipe(NamedIngredient input,
                                          double explosionPowerMin, double explosionPowerMax,
                                          ItemStack output, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
-                getItemPath(output.getItem()),
-                conditions);
+        addBlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, RecipeOutputCompound.of(output), conditions);
+    }
 
-        BlastProcessingRecipe recipe = new BlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, output);
+    public void addBlastProcessingRecipe(NamedIngredient input,
+                                         double explosionPowerMin, double explosionPowerMax,
+                                         Function<RecipeOutputCompound.Builder, RecipeOutputCompound.Builder> function, final ResourceCondition... conditions) {
+        addBlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, function.apply(RecipeOutputCompound.builder()).build(), conditions);
+    }
+
+    public void addExplosiveDisassemblyRecipe(NamedIngredient input,
+                                         double explosionPowerMin, double explosionPowerMax,
+                                         Function<RecipeOutputCompound.Builder, RecipeOutputCompound.Builder> function, final ResourceCondition... conditions) {
+        addBlastProcessingRecipe(input.withName("recycling/" + input.getName()), explosionPowerMin, explosionPowerMax, function.apply(RecipeOutputCompound.builder()).build(), conditions);
+    }
+
+    public void addBlastProcessingRecipe(NamedIngredient input,
+                                         double explosionPowerMin, double explosionPowerMax,
+                                         RecipeOutputCompound outputCompound, final ResourceCondition... conditions) {
+        String path = outputCompound.size() > 1
+                ? input.getName()
+                : getItemPath(outputCompound.getDisplayStacks()[0].getItem()) + "_from_" + input.getName();
+
+        Identifier recipeId = provider.computeRecipeIdentifier(
+                KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
+                path,
+                conditions
+        );
+
+        BlastProcessingRecipe recipe = new BlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax, outputCompound);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addBlastProcessorBehaviorRecipe(NamedIngredient ingredient,
-                                                Identifier behaviorIdentifier, final ResourceCondition... conditions) {
-        Identifier recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.BLAST_PROCESSOR_BEHAVIOR_RECIPE_ID,
-                ingredient.getName(),
-                conditions);
-
-        BlastProcessorBehaviorRecipe recipe = new BlastProcessorBehaviorRecipe(ingredient.toIngredient(), behaviorIdentifier);
-
-        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
-    }
 
     public void addOverrideRecipe(Identifier id) {
         provider.acceptOverrideRecipe(exporter, id);

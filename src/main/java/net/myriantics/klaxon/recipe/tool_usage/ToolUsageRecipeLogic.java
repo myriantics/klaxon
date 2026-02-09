@@ -10,8 +10,9 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.resource.LifecycledResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,10 +20,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.TypeFilter;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Position;
@@ -31,43 +29,40 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
+import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 // Inspiration taken from AE2's Item Transformation system
 public abstract class ToolUsageRecipeLogic {
-    private static Set<Item> VALID_RECIPE_TOOL_CACHE = new HashSet<>();
+
+    private static Set<Item> VALID_TOOLS_CACHE = new HashSet<>();
     public static final int MAX_SOUNDS_PER_ACTION = 4;
     public static final int MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION = 16;
 
     public static boolean test(World world, ItemStack stack) {
-        return getUsableTools(world).contains(stack.getItem());
+        return getValidToolsCache(world).contains(stack.getItem());
     }
 
-    private static Set<Item> getUsableTools(World world) {
-        if (VALID_RECIPE_TOOL_CACHE.isEmpty()) {
-
+    private static Set<Item> getValidToolsCache(World world) {
+        if (VALID_TOOLS_CACHE.isEmpty()) {
             Set<Item> newCache = new HashSet<>();
-            for (RecipeEntry<ToolUsageRecipe> entry : world.getRecipeManager().listAllOfType(KlaxonRecipeTypes.TOOL_USAGE)) {
-                // add all the compatible items to the new cache
-                for (ItemStack stack : entry.value().getRequiredTool().getMatchingStacks()) {
+            for (RegistryEntry<ToolUsageRecipeType> type : world.getRegistryManager().get(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).getIndexedEntries()) {
+                for (ItemStack stack : type.value().validTools().getMatchingStacks()) {
                     newCache.add(stack.getItem());
                 }
             }
 
             // update stored cache
-            VALID_RECIPE_TOOL_CACHE = newCache;
+            VALID_TOOLS_CACHE = newCache;
             return newCache;
         } else {
-            return VALID_RECIPE_TOOL_CACHE;
+            return VALID_TOOLS_CACHE;
         }
     }
 
@@ -78,26 +73,21 @@ public abstract class ToolUsageRecipeLogic {
      * @return
      * Returns ActionResult.SUCCESS if recipe succeeds - ActionResult.PASS otherwise.
      */
-    public static ActionResult runRecipeLogic(ItemUsageContext context, @Nullable ActionResult original) {
+    public static ToolUsageRecipeResult runRecipeLogic(ItemUsageContext context) {
         World world = context.getWorld();
         PlayerEntity player = context.getPlayer();
         Vec3d clickedPos = context.getHitPos();
         ItemStack toolStack = context.getStack();
         Hand usedHand = context.getHand();
 
-        // if we're not provided an action result, default to pass
-        if (original == null) original = ActionResult.PASS;
-
         // make sure player is valid for recipe processing before doing anything
-        if (!isPlayerValid(player)) return original;
+        if (!isPlayerValid(player)) {
+            return ToolUsageRecipeResult.FAIL;
+        }
 
-        ToolUseRecipeConfigComponent component = ToolUseRecipeConfigComponent.get(toolStack);
-        if (component == null) component = new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_STONE_BREAK);
+        ToolUseRecipeConfigComponent component = toolStack.getOrDefault(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, ToolUseRecipeConfigComponent.DEFAULT);
 
-        // defines if tool can cosmetically hit items, making sound and particles but not sculk vibrations
-        boolean canCosmeticUse = component.canCosmeticUse();
-
-        boolean recipeSuccess = false;
+        boolean didAtLeastOneRecipeSucceed = false;
         // this is in place to prevent hammering from taking up the whole sound cap
         int totalPlayedSounds = 0;
         int totalParticleSpawnActions = 0;
@@ -106,7 +96,22 @@ public abstract class ToolUsageRecipeLogic {
 
         // if there aren't any dropped items in the targeted area, don't do anything
         if (selectedItems.isEmpty()) {
-            return original;
+            return ToolUsageRecipeResult.FAIL;
+        }
+
+        RegistryKey<ToolUsageRecipeType> type = null;
+        for (RegistryEntry<ToolUsageRecipeType> entry : world.getRegistryManager().get(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).getIndexedEntries()) {
+            if (entry.value().validTools().test(toolStack) && entry.getKey().isPresent()) {
+                type = entry.getKey().get();
+                break;
+            }
+        }
+
+        // defines if tool can cosmetically hit items, making sound and particles but not sculk vibrations
+        boolean canCosmeticUse = component.canCosmeticUse();
+
+        if (type == null) {
+            return ToolUsageRecipeResult.FAIL;
         }
 
         for (ItemEntity targetItemEntity : selectedItems) {
@@ -116,34 +121,16 @@ public abstract class ToolUsageRecipeLogic {
             SoundEvent recipeSoundOverride = null;
             boolean targetRecipeSuccess = false;
 
-            // necessary so that the client knows if it's completed a recipe or not
-            if (world.isClient()) {
-                RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
+            ToolUsageRecipeInput dummyInventory = new ToolUsageRecipeInput(toolStack, targetStack, type);
+            Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
 
-                Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+            // change recipe success indicator and recipe sound override
+            if (match.isPresent()) {
+                targetRecipeSuccess = true;
+                SoundEvent soundEvent = match.get().value().getSound();
+                recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
 
-                // change recipe success indicator and recipe sound override
-                if (match.isPresent()) {
-                    targetRecipeSuccess = true;
-                    SoundEvent soundEvent = match.get().value().getSoundOverride();
-                    recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
-                }
-
-                // spawn particles if recipe was successful or cosmetic usage is enabled
-                if ((match.isPresent() || canCosmeticUse) && totalParticleSpawnActions < MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION) {
-                    spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
-                    totalParticleSpawnActions++;
-                }
-            }
-
-            if (world instanceof ServerWorld serverWorld) {
-                RecipeInput dummyInventory = getRecipeInput(targetStack, toolStack);
-
-                Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
-
-                if (match.isPresent()) {
-                    targetRecipeSuccess = true;
-
+                if (!world.isClient()) {
                     targetStack.decrement(1);
                     if (targetStack.getCount() == 0) {
                         targetItemEntity.discard();
@@ -151,7 +138,7 @@ public abstract class ToolUsageRecipeLogic {
                         targetItemEntity.setStack(targetStack);
                     }
 
-                    ItemStack outputStack = match.get().value().craft(dummyInventory, serverWorld.getRegistryManager());
+                    ItemStack outputStack = match.get().value().craft(dummyInventory, world.getRegistryManager());
 
                     // make sure to proc advancement trigger before spawning item
                     KlaxonAdvancementTriggers.triggerToolUsageCraft((ServerPlayerEntity) player, toolStack, outputStack);
@@ -165,14 +152,15 @@ public abstract class ToolUsageRecipeLogic {
                             outputStack
                     );
 
-                    SoundEvent soundEvent = match.get().value().getSoundOverride();
-
-                    // make sure to get the sound override - ignore empty ones
-                    recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
                 }
             }
 
-            // both client and server know if a recipe was successful - also play sound for every item processed in an interaction because it sounds better and signifies that more items were processed
+            // spawn particles if recipe was successful or cosmetic usage is enabled
+            if ((targetRecipeSuccess || canCosmeticUse) && totalParticleSpawnActions < MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION) {
+                spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
+                totalParticleSpawnActions++;
+            }
+
             // this caps out at 4 sounds because otherwise people are going to take up the whole sound cap with it
             if ((targetRecipeSuccess || canCosmeticUse) && totalPlayedSounds < MAX_SOUNDS_PER_ACTION) {
                 world.playSound(player, BlockPos.ofFloored(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
@@ -180,11 +168,11 @@ public abstract class ToolUsageRecipeLogic {
             }
 
             // commit recipe success status after all calculations
-            recipeSuccess = recipeSuccess || targetRecipeSuccess;
+            didAtLeastOneRecipeSucceed |= targetRecipeSuccess;
         }
 
         if (world instanceof ServerWorld serverWorld) {
-            if (recipeSuccess) {
+            if (didAtLeastOneRecipeSucceed) {
                 // trip sculk sensors and damage tool
                 serverWorld.emitGameEvent(player, GameEvent.ITEM_INTERACT_FINISH, clickedPos);
                 if (player != null) toolStack.damage(1, player, EquipmentSlotHelper.convert(usedHand));
@@ -193,29 +181,19 @@ public abstract class ToolUsageRecipeLogic {
 
         // if we succeeded at any recipes, we win. also preserve original action result if we do nothing.
         // if cosmetic usage is enabled, we also succeed because yeah
-        return recipeSuccess || canCosmeticUse ? ActionResult.SUCCESS : original;
-    }
-
-    private static @NotNull RecipeInput getRecipeInput(ItemStack targetStack, ItemStack toolStack) {
-        return new RecipeInput() {
-            @Override
-            public ItemStack getStackInSlot(int slot) {
-                return switch (slot) {
-                    case 0 -> toolStack;
-                    case 1 -> targetStack;
-                    default -> ItemStack.EMPTY;
-                };
+        if (didAtLeastOneRecipeSucceed) {
+            return ToolUsageRecipeResult.COSMETIC_SUCCESS;
+        } else {
+            if (canCosmeticUse) {
+                return ToolUsageRecipeResult.COSMETIC_SUCCESS;
+            } else {
+                return ToolUsageRecipeResult.FAIL;
             }
-
-            @Override
-            public int getSize() {
-                return 2;
-            }
-        };
+        }
     }
 
     private static void clearCache() {
-        VALID_RECIPE_TOOL_CACHE.clear();
+        VALID_TOOLS_CACHE.clear();
     }
 
     public static void onServerStarted(MinecraftServer minecraftServer) {
@@ -236,6 +214,10 @@ public abstract class ToolUsageRecipeLogic {
 
     // yoinked from living entity
     public static void spawnToolUseParticleEffects(World world, ItemStack stack, int count, Entity source) {
+        if (stack.isEmpty()) {
+            return;
+        }
+
         Random random = source.getRandom();
         float pitch = source.getPitch();
         float yaw = source.getYaw();

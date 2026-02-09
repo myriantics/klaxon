@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:tool_usage",
+  "input_ingredient": {
+    "item": "minecraft:snowball"
+  },
+  "output_stack": {
+    "count": 1,
+    "id": "minecraft:snow"
+  },
+  "sound_override": {},
+  "tool_usage_recipe_type": "klaxon:hammering"
+}

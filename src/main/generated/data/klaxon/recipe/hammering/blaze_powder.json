@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:tool_usage",
+  "input_ingredient": {
+    "item": "minecraft:blaze_rod"
+  },
+  "output_stack": {
+    "count": 4,
+    "id": "minecraft:blaze_powder"
+  },
+  "sound_override": {},
+  "tool_usage_recipe_type": "klaxon:hammering"
+}

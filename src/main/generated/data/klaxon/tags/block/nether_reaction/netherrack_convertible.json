@@ -1,10 +1,13 @@
 {
   "values": [
     "#minecraft:terracotta",
+    "minecraft:snow_block",
+    "minecraft:powder_snow",
     "minecraft:farmland",
     "minecraft:dirt",
     "minecraft:dirt_path",
     "minecraft:coarse_dirt",
-    "minecraft:rooted_dirt"
+    "minecraft:rooted_dirt",
+    "minecraft:muddy_mangrove_roots"
   ]
 }

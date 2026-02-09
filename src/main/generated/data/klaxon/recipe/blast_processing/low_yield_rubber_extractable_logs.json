@@ -1,0 +1,24 @@
+{
+  "type": "klaxon:blast_processing",
+  "explosion_power_max": 2.0,
+  "explosion_power_min": 0.8,
+  "input_ingredient": {
+    "tag": "klaxon:low_yield_rubber_extractable_logs"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:rubber_glob"
+      }
+    },
+    {
+      "chance": 0.4,
+      "stack": {
+        "count": 2,
+        "id": "klaxon:rubber_glob"
+      }
+    }
+  ]
+}

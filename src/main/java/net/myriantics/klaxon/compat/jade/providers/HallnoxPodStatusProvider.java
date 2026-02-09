@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.functional.HallnoxPodBlock;
+import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import snownee.jade.api.BlockAccessor;
@@ -22,12 +22,14 @@ public enum HallnoxPodStatusProvider implements IBlockComponentProvider {
     private HallnoxPodStatusProvider() {
     }
 
+    private static final Identifier ID = KlaxonCommon.locate("crop_growth_disabled");
+
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         BlockState podState = blockAccessor.getBlockState();
         boolean growthDisabled = podState.contains(KlaxonBlockStateProperties.GROWTH_DISABLED) && podState.get(KlaxonBlockStateProperties.GROWTH_DISABLED);
         if (growthDisabled) {
-            iTooltip.add(Text.translatable("klaxon.jade.text.tooltip.crop_growth_disabled").withColor(Colors.RED));
+            iTooltip.add(Text.translatable("klaxon.jade.text.crop_growth_disabled").withColor(Colors.RED));
         } else {
             World world = blockAccessor.getLevel();
             Direction podFacing = podState.get(HallnoxPodBlock.FACING);
@@ -35,13 +37,13 @@ public enum HallnoxPodStatusProvider implements IBlockComponentProvider {
             BlockState supportingState = world.getBlockState(supportingPos);
 
             if (supportingState.isIn(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)) {
-                iTooltip.add(Text.translatable("klaxon.jade.text.tooltip.natural_crop_growth_inhibited").withColor(Colors.YELLOW));
+                iTooltip.add(Text.translatable("klaxon.jade.text.natural_crop_growth_inhibited").withColor(Colors.YELLOW));
             }
         }
     }
 
     @Override
     public Identifier getUid() {
-        return KlaxonCommon.locate("crop_growth_disabled");
+        return ID;
     }
 }

@@ -1,0 +1,12 @@
+{
+  "type": "klaxon:explosive_catalyst_definition",
+  "explosive_catalyst_data": {
+    "behavior": "klaxon:default",
+    "explosion_power": 3.5,
+    "produces_fire": true
+  },
+  "ingredient": {
+    "item": "minecraft:ghast_spawn_egg"
+  },
+  "is_hidden_from_emi": true
+}

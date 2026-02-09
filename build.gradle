@@ -1,6 +1,6 @@
 plugins {
-	id 'fabric-loom' version "1.10-SNAPSHOT"
-	id("org.moddedmc.wiki.toolkit") version "0.2.7"
+	id 'fabric-loom' version "1.13-SNAPSHOT"
+	id("org.moddedmc.wiki.toolkit") version "0.3.2"
 	id 'maven-publish'
 }
 
@@ -34,6 +34,11 @@ repositories {
 	// for more information about repositories.
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/klaxon.accesswidener")
+    splitEnvironmentSourceSets()
+}
+
 fabricApi {
 	configureDataGeneration()
 }
@@ -53,6 +58,9 @@ dependencies {
 
 	// jade
 	modImplementation "maven.modrinth:jade:${project.jade_version}"
+
+    // scalding hot
+    modLocalRuntime "maven.modrinth:scaldinghot:${project.scaldinghot_version}"
 
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
@@ -107,7 +115,7 @@ publishing {
 
 wiki {
 	docs {
-		// The name of the object (examplemod) should match the registered wiki project ID (if it exists).
+		// The name of the object (klaxon) should match the registered wiki project ID (if it exists).
 		klaxon {
 			// The path to the folder containing the documentation metadata file (sinytra-wiki.json)
 			root = file('docs/klaxon')

@@ -1,0 +1,32 @@
+{
+  "parent": "klaxon:stage_one/watch_blast_processor_craft",
+  "criteria": {
+    "makeshift_item_full_repair": {
+      "conditions": {
+        "accepted_items": {
+          "tag": "klaxon:makeshift_crafted_equipment"
+        },
+        "max_damage_proportion": 0.0
+      },
+      "trigger": "klaxon:makeshift_equipment_repair"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.makeshift_item_full_repair.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:anvil"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.makeshift_item_full_repair.title"
+    }
+  },
+  "requirements": [
+    [
+      "makeshift_item_full_repair"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

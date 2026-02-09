@@ -1,0 +1,37 @@
+{
+  "parent": "klaxon:stage_one/obtain_grapple_winch",
+  "criteria": {
+    "grapple_winch_intentionally_disconnect_cable": {
+      "conditions": {
+        "cable_detachment_reason": "invalid_held_items",
+        "player_entity_predicate": {
+          "type": "minecraft:player",
+          "movement": {
+            "speed": {
+              "min": 0.25
+            }
+          }
+        }
+      },
+      "trigger": "klaxon:grapple_winch_cable_disconnect_criterion"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_intentionally_disconnect_cable.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_wire"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_intentionally_disconnect_cable.title"
+    }
+  },
+  "requirements": [
+    [
+      "grapple_winch_intentionally_disconnect_cable"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

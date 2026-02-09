@@ -31,23 +31,43 @@ public abstract class KlaxonBlockTags {
     public static final TagKey<Block> INCORRECT_FOR_STEEL_TOOL =
             createTag("incorrect_for_steel_tool");
 
+    // grapple claw tags
+    public static final TagKey<Block> GRAPPLE_CLAW_BREAKABLE =
+            createTag("grapple_claw_breakable");
+    public static final TagKey<Block> GRAPPLE_CLAW_VEINMINEABLE =
+            createTag("grapple_claw_veinmineable");
+
+    // veinmine group tags
+    public static final TagKey<Block> GLASS_VEINMINE_GROUP =
+            createVeinmineGroupTag("glass");
+    public static final TagKey<Block> CHORUS_VEINMINE_GROUP =
+            createVeinmineGroupTag("chorus");
+    public static final TagKey<Block> ICE_VEINMINE_GROUP =
+            createVeinmineGroupTag("ice");
+    public static final TagKey<Block> GLOWSTONE_VEINMINE_GROUP =
+            createVeinmineGroupTag("glowstone");
+
+
     // behavior tags
     public static final TagKey<Block> WRENCH_PICKUP_ALLOWLIST =
             createTag("wrench_pickup_allowlist");
     public static final TagKey<Block> WRENCH_PICKUP_DENYLIST =
             createTag("wrench_pickup_denylist");
-    public static final TagKey<Block> WRENCH_ROTATION_ALLOWLIST =
-            createTag("wrench_rotation_allowlist");
-    public static final TagKey<Block> WRENCH_ROTATION_DENYLIST =
-            createTag("wrench_interaction_denylist");
+    public static final TagKey<Block> WRENCH_INTERACTION_GENERAL_DENYLIST =
+            createTag("wrench_interaction_general_denylist");
     public static final TagKey<Block> FERROMAGNETIC_BLOCKS =
             createTag("ferromagnetic_blocks");
     public static final TagKey<Block> COLD_BLOCKS =
             createTag("cold_blocks");
     public static final TagKey<Block> HALLNOX_POD_NATURAL_GROWTH_INHIBITING =
             createTag("hallnox_pod_natural_growth_inhibiting");
+    public static final TagKey<Block> HEAVY_FALLING_BLOCKS =
+            createTag("heavy_falling_blocks");
 
     // nether reaction tags
+    public static final TagKey<Block> NETHER_REACTION_IMMUNE =
+            createTag("nether_reaction_immune");
+
     public static final TagKey<Block> STEEL_CASING_CONVERTIBLE =
             createNetherReactionTag("steel_casing");
 
@@ -59,6 +79,10 @@ public abstract class KlaxonBlockTags {
             createNetherReactionTag("shroomlight");
     public static final TagKey<Block> BONE_BLOCK_CONVERTIBLE =
             createNetherReactionTag("bone_block");
+    public static final TagKey<Block> WITHER_SKELETON_SKULL_CONVERTIBLE =
+            createNetherReactionTag("wither_skeleton_skull");
+    public static final TagKey<Block> WITHER_SKELETON_WALL_SKULL_CONVERTIBLE =
+            createNetherReactionTag("wither_skeleton_wall_skull");
     public static final TagKey<Block> NETHER_QUARTZ_ORE_CONVERTIBLE =
             createNetherReactionTag("nether_quartz_ore");
     public static final TagKey<Block> NETHER_GOLD_ORE_CONVERTIBLE =
@@ -75,6 +99,9 @@ public abstract class KlaxonBlockTags {
             createNetherReactionTag("blackstone_slab");
     public static final TagKey<Block> BLACKSTONE_WALL_CONVERTIBLE =
             createNetherReactionTag("blackstone_wall");
+
+    public static final TagKey<Block> BASALT_CONVERTIBLE =
+            createNetherReactionTag("basalt");
 
     public static final TagKey<Block> SOUL_SAND_CONVERTIBLE =
             createNetherReactionTag("soul_sand");
@@ -125,6 +152,14 @@ public abstract class KlaxonBlockTags {
             createNetherReactionTag("crimson_door");
     public static final TagKey<Block> CRIMSON_TRAPDOOR_CONVERTIBLE =
             createNetherReactionTag("crimson_trapdoor");
+    public static final TagKey<Block> CRIMSON_SIGN_CONVERTIBLE =
+            createNetherReactionTag("crimson_sign");
+    public static final TagKey<Block> CRIMSON_WALL_SIGN_CONVERTIBLE =
+            createInstabreakableTag("crimson_wall_sign");
+    public static final TagKey<Block> CRIMSON_HANGING_SIGN_CONVERTIBLE =
+            createNetherReactionTag("crimson_hanging_sign");
+    public static final TagKey<Block> CRIMSON_WALL_HANGING_SIGN_CONVERTIBLE =
+            createNetherReactionTag("crimson_wall_hanging_sign");
 
     public static final TagKey<Block> WARPED_NYLIUM_CONVERTIBLE =
             createNetherReactionTag("warped_nylium");
@@ -153,6 +188,46 @@ public abstract class KlaxonBlockTags {
     public static final TagKey<Block> HALLNOX_STEMS =
             createTag("hallnox_stems");
 
+    // plating blocks
+    public static final TagKey<Block> PLATING_BLOCKS =
+            createTag("plating_blocks");
+    public static final TagKey<Block> STEEL_PLATING_BLOCKS =
+            createPlatingBlockTag("steel");
+    public static final TagKey<Block> CRUDE_STEEL_PLATING_BLOCKS =
+            createPlatingBlockTag("crude_steel");
+    public static final TagKey<Block> GOLD_PLATING_BLOCKS =
+            createPlatingBlockTag("gold");
+    public static final TagKey<Block> COPPER_PLATING_BLOCKS =
+            createPlatingBlockTag("copper");
+    public static final TagKey<Block> IRON_PLATING_BLOCKS =
+            createPlatingBlockTag("iron");
+
+    // wire spools
+    public static final TagKey<Block> WIRE_SPOOLS =
+            createTag("wire_spools");
+    public static final TagKey<Block> COPPER_WIRE_SPOOLS =
+            createWireSpoolsTag("copper");
+    public static final TagKey<Block> IRON_WIRE_SPOOLS =
+            createWireSpoolsTag("iron");
+    public static final TagKey<Block> GOLD_WIRE_SPOOLS =
+            createWireSpoolsTag("gold");
+    public static final TagKey<Block> STEEL_WIRE_SPOOLS =
+            createWireSpoolsTag("steel");
+
+    // pipe matrices
+    public static final TagKey<Block> PIPE_MATRICES =
+            createTag("pipe_matrices");
+    public static final TagKey<Block> PIPE_MATRIX_U_BENDS =
+            createPipeMatricesTag("u_bends");
+    public static final TagKey<Block> PIPE_MATRIX_SEGMENTS =
+            createPipeMatricesTag("segments");
+    public static final TagKey<Block> COPPER_PIPE_MATRICES =
+            createPipeMatricesTag("copper");
+    public static final TagKey<Block> COPPER_PIPE_MATRIX_U_BENDS =
+            createPipeMatrixUBendTag("copper");
+    public static final TagKey<Block> COPPER_PIPE_MATRIX_SEGMENTS =
+            createPipeMatrixSegmentTag("copper");
+
     // advancement tags
 
     private static TagKey<Block> createInstabreakableTag(String name) {
@@ -167,8 +242,32 @@ public abstract class KlaxonBlockTags {
         return createTag("nether_reaction/" + name + "_convertible");
     }
 
+    private static TagKey<Block> createPlatingBlockTag(String name) {
+        return createTag("plating_block/" + name);
+    }
+
     private static TagKey<Block> createManualItemApplicationTag(String name) {
         return createTag("manual_item_application/" + name + "_convertible");
+    }
+
+    private static TagKey<Block> createPipeMatricesTag(String name) {
+        return createTag("pipe_matrices/" + name);
+    }
+
+    private static TagKey<Block> createPipeMatrixSegmentTag(String name) {
+        return createPipeMatricesTag("segment/" + name);
+    }
+
+    private static TagKey<Block> createPipeMatrixUBendTag(String name) {
+        return createPipeMatricesTag("u_bend/" + name);
+    }
+
+    private static TagKey<Block> createWireSpoolsTag(String name) {
+        return createTag("wire_spools/" + name);
+    }
+
+    private static TagKey<Block> createVeinmineGroupTag(String name) {
+        return createTag("veinmine_group/" + name);
     }
 
     private static TagKey<Block> createTag(String name) {

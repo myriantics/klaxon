@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "klaxon:bludgeoning",
+      "required": false
+    },
+    {
+      "id": "klaxon:wrench_overtuning",
+      "required": false
+    }
+  ]
+}

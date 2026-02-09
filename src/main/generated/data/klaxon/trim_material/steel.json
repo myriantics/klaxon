@@ -1,0 +1,9 @@
+{
+  "asset_name": "steel",
+  "description": {
+    "color": "#6F6572",
+    "translate": "trim_material.klaxon.steel"
+  },
+  "ingredient": "klaxon:steel_ingot",
+  "item_model_index": 0.3
+}

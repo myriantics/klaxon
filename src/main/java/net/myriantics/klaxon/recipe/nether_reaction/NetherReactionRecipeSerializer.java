@@ -6,13 +6,14 @@ import net.minecraft.block.Block;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.tag.TagKey;
+import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 
 public class NetherReactionRecipeSerializer implements RecipeSerializer<NetherReactionRecipe> {
 
     private final MapCodec<NetherReactionRecipe> CODEC = RecordCodecBuilder.mapCodec((recipeInstance) -> {
-        return recipeInstance.group(KlaxonCodecUtils.BLOCK_TAG_CODEC.fieldOf("valid_blocks").forGetter(NetherReactionRecipe::getValidBlockInputs),
+        return recipeInstance.group(
+                BlockIngredient.DISALLOW_EMPTY_CODEC.fieldOf("block_ingredient").forGetter(NetherReactionRecipe::getBlockIngredient),
                 KlaxonCodecUtils.BLOCK_CODEC.fieldOf("output_block").forGetter(NetherReactionRecipe::getOutputBlock)
         ).apply(recipeInstance, NetherReactionRecipe::new);
     });
@@ -22,12 +23,12 @@ public class NetherReactionRecipeSerializer implements RecipeSerializer<NetherRe
     );
 
     private static void write(RegistryByteBuf buf, NetherReactionRecipe recipe) {
-        KlaxonCodecUtils.BLOCK_TAG_PACKET_CODEC.encode(buf, recipe.getValidBlockInputs());
+        BlockIngredient.PACKET_CODEC.encode(buf, recipe.getBlockIngredient());
         KlaxonCodecUtils.BLOCK_PACKET_CODEC.encode(buf, recipe.getOutputBlock());
     }
 
     private static NetherReactionRecipe read(RegistryByteBuf buf) {
-        TagKey<Block> validBlockInputs = KlaxonCodecUtils.BLOCK_TAG_PACKET_CODEC.decode(buf);
+        BlockIngredient validBlockInputs = BlockIngredient.PACKET_CODEC.decode(buf);
         Block outputBlock = KlaxonCodecUtils.BLOCK_PACKET_CODEC.decode(buf);
 
         return new NetherReactionRecipe(validBlockInputs, outputBlock);

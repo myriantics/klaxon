@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosionPower": 3.0,
-  "ingredient": {
-    "item": "minecraft:creeper_spawn_egg"
-  },
-  "isHidden": true,
-  "producesFire": false
-}

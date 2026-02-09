@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.myriantics.klaxon.registry.entity.KlaxonStatusEffects;
@@ -17,7 +18,12 @@ public class KlaxonStatusEffectTagProvider extends FabricTagProvider<StatusEffec
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-        getOrCreateTagBuilder(KlaxonStatusEffectTags.HEAVY_STATUS_EFFECTS)
-                .add(KlaxonStatusEffects.HEAVY.value());
+        // getOrCreateTagBuilder(KlaxonStatusEffectTags.HEAVY_STATUS_EFFECTS).add();
+        getOrCreateTagBuilder(KlaxonStatusEffectTags.STRENGTHENING_EFFECTS)
+                .add(StatusEffects.STRENGTH.value());
+        getOrCreateTagBuilder(KlaxonStatusEffectTags.WEAKENING_EFFECTS)
+                .add(StatusEffects.WEAKNESS.value());
+        getOrCreateTagBuilder(KlaxonStatusEffectTags.HASTENING_EFFECTS)
+                .add(StatusEffects.HASTE.value());
     }
 }

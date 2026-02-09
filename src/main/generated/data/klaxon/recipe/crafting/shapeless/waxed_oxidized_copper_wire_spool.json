@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "klaxon.waxing",
+  "ingredients": [
+    {
+      "item": "klaxon:oxidized_copper_wire_spool"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:waxed_oxidized_copper_wire_spool"
+  }
+}

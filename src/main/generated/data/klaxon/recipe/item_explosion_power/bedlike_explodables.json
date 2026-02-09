@@ -1,9 +1,0 @@
-{
-  "type": "klaxon:item_explosion_power",
-  "explosionPower": 5.0,
-  "ingredient": {
-    "tag": "klaxon:bedlike_explodables"
-  },
-  "isHidden": false,
-  "producesFire": true
-}

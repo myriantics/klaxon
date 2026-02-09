@@ -6,9 +6,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.customblocks.decor.custom_hanging_sign.CustomHangingSignBlockEntity;
-import net.myriantics.klaxon.block.customblocks.decor.custom_sign.CustomSignBlockEntity;
-import net.myriantics.klaxon.block.customblocks.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 
 public abstract class KlaxonBlockEntities {
     public static final BlockEntityType<DeepslateBlastProcessorBlockEntity> DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY = register(
@@ -16,25 +14,13 @@ public abstract class KlaxonBlockEntities {
             KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR,
             DeepslateBlastProcessorBlockEntity::new
     );
-    public static final BlockEntityType<CustomSignBlockEntity> CUSTOM_SIGN_BLOCK_ENTITY = register(
-            "sign",
-            BlockEntityType.Builder.create(
-                    CustomSignBlockEntity::new,
-                    KlaxonBlocks.HALLNOX_SIGN,
-                    KlaxonBlocks.HALLNOX_WALL_SIGN
-            )
-    );
-    public static final BlockEntityType<CustomHangingSignBlockEntity> CUSTOM_HANGING_SIGN_BLOCK_ENTITY = register(
-            "hanging_sign",
-            BlockEntityType.Builder.create(
-                    CustomHangingSignBlockEntity::new,
-                    KlaxonBlocks.HALLNOX_HANGING_SIGN,
-                    KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN
-            )
-    );
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Block Entities!");
+        BlockEntityType.SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_SIGN);
+        BlockEntityType.SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_WALL_SIGN);
+        BlockEntityType.HANGING_SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_HANGING_SIGN);
+        BlockEntityType.HANGING_SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> register(String id, Block block, BlockEntityType.BlockEntityFactory<T> factory) {

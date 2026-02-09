@@ -1,11 +1,11 @@
 {
   "type": "minecraft:blasting",
   "category": "misc",
-  "cookingtime": 150,
+  "cookingtime": 100,
   "experience": 3.0,
   "group": "steel_nugget",
   "ingredient": {
-    "item": "klaxon:steel_hammer"
+    "tag": "klaxon:steel_equipment"
   },
   "result": {
     "id": "klaxon:steel_nugget"

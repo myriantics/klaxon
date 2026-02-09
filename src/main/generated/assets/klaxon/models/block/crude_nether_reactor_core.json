@@ -1,0 +1,8 @@
+{
+  "parent": "klaxon:block/nether_reactor_core/normal",
+  "textures": {
+    "casing": "klaxon:block/crude_nether_reactor_core/casing",
+    "core": "klaxon:block/crude_nether_reactor_core/core",
+    "particle": "klaxon:block/crude_nether_reactor_core/casing"
+  }
+}

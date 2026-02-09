@@ -1,0 +1,7 @@
+{
+  "type": "klaxon:nether_reaction",
+  "block_ingredient": {
+    "tag": "klaxon:nether_reaction/crimson_sign_convertible"
+  },
+  "output_block": "minecraft:crimson_sign"
+}

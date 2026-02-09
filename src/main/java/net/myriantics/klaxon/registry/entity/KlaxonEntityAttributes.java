@@ -12,16 +12,27 @@ import java.util.List;
 
 public abstract class KlaxonEntityAttributes {
     private static final ArrayList<RegistryEntry<EntityAttribute>> KLAXON_GENERIC_ENTITY_ATTRIBUTES =  new ArrayList<>();
+    private static final ArrayList<RegistryEntry<EntityAttribute>> KLAXON_PLAYER_ENTITY_ATTRIBUTES =  new ArrayList<>();
 
-    public static final RegistryEntry<EntityAttribute> GENERIC_WEIGHT = registerGeneric(
-            "generic.weight", new ClampedEntityAttribute("klaxon.attribute.name.generic.weight", 0.0, 0.0, 20.0)
-                    .setCategory(EntityAttribute.Category.NEUTRAL)
-                    .setTracked(true)
+    public static RegistryEntry<EntityAttribute> WINCH_CABLE_LENGTH = registerPlayer(
+            "winch_cable_length",
+            new ClampedEntityAttribute(
+                    "klaxon.attribute.name.player.winch_cable_length",
+                    0.0,
+                    0.0,
+                    256
+            ).setTracked(true)
     );
 
     private static RegistryEntry<EntityAttribute> registerGeneric(String id, EntityAttribute attribute) {
-        RegistryEntry<EntityAttribute> entry = Registry.registerReference(Registries.ATTRIBUTE, KlaxonCommon.locate(id), attribute);
+        RegistryEntry<EntityAttribute> entry = Registry.registerReference(Registries.ATTRIBUTE, KlaxonCommon.locate("generic." + id), attribute);
         KLAXON_GENERIC_ENTITY_ATTRIBUTES.add(entry);
+        return entry;
+    }
+
+    private static RegistryEntry<EntityAttribute> registerPlayer(String id, EntityAttribute attribute) {
+        RegistryEntry<EntityAttribute> entry = Registry.registerReference(Registries.ATTRIBUTE, KlaxonCommon.locate("player." + id), attribute);
+        KLAXON_PLAYER_ENTITY_ATTRIBUTES.add(entry);
         return entry;
     }
 
@@ -30,6 +41,10 @@ public abstract class KlaxonEntityAttributes {
     }
 
     public static List<RegistryEntry<EntityAttribute>> getKlaxonGenericLivingEntityAttributes() {
-        return List.copyOf(KLAXON_GENERIC_ENTITY_ATTRIBUTES);
+        return KLAXON_GENERIC_ENTITY_ATTRIBUTES;
+    }
+
+    public static List<RegistryEntry<EntityAttribute>> getKlaxonPlayerEntityAttributes() {
+        return KLAXON_PLAYER_ENTITY_ATTRIBUTES;
     }
 }
