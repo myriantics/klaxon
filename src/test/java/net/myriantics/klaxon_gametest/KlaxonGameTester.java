@@ -1,7 +1,8 @@
 package net.myriantics.klaxon_gametest;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.test.TestFunctions;
+import net.fabricmc.fabric.mixin.gametest.TestFunctionsMixin;
+import net.minecraft.gametest.framework.GameTestRegistry;
 import net.myriantics.klaxon_gametest.test.KlaxonBlockTesters;
 import net.myriantics.klaxon_gametest.test.KlaxonEntityTesters;
 import net.myriantics.klaxon_gametest.test.KlaxonItemTesters;
@@ -22,7 +23,7 @@ public class KlaxonGameTester implements ModInitializer {
         KlaxonItemTesters.init();
 
         for (Class<?> clazz : TEST_CLASSES) {
-            TestFunctions.register(clazz);
+            GameTestRegistry.register(clazz);
         }
         LOGGER.info("Initialized KLAXON's Game Tests!");
     }

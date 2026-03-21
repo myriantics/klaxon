@@ -1,8 +1,7 @@
 package net.myriantics.klaxon.mixin.jade;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.jade.KlaxonJadePlugin;
 import org.spongepowered.asm.mixin.Mixin;

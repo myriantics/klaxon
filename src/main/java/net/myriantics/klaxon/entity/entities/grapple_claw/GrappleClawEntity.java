@@ -1,33 +1,33 @@
 package net.myriantics.klaxon.entity.entities.grapple_claw;
 
-import net.minecraft.entity.*;
-import net.minecraft.entity.boss.dragon.EnderDragonPart;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.EnderDragonPart;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.*;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
@@ -36,7 +36,7 @@ import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConn
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
-import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
+import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonAccessor;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
@@ -48,124 +48,125 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
 import java.util.function.Consumer;
 
-public class GrappleClawEntity extends PersistentProjectileEntity implements GrapplingHook {
+public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
 
-    protected static final TrackedData<Integer> HOOKED_ENTITY_ID = DataTracker.registerData(GrappleClawEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    protected static final TrackedData<List<Integer>> DRAGGED_ITEM_IDS = DataTracker.registerData(GrappleClawEntity.class, KlaxonTrackedDataHandlerRegistry.INT_LIST);
+    protected static final EntityDataAccessor<Integer> HOOKED_ENTITY_ID = SynchedEntityData.defineId(GrappleClawEntity.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<List<Integer>> DRAGGED_ITEM_IDS = SynchedEntityData.defineId(GrappleClawEntity.class, KlaxonTrackedDataHandlerRegistry.INT_LIST);
 
     private final HookedEntityContainer hookedEntityContainer = new HookedEntityContainer();
     public final DraggedItemsContainer draggedItemsContainer = new DraggedItemsContainer();
 
-    public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, World world) {
+    public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public GrappleClawEntity(World world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
+    public GrappleClawEntity(Level world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
         super(KlaxonEntityTypes.GRAPPLE_CLAW, x, y, z, world, stack, shotFrom);
     }
 
-    public GrappleClawEntity(World world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
+    public GrappleClawEntity(Level world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
         super(KlaxonEntityTypes.GRAPPLE_CLAW, owner, world, stack, shotFrom);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(HOOKED_ENTITY_ID, 0);
-        builder.add(DRAGGED_ITEM_IDS, List.of());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HOOKED_ENTITY_ID, 0);
+        builder.define(DRAGGED_ITEM_IDS, List.of());
     }
 
     @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
-        super.onTrackedDataSet(data);
+    public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
+        super.onSyncedDataUpdated(data);
         if (data.equals(HOOKED_ENTITY_ID)) {
-            this.hookedEntityContainer.onTrackedDataSet(this.getDataTracker().get(HOOKED_ENTITY_ID));
+            this.hookedEntityContainer.onTrackedDataSet(this.getEntityData().get(HOOKED_ENTITY_ID));
         }
         if (data.equals(DRAGGED_ITEM_IDS)) {
-            this.draggedItemsContainer.onTrackedDataUpdate(this.getDataTracker().get(DRAGGED_ITEM_IDS));
+            this.draggedItemsContainer.onTrackedDataUpdate(this.getEntityData().get(DRAGGED_ITEM_IDS));
         }
     }
 
     @Override
-    protected ItemStack getDefaultItemStack() {
+    protected ItemStack getDefaultPickupItem() {
         return new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
     }
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        return super.isInvulnerableTo(damageSource) || damageSource.isIn(DamageTypeTags.BYPASSES_ARMOR);
+        return super.isInvulnerableTo(damageSource) || damageSource.is(DamageTypeTags.BYPASSES_ARMOR);
     }
 
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
-        ItemStack handStack = player.getStackInHand(hand);
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        ItemStack handStack = player.getItemInHand(hand);
 
-        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(player.getWorld());
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(player.level());
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
 
         if (connection != null) {
             // attempt to detach grapple winch cable if shears are used on it
-            if (handStack.isIn(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)) {
+            if (handStack.is(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)) {
                 if (manager instanceof ServerGrappleWinchConnectionManager serverManager) {
                     serverManager.disconnect(connection.getId(), CableDetachmentReason.MANUAL_DISCONNECT);
                 }
 
-                return ActionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
-        } else if (this.isOnGround()) {
+        } else if (this.onGround()) {
             // attempt to pick up / load the attached grapple claw
             // if that fails, just pick self up and discard
-            if (!this.getWorld().isClient() && this.tryPickup(player)) {
-                player.sendPickup(this, 1);
+            if (!this.level().isClientSide() && this.tryPickup(player)) {
+                player.take(this, 1);
                 this.discard();
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         return super.interact(player, hand);
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        World world = this.getWorld();
+    public boolean hurt(DamageSource source, float amount) {
+        Level world = this.level();
 
-        if (world.isClient() || this.isRemoved()) {
+        if (world.isClientSide() || this.isRemoved()) {
             return true;
         } else if (this.isInvulnerableTo(source)) {
             return false;
         } else {
 
-            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get((ServerWorld) world);
+            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get((ServerLevel) world);
             @Nullable GrappleWinchConnection connection = manager.fromHook(this);
 
             // players in creative can instantly kill grapple claws with no drop
-            if (source.getAttacker() instanceof PlayerEntity player && player.getAbilities().creativeMode) {
+            if (source.getEntity() instanceof Player player && player.getAbilities().instabuild) {
                 this.discard();
                 return true;
             }
 
-            ItemStack weaponStack = source.getWeaponStack();
-            Entity attacker = source.getAttacker();
+            ItemStack weaponStack = source.getWeaponItem();
+            Entity attacker = source.getEntity();
 
             // make sure the attacker is a player entity - then, check if we're either not attached or the player is the attached player
             // if this passes, attempt fast reloading - and return true if that passes.
-            if (weaponStack != null && attacker instanceof PlayerEntity player && (connection == null || player.equals(connection.getPlayer())) && this.klaxon$tryFastReload(player, weaponStack)) {
+            if (weaponStack != null && attacker instanceof Player player && (connection == null || player.equals(connection.getPlayer())) && this.klaxon$tryFastReload(player, weaponStack)) {
                 return true;
             }
 
             // any properly tagged items instakill grapple claws
             // by default includes mining tools and melee weapons
-            if (weaponStack != null && weaponStack.isIn(KlaxonItemTags.GRAPPLE_CLAW_INSTAKILL)) {
+            if (weaponStack != null && weaponStack.is(KlaxonItemTags.GRAPPLE_CLAW_INSTAKILL)) {
                 this.kill();
                 this.playSoundAtBothCableEndsIfPossible(
                         KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_DESTROY,
-                        0.8f + this.getWorld().getRandom().nextFloat() * 0.2f,
-                        0.7f + this.getWorld().getRandom().nextFloat() * 0.3f
+                        0.8f + this.level().getRandom().nextFloat() * 0.2f,
+                        0.7f + this.level().getRandom().nextFloat() * 0.3f
                 );
-                this.getWorld().emitGameEvent(this, GameEvent.ENTITY_DAMAGE, this.getPos());
+                this.level().gameEvent(this, GameEvent.ENTITY_DAMAGE, this.position());
                 return true;
             }
         }
@@ -174,7 +175,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     private void playSoundAtBothCableEndsIfPossible(SoundEvent soundEvent, float volume, float pitch) {
-        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.level());
         if (manager instanceof ServerGrappleWinchConnectionManager serverManager) {
             ServerGrappleWinchConnection connection = serverManager.fromHook(this);
             if (connection == null) {
@@ -187,14 +188,14 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     @Override
     public void kill() {
-        if (this.pickupType.equals(PickupPermission.ALLOWED)) {
-            this.dropStack(getItemStack());
+        if (this.pickup.equals(Pickup.ALLOWED)) {
+            this.spawnAtLocation(getPickupItemStackOrigin());
         }
         super.kill();
     }
 
     @Override
-    public boolean canHit() {
+    public boolean isPickable() {
         return !this.hookedEntityContainer.isPresent();
     }
 
@@ -204,16 +205,16 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
-    public float getTargetingMargin() {
+    public float getPickRadius() {
         return 0.0f;
     }
 
     @Override
-    public void onStruckByLightning(ServerWorld world, LightningEntity lightning) {
+    public void thunderHit(ServerLevel world, LightningBolt lightning) {
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity hitEntity = entityHitResult.getEntity();
 
         // if we're already attached to an entity, don't process further
@@ -221,7 +222,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             return;
         }
 
-        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.level());
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
 
         // if we hit the attached player, attempt to fast reload
@@ -229,37 +230,37 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             // attempt to pickup items into attached player when hitting
             this.draggedItemsContainer.forEach((itemEntity -> {
                 if (!itemEntity.isRemoved()) {
-                    itemEntity.onPlayerCollision(connection.getPlayer());
+                    itemEntity.playerTouch(connection.getPlayer());
                 }
             }));
 
-            if (!(this.klaxon$tryFastReload(connection.getPlayer(), connection.getPlayer().getMainHandStack()) || this.klaxon$tryFastReload(connection.getPlayer(), connection.getPlayer().getOffHandStack()))) {
+            if (!(this.klaxon$tryFastReload(connection.getPlayer(), connection.getPlayer().getMainHandItem()) || this.klaxon$tryFastReload(connection.getPlayer(), connection.getPlayer().getOffhandItem()))) {
                 // if we can't be picked up, bonk all velocity
-                setVelocity(Vec3d.ZERO);
+                setDeltaMovement(Vec3.ZERO);
             }
         } else if (!this.hookedEntityContainer.tryHook(hitEntity)) {
-            this.setVelocity(this.getVelocity().multiply(-0.01, -0.1, -0.01));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01, -0.1, -0.01));
         }
     }
 
     @Override
-    protected boolean canHit(Entity entity) {
-        return super.canHit(entity) && !entity.getType().isIn(KlaxonEntityTypeTags.GRAPPLE_CLAW_COLLISION_DENYLIST) && !(entity instanceof GrappleClawEntity);
+    protected boolean canHitEntity(Entity entity) {
+        return super.canHitEntity(entity) && !entity.getType().is(KlaxonEntityTypeTags.GRAPPLE_CLAW_COLLISION_DENYLIST) && !(entity instanceof GrappleClawEntity);
     }
 
     @Override
-    protected void onBlockHit(BlockHitResult blockHitResult) {
-        super.onBlockHit(blockHitResult);
-        this.getDataTracker().set(DRAGGED_ITEM_IDS, List.of());
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+        this.getEntityData().set(DRAGGED_ITEM_IDS, List.of());
     }
 
     @Override
-    protected SoundEvent getHitSound() {
+    protected SoundEvent getDefaultHitGroundSoundEvent() {
         return KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR;
     }
 
-    private DamageSource createDamageSource(RegistryKey<DamageType> key) {
-        return this.getWorld().getDamageSources().create(
+    private DamageSource createDamageSource(ResourceKey<DamageType> key) {
+        return this.level().damageSources().source(
                 key,
                 this,
                 this.getOwner() == null ? this : this.getOwner()
@@ -267,17 +268,17 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
-    public void updateTrackedPositionAndAngles(double x, double y, double z, float yaw, float pitch, int interpolationSteps) {
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps) {
         // needed so that it doesn't look like jittery bullshit when hooking an entity
         if (!hookedEntityContainer.isPresent()) {
-            this.setPosition(x, y, z);
+            this.setPos(x, y, z);
         }
-        this.setRotation(yaw, pitch);
+        this.setRot(yaw, pitch);
     }
 
     @Override
     public void tick() {
-        World world = this.getWorld();
+        Level world = this.level();
 
         GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
@@ -295,33 +296,33 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         // boom look at me using &= how snazzy
         this.inGround &= !this.hookedEntityContainer.isPresent();
 
-        this.refreshPosition();
+        this.reapplyPosition();
     }
 
     @Override
-    protected void age() {
+    protected void tickDespawn() {
         // only age up if in ground and disconnected
         if (inGround && !this.isConnected()) {
-            super.age();
+            super.tickDespawn();
         }
     }
 
     @Override
-    protected boolean tryPickup(PlayerEntity pickupPlayer) {
-        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
+    protected boolean tryPickup(Player pickupPlayer) {
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.level());
         @Nullable GrappleWinchConnection fromHook = manager.fromHook(this);
         @Nullable GrappleWinchConnection fromPlayer = manager.fromPlayer(pickupPlayer);
 
         boolean pickupTypeValid = true;
-        switch (this.pickupType) {
+        switch (this.pickup) {
             case DISALLOWED -> pickupTypeValid = false;
             case CREATIVE_ONLY -> pickupTypeValid = pickupPlayer.isCreative();
         }
 
         if (fromHook == fromPlayer) {
             if (fromHook != null && pickupTypeValid) {
-                BlockPos steppingPos = pickupPlayer.getSteppingPos();
-                BlockPos anchoredPos = this.getBlockPos();
+                BlockPos steppingPos = pickupPlayer.getOnPos();
+                BlockPos anchoredPos = this.blockPosition();
 
                 // don't pick up grapple claws that are hooked into entities.
                 if (this.hookedEntityContainer.isPresent()) {
@@ -329,11 +330,11 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 }
 
                 // don't pick up grapple claw while you're being supported by it
-                if ((!pickupPlayer.isOnGround() && anchoredPos.getY() > steppingPos.getY())) {
+                if ((!pickupPlayer.onGround() && anchoredPos.getY() > steppingPos.getY())) {
                     return false;
                 }
 
-                if (this.klaxon$tryFastReload(pickupPlayer, pickupPlayer.getMainHandStack()) || this.klaxon$tryFastReload(pickupPlayer, pickupPlayer.getOffHandStack())) {
+                if (this.klaxon$tryFastReload(pickupPlayer, pickupPlayer.getMainHandItem()) || this.klaxon$tryFastReload(pickupPlayer, pickupPlayer.getOffhandItem())) {
                     return true;
                 }
             }
@@ -345,73 +346,73 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     public boolean isConnected() {
-        return GrappleWinchConnectionManager.get(this.getWorld()).fromHook(this) != null;
+        return GrappleWinchConnectionManager.get(this.level()).fromHook(this) != null;
     }
 
-    public boolean isAttachedToPlayer(PlayerEntity player) {
+    public boolean isAttachedToPlayer(Player player) {
         return player.equals(this.getAttachedPlayer());
     }
 
-    public @Nullable PlayerEntity getAttachedPlayer() {
-        return GrappleWinchConnectionManager.get(this.getWorld()).fromHook(this) instanceof GrappleWinchConnection connection ? connection.getPlayer() : null;
+    public @Nullable Player getAttachedPlayer() {
+        return GrappleWinchConnectionManager.get(this.level()).fromHook(this) instanceof GrappleWinchConnection connection ? connection.getPlayer() : null;
     }
 
     @Override
-    public Vec3d getVelocity() {
+    public Vec3 getDeltaMovement() {
         // don't override velocity if hooked entity is main player because that makes the grapple claw desync from hooked player's eye position in their client view
-        if (this.hookedEntityContainer.isPresent() && !(this.hookedEntityContainer.get() instanceof PlayerEntity player && player.isMainPlayer())) {
-            return this.hookedEntityContainer.get().getVelocity();
+        if (this.hookedEntityContainer.isPresent() && !(this.hookedEntityContainer.get() instanceof Player player && player.isLocalPlayer())) {
+            return this.hookedEntityContainer.get().getDeltaMovement();
         } else {
-            return super.getVelocity();
+            return super.getDeltaMovement();
         }
     }
 
     @Override
-    public void addVelocity(double deltaX, double deltaY, double deltaZ) {
-        if (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isLogicalSideForUpdatingMovement()) {
-            this.hookedEntityContainer.get().addVelocity(deltaX, deltaY, deltaZ);
+    public void push(double deltaX, double deltaY, double deltaZ) {
+        if (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isControlledByLocalInstance()) {
+            this.hookedEntityContainer.get().push(deltaX, deltaY, deltaZ);
         } else {
-            super.addVelocity(deltaX, deltaY, deltaZ);
+            super.push(deltaX, deltaY, deltaZ);
         }
     }
 
     @Override
-    public void setYaw(float yaw) {
+    public void setYRot(float yaw) {
         if (!this.hookedEntityContainer.isPresent()) {
-            super.setYaw(yaw);
+            super.setYRot(yaw);
         }
     }
 
     @Override
-    public void setPitch(float pitch) {
+    public void setXRot(float pitch) {
         if (!this.hookedEntityContainer.isPresent()) {
-            super.setPitch(pitch);
+            super.setXRot(pitch);
         }
     }
 
     @Override
-    public boolean canUsePortals(boolean allowVehicles) {
+    public boolean canUsePortal(boolean allowVehicles) {
         return !this.hookedEntityContainer.isPresent();
     }
 
     @Override
-    public boolean isLogicalSideForUpdatingMovement() {
-        return super.isLogicalSideForUpdatingMovement() || (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isLogicalSideForUpdatingMovement());
+    public boolean isControlledByLocalInstance() {
+        return super.isControlledByLocalInstance() || (this.hookedEntityContainer.isPresent() && this.hookedEntityContainer.get().isControlledByLocalInstance());
     }
 
     @Override
-    public SoundCategory getSoundCategory() {
-        return this.isConnected() ? SoundCategory.PLAYERS : super.getSoundCategory();
+    public SoundSource getSoundSource() {
+        return this.isConnected() ? SoundSource.PLAYERS : super.getSoundSource();
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
     }
 
     @Override
@@ -425,13 +426,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
-    public boolean canModifyAt(World world, BlockPos pos) {
-        return !super.canModifyAt(world, pos) || !(this.getOwner() instanceof PlayerEntity player) || player.canModifyBlocks();
+    public boolean mayInteract(Level world, BlockPos pos) {
+        return !super.mayInteract(world, pos) || !(this.getOwner() instanceof Player player) || player.mayBuild();
     }
 
     @Override
-    public @Nullable ItemStack getPickBlockStack() {
-        return this.getItemStack().copy();
+    public @Nullable ItemStack getPickResult() {
+        return this.getPickupItemStackOrigin().copy();
     }
 
     @Override
@@ -445,7 +446,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
-    public void klaxon$onConnect(ServerPlayerEntity serverPlayer) {
+    public void klaxon$onConnect(ServerPlayer serverPlayer) {
         this.setOwner(serverPlayer);
     }
 
@@ -457,7 +458,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
     @Override
     public ItemStack klaxon$getItemStack() {
-        return this.getItemStack();
+        return this.getPickupItemStackOrigin();
     }
 
     @Override
@@ -466,18 +467,18 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
     }
 
     @Override
-    public void klaxon$deAnchor(Vec3d deAnchoringDirection) {
+    public void klaxon$deAnchor(Vec3 deAnchoringDirection) {
         boolean success = false;
         if (this.inGround) {
             BlockHitResult hitResult = GrappleClawBlockDestructionHelper.raycast(
                     this,
-                    this.getPos(),
-                    this.getPos().add(deAnchoringDirection),
+                    this.position(),
+                    this.position().add(deAnchoringDirection),
                     true
             );
 
             // make sure it's either a miss or we've got space to move a significant amount
-            if (hitResult.getType().equals(HitResult.Type.MISS) || hitResult.getPos().distanceTo(this.getPos()) > 0.1) {
+            if (hitResult.getType().equals(HitResult.Type.MISS) || hitResult.getLocation().distanceTo(this.position()) > 0.1) {
                 this.inGround = false;
                 success = true;
             }
@@ -486,7 +487,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         }
 
         if (success) {
-            KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) this.getAttachedPlayer());
+            KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayer) this.getAttachedPlayer());
         }
 
     }
@@ -496,7 +497,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
         private void tick(GrappleWinchConnection connection) {
             if (connection instanceof ServerGrappleWinchConnection) {
-                this.gatherNearbyItemEntities(GrappleClawEntity.this.getBoundingBox().expand(GrappleClawEntity.this.getHeight()));
+                this.gatherNearbyItemEntities(GrappleClawEntity.this.getBoundingBox().inflate(GrappleClawEntity.this.getBbHeight()));
             }
             if (!connection.isHookAnchored()) {
                 this.moveItems();
@@ -512,7 +513,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
                 // add the new entities
                 for (int id : newItemIds) {
-                    Entity entity = GrappleClawEntity.this.getWorld().getEntityById(id);
+                    Entity entity = GrappleClawEntity.this.level().getEntity(id);
                     if (entity != null && !entity.isRemoved() && entity instanceof ItemEntity itemEntity) {
                         this.draggedItems.add(itemEntity);
                     }
@@ -525,10 +526,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             this.sync();
         }
 
-        private void gatherNearbyItemEntities(Box box) {
+        private void gatherNearbyItemEntities(AABB box) {
             // yonk nearby entities and add to list
-            this.draggedItems.addAll(GrappleClawEntity.this.getWorld().getEntitiesByType(
-                    TypeFilter.instanceOf(ItemEntity.class),
+            this.draggedItems.addAll(GrappleClawEntity.this.level().getEntities(
+                    EntityTypeTest.forClass(ItemEntity.class),
                     box,
                     (entity) -> !entity.isRemoved()
             ));
@@ -537,8 +538,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
         private void moveItems() {
             for (ItemEntity itemEntity : this.draggedItems) {
-                itemEntity.setVelocity(GrappleClawEntity.this.getVelocity());
-                itemEntity.setPosition(GrappleClawEntity.this.getPos());
+                itemEntity.setDeltaMovement(GrappleClawEntity.this.getDeltaMovement());
+                itemEntity.setPos(GrappleClawEntity.this.position());
             }
         }
 
@@ -554,7 +555,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         }
 
         public void sync() {
-            GrappleClawEntity.this.getDataTracker().set(DRAGGED_ITEM_IDS, this.draggedItems.stream().map(Entity::getId).toList());
+            GrappleClawEntity.this.getEntityData().set(DRAGGED_ITEM_IDS, this.draggedItems.stream().map(Entity::getId).toList());
         }
     }
 
@@ -572,9 +573,9 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             if (newId < 0) {
                 this.hookedEntity = null;
             } else {
-                Entity entity = GrappleClawEntity.this.getWorld().getEntityById(newId);
+                Entity entity = GrappleClawEntity.this.level().getEntity(newId);
                 switch (entity) {
-                    case EnderDragonEntityAccessor access -> this.setHookedEntity(access.getBody());
+                    case EnderDragonAccessor access -> this.setHookedEntity(access.getBody());
                     case null, default -> this.hookedEntity = entity;
                 }
             }
@@ -585,20 +586,20 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 return;
             }
 
-            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(GrappleClawEntity.this.getWorld());
+            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(GrappleClawEntity.this.level());
             @Nullable GrappleWinchConnection connection = manager.fromHook(GrappleClawEntity.this);
 
             // clear grappled entity if it was removed
             if (connection == null || this.hookedEntity.isRemoved() || !this.hookedEntity.isAlive()) {
                 if (this.hookedEntity.getRemovalReason() == RemovalReason.CHANGED_DIMENSION) {
-                    GrappleClawEntity.this.resetPortalCooldown();
+                    GrappleClawEntity.this.setPortalCooldown();
                 }
                 this.release(false);
                 return;
             } else {
                 this.snapClawToHookPos();
-                this.hookedEntity.limitFallDistance();
-                GrappleClawEntity.this.setVelocity(Vec3d.ZERO);
+                this.hookedEntity.checkSlowFallDistance();
+                GrappleClawEntity.this.setDeltaMovement(Vec3.ZERO);
             }
         }
 
@@ -606,10 +607,10 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
             switch (entity) {
                 case EnderDragonPart part -> {
-                    GrappleClawEntity.this.getDataTracker().set(GrappleClawEntity.HOOKED_ENTITY_ID, part.owner.getId() + 1);
+                    GrappleClawEntity.this.getEntityData().set(GrappleClawEntity.HOOKED_ENTITY_ID, part.parentMob.getId() + 1);
                 }
                 case null, default -> {
-                    GrappleClawEntity.this.getDataTracker().set(GrappleClawEntity.HOOKED_ENTITY_ID, entity == null ? 0 : entity.getId() + 1);
+                    GrappleClawEntity.this.getEntityData().set(GrappleClawEntity.HOOKED_ENTITY_ID, entity == null ? 0 : entity.getId() + 1);
                 }
             }
 
@@ -618,7 +619,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
         public boolean tryHook(Entity entity) {
             // this is only for the server
-            if (GrappleClawEntity.this.getWorld().isClient()) {
+            if (GrappleClawEntity.this.level().isClientSide()) {
                 return false;
             }
 
@@ -626,12 +627,12 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
 
             // hook onto the ender dragon body if possible
             entity = entity instanceof EnderDragonPart part
-                    ? ((EnderDragonEntityAccessor) part.owner).getBody()
+                    ? ((EnderDragonAccessor) part.parentMob).getBody()
                     : entity;
 
             DamageSource source = claw.createDamageSource(KlaxonDamageTypes.GRAPPLING);
 
-            if (entity.isInvulnerableTo(source) || (entity instanceof LivingEntity livingEntity && livingEntity.blockedByShield(source))) {
+            if (entity.isInvulnerableTo(source) || (entity instanceof LivingEntity livingEntity && livingEntity.isDamageSourceBlocked(source))) {
                 return false;
             }
 
@@ -640,13 +641,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             // this allows you to yoink it off the wall in a cool way instead of just dropping its item on initial hit
             // top 10 changes people will notice
             // this causes endermen to tp
-            if (!entity.getType().isIn(KlaxonEntityTypeTags.GRAPPLE_CLAW_GRAPPLING_DAMAGE_DENYLIST)) {
-                entity.damage(
+            if (!entity.getType().is(KlaxonEntityTypeTags.GRAPPLE_CLAW_GRAPPLING_DAMAGE_DENYLIST)) {
+                entity.hurt(
                         source,
-                        claw.getItemStack().getOrDefault(
+                        claw.getPickupItemStackOrigin().getOrDefault(
                                 KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
                                 GrappleClawComponent.DEFAULT
-                        ).computeGrappling(claw.getItemStack())
+                        ).computeGrappling(claw.getPickupItemStackOrigin())
                 );
             }
 
@@ -661,7 +662,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             this.setHookedEntity(entity);
 
             // pop advancement
-            if (claw.getAttachedPlayer() instanceof ServerPlayerEntity serverPlayer) {
+            if (claw.getAttachedPlayer() instanceof ServerPlayer serverPlayer) {
                 KlaxonAdvancementTriggers.triggerEntityGrapple(serverPlayer, entity);
             }
 
@@ -670,8 +671,8 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             // play sound
             claw.playSoundAtBothCableEndsIfPossible(
                     KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_HOOK,
-                    0.8f + claw.getWorld().getRandom().nextFloat() * 0.2f,
-                    0.7f + claw.getWorld().getRandom().nextFloat() * 0.3f
+                    0.8f + claw.level().getRandom().nextFloat() * 0.2f,
+                    0.7f + claw.level().getRandom().nextFloat() * 0.3f
             );
 
             return true;
@@ -685,25 +686,25 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
             GrappleClawEntity claw = GrappleClawEntity.this;
 
             if (damage) {
-                hookedEntity.damage(
+                hookedEntity.hurt(
                         claw.createDamageSource(KlaxonDamageTypes.RENDING),
-                        claw.getItemStack().getOrDefault(
+                        claw.getPickupItemStackOrigin().getOrDefault(
                                 KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
                                 GrappleClawComponent.DEFAULT
-                        ).computeRending(claw.getItemStack())
+                        ).computeRending(claw.getPickupItemStackOrigin())
                 );
             }
 
             // make sure claws aren't stuck in blocks when releasing entities
             // now you can pull item frames off the floor
-            if (!claw.getWorld().isSpaceEmpty(Box.of(claw.getPos(), 0.01, 0.01, 0.01))) {
-                claw.setPosition(claw.getX(), this.hookedEntity.getBoundingBox().minY, claw.getZ());
+            if (!claw.level().noCollision(AABB.ofSize(claw.position(), 0.01, 0.01, 0.01))) {
+                claw.setPos(claw.getX(), this.hookedEntity.getBoundingBox().minY, claw.getZ());
             }
 
-            Vec3d hookedVelocity = this.hookedEntity.getVelocity();
+            Vec3 hookedVelocity = this.hookedEntity.getDeltaMovement();
             this.setHookedEntity(null);
             if (!damage) {
-                claw.setVelocity(hookedVelocity);
+                claw.setDeltaMovement(hookedVelocity);
             }
 
             return true;
@@ -714,7 +715,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 return false;
             }
 
-            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(GrappleClawEntity.this.getWorld());
+            GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(GrappleClawEntity.this.level());
             if (manager == null) {
                 throw new AssertionError();
             }
@@ -722,7 +723,7 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
                 return false;
             }
 
-            return entity.canBeHitByProjectile() && !entity.getType().isIn(KlaxonEntityTypeTags.GRAPPLE_CLAW_HOOKING_DENYLIST);
+            return entity.canBeHitByProjectile() && !entity.getType().is(KlaxonEntityTypeTags.GRAPPLE_CLAW_HOOKING_DENYLIST);
         }
 
         public void snapClawToHookPos() {
@@ -730,13 +731,13 @@ public class GrappleClawEntity extends PersistentProjectileEntity implements Gra
         }
 
         public void snapClawToHookPos(Entity target) {
-            Vec3d targetPos = target instanceof EnderDragonPart
-                    ? target.getPos().add(0, target.getHeight() / 2, 0)
-                    : target.getEyePos();
+            Vec3 targetPos = target instanceof EnderDragonPart
+                    ? target.position().add(0, target.getBbHeight() / 2, 0)
+                    : target.getEyePosition();
 
             GrappleClawEntity grappleClaw = GrappleClawEntity.this;
 
-            grappleClaw.setPosition(targetPos.subtract(0, grappleClaw.getHeight() / 2, 0));
+            grappleClaw.setPos(targetPos.subtract(0, grappleClaw.getBbHeight() / 2, 0));
         }
 
         public boolean matches(Entity entity) {

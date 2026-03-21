@@ -1,30 +1,30 @@
 package net.myriantics.klaxon.mechanics.wrench;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.FallibleItemDispenserBehavior;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 
-public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
+public class WrenchDispenserBehavior extends OptionalDispenseItemBehavior {
     private boolean shouldPlayEffects = true;
 
     @Override
-    protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
-        ServerWorld serverWorld = pointer.world();
-        Direction facing = pointer.state().get(DispenserBlock.FACING);
-        BlockPos targetPos = pointer.pos().offset(facing);
+    protected ItemStack execute(BlockSource pointer, ItemStack stack) {
+        ServerLevel serverWorld = pointer.level();
+        Direction facing = pointer.state().getValue(DispenserBlock.FACING);
+        BlockPos targetPos = pointer.pos().relative(facing);
         BlockState targetState = serverWorld.getBlockState(targetPos);
 
         setSuccess(false);
         shouldPlayEffects = true;
 
         // cancel wrench interaction if a predicate blocks it
-        if (WrenchInteractionDenialPredicate.wrenchInteractionBlocked(serverWorld.getServer().getReloadableRegistries().getRegistryManager(), targetState)) {
+        if (WrenchInteractionDenialPredicate.wrenchInteractionBlocked(serverWorld.getServer().reloadableRegistries().get(), targetState)) {
             return stack;
         }
 
@@ -36,7 +36,7 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
 
             // we don't need to set blockstate here because it's done in the above method
             if (success) {
-                serverWorld.updateComparators(pointer.pos(), pointer.state().getBlock());
+                serverWorld.updateNeighbourForOutputSignal(pointer.pos(), pointer.state().getBlock());
                 setSuccess(true);
                 return stack;
             }
@@ -51,9 +51,9 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
 
         // only commit changes to the world if we've changed the block state
         if (!newState.equals(targetState)) {
-            serverWorld.setBlockState(targetPos, newState);
-            serverWorld.updateNeighbor(targetPos, pointer.state().getBlock(), pointer.pos());
-            serverWorld.updateComparators(pointer.pos(), pointer.state().getBlock());
+            serverWorld.setBlockAndUpdate(targetPos, newState);
+            serverWorld.neighborChanged(targetPos, pointer.state().getBlock(), pointer.pos());
+            serverWorld.updateNeighbourForOutputSignal(pointer.pos(), pointer.state().getBlock());
             setSuccess(true);
             shouldPlayEffects = false;
         }
@@ -62,16 +62,16 @@ public class WrenchDispenserBehavior extends FallibleItemDispenserBehavior {
     }
 
     @Override
-    protected void playSound(BlockPointer pointer) {
+    protected void playSound(BlockSource pointer) {
         if (this.shouldPlayEffects) {
             super.playSound(pointer);
         }
     }
 
     @Override
-    protected void spawnParticles(BlockPointer pointer, Direction side) {
+    protected void playAnimation(BlockSource pointer, Direction side) {
         if (this.shouldPlayEffects) {
-            super.spawnParticles(pointer, side);
+            super.playAnimation(pointer, side);
         }
     }
 }

@@ -1,10 +1,8 @@
 package net.myriantics.klaxon.recipe.makeshift_crafting.shaped;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.*;
-import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.recipe.input.CraftingRecipeInput;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -14,11 +12,11 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
 
     public ItemStack result;
 
-    public RawShapedRecipe raw;
+    public ShapedRecipePattern raw;
 
     List<Ingredient> constantIngredients;
 
-    public MakeshiftShapedCraftingRecipe(String group, CraftingRecipeCategory category, RawShapedRecipe raw, List<Ingredient> constantIngredients, ItemStack result, boolean showNotification) {
+    public MakeshiftShapedCraftingRecipe(String group, CraftingBookCategory category, ShapedRecipePattern raw, List<Ingredient> constantIngredients, ItemStack result, boolean showNotification) {
         super(group, category, raw, result, showNotification);
         this.raw = raw;
         this.result = result;
@@ -26,10 +24,10 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
     }
 
     @Override
-    public ItemStack craft(CraftingRecipeInput craftingRecipeInput, RegistryWrapper.WrapperLookup wrapperLookup) {
-        List<ItemStack> inputStacks = craftingRecipeInput.getStacks();
+    public ItemStack assemble(CraftingInput craftingRecipeInput, HolderLookup.Provider wrapperLookup) {
+        List<ItemStack> inputStacks = craftingRecipeInput.items();
 
-        ItemStack result = this.getResult(wrapperLookup);
+        ItemStack result = this.getResultItem(wrapperLookup);
 
         final double durabilityPenaltyCap = 0.5;
         int totalPresentMakeshiftIngredients = 0;
@@ -41,12 +39,12 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
             if (!this.constantIngredients.stream().anyMatch((ingredient -> ingredient.test(inputStack))) && !inputStack.isEmpty()) {
                 totalPotentialMakeshiftIngredients++;
 
-                totalPresentMakeshiftIngredients += inputStack.isIn(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS) ? 1 : 0;
+                totalPresentMakeshiftIngredients += inputStack.is(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS) ? 1 : 0;
             }
         }
 
         // decrease the result's durability according to how many makeshift stacks were used in crafting out of all potential makeshift ingredients in the recipe
-        result.setDamage((int) (result.getMaxDamage() * durabilityPenaltyCap * ((double) totalPresentMakeshiftIngredients / totalPotentialMakeshiftIngredients)));
+        result.setDamageValue((int) (result.getMaxDamage() * durabilityPenaltyCap * ((double) totalPresentMakeshiftIngredients / totalPotentialMakeshiftIngredients)));
 
         return result.copy();
     }

@@ -3,10 +3,10 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.EntityTypeTags;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.EntityType;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 
@@ -14,12 +14,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>> {
 
-    public KlaxonEntityTypeTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-        super(output, RegistryKeys.ENTITY_TYPE, registriesFuture);
+    public KlaxonEntityTypeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, Registries.ENTITY_TYPE, registriesFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup arg) {
+    protected void addTags(HolderLookup.Provider arg) {
         getOrCreateTagBuilder(KlaxonEntityTypeTags.HEAVY_HITTERS)
                 .add(EntityType.VINDICATOR)
                 .add(EntityType.PIGLIN_BRUTE)

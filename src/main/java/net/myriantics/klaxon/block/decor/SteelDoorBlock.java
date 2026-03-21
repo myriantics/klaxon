@@ -1,63 +1,66 @@
 package net.myriantics.klaxon.block.decor;
 
-import net.minecraft.block.*;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.Entity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
 import org.jetbrains.annotations.Nullable;
 
 public class SteelDoorBlock extends DoorBlock implements Wrenchable {
-    public SteelDoorBlock(BlockSetType type, Settings settings) {
+    public SteelDoorBlock(BlockSetType type, Properties settings) {
         super(type, settings);
     }
 
     @Override
-    protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!world.isClient()) {
-            boolean isRecievingPower = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        if (!world.isClientSide()) {
+            boolean isRecievingPower = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
 
-            if (isRecievingPower != state.get(POWERED)) {
+            if (isRecievingPower != state.getValue(POWERED)) {
                 BlockState newState = state.cycle(POWERED);
 
                 // flips on up signal
-                if (!this.getDefaultState().isOf(sourceBlock) && isRecievingPower) {
+                if (!this.defaultBlockState().is(sourceBlock) && isRecievingPower) {
                     // dude these random ass private methods have me tweaking
-                    playOpenCloseSound(null, world, pos, !state.get(OPEN));
+                    playSound(null, world, pos, !state.getValue(OPEN));
                     newState = newState.cycle(OPEN);
                 }
 
-                world.setBlockState(pos, newState);
+                world.setBlockAndUpdate(pos, newState);
             }
         }
     }
 
-    private void playOpenCloseSound(@Nullable Entity entity, World world, BlockPos pos, boolean open) {
+    private void playSound(@Nullable Entity entity, Level world, BlockPos pos, boolean open) {
         world.playSound(
-                entity, pos, open ? this.getBlockSetType().doorOpen() : this.getBlockSetType().doorClose(), SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.1F + 0.9F
+                entity, pos, open ? this.type().doorOpen() : this.type().doorClose(), SoundSource.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.1F + 0.9F
         );
     }
 
     @Override
-    public ItemActionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
+    public ItemInteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
         BlockPos targetPos = context.hitResult().getBlockPos();
 
-        this.playOpenCloseSound(context.player(), context.world(), targetPos, !context.targetState().get(OPEN));
-        context.world().setBlockState(targetPos, context.targetState().cycle(OPEN));
+        this.playSound(context.player(), context.world(), targetPos, !context.targetState().getValue(OPEN));
+        context.world().setBlockAndUpdate(targetPos, context.targetState().cycle(OPEN));
 
-        return ItemActionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
     public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
-        this.playOpenCloseSound(null, context.serverWorld(), context.targetPos(), !context.targetState().get(OPEN));
-        context.serverWorld().setBlockState(context.targetPos(), context.targetState().cycle(OPEN));
+        this.playSound(null, context.serverWorld(), context.targetPos(), !context.targetState().getValue(OPEN));
+        context.serverWorld().setBlockAndUpdate(context.targetPos(), context.targetState().cycle(OPEN));
 
         return true;
     }

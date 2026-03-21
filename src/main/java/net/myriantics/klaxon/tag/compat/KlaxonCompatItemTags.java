@@ -1,9 +1,9 @@
 package net.myriantics.klaxon.tag.compat;
 
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 
 public class KlaxonCompatItemTags {
 
@@ -18,6 +18,6 @@ public class KlaxonCompatItemTags {
     }
 
     private static TagKey<Item> createCompatItemTag(String namespace, String name) {
-        return TagKey.of(RegistryKeys.ITEM, Identifier.of(namespace, name));
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(namespace, name));
     }
 }

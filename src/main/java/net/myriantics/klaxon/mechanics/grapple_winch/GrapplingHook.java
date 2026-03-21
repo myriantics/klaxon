@@ -1,15 +1,15 @@
 package net.myriantics.klaxon.mechanics.grapple_winch;
 
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
@@ -18,13 +18,13 @@ import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import org.jetbrains.annotations.Nullable;
 
 public interface GrapplingHook {
-    void klaxon$onConnect(ServerPlayerEntity serverPlayer);
+    void klaxon$onConnect(ServerPlayer serverPlayer);
 
     void klaxon$onDisconnect(CableDetachmentReason reason);
 
     boolean klaxon$isAnchored();
 
-    void klaxon$deAnchor(Vec3d deAnchoringDirection);
+    void klaxon$deAnchor(Vec3 deAnchoringDirection);
 
     Entity klaxon$asEntity();
 
@@ -36,8 +36,8 @@ public interface GrapplingHook {
      * @param winchStack - Stack that we're attempting to load into
      * @return Whether the fast loading succeeded or not
      */
-    default boolean klaxon$tryFastReload(PlayerEntity player, ItemStack winchStack) {
-        World world = player.getWorld();
+    default boolean klaxon$tryFastReload(Player player, ItemStack winchStack) {
+        Level world = player.level();
 
         // check if the winch stack is a grapple winch
         if (!(winchStack.getItem() instanceof GrappleWinchItem)) {
@@ -49,7 +49,7 @@ public interface GrapplingHook {
         @Nullable GrappleWinchConnection selfConnection = manager.fromHook(this);
 
         // make sure grapple winch is empty - so there's space to reload into
-        ChargedProjectilesComponent projectiles = winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
+        ChargedProjectiles projectiles = winchStack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
         if (!projectiles.isEmpty()) {
             return false;
         }
@@ -58,14 +58,14 @@ public interface GrapplingHook {
         if (playerConnection == selfConnection) {
             // this is needed so players can choose whether they want to recast grapple claw or not
             // only trigger this if pickup occurred while retracting
-            if (player instanceof ServerPlayerEntity serverPlayer && (selfConnection == null || selfConnection.isRetracting())) {
+            if (player instanceof ServerPlayer serverPlayer && (selfConnection == null || selfConnection.isRetracting())) {
                 // update usage lockout if true
                 KlaxonServerPlayNetworkHandler.triggerItemLockout(serverPlayer);
             }
 
             // if we're on the server, update the grapple winch's components to include this one
-            if (!world.isClient()) {
-                winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(this.klaxon$getItemStack()));
+            if (!world.isClientSide()) {
+                winchStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(this.klaxon$getItemStack()));
             }
 
             // play sounds and emit game event
@@ -75,17 +75,17 @@ public interface GrapplingHook {
                     player.getEyeY(),
                     player.getZ(),
                     KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_FAST_LOAD,
-                    SoundCategory.PLAYERS,
+                    SoundSource.PLAYERS,
                     0.7f + world.getRandom().nextFloat() * 0.3f,
                     0.7f + world.getRandom().nextFloat() * 0.3f
             );
-            world.emitGameEvent(
+            world.gameEvent(
                     GameEvent.ENTITY_ACTION,
-                    player.getEyePos(),
-                    GameEvent.Emitter.of(player)
+                    player.getEyePosition(),
+                    GameEvent.Context.of(player)
             );
 
-            if (!this.klaxon$asEntity().getWorld().isClient()) {
+            if (!this.klaxon$asEntity().level().isClientSide()) {
                 if (manager == null) {
                     throw new AssertionError();
                 }

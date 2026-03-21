@@ -1,11 +1,11 @@
 package net.myriantics.klaxon.datagen;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 
 
 // Used during datagen to improve recipe name readability when there's no output item to pull the name from
@@ -31,22 +31,22 @@ public final class NamedIngredient {
     }
 
     public static NamedIngredient fromTag(TagKey<Item> tag) {
-        return new NamedIngredient(Ingredient.fromTag(tag), tag.id().getPath());
+        return new NamedIngredient(Ingredient.of(tag), tag.location().getPath());
     }
 
     public static NamedIngredient ofStacks(ItemStack... stacks) {
         String name = "empty";
         if (stacks.length > 0) {
-            name = Registries.ITEM.getId(stacks[0].getItem()).getPath();
+            name = BuiltInRegistries.ITEM.getKey(stacks[0].getItem()).getPath();
         }
-        return new NamedIngredient(Ingredient.ofStacks(stacks), name);
+        return new NamedIngredient(Ingredient.of(stacks), name);
     }
 
-    public static NamedIngredient ofItems(ItemConvertible... items) {
+    public static NamedIngredient ofItems(ItemLike... items) {
         String name = "empty";
         if (items.length > 0) {
-            name = Registries.ITEM.getId(items[0].asItem()).getPath();
+            name = BuiltInRegistries.ITEM.getKey(items[0].asItem()).getPath();
         }
-        return new NamedIngredient(Ingredient.ofItems(items), name);
+        return new NamedIngredient(Ingredient.of(items), name);
     }
 }

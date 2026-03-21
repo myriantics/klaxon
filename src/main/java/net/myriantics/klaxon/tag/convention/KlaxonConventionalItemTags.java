@@ -1,9 +1,9 @@
 package net.myriantics.klaxon.tag.convention;
 
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 
 public class KlaxonConventionalItemTags {
 
@@ -94,6 +94,6 @@ public class KlaxonConventionalItemTags {
     }
 
     private static TagKey<Item> createConventionalItemTag(String name) {
-        return TagKey.of(RegistryKeys.ITEM, Identifier.of("c", name));
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
     }
 }

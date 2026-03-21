@@ -4,9 +4,9 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiRecipeSorting;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
@@ -44,25 +44,25 @@ public abstract class KlaxonEmiRecipeCategories {
         return of(KlaxonCommon.locate(name), icon);
     }
 
-    public static EmiRecipeCategory of(Identifier id, EmiRenderable icon) {
+    public static EmiRecipeCategory of(ResourceLocation id, EmiRenderable icon) {
         return new KlaxonCategory(id, icon);
     }
 
     private static class KlaxonCategory extends EmiRecipeCategory {
         private final String key;
 
-        public KlaxonCategory(Identifier id, EmiRenderable icon) {
+        public KlaxonCategory(ResourceLocation id, EmiRenderable icon) {
             this(id, icon, "container." + id.getNamespace() + "." + id.getPath() +".title");
         }
 
-        public KlaxonCategory(Identifier id, EmiRenderable icon, String key) {
+        public KlaxonCategory(ResourceLocation id, EmiRenderable icon, String key) {
             super(id, icon, icon, EmiRecipeSorting.compareOutputThenInput());
             this.key = key;
         }
 
         @Override
-        public Text getName() {
-            return Text.translatable(key);
+        public Component getName() {
+            return Component.translatable(key);
         }
     }
 }

@@ -1,32 +1,37 @@
 package net.myriantics.klaxon.mechanics.grapple_winch;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LightType;
+import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import java.util.Collection;
 
 public final class GrappleWinchCableRenderer {
 
-    private static final Identifier CABLE_SEGMENT_TEXTURE = KlaxonTextures.decorate(KlaxonTextures.STEEL_CABLE_SEGMENT);
+    private static final ResourceLocation CABLE_SEGMENT_TEXTURE = KlaxonTextures.decorate(KlaxonTextures.STEEL_CABLE_SEGMENT);
 
     private static final float TEXTURE_U_MIN = 0f/16;
     private static final float TEXTURE_U_MAX = 16f/16;
@@ -34,21 +39,21 @@ public final class GrappleWinchCableRenderer {
     private static final float TEXTURE_V_MAX = 3f/16;
 
     public void render(
-            ClientWorld clientWorld,
+            ClientLevel clientWorld,
             Camera camera,
-            RenderTickCounter renderTickCounter,
-            MatrixStack matrices,
-            VertexConsumerProvider immediate,
+            DeltaTracker renderTickCounter,
+            PoseStack matrices,
+            MultiBufferSource immediate,
             Collection<ClientGrappleWinchConnection> connections,
             float daylightMultiplier,
             boolean clientPlayerHasNightVision
     ) {
-        VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getEntityCutoutNoCull(CABLE_SEGMENT_TEXTURE));
-        Vec3d cameraPos = camera.getPos();
+        VertexConsumer vertexConsumer = immediate.getBuffer(RenderType.entityCutoutNoCull(CABLE_SEGMENT_TEXTURE));
+        Vec3 cameraPos = camera.getPosition();
 
         for (ClientGrappleWinchConnection connection : connections) {
 
-            @Nullable PlayerEntity player = connection.getPlayer();
+            @Nullable Player player = connection.getPlayer();
             @Nullable GrapplingHook hook = connection.getHook();
 
             Entity source = player == null || player.isRemoved()
@@ -60,27 +65,27 @@ public final class GrappleWinchCableRenderer {
                 continue;
             }
 
-            float tickDelta = renderTickCounter.getTickDelta(clientWorld.getTickManager().shouldSkipTick(source));
+            float tickDelta = renderTickCounter.getGameTimeDeltaPartialTick(clientWorld.tickRateManager().isEntityFrozen(source));
 
             // initialize positions
-            Vec3d playerPos = player == null || player.isRemoved() ? connection.getLerpedPlayerPos(tickDelta) : player.getLerpedPos(tickDelta);
-            Vec3d clawPos = hook == null || hook.klaxon$asEntity().isRemoved() ? connection.getLerpedHookPos(tickDelta) : hook.klaxon$asEntity().getLerpedPos(tickDelta);
-            BlockPos playerBlockPos = BlockPos.ofFloored(playerPos);
-            BlockPos clawBlockPos = BlockPos.ofFloored(clawPos);
+            Vec3 playerPos = player == null || player.isRemoved() ? connection.getLerpedPlayerPos(tickDelta) : player.getPosition(tickDelta);
+            Vec3 clawPos = hook == null || hook.klaxon$asEntity().isRemoved() ? connection.getLerpedHookPos(tickDelta) : hook.klaxon$asEntity().getPosition(tickDelta);
+            BlockPos playerBlockPos = BlockPos.containing(playerPos);
+            BlockPos clawBlockPos = BlockPos.containing(clawPos);
 
             if (hook instanceof GrappleClawEntity grappleClaw && grappleClaw.hasHookedEntity()) {
                 clawPos = clawPos.add(0, grappleClaw.getEyeHeight(grappleClaw.getPose()), 0);
             }
 
             // gather light values
-            int originBlockLight = clientWorld.getLightLevel(LightType.BLOCK, playerBlockPos);
-            int endpointBlockLight = clientWorld.getLightLevel(LightType.BLOCK, clawBlockPos);
-            int originSkyLight = clientWorld.getLightLevel(LightType.SKY, playerBlockPos);
-            int endpointSkyLight = clientWorld.getLightLevel(LightType.SKY, clawBlockPos);
+            int originBlockLight = clientWorld.getBrightness(LightLayer.BLOCK, playerBlockPos);
+            int endpointBlockLight = clientWorld.getBrightness(LightLayer.BLOCK, clawBlockPos);
+            int originSkyLight = clientWorld.getBrightness(LightLayer.SKY, playerBlockPos);
+            int endpointSkyLight = clientWorld.getBrightness(LightLayer.SKY, clawBlockPos);
 
             // block light level is overridden to 15 if on fire or glowing
-            originBlockLight = player != null && (player.isOnFire() || player.isGlowing()) ? 15 : originBlockLight;
-            endpointBlockLight = hook != null && (hook.klaxon$asEntity().isOnFire() || hook.klaxon$asEntity().isGlowing()) ? 15 : endpointBlockLight;
+            originBlockLight = player != null && (player.isOnFire() || player.isCurrentlyGlowing()) ? 15 : originBlockLight;
+            endpointBlockLight = hook != null && (hook.klaxon$asEntity().isOnFire() || hook.klaxon$asEntity().isCurrentlyGlowing()) ? 15 : endpointBlockLight;
 
             // multiply skylight by daytime multiplier (computed in clientTick())
             // this is needed because the skylight is always 15 when you're in the open regardless of whether it's night
@@ -95,31 +100,31 @@ public final class GrappleWinchCableRenderer {
                 endpointSkyLight = Math.max(endpointSkyLight, 13);
             }
 
-            Vec3d cableOriginPos = playerPos;
-            Vec3d cableEndpointPos = clawPos;
+            Vec3 cableOriginPos = playerPos;
+            Vec3 cableEndpointPos = clawPos;
 
             // override cable origin pos with player hand position if possible
             if (player != null && !player.isRemoved()) {
-                float swingProgress = player.getHandSwingProgress(tickDelta);
-                float handMovementOffset = MathHelper.sin(MathHelper.sqrt(swingProgress) * (float) Math.PI);
+                float swingProgress = player.getAttackAnim(tickDelta);
+                float handMovementOffset = Mth.sin(Mth.sqrt(swingProgress) * (float) Math.PI);
                 cableOriginPos = this.getHandPos(connection.getPlayer(), camera, handMovementOffset, tickDelta);
             }
 
             // yonk the lerped values
-            double lerpedX = MathHelper.lerp(tickDelta, source.lastRenderX, source.getX());
-            double lerpedY = MathHelper.lerp(tickDelta, source.lastRenderY, source.getY());
-            double lerpedZ = MathHelper.lerp(tickDelta, source.lastRenderZ, source.getZ());
+            double lerpedX = Mth.lerp(tickDelta, source.xOld, source.getX());
+            double lerpedY = Mth.lerp(tickDelta, source.yOld, source.getY());
+            double lerpedZ = Mth.lerp(tickDelta, source.zOld, source.getZ());
 
-            matrices.push();
-            matrices.translate(lerpedX - cameraPos.getX(), lerpedY - cameraPos.getY(), lerpedZ - cameraPos.getZ());
-            matrices.translate(cableEndpointPos.getX() - lerpedX, cableEndpointPos.getY() - lerpedY, cableEndpointPos.getZ() - lerpedZ);
+            matrices.pushPose();
+            matrices.translate(lerpedX - cameraPos.x(), lerpedY - cameraPos.y(), lerpedZ - cameraPos.z());
+            matrices.translate(cableEndpointPos.x() - lerpedX, cableEndpointPos.y() - lerpedY, cableEndpointPos.z() - lerpedZ);
 
             double distance = cableOriginPos.distanceTo(cableEndpointPos);
             int maxSegments = (int) distance;
 
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90 - KlaxonMathHelper.yawBetween(cableOriginPos, cableEndpointPos)));
-            matrices.multiply(
-                    RotationAxis.POSITIVE_Z.rotationDegrees(KlaxonMathHelper.pitchBetween(cableOriginPos, cableEndpointPos))
+            matrices.mulPose(Axis.YP.rotationDegrees(90 - KlaxonMathHelper.yawBetween(cableOriginPos, cableEndpointPos)));
+            matrices.mulPose(
+                    Axis.ZP.rotationDegrees(KlaxonMathHelper.pitchBetween(cableOriginPos, cableEndpointPos))
             );
             matrices.scale(1f/16, 1f/16, 1f/16);
 
@@ -133,7 +138,7 @@ public final class GrappleWinchCableRenderer {
                     );
                 }
 
-                matrices.push();
+                matrices.pushPose();
 
                 renderCableSegment(
                         // makes it seem like the cable is actually streaming out of the grapple winch
@@ -148,10 +153,10 @@ public final class GrappleWinchCableRenderer {
                         matrices,
                         (float) segmentIndex / maxSegments
                 );
-                matrices.pop();
+                matrices.popPose();
             }
 
-            matrices.pop();
+            matrices.popPose();
         }
     }
 
@@ -162,17 +167,17 @@ public final class GrappleWinchCableRenderer {
             int cableOriginSkyLight,
             int cableEndpointBlockLight,
             int cableEndpointSkyLight,
-            MatrixStack matrices,
+            PoseStack matrices,
             float segmentStartPercentage
     ) {
         // do lighting calculations
-        int lerpedBlockLight = MathHelper.lerp(segmentStartPercentage, cableEndpointBlockLight, cableOriginBlockLight);
-        int lerpedSkyLight = MathHelper.lerp(segmentStartPercentage, cableEndpointSkyLight, cableOriginSkyLight);
-        int light = LightmapTextureManager.pack(lerpedBlockLight, lerpedSkyLight);
+        int lerpedBlockLight = Mth.lerpInt(segmentStartPercentage, cableEndpointBlockLight, cableOriginBlockLight);
+        int lerpedSkyLight = Mth.lerpInt(segmentStartPercentage, cableEndpointSkyLight, cableOriginSkyLight);
+        int light = LightTexture.pack(lerpedBlockLight, lerpedSkyLight);
 
 
 
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45));
+        matrices.mulPose(Axis.XP.rotationDegrees(45));
 
         float uMin = TEXTURE_U_MIN;
         float uMax = TEXTURE_U_MAX * lengthToRender;
@@ -182,8 +187,8 @@ public final class GrappleWinchCableRenderer {
         float cableThickness = 3f;
 
         for (int i = 0; i < 2; i++) {
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
-            MatrixStack.Entry entry2 = matrices.peek();
+            matrices.mulPose(Axis.XP.rotationDegrees(90));
+            PoseStack.Pose entry2 = matrices.last();
 
             this.vertex(entry2, vertexConsumer, 0, cableThickness / 2, 0, uMin, TEXTURE_V_MIN, 0, 0, 0, light);
             this.vertex(entry2, vertexConsumer, xTo, cableThickness / 2, 0, uMax, TEXTURE_V_MIN, 0, 0, 0, light);
@@ -192,36 +197,36 @@ public final class GrappleWinchCableRenderer {
         }
     }
 
-    public Vec3d getHandPos(PlayerEntity player, Camera camera, float f, float tickDelta) {
-        int handInverter = player.getMainArm() == Arm.RIGHT ? 1 : -1;
-        boolean isUsing = player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
-        boolean isSneaking = player.isInSneakingPose();
-        ItemStack itemStack = player.getMainHandStack();
+    public Vec3 getHandPos(Player player, Camera camera, float f, float tickDelta) {
+        int handInverter = player.getMainArm() == HumanoidArm.RIGHT ? 1 : -1;
+        boolean isUsing = player.getUseItem().is(KlaxonItems.GRAPPLE_WINCH);
+        boolean isSneaking = player.isCrouching();
+        ItemStack itemStack = player.getMainHandItem();
         if (!(itemStack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(itemStack))) {
             handInverter = -handInverter;
         }
 
-        if (MinecraftClient.getInstance().options.getPerspective().isFirstPerson() && player == MinecraftClient.getInstance().player) {
-            double m = 960.0 / MinecraftClient.getInstance().options.getFov().getValue();
-            Vec3d vec3d = camera.getProjection().getPosition(handInverter * 0.4F, -0.5F).multiply(m).rotateY(f * 0.25F).rotateX(-f * 0.3F);
+        if (Minecraft.getInstance().options.getCameraType().isFirstPerson() && player == Minecraft.getInstance().player) {
+            double m = 960.0 / Minecraft.getInstance().options.fov().get();
+            Vec3 vec3d = camera.getNearPlane().getPointOnPlane(handInverter * 0.4F, -0.5F).scale(m).yRot(f * 0.25F).xRot(-f * 0.3F);
 
-            return player.getCameraPosVec(tickDelta).add(vec3d);
+            return player.getEyePosition(tickDelta).add(vec3d);
         } else {
             float scale = player.getScale();
 
             float sneakOffset = isSneaking ? -0.1375F : -0.0675F;
 
 
-            Vec3d vec3d = Vec3d.ZERO;
+            Vec3 vec3d = Vec3.ZERO;
 
             if (isUsing) {
-                float headYawRadians = MathHelper.lerp(tickDelta, player.prevHeadYaw, player.headYaw) * (float) (Math.PI / 180);
-                float headPitchRadians = MathHelper.lerp(tickDelta, player.prevPitch, player.getPitch()) * (float) (Math.PI / 180);
+                float headYawRadians = Mth.lerp(tickDelta, player.yHeadRotO, player.yHeadRot) * (float) (Math.PI / 180);
+                float headPitchRadians = Mth.lerp(tickDelta, player.xRotO, player.getXRot()) * (float) (Math.PI / 180);
 
-                double sinHeadYaw = MathHelper.sin(headYawRadians);
-                double cosHeadYaw = MathHelper.cos(headYawRadians);
-                double sinHeadPitch = MathHelper.sin(headPitchRadians);
-                double cosHeadPitch = MathHelper.cos(headPitchRadians);
+                double sinHeadYaw = Mth.sin(headYawRadians);
+                double cosHeadYaw = Mth.cos(headYawRadians);
+                double sinHeadPitch = Mth.sin(headPitchRadians);
+                double cosHeadPitch = Mth.cos(headPitchRadians);
 
                 // lateral offset is 2 pixels away from head center
                 // facing offset is
@@ -229,7 +234,7 @@ public final class GrappleWinchCableRenderer {
                 double facingOffset = scale * 1;
                 float verticalOffset = 0.8625f;
 
-                vec3d = new Vec3d(
+                vec3d = new Vec3(
                         -cosHeadYaw * lateralOffset - sinHeadYaw * facingOffset * cosHeadPitch,
                         sneakOffset - verticalOffset * scale,
                         -sinHeadYaw * lateralOffset + cosHeadYaw * facingOffset
@@ -239,33 +244,33 @@ public final class GrappleWinchCableRenderer {
                         cosHeadPitch
                 );
             } else {
-                float bodyYawRadians = MathHelper.lerp(tickDelta, player.prevBodyYaw, player.bodyYaw) * (float) (Math.PI / 180.0);
-                double sinBodyYaw = MathHelper.sin(bodyYawRadians);
-                double cosBodyYaw = MathHelper.cos(bodyYawRadians);
+                float bodyYawRadians = Mth.lerp(tickDelta, player.yBodyRotO, player.yBodyRot) * (float) (Math.PI / 180.0);
+                double sinBodyYaw = Mth.sin(bodyYawRadians);
+                double cosBodyYaw = Mth.cos(bodyYawRadians);
 
                 double lateralOffset = handInverter * scale * 0.375;
                 double facingOffset = scale * (isSneaking ? -0.0475 : 0.2875);
                 float verticalOffset = 0.8625f;
 
-                vec3d = new Vec3d(
+                vec3d = new Vec3(
                         -cosBodyYaw * lateralOffset - sinBodyYaw * facingOffset,
                         sneakOffset - verticalOffset * scale,
                         -sinBodyYaw * lateralOffset + cosBodyYaw * facingOffset
                 );
             }
 
-            return player.getCameraPosVec(tickDelta).add(vec3d.subtract(0, 0.45, 0));
+            return player.getEyePosition(tickDelta).add(vec3d.subtract(0, 0.45, 0));
         }
     }
 
     private void vertex(
-            MatrixStack.Entry matrix, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, float normalX, float normalZ, float normalY, int light
+            PoseStack.Pose matrix, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, float normalX, float normalZ, float normalY, int light
     ) {
-        vertexConsumer.vertex(matrix, x, y, z)
-                .color(Colors.WHITE)
-                .texture(u, v)
-                .overlay(OverlayTexture.DEFAULT_UV)
-                .light(light)
-                .normal(matrix, normalX, normalY, normalZ);
+        vertexConsumer.addVertex(matrix, x, y, z)
+                .setColor(CommonColors.WHITE)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(matrix, normalX, normalY, normalZ);
     }
 }

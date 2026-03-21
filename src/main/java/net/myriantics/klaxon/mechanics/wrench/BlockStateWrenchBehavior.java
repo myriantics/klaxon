@@ -1,13 +1,12 @@
 package net.myriantics.klaxon.mechanics.wrench;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.Identifier;
-
 import java.util.Optional;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 
 public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
     private final Property<T> property;
@@ -19,11 +18,11 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
 
     public BlockStateWrenchBehavior(
             Property<T> property,
-            Identifier id
+            ResourceLocation id
     ) {
         this.property = property;
-        this.allowlistTag = TagKey.of(RegistryKeys.BLOCK, Identifier.of(id.getNamespace(), ALLOWLIST_SUBDIRECTORY + "_" + id.getPath()));
-        this.denylistTag = TagKey.of(RegistryKeys.BLOCK, Identifier.of(id.getNamespace(), DENYLIST_SUBDIRECTORY + "_" + id.getPath()));
+        this.allowlistTag = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(id.getNamespace(), ALLOWLIST_SUBDIRECTORY + "_" + id.getPath()));
+        this.denylistTag = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(id.getNamespace(), DENYLIST_SUBDIRECTORY + "_" + id.getPath()));
     }
 
     public Property<T> getProperty() {
@@ -39,14 +38,14 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
     }
 
     public boolean test(BlockState state) {
-        return !state.isIn(this.getDenylistTag()) && state.isIn(this.getAllowlistTag()) && state.contains(property);
+        return !state.is(this.getDenylistTag()) && state.is(this.getAllowlistTag()) && state.hasProperty(property);
     }
 
     public BlockState applyDispenser(BlockState state, DispenserWrenchInteractionContext context) {
         if (this.test(state)) {
-            Optional<T> result = this.applyDispenser(state.get(this.property), context);
+            Optional<T> result = this.applyDispenser(state.getValue(this.property), context);
             if (result.isPresent()) {
-                return state.with(this.property, result.get());
+                return state.setValue(this.property, result.get());
             }
         }
 
@@ -55,9 +54,9 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
 
     public BlockState applyManual(BlockState state, ManualWrenchInteractionContext context) {
         if (this.test(state)) {
-            Optional<T> result = this.applyManual(state.get(this.property), context);
+            Optional<T> result = this.applyManual(state.getValue(this.property), context);
             if (result.isPresent()) {
-                return state.with(this.property, result.get());
+                return state.setValue(this.property, result.get());
             }
         }
 

@@ -2,10 +2,10 @@ package net.myriantics.klaxon.mixin.self.grapple_winch.tooltip;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.MutableComponent;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
@@ -21,16 +21,16 @@ public abstract class GrappleWinchItemMixin {
 
     @WrapOperation(
             method = "createCableLengthDisplayText",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;")
     )
-    private static MutableText klaxon$addCableLengthDataToTooltip(String key, Object[] args, Operation<MutableText> original) {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+    private static MutableComponent klaxon$addCableLengthDataToTooltip(String key, Object[] args, Operation<MutableComponent> original) {
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return original.call(key, args);
         }
 
         // yoink the connection
-        ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(MinecraftClient.getInstance().world);
+        ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(Minecraft.getInstance().level);
         @Nullable ClientGrappleWinchConnection connection = manager.fromPlayer(player);
 
         // initialize max cable length
@@ -43,15 +43,15 @@ public abstract class GrappleWinchItemMixin {
             double truncatedCableLength = KlaxonMathHelper.roundToTenth(connection.getCableLength());
             double ratio = truncatedCableLength / maxCableLength;
 
-            MutableText populatedCableDisplay = original.call(key, new Object[]{truncatedCableLength, maxCableLength});
+            MutableComponent populatedCableDisplay = original.call(key, new Object[]{truncatedCableLength, maxCableLength});
 
             // format text according to cable ratio
             if (ratio >= 1.0) {
-                return populatedCableDisplay.formatted(Formatting.RED);
+                return populatedCableDisplay.withStyle(ChatFormatting.RED);
             } else if (ratio >= 0.75) {
-                return populatedCableDisplay.formatted(Formatting.YELLOW);
+                return populatedCableDisplay.withStyle(ChatFormatting.YELLOW);
             } else {
-                return populatedCableDisplay.formatted(Formatting.GREEN);
+                return populatedCableDisplay.withStyle(ChatFormatting.GREEN);
             }
         }
 

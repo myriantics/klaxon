@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.registry.behavior;
 
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ItemExplosiveCatalystBehavior;
@@ -22,7 +22,7 @@ public abstract class KlaxonExplosiveCatalystBehaviors {
     public static final ExplosiveCatalystBehavior CREEPER_HEAD = register("creeper_head", CreeperHeadExplosiveCatalystBehavior::new);
 
     private static ExplosiveCatalystBehavior register(String name, ExplosiveCatalystBehaviorInitializer initializer) {
-        Identifier id = KlaxonCommon.locate(name);
+        ResourceLocation id = KlaxonCommon.locate(name);
         return Registry.register(KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIORS, id, initializer.apply(id));
     }
 
@@ -31,6 +31,6 @@ public abstract class KlaxonExplosiveCatalystBehaviors {
     }
 
     private interface ExplosiveCatalystBehaviorInitializer {
-        ExplosiveCatalystBehavior apply(Identifier id);
+        ExplosiveCatalystBehavior apply(ResourceLocation id);
     }
 }

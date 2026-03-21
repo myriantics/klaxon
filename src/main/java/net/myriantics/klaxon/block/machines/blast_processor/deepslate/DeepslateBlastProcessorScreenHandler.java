@@ -3,37 +3,37 @@ package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
-import net.myriantics.klaxon.util.PermissionsHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
+import net.myriantics.klaxon.util.PermissionsHelper;
 
-public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
-    private final Inventory ingredientInventory;
-    private final SimpleInventory outputInventory;
+public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu {
+    private final Container ingredientInventory;
+    private final SimpleContainer outputInventory;
 
     private ExplosiveCatalystData powerData;
 
     private BlastProcessingRecipeData blastProcessingData;
 
-    public ScreenHandlerContext context;
+    public ContainerLevelAccess context;
 
-    public PlayerEntity player;
+    public Player player;
 
     public double explosionPower;
 
@@ -42,8 +42,8 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     public boolean producesFire;
 
     // client constructor
-        public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, BlastProcessorScreenSyncPacket packetData) {
-        this(syncId, playerInventory, new SimpleInventory(2), ScreenHandlerContext.EMPTY);
+        public DeepslateBlastProcessorScreenHandler(int syncId, Inventory playerInventory, BlastProcessorScreenSyncPacket packetData) {
+        this(syncId, playerInventory, new SimpleContainer(2), ContainerLevelAccess.NULL);
 
             setRecipeData(packetData.explosionPower(),
                     packetData.explosionPowerMin(),
@@ -53,22 +53,22 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
 
 
     // server constructor
-    public DeepslateBlastProcessorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory blockEntityInventory, ScreenHandlerContext context) {
+    public DeepslateBlastProcessorScreenHandler(int syncId, Inventory playerInventory, Container blockEntityInventory, ContainerLevelAccess context) {
         super(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, syncId);
-        checkSize(blockEntityInventory, 2);
+        checkContainerSize(blockEntityInventory, 2);
         this.ingredientInventory = blockEntityInventory;
         this.context = context;
         this.player = playerInventory.player;
-        this.outputInventory = new SimpleInventory(9);
-        blockEntityInventory.onOpen(playerInventory.player);
+        this.outputInventory = new SimpleContainer(9);
+        blockEntityInventory.startOpen(playerInventory.player);
 
-        if (!player.getWorld().isClient) {
-            this.context.run((world, pos) -> {
-                ExplosiveCatalystDefinitionRecipeInput catalystInput = new ExplosiveCatalystDefinitionRecipeInput(blockEntityInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
+        if (!player.level().isClientSide) {
+            this.context.execute((world, pos) -> {
+                ExplosiveCatalystDefinitionRecipeInput catalystInput = new ExplosiveCatalystDefinitionRecipeInput(blockEntityInventory.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
                 this.powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), catalystInput);
 
-                BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
+                BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
                 this.blastProcessingData = this.powerData.behavior().value().getBlastProcessingPreviewData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInput);
             });
         }
@@ -76,7 +76,7 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         // ingredient slot
         this.addSlot(new Slot(ingredientInventory, 0, 35, 53 - 36) {
             @Override
-            public int getMaxItemCount() {
+            public int getMaxStackSize() {
                 return 1;
             }
         });
@@ -84,20 +84,20 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         // catalyst slot
         this.addSlot(new Slot(ingredientInventory, 1, 35, 53) {
             @Override
-            public int getMaxItemCount() {
+            public int getMaxStackSize() {
                 return 1;
             }
 
             // don't allow players to modify catalyst slot - protection put in for blanketcon
 
             @Override
-            public boolean canInsert(ItemStack stack) {
-                return super.canInsert(stack) && PermissionsHelper.canModifyWorld(player);
+            public boolean mayPlace(ItemStack stack) {
+                return super.mayPlace(stack) && PermissionsHelper.canModifyWorld(player);
             }
 
             @Override
-            public boolean canTakeItems(PlayerEntity playerEntity) {
-                return super.canTakeItems(playerEntity) && PermissionsHelper.canModifyWorld(player);
+            public boolean mayPickup(Player playerEntity) {
+                return super.mayPickup(playerEntity) && PermissionsHelper.canModifyWorld(player);
             }
         });
 
@@ -109,12 +109,12 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
                 this.addSlot(new Slot(outputInventory, l + m * 3, 107 + l * 18, 17 + m * 18) {
                     // these are crafting output showcase slots
                     @Override
-                    public boolean canTakeItems(PlayerEntity playerEntity) {
+                    public boolean mayPickup(Player playerEntity) {
                         return false;
                     }
 
                     @Override
-                    public boolean canInsert(ItemStack stack) {
+                    public boolean mayPlace(ItemStack stack) {
                         return false;
                     }
                 });
@@ -133,25 +133,25 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
 
-        onContentChanged(blockEntityInventory);
+        slotsChanged(blockEntityInventory);
     }
 
     @Override
-    public void onContentChanged(Inventory inventory) {
-        this.context.run((world, pos) -> {
+    public void slotsChanged(Container inventory) {
+        this.context.execute((world, pos) -> {
             updateResult(world, pos, player, outputInventory);
         });
     }
 
-    public void updateResult(World world, BlockPos pos, PlayerEntity player, SimpleInventory resultInventory) {
+    public void updateResult(Level world, BlockPos pos, Player player, SimpleContainer resultInventory) {
 
-        ExplosiveCatalystDefinitionRecipeInput catalystInput = new ExplosiveCatalystDefinitionRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
+        ExplosiveCatalystDefinitionRecipeInput catalystInput = new ExplosiveCatalystDefinitionRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
 
-        if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
+        if (!world.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
                 ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, blastProcessor, catalystInput);
-                BlastProcessingRecipeData newBlastProcessingData = newPowerData.behavior().value().getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getStack(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
+                BlastProcessingRecipeData newBlastProcessingData = newPowerData.behavior().value().getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
 
                 // Make sure we've changed something before sending an update packet
                 if (!newPowerData.equals(powerData) || !newBlastProcessingData.equals(this.blastProcessingData)) {
@@ -174,45 +174,45 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
         ItemStack[] displayStacks = blastProcessingData.outputStacks();
 
         // update display inventory
-        for (int i = 0; i < resultInventory.size(); i++) {
+        for (int i = 0; i < resultInventory.getContainerSize(); i++) {
             // set slot to display stack if possible, otherwise clear it
-            resultInventory.setStack(i, i < displayStacks.length ? displayStacks[i] : ItemStack.EMPTY);
+            resultInventory.setItem(i, i < displayStacks.length ? displayStacks[i] : ItemStack.EMPTY);
         }
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return this.ingredientInventory.canPlayerUse(player);
+    public boolean stillValid(Player player) {
+        return this.ingredientInventory.stillValid(player);
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int sourceSlotIndex) {
+    public ItemStack quickMoveStack(Player player, int sourceSlotIndex) {
         Slot slot = this.slots.get(sourceSlotIndex);
 
-        if (slot.hasStack()) {
-            ItemStack originalStack = slot.getStack();
-            if (sourceSlotIndex < this.ingredientInventory.size()) {
+        if (slot.hasItem()) {
+            ItemStack originalStack = slot.getItem();
+            if (sourceSlotIndex < this.ingredientInventory.getContainerSize()) {
                 // machine inventory to player inventory
-                if (!this.insertItem(originalStack, this.ingredientInventory.size(), this.slots.size(), true)) {
+                if (!this.moveItemStackTo(originalStack, this.ingredientInventory.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
                 // player inventory to machine inventory
             } else {
                 // yonked stacking protection logic from EnchantmentScreenHandler - unexpected enchant table carry
-                for (int i = 0; i < this.ingredientInventory.size(); i++) {
-                    if (this.slots.get(i).hasStack() || !this.slots.get(i).canInsert(originalStack)) {
+                for (int i = 0; i < this.ingredientInventory.getContainerSize(); i++) {
+                    if (this.slots.get(i).hasItem() || !this.slots.get(i).mayPlace(originalStack)) {
                         continue;
                     }
                     ItemStack filteredStack = originalStack.split(DeepslateBlastProcessorBlockEntity.MAX_HELD_STACK_COUNT);
-                    this.slots.get(i).setStack(filteredStack);
+                    this.slots.get(i).setByPlayer(filteredStack);
                     break;
                 }
             }
 
             if (originalStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
-                slot.markDirty();
+                slot.setChanged();
             }
         }
 
@@ -230,8 +230,8 @@ public class DeepslateBlastProcessorScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public void onClosed(PlayerEntity player) {
-        super.onClosed(player);
+    public void removed(Player player) {
+        super.removed(player);
         if (ingredientInventory instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
             blastProcessor.removeScreenHandler(this);
         }

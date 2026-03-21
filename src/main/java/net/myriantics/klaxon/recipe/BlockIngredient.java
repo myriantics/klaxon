@@ -7,17 +7,17 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,10 +29,10 @@ import java.util.stream.Stream;
 
 public final class BlockIngredient implements Predicate<BlockState> {
 
-    public static final PacketCodec<RegistryByteBuf, BlockIngredient> PACKET_CODEC = PacketCodecs.registryEntryList(RegistryKeys.BLOCK)
-            .xmap(
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockIngredient> PACKET_CODEC = ByteBufCodecs.holderSet(Registries.BLOCK)
+            .map(
                     list -> ofEntries(list.stream().map(BlockIngredient.BlockEntry::new)),
-                    blockIngredient -> RegistryEntryList.of(Arrays.stream(blockIngredient.getMatchingBlocks()).map(Registries.BLOCK::getEntry).toList())
+                    blockIngredient -> HolderSet.direct(Arrays.stream(blockIngredient.getMatchingBlocks()).map(BuiltInRegistries.BLOCK::wrapAsHolder).toList())
             );
     public static final BlockIngredient EMPTY = new BlockIngredient(new Entry[0]);
     private final BlockIngredient.Entry[] entries;
@@ -101,7 +101,7 @@ public final class BlockIngredient implements Predicate<BlockState> {
             return true;
         } else {
             for (Block block : this.getMatchingBlocks()) {
-                if (state.isOf(block)) {
+                if (state.is(block)) {
                     return true;
                 }
             }
@@ -116,7 +116,7 @@ public final class BlockIngredient implements Predicate<BlockState> {
             this.ids = new IntArrayList(blocks.length);
 
             for (Block block : blocks) {
-                this.ids.add(Registries.BLOCK.getRawId(block));
+                this.ids.add(BuiltInRegistries.BLOCK.getId(block));
             }
 
             this.ids.sort(IntComparators.NATURAL_COMPARATOR);
@@ -144,7 +144,7 @@ public final class BlockIngredient implements Predicate<BlockState> {
     }
 
     public static BlockIngredient ofBlocks(Block... blocks) {
-        return ofEntries(Arrays.stream(blocks).map((block -> new BlockEntry(Registries.BLOCK.getEntry(block)))));
+        return ofEntries(Arrays.stream(blocks).map((block -> new BlockEntry(BuiltInRegistries.BLOCK.wrapAsHolder(block)))));
     }
 
     public static BlockIngredient fromTag(TagKey<Block> tag) {
@@ -189,10 +189,10 @@ public final class BlockIngredient implements Predicate<BlockState> {
         Block[] getBlocks();
     }
 
-    record BlockEntry(RegistryEntry<Block> block) implements Entry {
+    record BlockEntry(Holder<Block> block) implements Entry {
         static final Codec<BlockIngredient.BlockEntry> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        Registries.BLOCK.getEntryCodec().fieldOf("block").forGetter(BlockEntry::block)
+                        BuiltInRegistries.BLOCK.holderByNameCodec().fieldOf("block").forGetter(BlockEntry::block)
                 ).apply(
                         instance, BlockEntry::new
                 )
@@ -207,7 +207,7 @@ public final class BlockIngredient implements Predicate<BlockState> {
     record TagEntry(TagKey<Block> blockTagKey) implements Entry {
         static final Codec<BlockIngredient.TagEntry> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        TagKey.unprefixedCodec(RegistryKeys.BLOCK).fieldOf("tag").forGetter(TagEntry::blockTagKey)
+                        TagKey.codec(Registries.BLOCK).fieldOf("tag").forGetter(TagEntry::blockTagKey)
                 ).apply(
                         instance, TagEntry::new
                 )
@@ -215,12 +215,12 @@ public final class BlockIngredient implements Predicate<BlockState> {
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof TagEntry tagEntry && tagEntry.blockTagKey.id().equals(this.blockTagKey.id());
+            return obj instanceof TagEntry tagEntry && tagEntry.blockTagKey.location().equals(this.blockTagKey.location());
         }
 
         @Override
         public Block[] getBlocks() {
-            Optional<RegistryEntryList.Named<Block>> entries = Registries.BLOCK.getEntryList(blockTagKey);
+            Optional<HolderSet.Named<Block>> entries = BuiltInRegistries.BLOCK.getTag(blockTagKey);
             if (entries.isPresent()) {
                 Block[] blocks = new Block[entries.get().size()];
                 for (int i = 0; i < blocks.length; i++) {

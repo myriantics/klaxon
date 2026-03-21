@@ -3,9 +3,9 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.compat.KlaxonCompatItemTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
@@ -15,12 +15,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
-    public KlaxonItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
+    public KlaxonItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
         super(output, completableFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup arg) {
+    protected void addTags(HolderLookup.Provider arg) {
         // build material tags
         buildMaterialIngotTags();
         buildMaterialGlobTags();

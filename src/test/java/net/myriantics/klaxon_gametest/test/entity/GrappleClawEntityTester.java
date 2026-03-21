@@ -1,38 +1,38 @@
 package net.myriantics.klaxon_gametest.test.entity;
 
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.test.GameTest;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon_gametest.util.KlaxonTestContext;
+import net.myriantics.klaxon_gametest.util.KlaxonGameTestHelper;
 import net.myriantics.klaxon_gametest.util.KlaxonTestPlayer;
 
 public class GrappleClawEntityTester {
-    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
-    public static void testGrappleClawFastReload(KlaxonTestContext context) {
-        GrappleClawEntity grappleClaw = context.spawnEntity(KlaxonEntityTypes.GRAPPLE_CLAW, new Vec3d(3, 0, 3));
-        KlaxonTestPlayer player = context.createFakePlayer(GameMode.SURVIVAL);
-        player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, grappleClaw.getEyePos());
-        context.getWorld().spawnEntity(player);
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    public static void testGrappleClawFastReload(KlaxonGameTestHelper context) {
+        GrappleClawEntity grappleClaw = context.spawn(KlaxonEntityTypes.GRAPPLE_CLAW, new Vec3(3, 0, 3));
+        KlaxonTestPlayer player = context.createFakePlayer(GameType.SURVIVAL);
+        player.lookAt(EntityAnchorArgument.Anchor.EYES, grappleClaw.getEyePosition());
+        context.getLevel().addFreshEntity(player);
 
-        context.runAtEveryTick(() -> {
+        context.onEachTick(() -> {
             if (grappleClaw.klaxon$isAnchored()) {
-                player.setStackInHand(Hand.MAIN_HAND, new ItemStack(KlaxonItems.GRAPPLE_WINCH));
+                player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(KlaxonItems.GRAPPLE_WINCH));
                 player.attack(grappleClaw);
 
-                context.dontExpectEntity(KlaxonEntityTypes.GRAPPLE_CLAW);
-                context.expectBoolean(false, player.getStackInHand(Hand.MAIN_HAND).getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty(), "Grapple Winch Charged Projectiles empty when it shouldn't be!");
+                context.assertEntityNotPresent(KlaxonEntityTypes.GRAPPLE_CLAW);
+                context.expectBoolean(false, player.getItemInHand(InteractionHand.MAIN_HAND).getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).isEmpty(), "Grapple Winch Charged Projectiles empty when it shouldn't be!");
 
                 player.kill();
-                context.complete();
+                context.succeed();
             }
         });
     }

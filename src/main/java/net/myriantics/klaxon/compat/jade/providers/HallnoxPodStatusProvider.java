@@ -1,12 +1,12 @@
 package net.myriantics.klaxon.compat.jade.providers;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
@@ -22,28 +22,28 @@ public enum HallnoxPodStatusProvider implements IBlockComponentProvider {
     private HallnoxPodStatusProvider() {
     }
 
-    private static final Identifier ID = KlaxonCommon.locate("crop_growth_disabled");
+    private static final ResourceLocation ID = KlaxonCommon.locate("crop_growth_disabled");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         BlockState podState = blockAccessor.getBlockState();
-        boolean growthDisabled = podState.contains(KlaxonBlockStateProperties.GROWTH_DISABLED) && podState.get(KlaxonBlockStateProperties.GROWTH_DISABLED);
+        boolean growthDisabled = podState.hasProperty(KlaxonBlockStateProperties.GROWTH_DISABLED) && podState.getValue(KlaxonBlockStateProperties.GROWTH_DISABLED);
         if (growthDisabled) {
-            iTooltip.add(Text.translatable("klaxon.jade.text.crop_growth_disabled").withColor(Colors.RED));
+            iTooltip.add(Component.translatable("klaxon.jade.text.crop_growth_disabled").withColor(CommonColors.RED));
         } else {
-            World world = blockAccessor.getLevel();
-            Direction podFacing = podState.get(HallnoxPodBlock.FACING);
-            BlockPos supportingPos = blockAccessor.getPosition().offset(podFacing);
+            Level world = blockAccessor.getLevel();
+            Direction podFacing = podState.getValue(HallnoxPodBlock.FACING);
+            BlockPos supportingPos = blockAccessor.getPosition().relative(podFacing);
             BlockState supportingState = world.getBlockState(supportingPos);
 
-            if (supportingState.isIn(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)) {
-                iTooltip.add(Text.translatable("klaxon.jade.text.natural_crop_growth_inhibited").withColor(Colors.YELLOW));
+            if (supportingState.is(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING)) {
+                iTooltip.add(Component.translatable("klaxon.jade.text.natural_crop_growth_inhibited").withColor(CommonColors.YELLOW));
             }
         }
     }
 
     @Override
-    public Identifier getUid() {
+    public ResourceLocation getUid() {
         return ID;
     }
 }

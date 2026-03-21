@@ -1,12 +1,10 @@
 package net.myriantics.klaxon.mechanics.entity_weight;
 
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonStatusEffectTags;
@@ -17,24 +15,24 @@ public abstract class EntityWeightHelper {
         EntityType<? extends Entity> type = entity.getType();
 
         // mobs with no AI are heavy because they can't move
-        if (entity instanceof MobEntity mobEntity && mobEntity.isAiDisabled()) {
+        if (entity instanceof Mob mobEntity && mobEntity.isNoAi()) {
             return true;
         }
 
         // The light_entities tag cancels out all weight modifiers - entity is always light
-        if (type.isIn(KlaxonEntityTypeTags.LIGHT_ENTITIES)) {
+        if (type.is(KlaxonEntityTypeTags.LIGHT_ENTITIES)) {
             return false;
         }
 
         // The heavy_entities tag cancels out all weight modifiers save for light_entities - entity is almost always heavy
-        if (type.isIn(KlaxonEntityTypeTags.HEAVY_ENTITIES)) {
+        if (type.is(KlaxonEntityTypeTags.HEAVY_ENTITIES)) {
             return true;
         }
 
         // fallback calculations in order of priciness
 
         // entities larger than a boat or wearing any heavy equipment are considered heavy
-        if (entity.getWidth() > EntityType.BOAT.getWidth()) {
+        if (entity.getBbWidth() > EntityType.BOAT.getWidth()) {
             return true;
         }
 
@@ -53,7 +51,7 @@ public abstract class EntityWeightHelper {
             }
 
             // living entities with any status effect in the heavy tag are considered heavy
-            return StatusEffectHelper.containsAnyEffectIn(livingEntity.getStatusEffects(), KlaxonStatusEffectTags.HEAVY_EFFECTS);
+            return StatusEffectHelper.containsAnyEffectIn(livingEntity.getActiveEffects(), KlaxonStatusEffectTags.HEAVY_EFFECTS);
         }
 
         // return the fallback value
@@ -61,8 +59,8 @@ public abstract class EntityWeightHelper {
     }
 
     private static boolean isEntityWearingHeavyEquipment(LivingEntity livingEntity) {
-        for (ItemStack stack : livingEntity.getAllArmorItems()) {
-            if (stack.isIn(KlaxonItemTags.HEAVY_EQUIPMENT)) {
+        for (ItemStack stack : livingEntity.getArmorAndBodyArmorSlots()) {
+            if (stack.is(KlaxonItemTags.HEAVY_EQUIPMENT)) {
                 return true;
             }
         }

@@ -6,11 +6,11 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
@@ -22,20 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlastProcessingEmiRecipe implements EmiRecipe {
-    private static final Identifier BACKGROUND_TEXTURE = KlaxonCommon.locate("textures/gui/emi/deepslate_blast_processor_emi.png");
+    private static final ResourceLocation BACKGROUND_TEXTURE = KlaxonCommon.locate("textures/gui/emi/deepslate_blast_processor_emi.png");
 
-    private final Identifier id;
+    private final ResourceLocation id;
     private final List<EmiIngredient> input;
     private final List<EmiStack> outputStacks;
     private final EmiRegistry registry;
 
-    private final DefaultedList<ExplosiveCatalystDefinitionRecipe> catalystData;
+    private final NonNullList<ExplosiveCatalystDefinitionRecipe> catalystData;
     private final EmiIngredient catalysts;
 
     private final double explosionPowerMin;
     private final double explosionPowerMax;
 
-    public BlastProcessingEmiRecipe(RecipeEntry<BlastProcessingRecipe> recipe, EmiRegistry registry, Identifier id) {
+    public BlastProcessingEmiRecipe(RecipeHolder<BlastProcessingRecipe> recipe, EmiRegistry registry, ResourceLocation id) {
         this.id = id;
         this.outputStacks = new ArrayList<>();
         for (ItemStack stack : recipe.value().getRecipeOutputCompound().getDisplayStacks()) {
@@ -45,7 +45,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         this.explosionPowerMax = recipe.value().getExplosionPowerMax();
         this.registry = registry;
         this.catalystData = getValidCatalysts();
-        DefaultedList<EmiIngredient> catalystStacks = DefaultedList.ofSize(catalystData.size());
+        NonNullList<EmiIngredient> catalystStacks = NonNullList.createWithCapacity(catalystData.size());
 
         for (ExplosiveCatalystDefinitionRecipe catalystRecipe : catalystData) {
             catalystStacks.add(EmiIngredient.of(catalystRecipe.getIngredient()));
@@ -61,7 +61,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
     }
 
     @Override
-    public @Nullable Identifier getId() {
+    public @Nullable ResourceLocation getId() {
         return id;
     }
 
@@ -92,9 +92,9 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         widgets.addSlot(input.get(0), 18, 3).drawBack(false);
 
         widgets.addSlot(catalysts, 18, 39).drawBack(false);
-        widgets.addText(Text.literal("" + explosionPowerMin), 48, 44, 16777215, false);
-        widgets.addText(Text.literal("" + explosionPowerMax), 48, 8, 16777215, false);
-        widgets.addText(Text.literal("---" ), 48, 26, 16777215, false);
+        widgets.addText(Component.literal("" + explosionPowerMin), 48, 44, 16777215, false);
+        widgets.addText(Component.literal("" + explosionPowerMax), 48, 8, 16777215, false);
+        widgets.addText(Component.literal("---" ), 48, 26, 16777215, false);
 
         // add the 3x3 grid of output slots
         for (int x = 0; x < 3; x++) {
@@ -110,9 +110,9 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         }
     }
 
-    private DefaultedList<ExplosiveCatalystDefinitionRecipe> getValidCatalysts() {
-        DefaultedList<ExplosiveCatalystDefinitionRecipe> catalysts = DefaultedList.of();
-        for (RecipeEntry<ExplosiveCatalystDefinitionRecipe> recipe : registry.getRecipeManager().listAllOfType(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION)) {
+    private NonNullList<ExplosiveCatalystDefinitionRecipe> getValidCatalysts() {
+        NonNullList<ExplosiveCatalystDefinitionRecipe> catalysts = NonNullList.create();
+        for (RecipeHolder<ExplosiveCatalystDefinitionRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION)) {
             if (recipe.value().getData().matchesConditions(explosionPowerMin, explosionPowerMax)) {
 
                 // dont show hidden recipes in the scroller

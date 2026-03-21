@@ -1,9 +1,12 @@
 package net.myriantics.klaxon.mechanics.wrench.behaviors;
 
-import net.minecraft.block.enums.RailShape;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.RailShape;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
@@ -13,24 +16,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBehavior<RailShape> {
-    public CurvingRailShapeBlockStateWrenchBehavior(Identifier id) {
-        super(Properties.RAIL_SHAPE, id);
+    public CurvingRailShapeBlockStateWrenchBehavior(ResourceLocation id) {
+        super(BlockStateProperties.RAIL_SHAPE, id);
     }
 
     @Override
     protected Optional<RailShape> applyManual(RailShape original, ManualWrenchInteractionContext context) {
-        Direction playerFacing = context.player().getHorizontalFacing();
+        Direction playerFacing = context.player().getDirection();
         BlockPos railPos = context.hitResult().getBlockPos();
-        Position hitPos = context.hitResult().getPos();
+        Position hitPos = context.hitResult().getLocation();
 
-        Vec3d railCenterPos = railPos.toCenterPos();
+        Vec3 railCenterPos = railPos.getCenter();
 
         @Nullable Direction.Axis railAxis = KlaxonRailHelper.railShapeToAxis(original);
         Direction.Axis lookAxis = playerFacing.getAxis();
 
         // try to toggle ascension / descension first
         if (original.isAscending() || lookAxis.equals(railAxis)) {
-            @Nullable RailShape newShape = KlaxonRailHelper.tryToggleAscending(context.world(), original, railPos, playerFacing.getDirection());
+            @Nullable RailShape newShape = KlaxonRailHelper.tryToggleAscending(context.world(), original, railPos, playerFacing.getAxisDirection());
             if (newShape != null && !newShape.equals(original)) {
                 return Optional.of(newShape);
             }
@@ -46,9 +49,9 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
         if (railAxis != null) {
             // we're already going to rotate it, so broaden search to either side of the rail
             Direction clickDirection =
-                    Direction.getFacing(railAxis.equals(Direction.Axis.X)
-                            ? new Vec3d(0, 0, hitPos.getZ() - railCenterPos.getZ())
-                            : new Vec3d(hitPos.getX() - railCenterPos.getX(), 0, 0)
+                    Direction.getNearest(railAxis.equals(Direction.Axis.X)
+                            ? new Vec3(0, 0, hitPos.z() - railCenterPos.z())
+                            : new Vec3(hitPos.x() - railCenterPos.x(), 0, 0)
                     );
 
             // if player clicks on the axis perpendicular to looking axis, rotate rail.
@@ -80,7 +83,7 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
             case DOWN, UP -> {
                 // start off with making the rail flat if needed
                 if (original.isAscending()) {
-                    @Nullable RailShape toggled = KlaxonRailHelper.tryToggleAscending(context.serverWorld(), original, context.targetPos(), context.dispenserFacing().getOpposite().getDirection());
+                    @Nullable RailShape toggled = KlaxonRailHelper.tryToggleAscending(context.serverWorld(), original, context.targetPos(), context.dispenserFacing().getOpposite().getAxisDirection());
                     if (toggled != null && !toggled.equals(original)) {
                         return Optional.of(toggled);
                     }
@@ -94,7 +97,7 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
             case NORTH, SOUTH, WEST, EAST -> {
                 if (dispenserAxis.equals(railAxis)) {
                     // start off with trying to make it ascending
-                    @Nullable RailShape toggled = KlaxonRailHelper.tryToggleAscending(context.serverWorld(), original, context.targetPos(), context.dispenserFacing().getOpposite().getDirection());
+                    @Nullable RailShape toggled = KlaxonRailHelper.tryToggleAscending(context.serverWorld(), original, context.targetPos(), context.dispenserFacing().getOpposite().getAxisDirection());
                     if (toggled != null && !toggled.equals(original)) {
                         return Optional.of(toggled);
                     }

@@ -1,6 +1,6 @@
 package net.myriantics.klaxon.util;
 
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 
 public abstract class BlockDirectionHelper {
     public static Direction[] HORIZONTAL = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
@@ -13,15 +13,15 @@ public abstract class BlockDirectionHelper {
         return Direction.DOWN;
     }
     public static Direction getLeft(Direction blockDirection) {
-        return blockDirection.rotateClockwise(Direction.Axis.Y);
+        return blockDirection.getClockWise(Direction.Axis.Y);
     }
     public static Direction getRight(Direction blockDirection) {
-        return blockDirection.rotateCounterclockwise(Direction.Axis.Y);
+        return blockDirection.getCounterClockWise(Direction.Axis.Y);
     }
     public static Direction getFront(Direction blockDirection) {
         return blockDirection;
     }
     public static Direction getBack(Direction blockDirection) {
-        return blockDirection.rotateClockwise(Direction.Axis.Y).rotateClockwise(Direction.Axis.Y);
+        return blockDirection.getClockWise(Direction.Axis.Y).getClockWise(Direction.Axis.Y);
     }
 }

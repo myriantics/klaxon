@@ -2,8 +2,8 @@ package net.myriantics.klaxon.mechanics.grapple_winch;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.myriantics.klaxon.recipe.BlockIngredient;
 
 public record VeinmineGroup(BlockIngredient ingredient) {
@@ -11,7 +11,7 @@ public record VeinmineGroup(BlockIngredient ingredient) {
             BlockIngredient.DISALLOW_EMPTY_CODEC.fieldOf("block_ingredient").forGetter(VeinmineGroup::ingredient)
     ).apply(instance, VeinmineGroup::new));
 
-    public static final PacketCodec<RegistryByteBuf, VeinmineGroup> PACKET_CODEC = PacketCodec.tuple(
+    public static final StreamCodec<RegistryFriendlyByteBuf, VeinmineGroup> PACKET_CODEC = StreamCodec.composite(
             BlockIngredient.PACKET_CODEC, VeinmineGroup::ingredient,
             VeinmineGroup::new
     );

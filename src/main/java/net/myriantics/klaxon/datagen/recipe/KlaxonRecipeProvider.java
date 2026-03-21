@@ -6,31 +6,32 @@ import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.NotResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.TrueResourceCondition;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.*;
-import net.minecraft.recipe.*;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.datagen.recipe.providers.*;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
 
-import java.util.*;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 // structure for this kinda yoinked from energized power
 public class KlaxonRecipeProvider extends FabricRecipeProvider {
-    private final HashMap<Identifier, Integer> recipeIdOccurrencesMap = new HashMap<>();
+    private final HashMap<ResourceLocation, Integer> recipeIdOccurrencesMap = new HashMap<>();
 
-    public KlaxonRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public KlaxonRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    public void generate(RecipeExporter exporter) {
+    public void buildRecipes(RecipeOutput exporter) {
         new KlaxonToolUsageRecipeProvider(this, exporter).generateRecipes();
         new KlaxonBlastProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonCraftingRecipeProvider(this, exporter).generateRecipes();
@@ -43,7 +44,7 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         new KlaxonManualItemApplicationRecipeProvider(this, exporter).generateRecipes();
     }
 
-    public Identifier computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {
+    public ResourceLocation computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {
         for (ResourceCondition condition : conditions) {
             if (condition instanceof AllModsLoadedResourceCondition allModsLoadedResourceCondition) {
                 return KlaxonCommon.locate(typeId + "/" + allModsLoadedResourceCondition.modIds().getFirst() + "/" + path);
@@ -53,12 +54,12 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         return KlaxonCommon.locate(typeId + "/" + path);
     }
 
-    public void acceptRecipeWithConditions(RecipeExporter exporter, Identifier recipeId, Recipe<?> recipe, final ResourceCondition... conditions) {
+    public void acceptRecipeWithConditions(RecipeOutput exporter, ResourceLocation recipeId, Recipe<?> recipe, final ResourceCondition... conditions) {
 
-        Identifier proposedId = null;
+        ResourceLocation proposedId = null;
 
         // iterate through them all to check if theyre the same as the active recipe's id
-        for (Identifier potentiallySpentIdentifier : recipeIdOccurrencesMap.keySet()) {
+        for (ResourceLocation potentiallySpentIdentifier : recipeIdOccurrencesMap.keySet()) {
             // if there is a match, attach a discriminator to the end of the recipe id
             if (potentiallySpentIdentifier.equals(recipeId)) {
                 proposedId = recipeId.withPath(recipeId.getPath() + "_" + recipeIdOccurrencesMap.get(potentiallySpentIdentifier));
@@ -86,15 +87,15 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         }
     }
 
-    public void acceptOverrideRecipe(RecipeExporter exporter, Identifier id) {
+    public void acceptOverrideRecipe(RecipeOutput exporter, ResourceLocation id) {
         // accept a REALLY FUNNY recipe with the "never loads" resource condition
         withConditions(exporter, new NotResourceCondition(new TrueResourceCondition()))
-                .accept(id, new ToolUsageRecipe(KlaxonToolUsageRecipeTypes.HAMMERING, Ingredient.ofItems(Items.END_ROD), new ItemStack(Items.SHEEP_SPAWN_EGG), SoundEvents.BLOCK_PISTON_EXTEND), null);
+                .accept(id, new ToolUsageRecipe(KlaxonToolUsageRecipeTypes.HAMMERING, Ingredient.of(Items.END_ROD), new ItemStack(Items.SHEEP_SPAWN_EGG), SoundEvents.PISTON_EXTEND), null);
     }
 
     // gotcha stinker
     @Override
-    protected Identifier getRecipeIdentifier(Identifier identifier) {
+    protected ResourceLocation getRecipeIdentifier(ResourceLocation identifier) {
         return identifier;
     }
 }

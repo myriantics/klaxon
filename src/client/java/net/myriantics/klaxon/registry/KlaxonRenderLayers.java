@@ -1,50 +1,49 @@
 package net.myriantics.klaxon.registry;
 
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderLayer.MultiPhase;
-import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
-import net.myriantics.klaxon.mixin.minecraft.rendering.RenderLayerInvoker;
-
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderType.CompositeRenderType;
+import net.myriantics.klaxon.mixin.minecraft.rendering.RenderTypeInvoker;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.OptionalDouble;
 
 public abstract class KlaxonRenderLayers {
-    private static final MultiPhase GRAPPLE_WINCH_CABLE = of(
+    private static final CompositeRenderType GRAPPLE_WINCH_CABLE = of(
             "grapple_winch_cable",
-            VertexFormats.LINES,
-            VertexFormat.DrawMode.LINE_STRIP,
+            DefaultVertexFormat.POSITION_COLOR_NORMAL,
+            VertexFormat.Mode.LINE_STRIP,
             1536,
-            RenderLayer.MultiPhaseParameters.builder()
-                    .program(RenderPhase.LINES_PROGRAM)
-                    .lineWidth(new RenderPhase.LineWidth(OptionalDouble.of(8)))
-                    .layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
-                    .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
-                    .target(RenderPhase.ITEM_ENTITY_TARGET)
-                    .writeMaskState(RenderPhase.ALL_MASK)
-                    .cull(RenderPhase.DISABLE_CULLING)
-                    .build(false)
+            RenderType.CompositeState.builder()
+                    .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)
+                    .setLineState(new RenderStateShard.LineStateShard(OptionalDouble.of(8)))
+                    .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
+                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                    .setOutputState(RenderStateShard.ITEM_ENTITY_TARGET)
+                    .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                    .setCullState(RenderStateShard.NO_CULL)
+                    .createCompositeState(false)
     );
 
-    public static RenderLayer.MultiPhase getGrappleWinchCable() {
+    public static RenderType.CompositeRenderType getGrappleWinchCable() {
         return GRAPPLE_WINCH_CABLE;
     }
 
-    public static MultiPhase of(
-            String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, RenderLayer.MultiPhaseParameters phaseData
+    public static CompositeRenderType of(
+            String name, VertexFormat vertexFormat, VertexFormat.Mode drawMode, int expectedBufferSize, RenderType.CompositeState phaseData
     ) {
         return of(name, vertexFormat, drawMode, expectedBufferSize, false, false, phaseData);
     }
 
-    public static MultiPhase of(
+    public static CompositeRenderType of(
             String name,
             VertexFormat vertexFormat,
-            VertexFormat.DrawMode drawMode,
+            VertexFormat.Mode drawMode,
             int expectedBufferSize,
             boolean hasCrumbling,
             boolean translucent,
-            RenderLayer.MultiPhaseParameters phases
+            RenderType.CompositeState phases
     ) {
-        return RenderLayerInvoker.klaxon$invokeCreateMultiphase(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, phases);
+        return RenderTypeInvoker.klaxon$invokeCreateMultiphase(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, phases);
     }
 }

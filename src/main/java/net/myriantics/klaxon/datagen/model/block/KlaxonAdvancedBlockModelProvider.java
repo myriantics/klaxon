@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.datagen.model.block;
 
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ModelIds;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.model.ModelLocationUtils;
 import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.datagen.model.KlaxonBlockModelSubProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
@@ -10,7 +10,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvider {
-    public KlaxonAdvancedBlockModelProvider(KlaxonModelProvider provider, BlockStateModelGenerator generator) {
+    public KlaxonAdvancedBlockModelProvider(KlaxonModelProvider provider, BlockModelGenerators generator) {
         super(provider, generator);
     }
 
@@ -31,8 +31,8 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
 
         // hallnox
         registerHangingSign(KlaxonBlocks.STRIPPED_HALLNOX_STEM, KlaxonBlocks.HALLNOX_HANGING_SIGN, KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
-        registerCubeAllModelTexturePool(KlaxonBlockFamilies.HALLNOX.getBaseBlock()).family(KlaxonBlockFamilies.HALLNOX);
-        acceptSingletonBlockState(KlaxonBlocks.POTTED_HALLNOX_POD, ModelIds.getBlockModelId(KlaxonBlocks.POTTED_HALLNOX_POD));
+        registerCubeAllModelTexturePool(KlaxonBlockFamilies.HALLNOX.getBaseBlock()).generateFor(KlaxonBlockFamilies.HALLNOX);
+        acceptSingletonBlockState(KlaxonBlocks.POTTED_HALLNOX_POD, ModelLocationUtils.getModelLocation(KlaxonBlocks.POTTED_HALLNOX_POD));
         registerHallnoxPod(generator);
         registerHallnoxBulb((HallnoxBulbBlock) KlaxonBlocks.HALLNOX_BULB);
     }

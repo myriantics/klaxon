@@ -2,43 +2,43 @@ package net.myriantics.klaxon.block.decor;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Degradable;
-import net.minecraft.block.Oxidizable;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.ChangeOverTimeBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.WeatheringCopper;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class OxidizablePillarBlock extends PillarBlock implements Oxidizable {
+public class OxidizablePillarBlock extends RotatedPillarBlock implements WeatheringCopper {
     public static final MapCodec<OxidizablePillarBlock> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance.group(OxidationLevel.CODEC.fieldOf("weathering_state").forGetter(Degradable::getDegradationLevel), createSettingsCodec())
+            instance -> instance.group(WeatherState.CODEC.fieldOf("weathering_state").forGetter(ChangeOverTimeBlock::getAge), propertiesCodec())
                     .apply(instance, OxidizablePillarBlock::new)
     );
-    private final Oxidizable.OxidationLevel oxidationLevel;
+    private final WeatheringCopper.WeatherState oxidationLevel;
 
-    public OxidizablePillarBlock(Oxidizable.OxidationLevel oxidationLevel, Settings settings) {
+    public OxidizablePillarBlock(WeatheringCopper.WeatherState oxidationLevel, Properties settings) {
         super(settings);
         this.oxidationLevel = oxidationLevel;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        this.tickDegradation(state, world, pos, random);
+    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        this.changeOverTime(state, world, pos, random);
     }
 
     @Override
-    protected boolean hasRandomTicks(BlockState state) {
-        return Oxidizable.getIncreasedOxidationBlock(state.getBlock()).isPresent();
+    protected boolean isRandomlyTicking(BlockState state) {
+        return WeatheringCopper.getNext(state.getBlock()).isPresent();
     }
 
     @Override
-    public OxidationLevel getDegradationLevel() {
+    public WeatherState getAge() {
         return this.oxidationLevel;
     }
 
     @Override
-    public MapCodec<? extends PillarBlock> getCodec() {
+    public MapCodec<? extends RotatedPillarBlock> codec() {
         return CODEC;
     }
 }

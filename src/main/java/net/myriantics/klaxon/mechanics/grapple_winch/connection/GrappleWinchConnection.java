@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.mechanics.grapple_winch.connection;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 
@@ -18,36 +18,36 @@ public abstract class GrappleWinchConnection {
     }
 
     public void tick() {
-        Vec3d compiledHookVec = Vec3d.ZERO;
-        Vec3d hookPos = this.getHookPos();
-        Vec3d playerEyePos = this.getPlayerEyePos();
+        Vec3 compiledHookVec = Vec3.ZERO;
+        Vec3 hookPos = this.getHookPos();
+        Vec3 playerEyePos = this.getPlayerEyePos();
 
-        Vec3d normalizedHook2WielderVec = playerEyePos.subtract(hookPos).normalize();
+        Vec3 normalizedHook2WielderVec = playerEyePos.subtract(hookPos).normalize();
         double wielderDistance = hookPos.distanceTo(playerEyePos);
 
 
-        if (!this.hookAnchored && this.getHook() != null && this.getHook().klaxon$asEntity().isLogicalSideForUpdatingMovement()) {
+        if (!this.hookAnchored && this.getHook() != null && this.getHook().klaxon$asEntity().isControlledByLocalInstance()) {
 
             // if we're not anchored, move the grappling hook
             if (!this.isHookAnchored()) {
 
                 // retract grapple claw if owner pulls back before landing
-                if (this.retracting && !this.getPlayer().isSneaking()) {
-                    compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.multiply(4f/20));
+                if (this.retracting && !this.getPlayer().isShiftKeyDown()) {
+                    compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.scale(4f/20));
                 }
 
-                double activeCableLength = this.retracting && this.getPlayer().isSneaking()
+                double activeCableLength = this.retracting && this.getPlayer().isShiftKeyDown()
                         ? this.getMaxCableLength()
                         : this.getCableLength();
 
                 // retract grapple claw if it hits limit
                 if (wielderDistance >= activeCableLength) {
 
-                    if (this.getHook().klaxon$asEntity().isLogicalSideForUpdatingMovement() && wielderDistance >= maxCableLength * 1.2) {
-                        this.getHook().klaxon$asEntity().addVelocity(this.getHook().klaxon$asEntity().getVelocity().multiply(-0.15));
+                    if (this.getHook().klaxon$asEntity().isControlledByLocalInstance() && wielderDistance >= maxCableLength * 1.2) {
+                        this.getHook().klaxon$asEntity().push(this.getHook().klaxon$asEntity().getDeltaMovement().scale(-0.15));
                     }
 
-                    compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.multiply(4f/20));
+                    compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.scale(4f/20));
 
                     if (this instanceof ServerGrappleWinchConnection connection) {
                         connection.tryPlayReboundSound();
@@ -59,7 +59,7 @@ public abstract class GrappleWinchConnection {
                 }
             }
 
-            this.getHook().klaxon$asEntity().addVelocity(compiledHookVec);
+            this.getHook().klaxon$asEntity().push(compiledHookVec);
         }
     }
 
@@ -71,13 +71,13 @@ public abstract class GrappleWinchConnection {
 
     public abstract int getHookId();
 
-    public abstract PlayerEntity getPlayer();
+    public abstract Player getPlayer();
 
     public abstract GrapplingHook getHook();
 
-    public abstract Vec3d getPlayerEyePos();
+    public abstract Vec3 getPlayerEyePos();
 
-    public abstract Vec3d getHookPos();
+    public abstract Vec3 getHookPos();
 
     public boolean isHookAnchored() {
         return this.hookAnchored;

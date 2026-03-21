@@ -1,17 +1,19 @@
 package net.myriantics.klaxon.recipe;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.util.math.random.Random;
+import com.mojang.serialization.Codec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public final class RecipeOutputCompound {
     private final List<Pair<ItemStack, Double>> dropsAndChances;
@@ -38,11 +40,11 @@ public final class RecipeOutputCompound {
         return new RecipeOutputCompound(List.copyOf(dropsAndChances));
     }
 
-    public static RecipeOutputCompound of(ItemConvertible item, double d) {
+    public static RecipeOutputCompound of(ItemLike item, double d) {
         return new RecipeOutputCompound(List.of(new Pair<>(new ItemStack(item), d)));
     }
 
-    public static RecipeOutputCompound of(ItemConvertible item, double d, ItemConvertible item1, double d1) {
+    public static RecipeOutputCompound of(ItemLike item, double d, ItemLike item1, double d1) {
         return new RecipeOutputCompound(List.of(new Pair<>(new ItemStack(item), d), new Pair<>(new ItemStack(item1), d1)));
     }
 
@@ -50,7 +52,7 @@ public final class RecipeOutputCompound {
         return dropsAndChances.size();
     }
 
-    public ItemStack[] computeDrops(Random random) {
+    public ItemStack[] computeDrops(RandomSource random) {
         ItemStack[] outputList = new ItemStack[dropsAndChances.size()];
 
         // Roll the random drops and add copies to the list
@@ -72,7 +74,7 @@ public final class RecipeOutputCompound {
                 outputList.add(stack.copyWithCount(count));
             }*/
 
-            int count = (int) (0.5 + random.nextTriangular(
+            int count = (int) (0.5 + random.triangle(
                     stack.getCount() * chance,
                     stack.getCount() / 2f
             ));
@@ -130,34 +132,34 @@ public final class RecipeOutputCompound {
         );
     }
 
-    public static PacketCodec<RegistryByteBuf, RecipeOutputCompound> PACKET_CODEC = PacketCodec.ofStatic(
+    public static StreamCodec<RegistryFriendlyByteBuf, RecipeOutputCompound> PACKET_CODEC = StreamCodec.of(
             RecipeOutputCompound::write, RecipeOutputCompound::read
     );
 
-    private static RecipeOutputCompound read(RegistryByteBuf buf) {
-        int size = PacketCodecs.VAR_INT.decode(buf);
+    private static RecipeOutputCompound read(RegistryFriendlyByteBuf buf) {
+        int size = ByteBufCodecs.VAR_INT.decode(buf);
 
         ArrayList<Pair<ItemStack, Double>> entries = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             entries.add(new Pair<>(
-                    ItemStack.PACKET_CODEC.decode(buf),
-                    PacketCodecs.DOUBLE.decode(buf)
+                    ItemStack.STREAM_CODEC.decode(buf),
+                    ByteBufCodecs.DOUBLE.decode(buf)
             ));
         }
 
         return new RecipeOutputCompound(entries);
     }
 
-    private static void write(RegistryByteBuf buf, RecipeOutputCompound recipeOutputCompound) {
+    private static void write(RegistryFriendlyByteBuf buf, RecipeOutputCompound recipeOutputCompound) {
         List<Pair<ItemStack, Double>> rawDropsAndChances = recipeOutputCompound.getRawDropsAndChances();
 
         int size = rawDropsAndChances.size();
-        PacketCodecs.VAR_INT.encode(buf, size);
+        ByteBufCodecs.VAR_INT.encode(buf, size);
 
         for (Pair<ItemStack, Double> pair : rawDropsAndChances) {
-            ItemStack.PACKET_CODEC.encode(buf, pair.getFirst());
-            PacketCodecs.DOUBLE.encode(buf, pair.getSecond());
+            ItemStack.STREAM_CODEC.encode(buf, pair.getFirst());
+            ByteBufCodecs.DOUBLE.encode(buf, pair.getSecond());
         }
     }
 

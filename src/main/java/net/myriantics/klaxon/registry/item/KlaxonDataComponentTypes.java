@@ -1,18 +1,21 @@
 package net.myriantics.klaxon.registry.item;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.component.ComponentType;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Unit;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import net.myriantics.klaxon.component.configuration.*;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
+import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
+import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
+import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
 import java.util.function.UnaryOperator;
@@ -20,101 +23,101 @@ import java.util.function.UnaryOperator;
 public abstract class KlaxonDataComponentTypes {
 
     // Items with this component will propel the given entity backwards from their look direction if they attack a block with positive Y velocity. Also restricts the given item from being able to break blocks in Creative.
-    public static final ComponentType<WalljumpAbilityComponent> WALLJUMP_ABILITY = register("walljump_ability",
+    public static final DataComponentType<WalljumpAbilityComponent> WALLJUMP_ABILITY = register("walljump_ability",
             builder -> {
-                builder.codec(WalljumpAbilityComponent.CODEC);
-                builder.packetCodec(WalljumpAbilityComponent.PACKET_CODEC);
+                builder.persistent(WalljumpAbilityComponent.CODEC);
+                builder.networkSynchronized(WalljumpAbilityComponent.PACKET_CODEC);
                 return builder;
             });
 
     // Items with this component can disable shields and deal damage in the same hit, given the defined conditions are met.
-    public static final ComponentType<ShieldBreachingComponent> SHIELD_BREACHING = register("shield_breaching",
+    public static final DataComponentType<ShieldBreachingComponent> SHIELD_BREACHING = register("shield_breaching",
             builder -> {
-                builder.codec(ShieldBreachingComponent.CODEC);
-                builder.packetCodec(ShieldBreachingComponent.PACKET_CODEC);
+                builder.persistent(ShieldBreachingComponent.CODEC);
+                builder.networkSynchronized(ShieldBreachingComponent.PACKET_CODEC);
                 return builder;
             });
 
     // Modifies the knockback strength of a knockback hit when using the given item.
-    public static final ComponentType<KnockbackHitModifierComponent> KNOCKBACK_HIT_MODIFIER = register("knockback_hit_modifier",
+    public static final DataComponentType<KnockbackHitModifierComponent> KNOCKBACK_HIT_MODIFIER = register("knockback_hit_modifier",
             builder -> {
-                builder.codec(KnockbackHitModifierComponent.CODEC);
-                builder.packetCodec(KnockbackHitModifierComponent.PACKET_CODEC);
+                builder.persistent(KnockbackHitModifierComponent.CODEC);
+                builder.networkSynchronized(KnockbackHitModifierComponent.PACKET_CODEC);
                 return builder;
             });
 
     // Determines what damage type a weapon will use on melee strike
-    public static final ComponentType<MeleeDamageTypeOverrideComponent> MELEE_DAMAGE_TYPE_OVERRIDE = register("melee_damage_type_override",
+    public static final DataComponentType<MeleeDamageTypeOverrideComponent> MELEE_DAMAGE_TYPE_OVERRIDE = register("melee_damage_type_override",
             builder -> {
-                builder.codec(MeleeDamageTypeOverrideComponent.CODEC);
-                builder.packetCodec(MeleeDamageTypeOverrideComponent.PACKET_CODEC);
+                builder.persistent(MeleeDamageTypeOverrideComponent.CODEC);
+                builder.networkSynchronized(MeleeDamageTypeOverrideComponent.PACKET_CODEC);
                 return builder;
             });
 
     // The given item will now use this repair item in lieu of a code-defined one
-    public static final ComponentType<RepairIngredientOverrideComponent> REPAIR_INGREDIENT_OVERRIDE = register("repair_ingredient_override",
+    public static final DataComponentType<RepairIngredientOverrideComponent> REPAIR_INGREDIENT_OVERRIDE = register("repair_ingredient_override",
             builder -> {
-                builder.codec(RepairIngredientOverrideComponent.CODEC);
-                builder.packetCodec(RepairIngredientOverrideComponent.PACKET_CODEC);
+                builder.persistent(RepairIngredientOverrideComponent.CODEC);
+                builder.networkSynchronized(RepairIngredientOverrideComponent.PACKET_CODEC);
                 return builder;
             });
 
     // Determines the default sound used for a given ToolUsageRecipe. Also determines if you can cosmetically use the tool - i.e. hammering items to no effect, just to make the noise.
-    public static final ComponentType<ToolUseRecipeConfigComponent> TOOL_USE_RECIPE_CONFIG = register("tool_usage_config",
+    public static final DataComponentType<ToolUseRecipeConfigComponent> TOOL_USE_RECIPE_CONFIG = register("tool_usage_config",
             builder -> {
-                builder.codec(ToolUseRecipeConfigComponent.CODEC);
-                builder.packetCodec(ToolUseRecipeConfigComponent.PACKET_CODEC);
+                builder.persistent(ToolUseRecipeConfigComponent.CODEC);
+                builder.networkSynchronized(ToolUseRecipeConfigComponent.PACKET_CODEC);
                 return builder;
             });
 
     // Defines a block tag that the given ItemStack can instantly break. Requires ToolComponent that boosts mining speed of given block.
-    public static final ComponentType<InstabreakingToolComponent> INSTABREAK_TOOL_COMPONENT = register("instabreaking_tool",
+    public static final DataComponentType<InstabreakingToolComponent> INSTABREAK_TOOL_COMPONENT = register("instabreaking_tool",
             builder -> {
-                builder.codec(InstabreakingToolComponent.CODEC);
-                builder.packetCodec(InstabreakingToolComponent.PACKET_CODEC);
+                builder.persistent(InstabreakingToolComponent.CODEC);
+                builder.networkSynchronized(InstabreakingToolComponent.PACKET_CODEC);
                 return builder;
             });
 
-    public static final ComponentType<GrappleClawComponent> GRAPPLE_CLAW_COMPONENT = register("grapple_claw", builder -> builder
-            .codec(GrappleClawComponent.CODEC)
-            .packetCodec(GrappleClawComponent.PACKET_CODEC)
+    public static final DataComponentType<GrappleClawComponent> GRAPPLE_CLAW_COMPONENT = register("grapple_claw", builder -> builder
+            .persistent(GrappleClawComponent.CODEC)
+            .networkSynchronized(GrappleClawComponent.PACKET_CODEC)
     );
 
-    public static final ComponentType<ExplosiveCatalystData> EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT = register("explosive_catalyst_override", builder -> builder
-            .codec(ExplosiveCatalystData.CODEC)
-            .packetCodec(ExplosiveCatalystData.PACKET_CODEC)
+    public static final DataComponentType<ExplosiveCatalystData> EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT = register("explosive_catalyst_override", builder -> builder
+            .persistent(ExplosiveCatalystData.CODEC)
+            .networkSynchronized(ExplosiveCatalystData.PACKET_CODEC)
     );
 
     // Items with this component override the check that disallows both damage and stacking components coexisting.
-    public static final ComponentType<Unit> DAMAGEABLE_AND_STACKABLE = registerUnit("damageable_and_stackable");
+    public static final DataComponentType<Unit> DAMAGEABLE_AND_STACKABLE = registerUnit("damageable_and_stackable");
 
     // Items with this component replace their held item model "x:example_model" with "x:example_model_[YOUR_STRING_HERE]" under certain conditions
-    public static final ComponentType<String> ALT_HAND_MODEL = register("alt_hand_model",
+    public static final DataComponentType<String> ALT_HAND_MODEL = register("alt_hand_model",
             builder ->  {
-                builder.codec(Codec.STRING);
-                builder.packetCodec(PacketCodecs.STRING);
+                builder.persistent(Codec.STRING);
+                builder.networkSynchronized(ByteBufCodecs.STRING_UTF8);
                 return builder;
             });
 
     // Items with this component flip their held item model when held in the left hand
-    public static final ComponentType<Unit> MIRRORED_LEFT_HAND_MODEL = registerUnit("mirrored_left_hand_model");
+    public static final DataComponentType<Unit> MIRRORED_LEFT_HAND_MODEL = registerUnit("mirrored_left_hand_model");
 
-    public static final ComponentType<Double> RECIPE_OUTPUT_CHANCE_LORE = register("recipe_output_chance_lore",
+    public static final DataComponentType<Double> RECIPE_OUTPUT_CHANCE_LORE = register("recipe_output_chance_lore",
             builder -> {
-        builder.codec(Codec.DOUBLE);
-        builder.packetCodec(PacketCodecs.DOUBLE);
+        builder.persistent(Codec.DOUBLE);
+        builder.networkSynchronized(ByteBufCodecs.DOUBLE);
         return builder;
     });
 
 
-    public static final ComponentType<Unit> HELMET_CREST_COMPONENT = registerUnit("helmet_crest");
+    public static final DataComponentType<Unit> HELMET_CREST_COMPONENT = registerUnit("helmet_crest");
 
-    private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
-        return Registry.register(Registries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(ComponentType.builder()).build());
+    private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
+        return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, KlaxonCommon.locate(name), builderOperator.apply(DataComponentType.builder()).build());
     }
 
-    private static ComponentType<Unit> registerUnit(String name) {
-        return register(name, unitBuilder -> unitBuilder.codec(Codec.unit(Unit.INSTANCE)).packetCodec(PacketCodec.unit(Unit.INSTANCE)));
+    private static DataComponentType<Unit> registerUnit(String name) {
+        return register(name, unitBuilder -> unitBuilder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     }
 
     public static void init() {

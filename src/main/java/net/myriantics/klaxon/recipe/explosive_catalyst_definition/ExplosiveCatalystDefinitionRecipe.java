@@ -1,13 +1,13 @@
 package net.myriantics.klaxon.recipe.explosive_catalyst_definition;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class ExplosiveCatalystDefinitionRecipe implements Recipe<ExplosiveCatalystDefinitionRecipeInput> {
@@ -24,22 +24,22 @@ public class ExplosiveCatalystDefinitionRecipe implements Recipe<ExplosiveCataly
     // to whom it may concern: CHECK WHAT INDEX YOU'RE TRYING TO PULL FROM
     // GAH
     @Override
-    public boolean matches(ExplosiveCatalystDefinitionRecipeInput input, World world) {
+    public boolean matches(ExplosiveCatalystDefinitionRecipeInput input, Level world) {
         return ingredient.test(input.catalystStack());
     }
 
     @Override
-    public ItemStack craft(ExplosiveCatalystDefinitionRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack assemble(ExplosiveCatalystDefinitionRecipeInput input, HolderLookup.Provider lookup) {
         return input.catalystStack();
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
         return ItemStack.EMPTY;
     }
 
@@ -56,7 +56,7 @@ public class ExplosiveCatalystDefinitionRecipe implements Recipe<ExplosiveCataly
     }
 
     @Override
-    public ItemStack createIcon() {
+    public ItemStack getToastSymbol() {
         return new ItemStack(Blocks.TNT);
     }
 

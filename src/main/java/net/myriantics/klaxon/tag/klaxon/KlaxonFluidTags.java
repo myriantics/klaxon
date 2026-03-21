@@ -1,9 +1,8 @@
 package net.myriantics.klaxon.tag.klaxon;
 
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.material.Fluid;
 import net.myriantics.klaxon.KlaxonCommon;
 
 public abstract class KlaxonFluidTags {
@@ -12,6 +11,6 @@ public abstract class KlaxonFluidTags {
             createTag("cold_fluids");
 
     private static TagKey<Fluid> createTag(String name) {
-        return TagKey.of(RegistryKeys.FLUID, KlaxonCommon.locate(name));
+        return TagKey.create(Registries.FLUID, KlaxonCommon.locate(name));
     }
 }

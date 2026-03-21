@@ -1,8 +1,8 @@
 package net.myriantics.klaxon.tag.klaxon;
 
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.myriantics.klaxon.KlaxonCommon;
 
 public abstract class KlaxonItemTags {
@@ -115,6 +115,6 @@ public abstract class KlaxonItemTags {
     }
 
     private static TagKey<Item> createTag(String name) {
-        return TagKey.of(RegistryKeys.ITEM, KlaxonCommon.locate(name));
+        return TagKey.create(Registries.ITEM, KlaxonCommon.locate(name));
     }
 }

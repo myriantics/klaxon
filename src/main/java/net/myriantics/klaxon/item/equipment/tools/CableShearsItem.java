@@ -1,18 +1,18 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.ToolComponent;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.*;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.ActionResult;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShearsItem;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
@@ -23,51 +23,51 @@ import java.util.ArrayList;
 
 public class CableShearsItem extends ShearsItem {
 
-    private final ToolMaterial material;
+    private final Tier material;
 
-    public CableShearsItem(ToolMaterial material, Settings settings) {
+    public CableShearsItem(Tier material, Properties settings) {
         super(settings
-                .maxDamage(material.getDurability())
-                .component(DataComponentTypes.TOOL, tupleToolComponent(ShearsItem.createToolComponent(), material, KlaxonBlockTags.CABLE_SHEARS_MINEABLE))
+                .durability(material.getUses())
+                .component(DataComponents.TOOL, tupleToolComponent(ShearsItem.createToolProperties(), material, KlaxonBlockTags.CABLE_SHEARS_MINEABLE))
                 .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(KlaxonSoundEvents.ITEM_CABLE_SHEARS_USAGE))
                 .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE))
         );
         this.material = material;
     }
 
-    private static ToolComponent tupleToolComponent(ToolComponent shears, ToolMaterial material, TagKey<Block> effectiveBlocks) {
-        ArrayList<ToolComponent.Rule> rules = new ArrayList<>(shears.rules());
-        ToolComponent fromMaterial = material.createComponent(effectiveBlocks);
+    private static Tool tupleToolComponent(Tool shears, Tier material, TagKey<Block> effectiveBlocks) {
+        ArrayList<Tool.Rule> rules = new ArrayList<>(shears.rules());
+        Tool fromMaterial = material.createToolProperties(effectiveBlocks);
         rules.addAll(fromMaterial.rules());
-        return new ToolComponent(rules, fromMaterial.defaultMiningSpeed(), fromMaterial.damagePerBlock());
+        return new Tool(rules, fromMaterial.defaultMiningSpeed(), fromMaterial.damagePerBlock());
     }
 
-    public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
-        return AttributeModifiersComponent.builder()
+    public static ItemAttributeModifiers createAttributeModifiers(Tier material, float baseAttackDamage, float attackSpeed) {
+        return ItemAttributeModifiers.builder()
                 .add(
-                        EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                        new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, material.getAttackDamage() + baseAttackDamage, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.MAINHAND
+                        Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID, material.getAttackDamageBonus() + baseAttackDamage, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND
                 )
                 .add(
-                        EntityAttributes.GENERIC_ATTACK_SPEED,
-                        new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.MAINHAND
+                        Attributes.ATTACK_SPEED,
+                        new AttributeModifier(BASE_ATTACK_SPEED_ID, attackSpeed, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND
                 ).build();
     }
 
     @Override
-    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         return true;
     }
 
     @Override
-    public void postDamageEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damage(2, attacker, EquipmentSlot.MAINHAND);
+    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        stack.hurtAndBreak(2, attacker, EquipmentSlot.MAINHAND);
     }
 
     @Override
-    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return this.material.getRepairIngredient().test(ingredient) || super.canRepair(stack, ingredient);
+    public boolean isValidRepairItem(ItemStack stack, ItemStack ingredient) {
+        return this.material.getRepairIngredient().test(ingredient) || super.isValidRepairItem(stack, ingredient);
     }
 }

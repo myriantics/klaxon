@@ -1,6 +1,6 @@
 package net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors;
 
-import net.minecraft.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface FireworkRocketEntityInvoker {
 
     // Used to explode fireworks in the corresponding BlastProcessorBehavior
-    @Invoker(value = "explodeAndRemove")
+    @Invoker(value = "explode")
     void invokeExplodeAndRemove();
 }

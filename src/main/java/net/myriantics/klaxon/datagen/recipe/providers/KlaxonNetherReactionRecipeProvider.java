@@ -1,14 +1,14 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.level.block.Blocks;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider {
-    public KlaxonNetherReactionRecipeProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
+    public KlaxonNetherReactionRecipeProvider(KlaxonRecipeProvider provider, RecipeOutput exporter) {
         super(provider, exporter);
     }
 

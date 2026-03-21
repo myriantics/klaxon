@@ -4,15 +4,15 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.ShapelessRecipe;
-import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 
 import java.util.List;
@@ -22,9 +22,9 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
     private final MapCodec<MakeshiftShapelessCraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                     Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessRecipe::getGroup),
-                    CraftingRecipeCategory.CODEC.fieldOf("category").orElse(CraftingRecipeCategory.MISC).forGetter(ShapelessRecipe::getCategory),
-                    ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(MakeshiftShapelessCraftingRecipe::getRawResult),
-                    Ingredient.DISALLOW_EMPTY_CODEC
+                    CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(ShapelessRecipe::category),
+                    ItemStack.STRICT_CODEC.fieldOf("result").forGetter(MakeshiftShapelessCraftingRecipe::getRawResult),
+                    Ingredient.CODEC_NONEMPTY
                             .listOf()
                             .fieldOf("ingredients")
                             .flatXmap(
@@ -35,7 +35,7 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
                                         } else {
                                             return ingredients2.length > 9
                                                     ? DataResult.error(() -> "Too many ingredients for shapeless recipe")
-                                                    : DataResult.success(DefaultedList.copyOf(Ingredient.EMPTY, ingredients2));
+                                                    : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients2));
                                         }
                                     },
                                     DataResult::success
@@ -46,32 +46,32 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
                     .apply(instance, MakeshiftShapelessCraftingRecipe::new)
     );
 
-    private final PacketCodec<RegistryByteBuf, MakeshiftShapelessCraftingRecipe> PACKET_CODEC = PacketCodec.ofStatic(
+    private final StreamCodec<RegistryFriendlyByteBuf, MakeshiftShapelessCraftingRecipe> PACKET_CODEC = StreamCodec.of(
             MakeshiftShapelessCraftingRecipeSerializer::write, MakeshiftShapelessCraftingRecipeSerializer::read
     );
 
-    private static void write(RegistryByteBuf buf, MakeshiftShapelessCraftingRecipe recipe) {
-        PacketCodecs.STRING.encode(buf, recipe.getGroup());
-        CraftingRecipeCategory.PACKET_CODEC.encode(buf, recipe.getCategory());
-        PacketCodecs.VAR_INT.encode(buf, recipe.getIngredients().size());
+    private static void write(RegistryFriendlyByteBuf buf, MakeshiftShapelessCraftingRecipe recipe) {
+        ByteBufCodecs.STRING_UTF8.encode(buf, recipe.getGroup());
+        CraftingBookCategory.STREAM_CODEC.encode(buf, recipe.category());
+        ByteBufCodecs.VAR_INT.encode(buf, recipe.getIngredients().size());
 
         for (Ingredient ingredient : recipe.getIngredients()) {
-            Ingredient.PACKET_CODEC.encode(buf, ingredient);
+            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
         }
 
-        ItemStack.PACKET_CODEC.encode(buf, recipe.getRawResult());
+        ItemStack.STREAM_CODEC.encode(buf, recipe.getRawResult());
         KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.encode(buf, recipe.getConstantIngredients());
     }
 
-    private static MakeshiftShapelessCraftingRecipe read(RegistryByteBuf buf) {
-        String group = PacketCodecs.STRING.decode(buf);
-        CraftingRecipeCategory category = CraftingRecipeCategory.PACKET_CODEC.decode(buf);
-        int i = PacketCodecs.VAR_INT.decode(buf);
+    private static MakeshiftShapelessCraftingRecipe read(RegistryFriendlyByteBuf buf) {
+        String group = ByteBufCodecs.STRING_UTF8.decode(buf);
+        CraftingBookCategory category = CraftingBookCategory.STREAM_CODEC.decode(buf);
+        int i = ByteBufCodecs.VAR_INT.decode(buf);
 
-        DefaultedList<Ingredient> defaultedList = DefaultedList.ofSize(i, Ingredient.EMPTY);
-        defaultedList.replaceAll(empty -> Ingredient.PACKET_CODEC.decode(buf));
+        NonNullList<Ingredient> defaultedList = NonNullList.withSize(i, Ingredient.EMPTY);
+        defaultedList.replaceAll(empty -> Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
 
-        ItemStack result = ItemStack.PACKET_CODEC.decode(buf);
+        ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
         List<Ingredient> constantIngredients = KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.decode(buf);
         return new MakeshiftShapelessCraftingRecipe(group, category, result, defaultedList, constantIngredients);
     }
@@ -82,7 +82,7 @@ public class MakeshiftShapelessCraftingRecipeSerializer implements RecipeSeriali
     }
 
     @Override
-    public PacketCodec<RegistryByteBuf, MakeshiftShapelessCraftingRecipe> packetCodec() {
+    public StreamCodec<RegistryFriendlyByteBuf, MakeshiftShapelessCraftingRecipe> streamCodec() {
         return PACKET_CODEC;
     }
 }

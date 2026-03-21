@@ -1,57 +1,57 @@
 package net.myriantics.klaxon.particle;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
-public class HallnoxDripParticle extends SpriteBillboardParticle {
-    protected HallnoxDripParticle(ClientWorld clientWorld, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+public class HallnoxDripParticle extends TextureSheetParticle {
+    protected HallnoxDripParticle(ClientLevel clientWorld, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
         super(clientWorld, x, y, z, velocityX, velocityY, velocityZ);
         this.setColor(255f/255, 234f/255, 185f/255);
-        this.gravityStrength = 0.01f;
+        this.gravity = 0.01f;
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
-    protected int getBrightness(float tint) {
+    protected int getLightColor(float tint) {
         return 240;
     }
 
     @Override
     public void tick() {
 
-        if (this.onGround || this.age++ > this.maxAge) {
-            this.markDead();
+        if (this.onGround || this.age++ > this.lifetime) {
+            this.remove();
         }
 
-        if (!this.dead) {
-            this.velocityY = this.velocityY - this.gravityStrength;
+        if (!this.removed) {
+            this.yd = this.yd - this.gravity;
 
-            this.velocityX *= 0.02;
-            this.velocityY *= 0.02;
-            this.velocityZ *= 0.02;
+            this.xd *= 0.02;
+            this.yd *= 0.02;
+            this.zd *= 0.02;
 
-            this.move(this.velocityX, this.velocityY, this.velocityZ);
+            this.move(this.xd, this.yd, this.zd);
         }
     }
 
-    public static class HallnoxDripParticleFactory implements ParticleFactory<SimpleParticleType> {
-        private final SpriteProvider spriteProvider;
+    public static class HallnoxDripParticleFactory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteProvider;
 
-        public HallnoxDripParticleFactory(SpriteProvider spriteProvider) {
+        public HallnoxDripParticleFactory(SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
         @Override
-        public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public @Nullable Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             HallnoxDripParticle particle = new HallnoxDripParticle(world, x, y, z, velocityX, velocityY, velocityZ);
 
-            particle.setSprite(spriteProvider);
+            particle.pickSprite(spriteProvider);
 
             return particle;
         }

@@ -1,12 +1,12 @@
 package net.myriantics.klaxon.datagen.model.block;
 
-import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.models.BlockModelGenerators;
 import net.myriantics.klaxon.datagen.model.KlaxonBlockModelSubProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
 public class KlaxonSimpleBlockModelProvider extends KlaxonBlockModelSubProvider {
-    public KlaxonSimpleBlockModelProvider(KlaxonModelProvider provider, BlockStateModelGenerator generator) {
+    public KlaxonSimpleBlockModelProvider(KlaxonModelProvider provider, BlockModelGenerators generator) {
         super(provider, generator);
     }
 
@@ -35,8 +35,8 @@ public class KlaxonSimpleBlockModelProvider extends KlaxonBlockModelSubProvider 
 
     private void registerAxisRotatedBlockModels() {
         // hallnox
-        registerLog(KlaxonBlocks.HALLNOX_STEM).stem(KlaxonBlocks.HALLNOX_STEM).wood(KlaxonBlocks.HALLNOX_HYPHAE);
-        registerLog(KlaxonBlocks.STRIPPED_HALLNOX_STEM).stem(KlaxonBlocks.STRIPPED_HALLNOX_STEM).wood(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
+        registerLog(KlaxonBlocks.HALLNOX_STEM).log(KlaxonBlocks.HALLNOX_STEM).wood(KlaxonBlocks.HALLNOX_HYPHAE);
+        registerLog(KlaxonBlocks.STRIPPED_HALLNOX_STEM).log(KlaxonBlocks.STRIPPED_HALLNOX_STEM).wood(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
 
         // steel
         registerPillarBlock(KlaxonBlocks.STEEL_PLATING_BLOCK);

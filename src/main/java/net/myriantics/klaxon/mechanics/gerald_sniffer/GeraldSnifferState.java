@@ -1,9 +1,8 @@
 package net.myriantics.klaxon.mechanics.gerald_sniffer;
 
-import net.minecraft.entity.passive.SnifferEntity;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum GeraldSnifferState implements StringIdentifiable {
+public enum GeraldSnifferState implements StringRepresentable {
     TRACKING_UNSUPPORTED("tracking_unsupported"),
     TRACKING_READY("tracking_ready"),
     TRACKING_IN_PROGRESS("tracking_in_progress"),
@@ -24,7 +23,7 @@ public enum GeraldSnifferState implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.id;
     }
 

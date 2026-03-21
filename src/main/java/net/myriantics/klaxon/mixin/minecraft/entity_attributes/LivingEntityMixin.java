@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.mixin.minecraft.entity_attributes;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,8 +16,8 @@ public abstract class LivingEntityMixin {
             method = "createLivingAttributes",
             at = @At(value = "RETURN")
     )
-    private static DefaultAttributeContainer.Builder klaxon$appendKlaxonLivingAttributes(DefaultAttributeContainer.Builder original) {
-        for (RegistryEntry<EntityAttribute> attribute : KlaxonEntityAttributes.getKlaxonGenericLivingEntityAttributes()) {
+    private static AttributeSupplier.Builder klaxon$appendKlaxonLivingAttributes(AttributeSupplier.Builder original) {
+        for (Holder<Attribute> attribute : KlaxonEntityAttributes.getKlaxonGenericLivingEntityAttributes()) {
             original.add(attribute);
         }
         return original;

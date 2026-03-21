@@ -1,6 +1,6 @@
 package net.myriantics.klaxon.util;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -8,11 +8,11 @@ public abstract class KlaxonItemStackHelper {
     public static void insertAndMerge(List<ItemStack> list, ItemStack insertedStack) {
         for (int i = 0; i < list.size(); i++) {
             ItemStack listStack = list.get(i);
-            if (listStack.isStackable() && ItemStack.areItemsAndComponentsEqual(listStack, insertedStack)) {
-                int listStackSpace = listStack.getMaxCount() - listStack.getCount();
+            if (listStack.isStackable() && ItemStack.isSameItemSameComponents(listStack, insertedStack)) {
+                int listStackSpace = listStack.getMaxStackSize() - listStack.getCount();
                 int transferredCount = Math.min(listStackSpace, insertedStack.getCount());
-                listStack.increment(transferredCount);
-                insertedStack.decrement(transferredCount);
+                listStack.grow(transferredCount);
+                insertedStack.shrink(transferredCount);
             }
 
             // no need to check more slots if inserted stack is empty
@@ -33,20 +33,20 @@ public abstract class KlaxonItemStackHelper {
         }
 
         if (canStacksMerge(stackA, stackB)) {
-            int maxAcceptedItems = stackA.getMaxCount() - stackA.getCount();
+            int maxAcceptedItems = stackA.getMaxStackSize() - stackA.getCount();
             int transferredItems = Math.min(stackB.getCount(), maxAcceptedItems);
-            stackA.increment(transferredItems);
-            stackB.decrement(transferredItems);
+            stackA.grow(transferredItems);
+            stackB.shrink(transferredItems);
         }
 
         return stackA;
     }
 
     public static boolean canStacksMerge(ItemStack stackA, ItemStack stackB) {
-        return stackA.getCount() <= stackA.getMaxCount() && (stackA.isEmpty() || stackB.isEmpty() || ItemStack.areItemsAndComponentsEqual(stackA, stackB));
+        return stackA.getCount() <= stackA.getMaxStackSize() && (stackA.isEmpty() || stackB.isEmpty() || ItemStack.isSameItemSameComponents(stackA, stackB));
     }
 
     public static boolean hasStackedToMax(ItemStack stack) {
-        return stack.getMaxCount() == stack.getCount();
+        return stack.getMaxStackSize() == stack.getCount();
     }
 }

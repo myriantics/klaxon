@@ -2,11 +2,11 @@ package net.myriantics.klaxon.networking;
 
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.networking.s2c.KlaxonWorldEventPacket;
 
@@ -17,38 +17,38 @@ public abstract class KlaxonServerPlayNetworkHandler {
      * This makes it so that the player must release their use key and press it again in order to use the item again.
      * @param serverPlayer the player to trigger it on
      */
-    public static void triggerItemLockout(ServerPlayerEntity serverPlayer) {
-        serverPlayer.clearActiveItem();
+    public static void triggerItemLockout(ServerPlayer serverPlayer) {
+        serverPlayer.stopUsingItem();
         send(serverPlayer, new ItemUsageLockoutTrigger());
     }
 
-    public static void send(ServerPlayerEntity serverPlayer, CustomPayload customPayload) {
+    public static void send(ServerPlayer serverPlayer, CustomPacketPayload customPayload) {
         ServerPlayNetworking.send(serverPlayer, customPayload);
     }
 
-    public static void sendToTracking(ServerWorld serverWorld, BlockPos pos, CustomPayload customPayload) {
-        for (ServerPlayerEntity player : PlayerLookup.tracking(serverWorld, pos)) {
+    public static void sendToTracking(ServerLevel serverWorld, BlockPos pos, CustomPacketPayload customPayload) {
+        for (ServerPlayer player : PlayerLookup.tracking(serverWorld, pos)) {
             ServerPlayNetworking.send(player, customPayload);
         }
     }
 
-    public static void sendToTracking(ServerWorld serverWorld, Entity tracking, CustomPayload customPayload) {
-        for (ServerPlayerEntity player : PlayerLookup.tracking(tracking)) {
+    public static void sendToTracking(ServerLevel serverWorld, Entity tracking, CustomPacketPayload customPayload) {
+        for (ServerPlayer player : PlayerLookup.tracking(tracking)) {
             ServerPlayNetworking.send(player, customPayload);
         }
     }
 
-    public static void syncWorldEvent(ServerWorld serverWorld, BlockPos pos, int eventId) {
+    public static void syncWorldEvent(ServerLevel serverWorld, BlockPos pos, int eventId) {
         syncWorldEvent(serverWorld, pos, eventId, 0);
     }
-    public static void syncWorldEvent(ServerWorld serverWorld, BlockPos pos, int eventId, int data) {
+    public static void syncWorldEvent(ServerLevel serverWorld, BlockPos pos, int eventId, int data) {
         sendToTracking(serverWorld, pos, new KlaxonWorldEventPacket(eventId, pos, data, false));
     }
 
-    public static void syncGlobalEvent(ServerWorld serverWorld, BlockPos pos, int eventId) {
+    public static void syncGlobalEvent(ServerLevel serverWorld, BlockPos pos, int eventId) {
         syncGlobalEvent(serverWorld, pos, eventId, 0);
     }
-    public static void syncGlobalEvent(ServerWorld serverWorld, BlockPos pos, int eventId, int data) {
+    public static void syncGlobalEvent(ServerLevel serverWorld, BlockPos pos, int eventId, int data) {
         sendToTracking(serverWorld, pos, new KlaxonWorldEventPacket(eventId, pos, data, true));
     }
 }

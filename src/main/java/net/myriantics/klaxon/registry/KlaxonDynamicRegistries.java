@@ -2,9 +2,8 @@ package net.myriantics.klaxon.registry;
 
 import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
-import net.minecraft.predicate.StatePredicate;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
 import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
@@ -18,7 +17,7 @@ public abstract class KlaxonDynamicRegistries {
         registerSynced(KlaxonRegistryKeys.WRENCH_INTERACTION_DENIAL_PREDICATE, WrenchInteractionDenialPredicate.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
     }
 
-    private static <T> void registerSynced(RegistryKey<? extends Registry<T>> key, Codec<T> codec, DynamicRegistries.SyncOption... options) {
+    private static <T> void registerSynced(ResourceKey<? extends Registry<T>> key, Codec<T> codec, DynamicRegistries.SyncOption... options) {
         DynamicRegistries.registerSynced(key, codec, options);
     }
 

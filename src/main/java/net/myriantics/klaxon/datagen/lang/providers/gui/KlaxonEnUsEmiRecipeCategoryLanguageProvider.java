@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.datagen.lang.providers.gui;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageSubProvider;
 import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
@@ -18,7 +17,7 @@ public final class KlaxonEnUsEmiRecipeCategoryLanguageProvider extends KlaxonEnU
         addEmiRecipeCategory(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID, "Explosive Catalysts");
         addEmiRecipeCategory(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID, "Blast Processing");
         addEmiRecipeCategory(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID, "World Item Application");
-        addEmiRecipeCategory(KlaxonToolUsageRecipeTypes.HAMMERING.getValue().getPath(), "Hammering");
-        addEmiRecipeCategory(KlaxonToolUsageRecipeTypes.WIRECUTTING.getValue().getPath(), "Wirecutting");
+        addEmiRecipeCategory(KlaxonToolUsageRecipeTypes.HAMMERING.location().getPath(), "Hammering");
+        addEmiRecipeCategory(KlaxonToolUsageRecipeTypes.WIRECUTTING.location().getPath(), "Wirecutting");
     }
 }

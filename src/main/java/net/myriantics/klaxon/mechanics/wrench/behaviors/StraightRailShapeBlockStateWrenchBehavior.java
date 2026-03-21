@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.mechanics.wrench.behaviors;
 
-import net.minecraft.block.enums.RailShape;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
@@ -14,13 +14,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class StraightRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBehavior<RailShape> {
-    public StraightRailShapeBlockStateWrenchBehavior(Identifier id) {
-        super(Properties.STRAIGHT_RAIL_SHAPE, id);
+    public StraightRailShapeBlockStateWrenchBehavior(ResourceLocation id) {
+        super(BlockStateProperties.RAIL_SHAPE_STRAIGHT, id);
     }
 
     @Override
     protected Optional<RailShape> applyManual(RailShape original, ManualWrenchInteractionContext context) {
-        Direction playerFacing = context.player().getFacing();
+        Direction playerFacing = context.player().getNearestViewDirection();
         @Nullable Direction.Axis railAxis = KlaxonRailHelper.railShapeToAxis(original);
         BlockPos targetPos = context.hitResult().getBlockPos();
 
@@ -31,7 +31,7 @@ public class StraightRailShapeBlockStateWrenchBehavior extends BlockStateWrenchB
 
         if (playerFacing.getAxis().equals(railAxis)) {
             // if we're coming from the same direction that the rail's already facing, try to switch between ascending and flat rails
-            Direction.AxisDirection ascensionDirection = playerFacing.getDirection();
+            Direction.AxisDirection ascensionDirection = playerFacing.getAxisDirection();
             RailShape toggled = KlaxonRailHelper.tryToggleAscending(context.world(), original, targetPos, ascensionDirection);
 
             if (toggled != null) {
@@ -59,7 +59,7 @@ public class StraightRailShapeBlockStateWrenchBehavior extends BlockStateWrenchB
 
         if (context.dispenserFacing().getAxis().equals(railAxis)) {
             // if we're coming from the same direction that the rail's already facing, try to switch between ascending and flat rails
-            Direction.AxisDirection ascensionDirection = context.dispenserFacing().getDirection().getOpposite();
+            Direction.AxisDirection ascensionDirection = context.dispenserFacing().getAxisDirection().opposite();
             // swap since we're a dispenser to allow tracks to be routed on top of dispenser - more useful than setting the dispenser at the bottom of the track, blocking any carts.
             RailShape toggled = KlaxonRailHelper.tryToggleAscending(context.serverWorld(), original, context.targetPos(), ascensionDirection);
 

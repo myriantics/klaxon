@@ -1,12 +1,12 @@
 package net.myriantics.klaxon.recipe.nether_reaction;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
@@ -21,22 +21,22 @@ public class NetherReactionRecipe implements Recipe<NetherReactionRecipeInput> {
     }
 
     @Override
-    public boolean matches(NetherReactionRecipeInput input, World world) {
+    public boolean matches(NetherReactionRecipeInput input, Level world) {
         return blockIngredient.test(input.inputBlockState());
     }
 
     @Override
-    public ItemStack craft(NetherReactionRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return getResult(lookup);
+    public ItemStack assemble(NetherReactionRecipeInput input, HolderLookup.Provider lookup) {
+        return getResultItem(lookup);
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
         return ItemStack.EMPTY;
     }
 

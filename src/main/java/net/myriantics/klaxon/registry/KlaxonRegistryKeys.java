@@ -1,8 +1,7 @@
 package net.myriantics.klaxon.registry;
 
-import net.minecraft.predicate.StatePredicate;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
@@ -13,15 +12,15 @@ import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 public abstract class KlaxonRegistryKeys {
 
     // static
-    public static final RegistryKey<Registry<ExplosiveCatalystBehavior>> EXPLOSIVE_CATALYST_BEHAVIOR = of("blast_processor_behavior");
-    public static final RegistryKey<Registry<BlockStateWrenchBehavior<? extends Comparable<?>>>> BLOCK_STATE_WRENCH_BEHAVIOR = of("block_state_wrench_behavior");
+    public static final ResourceKey<Registry<ExplosiveCatalystBehavior>> EXPLOSIVE_CATALYST_BEHAVIOR = of("blast_processor_behavior");
+    public static final ResourceKey<Registry<BlockStateWrenchBehavior<? extends Comparable<?>>>> BLOCK_STATE_WRENCH_BEHAVIOR = of("block_state_wrench_behavior");
     // dynamic
-    public static final RegistryKey<Registry<WrenchInteractionDenialPredicate>> WRENCH_INTERACTION_DENIAL_PREDICATE = of("wrench_interaction_denial_predicates");
-    public static final RegistryKey<Registry<ToolUsageRecipeType>> TOOL_USAGE_RECIPE_TYPE = of("tool_usage_recipe_type");
-    public static final RegistryKey<Registry<VeinmineGroup>> VEINMINE_GROUP = of("veinmine_group");
+    public static final ResourceKey<Registry<WrenchInteractionDenialPredicate>> WRENCH_INTERACTION_DENIAL_PREDICATE = of("wrench_interaction_denial_predicates");
+    public static final ResourceKey<Registry<ToolUsageRecipeType>> TOOL_USAGE_RECIPE_TYPE = of("tool_usage_recipe_type");
+    public static final ResourceKey<Registry<VeinmineGroup>> VEINMINE_GROUP = of("veinmine_group");
 
-    private static <T> RegistryKey<Registry<T>> of(String id) {
-        return RegistryKey.ofRegistry(KlaxonCommon.locate(id));
+    private static <T> ResourceKey<Registry<T>> of(String id) {
+        return ResourceKey.createRegistryKey(KlaxonCommon.locate(id));
     }
 
     public static void init() {

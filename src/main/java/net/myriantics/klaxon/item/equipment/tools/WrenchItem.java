@@ -1,34 +1,35 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.pattern.CachedBlockPosition;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
-import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
+import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
@@ -39,53 +40,53 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class WrenchItem extends MiningToolItem {
-    public WrenchItem(ToolMaterial material, Settings settings) {
+public class WrenchItem extends DiggerItem {
+    public WrenchItem(Tier material, Properties settings) {
         super(material, KlaxonBlockTags.WRENCH_MINEABLE, settings
                 .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.WRENCH_INSTABREAKABLE))
         );
     }
 
-    public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
-        return AttributeModifiersComponent.builder()
+    public static ItemAttributeModifiers createAttributes(Tier material, float baseAttackDamage, float attackSpeed) {
+        return ItemAttributeModifiers.builder()
                 .add(
-                        EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                        new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, material.getAttackDamage() + baseAttackDamage, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.MAINHAND
+                        Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID, material.getAttackDamageBonus() + baseAttackDamage, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND
                 )
                 .add(
-                        EntityAttributes.GENERIC_ATTACK_SPEED,
-                        new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.MAINHAND
+                        Attributes.ATTACK_SPEED,
+                        new AttributeModifier(BASE_ATTACK_SPEED_ID, attackSpeed, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND
                 ).build();
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        BlockPos targetPos = context.getBlockPos();
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
+        BlockPos targetPos = context.getClickedPos();
         BlockState targetState = world.getBlockState(targetPos);
-        PlayerEntity player = context.getPlayer();
-        ItemStack wrenchStack = context.getStack();
+        Player player = context.getPlayer();
+        ItemStack wrenchStack = context.getItemInHand();
 
         if (player == null) {
-            return super.useOnBlock(context);
+            return super.useOn(context);
         }
 
         // Wrench pickup ability requires both CAN_PLACE_ON and CAN_DESTROY components to work in Adventure Mode
         if (canPickup(targetState, targetPos, world, player, wrenchStack)) {
-            if (world instanceof ServerWorld serverWorld) {
-                List<ItemStack> outputStacks = Block.getDroppedStacks(targetState, serverWorld, targetPos, serverWorld.getBlockEntity(targetPos));
+            if (world instanceof ServerLevel serverWorld) {
+                List<ItemStack> outputStacks = Block.getDrops(targetState, serverWorld, targetPos, serverWorld.getBlockEntity(targetPos));
                 if (!outputStacks.isEmpty()) {
                     for (ItemStack stack : outputStacks) {
                         // don't insert the stack if player is already creative - unless it's valuable, then do
-                        if (!stack.isEmpty() && (!player.isCreative() || stack.contains(DataComponentTypes.CONTAINER) || stack.contains(DataComponentTypes.CONTAINER_LOOT))) {
+                        if (!stack.isEmpty() && (!player.isCreative() || stack.has(DataComponents.CONTAINER) || stack.has(DataComponents.CONTAINER_LOOT))) {
                             // dump the rest of the stack into the world if it doesn't fit into player's inventory
-                            if (context.getHand().equals(Hand.MAIN_HAND) && (player.getOffHandStack().isEmpty() || KlaxonItemStackHelper.canStacksMerge(player.getOffHandStack(), stack))) {
-                                player.setStackInHand(Hand.OFF_HAND, KlaxonItemStackHelper.combineStacksIfPossible(stack, player.getOffHandStack()));
-                            } else if (!player.getInventory().insertStack(stack)) {
+                            if (context.getHand().equals(InteractionHand.MAIN_HAND) && (player.getOffhandItem().isEmpty() || KlaxonItemStackHelper.canStacksMerge(player.getOffhandItem(), stack))) {
+                                player.setItemInHand(InteractionHand.OFF_HAND, KlaxonItemStackHelper.combineStacksIfPossible(stack, player.getOffhandItem()));
+                            } else if (!player.getInventory().add(stack)) {
                                 if (!stack.isEmpty()) {
-                                    Block.dropStack(serverWorld, targetPos, stack);
+                                    Block.popResource(serverWorld, targetPos, stack);
                                 }
                             }
                         }
@@ -94,16 +95,16 @@ public class WrenchItem extends MiningToolItem {
 
                 // drop is false here because we already handled the drops
                 // only break on server because sound plays twice on client otherwise
-                world.breakBlock(targetPos, false, player);
-                KlaxonAdvancementTriggers.triggerWrenchUsage((ServerPlayerEntity) player, UsageType.PICKUP, targetState);
+                world.destroyBlock(targetPos, false, player);
+                KlaxonAdvancementTriggers.triggerWrenchUsage((ServerPlayer) player, UsageType.PICKUP, targetState);
             }
 
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         // Only requires CAN_PLACE_ON in adventure mode
-        if (allowDefaultRotationBehavior(context.getWorld().getRegistryManager(), targetState)) {
-            ManualWrenchInteractionContext wrenchContext = new ManualWrenchInteractionContext(targetState, wrenchStack, world, player, context.getHand(), new BlockHitResult(context.getHitPos(), context.getSide(), context.getBlockPos(), context.hitsInsideBlock()));
+        if (allowDefaultRotationBehavior(context.getLevel().registryAccess(), targetState)) {
+            ManualWrenchInteractionContext wrenchContext = new ManualWrenchInteractionContext(targetState, wrenchStack, world, player, context.getHand(), new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside()));
 
             BlockState newState = targetState;
 
@@ -115,24 +116,24 @@ public class WrenchItem extends MiningToolItem {
             }
 
             if (newState != targetState) {
-                Vec3d cords = targetPos.toCenterPos();
-                world.playSound(cords.getX(), cords.getY(), cords.getZ(), targetState.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, 0.7f + 0.3f * world.getRandom().nextFloat(), 1.0f, true);
-                if (player instanceof ServerPlayerEntity serverPlayer) {
+                Vec3 cords = targetPos.getCenter();
+                world.playLocalSound(cords.x(), cords.y(), cords.z(), targetState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.7f + 0.3f * world.getRandom().nextFloat(), 1.0f, true);
+                if (player instanceof ServerPlayer serverPlayer) {
                     KlaxonAdvancementTriggers.triggerWrenchUsage(serverPlayer, UsageType.ROTATION, targetState);
-                    world.setBlockState(targetPos, newState);
-                    world.updateNeighbor(targetPos, newState.getBlock(), targetPos);
-                    world.updateComparators(targetPos, newState.getBlock());
+                    world.setBlockAndUpdate(targetPos, newState);
+                    world.neighborChanged(targetPos, newState.getBlock(), targetPos);
+                    world.updateNeighbourForOutputSignal(targetPos, newState.getBlock());
                 }
-                return ActionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
 
-        return super.useOnBlock(context);
+        return super.useOn(context);
     }
 
-    public static boolean canRotate(DynamicRegistryManager manager, BlockState targetState) {
+    public static boolean canRotate(RegistryAccess manager, BlockState targetState) {
         // blocks in the deny list cannot be rotated
-        if (targetState.isIn(KlaxonBlockTags.WRENCH_INTERACTION_GENERAL_DENYLIST)) {
+        if (targetState.is(KlaxonBlockTags.WRENCH_INTERACTION_GENERAL_DENYLIST)) {
             return false;
         }
 
@@ -153,37 +154,37 @@ public class WrenchItem extends MiningToolItem {
         return false;
     }
 
-    public static boolean allowDefaultRotationBehavior(DynamicRegistryManager manager, BlockState targetState) {
+    public static boolean allowDefaultRotationBehavior(RegistryAccess manager, BlockState targetState) {
         return !(targetState.getBlock() instanceof Wrenchable) && canRotate(manager, targetState);
     }
 
-    public static boolean canPickup(BlockState targetState, BlockPos targetPos, World world, @Nullable PlayerEntity player, ItemStack wrenchStack) {
+    public static boolean canPickup(BlockState targetState, BlockPos targetPos, Level world, @Nullable Player player, ItemStack wrenchStack) {
         // if the state is in the denylist, fail pickup
-        if (targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST)) {
+        if (targetState.is(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST)) {
             return false;
         }
 
         // if we have a player and it's not sneaking, fail pickup
-        if (player != null && !player.isSneaking()) {
+        if (player != null && !player.isShiftKeyDown()) {
             return false;
         }
 
         // if the state isn't in the allowlist, fail pickup
-        if (!targetState.isIn(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST)) {
+        if (!targetState.is(KlaxonBlockTags.WRENCH_PICKUP_ALLOWLIST)) {
             return false;
         }
 
-        return player == null || PermissionsHelper.canModifyWorld(player) || wrenchStack.canBreak(new CachedBlockPosition(world, targetPos, false));
+        return player == null || PermissionsHelper.canModifyWorld(player) || wrenchStack.canBreakBlockInAdventureMode(new BlockInWorld(world, targetPos, false));
     }
 
-    public enum UsageType implements StringIdentifiable {
+    public enum UsageType implements StringRepresentable {
         ROTATION,
         PICKUP;
 
-        public static Codec<UsageType> CODEC = StringIdentifiable.createCodec(UsageType::values);
+        public static Codec<UsageType> CODEC = StringRepresentable.fromEnum(UsageType::values);
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return toString().toLowerCase();
         }
     }

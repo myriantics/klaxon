@@ -1,48 +1,48 @@
 package net.myriantics.klaxon.registry.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 public abstract class KlaxonToolMaterials {
-    public static final ToolMaterial STEEL = registerToolMaterial(3200, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS));
-    public static final ToolMaterial STEEL_PLATE = registerToolMaterial(3200, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES));
-    public static final ToolMaterial STEEL_NUGGET = registerToolMaterial(640, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.fromTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS));
+    public static final Tier STEEL = registerToolMaterial(3200, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS));
+    public static final Tier STEEL_PLATE = registerToolMaterial(3200, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES));
+    public static final Tier STEEL_NUGGET = registerToolMaterial(640, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS));
 
-    private static ToolMaterial registerToolMaterial(
+    private static Tier registerToolMaterial(
             int durability,
             float miningSpeedMultiplier,
             float attackDamage,
             TagKey<Block> inverseTag,
             int enchantability,
             Ingredient repairIngredient) {
-        return new ToolMaterial() {
+        return new Tier() {
             @Override
-            public int getDurability() {
+            public int getUses() {
                 return durability;
             }
 
             @Override
-            public float getMiningSpeedMultiplier() {
+            public float getSpeed() {
                 return miningSpeedMultiplier;
             }
 
             @Override
-            public float getAttackDamage() {
+            public float getAttackDamageBonus() {
                 return attackDamage;
             }
 
             @Override
-            public TagKey<Block> getInverseTag() {
+            public TagKey<Block> getIncorrectBlocksForDrops() {
                 return inverseTag;
             }
 
             @Override
-            public int getEnchantability() {
+            public int getEnchantmentValue() {
                 return enchantability;
             }
 

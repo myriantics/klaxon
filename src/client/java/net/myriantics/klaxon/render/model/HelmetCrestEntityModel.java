@@ -1,14 +1,20 @@
 package net.myriantics.klaxon.render.model;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.AnimalModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.world.entity.LivingEntity;
 import net.myriantics.klaxon.registry.KlaxonEntityModelPartNames;
 
-public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<T> {
+public class HelmetCrestEntityModel<T extends LivingEntity> extends AgeableListModel<T> {
 
     public final ImmutableList<ModelPart> parts;
 
@@ -25,21 +31,21 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
     }
 
     @Override
-    public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        Dilation dilation = Dilation.NONE;
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        CubeDeformation dilation = CubeDeformation.NONE;
         // go go gadget guess and check in spectator
         // magic numbers go brrr
         // also they're the '99s to stop z fighting
-        ModelTransform transform = ModelTransform.pivot(0f, 9.201f, -2.999f);
+        PartPose transform = PartPose.offset(0f, 9.201f, -2.999f);
 
         // init builder for dyeable crest parts
-        ModelPartBuilder dyeableCrestBuilder = ModelPartBuilder.create();
+        CubeListBuilder dyeableCrestBuilder = CubeListBuilder.create();
 
         // dimensions for upper crest
         final float crestUpperX = 2f;
@@ -48,8 +54,8 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add upper crest to builder
         dyeableCrestBuilder
-                .uv(0, 0)
-                .cuboid(
+                .texOffs(0, 0)
+                .addBox(
                         -(crestUpperX / 2), 0f, 0f,
                         crestUpperX, crestUpperY, crestUpperZ,
                         dilation
@@ -62,22 +68,22 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add back crest to builder
         dyeableCrestBuilder
-                .uv(0, 0)
-                .cuboid(
+                .texOffs(0, 0)
+                .addBox(
                         -(crestBackX / 2), -crestBackY, crestUpperZ - crestBackZ,
                         crestBackX, crestBackY, crestBackZ,
                         dilation
                 );
 
         // commit the dyed crest segments to the model part data
-        modelPartData.addChild(
+        modelPartData.addOrReplaceChild(
                 KlaxonEntityModelPartNames.HELMET_CREST_DYEABLE,
                 dyeableCrestBuilder,
                 transform
         );
 
         // init the builder for the non dyed crest segments
-        ModelPartBuilder staticCrestSupportBuilder = ModelPartBuilder.create();
+        CubeListBuilder staticCrestSupportBuilder = CubeListBuilder.create();
 
         // dimensions for upper crest base
         final float crestBaseUpperX = 4f;
@@ -86,8 +92,8 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add upper crest base to crest support builder
         staticCrestSupportBuilder
-                .uv(0, 22)
-                .cuboid(
+                .texOffs(0, 22)
+                .addBox(
                         -(crestBaseUpperX / 2), -crestBaseUpperY, 0f,
                         crestBaseUpperX, crestBaseUpperY, crestBaseUpperZ,
                         dilation
@@ -100,8 +106,8 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add back crest base to crest support builder
         staticCrestSupportBuilder
-                .uv(17, 0)
-                .cuboid(
+                .texOffs(17, 0)
+                .addBox(
                         -(crestBaseBackX / 2), -crestBaseBackY, crestUpperZ - crestBackZ - crestBaseBackZ,
                         crestBaseBackX, crestBaseBackY, crestBaseBackZ,
                         dilation
@@ -114,8 +120,8 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add upper crest support to crest support builder
         staticCrestSupportBuilder
-                .uv(11, 16)
-                .cuboid(
+                .texOffs(11, 16)
+                .addBox(
                         -(crestUpperSupportX / 2), -(crestBaseUpperY + crestUpperSupportY), 0f,
                         crestUpperSupportX, crestUpperSupportY, crestUpperSupportZ,
                         dilation
@@ -128,8 +134,8 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add edge crest support to crest support builder
         staticCrestSupportBuilder
-                .uv(18, 22)
-                .cuboid(
+                .texOffs(18, 22)
+                .addBox(
                         -(crestEdgeSupportX / 2), -crestEdgeSupportY, crestBaseUpperZ - crestEdgeSupportZ,
                         crestEdgeSupportX, crestEdgeSupportY, crestEdgeSupportZ,
                         dilation
@@ -142,41 +148,41 @@ public class HelmetCrestEntityModel<T extends LivingEntity> extends AnimalModel<
 
         // add back crest support to crest support builder
         staticCrestSupportBuilder
-                .uv(0, 16)
-                .cuboid(
+                .texOffs(0, 16)
+                .addBox(
                         -(crestBackSupportX / 2), -crestBaseBackY, crestUpperZ - crestBackZ - crestBaseBackZ - crestBackSupportZ,
                         crestBackSupportX, crestBackSupportY, crestBackSupportZ,
                         dilation
                 );
 
         // commit the static crest supports to the model part data
-        modelPartData.addChild(
+        modelPartData.addOrReplaceChild(
                 KlaxonEntityModelPartNames.HELMET_CREST_STATIC_SUPPORT,
                 staticCrestSupportBuilder,
                 transform
         );
 
-        return TexturedModelData.of(modelData, 32, 32);
+        return LayerDefinition.create(modelData, 32, 32);
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
-        matrices.push();
+    public void renderToBuffer(PoseStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+        matrices.pushPose();
 
         this.dyeableCrest.render(matrices, vertices, light, overlay, color);
         this.staticCrestSupports.render(matrices, vertices, light, overlay);
-        matrices.pop();
+        matrices.popPose();
     }
 
     @Override
-    protected Iterable<ModelPart> getHeadParts() {
+    protected Iterable<ModelPart> headParts() {
         // probably good practice to still have this return something in case something uses it
         // even though it's not used by me for rendering
         return this.parts;
     }
 
     @Override
-    protected Iterable<ModelPart> getBodyParts() {
+    protected Iterable<ModelPart> bodyParts() {
         return ImmutableList.of();
     }
 }

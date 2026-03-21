@@ -2,52 +2,52 @@ package net.myriantics.klaxon.advancement.criterion.grapple_winch;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancement.AdvancementCriterion;
-import net.minecraft.advancement.criterion.AbstractCriterion;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.predicate.entity.LootContextPredicate;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 
 import java.util.Optional;
 
-public class EntityGrappleCriterion extends AbstractCriterion<EntityGrappleCriterion.Conditions> {
+public class EntityGrappleCriterion extends SimpleCriterionTrigger<EntityGrappleCriterion.Conditions> {
 
     @Override
-    public Codec<Conditions> getConditionsCodec() {
+    public Codec<Conditions> codec() {
         return Conditions.CODEC;
     }
 
-    public void trigger(ServerPlayerEntity serverPlayer, Entity grappledEntity) {
+    public void trigger(ServerPlayer serverPlayer, Entity grappledEntity) {
         this.trigger(serverPlayer, (conditions) -> conditions.test(serverPlayer, grappledEntity));
     }
 
-    public record Conditions(Optional<LootContextPredicate> player, Optional<EntityPredicate> entityPredicate) implements AbstractCriterion.Conditions {
+    public record Conditions(Optional<ContextAwarePredicate> player, Optional<EntityPredicate> entityPredicate) implements SimpleCriterionTrigger.SimpleInstance {
         public static final Codec<EntityGrappleCriterion.Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(Conditions::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Conditions::player),
                 EntityPredicate.CODEC.optionalFieldOf("entity_predicate").forGetter(Conditions::entityPredicate)
                 ).apply(instance, Conditions::new)
         );
 
-        public static AdvancementCriterion<Conditions> create(TagKey<EntityType<?>> tagKey) {
-            return KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.create(new Conditions(
+        public static Criterion<Conditions> create(TagKey<EntityType<?>> tagKey) {
+            return KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.createCriterion(new Conditions(
                     Optional.empty(),
-                    Optional.of(new EntityPredicate.Builder().type(tagKey).build())
+                    Optional.of(new EntityPredicate.Builder().of(tagKey).build())
             ));
         }
 
-        public static AdvancementCriterion<Conditions> create(EntityType<?> type) {
-            return KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.create(new Conditions(
+        public static Criterion<Conditions> create(EntityType<?> type) {
+            return KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.createCriterion(new Conditions(
                     Optional.empty(),
-                    Optional.of(new EntityPredicate.Builder().type(type).build())
+                    Optional.of(new EntityPredicate.Builder().of(type).build())
             ));
         }
 
-        boolean test(ServerPlayerEntity serverPlayer, Entity grappledEntity) {
-            return entityPredicate.isEmpty() || entityPredicate.get().test(serverPlayer, grappledEntity);
+        boolean test(ServerPlayer serverPlayer, Entity grappledEntity) {
+            return entityPredicate.isEmpty() || entityPredicate.get().matches(serverPlayer, grappledEntity);
         }
     }
 }

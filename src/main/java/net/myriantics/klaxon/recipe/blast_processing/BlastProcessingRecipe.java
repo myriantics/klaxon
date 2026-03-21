@@ -1,10 +1,13 @@
 package net.myriantics.klaxon.recipe.blast_processing;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.*;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
@@ -26,16 +29,16 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
     }
 
     @Override
-    public boolean matches(BlastProcessingRecipeInput inventory, World world) {
-        return ingredientItem.test(inventory.getStackInSlot(INGREDIENT_INDEX));
+    public boolean matches(BlastProcessingRecipeInput inventory, Level world) {
+        return ingredientItem.test(inventory.getItem(INGREDIENT_INDEX));
     }
 
     @Override
-    public ItemStack craft(BlastProcessingRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack assemble(BlastProcessingRecipeInput input, HolderLookup.Provider lookup) {
         return ItemStack.EMPTY;
     }
 
-    public ItemStack[] craft(BlastProcessingRecipeInput input, RegistryWrapper.WrapperLookup lookup, Random random) {
+    public ItemStack[] craft(BlastProcessingRecipeInput input, HolderLookup.Provider lookup, RandomSource random) {
         double explosionPower = input.getPowerData().explosionPower();
 
         // check if explosion power exists and is within bounds
@@ -47,12 +50,12 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
         return ItemStack.EMPTY;
     }
 
@@ -78,7 +81,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
     }
 
     @Override
-    public ItemStack createIcon() {
+    public ItemStack getToastSymbol() {
         return new ItemStack(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
     }
 

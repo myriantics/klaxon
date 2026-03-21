@@ -1,18 +1,17 @@
 package net.myriantics.klaxon.datagen.recipe;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.myriantics.klaxon.datagen.NamedIngredient;
-import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
 
-    public KlaxonOreProcessingRecipeProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
+    public KlaxonOreProcessingRecipeProvider(KlaxonRecipeProvider provider, RecipeOutput exporter) {
         super(provider, exporter);
     }
 
@@ -44,10 +43,10 @@ public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
         );
 
         // smelting
-        addBlastingAndSmeltingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(fracturedOreFragmentsItem), 1.0f, 150, null, "fractured_ores", conditions);
+        addBlastingAndSmeltingRecipe(Ingredient.of(fracturedRawOreItem), new ItemStack(fracturedOreFragmentsItem), 1.0f, 150, null, "fractured_ores", conditions);
 
         // crafting
-        add2x2PackingRecipe(Ingredient.ofItems(fracturedRawOreItem), new ItemStack(rawOreItem), null, null, conditions);
-        add2x2PackingRecipe(Ingredient.ofItems(fracturedOreFragmentsItem), new ItemStack(oreIngotItem), null, null, conditions);
+        add2x2PackingRecipe(Ingredient.of(fracturedRawOreItem), new ItemStack(rawOreItem), null, null, conditions);
+        add2x2PackingRecipe(Ingredient.of(fracturedOreFragmentsItem), new ItemStack(oreIngotItem), null, null, conditions);
     }
 }

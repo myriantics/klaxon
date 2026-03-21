@@ -1,23 +1,14 @@
 package net.myriantics.klaxon.registry.item;
 
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.trim.ArmorTrimMaterial;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Util;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.myriantics.klaxon.KlaxonCommon;
 
-import java.util.Map;
-
 public abstract class KlaxonArmorTrimMaterials {
-    public static final RegistryKey<ArmorTrimMaterial> STEEL = of("steel");
+    public static final ResourceKey<TrimMaterial> STEEL = of("steel");
 
-    private static RegistryKey<ArmorTrimMaterial> of(String id) {
-        return RegistryKey.of(RegistryKeys.TRIM_MATERIAL, KlaxonCommon.locate(id));
+    private static ResourceKey<TrimMaterial> of(String id) {
+        return ResourceKey.create(Registries.TRIM_MATERIAL, KlaxonCommon.locate(id));
     }
 }

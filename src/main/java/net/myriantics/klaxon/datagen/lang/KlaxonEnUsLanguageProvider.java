@@ -2,7 +2,7 @@ package net.myriantics.klaxon.datagen.lang;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
 import net.myriantics.klaxon.datagen.lang.providers.*;
 import net.myriantics.klaxon.datagen.lang.providers.entity.KlaxonEnUsEntityAttributeProvider;
 import net.myriantics.klaxon.datagen.lang.providers.entity.KlaxonEnUsEntityTypeLanguageProvider;
@@ -12,12 +12,12 @@ import net.myriantics.klaxon.datagen.lang.providers.tag.*;
 import java.util.concurrent.CompletableFuture;
 
 public final class KlaxonEnUsLanguageProvider extends FabricLanguageProvider {
-    public KlaxonEnUsLanguageProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+    public KlaxonEnUsLanguageProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, registryLookup);
     }
 
     @Override
-    public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder) {
+    public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder) {
         // tag translations
         new KlaxonEnUsItemTagLanguageProvider(this, translationBuilder).generate();
         new KlaxonEnUsBlockEntityTypeTagProvider(this, translationBuilder).generate();

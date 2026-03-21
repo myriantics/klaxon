@@ -2,13 +2,13 @@ package net.myriantics.klaxon.component.configuration;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,18 +17,18 @@ public record ToolUseRecipeConfigComponent(SoundEvent usageSound, boolean canCos
         this(usageSound, false);
     }
 
-    public static final ToolUseRecipeConfigComponent DEFAULT = new ToolUseRecipeConfigComponent(SoundEvents.BLOCK_STONE_BREAK);
+    public static final ToolUseRecipeConfigComponent DEFAULT = new ToolUseRecipeConfigComponent(SoundEvents.STONE_BREAK);
 
     public static final Codec<ToolUseRecipeConfigComponent> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-                SoundEvent.CODEC.fieldOf("usage_sound").forGetter(ToolUseRecipeConfigComponent::usageSound),
+                SoundEvent.DIRECT_CODEC.fieldOf("usage_sound").forGetter(ToolUseRecipeConfigComponent::usageSound),
                 Codec.BOOL.fieldOf("action_requires_recipe").forGetter(ToolUseRecipeConfigComponent::canCosmeticUse)
         ).apply(instance, ToolUseRecipeConfigComponent::new);
     });
 
-    public static final PacketCodec<RegistryByteBuf, ToolUseRecipeConfigComponent> PACKET_CODEC = PacketCodec.tuple(
-            SoundEvent.PACKET_CODEC, ToolUseRecipeConfigComponent::usageSound,
-            PacketCodecs.BOOL, ToolUseRecipeConfigComponent::canCosmeticUse,
+    public static final StreamCodec<RegistryFriendlyByteBuf, ToolUseRecipeConfigComponent> PACKET_CODEC = StreamCodec.composite(
+            SoundEvent.DIRECT_STREAM_CODEC, ToolUseRecipeConfigComponent::usageSound,
+            ByteBufCodecs.BOOL, ToolUseRecipeConfigComponent::canCosmeticUse,
             ToolUseRecipeConfigComponent::new
     );
 
@@ -37,6 +37,6 @@ public record ToolUseRecipeConfigComponent(SoundEvent usageSound, boolean canCos
     }
 
     public void set(ItemStack stack) {
-        stack.applyComponentsFrom(ComponentMap.builder().add(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, this).build());
+        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, this).build());
     }
 }

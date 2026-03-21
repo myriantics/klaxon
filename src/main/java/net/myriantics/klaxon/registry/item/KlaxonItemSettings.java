@@ -1,35 +1,29 @@
 package net.myriantics.klaxon.registry.item;
 
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Colors;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Rarity;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Unit;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 
-import java.util.Map;
-
 public class KlaxonItemSettings {
 
-    private final Item.Settings settings;
+    private final Item.Properties settings;
 
     public KlaxonItemSettings() {
-        this.settings = new Item.Settings();
+        this.settings = new Item.Properties();
     }
 
-    public KlaxonItemSettings(Item.Settings settings) {
-        this.settings = new Item.Settings();
+    public KlaxonItemSettings(Item.Properties settings) {
+        this.settings = new Item.Properties();
     }
 
-    public <T> KlaxonItemSettings component(ComponentType<T> type, T value) {
+    public <T> KlaxonItemSettings component(DataComponentType<T> type, T value) {
         this.settings.component(type, value);
         return this;
     }
@@ -40,25 +34,25 @@ public class KlaxonItemSettings {
     }
 
     public KlaxonItemSettings rarity(Rarity rarity) {
-        this.settings.component(DataComponentTypes.RARITY, rarity);
+        this.settings.component(DataComponents.RARITY, rarity);
         return this;
     }
 
     public KlaxonItemSettings maxCountMaxDamage(int maxCount, int maxDamage) {
         this.settings.component(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE, Unit.INSTANCE);
-        this.settings.component(DataComponentTypes.MAX_DAMAGE, maxDamage);
-        this.settings.component(DataComponentTypes.DAMAGE, 0);
-        this.settings.component(DataComponentTypes.MAX_STACK_SIZE, maxCount);
+        this.settings.component(DataComponents.MAX_DAMAGE, maxDamage);
+        this.settings.component(DataComponents.DAMAGE, 0);
+        this.settings.component(DataComponents.MAX_STACK_SIZE, maxCount);
         return this;
     }
 
     public KlaxonItemSettings maxDamage(int maxDamage) {
-        this.settings.maxDamage(maxDamage);
+        this.settings.durability(maxDamage);
         return this;
     }
 
     public KlaxonItemSettings maxCount(int maxCount) {
-        this.settings.maxCount(maxCount);
+        this.settings.stacksTo(maxCount);
         return this;
     }
 
@@ -67,12 +61,12 @@ public class KlaxonItemSettings {
         return this;
     }
 
-    public KlaxonItemSettings attributeModifiers(AttributeModifiersComponent attributeModifiers) {
-        this.settings.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributeModifiers);
+    public KlaxonItemSettings attributeModifiers(ItemAttributeModifiers attributeModifiers) {
+        this.settings.component(DataComponents.ATTRIBUTE_MODIFIERS, attributeModifiers);
         return this;
     }
 
-    public KlaxonItemSettings damageTypeOverride(RegistryKey<DamageType> damageTypeKey) {
+    public KlaxonItemSettings damageTypeOverride(ResourceKey<DamageType> damageTypeKey) {
         this.settings.component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(damageTypeKey));
         return this;
     }
@@ -87,7 +81,7 @@ public class KlaxonItemSettings {
         return this;
     }
 
-    public Item.Settings getSettings() {
+    public Item.Properties getSettings() {
         return settings;
     }
 }

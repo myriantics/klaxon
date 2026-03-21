@@ -1,23 +1,24 @@
 package net.myriantics.klaxon.entity.entities.grapple_claw;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContextParameterSet;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
-import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
+import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
@@ -35,7 +36,7 @@ public abstract class GrappleClawBlockDestructionHelper {
     /**
      * Called while checking for block collision, for each currently colliding block.
      */
-    public static void onBlockPosIntersection(GrappleClawEntity grappleClaw, World world, BlockState occupiedState, BlockPos pos) {
+    public static void onBlockPosIntersection(GrappleClawEntity grappleClaw, Level world, BlockState occupiedState, BlockPos pos) {
         // make sure we're neither anchored nor removed
         if (grappleClaw.klaxon$isAnchored() || grappleClaw.isRemoved()) {
             return;
@@ -44,7 +45,7 @@ public abstract class GrappleClawBlockDestructionHelper {
         VoxelShape occupiedStateShape = occupiedState.getCollisionShape(world, pos);
 
         // make sure we actually collide with the target bounding box
-        if (occupiedStateShape.isEmpty() || !grappleClaw.getBoundingBox().intersects(occupiedStateShape.getBoundingBox().offset(pos))) {
+        if (occupiedStateShape.isEmpty() || !grappleClaw.getBoundingBox().intersects(occupiedStateShape.bounds().move(pos))) {
             return;
         }
 
@@ -52,13 +53,13 @@ public abstract class GrappleClawBlockDestructionHelper {
         boolean success = tryBreakingBlocks(grappleClaw, world, occupiedState, pos);
     }
 
-    protected static boolean tryBreakingBlocks(GrappleClawEntity grappleClaw, World world, BlockState occupiedState, BlockPos pos) {
+    protected static boolean tryBreakingBlocks(GrappleClawEntity grappleClaw, Level world, BlockState occupiedState, BlockPos pos) {
         // make sure grapple claw can break block
         if (!canBreakBlock(grappleClaw, world, occupiedState, pos)) {
             return false;
         }
 
-        PlayerEntity attachedPlayer = grappleClaw.getAttachedPlayer();
+        Player attachedPlayer = grappleClaw.getAttachedPlayer();
 
         // try to veinmine before breaking the block :)
         if (!veinmineBlocksIfValid(grappleClaw, world, occupiedState, pos, attachedPlayer)) {
@@ -67,8 +68,8 @@ public abstract class GrappleClawBlockDestructionHelper {
         return true;
     }
 
-    private static boolean veinmineBlocksIfValid(GrappleClawEntity grappleClaw, World world, BlockState originState, BlockPos originPos, PlayerEntity owner) {
-        int maxVeinminedBlocks = grappleClaw.getItemStack().getOrDefault(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT, GrappleClawComponent.DEFAULT).veinmineCap();
+    private static boolean veinmineBlocksIfValid(GrappleClawEntity grappleClaw, Level world, BlockState originState, BlockPos originPos, Player owner) {
+        int maxVeinminedBlocks = grappleClaw.getPickupItemStackOrigin().getOrDefault(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT, GrappleClawComponent.DEFAULT).veinmineCap();
 
         // don't veinmine anything if the source block is not veinmineable
         // also declare failure if radius is 0
@@ -76,14 +77,14 @@ public abstract class GrappleClawBlockDestructionHelper {
             return false;
         }
 
-        if (world.isClient) {
+        if (world.isClientSide) {
             return true;
         }
 
-        Predicate<BlockState> veinminePredicate = (state) -> state.isOf(originState.getBlock());
+        Predicate<BlockState> veinminePredicate = (state) -> state.is(originState.getBlock());
 
         // check for any matching veinmine groups
-        for (VeinmineGroup group : ((ServerWorld) world).getServer().getReloadableRegistries().getRegistryManager().get(KlaxonRegistryKeys.VEINMINE_GROUP)) {
+        for (VeinmineGroup group : ((ServerLevel) world).getServer().reloadableRegistries().get().registryOrThrow(KlaxonRegistryKeys.VEINMINE_GROUP)) {
             if (group.ingredient().test(originState)) {
                 veinminePredicate = group.ingredient();
                 break;
@@ -91,9 +92,9 @@ public abstract class GrappleClawBlockDestructionHelper {
         }
 
         // init loot context
-        LootContextParameterSet.Builder lootContextBuilder = new LootContextParameterSet.Builder((ServerWorld) world)
-                .add(LootContextParameters.ORIGIN, grappleClaw.getEyePos())
-                .add(LootContextParameters.TOOL, grappleClaw.getItemStack());
+        LootParams.Builder lootContextBuilder = new LootParams.Builder((ServerLevel) world)
+                .withParameter(LootContextParams.ORIGIN, grappleClaw.getEyePosition())
+                .withParameter(LootContextParams.TOOL, grappleClaw.getPickupItemStackOrigin());
 
         // Output stacks to be merged and output at the grapple winch's position
         ArrayList<ItemStack> outputStacks = new ArrayList<>();
@@ -113,11 +114,11 @@ public abstract class GrappleClawBlockDestructionHelper {
 
                 if (veinminePredicate.test(targetState)) {
                     // condense dropped stacks so we don't get 5 billion item entities
-                    for (ItemStack droppedStack : world.getBlockState(targetPos).getDroppedStacks(lootContextBuilder)) {
+                    for (ItemStack droppedStack : world.getBlockState(targetPos).getDrops(lootContextBuilder)) {
                         KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);
                     }
 
-                    world.breakBlock(targetPos, false, owner);
+                    world.destroyBlock(targetPos, false, owner);
 
                     // cancel operation if we've exceeded the max blocks broken
                     if (blocksBroken++ > maxVeinminedBlocks) {
@@ -126,7 +127,7 @@ public abstract class GrappleClawBlockDestructionHelper {
 
                     // add the next round of target positions
                     for (Offset offset : Offset.values()) {
-                        newTargetPositions.add(targetPos.add(offset.getOffsetVector()));
+                        newTargetPositions.add(targetPos.offset(offset.getOffsetVector()));
                     }
                 }
             }
@@ -137,13 +138,13 @@ public abstract class GrappleClawBlockDestructionHelper {
 
         // drop all of the output stacks at the grapple claw's location, ready to be dragged
         for (ItemStack stack : outputStacks) {
-            grappleClaw.draggedItemsContainer.add(grappleClaw.dropStack(stack));
+            grappleClaw.draggedItemsContainer.add(grappleClaw.spawnAtLocation(stack));
         }
 
         // pop advancement trigger and increase mined stat
-        if (owner instanceof ServerPlayerEntity serverPlayer) {
+        if (owner instanceof ServerPlayer serverPlayer) {
             KlaxonAdvancementTriggers.triggerGrappleWinchVeinMine(serverPlayer, originState);
-            serverPlayer.increaseStat(Stats.MINED.getOrCreateStat(originState.getBlock()), blocksBroken);
+            serverPlayer.awardStat(Stats.BLOCK_MINED.get(originState.getBlock()), blocksBroken);
         }
 
         return true;
@@ -155,30 +156,30 @@ public abstract class GrappleClawBlockDestructionHelper {
      * @param targetPos - block to break
      * @param owner - entity to credit block break to
      */
-    private static void breakBlock(GrappleClawEntity grappleClaw, World world, BlockState targetState, BlockPos targetPos, @Nullable Entity owner) {
+    private static void breakBlock(GrappleClawEntity grappleClaw, Level world, BlockState targetState, BlockPos targetPos, @Nullable Entity owner) {
         // don't break blocks on clientside
-        if (!world.isClient()) {
-            world.breakBlock(targetPos, true, owner);
+        if (!world.isClientSide()) {
+            world.destroyBlock(targetPos, true, owner);
 
-            if (owner instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.incrementStat(Stats.MINED.getOrCreateStat(targetState.getBlock()));
+            if (owner instanceof ServerPlayer serverPlayer) {
+                serverPlayer.awardStat(Stats.BLOCK_MINED.get(targetState.getBlock()));
             }
         }
     }
 
-    private static boolean canVeinmineBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos, PlayerEntity attachedPlayer) {
+    private static boolean canVeinmineBlock(GrappleClawEntity grappleClaw, Level world, BlockState state, BlockPos pos, Player attachedPlayer) {
         if (attachedPlayer == null) {
             return false;
         }
         GrappleWinchConnection connection = GrappleWinchConnectionManager.get(world).fromHook(grappleClaw);
-        return connection != null && connection.isRetracting() && state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE);
+        return connection != null && connection.isRetracting() && state.is(KlaxonBlockTags.GRAPPLE_CLAW_VEINMINEABLE);
     }
 
-    private static boolean canBreakBlock(GrappleClawEntity grappleClaw, World world, BlockState state, BlockPos pos) {
+    private static boolean canBreakBlock(GrappleClawEntity grappleClaw, Level world, BlockState state, BlockPos pos) {
         if (grappleClaw.hasHookedEntity()) {
             return false;
         }
-        return grappleClaw.canModifyAt(world, pos) && (state.isIn(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.isReplaceable() || state.getHardness(world, pos) == 0);
+        return grappleClaw.mayInteract(world, pos) && (state.is(KlaxonBlockTags.GRAPPLE_CLAW_BREAKABLE) || state.canBeReplaced() || state.getDestroySpeed(world, pos) == 0);
     }
 
     /**
@@ -189,14 +190,14 @@ public abstract class GrappleClawBlockDestructionHelper {
      * @param destructive - Used to determine if this raycast is being used for movement calculations & destruction OR collision checking when de-anchoring. It is intended that this parameter not collide with breakable blocks - as the grapple claw will penetrate through them once de-anchored.
      * @return
      */
-    public static BlockHitResult raycast(GrappleClawEntity grappleClaw, Vec3d start, Vec3d end, boolean destructive) {
-        World world = grappleClaw.getWorld();
+    public static BlockHitResult raycast(GrappleClawEntity grappleClaw, Vec3 start, Vec3 end, boolean destructive) {
+        Level world = grappleClaw.level();
 
-        return BlockView.raycast(start, end, null, (s, blockPos) -> {
-            BlockState targetState = grappleClaw.getWorld().getBlockState(blockPos);
+        return BlockGetter.traverseBlocks(start, end, null, (s, blockPos) -> {
+            BlockState targetState = grappleClaw.level().getBlockState(blockPos);
             VoxelShape shape = targetState.getCollisionShape(world, blockPos);
 
-            BlockHitResult hitResult = world.raycastBlock(start, end, blockPos, shape, targetState);
+            BlockHitResult hitResult = world.clipWithInteractionOverride(start, end, blockPos, shape, targetState);
 
             // if we didn't collide with the block, cancel operation
             if (hitResult == null) {
@@ -217,8 +218,8 @@ public abstract class GrappleClawBlockDestructionHelper {
 
             return hitResult;
         }, (s) -> {
-            Vec3d vec = start.subtract(end);
-            return BlockHitResult.createMissed(end, Direction.getFacing(vec.getX(), vec.getY(), vec.getZ()), BlockPos.ofFloored(end));
+            Vec3 vec = start.subtract(end);
+            return BlockHitResult.miss(end, Direction.getNearest(vec.x(), vec.y(), vec.z()), BlockPos.containing(end));
         });
     }
 }

@@ -1,27 +1,27 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.FireworkExplosionComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ItemExplosiveCatalystBehavior;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.FireworkExplosion;
+import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 
 public class FireworkStarExplosiveCatalystBehavior extends ItemExplosiveCatalystBehavior {
-    public FireworkStarExplosiveCatalystBehavior(Identifier id) {
+    public FireworkStarExplosiveCatalystBehavior(ResourceLocation id) {
         super(id);
     }
 
     @Override
-    public ExplosiveCatalystData transformExplosiveCatalystData(World world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
-        ItemStack stack = blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+    public ExplosiveCatalystData transformExplosiveCatalystData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
+        ItemStack stack = blastProcessor.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
 
-        if (stack.get(DataComponentTypes.FIREWORK_EXPLOSION) instanceof FireworkExplosionComponent component)  {
+        if (stack.get(DataComponents.FIREWORK_EXPLOSION) instanceof FireworkExplosion component)  {
             boolean producesFire = data.producesFire();
             double explosionPower = data.explosionPower();
 

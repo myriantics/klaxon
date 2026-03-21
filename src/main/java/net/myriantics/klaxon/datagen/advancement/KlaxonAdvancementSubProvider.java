@@ -1,141 +1,141 @@
 package net.myriantics.klaxon.datagen.advancement;
 
-import net.minecraft.advancement.*;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.myriantics.klaxon.KlaxonCommon;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 public abstract class KlaxonAdvancementSubProvider {
-    protected final Consumer<AdvancementEntry> consumer;
+    protected final Consumer<AdvancementHolder> consumer;
     protected final String path;
 
-    public KlaxonAdvancementSubProvider(Consumer<AdvancementEntry> consumer, String path) {
+    public KlaxonAdvancementSubProvider(Consumer<AdvancementHolder> consumer, String path) {
         this.consumer = consumer;
         this.path = path;
     }
 
-    protected abstract AdvancementEntry generateAdvancements();
+    protected abstract AdvancementHolder generateAdvancements();
 
-    protected AdvancementEntry addTask(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addTask(AdvancementHolder parent, String name, ItemLike display, Criterion<?> criterion) {
         return addTask(parent, name, display, false, criterion, null);
     }
 
-    protected AdvancementEntry addTask(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addTask(AdvancementHolder parent, String name, ItemStack display, Criterion<?> criterion) {
         return addTask(parent, name, display, false, criterion, null);
     }
 
-    protected AdvancementEntry addGoal(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addGoal(AdvancementHolder parent, String name, ItemLike display, Criterion<?> criterion) {
         return addGoal(parent, name, display, false, criterion, null);
     }
 
-    protected AdvancementEntry addGoal(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addGoal(AdvancementHolder parent, String name, ItemStack display, Criterion<?> criterion) {
         return addGoal(parent, name, display, false, criterion, null);
     }
 
-    protected AdvancementEntry addChallenge(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addChallenge(AdvancementHolder parent, String name, ItemStack display, Criterion<?> criterion) {
         return addChallenge(parent, name, display, false, criterion, null);
     }
 
-    protected AdvancementEntry addChallenge(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addChallenge(AdvancementHolder parent, String name, ItemLike display, Criterion<?> criterion) {
         return addChallenge(parent, name, display, false, criterion, null);
     }
 
-    protected AdvancementEntry addHiddenTask(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addHiddenTask(AdvancementHolder parent, String name, ItemLike display, Criterion<?> criterion) {
         return addTask(parent, name, display, true, criterion, null);
     }
 
-    protected AdvancementEntry addHiddenTask(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addHiddenTask(AdvancementHolder parent, String name, ItemStack display, Criterion<?> criterion) {
         return addTask(parent, name, display, true, criterion, null);
     }
 
-    protected AdvancementEntry addHiddenGoal(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addHiddenGoal(AdvancementHolder parent, String name, ItemLike display, Criterion<?> criterion) {
         return addGoal(parent, name, display, true, criterion, null);
     }
 
-    protected AdvancementEntry addHiddenGoal(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addHiddenGoal(AdvancementHolder parent, String name, ItemStack display, Criterion<?> criterion) {
         return addGoal(parent, name, display, true, criterion, null);
     }
 
-    protected AdvancementEntry addHiddenChallenge(AdvancementEntry parent, String name, ItemStack display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addHiddenChallenge(AdvancementHolder parent, String name, ItemStack display, Criterion<?> criterion) {
         return addChallenge(parent, name, display, true, criterion, null);
     }
 
-    protected AdvancementEntry addHiddenChallenge(AdvancementEntry parent, String name, ItemConvertible display, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addHiddenChallenge(AdvancementHolder parent, String name, ItemLike display, Criterion<?> criterion) {
         return addChallenge(parent, name, display, true, criterion, null);
     }
 
-    protected AdvancementEntry addTask(AdvancementEntry parent, String name, ItemConvertible display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
-        return addAdvancement(parent, name, display, AdvancementFrame.TASK, hidden, criterion, rewards);
+    protected AdvancementHolder addTask(AdvancementHolder parent, String name, ItemLike display, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementType.TASK, hidden, criterion, rewards);
     }
 
-    protected AdvancementEntry addTask(AdvancementEntry parent, String name, ItemStack display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
-        return addAdvancement(parent, name, display, AdvancementFrame.TASK, hidden, criterion, rewards);
+    protected AdvancementHolder addTask(AdvancementHolder parent, String name, ItemStack display, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementType.TASK, hidden, criterion, rewards);
     }
 
-    protected AdvancementEntry addGoal(AdvancementEntry parent, String name, ItemConvertible display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
-        return addAdvancement(parent, name, display, AdvancementFrame.GOAL, hidden, criterion, rewards);
+    protected AdvancementHolder addGoal(AdvancementHolder parent, String name, ItemLike display, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementType.GOAL, hidden, criterion, rewards);
     }
 
-    protected AdvancementEntry addGoal(AdvancementEntry parent, String name, ItemStack display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
-        return addAdvancement(parent, name, display, AdvancementFrame.GOAL, hidden, criterion, rewards);
+    protected AdvancementHolder addGoal(AdvancementHolder parent, String name, ItemStack display, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementType.GOAL, hidden, criterion, rewards);
     }
 
-    protected AdvancementEntry addChallenge(AdvancementEntry parent, String name, ItemConvertible display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
-        return addAdvancement(parent, name, display, AdvancementFrame.CHALLENGE, hidden, criterion, rewards);
+    protected AdvancementHolder addChallenge(AdvancementHolder parent, String name, ItemLike display, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementType.CHALLENGE, hidden, criterion, rewards);
     }
 
-    protected AdvancementEntry addChallenge(AdvancementEntry parent, String name, ItemStack display, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
-        return addAdvancement(parent, name, display, AdvancementFrame.CHALLENGE, hidden, criterion, rewards);
+    protected AdvancementHolder addChallenge(AdvancementHolder parent, String name, ItemStack display, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        return addAdvancement(parent, name, display, AdvancementType.CHALLENGE, hidden, criterion, rewards);
     }
 
 
-    protected AdvancementEntry addRootAdvancement(ItemConvertible display, AdvancementFrame frame, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addRootAdvancement(ItemLike display, AdvancementType frame, Criterion<?> criterion) {
         return addAdvancement(null, "root", KlaxonCommon.locate("textures/gui/advancements/backgrounds/" + path + ".png"), display, frame, false, false, false, criterion, null);
     }
 
-    protected AdvancementEntry addRootAdvancement(ItemStack display, AdvancementFrame frame, AdvancementCriterion<?> criterion) {
+    protected AdvancementHolder addRootAdvancement(ItemStack display, AdvancementType frame, Criterion<?> criterion) {
         return addAdvancement(null, "root", KlaxonCommon.locate("textures/gui/advancements/backgrounds/" + path + ".png"), display, frame, false, false, false, criterion, null);
     }
 
-    protected AdvancementEntry addAdvancement(@Nullable AdvancementEntry parent, String name, ItemConvertible display, AdvancementFrame frame, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+    protected AdvancementHolder addAdvancement(@Nullable AdvancementHolder parent, String name, ItemLike display, AdvancementType frame, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
         return addAdvancement(parent, name, null, display, frame, true, true, hidden, criterion, rewards);
     }
 
-    protected AdvancementEntry addAdvancement(@Nullable AdvancementEntry parent, String name, ItemStack display, AdvancementFrame frame, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+    protected AdvancementHolder addAdvancement(@Nullable AdvancementHolder parent, String name, ItemStack display, AdvancementType frame, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
         return addAdvancement(parent, name, null, display, frame, true, true, hidden, criterion, rewards);
     }
 
-    protected AdvancementEntry addAdvancement(@Nullable AdvancementEntry parent, String name, Identifier backgroundId, ItemConvertible display, AdvancementFrame frame, boolean showToast, boolean showToChat, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+    protected AdvancementHolder addAdvancement(@Nullable AdvancementHolder parent, String name, ResourceLocation backgroundId, ItemLike display, AdvancementType frame, boolean showToast, boolean showToChat, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
         return this.addAdvancement(parent, name, backgroundId, new ItemStack(display), frame, showToast, showToChat, hidden, criterion, rewards);
     }
 
-    protected AdvancementEntry addAdvancement(@Nullable AdvancementEntry parent, String name, Identifier backgroundId, ItemStack display, AdvancementFrame frame, boolean showToast, boolean showToChat, boolean hidden, AdvancementCriterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
-        Advancement.Builder builder = Advancement.Builder.create();
+    protected AdvancementHolder addAdvancement(@Nullable AdvancementHolder parent, String name, ResourceLocation backgroundId, ItemStack display, AdvancementType frame, boolean showToast, boolean showToChat, boolean hidden, Criterion<?> criterion, @Nullable AdvancementRewards.Builder rewards) {
+        Advancement.Builder builder = Advancement.Builder.advancement();
         if (parent != null) {
             builder.parent(parent);
         }
 
         builder.display(
                         display,
-                        Text.translatable("advancements.klaxon." + path + "." + name + ".title"),
-                        Text.translatable("advancements.klaxon." + path + "." + name + ".description"),
+                        Component.translatable("advancements.klaxon." + path + "." + name + ".title"),
+                        Component.translatable("advancements.klaxon." + path + "." + name + ".description"),
                         backgroundId,
                         frame,
                         showToast,
                         showToChat,
                         hidden
                 )
-                .criterion(name, criterion);
+                .addCriterion(name, criterion);
 
         if (rewards != null) {
             builder.rewards(rewards);
         }
 
-        return builder.build(consumer, KlaxonCommon.locate(path + "/" + name).toString());
+        return builder.save(consumer, KlaxonCommon.locate(path + "/" + name).toString());
     }
 }

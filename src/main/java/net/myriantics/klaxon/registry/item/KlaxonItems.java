@@ -1,14 +1,12 @@
 package net.myriantics.klaxon.registry.item;
 
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Rarity;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
@@ -16,12 +14,9 @@ import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
-import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
-import net.myriantics.klaxon.registry.dynamic.KlaxonEnchantments;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
 
 public abstract class KlaxonItems extends KlaxonBlockItems {
@@ -31,7 +26,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     // tools
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer",
             new HammerItem(KlaxonToolMaterials.STEEL, new KlaxonItemSettings()
-                    .attributeModifiers(HammerItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
+                    .attributeModifiers(HammerItem.createAttributes(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
                     .damageTypeOverride(KlaxonDamageTypes.HAMMER_BONKING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING))
@@ -46,14 +41,14 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             ));
     public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
             new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
-                    .attributeModifiers(CleaverItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
+                    .attributeModifiers(CleaverItem.createAttributes(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .damageTypeOverride(KlaxonDamageTypes.CLEAVING)
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), ShieldBreachingComponent.Condition.CRITICAL))
                     .getSettings()
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL, new KlaxonItemSettings()
-                    .attributeModifiers(WrenchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL, 0f, -2.6f))
+                    .attributeModifiers(WrenchItem.createAttributes(KlaxonToolMaterials.STEEL, 0f, -2.6f))
                     .damageTypeOverride(KlaxonDamageTypes.WRENCH_OVERTUNING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
                     .getSettings()
@@ -73,7 +68,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             ));
     public static final Item GRAPPLE_WINCH = registerItem("grapple_winch",
             new GrappleWinchItem(new KlaxonItemSettings()
-                    .component(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT)
+                    .component(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY)
                     .maxCount(1)
                     .damageTypeOverride(KlaxonDamageTypes.BLUDGEONING)
                     .attributeModifiers(GrappleWinchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 0, -3.2f))
@@ -137,16 +132,16 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Item COPPER_WIRE = registerReallySimpleItem("copper_wire");
 
     private static Item registerItem(String name, Item item) {
-        return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);
+        return Registry.register(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), item);
     }
 
     private static Item registerReallySimpleItem(String name) {
-        return registerSimpleItem(name, new Item(new Item.Settings()));
+        return registerSimpleItem(name, new Item(new Item.Properties()));
     }
 
     private static Item registerSimpleItem(String name, Item item) {
         simpleItems.add(item);
-        return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), item);
+        return Registry.register(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), item);
     }
 
     public static void init() {

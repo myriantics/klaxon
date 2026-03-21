@@ -1,20 +1,18 @@
 package net.myriantics.klaxon.mechanics.grapple_winch.manager;
 
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
@@ -38,19 +36,19 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
 
     private int currentConnectionId = 0;
 
-    public ServerGrappleWinchConnectionManager(ServerWorld world) {
+    public ServerGrappleWinchConnectionManager(ServerLevel world) {
         super(world);
     }
 
     @Override
-    public ServerWorld getWorld() {
-        return (ServerWorld) super.getWorld();
+    public ServerLevel getWorld() {
+        return (ServerLevel) super.getWorld();
     }
 
     @Override
-    public @Nullable ServerGrappleWinchConnection fromPlayer(PlayerEntity player) {
+    public @Nullable ServerGrappleWinchConnection fromPlayer(Player player) {
         for (ServerGrappleWinchConnection connection : this.connectionId2Connection.values()) {
-            if (connection.playerUUID.equals(player.getUuid()) && !connection.isDormant()) {
+            if (connection.playerUUID.equals(player.getUUID()) && !connection.isDormant()) {
                 return connection;
             }
         }
@@ -69,7 +67,7 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
     @Override
     public @Nullable ServerGrappleWinchConnection fromHook(GrapplingHook hook) {
         for (ServerGrappleWinchConnection connection : this.connectionId2Connection.values()) {
-            if (connection.hookUUID.equals(hook.klaxon$asEntity().getUuid()) && !connection.isDormant()) {
+            if (connection.hookUUID.equals(hook.klaxon$asEntity().getUUID()) && !connection.isDormant()) {
                 return connection;
             }
         }
@@ -77,7 +75,7 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
         return null;
     }
 
-    public void connect(ServerPlayerEntity serverPlayer, GrapplingHook hook) {
+    public void connect(ServerPlayer serverPlayer, GrapplingHook hook) {
         ServerGrappleWinchConnection connection = new ServerGrappleWinchConnection(this, this.currentConnectionId, serverPlayer, hook);
         for (ServerGrappleWinchConnection existing : this.connectionId2Connection.values()) {
             if (existing.playerUUID.equals(connection.playerUUID) || existing.hookUUID.equals(connection.playerUUID)) {
@@ -90,14 +88,14 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
 
         // run on connect effects (mainly just setting owner)
         hook.klaxon$onConnect(serverPlayer);
-        this.markDirty();
+        this.setDirty();
     }
 
     @Override
     protected void disconnectInternal(int connectionId, CableDetachmentReason reason) {
         ServerGrappleWinchConnection connection = this.connectionId2Connection.remove(connectionId);
         if (connection != null) {
-            @Nullable ServerPlayerEntity player = connection.getPlayer();
+            @Nullable ServerPlayer player = connection.getPlayer();
 
             if (player != null) {
                 KlaxonAdvancementTriggers.triggerGrappleWinchIntentionallyDisconnectCable(
@@ -107,8 +105,8 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
                 );
 
                 ItemStack grappleWinchStack = null;
-                ItemStack mainHandStack = player.getMainHandStack();
-                ItemStack offHandStack = player.getOffHandStack();
+                ItemStack mainHandStack = player.getMainHandItem();
+                ItemStack offHandStack = player.getOffhandItem();
 
                 if (mainHandStack.getItem() instanceof GrappleWinchItem grappleWinchItem && grappleWinchItem.canSupportCable(mainHandStack)) {
                     grappleWinchStack = mainHandStack;
@@ -117,7 +115,7 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
                 }
 
                 if (grappleWinchStack != null) {
-                    grappleWinchStack.damage(
+                    grappleWinchStack.hurtAndBreak(
                             (int) (connection.getCableLength() / connection.getMaxCableLength()) * 4,
                             player,
                             grappleWinchStack == mainHandStack ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND
@@ -134,7 +132,7 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
             }
             connection.sendToTracking(new GrappleWinchConnectionDiscardPacket(connectionId, reason));
         }
-        this.markDirty();
+        this.setDirty();
     }
 
     public void tick() {
@@ -144,25 +142,25 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
         }
     }
 
-    public static PersistentState.Type<ServerGrappleWinchConnectionManager> getPersistentStateType(ServerWorld serverWorld) {
-        return new PersistentState.Type<>(
+    public static SavedData.Factory<ServerGrappleWinchConnectionManager> getPersistentStateType(ServerLevel serverWorld) {
+        return new SavedData.Factory<>(
                 () -> new ServerGrappleWinchConnectionManager(serverWorld),
                 (nbt, registryLookup) -> fromNbt(serverWorld, nbt),
                 null
         );
     }
 
-    public static String nameFor(RegistryKey<World> worldKey) {
-        Identifier id = worldKey.getValue();
+    public static String nameFor(ResourceKey<Level> worldKey) {
+        ResourceLocation id = worldKey.location();
         return id.getNamespace() + "_" + id.getPath() + "_grapple_winch_connection_manager";
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        NbtList list = new NbtList();
+    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        ListTag list = new ListTag();
 
         for (ServerGrappleWinchConnection connection : this.connectionId2Connection.values()) {
-            list.add(connection.writeNbt(new NbtCompound(), world.getRegistryManager()));
+            list.add(connection.writeNbt(new CompoundTag(), world.registryAccess()));
         }
 
         nbt.put(KlaxonNBTIds.GRAPPLE_WINCH_CONNECTIONS, list);
@@ -170,15 +168,15 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
         return nbt;
     }
 
-    public static ServerGrappleWinchConnectionManager fromNbt(ServerWorld serverWorld, NbtCompound nbt) {
+    public static ServerGrappleWinchConnectionManager fromNbt(ServerLevel serverWorld, CompoundTag nbt) {
         ServerGrappleWinchConnectionManager manager = new ServerGrappleWinchConnectionManager(serverWorld);
 
         int currentId = 0;
 
         // read all the stored connections and init the maps
-        if (nbt.get(KlaxonNBTIds.GRAPPLE_WINCH_CONNECTIONS) instanceof NbtList connections) {
-            for (NbtElement element : connections) {
-                if (element instanceof NbtCompound compound) {
+        if (nbt.get(KlaxonNBTIds.GRAPPLE_WINCH_CONNECTIONS) instanceof ListTag connections) {
+            for (Tag element : connections) {
+                if (element instanceof CompoundTag compound) {
                     ServerGrappleWinchConnection connection = ServerGrappleWinchConnection.fromNbt(manager, compound, currentId);
                     manager.connectionId2Connection.put(currentId, connection);
                     currentId++;
@@ -200,8 +198,8 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
         ServerGrappleWinchConnectionManager klaxon$getGrappleWinchConnectionManager();
     }
 
-    public static ServerGrappleWinchConnectionManager get(ServerWorld world) {
-        @Nullable ServerGrappleWinchConnectionManager manager = ((Access) world).klaxon$getGrappleWinchConnectionManager();
+    public static ServerGrappleWinchConnectionManager get(ServerLevel world) {
+        @Nullable ServerGrappleWinchConnectionManager manager = ((net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager.Access) world).klaxon$getGrappleWinchConnectionManager();
         if (manager == null) {
             throw new AssertionError("Grapple Winch Connection Manager not present in " + world + '.');
         } else {

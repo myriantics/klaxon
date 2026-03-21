@@ -1,17 +1,17 @@
 package net.myriantics.klaxon.recipe.world_item_application;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.dispenser.ItemDispenserBehavior;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class WorldItemApplicationDispenserBehavior extends ItemDispenserBehavior {
+public class WorldItemApplicationDispenserBehavior extends DefaultDispenseItemBehavior {
     public void processManualItemApplicationRecipe(
-            ServerWorld serverWorld,
-            BlockPointer blockPointer,
+            ServerLevel serverWorld,
+            BlockSource blockPointer,
             BlockPos targetPos,
             Direction dispenserFacing,
             WorldItemApplicationRecipeInput recipeInput,
@@ -22,6 +22,6 @@ public class WorldItemApplicationDispenserBehavior extends ItemDispenserBehavior
         WorldItemApplicationRecipeLogic.affectWorld(serverWorld, targetPos, newState, dispenserFacing.getOpposite(), null, recipeInput);
 
         // decrement stack and set the block state
-        decrementStackWithRemainder(blockPointer, usedStack, usedStack.getRecipeRemainder());
+        consumeWithRemainder(blockPointer, usedStack, usedStack.getRecipeRemainder());
     }
 }

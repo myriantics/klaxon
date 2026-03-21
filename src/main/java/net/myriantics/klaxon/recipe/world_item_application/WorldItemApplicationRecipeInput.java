@@ -1,18 +1,18 @@
 package net.myriantics.klaxon.recipe.world_item_application;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.block.state.BlockState;
 
 public record WorldItemApplicationRecipeInput(ItemStack usedStack, BlockState inputState) implements RecipeInput {
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
+    public ItemStack getItem(int slot) {
         return usedStack();
     }
 
     @Override
-    public int getSize() {
+    public int size() {
         return 1;
     }
 
