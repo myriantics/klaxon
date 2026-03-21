@@ -82,7 +82,7 @@ public class WrenchItem extends DiggerItem {
                         // don't insert the stack if player is already creative - unless it's valuable, then do
                         if (!stack.isEmpty() && (!player.isCreative() || stack.has(DataComponents.CONTAINER) || stack.has(DataComponents.CONTAINER_LOOT))) {
                             // dump the rest of the stack into the world if it doesn't fit into player's inventory
-                            if (context.getHand().equals(InteractionHand.MAIN_HAND) && (player.getOffhandItem().isEmpty() || KlaxonItemStackHelper.canStacksMerge(player.getOffhandItem(), stack))) {
+                            if (context.getHand().equals(InteractionHand.MAIN_HAND) && player.getInventory().getSlotWithRemainingSpace(stack) == -1 && (player.getOffhandItem().isEmpty() || KlaxonItemStackHelper.canStacksMerge(player.getOffhandItem(), stack))) {
                                 player.setItemInHand(InteractionHand.OFF_HAND, KlaxonItemStackHelper.combineStacksIfPossible(stack, player.getOffhandItem()));
                             } else if (!player.getInventory().add(stack)) {
                                 if (!stack.isEmpty()) {
