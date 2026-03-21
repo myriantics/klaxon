@@ -353,6 +353,14 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildRepairTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_INGOT_TOOL_MATERIAL_REPAIR_MATERIALS)
+                .addOptionalTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS);
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_PLATE_TOOL_MATERIAL_REPAIR_MATERIALS)
+                .addOptionalTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES);
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_NUGGET_TOOL_MATERIAL_REPAIR_MATERIALS)
+                .addOptionalTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS);
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_PLATE_ARMOR_MATERIAL_REPAIR_MATERIALS)
+                .addOptionalTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES);
     }
 
     private void buildEnchantableTags() {

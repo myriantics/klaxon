@@ -25,8 +25,8 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
 
     // tools
     public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer",
-            new HammerItem(KlaxonToolMaterials.STEEL, new KlaxonItemSettings()
-                    .attributeModifiers(HammerItem.createAttributes(KlaxonToolMaterials.STEEL, 5.0F, -3.1F))
+            new HammerItem(KlaxonToolMaterials.STEEL_INGOT, new KlaxonItemSettings()
+                    .attributeModifiers(HammerItem.createAttributes(KlaxonToolMaterials.STEEL_INGOT, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
                     .damageTypeOverride(KlaxonDamageTypes.HAMMER_BONKING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING))
@@ -47,8 +47,8 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .getSettings()
             ));
     public static final Item STEEL_WRENCH = registerItem("steel_wrench",
-            new WrenchItem(KlaxonToolMaterials.STEEL, new KlaxonItemSettings()
-                    .attributeModifiers(WrenchItem.createAttributes(KlaxonToolMaterials.STEEL, 0f, -2.6f))
+            new WrenchItem(KlaxonToolMaterials.STEEL_INGOT, new KlaxonItemSettings()
+                    .attributeModifiers(WrenchItem.createAttributes(KlaxonToolMaterials.STEEL_INGOT, 0f, -2.6f))
                     .damageTypeOverride(KlaxonDamageTypes.WRENCH_OVERTUNING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
                     .getSettings()

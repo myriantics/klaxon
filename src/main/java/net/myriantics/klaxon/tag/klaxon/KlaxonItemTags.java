@@ -44,6 +44,16 @@ public abstract class KlaxonItemTags {
     public static final TagKey<Item> UNENCHANTABLE =
             createTag("unenchantable");
 
+    // repair tags
+    public static final TagKey<Item> STEEL_INGOT_TOOL_MATERIAL_REPAIR_MATERIALS =
+            createRepairTag("tool_material/steel_ingot");
+    public static final TagKey<Item> STEEL_PLATE_TOOL_MATERIAL_REPAIR_MATERIALS =
+            createRepairTag("tool_material/steel_plate");
+    public static final TagKey<Item> STEEL_NUGGET_TOOL_MATERIAL_REPAIR_MATERIALS =
+            createRepairTag("tool_material/steel_nugget");
+    public static final TagKey<Item> STEEL_PLATE_ARMOR_MATERIAL_REPAIR_MATERIALS =
+            createRepairTag("armor_material/steel_plate");
+
     // behavior tags
     public static final TagKey<Item> WRENCHABLE_INTERFACE_TRIGGERING_TOOLS =
             createTag("wrenchable_interface_triggering_tools");
@@ -110,6 +120,11 @@ public abstract class KlaxonItemTags {
 
     private static TagKey<Item> createToolTag(String name) {
         return createTag("tools/" + name);
+    }
+
+
+    private static TagKey<Item> createRepairTag(String name) {
+        return createTag("repair/" + name);
     }
 
     private static TagKey<Item> createEnchantableTag(String name) {

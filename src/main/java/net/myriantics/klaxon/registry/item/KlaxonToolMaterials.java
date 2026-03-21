@@ -9,9 +9,9 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 public abstract class KlaxonToolMaterials {
-    public static final Tier STEEL = registerToolMaterial(3200, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS));
-    public static final Tier STEEL_PLATE = registerToolMaterial(3200, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES));
-    public static final Tier STEEL_NUGGET = registerToolMaterial(640, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS));
+    public static final Tier STEEL_INGOT = registerToolMaterial(3200, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.STEEL_INGOT_TOOL_MATERIAL_REPAIR_MATERIALS));
+    public static final Tier STEEL_PLATE = registerToolMaterial(3200, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.STEEL_PLATE_TOOL_MATERIAL_REPAIR_MATERIALS));
+    public static final Tier STEEL_NUGGET = registerToolMaterial(640, 6.0f, 3.0f, KlaxonBlockTags.INCORRECT_FOR_STEEL_TOOL, 0, Ingredient.of(KlaxonItemTags.STEEL_NUGGET_TOOL_MATERIAL_REPAIR_MATERIALS));
 
     private static Tier registerToolMaterial(
             int durability,

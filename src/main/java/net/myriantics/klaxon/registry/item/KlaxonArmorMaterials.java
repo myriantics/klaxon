@@ -24,7 +24,7 @@ public abstract class KlaxonArmorMaterials {
         map.put(ArmorItem.Type.CHESTPLATE, 8);
         map.put(ArmorItem.Type.HELMET, 3);
         map.put(ArmorItem.Type.BODY, 11);
-    }), 0, SoundEvents.ARMOR_EQUIP_IRON, 1.5f, 0.1f, () -> Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+    }), 0, SoundEvents.ARMOR_EQUIP_IRON, 1.5f, 0.1f, () -> Ingredient.of(KlaxonItemTags.STEEL_PLATE_ARMOR_MATERIAL_REPAIR_MATERIALS),
             List.of(new ArmorMaterial.Layer(KlaxonCommon.locate("steel"))));
 
     private static Holder<ArmorMaterial> register(
