@@ -1,39 +1,39 @@
 package net.myriantics.klaxon.networking.c2s;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
-public record HammerWalljumpTriggerPacket(BlockPos pos, Direction direction) implements CustomPayload {
+public record HammerWalljumpTriggerPacket(BlockPos pos, Direction direction) implements CustomPacketPayload {
 
-    public static final CustomPayload.Id<HammerWalljumpTriggerPacket> ID = new CustomPayload.Id<>(KlaxonPackets.HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID);
+    public static final CustomPacketPayload.Type<HammerWalljumpTriggerPacket> ID = new CustomPacketPayload.Type<>(KlaxonPackets.HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID);
 
-    public static final PacketCodec<RegistryByteBuf, HammerWalljumpTriggerPacket> PACKET_CODEC = PacketCodec.tuple(
-            BlockPos.PACKET_CODEC, HammerWalljumpTriggerPacket::pos,
-            Direction.PACKET_CODEC, HammerWalljumpTriggerPacket::direction,
+    public static final StreamCodec<RegistryFriendlyByteBuf, HammerWalljumpTriggerPacket> PACKET_CODEC = StreamCodec.composite(
+            BlockPos.STREAM_CODEC, HammerWalljumpTriggerPacket::pos,
+            Direction.STREAM_CODEC, HammerWalljumpTriggerPacket::direction,
             HammerWalljumpTriggerPacket::new
     );
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 
     public void execute(ServerPlayNetworking.Context context) {
         context.server().execute(() -> {
-            ServerPlayerEntity player = context.player();
+            ServerPlayer player = context.player();
 
-            WalljumpAbilityComponent component = WalljumpAbilityComponent.get(player.getMainHandStack());
+            WalljumpAbilityComponent component = WalljumpAbilityComponent.get(player.getMainHandItem());
 
             if (component != null) {
                 // run the walljump ability :D
-                component.processHammerWalljump(player, player.getWorld(), pos, direction);
+                component.processHammerWalljump(player, player.level(), pos, direction);
             }
         });
     }

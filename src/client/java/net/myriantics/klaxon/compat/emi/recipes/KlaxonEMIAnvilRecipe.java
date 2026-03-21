@@ -7,8 +7,8 @@ import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiPlugin;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +20,7 @@ public class KlaxonEMIAnvilRecipe implements EmiRecipe {
 
     private final EmiStack tool;
     private final EmiIngredient resource;
-    private final Identifier id;
+    private final ResourceLocation id;
     private final int uniq = KlaxonEmiPlugin.RANDOM.nextInt();
 
     public KlaxonEMIAnvilRecipe(EmiStack tool, EmiIngredient resource, String path) {
@@ -35,7 +35,7 @@ public class KlaxonEMIAnvilRecipe implements EmiRecipe {
     }
 
     @Override
-    public @Nullable Identifier getId() {
+    public @Nullable ResourceLocation getId() {
         return id;
     }
 
@@ -80,7 +80,7 @@ public class KlaxonEMIAnvilRecipe implements EmiRecipe {
                 return tool;
             }
         }
-        stack.setDamage(d);
+        stack.setDamageValue(d);
         return EmiStack.of(stack);
     }
 }

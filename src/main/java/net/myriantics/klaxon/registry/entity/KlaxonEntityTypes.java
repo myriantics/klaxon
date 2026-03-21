@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.registry.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 
@@ -12,11 +12,11 @@ public abstract class KlaxonEntityTypes {
 
     public static final EntityType<GrappleClawEntity> GRAPPLE_CLAW = register(
             "grapple_claw",
-            EntityType.Builder.<GrappleClawEntity>create(GrappleClawEntity::new, SpawnGroup.MISC)
-                    .dimensions(0.8f, 0.8f)
+            EntityType.Builder.<GrappleClawEntity>of(GrappleClawEntity::new, MobCategory.MISC)
+                    .sized(0.8f, 0.8f)
                     .eyeHeight(0.4f)
-                    .maxTrackingRange(4)
-                    .trackingTickInterval(20)
+                    .clientTrackingRange(4)
+                    .updateInterval(20)
     );
 
     public static void init() {
@@ -25,6 +25,6 @@ public abstract class KlaxonEntityTypes {
 
     private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder<T> type) {
         // built with null identifier to stop missing datafixer log message
-        return Registry.register(Registries.ENTITY_TYPE, KlaxonCommon.locate(id), type.build(null));
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, KlaxonCommon.locate(id), type.build(null));
     }
 }

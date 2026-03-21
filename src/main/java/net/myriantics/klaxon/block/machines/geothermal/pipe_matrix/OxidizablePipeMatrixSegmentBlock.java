@@ -1,51 +1,47 @@
 package net.myriantics.klaxon.block.machines.geothermal.pipe_matrix;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Degradable;
-import net.minecraft.block.Oxidizable;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.myriantics.klaxon.block.decor.OxidizablePillarBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WeatheringCopper;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
-public class OxidizablePipeMatrixSegmentBlock extends PipeMatrixSegmentBlock implements Oxidizable {
-    private final OxidationLevel oxidationLevel;
+public class OxidizablePipeMatrixSegmentBlock extends PipeMatrixSegmentBlock implements WeatheringCopper {
+    private final WeatherState oxidationLevel;
 
-    public OxidizablePipeMatrixSegmentBlock(OxidationLevel oxidationLevel, Settings settings, Block loopBlock) {
+    public OxidizablePipeMatrixSegmentBlock(WeatherState oxidationLevel, Properties settings, Block loopBlock) {
         super(settings, loopBlock);
         this.oxidationLevel = oxidationLevel;
     }
 
     @Override
-    public OxidationLevel getDegradationLevel() {
+    public WeatherState getAge() {
         return this.oxidationLevel;
     }
 
     @Override
-    public Optional<BlockState> tryDegrade(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        Optional<BlockState> degraded = Oxidizable.super.tryDegrade(state, world, pos, random);
+    public Optional<BlockState> getNextState(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        Optional<BlockState> degraded = WeatheringCopper.super.getNextState(state, world, pos, random);
 
         // pipe matrices actively hooked up to a geothermal generator have water in them, so they oxidize twice as fast
-        if (degraded.isEmpty() && state.get(FORMED)) {
-            degraded = Oxidizable.super.tryDegrade(state, world, pos, random);
+        if (degraded.isEmpty() && state.getValue(FORMED)) {
+            degraded = WeatheringCopper.super.getNextState(state, world, pos, random);
         }
 
         return degraded;
     }
 
     @Override
-    protected boolean hasRandomTicks(BlockState state) {
+    protected boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        this.tickDegradation(state, world, pos, random);
+    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        this.changeOverTime(state, world, pos, random);
         super.randomTick(state, world, pos, random);
     }
 }

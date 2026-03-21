@@ -1,23 +1,23 @@
 package net.myriantics.klaxon.registry.misc;
 
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeSerializer;
-import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
-import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeSerializer;
-import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
-import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeSerializer;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipeSerializer;
+import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
+import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeSerializer;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeSerializer;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeSerializer;
 
@@ -61,11 +61,11 @@ public abstract class KlaxonRecipeTypes {
             registerSerializer(MAKESHIFT_SHAPELESS_CRAFTING_ID, new MakeshiftShapelessCraftingRecipeSerializer());
 
     static <S extends RecipeSerializer<T>, T extends Recipe<?>> S registerSerializer(String id, S serializer) {
-        return Registry.register(Registries.RECIPE_SERIALIZER, KlaxonCommon.locate(id), serializer);
+        return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, KlaxonCommon.locate(id), serializer);
     }
 
     static <T extends Recipe<?>> RecipeType<T> registerRecipeType(String id) {
-        return Registry.register(Registries.RECIPE_TYPE, KlaxonCommon.locate(id), new RecipeType<T>() {
+        return Registry.register(BuiltInRegistries.RECIPE_TYPE, KlaxonCommon.locate(id), new RecipeType<T>() {
             @Override
             public String toString() {
                 return "klaxon:" + id;

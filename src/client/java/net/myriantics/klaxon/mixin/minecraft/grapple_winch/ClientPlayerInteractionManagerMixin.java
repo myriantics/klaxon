@@ -2,10 +2,10 @@ package net.myriantics.klaxon.mixin.minecraft.grapple_winch;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import org.spongepowered.asm.mixin.Final;
@@ -13,24 +13,24 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ClientPlayerInteractionManager.class)
+@Mixin(MultiPlayerGameMode.class)
 public abstract class ClientPlayerInteractionManagerMixin {
     @Shadow
     @Final
-    private MinecraftClient client;
+    private Minecraft minecraft;
 
     @ModifyExpressionValue(
             method = "method_41929",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ItemCooldownManager;isCoolingDown(Lnet/minecraft/item/Item;)Z")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemCooldowns;isOnCooldown(Lnet/minecraft/world/item/Item;)Z")
     )
-    private boolean klaxon$checkForUsageLockout(boolean original, @Local ItemStack winchStack, @Local(argsOnly = true) PlayerEntity player) {
+    private boolean klaxon$checkForUsageLockout(boolean original, @Local ItemStack winchStack, @Local(argsOnly = true) Player player) {
         if (
                 !original
-                        && winchStack.isOf(KlaxonItems.GRAPPLE_WINCH)
-                        && client instanceof MinecraftClientUsageLockoutAccess access
+                        && winchStack.is(KlaxonItems.GRAPPLE_WINCH)
+                        && minecraft instanceof MinecraftClientUsageLockoutAccess access
                         && access.klaxon$isUsageLockoutActive()
         ) {
-            player.clearActiveItem();
+            player.stopUsingItem();
             return true;
         }
 

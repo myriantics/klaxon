@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.registry.misc;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
@@ -14,8 +14,8 @@ public abstract class KlaxonScreenHandlers {
     public static final ExtendedScreenHandlerType<DeepslateBlastProcessorScreenHandler, BlastProcessorScreenSyncPacket> BLAST_PROCESSOR_SCREEN_HANDLER
             = new ExtendedScreenHandlerType<>(DeepslateBlastProcessorScreenHandler::new, BlastProcessorScreenSyncPacket.PACKET_CODEC);
 
-    private static void createScreenHandler(String name, ScreenHandlerType type) {
-        Registry.register(Registries.SCREEN_HANDLER, Identifier.tryParse(name), type);
+    private static void createScreenHandler(String name, MenuType type) {
+        Registry.register(BuiltInRegistries.MENU, ResourceLocation.tryParse(name), type);
     }
 
     public static void init() {

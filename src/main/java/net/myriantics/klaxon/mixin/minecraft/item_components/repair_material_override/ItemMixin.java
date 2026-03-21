@@ -2,8 +2,8 @@ package net.myriantics.klaxon.mixin.minecraft.item_components.repair_material_ov
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class ItemMixin {
 
     @ModifyReturnValue(
-            method = "canRepair",
+            method = "isValidRepairItem",
             at =  @At(value = "RETURN")
     )
     public boolean klaxon$applyRepairIngredientOverride(

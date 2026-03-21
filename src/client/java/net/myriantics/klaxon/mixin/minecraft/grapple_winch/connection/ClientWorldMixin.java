@@ -1,13 +1,13 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch.connection;
 
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.storage.WritableLevelData;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,13 +18,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-@Mixin(ClientWorld.class)
-public abstract class ClientWorldMixin extends World implements ClientGrappleWinchConnectionManager.Access {
+@Mixin(ClientLevel.class)
+public abstract class ClientWorldMixin extends Level implements ClientGrappleWinchConnectionManager.Access {
 
     @Unique
-    private final ClientGrappleWinchConnectionManager klaxon$grappleWinchConnectionManager = new ClientGrappleWinchConnectionManager((ClientWorld) (Object) this);
+    private final ClientGrappleWinchConnectionManager klaxon$grappleWinchConnectionManager = new ClientGrappleWinchConnectionManager((ClientLevel) (Object) this);
 
-    protected ClientWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
+    protected ClientWorldMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, Supplier<ProfilerFiller> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
     }
 

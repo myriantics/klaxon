@@ -1,21 +1,18 @@
 package net.myriantics.klaxon.mixin.minecraft.item_components;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.component.EnchantmentEffectComponentTypes;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.World;
+import net.minecraft.core.Holder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
-import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,9 +20,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.Optional;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
-    protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+    protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -41,18 +38,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @ModifyVariable(
             method = "attack",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;")
     )
     // ordinal 2 selects boolean #3 (bl3)
     // Changes melee damage type of attacking player based on item components.
     private DamageSource klaxon$applyMeleeDamageTypeComponentOverrides(DamageSource original, @Local(ordinal = 0) boolean fullyCharged, @Local(ordinal = 2) boolean willCrit, @Local(ordinal = 1) boolean knockbackHit) {
-        PlayerEntity player = ((PlayerEntity) (Object) this);
-        ItemStack weaponStack = player.getWeaponStack();
+        Player player = ((Player) (Object) this);
+        ItemStack weaponStack = player.getWeaponItem();
 
         // check for overridden damage type on weapon stack - if so, apply the override
         MeleeDamageTypeOverrideComponent damageTypeOverride = MeleeDamageTypeOverrideComponent.get(weaponStack);
         if (damageTypeOverride != null) {
-            this.getDamageSources().registry.getEntry(damageTypeOverride.damageType()).ifPresent(
+            this.damageSources().damageTypes.getHolder(damageTypeOverride.damageType()).ifPresent(
                     entry -> KlaxonDamageTypes.modifyDamageSourceType(original, entry
             ));
         }
@@ -61,7 +58,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         ShieldBreachingComponent shieldBreachingComponent = ShieldBreachingComponent.get(weaponStack);
         if (shieldBreachingComponent != null && shieldBreachingComponent.shouldFire(willCrit, fullyCharged, knockbackHit)) {
             if (shieldBreachingComponent.damageType().isPresent()) {
-                Optional<RegistryEntry.Reference<DamageType>> entry = this.getDamageSources().registry.getEntry(shieldBreachingComponent.damageType().get());
+                Optional<Holder.Reference<DamageType>> entry = this.damageSources().damageTypes.getHolder(shieldBreachingComponent.damageType().get());
                 entry.ifPresent(damageTypeReference -> KlaxonDamageTypes.modifyDamageSourceType(original, damageTypeReference));
             }
             ((DamageSourceMixinAccess) original).klaxon$setShieldBreaching(true);
@@ -70,7 +67,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         // check for knockback modifier component - change damage type if present
         KnockbackHitModifierComponent knockbackModifier = KnockbackHitModifierComponent.get(weaponStack);
         if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit)) {
-            this.getDamageSources().registry.getEntry(knockbackModifier.damageType().get()).ifPresent(
+            this.damageSources().damageTypes.getHolder(knockbackModifier.damageType().get()).ifPresent(
                     entry -> KlaxonDamageTypes.modifyDamageSourceType(original, entry
             ));
         }

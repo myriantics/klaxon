@@ -1,20 +1,20 @@
 package net.myriantics.klaxon.mixin.minecraft.rendering;
 
-import net.minecraft.client.render.entity.model.AnimalModel;
+import net.minecraft.client.model.AgeableListModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(AnimalModel.class)
+@Mixin(AgeableListModel.class)
 public interface AnimalModelAccessor {
-    @Accessor("headScaled")
+    @Accessor("scaleHead")
     boolean klaxon$headScaled();
 
-    @Accessor("childHeadYOffset")
+    @Accessor("babyYHeadOffset")
     float klaxon$childHeadYOffset();
 
-    @Accessor("childHeadZOffset")
+    @Accessor("babyZHeadOffset")
     float klaxon$childHeadZOffset();
 
-    @Accessor("invertedChildHeadScale")
+    @Accessor("babyHeadScale")
     float klaxon$invertedChildHeadScale();
 }

@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
+import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;
 import net.myriantics.klaxon.registry.item.KlaxonDefaultItemComponentModifications;
 
 public abstract class KlaxonEventListeners {

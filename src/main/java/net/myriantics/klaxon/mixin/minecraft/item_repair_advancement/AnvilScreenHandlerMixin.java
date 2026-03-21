@@ -1,10 +1,13 @@
 package net.myriantics.klaxon.mixin.minecraft.item_repair_advancement;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.*;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.ItemCombinerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,23 +16,23 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AnvilScreenHandler.class)
-public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
+@Mixin(AnvilMenu.class)
+public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
 
-    public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
+    public AnvilScreenHandlerMixin(@Nullable MenuType<?> type, int syncId, Inventory playerInventory, ContainerLevelAccess context) {
         super(type, syncId, playerInventory, context);
     }
 
-    @Shadow private int repairItemUsage;
+    @Shadow private int repairItemCountCost;
 
     @Inject(
-            method = "onTakeOutput",
+            method = "onTake",
             at = @At(value = "HEAD")
     )
-    public void klaxon$repairAdvancementHook(PlayerEntity player, ItemStack stack, CallbackInfo ci) {
-        if (player instanceof ServerPlayerEntity serverPlayer) {
+    public void klaxon$repairAdvancementHook(Player player, ItemStack stack, CallbackInfo ci) {
+        if (player instanceof ServerPlayer serverPlayer) {
             // check that we have actually done a repairing recipe before firing advancement
-            if (repairItemUsage > 0 || input.getStack(0).getItem().equals(input.getStack(1).getItem())) {
+            if (repairItemCountCost > 0 || inputSlots.getItem(0).getItem().equals(inputSlots.getItem(1).getItem())) {
                 KlaxonAdvancementTriggers.triggerItemRepair(serverPlayer, stack);
             }
         }

@@ -1,23 +1,26 @@
 package net.myriantics.klaxon.recipe.tool_usage;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.*;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ToolUsageRecipe implements Recipe<ToolUsageRecipeInput> {
-    private final RegistryKey<ToolUsageRecipeType> type;
+    private final ResourceKey<ToolUsageRecipeType> type;
     private final Ingredient inputIngredient;
     private final ItemStack output;
     private final @Nullable SoundEvent soundOverride;
 
-    public ToolUsageRecipe(RegistryKey<ToolUsageRecipeType> type, Ingredient inputIngredient, ItemStack output, @Nullable SoundEvent soundOverride) {
+    public ToolUsageRecipe(ResourceKey<ToolUsageRecipeType> type, Ingredient inputIngredient, ItemStack output, @Nullable SoundEvent soundOverride) {
         this.type = type;
         this.inputIngredient = inputIngredient;
         this.output = output;
@@ -25,31 +28,31 @@ public class ToolUsageRecipe implements Recipe<ToolUsageRecipeInput> {
     }
 
     @Override
-    public boolean matches(ToolUsageRecipeInput inventory, World world) {
-        return inventory.getTypeKey().equals(this.type) && inputIngredient.test(inventory.getStackInSlot(1));
+    public boolean matches(ToolUsageRecipeInput inventory, Level world) {
+        return inventory.getTypeKey().equals(this.type) && inputIngredient.test(inventory.getItem(1));
     }
 
     @Override
-    public ItemStack craft(ToolUsageRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack assemble(ToolUsageRecipeInput input, HolderLookup.Provider lookup) {
         return this.output.copy();
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
         return this.output.copy();
     }
 
     @Override
-    public ItemStack createIcon() {
-        return inputIngredient.getMatchingStacks()[0];
+    public ItemStack getToastSymbol() {
+        return inputIngredient.getItems()[0];
     }
 
-    public RegistryKey<ToolUsageRecipeType> getTypeKey() {
+    public ResourceKey<ToolUsageRecipeType> getTypeKey() {
         return this.type;
     }
 
@@ -80,6 +83,6 @@ public class ToolUsageRecipe implements Recipe<ToolUsageRecipeInput> {
     }
 
     protected @NotNull SoundEvent getDefaultSoundEvent() {
-        return SoundEvents.INTENTIONALLY_EMPTY;
+        return SoundEvents.EMPTY;
     };
 }

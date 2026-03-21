@@ -1,19 +1,16 @@
 package net.myriantics.klaxon.registry.entity;
 
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.effect.MobEffect;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.entity.effects.HeavyStatusEffect;
 
 public abstract class KlaxonStatusEffects {
 
     
-    private static RegistryEntry<StatusEffect> register(String name, StatusEffect statusEffect) {
-        return Registry.registerReference(Registries.STATUS_EFFECT, KlaxonCommon.locate(name), statusEffect);
+    private static Holder<MobEffect> register(String name, MobEffect statusEffect) {
+        return Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, KlaxonCommon.locate(name), statusEffect);
     }
 
     public static void init() {

@@ -1,19 +1,18 @@
 package net.myriantics.klaxon.worldgen.features.hallnox;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.blockpredicate.BlockPredicate;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.material.Fluids;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
-import org.jetbrains.annotations.Nullable;
 
 public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFeatureConfig> {
 
@@ -22,17 +21,17 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
     }
 
     @Override
-    public boolean generate(FeatureContext<UprightHallnoxGrowthFeatureConfig> context) {
-        StructureWorldAccess structureWorldAccess = context.getWorld();
-        UprightHallnoxGrowthFeatureConfig config = context.getConfig();
+    public boolean place(FeaturePlaceContext<UprightHallnoxGrowthFeatureConfig> context) {
+        WorldGenLevel structureWorldAccess = context.level();
+        UprightHallnoxGrowthFeatureConfig config = context.config();
         BlockState denseStemBlock = config.denseStemBlock();
         BlockState stemBlock = config.stemBlock();
         BlockState wartBlock = config.wartBlock();
         BlockState podBlock = config.podBlock();
         BlockPredicate replaceableBlocks = config.replaceableBlocks();
-        BlockPredicate featureUsedBlocks = BlockPredicate.matchingBlocks(denseStemBlock.getBlock(), stemBlock.getBlock(), wartBlock.getBlock(), podBlock.getBlock());
-        BlockPos originPos = context.getOrigin();
-        Random random = context.getRandom();
+        BlockPredicate featureUsedBlocks = BlockPredicate.matchesBlocks(denseStemBlock.getBlock(), stemBlock.getBlock(), wartBlock.getBlock(), podBlock.getBlock());
+        BlockPos originPos = context.origin();
+        RandomSource random = context.random();
         // throw in a bit more rng for shits and gigs
         int maxHeight = (int) (config.maxHeight() * (0.7 + (0.5 * random.nextFloat())));
         maxHeight = Math.min(maxHeight, config.maxHeight());
@@ -40,7 +39,7 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
 
         // validate that we can place growth before doing pricier calculations
         for (int yDiff = 0; yDiff < maxHeight; yDiff++) {
-            if (!isReplaceable(structureWorldAccess, originPos.withY(originPos.getY() + yDiff), replaceableBlocks, featureUsedBlocks)) {
+            if (!isReplaceable(structureWorldAccess, originPos.atY(originPos.getY() + yDiff), replaceableBlocks, featureUsedBlocks)) {
                 // don't even try to generate such a small growth
                 if (yDiff < 4) return false;
                 maxHeight = yDiff + 1;
@@ -59,12 +58,12 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
         }
 
         // prep pod state
-        if (podBlock.contains(Properties.FACING)) {
-            podBlock = podBlock.with(Properties.FACING, Direction.DOWN);
+        if (podBlock.hasProperty(BlockStateProperties.FACING)) {
+            podBlock = podBlock.setValue(BlockStateProperties.FACING, Direction.DOWN);
         }
 
         // place pod on bottom - if that fails, keep trying until it places.
-        BlockPos.Mutable podPlacementPos = stemTopPos.up().mutableCopy();
+        BlockPos.MutableBlockPos podPlacementPos = stemTopPos.above().mutable();
         while (!setBlockStateIfPossible(structureWorldAccess, podPlacementPos, podBlock, replaceableBlocks, featureUsedBlocks)) {
             if (podPlacementPos.getY() <= originPos.getY()) {
                 return false;
@@ -76,13 +75,13 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
         return true;
     }
 
-    private int generateBase(StructureWorldAccess world, BlockPos originPos, Random random, int maxHeight, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
-        BlockPos.Mutable workingPos = new BlockPos.Mutable().set(originPos);
+    private int generateBase(WorldGenLevel world, BlockPos originPos, RandomSource random, int maxHeight, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
+        BlockPos.MutableBlockPos workingPos = new BlockPos.MutableBlockPos().set(originPos);
 
         // prep the dense stem state
         BlockState denseStemState = config.denseStemBlock();
-        if (denseStemState.contains(Properties.AXIS)) {
-            denseStemState = denseStemState.with(Properties.AXIS, Direction.Axis.Y);
+        if (denseStemState.hasProperty(BlockStateProperties.AXIS)) {
+            denseStemState = denseStemState.setValue(BlockStateProperties.AXIS, Direction.Axis.Y);
         }
 
         int baseHeight = (int) (maxHeight * 0.45);
@@ -90,7 +89,7 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
         for (int yDiff = 0; yDiff < baseHeight; yDiff++) {
             workingPos.setY(originPos.getY() + yDiff);
 
-            for (BlockPos selected : BlockPos.iterateInSquare(workingPos, 1, Direction.NORTH, Direction.EAST)) {
+            for (BlockPos selected : BlockPos.spiralAround(workingPos, 1, Direction.NORTH, Direction.EAST)) {
                 // blocks aligned with origin pos are guaranteed to place
                 // blocks that share an axis have an 85% chance to place
                 // blocks on corners have a 70& chance to place
@@ -106,35 +105,35 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
     }
 
     // returns top middle block of stem
-    private BlockPos generateStem(StructureWorldAccess world, BlockPos originPos, Random random, int baseHeight, int maxHeight, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
-        BlockPos.Mutable workingPos = new BlockPos.Mutable().set(originPos);
+    private BlockPos generateStem(WorldGenLevel world, BlockPos originPos, RandomSource random, int baseHeight, int maxHeight, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
+        BlockPos.MutableBlockPos workingPos = new BlockPos.MutableBlockPos().set(originPos);
 
         // prep stem state
         BlockState stemState = config.stemBlock();
-        if (stemState.contains(Properties.AXIS)) {
-            stemState = stemState.with(Properties.AXIS, Direction.Axis.Y);
+        if (stemState.hasProperty(BlockStateProperties.AXIS)) {
+            stemState = stemState.setValue(BlockStateProperties.AXIS, Direction.Axis.Y);
         }
 
         // only start placing stem from where the base placer left off
         for (int yDiff = baseHeight; yDiff < maxHeight; yDiff++) {
             workingPos.setY(originPos.getY() + yDiff);
 
-            if (!setBlockStateIfPossible(world, workingPos, stemState, replaceableBlocks, featureUsedBlocks)) return workingPos.down();
+            if (!setBlockStateIfPossible(world, workingPos, stemState, replaceableBlocks, featureUsedBlocks)) return workingPos.below();
         }
 
         for (Direction direction : BlockDirectionHelper.HORIZONTAL) {
-            if (random.nextFloat() > 0.7) setBlockStateIfPossible(world, workingPos.offset(direction).down(), stemState, replaceableBlocks, featureUsedBlocks);
+            if (random.nextFloat() > 0.7) setBlockStateIfPossible(world, workingPos.relative(direction).below(), stemState, replaceableBlocks, featureUsedBlocks);
         }
 
-        return workingPos.toImmutable();
+        return workingPos.immutable();
     }
 
     // returns middle block of generated frond
-    private BlockPos generateFrond(StructureWorldAccess world, BlockPos stemTopPos, Random random, int frondScale, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction direction) {
+    private BlockPos generateFrond(WorldGenLevel world, BlockPos stemTopPos, RandomSource random, int frondScale, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction direction) {
         BlockState wartState = config.wartBlock();
         Direction.Axis perpendicularAxis = direction.getAxis().equals(Direction.Axis.X) ? Direction.Axis.Z : Direction.Axis.X;
 
-        BlockPos.Mutable workingPos = stemTopPos.mutableCopy();
+        BlockPos.MutableBlockPos workingPos = stemTopPos.mutable();
 
         for (int horizDiff = 0; horizDiff < frondScale; horizDiff++) {
             // hacky and awkward but it works
@@ -145,38 +144,38 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
 
             // place main row as well as line of blocks above it - if main spine is interrupted, break.
             if (!setBlockStateIfPossible(world, workingPos, wartState, replaceableBlocks, featureUsedBlocks)) break;
-            setBlockStateIfPossible(world, workingPos.up(), wartState, replaceableBlocks, featureUsedBlocks);
+            setBlockStateIfPossible(world, workingPos.above(), wartState, replaceableBlocks, featureUsedBlocks);
 
             // place blocks to the sides of main frond
             for (Direction.AxisDirection axisDirection : Direction.AxisDirection.values()) {
-                BlockPos offsetPos = workingPos.offset(Direction.from(perpendicularAxis, axisDirection), 1);
+                BlockPos offsetPos = workingPos.relative(Direction.fromAxisAndDirection(perpendicularAxis, axisDirection), 1);
                 if (random.nextFloat() < 0.9) setBlockStateIfPossible(world, offsetPos, wartState, replaceableBlocks, featureUsedBlocks);
 
                 // place middle ring
-                if (horizDiff == 1) setBlockStateIfPossible(world, offsetPos.up(), wartState, replaceableBlocks, featureUsedBlocks);
+                if (horizDiff == 1) setBlockStateIfPossible(world, offsetPos.above(), wartState, replaceableBlocks, featureUsedBlocks);
             }
         }
 
         // return last mainline block placed in frond
-        return workingPos.toImmutable();
+        return workingPos.immutable();
     }
 
-    private void generateDroop(StructureWorldAccess world, BlockPos frondFinalPos, Random random, int frondScale, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction facing) {
+    private void generateDroop(WorldGenLevel world, BlockPos frondFinalPos, RandomSource random, int frondScale, UprightHallnoxGrowthFeatureConfig config, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks, Direction facing) {
         // prep states for placement
         BlockState wartState = config.wartBlock();
         BlockState podState = config.podBlock();
-        if (podState.contains(Properties.FACING)) {
-            podState = podState.with(Properties.FACING, Direction.UP);
+        if (podState.hasProperty(BlockStateProperties.FACING)) {
+            podState = podState.setValue(BlockStateProperties.FACING, Direction.UP);
         }
 
-        BlockPos.Mutable workingPos = frondFinalPos.mutableCopy();
+        BlockPos.MutableBlockPos workingPos = frondFinalPos.mutable();
 
         for (int yDiff = 0; yDiff < frondScale - 1; yDiff++) {
             workingPos.setY(frondFinalPos.getY() - yDiff);
 
             // place droop center if possible - stop trying to place droop if failed
             if (!setBlockStateIfPossible(world, workingPos, wartState, replaceableBlocks, featureUsedBlocks)) break;
-            if (yDiff == 1 && random.nextFloat() < 0.8) setBlockStateIfPossible(world, workingPos.offset(facing.getAxis().equals(Direction.Axis.Z) ? facing : facing.getOpposite()), wartState, replaceableBlocks, featureUsedBlocks);
+            if (yDiff == 1 && random.nextFloat() < 0.8) setBlockStateIfPossible(world, workingPos.relative(facing.getAxis().equals(Direction.Axis.Z) ? facing : facing.getOpposite()), wartState, replaceableBlocks, featureUsedBlocks);
 
             // used to make fronds wider
             Direction.Axis perpendicularAxis = facing.getAxis().equals(Direction.Axis.X) ? Direction.Axis.Z : Direction.Axis.X;
@@ -186,23 +185,23 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
 
             // place blocks on side of droops
             for (Direction.AxisDirection axisDirection : Direction.AxisDirection.values()) {
-                Direction placingDirection = Direction.from(perpendicularAxis, axisDirection);
-                BlockPos offsetPos = workingPos.offset(placingDirection, 1);
+                Direction placingDirection = Direction.fromAxisAndDirection(perpendicularAxis, axisDirection);
+                BlockPos offsetPos = workingPos.relative(placingDirection, 1);
 
                 if (random.nextFloat() < 0.9) {
                     boolean success = setBlockStateIfPossible(world, offsetPos, wartState, replaceableBlocks, featureUsedBlocks);
 
                     // if we successfully placed one of the ending droop parts, roll for a hallnox pod to spawn
                     if (success && random.nextFloat() < 0.5) {
-                        setBlockStateIfPossible(world, offsetPos.down(), podState, replaceableBlocks, featureUsedBlocks);
+                        setBlockStateIfPossible(world, offsetPos.below(), podState, replaceableBlocks, featureUsedBlocks);
                     }
                 }
             }
         }
     }
 
-    private static boolean isReplaceable(StructureWorldAccess world, BlockPos pos, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
-        if (world.testBlockState(pos, AbstractBlock.AbstractBlockState::isReplaceable)) {
+    private static boolean isReplaceable(WorldGenLevel world, BlockPos pos, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
+        if (world.isStateAtPosition(pos, BlockBehaviour.BlockStateBase::canBeReplaced)) {
             return true;
         } else {
             return replaceableBlocks.or(featureUsedBlocks).test(world, pos);
@@ -210,14 +209,14 @@ public class UprightHallnoxGrowthFeature extends Feature<UprightHallnoxGrowthFea
     }
 
     // returns true if operation was successful - false if it wasn't
-    private boolean setBlockStateIfPossible(StructureWorldAccess world, BlockPos pos, BlockState state, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
+    private boolean setBlockStateIfPossible(WorldGenLevel world, BlockPos pos, BlockState state, BlockPredicate replaceableBlocks, BlockPredicate featureUsedBlocks) {
         // preserve waterlogged status if possible
-        if (state.contains(Properties.WATERLOGGED) && world.getFluidState(pos).isOf(Fluids.WATER)) {
-            state = state.with(Properties.WATERLOGGED, true);
+        if (state.hasProperty(BlockStateProperties.WATERLOGGED) && world.getFluidState(pos).is(Fluids.WATER)) {
+            state = state.setValue(BlockStateProperties.WATERLOGGED, true);
         }
 
         if (isReplaceable(world, pos, replaceableBlocks, featureUsedBlocks)) {
-            setBlockState(world, pos, state);
+            setBlock(world, pos, state);
             return true;
         } else {
             return false;

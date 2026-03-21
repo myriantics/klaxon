@@ -2,15 +2,15 @@ package net.myriantics.klaxon.mixin.minecraft.advanced_item_models;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.render.model.BlockStatesLoader;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.render.model.json.*;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.profiler.Profiler;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.BlockStateModelLoader;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.Item;
 import net.myriantics.klaxon.mechanics.advanced_item_models.ModelUtils;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.mechanics.advanced_item_models.AdvancedItemModelHelper;
@@ -23,47 +23,47 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
-@Mixin(ModelLoader.class)
+@Mixin(ModelBakery.class)
 public abstract class ModelLoaderMixin {
 
-    @Shadow abstract UnbakedModel getOrLoadModel(Identifier id);
+    @Shadow abstract UnbakedModel getModel(ResourceLocation id);
 
-    @Shadow protected abstract void add(ModelIdentifier id, UnbakedModel model);
+    @Shadow protected abstract void registerModelAndLoadDependencies(ModelResourceLocation id, UnbakedModel model);
 
-    @Shadow protected abstract void addModelToBake(ModelIdentifier id, UnbakedModel model);
+    @Shadow protected abstract void registerModel(ModelResourceLocation id, UnbakedModel model);
 
-    @Shadow @Final private Map<Identifier, UnbakedModel> unbakedModels;
+    @Shadow @Final private Map<ResourceLocation, UnbakedModel> unbakedCache;
 
     // Registers alt models and generates inverted models
     @Inject(
             method = "<init>",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/model/ModelLoader;loadInventoryVariantItemModel(Lnet/minecraft/util/Identifier;)V"
+                    target = "Lnet/minecraft/client/resources/model/ModelBakery;loadItemModelAndDependencies(Lnet/minecraft/resources/ResourceLocation;)V"
             )
     )
     public void klaxon$loadFancyModels(
             BlockColors blockColors,
-            Profiler profiler,
-            Map<Identifier, JsonUnbakedModel> jsonUnbakedModels,
-            Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates,
+            ProfilerFiller profiler,
+            Map<ResourceLocation, BlockModel> jsonUnbakedModels,
+            Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> blockStates,
             CallbackInfo ci,
-            @Local Identifier itemId
+            @Local ResourceLocation itemId
     ) {
-        Item item = Registries.ITEM.get(itemId);
+        Item item = BuiltInRegistries.ITEM.get(itemId);
 
-        if (item.getComponents().get(KlaxonDataComponentTypes.ALT_HAND_MODEL) instanceof String suffix) {
-            Identifier modelId = AdvancedItemModelHelper.getAlternateModelId(Registries.ITEM.getId(item), suffix);
+        if (item.components().get(KlaxonDataComponentTypes.ALT_HAND_MODEL) instanceof String suffix) {
+            ResourceLocation modelId = AdvancedItemModelHelper.getAlternateModelId(BuiltInRegistries.ITEM.getKey(item), suffix);
 
-            if (!(getOrLoadModel(modelId.withPrefixedPath("item/")) instanceof JsonUnbakedModel model)) {
+            if (!(getModel(modelId.withPrefix("item/")) instanceof BlockModel model)) {
                 return;
             }
 
-            Collection<Identifier> modelDependencies = model.getModelDependencies();
+            Collection<ResourceLocation> modelDependencies = model.getDependencies();
 
-            ArrayList<Identifier> processedIds = new ArrayList<>();
+            ArrayList<ResourceLocation> processedIds = new ArrayList<>();
             while (modelDependencies != null && !modelDependencies.isEmpty()) {
-                Collection<Identifier> newDependencies = new ArrayList<>();
+                Collection<ResourceLocation> newDependencies = new ArrayList<>();
 
                 modelDependencies.forEach((identifier -> {
                     // protection against an infinite loop - it will exhaust itself eventually
@@ -71,19 +71,19 @@ public abstract class ModelLoaderMixin {
                         return;
                     }
 
-                    Identifier mirroredId = AdvancedItemModelHelper.getMirroredId(identifier);
+                    ResourceLocation mirroredId = AdvancedItemModelHelper.getMirroredId(identifier);
 
-                    JsonUnbakedModel selected = (JsonUnbakedModel) this.getOrLoadModel(identifier);
-                    JsonUnbakedModel mirrored = ModelUtils.generateInvertedModel(selected);
+                    BlockModel selected = (BlockModel) this.getModel(identifier);
+                    BlockModel mirrored = ModelUtils.generateInvertedModel(selected);
 
                     // add selected model and mirrored variant to baking
-                    add(ModelIdentifier.ofInventoryVariant(identifier), selected);
-                    this.addModelToBake(
-                            ModelIdentifier.ofInventoryVariant(mirroredId),
+                    registerModelAndLoadDependencies(ModelResourceLocation.inventory(identifier), selected);
+                    this.registerModel(
+                            ModelResourceLocation.inventory(mirroredId),
                             mirrored
                     );
-                    unbakedModels.put(mirroredId, mirrored);
-                    newDependencies.addAll(selected.getModelDependencies());
+                    unbakedCache.put(mirroredId, mirrored);
+                    newDependencies.addAll(selected.getDependencies());
 
                     // make sure we don't process the same id twice.
                     processedIds.add(identifier);
@@ -92,14 +92,14 @@ public abstract class ModelLoaderMixin {
                 modelDependencies = newDependencies;
             }
 
-            ModelIdentifier mirroredModelId = ModelIdentifier.ofInventoryVariant(AdvancedItemModelHelper.getMirroredId(modelId));
-            JsonUnbakedModel invertedModel = ModelUtils.generateInvertedModel(model);
+            ModelResourceLocation mirroredModelId = ModelResourceLocation.inventory(AdvancedItemModelHelper.getMirroredId(modelId));
+            BlockModel invertedModel = ModelUtils.generateInvertedModel(model);
 
-            add(ModelIdentifier.ofInventoryVariant(modelId), model);
-            this.addModelToBake(mirroredModelId, invertedModel);
+            registerModelAndLoadDependencies(ModelResourceLocation.inventory(modelId), model);
+            this.registerModel(mirroredModelId, invertedModel);
 
-            unbakedModels.put(mirroredModelId.id(), invertedModel);
-            addModelToBake(mirroredModelId, invertedModel);
+            unbakedCache.put(mirroredModelId.id(), invertedModel);
+            registerModel(mirroredModelId, invertedModel);
         }
     }
 }

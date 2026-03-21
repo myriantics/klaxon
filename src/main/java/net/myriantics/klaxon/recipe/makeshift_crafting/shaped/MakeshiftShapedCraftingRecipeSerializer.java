@@ -3,15 +3,11 @@ package net.myriantics.klaxon.recipe.makeshift_crafting.shaped;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RawShapedRecipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 
 import java.util.List;
@@ -21,35 +17,35 @@ public class MakeshiftShapedCraftingRecipeSerializer implements RecipeSerializer
     private final MapCodec<MakeshiftShapedCraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(
                     instance -> instance.group(
                             Codec.STRING.optionalFieldOf("group", "").forGetter(ShapedRecipe::getGroup),
-                            CraftingRecipeCategory.CODEC.fieldOf("category").orElse(CraftingRecipeCategory.MISC).forGetter(ShapedRecipe::getCategory),
-                            RawShapedRecipe.CODEC.forGetter(recipe -> recipe.raw),
+                            CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(ShapedRecipe::category),
+                            ShapedRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.raw),
                             KlaxonCodecUtils.INGREDIENT_LIST_CODEC.fieldOf("constant_ingredients").forGetter(MakeshiftShapedCraftingRecipe::getConstantIngredients),
-                            ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(MakeshiftShapedCraftingRecipe::getRawResult),
+                            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(MakeshiftShapedCraftingRecipe::getRawResult),
                             Codec.BOOL.optionalFieldOf("show_notification", Boolean.TRUE).forGetter(ShapedRecipe::showNotification)
             )
             .apply(instance, MakeshiftShapedCraftingRecipe::new)
     );
 
-    private final PacketCodec<RegistryByteBuf, MakeshiftShapedCraftingRecipe> PACKET_CODEC = PacketCodec.ofStatic(
+    private final StreamCodec<RegistryFriendlyByteBuf, MakeshiftShapedCraftingRecipe> PACKET_CODEC = StreamCodec.of(
             MakeshiftShapedCraftingRecipeSerializer::write, MakeshiftShapedCraftingRecipeSerializer::read
     );
 
-    private static void write(RegistryByteBuf buf, MakeshiftShapedCraftingRecipe recipe) {
-        PacketCodecs.STRING.encode(buf, recipe.getGroup());
-        CraftingRecipeCategory.PACKET_CODEC.encode(buf, recipe.getCategory());
-        RawShapedRecipe.PACKET_CODEC.encode(buf, recipe.raw);
+    private static void write(RegistryFriendlyByteBuf buf, MakeshiftShapedCraftingRecipe recipe) {
+        ByteBufCodecs.STRING_UTF8.encode(buf, recipe.getGroup());
+        CraftingBookCategory.STREAM_CODEC.encode(buf, recipe.category());
+        ShapedRecipePattern.STREAM_CODEC.encode(buf, recipe.raw);
         KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.encode(buf, recipe.getConstantIngredients());
-        ItemStack.PACKET_CODEC.encode(buf, recipe.getRawResult());
-        PacketCodecs.BOOL.encode(buf, recipe.showNotification());
+        ItemStack.STREAM_CODEC.encode(buf, recipe.getRawResult());
+        ByteBufCodecs.BOOL.encode(buf, recipe.showNotification());
     }
 
-    private static MakeshiftShapedCraftingRecipe read(RegistryByteBuf buf) {
-        String group = PacketCodecs.STRING.decode(buf);
-        CraftingRecipeCategory category = CraftingRecipeCategory.PACKET_CODEC.decode(buf);
-        RawShapedRecipe raw = RawShapedRecipe.PACKET_CODEC.decode(buf);
+    private static MakeshiftShapedCraftingRecipe read(RegistryFriendlyByteBuf buf) {
+        String group = ByteBufCodecs.STRING_UTF8.decode(buf);
+        CraftingBookCategory category = CraftingBookCategory.STREAM_CODEC.decode(buf);
+        ShapedRecipePattern raw = ShapedRecipePattern.STREAM_CODEC.decode(buf);
         List<Ingredient> constantIngredients = KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.decode(buf);
-        ItemStack result =  ItemStack.PACKET_CODEC.decode(buf);
-        boolean showNotification = PacketCodecs.BOOL.decode(buf);
+        ItemStack result =  ItemStack.STREAM_CODEC.decode(buf);
+        boolean showNotification = ByteBufCodecs.BOOL.decode(buf);
 
         return new MakeshiftShapedCraftingRecipe(group, category, raw, constantIngredients, result, showNotification);
     }
@@ -60,7 +56,7 @@ public class MakeshiftShapedCraftingRecipeSerializer implements RecipeSerializer
     }
 
     @Override
-    public PacketCodec<RegistryByteBuf, MakeshiftShapedCraftingRecipe> packetCodec() {
+    public StreamCodec<RegistryFriendlyByteBuf, MakeshiftShapedCraftingRecipe> streamCodec() {
         return PACKET_CODEC;
     }
 }

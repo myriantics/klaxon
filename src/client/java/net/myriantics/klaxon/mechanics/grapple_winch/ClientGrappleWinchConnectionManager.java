@@ -1,21 +1,19 @@
 package net.myriantics.klaxon.mechanics.grapple_winch;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
 import net.myriantics.klaxon.networking.c2s.GrappleWinchCableForceDisconnectC2S;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
 import org.jetbrains.annotations.Nullable;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.*;
 
 public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionManager {
@@ -27,7 +25,7 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
     float daylightMultiplier = 1.0f;
     boolean clientPlayerHasNightVision = false;
 
-    public ClientGrappleWinchConnectionManager(ClientWorld world) {
+    public ClientGrappleWinchConnectionManager(ClientLevel world) {
         super(world);
     }
 
@@ -38,7 +36,7 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
         super.tick();
 
         for (ClientGrappleWinchConnection connection : this.connectionId2Connection.values()) {
-            if (connection.getPlayer() == MinecraftClient.getInstance().player && !connection.validate()) {
+            if (connection.getPlayer() == Minecraft.getInstance().player && !connection.validate()) {
                 //TODO: Unhardcode this to allow for more disconnection reasons
                 this.forceDisconnect(CableDetachmentReason.INVALID_HELD_ITEMS);
             } else {
@@ -49,20 +47,20 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
         // compute the daytime multiplier here instead of every render tick
         // kinda funky, look at daylight on the minecraft wiki for more info haha
         // basically keeps the value at 1.0f unless it's night, in which case it gets progressively smaller until midnight, when it starts climbing back up again.
-        long timeOfDay = this.getWorld().getTimeOfDay() % 24000L;
+        long timeOfDay = this.getWorld().getDayTime() % 24000L;
         this.daylightMultiplier = timeOfDay < 12040 || timeOfDay > 22331 ? 1.0f : Math.min(Math.abs((18000f - timeOfDay) / 10000), 1.0f);
 
         // update night vision status so we're not doing it every render tick
-        ClientPlayerEntity clientPlayer = MinecraftClient.getInstance().player;
-        this.clientPlayerHasNightVision = clientPlayer != null && clientPlayer.hasStatusEffect(StatusEffects.NIGHT_VISION);
+        LocalPlayer clientPlayer = Minecraft.getInstance().player;
+        this.clientPlayerHasNightVision = clientPlayer != null && clientPlayer.hasEffect(MobEffects.NIGHT_VISION);
     }
 
     public void render(
-            ClientWorld clientWorld,
+            ClientLevel clientWorld,
             Camera camera,
-            RenderTickCounter renderTickCounter,
-            MatrixStack matrices,
-            VertexConsumerProvider immediate
+            DeltaTracker renderTickCounter,
+            PoseStack matrices,
+            MultiBufferSource immediate
     ) {
         this.renderer.render(
                 clientWorld,
@@ -85,12 +83,12 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
     }
 
     @Override
-    public ClientWorld getWorld() {
-        return (ClientWorld) this.world;
+    public ClientLevel getWorld() {
+        return (ClientLevel) this.world;
     }
 
     @Override
-    public @Nullable ClientGrappleWinchConnection fromPlayer(PlayerEntity player) {
+    public @Nullable ClientGrappleWinchConnection fromPlayer(Player player) {
         for (ClientGrappleWinchConnection connection : this.connectionId2Connection.values()) {
             if (connection.getPlayerId() == player.getId()) {
                 return connection;
@@ -126,8 +124,8 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
     }
 
     public void forceDisconnect(CableDetachmentReason reason) {
-        assert MinecraftClient.getInstance().player != null;
-        ClientGrappleWinchConnection connection = this.fromPlayer(MinecraftClient.getInstance().player);
+        assert Minecraft.getInstance().player != null;
+        ClientGrappleWinchConnection connection = this.fromPlayer(Minecraft.getInstance().player);
         if (connection != null) {
             this.disconnect(connection.getId(), reason);
             KlaxonClientPlayNetworkHandler.send(new GrappleWinchCableForceDisconnectC2S(reason));
@@ -145,7 +143,7 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
         ClientGrappleWinchConnectionManager klaxon$getGrappleWinchConnectionManager();
     }
 
-    public static ClientGrappleWinchConnectionManager get(ClientWorld world) {
+    public static ClientGrappleWinchConnectionManager get(ClientLevel world) {
         @Nullable ClientGrappleWinchConnectionManager manager = ((Access) world).klaxon$getGrappleWinchConnectionManager();
         if (manager == null) {
             throw new AssertionError("Grapple Winch Connection Manager not present in " + world + '.');

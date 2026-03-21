@@ -1,20 +1,21 @@
 package net.myriantics.klaxon.recipe;
 
-import com.mojang.serialization.*;
-import net.minecraft.block.Block;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.random.Random;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 import org.jetbrains.annotations.Nullable;
@@ -75,7 +76,7 @@ public final class WeightedBlockOutputCompound {
 
                 // prime the display stack and builder
                 ItemStack displayStack;
-                ComponentMap.Builder changesBuilder = ComponentMap.builder();
+                DataComponentMap.Builder changesBuilder = DataComponentMap.builder();
 
                 // create items based off of blockitems if possible.
                 // if a block doesn't have a blockitem, fall back to barrier with lore
@@ -84,19 +85,19 @@ public final class WeightedBlockOutputCompound {
 
                     // add component changes to builder
                     changesBuilder
-                            .add(DataComponentTypes.CUSTOM_NAME, block.getName().formatted(Formatting.RED))
-                            .add(DataComponentTypes.LORE, new LoreComponent(
-                                    List.of(Text.translatable("klaxon.text.tooltip.lore.missing_block_item")
-                                            .formatted(Formatting.BOLD))
+                            .set(DataComponents.CUSTOM_NAME, block.getName().withStyle(ChatFormatting.RED))
+                            .set(DataComponents.LORE, new ItemLore(
+                                    List.of(Component.translatable("klaxon.text.tooltip.lore.missing_block_item")
+                                            .withStyle(ChatFormatting.BOLD))
                             ));
                 } else {
                     displayStack = new ItemStack(block.asItem());
                 }
 
                 // add chance lore and apply component changes
-                displayStack.applyComponentsFrom(
+                displayStack.applyComponents(
                         changesBuilder
-                                .add(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE, chance)
+                                .set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE, chance)
                                 .build()
                 );
 
@@ -111,7 +112,7 @@ public final class WeightedBlockOutputCompound {
         }
     }
 
-    public @Nullable Block computeOutputBlock(Random random) {
+    public @Nullable Block computeOutputBlock(RandomSource random) {
         double value = random.nextDouble();
 
         for (Block block : blocksAndCompiledWeights.keySet()) {
@@ -124,39 +125,39 @@ public final class WeightedBlockOutputCompound {
     }
 
     public static MapCodec<WeightedBlockOutputCompound> CODEC = Codec.simpleMap(
-            Registries.BLOCK.getEntryCodec().xmap(
-                    RegistryEntry::value,
-                    Registries.BLOCK::getEntry
+            BuiltInRegistries.BLOCK.holderByNameCodec().xmap(
+                    Holder::value,
+                    BuiltInRegistries.BLOCK::wrapAsHolder
             ).fieldOf("block").codec(),
             Codec.intRange(1, Integer.MAX_VALUE).fieldOf("weight").codec(),
-            Registries.BLOCK
+            BuiltInRegistries.BLOCK
     ).xmap(
             WeightedBlockOutputCompound::new,
             compound -> compound.blocksAndRawWeights
     );
 
-    public static PacketCodec<RegistryByteBuf, WeightedBlockOutputCompound> PACKET_CODEC = PacketCodec.ofStatic(
+    public static StreamCodec<RegistryFriendlyByteBuf, WeightedBlockOutputCompound> PACKET_CODEC = StreamCodec.of(
             WeightedBlockOutputCompound::write, WeightedBlockOutputCompound::read
     );
 
-    private static void write(RegistryByteBuf buf, WeightedBlockOutputCompound compound) {
+    private static void write(RegistryFriendlyByteBuf buf, WeightedBlockOutputCompound compound) {
         int size = compound.blocksAndRawWeights.size();
 
-        PacketCodecs.VAR_INT.encode(buf, size);
+        ByteBufCodecs.VAR_INT.encode(buf, size);
         for (Block block : compound.blocksAndRawWeights.keySet()) {
             KlaxonCodecUtils.BLOCK_PACKET_CODEC.encode(buf, block);
-            PacketCodecs.VAR_INT.encode(buf, compound.blocksAndRawWeights.get(block));
+            ByteBufCodecs.VAR_INT.encode(buf, compound.blocksAndRawWeights.get(block));
         }
     }
 
-    private static WeightedBlockOutputCompound read(RegistryByteBuf buf) {
+    private static WeightedBlockOutputCompound read(RegistryFriendlyByteBuf buf) {
         int size = buf.readInt();
         HashMap<Block, Integer> entries = HashMap.newHashMap(size);
 
         for (int i = 0; i < size; i++) {
             entries.put(
                     KlaxonCodecUtils.BLOCK_PACKET_CODEC.decode(buf),
-                    PacketCodecs.VAR_INT.decode(buf)
+                    ByteBufCodecs.VAR_INT.decode(buf)
             );
         }
 

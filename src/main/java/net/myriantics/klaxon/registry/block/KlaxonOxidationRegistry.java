@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.registry.block;
 
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 
 public abstract class KlaxonOxidationRegistry {

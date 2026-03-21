@@ -1,40 +1,40 @@
 package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.*;
-import net.minecraft.item.ItemStack;
-
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.*;
-import net.minecraft.world.WorldEvents;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
+import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
-import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.*;
+import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.HORIZONTAL_FACING;
+import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.isFrontObstructed;
 
-public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, SidedInventory {
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+public class DeepslateBlastProcessorBlockEntity extends RandomizableContainerBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
+    private NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
     public static final int INGREDIENT_INDEX = 0;
     public static final int CATALYST_INDEX = 1;
     private static final int[] INGREDIENT_ITEM_SLOTS = new int[]{INGREDIENT_INDEX};
@@ -45,13 +45,13 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
     public DeepslateBlastProcessorBlockEntity(BlockPos pos, BlockState state) {
         super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        DeepslateBlastProcessorScreenHandler screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.create(world, pos));
-        screenHandler.onContentChanged(this);
+    protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
+        DeepslateBlastProcessorScreenHandler screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ContainerLevelAccess.create(level, worldPosition));
+        screenHandler.slotsChanged(this);
         activeScreenHandlers.add(screenHandler);
         return screenHandler;
     }
@@ -62,39 +62,39 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
     public void updateAllActiveScreenHandlers() {
         for (DeepslateBlastProcessorScreenHandler screenHandler : activeScreenHandlers) {
-            screenHandler.onContentChanged(this);
+            screenHandler.slotsChanged(this);
         }
     }
 
     @Override
-    protected Text getContainerName() {
-        return Text.translatable(getCachedState().getBlock().getTranslationKey());
+    protected Component getDefaultName() {
+        return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
     @Override
-    public DefaultedList<ItemStack> getHeldStacks() {
+    public NonNullList<ItemStack> getItems() {
         return inventory;
     }
 
     @Override
-    protected void setHeldStacks(DefaultedList<ItemStack> inventory) {
+    protected void setItems(NonNullList<ItemStack> inventory) {
         this.inventory = inventory;
     }
 
-    public int size() {
+    public int getContainerSize() {
         return 2;
     }
 
     @Override
-    public int getMaxCountPerStack() {
+    public int getMaxStackSize() {
         return MAX_HELD_STACK_COUNT;
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
-        if (world != null) {
+    public int[] getSlotsForFace(Direction side) {
+        if (level != null) {
             // if it's the sides, you can insert into fuel
-            Direction blockFacing = world.getBlockState(pos).get(HORIZONTAL_FACING);
+            Direction blockFacing = level.getBlockState(worldPosition).getValue(HORIZONTAL_FACING);
             if (side == BlockDirectionHelper.getLeft(blockFacing) || side == BlockDirectionHelper.getRight(blockFacing)) {
                 return CATALYST_ITEM_SLOTS;
             }
@@ -107,10 +107,10 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
     }
 
     @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction dir) {
         // if the slot you want to access is available for the side you're accessing from, check if the item is valid
         // for that stack
-        int[] availableSlots = getAvailableSlots(dir);
+        int[] availableSlots = getSlotsForFace(dir);
 
         if (availableSlots == null || stack.isEmpty() || availableSlots[0] == -1) {
             return false;
@@ -118,7 +118,7 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
         for (int availableSlot : availableSlots) {
             if (slot == availableSlot) {
-                return this.isValid(slot, stack);
+                return this.canPlaceItem(slot, stack);
             }
         }
         return false;
@@ -127,11 +127,11 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
 
     @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        if (world != null && !world.isReceivingRedstonePower(pos)) {
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction dir) {
+        if (level != null && !level.hasNeighborSignal(worldPosition)) {
 
             // get the available slots for the side you're trying to pull from
-            int[] availableSlots = getAvailableSlots(dir);
+            int[] availableSlots = getSlotsForFace(dir);
 
             // null protection go brrr
             if (availableSlots == null || availableSlots[0] == -1) {
@@ -149,18 +149,18 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
     }
 
     @Override
-    public boolean isValid(int slot, ItemStack stack) {
+    public boolean canPlaceItem(int slot, ItemStack stack) {
         // look through the whole inventory and return true if selected slot is inbounds and empty
-        for (int i = 0; i < this.size(); i++) {
+        for (int i = 0; i < this.getContainerSize(); i++) {
             if (slot == i) {
-                return getStack(slot).isEmpty();
+                return getItem(slot).isEmpty();
             }
         }
         return false;
     }
 
     public void onRedstoneImpulse() {
-        if (world != null && !world.isClient) {
+        if (level != null && !level.isClientSide) {
 
             // default to true so that it shows the particles when dispensing nothing
             boolean shouldRunDispenserEffects = true;
@@ -170,47 +170,47 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
                 ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(this);
 
                 // compute blast processor behavior
-                ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, this, recipeInventory);
+                ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(level, worldPosition, this, recipeInventory);
 
                 ExplosiveCatalystBehavior behavior = data.behavior().value();
 
                 // transform data if needed
-                BlastProcessingRecipeData processingData = behavior.getBlastProcessingRecipeData(world, pos, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), data));
+                BlastProcessingRecipeData processingData = behavior.getBlastProcessingRecipeData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), data));
 
                 // do explosion effect
-                behavior.onExplosion(world, pos, this, data, world.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
+                behavior.onExplosion(level, worldPosition, this, data, level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
 
                 // eject recipe results
-                behavior.ejectItems(world, pos, this, processingData, data);
+                behavior.ejectItems(level, worldPosition, this, processingData, data);
 
-                shouldRunDispenserEffects = behavior.shouldRunDispenserEffects(world, pos, this, recipeInventory);
+                shouldRunDispenserEffects = behavior.shouldRunDispenserEffects(level, worldPosition, this, recipeInventory);
             }
 
             // if this has been exploded, dont run these
             if (shouldRunDispenserEffects && !this.isRemoved()) {
-                world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(world.getBlockState(pos)));
-                world.syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pos, 0);
+                level.gameEvent(GameEvent.BLOCK_ACTIVATE, worldPosition, GameEvent.Context.of(level.getBlockState(worldPosition)));
+                level.levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, worldPosition, 0);
 
                 // display particles if not front obstructed
-                if (!isFrontObstructed(world, pos)) {
-                    world.syncWorldEvent(WorldEvents.DISPENSER_ACTIVATED, pos, world.getBlockState(pos).get(HORIZONTAL_FACING).getId());
+                if (!isFrontObstructed(level, worldPosition)) {
+                    level.levelEvent(LevelEvent.PARTICLES_SHOOT_SMOKE, worldPosition, level.getBlockState(worldPosition).getValue(HORIZONTAL_FACING).get3DDataValue());
                 }
             }
         }
     }
 
     public void updateBlockState(@Nullable BlockState appendedState) {
-        if (world != null && world.getBlockState(pos).getBlock() instanceof DeepslateBlastProcessorBlock blastProcessorBlock) {
-            blastProcessorBlock.updateBlockState(world, pos, appendedState);
+        if (level != null && level.getBlockState(worldPosition).getBlock() instanceof DeepslateBlastProcessorBlock blastProcessorBlock) {
+            blastProcessorBlock.updateBlockState(level, worldPosition, appendedState);
         }
     }
 
 
     @Override
-    public void markDirty() {
+    public void setChanged() {
         updateAllActiveScreenHandlers();
         updateBlockState(null);
-        super.markDirty();
+        super.setChanged();
     }
 
     public Position getExplosionOutputLocation(Direction facing) {
@@ -222,10 +222,10 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
     }
 
     private Position getItemOutputLocation(@Nullable Direction direction, double offset) {
-        Position centerPos = pos.toCenterPos();
-        double x = centerPos.getX();
-        double y = centerPos.getY() - 0.3125;
-        double z = centerPos.getZ();
+        Position centerPos = worldPosition.getCenter();
+        double x = centerPos.x();
+        double y = centerPos.y() - 0.3125;
+        double z = centerPos.z();
 
         if (direction != null) {
             switch (direction) {
@@ -237,11 +237,11 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
         }
 
 
-        return new Vec3d(x, y, z);
+        return new Vec3(x, y, z);
     }
 
     @Override
-    public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayerEntity player) {
+    public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayer player) {
         ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(this);
 
         // default values if world is null
@@ -249,10 +249,10 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
         BlastProcessingRecipeData blastProcessingRecipeData = BlastProcessingRecipeData.ZERO;
 
         // if we have a world, actually yoink the proper values.
-        if (world != null) {
-            explosiveCatalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, this, recipeInventory);
+        if (level != null) {
+            explosiveCatalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(level, worldPosition, this, recipeInventory);
 
-            blastProcessingRecipeData = explosiveCatalystData.behavior().value().getBlastProcessingPreviewData(world, pos, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), explosiveCatalystData));
+            blastProcessingRecipeData = explosiveCatalystData.behavior().value().getBlastProcessingPreviewData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), explosiveCatalystData));
         }
 
         return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
@@ -265,19 +265,19 @@ public class DeepslateBlastProcessorBlockEntity extends LootableContainerBlockEn
 
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.readLootTable(nbt)) {
-            Inventories.readNbt(nbt, this.inventory, registryLookup);
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(nbt)) {
+            ContainerHelper.loadAllItems(nbt, this.inventory, registryLookup);
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        if (!this.writeLootTable(nbt)) {
-            Inventories.writeNbt(nbt, this.inventory, registryLookup);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
+        if (!this.trySaveLootTable(nbt)) {
+            ContainerHelper.saveAllItems(nbt, this.inventory, registryLookup);
         }
     }
 }

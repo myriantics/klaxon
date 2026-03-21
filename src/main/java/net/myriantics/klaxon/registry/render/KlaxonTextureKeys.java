@@ -1,17 +1,17 @@
 package net.myriantics.klaxon.registry.render;
 
-import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.models.model.TextureSlot;
 
 public abstract class KlaxonTextureKeys {
 
-    public static final TextureKey U_BEND_BOTTOM = of("u_bend_bottom");
-    public static final TextureKey U_BEND_SIDE = of("u_bend_side");
-    public static final TextureKey U_BEND_CURVE = of("u_bend_curve");
+    public static final TextureSlot U_BEND_BOTTOM = of("u_bend_bottom");
+    public static final TextureSlot U_BEND_SIDE = of("u_bend_side");
+    public static final TextureSlot U_BEND_CURVE = of("u_bend_curve");
 
-    public static final TextureKey CASING = of("casing");
-    public static final TextureKey CORE = of("core");
+    public static final TextureSlot CASING = of("casing");
+    public static final TextureSlot CORE = of("core");
 
-    private static TextureKey of(String name) {
-        return TextureKey.of(name);
+    private static TextureSlot of(String name) {
+        return TextureSlot.create(name);
     }
 }

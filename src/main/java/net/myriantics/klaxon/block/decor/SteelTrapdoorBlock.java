@@ -1,59 +1,59 @@
 package net.myriantics.klaxon.block.decor;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSetType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TrapdoorBlock;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.material.Fluids;
 import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
 
-public class SteelTrapdoorBlock extends TrapdoorBlock implements Wrenchable {
-    public SteelTrapdoorBlock(BlockSetType type, Settings settings) {
+public class SteelTrapdoorBlock extends TrapDoorBlock implements Wrenchable {
+    public SteelTrapdoorBlock(BlockSetType type, Properties settings) {
         super(type, settings);
     }
 
     @Override
-    protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!world.isClient()) {
-            boolean isRecievingPower = world.isReceivingRedstonePower(pos);
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        if (!world.isClientSide()) {
+            boolean isRecievingPower = world.hasNeighborSignal(pos);
 
-            if (isRecievingPower != state.get(POWERED)) {
+            if (isRecievingPower != state.getValue(POWERED)) {
                 BlockState newState = state.cycle(POWERED);
 
                 // flips on up signal
                 if (isRecievingPower) {
-                    this.playToggleSound(null, world, pos, !state.get(OPEN));
+                    this.playSound(null, world, pos, !state.getValue(OPEN));
                     newState = newState.cycle(OPEN);
 
-                    if (state.get(WATERLOGGED)) {
-                        world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+                    if (state.getValue(WATERLOGGED)) {
+                        world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
                     }
                 }
 
-                world.setBlockState(pos, newState);
+                world.setBlockAndUpdate(pos, newState);
             }
         }
     }
 
     @Override
-    public ItemActionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
+    public ItemInteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
         BlockPos targetPos = context.hitResult().getBlockPos();
 
-        this.playToggleSound(context.player(), context.world(), targetPos, !context.targetState().get(OPEN));
-        context.world().setBlockState(targetPos, context.targetState().cycle(OPEN));
+        this.playSound(context.player(), context.world(), targetPos, !context.targetState().getValue(OPEN));
+        context.world().setBlockAndUpdate(targetPos, context.targetState().cycle(OPEN));
 
-        return ItemActionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
     public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
-        this.playToggleSound(null, context.serverWorld(), context.targetPos(), !context.targetState().get(OPEN));
-        context.serverWorld().setBlockState(context.targetPos(), context.targetState().cycle(OPEN));
+        this.playSound(null, context.serverWorld(), context.targetPos(), !context.targetState().getValue(OPEN));
+        context.serverWorld().setBlockAndUpdate(context.targetPos(), context.targetState().cycle(OPEN));
 
         return true;
     }

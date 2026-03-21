@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageSubProvider;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockEntityTypeTags;
-import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 
 public final class KlaxonEnUsBlockEntityTypeTagProvider extends KlaxonEnUsLanguageSubProvider {
     public KlaxonEnUsBlockEntityTypeTagProvider(KlaxonEnUsLanguageProvider provider, FabricLanguageProvider.TranslationBuilder builder) {

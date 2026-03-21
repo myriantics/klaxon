@@ -1,14 +1,14 @@
 package net.myriantics.klaxon.mixin.minecraft.gerald_sniffer;
 
-import net.minecraft.entity.passive.SnifferEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.animal.sniffer.Sniffer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.Optional;
 
-@Mixin(SnifferEntity.class)
+@Mixin(Sniffer.class)
 public interface SnifferEntityInvoker {
-    @Invoker(value = "findSniffingTargetPos")
+    @Invoker(value = "calculateDigPosition")
     Optional<BlockPos> klaxon$invokeFindSniffingTargetPos();
 }

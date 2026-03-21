@@ -1,33 +1,32 @@
 package net.myriantics.klaxon.item.equipment.armor;
 
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.item.KlaxonAttributeModifierComponentModifications;
-import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 
 public class SteelArmorItem extends ArmorItem {
 
     public static final float MOVEMENT_SPEED_MULTIPLIER = -0.04f;
 
-    public static final Identifier MOVEMENT_SPEED_MULTIPLIER_ID = KlaxonCommon.locate("steel_armor_movement_speed_multiplier_id");
+    public static final ResourceLocation MOVEMENT_SPEED_MULTIPLIER_ID = KlaxonCommon.locate("steel_armor_movement_speed_multiplier_id");
 
-    public SteelArmorItem(RegistryEntry<ArmorMaterial> material, Type type, Settings settings) {
-        super(material, type, settings.maxDamage(type.getMaxDamage(32)).maxCount(1));
+    public SteelArmorItem(Holder<ArmorMaterial> material, Type type, Properties settings) {
+        super(material, type, settings.durability(type.getDurability(32)).stacksTo(1));
     }
 
-    public static AttributeModifiersComponent appendAttributeModifiers(AttributeModifiersComponent attributeModifiers, AttributeModifierSlot slot) {
+    public static ItemAttributeModifiers appendAttributeModifiers(ItemAttributeModifiers attributeModifiers, EquipmentSlotGroup slot) {
 
         return attributeModifiers
-                .with(
-                        EntityAttributes.GENERIC_MOVEMENT_SPEED,
-                        new EntityAttributeModifier(KlaxonAttributeModifierComponentModifications.idFromSlot(MOVEMENT_SPEED_MULTIPLIER_ID, slot), MOVEMENT_SPEED_MULTIPLIER, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                .withModifierAdded(
+                        Attributes.MOVEMENT_SPEED,
+                        new AttributeModifier(KlaxonAttributeModifierComponentModifications.idFromSlot(MOVEMENT_SPEED_MULTIPLIER_ID, slot), MOVEMENT_SPEED_MULTIPLIER, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                         slot
                 );
     }

@@ -1,6 +1,6 @@
 package net.myriantics.klaxon.registry.worldgen;
 
-import net.minecraft.block.SaplingGenerator;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.functional.hallnox_pod.DirectionalSaplingGenerator;
 import net.myriantics.klaxon.datagen.KlaxonFeatureProvider;
@@ -8,7 +8,7 @@ import net.myriantics.klaxon.datagen.KlaxonFeatureProvider;
 import java.util.Optional;
 
 public abstract class KlaxonSaplingGenerators {
-    public static final SaplingGenerator EMPTY = new SaplingGenerator(
+    public static final TreeGrower EMPTY = new TreeGrower(
             "empty",
             0.0f,
             Optional.empty(),

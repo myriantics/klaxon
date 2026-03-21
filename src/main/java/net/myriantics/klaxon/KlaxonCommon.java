@@ -3,7 +3,7 @@ package net.myriantics.klaxon;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.behavior.KlaxonBlockStateWrenchBehaviors;
@@ -27,8 +27,8 @@ public class KlaxonCommon implements ModInitializer {
 	public static final String MOD_ID = "klaxon";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static Identifier locate(String name) {
-		return Identifier.of(MOD_ID, name);
+	public static ResourceLocation locate(String name) {
+		return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
 	}
 
     public static String locateAlt(String name) {

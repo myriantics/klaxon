@@ -1,14 +1,16 @@
 package net.myriantics.klaxon.compat.jade.providers;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
-import snownee.jade.api.*;
+import snownee.jade.api.EntityAccessor;
+import snownee.jade.api.IEntityComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.StreamServerDataProvider;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.IElement;
 import snownee.jade.api.ui.IElementHelper;
@@ -16,7 +18,7 @@ import snownee.jade.api.ui.IElementHelper;
 public enum GrappleClawEntityProvider implements IEntityComponentProvider, StreamServerDataProvider<EntityAccessor, ItemStack> {
     INSTANCE;
 
-    private static final Identifier ID = KlaxonCommon.locate("grapple_claw");
+    private static final ResourceLocation ID = KlaxonCommon.locate("grapple_claw");
 
     @Override
     public @Nullable IElement getIcon(EntityAccessor accessor, IPluginConfig config, IElement currentIcon) {
@@ -29,20 +31,20 @@ public enum GrappleClawEntityProvider implements IEntityComponentProvider, Strea
     }
 
     @Override
-    public Identifier getUid() {
+    public ResourceLocation getUid() {
         return ID;
     }
 
     @Override
     public @Nullable ItemStack streamData(EntityAccessor entityAccessor) {
         if (entityAccessor.getEntity() instanceof GrappleClawEntity grappleClaw) {
-            return grappleClaw.getItemStack();
+            return grappleClaw.getPickupItemStackOrigin();
         }
         return ItemStack.EMPTY;
     }
 
     @Override
-    public PacketCodec<RegistryByteBuf, ItemStack> streamCodec() {
-        return ItemStack.PACKET_CODEC;
+    public StreamCodec<RegistryFriendlyByteBuf, ItemStack> streamCodec() {
+        return ItemStack.STREAM_CODEC;
     }
 }

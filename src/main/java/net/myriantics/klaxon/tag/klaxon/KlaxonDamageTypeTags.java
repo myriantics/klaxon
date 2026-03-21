@@ -1,8 +1,8 @@
 package net.myriantics.klaxon.tag.klaxon;
 
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.myriantics.klaxon.KlaxonCommon;
 
 public abstract class KlaxonDamageTypeTags {
@@ -15,6 +15,6 @@ public abstract class KlaxonDamageTypeTags {
     public static final TagKey<DamageType> GRAPPLE_WINCH_CABLE_TRANSMISSIBLE = createTag("grapple_winch_cable_transmissible");
 
     private static TagKey<DamageType> createTag(String name) {
-        return TagKey.of(RegistryKeys.DAMAGE_TYPE, KlaxonCommon.locate(name));
+        return TagKey.create(Registries.DAMAGE_TYPE, KlaxonCommon.locate(name));
     }
 }

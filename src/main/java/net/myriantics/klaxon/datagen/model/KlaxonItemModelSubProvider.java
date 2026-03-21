@@ -1,10 +1,12 @@
 package net.myriantics.klaxon.datagen.model;
 
-import net.minecraft.data.client.*;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.data.models.model.TextureSlot;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.model.item.FancierItemModelBuilder;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -16,9 +18,9 @@ import java.util.Map;
 
 public abstract class KlaxonItemModelSubProvider {
     public final KlaxonModelProvider provider;
-    public final ItemModelGenerator generator;
+    public final ItemModelGenerators generator;
 
-    public KlaxonItemModelSubProvider(KlaxonModelProvider provider, ItemModelGenerator generator) {
+    public KlaxonItemModelSubProvider(KlaxonModelProvider provider, ItemModelGenerators generator) {
         this.provider = provider;
         this.generator = generator;
     }
@@ -26,19 +28,19 @@ public abstract class KlaxonItemModelSubProvider {
     public abstract void generateModels();
 
     protected void registerSimpleItem(Item item) {
-        generator.register(item, Models.GENERATED);
+        generator.generateFlatItem(item, ModelTemplates.FLAT_ITEM);
     }
 
     protected void register2DGrappleWinch() {
-        Identifier modelId = getItemId(Registries.ITEM.getId(KlaxonItems.GRAPPLE_WINCH));
+        ResourceLocation modelId = getItemId(BuiltInRegistries.ITEM.getKey(KlaxonItems.GRAPPLE_WINCH));
 
         // predicate
-        Identifier chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
+        ResourceLocation chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
 
         // texture key
-        TextureKey layer0 = TextureKey.LAYER0;
+        TextureSlot layer0 = TextureSlot.LAYER0;
 
-        FancierItemModelBuilder.of(Models.GENERATED, modelId, Map.of(
+        FancierItemModelBuilder.of(ModelTemplates.FLAT_ITEM, modelId, Map.of(
                 layer0, KlaxonTextures.GRAPPLE_WINCH_2D_UNLOADED
                 ))
                 .textureOverride(chargedPredicate, "layer0", 2)
@@ -49,18 +51,18 @@ public abstract class KlaxonItemModelSubProvider {
     }
 
     protected void register3DGrappleWinch() {
-        Identifier raw3dId = Registries.ITEM.getId(KlaxonItems.GRAPPLE_WINCH).withPath((path) -> path + "_3d");
-        Identifier modelId = getItemId(raw3dId);
+        ResourceLocation raw3dId = BuiltInRegistries.ITEM.getKey(KlaxonItems.GRAPPLE_WINCH).withPath((path) -> path + "_3d");
+        ResourceLocation modelId = getItemId(raw3dId);
 
         // predicates
-        Identifier chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
-        Identifier retractingPredicate = KlaxonItemModelPredicateIds.RETRACTING;
-        Identifier winchCableLengthPredicate = KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH;
+        ResourceLocation chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
+        ResourceLocation retractingPredicate = KlaxonItemModelPredicateIds.RETRACTING;
+        ResourceLocation winchCableLengthPredicate = KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH;
 
         // texture keys
-        TextureKey structure = TextureKey.of("5");
-        TextureKey claw = TextureKey.of("3");
-        TextureKey spool = TextureKey.of("4");
+        TextureSlot structure = TextureSlot.create("5");
+        TextureSlot claw = TextureSlot.create("3");
+        TextureSlot spool = TextureSlot.create("4");
 
         FancierItemModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_4, modelId, Map.of(
                         structure, KlaxonTextures.GRAPPLE_WINCH_3D_STRUCTURE,
@@ -76,11 +78,11 @@ public abstract class KlaxonItemModelSubProvider {
                 .add(5f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_1)
                 .add(6f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_0)
                 .build()
-                .textureOverride(chargedPredicate, claw.getName(), 2)
+                .textureOverride(chargedPredicate, claw.getId(), 2)
                 .add(0, KlaxonTextures.EMPTY)
                 .add(1, KlaxonTextures.GRAPPLE_WINCH_STEEL_GRAPPLE_CLAW)
                 .build()
-                .textureOverride(retractingPredicate, spool.getName(), 2)
+                .textureOverride(retractingPredicate, spool.getId(), 2)
                 .add(0, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL)
                 .add(1, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL_RETRACTING)
                 .build()
@@ -89,29 +91,29 @@ public abstract class KlaxonItemModelSubProvider {
 
     protected void registerArmor(Item armor) {
         if (armor instanceof ArmorItem armorItem) {
-            generator.registerArmor(armorItem);
+            generator.generateArmorTrims(armorItem);
         } else {
             throw new IllegalArgumentException(armor + "is not an ArmorItem. Fix.");
         }
     }
 
-    public static Identifier getItemId(String name) {
+    public static ResourceLocation getItemId(String name) {
         return KlaxonCommon.locate("item/" + name);
     }
 
-    public static Identifier getItemId(Identifier id) {
+    public static ResourceLocation getItemId(ResourceLocation id) {
         return id.withPath((path) -> "item/" + path);
     }
 
-    public static Identifier getSubModelId(Identifier id, String prefix) {
+    public static ResourceLocation getSubModelId(ResourceLocation id, String prefix) {
         return id.withPath((path) -> "item/" + prefix + "/" + path);
     }
 
-    public static Identifier getSimpleModelId(String name) {
+    public static ResourceLocation getSimpleModelId(String name) {
         return KlaxonCommon.locate("item/simple/" + name);
     }
 
-    public static Identifier getAdvancedModelId(String name) {
+    public static ResourceLocation getAdvancedModelId(String name) {
         return KlaxonCommon.locate("item/advanced/" + name);
     }
 }

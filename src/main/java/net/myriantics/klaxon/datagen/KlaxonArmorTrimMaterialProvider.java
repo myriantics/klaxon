@@ -2,17 +2,17 @@ package net.myriantics.klaxon.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.trim.ArmorTrimMaterial;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.item.KlaxonArmorTrimMaterials;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -21,16 +21,16 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class KlaxonArmorTrimMaterialProvider extends FabricDynamicRegistryProvider {
-    public KlaxonArmorTrimMaterialProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public KlaxonArmorTrimMaterialProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup wrapperLookup, Entries entries) {
-        entries.addAll(wrapperLookup.getWrapperOrThrow(RegistryKeys.TRIM_MATERIAL));
+    protected void configure(HolderLookup.Provider wrapperLookup, Entries entries) {
+        entries.addAll(wrapperLookup.lookupOrThrow(Registries.TRIM_MATERIAL));
     }
 
-    public static void generateArmorTrimMaterials(Registerable<ArmorTrimMaterial> registry) {
+    public static void generateArmorTrimMaterials(BootstrapContext<TrimMaterial> registry) {
         register(
                 registry,
                 KlaxonArmorTrimMaterials.STEEL,
@@ -40,23 +40,23 @@ public class KlaxonArmorTrimMaterialProvider extends FabricDynamicRegistryProvid
         );
     }
 
-    private static void register(Registerable<ArmorTrimMaterial> registry, RegistryKey<ArmorTrimMaterial> key, Item ingredient, Style style, float itemModelIndex) {
+    private static void register(BootstrapContext<TrimMaterial> registry, ResourceKey<TrimMaterial> key, Item ingredient, Style style, float itemModelIndex) {
         register(registry, key, ingredient, style, itemModelIndex, Map.of());
     }
 
     private static void register(
-            Registerable<ArmorTrimMaterial> registry,
-            RegistryKey<ArmorTrimMaterial> key,
+            BootstrapContext<TrimMaterial> registry,
+            ResourceKey<TrimMaterial> key,
             Item ingredient,
             Style style,
             float itemModelIndex,
-            Map<RegistryEntry<ArmorMaterial>, String> overrideArmorMaterials
+            Map<Holder<ArmorMaterial>, String> overrideArmorMaterials
     ) {
-        ArmorTrimMaterial armorTrimMaterial = ArmorTrimMaterial.of(
-                key.getValue().getPath(),
+        TrimMaterial armorTrimMaterial = TrimMaterial.create(
+                key.location().getPath(),
                 ingredient,
                 itemModelIndex,
-                Text.translatable(Util.createTranslationKey("trim_material", key.getValue())).fillStyle(style),
+                Component.translatable(Util.makeDescriptionId("trim_material", key.location())).withStyle(style),
                 overrideArmorMaterials
         );
         registry.register(key, armorTrimMaterial);

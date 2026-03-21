@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.mechanics.grapple_winch.manager;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 
-public abstract class GrappleWinchConnectionManager extends PersistentState {
-    protected final World world;
+public abstract class GrappleWinchConnectionManager extends SavedData {
+    protected final Level world;
     protected final LinkedList<Runnable> disconnectQueue = new LinkedList<>();
 
-    protected GrappleWinchConnectionManager(World world) {
+    protected GrappleWinchConnectionManager(Level world) {
         this.world = world;
     }
 
@@ -26,11 +26,11 @@ public abstract class GrappleWinchConnectionManager extends PersistentState {
         }
     }
 
-    public World getWorld() {
+    public Level getWorld() {
         return this.world;
     }
 
-    public abstract @Nullable GrappleWinchConnection fromPlayer(PlayerEntity player);
+    public abstract @Nullable GrappleWinchConnection fromPlayer(Player player);
 
     public abstract @Nullable GrappleWinchConnection fromConnectionId(int connectionId);
 
@@ -43,7 +43,7 @@ public abstract class GrappleWinchConnectionManager extends PersistentState {
     protected abstract void disconnectInternal(int connectionId, CableDetachmentReason reason);
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         throw new AssertionError();
     }
 
@@ -53,7 +53,7 @@ public abstract class GrappleWinchConnectionManager extends PersistentState {
         }
     }
 
-    public static GrappleWinchConnectionManager get(World world) {
+    public static GrappleWinchConnectionManager get(Level world) {
         @Nullable GrappleWinchConnectionManager manager = ((Access) world).klaxon$getGrappleWinchConnectionManager();
         if (manager == null) {
             throw new AssertionError("Grapple Winch Connection Manager not present in " + world + '.');

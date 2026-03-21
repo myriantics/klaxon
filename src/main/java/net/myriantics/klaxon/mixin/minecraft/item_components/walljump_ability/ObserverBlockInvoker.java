@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.mixin.minecraft.item_components.walljump_ability;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ObserverBlock;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.ObserverBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface ObserverBlockInvoker {
 
     // used for the hammer's observer activation ability
-    @Invoker("scheduledTick")
-    void invokeScheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);
+    @Invoker("tick")
+    void invokeScheduledTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random);
 }

@@ -1,15 +1,15 @@
 package net.myriantics.klaxon.registry;
 
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.render.model.HelmetCrestEntityModel;
 
 public abstract class KlaxonEntityModelLayers {
-    public static EntityModelLayer HELMET_CREST = register("helmet_crest", HelmetCrestEntityModel::getTexturedModelData);
+    public static ModelLayerLocation HELMET_CREST = register("helmet_crest", HelmetCrestEntityModel::getTexturedModelData);
 
-    private static EntityModelLayer register(String name, EntityModelLayerRegistry.TexturedModelDataProvider provider) {
-        EntityModelLayer layer = new EntityModelLayer(KlaxonCommon.locate(name), "main");
+    private static ModelLayerLocation register(String name, EntityModelLayerRegistry.TexturedModelDataProvider provider) {
+        ModelLayerLocation layer = new ModelLayerLocation(KlaxonCommon.locate(name), "main");
         EntityModelLayerRegistry.registerModelLayer(layer, provider);
         return layer;
     }

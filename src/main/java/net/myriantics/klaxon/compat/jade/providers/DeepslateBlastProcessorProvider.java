@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.compat.jade.providers;
 
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
@@ -23,28 +23,28 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
     private DeepslateBlastProcessorProvider() {
     }
 
-    private static final Identifier ID = KlaxonCommon.locate("deepslate_blast_processor");
+    private static final ResourceLocation ID = KlaxonCommon.locate("deepslate_blast_processor");
 
     @Override
     public boolean shouldRequestData(BlockAccessor accessor) {
-        return accessor.getBlockState().get(DeepslateBlastProcessorBlock.FUELED);
+        return accessor.getBlockState().getValue(DeepslateBlastProcessorBlock.FUELED);
     }
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         double explosionPower = this.decodeFromData(blockAccessor).orElse(0.0);
-        iTooltip.add(Text.translatable("klaxon.jade.text.blast_processor.explosion_power", explosionPower));
+        iTooltip.add(Component.translatable("klaxon.jade.text.blast_processor.explosion_power", explosionPower));
     }
 
     @Override
-    public Identifier getUid() {
+    public ResourceLocation getUid() {
         return ID;
     }
 
     @Override
     public @NotNull Double streamData(BlockAccessor blockAccessor) {
         if (blockAccessor.getBlockEntity() instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(blastProcessor.getStack(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
+            ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(blastProcessor.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
 
 
             return ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blockAccessor.getLevel(), blockAccessor.getPosition(), blastProcessor, recipeInventory).explosionPower();
@@ -53,7 +53,7 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
     }
 
     @Override
-    public PacketCodec<RegistryByteBuf, Double> streamCodec() {
-        return PacketCodecs.DOUBLE.cast();
+    public StreamCodec<RegistryFriendlyByteBuf, Double> streamCodec() {
+        return ByteBufCodecs.DOUBLE.cast();
     }
 }

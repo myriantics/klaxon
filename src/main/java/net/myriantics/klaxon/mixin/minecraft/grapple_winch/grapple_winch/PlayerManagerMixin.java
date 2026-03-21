@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_winch;
 
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import org.jetbrains.annotations.Nullable;
@@ -10,15 +10,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PlayerManager.class)
+@Mixin(PlayerList.class)
 public abstract class PlayerManagerMixin {
 
     @Inject(
             method = "remove",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;hasVehicle()Z")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isPassenger()Z")
     )
-    private void klaxon$markConnectionAsDormantWhenLoggingOut(ServerPlayerEntity player, CallbackInfo ci) {
-        @Nullable ServerGrappleWinchConnection connection = ServerGrappleWinchConnectionManager.get(player.getServerWorld()).fromPlayer(player);
+    private void klaxon$markConnectionAsDormantWhenLoggingOut(ServerPlayer player, CallbackInfo ci) {
+        @Nullable ServerGrappleWinchConnection connection = ServerGrappleWinchConnectionManager.get(player.serverLevel()).fromPlayer(player);
         if (connection != null) {
             connection.makeDormant();
         }

@@ -1,27 +1,21 @@
 package net.myriantics.klaxon.datagen.advancement.providers;
 
-import net.minecraft.advancement.*;
-import net.minecraft.advancement.criterion.InventoryChangedCriterion;
-import net.minecraft.advancement.criterion.TickCriterion;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.predicate.entity.LocationPredicate;
-import net.minecraft.predicate.entity.MovementPredicate;
-import net.minecraft.predicate.item.ItemPredicate;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
 import net.myriantics.klaxon.advancement.criterion.*;
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.EntityGrappleCriterion;
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchCableDisconnectCriterion;
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchVeinMineCriterion;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementSubProvider;
-import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -32,7 +26,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import java.util.function.Consumer;
 
 public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvider {
-    public KlaxonStageOneAdvancementProvider(Consumer<AdvancementEntry> consumer) {
+    public KlaxonStageOneAdvancementProvider(Consumer<AdvancementHolder> consumer) {
         super(consumer, STAGE);
     }
 
@@ -64,44 +58,44 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     public static final String GRAPPLE_WINCH_VEINMINE_GLOWSTONE = "grapple_winch_veinmine_glowstone";
 
     @Override
-    public AdvancementEntry generateAdvancements() {
-        AdvancementEntry root = generateRoot();
+    public AdvancementHolder generateAdvancements() {
+        AdvancementHolder root = generateRoot();
         generateAdvancements(root);
         return root;
     }
 
-    private AdvancementEntry generateRoot() {
-        return addRootAdvancement(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, AdvancementFrame.TASK, TickCriterion.Conditions.createTick());
+    private AdvancementHolder generateRoot() {
+        return addRootAdvancement(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, AdvancementType.TASK, PlayerTrigger.TriggerInstance.tick());
     }
 
-    private void generateAdvancements(AdvancementEntry root) {
-        AdvancementEntry watchBlastProcessorCraft = addTask(root, WATCH_BLAST_PROCESSOR_CRAFT, KlaxonItems.FRACTURED_RAW_IRON, BlockActivationCriterion.Conditions.create(KlaxonBlockTags.BLAST_PROCESSORS));
-        AdvancementEntry obtainHallnoxPod = addTask(root, OBTAIN_HALLNOX_POD, KlaxonItems.HALLNOX_POD, InventoryChangedCriterion.Conditions.items(KlaxonItems.HALLNOX_POD));
+    private void generateAdvancements(AdvancementHolder root) {
+        AdvancementHolder watchBlastProcessorCraft = addTask(root, WATCH_BLAST_PROCESSOR_CRAFT, KlaxonItems.FRACTURED_RAW_IRON, BlockActivationCriterion.Conditions.create(KlaxonBlockTags.BLAST_PROCESSORS));
+        AdvancementHolder obtainHallnoxPod = addTask(root, OBTAIN_HALLNOX_POD, KlaxonItems.HALLNOX_POD, InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.HALLNOX_POD));
 
-        AdvancementEntry watchNetherReactorCoreActivate = addTask(obtainHallnoxPod, WATCH_NETHER_REACTOR_CORE_ACTIVATE, KlaxonItems.NETHER_REACTOR_CORE, BlockActivationCriterion.Conditions.create(KlaxonBlockTags.NETHER_REACTOR_CORES));
-        AdvancementEntry hammerCraftMetalPlate = addTask(watchBlastProcessorCraft, USE_HAMMER_TO_MAKE_METAL_PLATE, KlaxonItems.CRUDE_STEEL_PLATE, ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.fromTag(KlaxonConventionalItemTags.PLATES)));
-        AdvancementEntry obtainAnyRubberGlob = addTask(watchBlastProcessorCraft, OBTAIN_ANY_RUBBER_GLOB, KlaxonItems.RUBBER_GLOB, InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().items(KlaxonItems.RUBBER_GLOB)));
-        AdvancementEntry normalHammerWalljump = addTask(watchBlastProcessorCraft, HAMMER_WALLJUMP_NORMAL, KlaxonItems.STEEL_HAMMER, WalljumpAbilityCriterion.Conditions.createNormalWalljump());
-        AdvancementEntry makeshiftItemFullRepair = addTask(watchBlastProcessorCraft, MAKESHIFT_ITEM_FULL_REPAIR, Items.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
+        AdvancementHolder watchNetherReactorCoreActivate = addTask(obtainHallnoxPod, WATCH_NETHER_REACTOR_CORE_ACTIVATE, KlaxonItems.NETHER_REACTOR_CORE, BlockActivationCriterion.Conditions.create(KlaxonBlockTags.NETHER_REACTOR_CORES));
+        AdvancementHolder hammerCraftMetalPlate = addTask(watchBlastProcessorCraft, USE_HAMMER_TO_MAKE_METAL_PLATE, KlaxonItems.CRUDE_STEEL_PLATE, ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.of(KlaxonConventionalItemTags.PLATES)));
+        AdvancementHolder obtainAnyRubberGlob = addTask(watchBlastProcessorCraft, OBTAIN_ANY_RUBBER_GLOB, KlaxonItems.RUBBER_GLOB, InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(KlaxonItems.RUBBER_GLOB)));
+        AdvancementHolder normalHammerWalljump = addTask(watchBlastProcessorCraft, HAMMER_WALLJUMP_NORMAL, KlaxonItems.STEEL_HAMMER, WalljumpAbilityCriterion.Conditions.createNormalWalljump());
+        AdvancementHolder makeshiftItemFullRepair = addTask(watchBlastProcessorCraft, MAKESHIFT_ITEM_FULL_REPAIR, Items.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
 
-        AdvancementEntry boostedHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_BOOSTED, Items.BLAZE_POWDER,  WalljumpAbilityCriterion.Conditions.createStrengthWalljump());
-        AdvancementEntry minecartHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_MINECART, Items.CAULDRON, WalljumpAbilityCriterion.Conditions.createMinecartWalljump());
-        AdvancementEntry cableShearCraftMetalWire = addTask(hammerCraftMetalPlate, USE_CABLE_SHEARS_TO_MAKE_METAL_WIRE, KlaxonItems.STEEL_CABLE_SHEARS, ToolUsageRecipeCraftCriterion.Conditions.createWirecutting(Ingredient.fromTag(KlaxonConventionalItemTags.WIRES)));
-        AdvancementEntry obtainSteelCleaver = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_CLEAVER, KlaxonItems.STEEL_CLEAVER, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_CLEAVER));
-        AdvancementEntry obtainSteelWrench = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_WRENCH, KlaxonItems.STEEL_WRENCH, InventoryChangedCriterion.Conditions.items(KlaxonItems.STEEL_WRENCH));
-        AdvancementEntry obtainAnySteelArmor = addGoal(hammerCraftMetalPlate, OBTAIN_ANY_STEEL_ARMOR, KlaxonItems.STEEL_CHESTPLATE, InventoryChangedCriterion.Conditions.items(ItemPredicate.Builder.create().tag(KlaxonItemTags.STEEL_ARMOR)));
+        AdvancementHolder boostedHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_BOOSTED, Items.BLAZE_POWDER,  WalljumpAbilityCriterion.Conditions.createStrengthWalljump());
+        AdvancementHolder minecartHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_MINECART, Items.CAULDRON, WalljumpAbilityCriterion.Conditions.createMinecartWalljump());
+        AdvancementHolder cableShearCraftMetalWire = addTask(hammerCraftMetalPlate, USE_CABLE_SHEARS_TO_MAKE_METAL_WIRE, KlaxonItems.STEEL_CABLE_SHEARS, ToolUsageRecipeCraftCriterion.Conditions.createWirecutting(Ingredient.of(KlaxonConventionalItemTags.WIRES)));
+        AdvancementHolder obtainSteelCleaver = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_CLEAVER, KlaxonItems.STEEL_CLEAVER, InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.STEEL_CLEAVER));
+        AdvancementHolder obtainSteelWrench = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_WRENCH, KlaxonItems.STEEL_WRENCH, InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.STEEL_WRENCH));
+        AdvancementHolder obtainAnySteelArmor = addGoal(hammerCraftMetalPlate, OBTAIN_ANY_STEEL_ARMOR, KlaxonItems.STEEL_CHESTPLATE, InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(KlaxonItemTags.STEEL_ARMOR)));
 
-        AdvancementEntry editRailWithSteelWrench = addTask(obtainSteelWrench, ROTATE_RAIL_WITH_WRENCH, Items.RAIL, WrenchUsageCriterion.Conditions.createRotation(BlockTags.RAILS));
+        AdvancementHolder editRailWithSteelWrench = addTask(obtainSteelWrench, ROTATE_RAIL_WITH_WRENCH, Items.RAIL, WrenchUsageCriterion.Conditions.createRotation(BlockTags.RAILS));
         ItemStack loadedGrappleWinch = new ItemStack(KlaxonItems.GRAPPLE_WINCH);
-        loadedGrappleWinch.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW)));
-        AdvancementEntry obtainGrappleWinch = addTask(cableShearCraftMetalWire, OBTAIN_GRAPPLE_WINCH, loadedGrappleWinch, InventoryChangedCriterion.Conditions.items(KlaxonItems.GRAPPLE_WINCH));
+        loadedGrappleWinch.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW)));
+        AdvancementHolder obtainGrappleWinch = addTask(cableShearCraftMetalWire, OBTAIN_GRAPPLE_WINCH, loadedGrappleWinch, InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.GRAPPLE_WINCH));
 
-        AdvancementEntry grappleWinchDeAnchorGrappleClaw = addTask(obtainGrappleWinch, GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW, KlaxonItems.STEEL_GRAPPLE_CLAW, OneOffCriterion.Conditions.createDeAnchorGrappleClaw());
-        AdvancementEntry grappleWinchIntentionallyDisconnectCable = addTask(obtainGrappleWinch, GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE, KlaxonItems.STEEL_WIRE, GrappleWinchCableDisconnectCriterion.Conditions.createPlayer(CableDetachmentReason.INVALID_HELD_ITEMS, EntityPredicate.Builder.create().type(EntityType.PLAYER).movement(MovementPredicate.speed(NumberRange.DoubleRange.atLeast(5f/20))).build()));
+        AdvancementHolder grappleWinchDeAnchorGrappleClaw = addTask(obtainGrappleWinch, GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW, KlaxonItems.STEEL_GRAPPLE_CLAW, OneOffCriterion.Conditions.createDeAnchorGrappleClaw());
+        AdvancementHolder grappleWinchIntentionallyDisconnectCable = addTask(obtainGrappleWinch, GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE, KlaxonItems.STEEL_WIRE, GrappleWinchCableDisconnectCriterion.Conditions.createPlayer(CableDetachmentReason.INVALID_HELD_ITEMS, EntityPredicate.Builder.entity().of(EntityType.PLAYER).moving(MovementPredicate.speed(MinMaxBounds.Doubles.atLeast(5f/20))).build()));
         ItemStack enchantedGrappleClawStack = new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
-        enchantedGrappleClawStack.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
-        AdvancementEntry grappleWinchGrappleEnderDragon = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON, enchantedGrappleClawStack, EntityGrappleCriterion.Conditions.create(EntityType.ENDER_DRAGON));
+        enchantedGrappleClawStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+        AdvancementHolder grappleWinchGrappleEnderDragon = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON, enchantedGrappleClawStack, EntityGrappleCriterion.Conditions.create(EntityType.ENDER_DRAGON));
 
-        AdvancementEntry grappleWinchVeinMine = addChallenge(grappleWinchDeAnchorGrappleClaw, GRAPPLE_WINCH_VEINMINE_GLOWSTONE, Items.GLOWSTONE, GrappleWinchVeinMineCriterion.Conditions.create(Blocks.GLOWSTONE));
+        AdvancementHolder grappleWinchVeinMine = addChallenge(grappleWinchDeAnchorGrappleClaw, GRAPPLE_WINCH_VEINMINE_GLOWSTONE, Items.GLOWSTONE, GrappleWinchVeinMineCriterion.Conditions.create(Blocks.GLOWSTONE));
     }
 }

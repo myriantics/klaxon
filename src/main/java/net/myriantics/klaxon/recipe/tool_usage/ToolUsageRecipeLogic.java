@@ -1,33 +1,35 @@
 package net.myriantics.klaxon.recipe.tool_usage;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.resource.LifecycledResourceManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Position;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Position;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.CloseableResourceManager;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
@@ -36,7 +38,10 @@ import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 // Inspiration taken from AE2's Item Transformation system
 public abstract class ToolUsageRecipeLogic {
@@ -45,15 +50,15 @@ public abstract class ToolUsageRecipeLogic {
     public static final int MAX_SOUNDS_PER_ACTION = 4;
     public static final int MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION = 16;
 
-    public static boolean test(World world, ItemStack stack) {
+    public static boolean test(Level world, ItemStack stack) {
         return getValidToolsCache(world).contains(stack.getItem());
     }
 
-    private static Set<Item> getValidToolsCache(World world) {
+    private static Set<Item> getValidToolsCache(Level world) {
         if (VALID_TOOLS_CACHE.isEmpty()) {
             Set<Item> newCache = new HashSet<>();
-            for (RegistryEntry<ToolUsageRecipeType> type : world.getRegistryManager().get(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).getIndexedEntries()) {
-                for (ItemStack stack : type.value().validTools().getMatchingStacks()) {
+            for (Holder<ToolUsageRecipeType> type : world.registryAccess().registryOrThrow(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
+                for (ItemStack stack : type.value().validTools().getItems()) {
                     newCache.add(stack.getItem());
                 }
             }
@@ -73,12 +78,12 @@ public abstract class ToolUsageRecipeLogic {
      * @return
      * Returns ActionResult.SUCCESS if recipe succeeds - ActionResult.PASS otherwise.
      */
-    public static ToolUsageRecipeResult runRecipeLogic(ItemUsageContext context) {
-        World world = context.getWorld();
-        PlayerEntity player = context.getPlayer();
-        Vec3d clickedPos = context.getHitPos();
-        ItemStack toolStack = context.getStack();
-        Hand usedHand = context.getHand();
+    public static ToolUsageRecipeResult runRecipeLogic(UseOnContext context) {
+        Level world = context.getLevel();
+        Player player = context.getPlayer();
+        Vec3 clickedPos = context.getClickLocation();
+        ItemStack toolStack = context.getItemInHand();
+        InteractionHand usedHand = context.getHand();
 
         // make sure player is valid for recipe processing before doing anything
         if (!isPlayerValid(player)) {
@@ -92,17 +97,17 @@ public abstract class ToolUsageRecipeLogic {
         int totalPlayedSounds = 0;
         int totalParticleSpawnActions = 0;
 
-        List<ItemEntity> selectedItems = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), Box.of(clickedPos, 0.8, 0.8, 0.8), (e) -> true);
+        List<ItemEntity> selectedItems = world.getEntities(EntityTypeTest.forClass(ItemEntity.class), AABB.ofSize(clickedPos, 0.8, 0.8, 0.8), (e) -> true);
 
         // if there aren't any dropped items in the targeted area, don't do anything
         if (selectedItems.isEmpty()) {
             return ToolUsageRecipeResult.FAIL;
         }
 
-        RegistryKey<ToolUsageRecipeType> type = null;
-        for (RegistryEntry<ToolUsageRecipeType> entry : world.getRegistryManager().get(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).getIndexedEntries()) {
-            if (entry.value().validTools().test(toolStack) && entry.getKey().isPresent()) {
-                type = entry.getKey().get();
+        ResourceKey<ToolUsageRecipeType> type = null;
+        for (Holder<ToolUsageRecipeType> entry : world.registryAccess().registryOrThrow(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
+            if (entry.value().validTools().test(toolStack) && entry.unwrapKey().isPresent()) {
+                type = entry.unwrapKey().get();
                 break;
             }
         }
@@ -115,40 +120,40 @@ public abstract class ToolUsageRecipeLogic {
         }
 
         for (ItemEntity targetItemEntity : selectedItems) {
-            ItemStack targetStack = targetItemEntity.getStack().copy();
-            Position outputPos = targetItemEntity.getPos();
+            ItemStack targetStack = targetItemEntity.getItem().copy();
+            Position outputPos = targetItemEntity.position();
 
             SoundEvent recipeSoundOverride = null;
             boolean targetRecipeSuccess = false;
 
             ToolUsageRecipeInput dummyInventory = new ToolUsageRecipeInput(toolStack, targetStack, type);
-            Optional<RecipeEntry<ToolUsageRecipe>> match = world.getRecipeManager().getFirstMatch(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+            Optional<RecipeHolder<ToolUsageRecipe>> match = world.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
 
             // change recipe success indicator and recipe sound override
             if (match.isPresent()) {
                 targetRecipeSuccess = true;
                 SoundEvent soundEvent = match.get().value().getSound();
-                recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? null : soundEvent;
+                recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.EMPTY) ? null : soundEvent;
 
-                if (!world.isClient()) {
-                    targetStack.decrement(1);
+                if (!world.isClientSide()) {
+                    targetStack.shrink(1);
                     if (targetStack.getCount() == 0) {
                         targetItemEntity.discard();
                     } else {
-                        targetItemEntity.setStack(targetStack);
+                        targetItemEntity.setItem(targetStack);
                     }
 
-                    ItemStack outputStack = match.get().value().craft(dummyInventory, world.getRegistryManager());
+                    ItemStack outputStack = match.get().value().assemble(dummyInventory, world.registryAccess());
 
                     // make sure to proc advancement trigger before spawning item
-                    KlaxonAdvancementTriggers.triggerToolUsageCraft((ServerPlayerEntity) player, toolStack, outputStack);
+                    KlaxonAdvancementTriggers.triggerToolUsageCraft((ServerPlayer) player, toolStack, outputStack);
 
                     // dump item out in-world
-                    ItemScatterer.spawn(
+                    Containers.dropItemStack(
                             world,
-                            outputPos.getX(),
-                            outputPos.getY(),
-                            outputPos.getZ(),
+                            outputPos.x(),
+                            outputPos.y(),
+                            outputPos.z(),
                             outputStack
                     );
 
@@ -163,7 +168,7 @@ public abstract class ToolUsageRecipeLogic {
 
             // this caps out at 4 sounds because otherwise people are going to take up the whole sound cap with it
             if ((targetRecipeSuccess || canCosmeticUse) && totalPlayedSounds < MAX_SOUNDS_PER_ACTION) {
-                world.playSound(player, BlockPos.ofFloored(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundCategory.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
+                world.playSound(player, BlockPos.containing(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundSource.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
                 totalPlayedSounds++;
             }
 
@@ -171,11 +176,11 @@ public abstract class ToolUsageRecipeLogic {
             didAtLeastOneRecipeSucceed |= targetRecipeSuccess;
         }
 
-        if (world instanceof ServerWorld serverWorld) {
+        if (world instanceof ServerLevel serverWorld) {
             if (didAtLeastOneRecipeSucceed) {
                 // trip sculk sensors and damage tool
-                serverWorld.emitGameEvent(player, GameEvent.ITEM_INTERACT_FINISH, clickedPos);
-                if (player != null) toolStack.damage(1, player, EquipmentSlotHelper.convert(usedHand));
+                serverWorld.gameEvent(player, GameEvent.ITEM_INTERACT_FINISH, clickedPos);
+                if (player != null) toolStack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(usedHand));
             }
         }
 
@@ -200,38 +205,38 @@ public abstract class ToolUsageRecipeLogic {
         clearCache();
     }
 
-    public static void onDatapackReload(MinecraftServer minecraftServer, LifecycledResourceManager lifecycledResourceManager, boolean success) {
+    public static void onDatapackReload(MinecraftServer minecraftServer, CloseableResourceManager lifecycledResourceManager, boolean success) {
         if (success) clearCache();
     }
 
-    public static void onTagsLoaded(DynamicRegistryManager registryManager, boolean success) {
+    public static void onTagsLoaded(RegistryAccess registryManager, boolean success) {
         if (success) clearCache();
     }
 
-    public static boolean isPlayerValid(@Nullable PlayerEntity player) {
-        return player == null || player.isOnGround() || player instanceof FakePlayer;
+    public static boolean isPlayerValid(@Nullable Player player) {
+        return player == null || player.onGround() || player instanceof FakePlayer;
     }
 
     // yoinked from living entity
-    public static void spawnToolUseParticleEffects(World world, ItemStack stack, int count, Entity source) {
+    public static void spawnToolUseParticleEffects(Level world, ItemStack stack, int count, Entity source) {
         if (stack.isEmpty()) {
             return;
         }
 
-        Random random = source.getRandom();
-        float pitch = source.getPitch();
-        float yaw = source.getYaw();
+        RandomSource random = source.getRandom();
+        float pitch = source.getXRot();
+        float yaw = source.getYRot();
 
         for (int i = 0; i < count; i++) {
-            Vec3d vec3d = new Vec3d(((double)random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0);
-            vec3d = vec3d.rotateX(-pitch * (float) (Math.PI / 180.0));
-            vec3d = vec3d.rotateY(-yaw * (float) (Math.PI / 180.0));
+            Vec3 vec3d = new Vec3(((double)random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0);
+            vec3d = vec3d.xRot(-pitch * (float) (Math.PI / 180.0));
+            vec3d = vec3d.yRot(-yaw * (float) (Math.PI / 180.0));
             double d = (double)(-random.nextFloat()) * 0.6 - 0.3;
-            Vec3d vec3d2 = new Vec3d(((double)random.nextFloat() - 0.5) * 0.3, d, 0.6);
-            vec3d2 = vec3d2.rotateX(-pitch * (float) (Math.PI / 180.0));
-            vec3d2 = vec3d2.rotateY(-yaw * (float) (Math.PI / 180.0));
+            Vec3 vec3d2 = new Vec3(((double)random.nextFloat() - 0.5) * 0.3, d, 0.6);
+            vec3d2 = vec3d2.xRot(-pitch * (float) (Math.PI / 180.0));
+            vec3d2 = vec3d2.yRot(-yaw * (float) (Math.PI / 180.0));
             vec3d2 = vec3d2.add(source.getX(), source.getEyeY(), source.getZ());
-            source.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
+            source.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
         }
     }
 }

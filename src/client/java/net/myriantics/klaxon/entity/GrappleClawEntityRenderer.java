@@ -1,44 +1,45 @@
 package net.myriantics.klaxon.entity;
 
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import java.util.HashMap;
 
 public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity> {
-    public GrappleClawEntityRenderer(EntityRendererFactory.Context context) {
+    public GrappleClawEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
-    private final Identifier DEFAULT_STEEL_GRAPPLE_CLAW_TEXTURE = KlaxonTextures.decorate(KlaxonTextures.STEEL_GRAPPLE_CLAW_ENTITY);
-    private final HashMap<Item, Identifier> ITEM_2_TEXTURE_MAP = new HashMap<>();
+    private final ResourceLocation DEFAULT_STEEL_GRAPPLE_CLAW_TEXTURE = KlaxonTextures.decorate(KlaxonTextures.STEEL_GRAPPLE_CLAW_ENTITY);
+    private final HashMap<Item, ResourceLocation> ITEM_2_TEXTURE_MAP = new HashMap<>();
 
     @Override
-    public Identifier getTexture(GrappleClawEntity entity) {
-        Item item = entity.getItemStack().getItem();
-        if (item == null || item.equals(Items.AIR)) {
+    public ResourceLocation getTextureLocation(GrappleClawEntity entity) {
+        ItemStack stack = entity.getPickupItemStackOrigin();
+        if (stack.isEmpty()) {
             return DEFAULT_STEEL_GRAPPLE_CLAW_TEXTURE;
         }
+        Item item = stack.getItem();
 
         // add new texture id to the map if it isn't present
         if (!ITEM_2_TEXTURE_MAP.containsKey(item)) {
             ITEM_2_TEXTURE_MAP.put(item, KlaxonTextures.copyDir(
-                    Registries.ITEM.getId(item).getPath() + ".png",
+                    BuiltInRegistries.ITEM.getKey(item).getPath() + ".png",
                     DEFAULT_STEEL_GRAPPLE_CLAW_TEXTURE
             ));
         }
@@ -47,26 +48,26 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
     }
 
     @Override
-    public void render(GrappleClawEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        matrices.push();
-        matrices.multiply(
-                RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevYaw, entity.getYaw()) - 90.0F)
+    public void render(GrappleClawEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+        matrices.pushPose();
+        matrices.mulPose(
+                Axis.YP.rotationDegrees(Mth.lerp(tickDelta, entity.yRotO, entity.getYRot()) - 90.0F)
         );
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch())));
+        matrices.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(tickDelta, entity.xRotO, entity.getXRot())));
 
 
-        float s = entity.shake - tickDelta;
+        float s = entity.shakeTime - tickDelta;
         if (s > 0.0F) {
-            float t = -MathHelper.sin(s * 3.0F) * s;
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(t));
+            float t = -Mth.sin(s * 3.0F) * s;
+            matrices.mulPose(Axis.ZP.rotationDegrees(t));
         }
 
         // rotate the claw 45 degrees
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(45.0F));
         matrices.scale(0.05625F, 0.05625F, 0.05625F);
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity)));
-        MatrixStack.Entry entry = matrices.peek();
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutout(this.getTextureLocation(entity)));
+        PoseStack.Pose entry = matrices.last();
 
         float crossbeamMinU = 16f/32;
         float crossbeamMaxU = 28f/32;
@@ -107,7 +108,7 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
 
         // main claw
         for (int u = 0; u < 4; u++) {
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
+            matrices.mulPose(Axis.XP.rotationDegrees(90.0F));
 
             this.vertex(entry, vertexConsumer, -6, -6, 0, clawMinU, clawMinV, 0, 1, 0, light);
             this.vertex(entry, vertexConsumer, 8, -6, 0, clawMaxU, clawMinV, 0, 1, 0, light);
@@ -115,25 +116,25 @@ public class GrappleClawEntityRenderer extends EntityRenderer<GrappleClawEntity>
             this.vertex(entry, vertexConsumer, -6, 6, 0, clawMinU, clawMaxV, 0, 1, 0, light);
         }
 
-        matrices.pop();
+        matrices.popPose();
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
     @Override
-    public Vec3d getPositionOffset(GrappleClawEntity entity, float tickDelta) {
+    public Vec3 getRenderOffset(GrappleClawEntity entity, float tickDelta) {
         return entity.hasHookedEntity()
-                ? new Vec3d(0, entity.getEyeHeight(entity.getPose()), 0)
-                : super.getPositionOffset(entity, tickDelta);
+                ? new Vec3(0, entity.getEyeHeight(entity.getPose()), 0)
+                : super.getRenderOffset(entity, tickDelta);
     }
 
     private void vertex(
-            MatrixStack.Entry matrix, VertexConsumer vertexConsumer, int x, int y, int z, float u, float v, int normalX, int normalZ, int normalY, int light
+            PoseStack.Pose matrix, VertexConsumer vertexConsumer, int x, int y, int z, float u, float v, int normalX, int normalZ, int normalY, int light
     ) {
-        vertexConsumer.vertex(matrix, (float)x, (float)y, (float)z)
-                .color(Colors.WHITE)
-                .texture(u, v)
-                .overlay(OverlayTexture.DEFAULT_UV)
-                .light(light)
-                .normal(matrix, normalX, normalY, normalZ);
+        vertexConsumer.addVertex(matrix, (float)x, (float)y, (float)z)
+                .setColor(CommonColors.WHITE)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(matrix, normalX, normalY, normalZ);
     }
 }

@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.registry.block;
 
-import net.minecraft.data.family.BlockFamilies;
-import net.minecraft.data.family.BlockFamily;
+import net.minecraft.data.BlockFamilies;
+import net.minecraft.data.BlockFamily;
 
 public abstract class KlaxonBlockFamilies {
-    public static final BlockFamily HALLNOX = BlockFamilies.register(KlaxonBlocks.HALLNOX_PLANKS)
+    public static final BlockFamily HALLNOX = BlockFamilies.familyBuilder(KlaxonBlocks.HALLNOX_PLANKS)
             .button(KlaxonBlocks.HALLNOX_BUTTON)
             .pressurePlate(KlaxonBlocks.HALLNOX_PRESSURE_PLATE)
             .fence(KlaxonBlocks.HALLNOX_FENCE)
@@ -14,21 +14,21 @@ public abstract class KlaxonBlockFamilies {
             .stairs(KlaxonBlocks.HALLNOX_STAIRS)
             .door(KlaxonBlocks.HALLNOX_DOOR)
             .trapdoor(KlaxonBlocks.HALLNOX_TRAPDOOR)
-            .group("wooden")
-            .unlockCriterionName("has_planks")
-            .build();
+            .recipeGroupPrefix("wooden")
+            .recipeUnlockedBy("has_planks")
+            .getFamily();
 
-    public static final BlockFamily STEEL = BlockFamilies.register(KlaxonBlocks.STEEL_BLOCK)
+    public static final BlockFamily STEEL = BlockFamilies.familyBuilder(KlaxonBlocks.STEEL_BLOCK)
             .door(KlaxonBlocks.STEEL_DOOR)
             .trapdoor(KlaxonBlocks.STEEL_TRAPDOOR)
-            .group("metal")
-            .unlockCriterionName("has_block")
-            .build();
+            .recipeGroupPrefix("metal")
+            .recipeUnlockedBy("has_block")
+            .getFamily();
 
-    public static final BlockFamily CRUDE_STEEL = BlockFamilies.register(KlaxonBlocks.CRUDE_STEEL_BLOCK)
+    public static final BlockFamily CRUDE_STEEL = BlockFamilies.familyBuilder(KlaxonBlocks.CRUDE_STEEL_BLOCK)
             .door(KlaxonBlocks.CRUDE_STEEL_DOOR)
             .trapdoor(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR)
-            .group("metal")
-            .unlockCriterionName("has_block")
-            .build();
+            .recipeGroupPrefix("metal")
+            .recipeUnlockedBy("has_block")
+            .getFamily();
 }

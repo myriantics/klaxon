@@ -1,10 +1,9 @@
 package net.myriantics.klaxon.tag.compat;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 
 public class KlaxonCompatBlockTags {
 
@@ -24,6 +23,6 @@ public class KlaxonCompatBlockTags {
     }
 
     private static TagKey<Block> createCompatBlockTag(String namespace, String name) {
-        return TagKey.of(RegistryKeys.BLOCK, Identifier.of(namespace, name));
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(namespace, name));
     }
 }

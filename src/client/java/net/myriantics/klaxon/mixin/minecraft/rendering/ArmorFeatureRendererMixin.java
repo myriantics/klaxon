@@ -1,25 +1,24 @@
 package net.myriantics.klaxon.mixin.minecraft.rendering;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModelManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.RotationAxis;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.myriantics.klaxon.registry.KlaxonEntityModelLayers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
@@ -32,15 +31,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ArmorFeatureRenderer.class)
-public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> extends FeatureRenderer<T, M> {
+@Mixin(HumanoidArmorLayer.class)
+public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> extends RenderLayer<T, M> {
     @Unique
-    private static final Identifier TEXTURE = KlaxonTextures.decorate(KlaxonTextures.HELMET_CREST);
+    private static final ResourceLocation TEXTURE = KlaxonTextures.decorate(KlaxonTextures.HELMET_CREST);
     @Unique
     private static final float ARMOR_SCALE = 1.25f;
 
     @Shadow
-    protected abstract void setVisible(A bipedModel, EquipmentSlot slot);
+    protected abstract void setPartVisibility(A bipedModel, EquipmentSlot slot);
 
     @Shadow
     @Final
@@ -48,7 +47,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, M extend
     @Unique
     private HelmetCrestEntityModel<T> klaxon$helmetCrestModel = null;
 
-    public ArmorFeatureRendererMixin(FeatureRendererContext<T, M> context) {
+    public ArmorFeatureRendererMixin(RenderLayerParent<T, M> context) {
         super(context);
     }
 
@@ -56,52 +55,52 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, M extend
             method = "<init>",
             at = @At(value = "TAIL")
     )
-    private void klaxon$initHelmetCrestModel(FeatureRendererContext<T, M> context, BipedEntityModel<T> innerModel, BipedEntityModel<T> outerModel, BakedModelManager bakery, CallbackInfo ci) {
-        this.klaxon$helmetCrestModel = new HelmetCrestEntityModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(KlaxonEntityModelLayers.HELMET_CREST));
+    private void klaxon$initHelmetCrestModel(RenderLayerParent<T, M> context, HumanoidModel<T> innerModel, HumanoidModel<T> outerModel, ModelManager bakery, CallbackInfo ci) {
+        this.klaxon$helmetCrestModel = new HelmetCrestEntityModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(KlaxonEntityModelLayers.HELMET_CREST));
     }
 
     @Inject(
-            method = "renderArmor",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;hasGlint()Z")
+            method = "renderArmorPiece",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hasFoil()Z")
     )
     private void klaxon$renderHelmetCrest(
-            MatrixStack matrices,
-            VertexConsumerProvider vertexConsumers,
+            PoseStack matrices,
+            MultiBufferSource vertexConsumers,
             T entity,
             EquipmentSlot armorSlot,
             int light,
             A model,
             CallbackInfo ci
     ) {
-        ItemStack stack = entity.getEquippedStack(armorSlot);
-        if (armorSlot != EquipmentSlot.HEAD || !stack.contains(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT)) {
+        ItemStack stack = entity.getItemBySlot(armorSlot);
+        if (armorSlot != EquipmentSlot.HEAD || !stack.has(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT)) {
             return;
         }
 
-        matrices.push();
+        matrices.pushPose();
 
-        if (this.getContextModel().child && ((AnimalModelAccessor) this.getContextModel()).klaxon$headScaled()) {
-            float f = 1.5F / ((AnimalModelAccessor) this.getContextModel()).klaxon$invertedChildHeadScale();
+        if (this.getParentModel().young && ((AnimalModelAccessor) this.getParentModel()).klaxon$headScaled()) {
+            float f = 1.5F / ((AnimalModelAccessor) this.getParentModel()).klaxon$invertedChildHeadScale();
             matrices.scale(f, f, f);
 
-            matrices.translate(0.0F, ((AnimalModelAccessor) this.getContextModel()).klaxon$childHeadYOffset() / 16.0F, ((AnimalModelAccessor) this.getContextModel()).klaxon$childHeadZOffset() / 16.0F);
+            matrices.translate(0.0F, ((AnimalModelAccessor) this.getParentModel()).klaxon$childHeadYOffset() / 16.0F, ((AnimalModelAccessor) this.getParentModel()).klaxon$childHeadZOffset() / 16.0F);
         }
 
-        this.innerModel.copyStateTo(this.klaxon$helmetCrestModel);
-        this.getContextModel().head.rotate(matrices);
+        this.innerModel.copyPropertiesTo(this.klaxon$helmetCrestModel);
+        this.getParentModel().head.translateAndRotate(matrices);
         // matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
         matrices.scale(ARMOR_SCALE, -ARMOR_SCALE, ARMOR_SCALE);
 
-        this.klaxon$helmetCrestModel.render(
+        this.klaxon$helmetCrestModel.renderToBuffer(
                 matrices,
-                ItemRenderer.getArmorGlintConsumer(
-                        vertexConsumers, RenderLayer.getArmorCutoutNoCull(TEXTURE), stack.hasGlint()
+                ItemRenderer.getArmorFoilBuffer(
+                        vertexConsumers, RenderType.armorCutoutNoCull(TEXTURE), stack.hasFoil()
                 ),
                 light,
-                OverlayTexture.DEFAULT_UV,
-                ColorHelper.Argb.fullAlpha(DyedColorComponent.getColor(stack, Colors.WHITE))
+                OverlayTexture.NO_OVERLAY,
+                FastColor.ARGB32.opaque(DyedItemColor.getOrDefault(stack, CommonColors.WHITE))
         );
 
-        matrices.pop();
+        matrices.popPose();
     }
 }

@@ -6,10 +6,10 @@ import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.item.BlockItem;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
@@ -23,22 +23,22 @@ import java.util.List;
 
 public class NetherReactionEmiRecipe implements EmiRecipe {
 
-    private static final Identifier BACKGROUND_TEXTURE = KlaxonTextures.decorate(KlaxonTextures.NETHER_REACTION_EMI_BACKGROUND);
+    private static final ResourceLocation BACKGROUND_TEXTURE = KlaxonTextures.decorate(KlaxonTextures.NETHER_REACTION_EMI_BACKGROUND);
 
-    private static final List<Text> NETHER_REACTOR_HOVER_TEXT = List.of(Text.translatable("klaxon.emi.text.nether_reaction.hover"));
+    private static final List<Component> NETHER_REACTOR_HOVER_TEXT = List.of(Component.translatable("klaxon.emi.text.nether_reaction.hover"));
 
-    private final Identifier id;
+    private final ResourceLocation id;
     private final List<EmiIngredient> inputStacks;
     private final List<EmiStack> outputStacks;
 
-    public NetherReactionEmiRecipe(RecipeEntry<NetherReactionRecipe> recipeEntry) {
+    public NetherReactionEmiRecipe(RecipeHolder<NetherReactionRecipe> recipeEntry) {
         this.id = recipeEntry.id();
         this.inputStacks = Collections.singletonList(EmiIngredient.of(Arrays.stream(
                 recipeEntry.value().getBlockIngredient().getDisplayStacks()
         ).filter(itemStack -> {
             // jank hack but whatevs
             if (itemStack.getItem() instanceof BlockItem blockItem) {
-                return !blockItem.getBlock().getDefaultState().isIn(KlaxonBlockTags.NETHER_REACTION_IMMUNE);
+                return !blockItem.getBlock().defaultBlockState().is(KlaxonBlockTags.NETHER_REACTION_IMMUNE);
             }
 
             return true;
@@ -54,7 +54,7 @@ public class NetherReactionEmiRecipe implements EmiRecipe {
     }
 
     @Override
-    public @Nullable Identifier getId() {
+    public @Nullable ResourceLocation getId() {
         return id;
     }
 

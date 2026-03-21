@@ -2,18 +2,18 @@ package net.myriantics.klaxon.mixin.minecraft.item_components.repair_material_ov
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.AnvilScreenHandler;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(AnvilScreenHandler.class)
+@Mixin(AnvilMenu.class)
 public abstract class AnvilScreenHandlerMixin {
 
     @ModifyExpressionValue(
-            method = "updateResult",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;canRepair(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z")
+            method = "createResult",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;isValidRepairItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z")
     )
     public boolean klaxon$repairItemOverride(
             boolean original,

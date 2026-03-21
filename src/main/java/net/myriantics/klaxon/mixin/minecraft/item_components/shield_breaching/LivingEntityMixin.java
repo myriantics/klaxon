@@ -2,9 +2,9 @@ package net.myriantics.klaxon.mixin.minecraft.item_components.shield_breaching;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.myriantics.klaxon.util.DamageSourceMixinAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,14 +14,14 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class LivingEntityMixin {
 
     @Shadow
-    public abstract void damageShield(float amount);
+    public abstract void hurtCurrentlyUsedShield(float amount);
 
-    @Shadow protected abstract void takeShieldHit(LivingEntity attacker);
+    @Shadow protected abstract void blockUsingShield(LivingEntity attacker);
 
     // Allows shield penetrating items to disable shields and deal damage through them
     @ModifyExpressionValue(
-            method = "damage",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;blockedByShield(Lnet/minecraft/entity/damage/DamageSource;)Z")
+            method = "hurt",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isDamageSourceBlocked(Lnet/minecraft/world/damagesource/DamageSource;)Z")
     )
     public boolean klaxon$shieldBreachingOverride(boolean original, @Local(argsOnly = true) DamageSource damageSource, @Local(argsOnly = true) float amount) {
 
@@ -29,11 +29,11 @@ public abstract class LivingEntityMixin {
         if (original
                 // make sure attack is actually shield breaching
                 && ((DamageSourceMixinAccess) damageSource).klaxon$isShieldBreaching()
-                && damageSource.getAttacker() instanceof LivingEntity attacker
+                && damageSource.getEntity() instanceof LivingEntity attacker
         ) {
-            damageShield(amount);
-            takeShieldHit(attacker);
-            if (((Object) this) instanceof PlayerEntity player) player.disableShield();
+            hurtCurrentlyUsedShield(amount);
+            blockUsingShield(attacker);
+            if (((Object) this) instanceof Player player) player.disableShield();
 
             // we have our own custom processing, we don't need to run the regular shield disabling stuff
             return false;

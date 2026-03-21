@@ -1,29 +1,29 @@
 package net.myriantics.klaxon.registry.dynamic;
 
-import net.minecraft.loot.LootTable;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.myriantics.klaxon.KlaxonCommon;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class KlaxonLootTables {
-    public static RegistryKey<LootTable> GERALD_SNIFFER_GAMEPLAY = register("gameplay/gerald_sniffer");
+    public static ResourceKey<LootTable> GERALD_SNIFFER_GAMEPLAY = register("gameplay/gerald_sniffer");
 
-    public static boolean isLootTablePresent(@Nullable MinecraftServer server, RegistryKey<LootTable> key) {
+    public static boolean isLootTablePresent(@Nullable MinecraftServer server, ResourceKey<LootTable> key) {
         if (server == null) {
             return false;
         }
 
-        return isLootTablePresent(server.getReloadableRegistries().getRegistryManager(), key);
+        return isLootTablePresent(server.reloadableRegistries().get(), key);
     }
 
-    public static boolean isLootTablePresent(DynamicRegistryManager registryManager, RegistryKey<LootTable> key) {
-        return registryManager.get(RegistryKeys.LOOT_TABLE).contains(key);
+    public static boolean isLootTablePresent(RegistryAccess registryManager, ResourceKey<LootTable> key) {
+        return registryManager.registryOrThrow(Registries.LOOT_TABLE).containsKey(key);
     }
 
-    private static RegistryKey<LootTable> register(String name) {
-        return RegistryKey.of(RegistryKeys.LOOT_TABLE, KlaxonCommon.locate(name));
+    private static ResourceKey<LootTable> register(String name) {
+        return ResourceKey.create(Registries.LOOT_TABLE, KlaxonCommon.locate(name));
     }
 }

@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.Items;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.item.Items;
 import net.myriantics.klaxon.datagen.NamedIngredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
@@ -10,7 +10,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 public class KlaxonExplosiveCatalystDefinitionRecipeProvider extends KlaxonRecipeSubProvider {
 
-    public KlaxonExplosiveCatalystDefinitionRecipeProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
+    public KlaxonExplosiveCatalystDefinitionRecipeProvider(KlaxonRecipeProvider provider, RecipeOutput exporter) {
         super(provider, exporter);
     }
 

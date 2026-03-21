@@ -2,11 +2,11 @@ package net.myriantics.klaxon.mechanics.grapple_winch;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.StringRepresentable;
 
-public enum CableDetachmentReason implements StringIdentifiable {
+public enum CableDetachmentReason implements StringRepresentable {
     INVALID_HELD_ITEMS(0, true),
     HOOK_REMOVED(1, false),
     PLAYER_DIED(2, false),
@@ -20,8 +20,8 @@ public enum CableDetachmentReason implements StringIdentifiable {
     PICKUP(10, false),
     GENERIC_DISCONNECT(11, false);
 
-    public static final Codec<CableDetachmentReason> CODEC = StringIdentifiable.createCodec(CableDetachmentReason::values);
-    public static final PacketCodec<ByteBuf, CableDetachmentReason> PACKET_CODEC = PacketCodecs.indexed(
+    public static final Codec<CableDetachmentReason> CODEC = StringRepresentable.fromEnum(CableDetachmentReason::values);
+    public static final StreamCodec<ByteBuf, CableDetachmentReason> PACKET_CODEC = ByteBufCodecs.idMapper(
             (index) -> CableDetachmentReason.values()[index],
             CableDetachmentReason::getIndex
     );
@@ -39,7 +39,7 @@ public enum CableDetachmentReason implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name().toLowerCase();
     }
 }

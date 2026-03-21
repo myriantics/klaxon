@@ -1,13 +1,13 @@
 package net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors;
 
-import net.minecraft.entity.projectile.WindChargeEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.projectile.windcharge.WindCharge;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(WindChargeEntity.class)
+@Mixin(WindCharge.class)
 public interface WindChargeEntityInvoker {
 
     @Invoker
-    void invokeCreateExplosion(Vec3d pos);
+    void invokeExplode(Vec3 pos);
 }

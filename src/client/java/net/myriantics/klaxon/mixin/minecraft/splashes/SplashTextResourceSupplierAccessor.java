@@ -1,13 +1,13 @@
 package net.myriantics.klaxon.mixin.minecraft.splashes;
 
-import net.minecraft.client.resource.SplashTextResourceSupplier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.List;
+import net.minecraft.client.resources.SplashManager;
 
-@Mixin(SplashTextResourceSupplier.class)
+@Mixin(SplashManager.class)
 public interface SplashTextResourceSupplierAccessor {
-    @Accessor(value = "splashTexts")
+    @Accessor(value = "splashes")
     List<String> klaxon$getSplashTexts();
 }

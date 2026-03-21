@@ -1,33 +1,32 @@
 package net.myriantics.klaxon.mechanics.grapple_winch;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.networking.c2s.GrappleWinchCableLengthUpdateC2S;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-
 import java.util.Objects;
 
 public class ClientGrappleWinchConnection extends GrappleWinchConnection {
-    private Vec3d playerFallbackPos;
-    private Vec3d playerFallbackPrevPos;
-    private Vec3d hookFallbackPos;
-    private Vec3d hookFallbackPrevPos;
+    private Vec3 playerFallbackPos;
+    private Vec3 playerFallbackPrevPos;
+    private Vec3 hookFallbackPos;
+    private Vec3 hookFallbackPrevPos;
 
     private final int playerId;
     private final int hookId;
     private final ClientGrappleWinchConnectionManager manager;
 
     private int ticksSinceUpdated;
-    private AbstractClientPlayerEntity player = null;
+    private AbstractClientPlayer player = null;
     private GrapplingHook hook = null;
 
     public ClientGrappleWinchConnection(ClientGrappleWinchConnectionManager manager, int connectionId, int playerId, int hookId) {
@@ -60,7 +59,7 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
         this.hookAnchored = packet.hookAnchored();
 
         // update cable length
-        if (this.player != null && (this.cableLength == -1 || !this.player.isMainPlayer())) {
+        if (this.player != null && (this.cableLength == -1 || !this.player.isLocalPlayer())) {
             this.setCableLength(packet.cableLength());
         }
         this.maxCableLength = packet.maxCableLength();
@@ -78,7 +77,7 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
         }
 
         if (this.player != null) {
-            this.retracting = player.isUsingItem() && player.getActiveItem().isOf(KlaxonItems.GRAPPLE_WINCH);
+            this.retracting = player.isUsingItem() && player.getUseItem().is(KlaxonItems.GRAPPLE_WINCH);
         }
 
         this.updateEntities();
@@ -86,15 +85,15 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
         super.tick();
 
         // only do movement stuff if we're the client main player
-        if (Objects.equals(this.player, MinecraftClient.getInstance().player)) {
-            Vec3d compiledPlayerVec = Vec3d.ZERO;
+        if (Objects.equals(this.player, Minecraft.getInstance().player)) {
+            Vec3 compiledPlayerVec = Vec3.ZERO;
 
             // initialize values
-            Vec3d playerToHookVec = this.getHookPos().subtract(this.getPlayerEyePos());
+            Vec3 playerToHookVec = this.getHookPos().subtract(this.getPlayerEyePos());
             double clawDistance = playerToHookVec.length();
 
             // update winch cable length
-            if (this.retracting || (this.player.isOnGround() && clawDistance > this.cableLength)) {
+            if (this.retracting || (this.player.onGround() && clawDistance > this.cableLength)) {
                 this.cableLength = clawDistance;
             }
 
@@ -103,18 +102,18 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
 
                 // get movement vectors and normalize them
                 playerToHookVec = playerToHookVec.normalize();
-                Vec3d playerFacingVec = this.player.getRotationVec(1.0f).normalize();
+                Vec3 playerFacingVec = this.player.getViewVector(1.0f).normalize();
 
                 // tick retraction movement
                 if (this.retracting) {
 
                     // transform movement vectors
-                    Vec3d playerToClawRetractionVec = playerToHookVec.multiply(2./20);
+                    Vec3 playerToClawRetractionVec = playerToHookVec.scale(2./20);
                     // player can direct movement with facing direction to combat getting stuck under ledges
-                    Vec3d playerFacingRetractionVec = playerFacingVec.multiply(1./20).multiply(this.player.isSprinting() ? 1.5 : 1);
+                    Vec3 playerFacingRetractionVec = playerFacingVec.scale(1./20).scale(this.player.isSprinting() ? 1.5 : 1);
 
                     // add vectors to self vector
-                    if (!this.player.isSneaking()) {
+                    if (!this.player.isShiftKeyDown()) {
                         compiledPlayerVec = compiledPlayerVec.add(playerToClawRetractionVec).add(playerFacingRetractionVec);
                     }
                 }
@@ -122,18 +121,18 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
                 // apply velocity to player if they go past target range
                 // retraction is only capped at the max range
                 // cable length is also less regulated when sneaking & retracting so that players can descend with the grapple winch
-                if (clawDistance > ((this.player.isSneaking() && this.retracting) || this.player.isOnGround()
+                if (clawDistance > ((this.player.isShiftKeyDown() && this.retracting) || this.player.onGround()
                         ? this.maxCableLength
                         : Math.min(this.maxCableLength, cableLength)
                 )) {
-                    Vec3d playerRangeCorrectionVec = playerToHookVec.multiply(0.1);
-                    playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, player.getFinalGravity(), 0);
+                    Vec3 playerRangeCorrectionVec = playerToHookVec.scale(0.1);
+                    playerRangeCorrectionVec = playerRangeCorrectionVec.add(0, player.getGravity(), 0);
                     compiledPlayerVec = compiledPlayerVec.add(playerRangeCorrectionVec);
                 }
             }
 
             // commit velocity
-            player.addVelocity(compiledPlayerVec);
+            player.push(compiledPlayerVec);
         }
     }
 
@@ -142,7 +141,7 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     private boolean canPlayerSupportGrappleWinchCable() {
-        return stackSupportsGrappleWinchCable(this.player.getMainHandStack()) || stackSupportsGrappleWinchCable(this.player.getOffHandStack());
+        return stackSupportsGrappleWinchCable(this.player.getMainHandItem()) || stackSupportsGrappleWinchCable(this.player.getOffhandItem());
     }
 
     private boolean stackSupportsGrappleWinchCable(ItemStack stack) {
@@ -150,8 +149,8 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     private void updateEntities() {
-        this.player = (AbstractClientPlayerEntity) this.manager.getWorld().getEntityById(this.playerId);
-        this.hook = (GrapplingHook) this.manager.getWorld().getEntityById(this.hookId);
+        this.player = (AbstractClientPlayer) this.manager.getWorld().getEntity(this.playerId);
+        this.hook = (GrapplingHook) this.manager.getWorld().getEntity(this.hookId);
     }
 
     @Override
@@ -165,7 +164,7 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     @Override
-    public PlayerEntity getPlayer() {
+    public Player getPlayer() {
         return this.player;
     }
 
@@ -175,35 +174,35 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     @Override
-    public Vec3d getHookPos() {
-        return this.hook == null || this.hook.klaxon$asEntity().isRemoved() ? this.hookFallbackPos : this.hook.klaxon$asEntity().getPos();
+    public Vec3 getHookPos() {
+        return this.hook == null || this.hook.klaxon$asEntity().isRemoved() ? this.hookFallbackPos : this.hook.klaxon$asEntity().position();
     }
 
     @Override
-    public Vec3d getPlayerEyePos() {
-        return this.player == null || this.player.isRemoved() ? this.playerFallbackPos : this.player.getPos();
+    public Vec3 getPlayerEyePos() {
+        return this.player == null || this.player.isRemoved() ? this.playerFallbackPos : this.player.position();
     }
 
-    public Vec3d getLerpedPlayerPos(float delta) {
+    public Vec3 getLerpedPlayerPos(float delta) {
         if (this.player != null && !this.player.isRemoved()) {
-            return this.player.getLerpedPos(delta);
+            return this.player.getPosition(delta);
         }
 
-        double lerpedX = MathHelper.lerp(delta, this.playerFallbackPrevPos.getX(), this.playerFallbackPos.getX());
-        double lerpedY = MathHelper.lerp(delta, this.playerFallbackPrevPos.getY(), this.playerFallbackPos.getY());
-        double lerpedZ = MathHelper.lerp(delta, this.playerFallbackPrevPos.getZ(), this.playerFallbackPos.getZ());
-        return new Vec3d(lerpedX, lerpedY, lerpedZ);
+        double lerpedX = Mth.lerp(delta, this.playerFallbackPrevPos.x(), this.playerFallbackPos.x());
+        double lerpedY = Mth.lerp(delta, this.playerFallbackPrevPos.y(), this.playerFallbackPos.y());
+        double lerpedZ = Mth.lerp(delta, this.playerFallbackPrevPos.z(), this.playerFallbackPos.z());
+        return new Vec3(lerpedX, lerpedY, lerpedZ);
     }
 
-    public Vec3d getLerpedHookPos(float delta) {
+    public Vec3 getLerpedHookPos(float delta) {
         if (this.hook != null && !this.hook.klaxon$asEntity().isRemoved()) {
-            return this.hook.klaxon$asEntity().getLerpedPos(delta);
+            return this.hook.klaxon$asEntity().getPosition(delta);
         }
 
-        double lerpedX = MathHelper.lerp(delta, this.hookFallbackPrevPos.getX(), this.hookFallbackPos.getX());
-        double lerpedY = MathHelper.lerp(delta, this.hookFallbackPrevPos.getY(), this.hookFallbackPos.getY());
-        double lerpedZ = MathHelper.lerp(delta, this.hookFallbackPrevPos.getZ(), this.hookFallbackPos.getZ());
-        return new Vec3d(lerpedX, lerpedY, lerpedZ);
+        double lerpedX = Mth.lerp(delta, this.hookFallbackPrevPos.x(), this.hookFallbackPos.x());
+        double lerpedY = Mth.lerp(delta, this.hookFallbackPrevPos.y(), this.hookFallbackPos.y());
+        double lerpedZ = Mth.lerp(delta, this.hookFallbackPrevPos.z(), this.hookFallbackPos.z());
+        return new Vec3(lerpedX, lerpedY, lerpedZ);
     }
 
     @Override

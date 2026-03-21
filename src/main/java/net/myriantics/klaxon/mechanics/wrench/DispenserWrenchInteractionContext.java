@@ -1,11 +1,11 @@
 package net.myriantics.klaxon.mechanics.wrench;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
-public record DispenserWrenchInteractionContext(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerWorld serverWorld, Direction dispenserFacing, BlockPointer pointer) {
+public record DispenserWrenchInteractionContext(BlockState targetState, BlockPos targetPos, ItemStack stack, ServerLevel serverWorld, Direction dispenserFacing, BlockSource pointer) {
 }

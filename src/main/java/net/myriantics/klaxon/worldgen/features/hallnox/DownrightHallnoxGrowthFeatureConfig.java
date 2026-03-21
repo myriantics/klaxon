@@ -2,16 +2,16 @@ package net.myriantics.klaxon.worldgen.features.hallnox;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.world.gen.blockpredicate.BlockPredicate;
-import net.minecraft.world.gen.feature.FeatureConfig;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public record DownrightHallnoxGrowthFeatureConfig(BlockPredicate replaceableBlocks, int maxDepth, BlockState denseStemBlock, BlockState stemBlock, BlockState wartBlock, BlockState podBlock) implements FeatureConfig {
+public record DownrightHallnoxGrowthFeatureConfig(BlockPredicate replaceableBlocks, int maxDepth, BlockState denseStemBlock, BlockState stemBlock, BlockState wartBlock, BlockState podBlock) implements FeatureConfiguration {
     public static final Codec<DownrightHallnoxGrowthFeatureConfig> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                            BlockPredicate.BASE_CODEC.fieldOf("replaceable_blocks").forGetter(DownrightHallnoxGrowthFeatureConfig::replaceableBlocks),
-                            Codecs.NONNEGATIVE_INT.fieldOf("max_depth").forGetter(DownrightHallnoxGrowthFeatureConfig::maxDepth),
+                            BlockPredicate.CODEC.fieldOf("replaceable_blocks").forGetter(DownrightHallnoxGrowthFeatureConfig::replaceableBlocks),
+                            ExtraCodecs.NON_NEGATIVE_INT.fieldOf("max_depth").forGetter(DownrightHallnoxGrowthFeatureConfig::maxDepth),
                             BlockState.CODEC.fieldOf("dense_stem_block").forGetter(DownrightHallnoxGrowthFeatureConfig::denseStemBlock),
                             BlockState.CODEC.fieldOf("stem_block").forGetter(DownrightHallnoxGrowthFeatureConfig::stemBlock),
                             BlockState.CODEC.fieldOf("wart_block").forGetter(DownrightHallnoxGrowthFeatureConfig::wartBlock),

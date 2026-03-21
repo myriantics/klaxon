@@ -1,30 +1,34 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.inventory.StackReference;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
-import net.minecraft.util.*;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.Unit;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
@@ -40,10 +44,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class GrappleWinchItem extends RangedWeaponItem {
+public class GrappleWinchItem extends ProjectileWeaponItem {
 
     private static final Predicate<ItemStack> PROJECTILES = (stack -> {
-        if (stack.isIn(KlaxonItemTags.GRAPPLE_CLAWS)) {
+        if (stack.is(KlaxonItemTags.GRAPPLE_CLAWS)) {
             return true;
         }
 
@@ -55,87 +59,87 @@ public class GrappleWinchItem extends RangedWeaponItem {
         return false;
     });
 
-    private static final Identifier BASE_WINCH_CABLE_LENGTH = KlaxonCommon.locate("base_winch_cable_length");
+    private static final ResourceLocation BASE_WINCH_CABLE_LENGTH = KlaxonCommon.locate("base_winch_cable_length");
 
-    public GrappleWinchItem(Settings settings) {
+    public GrappleWinchItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public Predicate<ItemStack> getProjectiles() {
+    public Predicate<ItemStack> getAllSupportedProjectiles() {
         return PROJECTILES;
     }
 
     @Override
-    public int getRange() {
+    public int getDefaultProjectileRange() {
         return 20;
     }
 
-    public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float baseAttackDamage, float attackSpeed) {
-        return AttributeModifiersComponent.builder()
+    public static ItemAttributeModifiers createAttributeModifiers(Tier material, float baseAttackDamage, float attackSpeed) {
+        return ItemAttributeModifiers.builder()
                 .add(
-                        EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                        new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, material.getAttackDamage() + baseAttackDamage, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.MAINHAND
+                        Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID, material.getAttackDamageBonus() + baseAttackDamage, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND
                 )
                 .add(
-                        EntityAttributes.GENERIC_ATTACK_SPEED,
-                        new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.MAINHAND
+                        Attributes.ATTACK_SPEED,
+                        new AttributeModifier(BASE_ATTACK_SPEED_ID, attackSpeed, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND
                 )
                 .add(
                         KlaxonEntityAttributes.WINCH_CABLE_LENGTH,
-                        new EntityAttributeModifier(BASE_WINCH_CABLE_LENGTH, 64, EntityAttributeModifier.Operation.ADD_VALUE),
-                        AttributeModifierSlot.HAND
+                        new AttributeModifier(BASE_WINCH_CABLE_LENGTH, 64, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HAND
                 ).build();
     }
 
     @Override
-    protected void shoot(LivingEntity shooter, ProjectileEntity projectile, int index, float speed, float divergence, float yaw, @Nullable LivingEntity target) {
+    protected void shootProjectile(LivingEntity shooter, Projectile projectile, int index, float speed, float divergence, float yaw, @Nullable LivingEntity target) {
         if (shooter.isFallFlying()) {
-            Vec3d projectileSpeed = Vec3d.fromPolar(shooter.getPitch(), shooter.getYaw());
-            projectile.setVelocity(projectileSpeed.x, projectileSpeed.y, projectileSpeed.z, (float)(shooter.getVelocity().length() + projectileSpeed.length()) * speed, divergence);
+            Vec3 projectileSpeed = Vec3.directionFromRotation(shooter.getXRot(), shooter.getYRot());
+            projectile.shoot(projectileSpeed.x, projectileSpeed.y, projectileSpeed.z, (float)(shooter.getDeltaMovement().length() + projectileSpeed.length()) * speed, divergence);
         } else {
-            projectile.setVelocity(shooter, shooter.getPitch(), shooter.getYaw() + yaw, 0.0F, speed, divergence);
+            projectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot() + yaw, 0.0F, speed, divergence);
         }
 
 
         // if this is the first projectile shot, attach the server player's cable to it.
-        if (index == 0 && shooter instanceof ServerPlayerEntity serverPlayer && projectile instanceof GrapplingHook hook) {
-            ServerGrappleWinchConnectionManager.get(serverPlayer.getServerWorld()).connect(serverPlayer, hook);
+        if (index == 0 && shooter instanceof ServerPlayer serverPlayer && projectile instanceof GrapplingHook hook) {
+            ServerGrappleWinchConnectionManager.get(serverPlayer.serverLevel()).connect(serverPlayer, hook);
         }
     }
 
     @Override
-    protected ProjectileEntity createArrowEntity(World world, LivingEntity shooter, ItemStack weaponStack, ItemStack projectileStack, boolean critical) {
+    protected Projectile createProjectile(Level world, LivingEntity shooter, ItemStack weaponStack, ItemStack projectileStack, boolean critical) {
         ProjectileItem projItem = projectileStack.getItem() instanceof ProjectileItem item ? item : (GrappleClawItem) KlaxonItems.STEEL_GRAPPLE_CLAW;
-        return projItem.createEntity(world, shooter.getEyePos(), projectileStack, shooter.getFacing());
+        return projItem.asProjectile(world, shooter.getEyePosition(), projectileStack, shooter.getNearestViewDirection());
     }
 
     @Override
-    public void onStoppedUsing(ItemStack winchStack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user instanceof PlayerEntity playerEntity) {
+    public void releaseUsing(ItemStack winchStack, Level world, LivingEntity user, int remainingUseTicks) {
+        if (user instanceof Player playerEntity) {
             GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
             @Nullable GrappleWinchConnection connection = manager.fromPlayer(playerEntity);
 
             if (connection == null) {
-                int i = this.getMaxUseTime(winchStack, user) - remainingUseTicks;
+                int i = this.getUseDuration(winchStack, user) - remainingUseTicks;
                 float pullProgress = getPullProgress(i);
                 if (!(pullProgress < 0.1)) {
-                    ChargedProjectilesComponent chargedProjectilesComponent = winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
+                    ChargedProjectiles chargedProjectilesComponent = winchStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
 
                     if (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty()) {
-                        Item projectileItem = chargedProjectilesComponent.getProjectiles().getFirst().getItem();
+                        Item projectileItem = chargedProjectilesComponent.getItems().getFirst().getItem();
 
-                        if (world instanceof ServerWorld serverWorld) {
+                        if (world instanceof ServerLevel serverWorld) {
                             // shoot a grapple claw if we have one loaded
                             // grapple claw is attached in the shoot() method
-                            shootAll(
+                            shoot(
                                     serverWorld,
                                     playerEntity,
-                                    playerEntity.getActiveHand(),
+                                    playerEntity.getUsedItemHand(),
                                     winchStack,
-                                    chargedProjectilesComponent.getProjectiles(),
+                                    chargedProjectilesComponent.getItems(),
                                     50f/20 + (pullProgress * 10f/20) + (playerEntity.isFallFlying() ? 10f/20 : 0),
                                     1.0f,
                                     true,
@@ -150,18 +154,18 @@ public class GrappleWinchItem extends RangedWeaponItem {
                                 playerEntity.getY(),
                                 playerEntity.getZ(),
                                 KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LAUNCH,
-                                SoundCategory.PLAYERS,
+                                SoundSource.PLAYERS,
                                 1.0F,
                                 1.0F / (world.getRandom().nextFloat() * 0.8F + 1.2F) + pullProgress * 0.5F
                         );
-                        world.emitGameEvent(
+                        world.gameEvent(
                                 GameEvent.ENTITY_ACTION,
-                                playerEntity.getEyePos(),
-                                GameEvent.Emitter.of(playerEntity)
+                                playerEntity.getEyePosition(),
+                                GameEvent.Context.of(playerEntity)
                         );
 
-                        playerEntity.incrementStat(Stats.USED.getOrCreateStat(projectileItem));
-                        playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+                        playerEntity.awardStat(Stats.ITEM_USED.get(projectileItem));
+                        playerEntity.awardStat(Stats.ITEM_USED.get(this));
                     }
                 }
             } else {
@@ -171,28 +175,28 @@ public class GrappleWinchItem extends RangedWeaponItem {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
         @Nullable GrappleWinchConnection connection = manager.fromPlayer(user);
-        ItemStack winchStack = user.getStackInHand(hand);
-        ItemStack offhandStack = user.getStackInHand(hand.equals(Hand.OFF_HAND) ? Hand.MAIN_HAND : Hand.OFF_HAND);
+        ItemStack winchStack = user.getItemInHand(hand);
+        ItemStack offhandStack = user.getItemInHand(hand.equals(InteractionHand.OFF_HAND) ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
         boolean supportsCable = this.canSupportCable(winchStack);
         boolean offhandSupportsCable = offhandStack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(offhandStack);
-        ItemStack ammoStack = user.getProjectileType(winchStack);
-        ChargedProjectilesComponent chargedProjectilesComponent = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
+        ItemStack ammoStack = user.getProjectile(winchStack);
+        ChargedProjectiles chargedProjectilesComponent = winchStack.get(DataComponents.CHARGED_PROJECTILES);
         boolean isLoaded = chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty();
 
         // creative mode players can load intangible grapple claws in whenever, even if they don't have claws
         if (!PROJECTILES.test(ammoStack) && user.isCreative()) {
             ammoStack = new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
-            ammoStack.set(DataComponentTypes.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
+            ammoStack.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
         }
 
         // proceed if connection is active or winch has a grapple claw stored
         // make sure offhand cannot support cable before trying to charge back
         if ((connection != null && supportsCable) || (isLoaded && !offhandSupportsCable)) {
-            user.setCurrentHand(hand);
-            return TypedActionResult.consume(winchStack);
+            user.startUsingItem(hand);
+            return InteractionResultHolder.consume(winchStack);
         } else if (!isLoaded && !ammoStack.isEmpty()) {
             loadIfPossible(winchStack, ammoStack, user);
             world.playSound(
@@ -201,21 +205,21 @@ public class GrappleWinchItem extends RangedWeaponItem {
                     user.getEyeY(),
                     user.getZ(),
                     KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
-                    SoundCategory.PLAYERS,
+                    SoundSource.PLAYERS,
                     0.7f + world.getRandom().nextFloat() * 0.3f,
                     0.7f + world.getRandom().nextFloat() * 0.3f
             );
-            world.emitGameEvent(
+            world.gameEvent(
                     GameEvent.ENTITY_ACTION,
-                    user.getEyePos(),
-                    GameEvent.Emitter.of(user)
+                    user.getEyePosition(),
+                    GameEvent.Context.of(user)
             );
 
-            user.incrementStat(Stats.USED.getOrCreateStat(this));
-            user.incrementStat(Stats.USED.getOrCreateStat(ammoStack.getItem()));
-            return TypedActionResult.success(winchStack);
+            user.awardStat(Stats.ITEM_USED.get(this));
+            user.awardStat(Stats.ITEM_USED.get(ammoStack.getItem()));
+            return InteractionResultHolder.success(winchStack);
         } else {
-            return TypedActionResult.fail(winchStack);
+            return InteractionResultHolder.fail(winchStack);
         }
     }
 
@@ -230,27 +234,27 @@ public class GrappleWinchItem extends RangedWeaponItem {
     }
 
     @Override
-    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(player.getWorld());
+    public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack otherStack, Slot slot, ClickAction clickType, Player player, SlotAccess cursorStackReference) {
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(player.level());
         @Nullable GrappleWinchConnection connection = manager.fromPlayer(player);
 
-        if (clickType.equals(ClickType.RIGHT) && slot.canTakePartial(player)) {
+        if (clickType.equals(ClickAction.SECONDARY) && slot.allowModification(player)) {
 
             // don't allow any right click item movements or actions when a connection is active
             if (connection != null) {
                 return true;
             }
 
-            World world = player.getWorld();
+            Level world = player.level();
 
-            List<ItemStack> projectiles = stack.get(DataComponentTypes.CHARGED_PROJECTILES) instanceof ChargedProjectilesComponent component ? component.getProjectiles() : List.of();
+            List<ItemStack> projectiles = stack.get(DataComponents.CHARGED_PROJECTILES) instanceof ChargedProjectiles component ? component.getItems() : List.of();
 
             if (!projectiles.isEmpty()) {
                 ItemStack firstProjectileStack = projectiles.getFirst();
 
-                if (!firstProjectileStack.contains(DataComponentTypes.INTANGIBLE_PROJECTILE)) {
-                    if (ItemStack.areItemsAndComponentsEqual(firstProjectileStack, otherStack)) {
-                        otherStack.increment(firstProjectileStack.getCount());
+                if (!firstProjectileStack.has(DataComponents.INTANGIBLE_PROJECTILE)) {
+                    if (ItemStack.isSameItemSameComponents(firstProjectileStack, otherStack)) {
+                        otherStack.grow(firstProjectileStack.getCount());
                     } else if (otherStack.isEmpty()) {
                         cursorStackReference.set(firstProjectileStack);
                     }
@@ -258,7 +262,7 @@ public class GrappleWinchItem extends RangedWeaponItem {
 
                 // replace projectiles component with a new one that has everything but the first element
                 List<ItemStack> newProjectiles = projectiles.subList(1, projectiles.size());
-                stack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(newProjectiles));
+                stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(newProjectiles));
 
                 world.playSound(
                         player,
@@ -266,19 +270,19 @@ public class GrappleWinchItem extends RangedWeaponItem {
                         player.getEyeY(),
                         player.getZ(),
                         KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_UNLOAD,
-                        SoundCategory.PLAYERS,
+                        SoundSource.PLAYERS,
                         0.7f + world.getRandom().nextFloat() * 0.3f,
                         0.7f + world.getRandom().nextFloat() * 0.3f
                 );
-                world.emitGameEvent(
+                world.gameEvent(
                         GameEvent.ENTITY_ACTION,
-                        player.getEyePos(),
-                        GameEvent.Emitter.of(player)
+                        player.getEyePosition(),
+                        GameEvent.Context.of(player)
                 );
 
                 return true;
             } else if (PROJECTILES.test(otherStack)) {
-                stack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(otherStack.split(1)));
+                stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(otherStack.split(1)));
 
                 world.playSound(
                         player,
@@ -286,38 +290,38 @@ public class GrappleWinchItem extends RangedWeaponItem {
                         player.getEyeY(),
                         player.getZ(),
                         KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
-                        SoundCategory.PLAYERS,
+                        SoundSource.PLAYERS,
                         0.7f + world.getRandom().nextFloat() * 0.3f,
                         0.7f + world.getRandom().nextFloat() * 0.3f
                 );
-                world.emitGameEvent(
+                world.gameEvent(
                         GameEvent.ENTITY_ACTION,
-                        player.getEyePos(),
-                        GameEvent.Emitter.of(player)
+                        player.getEyePosition(),
+                        GameEvent.Context.of(player)
                 );
                 return true;
             }
         }
 
-        return super.onClicked(stack, otherStack, slot, clickType, player, cursorStackReference);
+        return super.overrideOtherStackedOnMe(stack, otherStack, slot, clickType, player, cursorStackReference);
     }
 
     public static boolean loadIfPossible(ItemStack winchStack, ItemStack loadingStack, @Nullable LivingEntity entity) {
         // make sure we're actually trying to load into a grapple winch
-        if (!winchStack.isOf(KlaxonItems.GRAPPLE_WINCH)) {
+        if (!winchStack.is(KlaxonItems.GRAPPLE_WINCH)) {
             return false;
         }
 
-        @Nullable ChargedProjectilesComponent originalProjectiles = winchStack.get(DataComponentTypes.CHARGED_PROJECTILES);
+        @Nullable ChargedProjectiles originalProjectiles = winchStack.get(DataComponents.CHARGED_PROJECTILES);
         if ((originalProjectiles == null || originalProjectiles.isEmpty()) && PROJECTILES.test(loadingStack)) {
-            List<ItemStack> list = load(winchStack, loadingStack, entity);
+            List<ItemStack> list = draw(winchStack, loadingStack, entity);
             if (list.isEmpty()) {
                 return false;
             }
 
-            if (entity == null || !entity.getWorld().isClient()) {
+            if (entity == null || !entity.level().isClientSide()) {
                 if (!list.isEmpty()) {
-                    winchStack.set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.of(list));
+                    winchStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(list));
                 }
             }
 
@@ -328,42 +332,42 @@ public class GrappleWinchItem extends RangedWeaponItem {
     }
 
     public boolean canSupportCable(ItemStack winchStack) {
-        return winchStack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty();
+        return winchStack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).isEmpty();
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        ChargedProjectilesComponent chargedProjectilesComponent = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        ChargedProjectiles chargedProjectilesComponent = stack.get(DataComponents.CHARGED_PROJECTILES);
         if (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty()) {
-            ItemStack itemStack = chargedProjectilesComponent.getProjectiles().get(0);
-            tooltip.add(Text.translatable("klaxon.text.tooltip.grapple_winch.projectile").append(ScreenTexts.SPACE).append(itemStack.toHoverableText()));
+            ItemStack itemStack = chargedProjectilesComponent.getItems().get(0);
+            tooltip.add(Component.translatable("klaxon.text.tooltip.grapple_winch.projectile").append(CommonComponents.SPACE).append(itemStack.getDisplayName()));
         } else {
             // add the tooltip
             // additional advanced logic is defined in client self-mixin
             tooltip.add(
-                    Text.translatable("klaxon.text.tooltip.grapple_winch.cable_length.prefix")
-                    .formatted(Formatting.GRAY)
+                    Component.translatable("klaxon.text.tooltip.grapple_winch.cable_length.prefix")
+                    .withStyle(ChatFormatting.GRAY)
                     .append(createCableLengthDisplayText())
             );
         }
     }
 
-    private static MutableText createCableLengthDisplayText() {
-        return Texts.bracketed(Text.translatable("klaxon.text.tooltip.grapple_winch.cable_length.display", "--", "--"));
+    private static MutableComponent createCableLengthDisplayText() {
+        return ComponentUtils.wrapInSquareBrackets(Component.translatable("klaxon.text.tooltip.grapple_winch.cable_length.display", "--", "--"));
     }
 
     @Override
-    public boolean isUsedOnRelease(ItemStack stack) {
-        return stack.isOf(this) && !stack.getOrDefault(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT).isEmpty();
+    public boolean useOnRelease(ItemStack stack) {
+        return stack.is(this) && !stack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).isEmpty();
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BOW;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.BOW;
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack, LivingEntity user) {
+    public int getUseDuration(ItemStack stack, LivingEntity user) {
         return 72000;
     }
 }

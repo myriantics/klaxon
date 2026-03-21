@@ -1,37 +1,37 @@
 package net.myriantics.klaxon.registry.entity;
 
-import net.minecraft.entity.attribute.ClampedEntityAttribute;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.myriantics.klaxon.KlaxonCommon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class KlaxonEntityAttributes {
-    private static final ArrayList<RegistryEntry<EntityAttribute>> KLAXON_GENERIC_ENTITY_ATTRIBUTES =  new ArrayList<>();
-    private static final ArrayList<RegistryEntry<EntityAttribute>> KLAXON_PLAYER_ENTITY_ATTRIBUTES =  new ArrayList<>();
+    private static final ArrayList<Holder<Attribute>> KLAXON_GENERIC_ENTITY_ATTRIBUTES =  new ArrayList<>();
+    private static final ArrayList<Holder<Attribute>> KLAXON_PLAYER_ENTITY_ATTRIBUTES =  new ArrayList<>();
 
-    public static RegistryEntry<EntityAttribute> WINCH_CABLE_LENGTH = registerPlayer(
+    public static Holder<Attribute> WINCH_CABLE_LENGTH = registerPlayer(
             "winch_cable_length",
-            new ClampedEntityAttribute(
+            new RangedAttribute(
                     "klaxon.attribute.name.player.winch_cable_length",
                     0.0,
                     0.0,
                     256
-            ).setTracked(true)
+            ).setSyncable(true)
     );
 
-    private static RegistryEntry<EntityAttribute> registerGeneric(String id, EntityAttribute attribute) {
-        RegistryEntry<EntityAttribute> entry = Registry.registerReference(Registries.ATTRIBUTE, KlaxonCommon.locate("generic." + id), attribute);
+    private static Holder<Attribute> registerGeneric(String id, Attribute attribute) {
+        Holder<Attribute> entry = Registry.registerForHolder(BuiltInRegistries.ATTRIBUTE, KlaxonCommon.locate("generic." + id), attribute);
         KLAXON_GENERIC_ENTITY_ATTRIBUTES.add(entry);
         return entry;
     }
 
-    private static RegistryEntry<EntityAttribute> registerPlayer(String id, EntityAttribute attribute) {
-        RegistryEntry<EntityAttribute> entry = Registry.registerReference(Registries.ATTRIBUTE, KlaxonCommon.locate("player." + id), attribute);
+    private static Holder<Attribute> registerPlayer(String id, Attribute attribute) {
+        Holder<Attribute> entry = Registry.registerForHolder(BuiltInRegistries.ATTRIBUTE, KlaxonCommon.locate("player." + id), attribute);
         KLAXON_PLAYER_ENTITY_ATTRIBUTES.add(entry);
         return entry;
     }
@@ -40,11 +40,11 @@ public abstract class KlaxonEntityAttributes {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Entity Attributes!");
     }
 
-    public static List<RegistryEntry<EntityAttribute>> getKlaxonGenericLivingEntityAttributes() {
+    public static List<Holder<Attribute>> getKlaxonGenericLivingEntityAttributes() {
         return KLAXON_GENERIC_ENTITY_ATTRIBUTES;
     }
 
-    public static List<RegistryEntry<EntityAttribute>> getKlaxonPlayerEntityAttributes() {
+    public static List<Holder<Attribute>> getKlaxonPlayerEntityAttributes() {
         return KLAXON_PLAYER_ENTITY_ATTRIBUTES;
     }
 }

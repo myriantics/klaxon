@@ -1,18 +1,17 @@
 package net.myriantics.klaxon.entity.effects;
 
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.particle.ParticleEffect;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 
-public class HeavyStatusEffect extends StatusEffect {
-    public HeavyStatusEffect(StatusEffectCategory category, int color) {
+public class HeavyStatusEffect extends MobEffect {
+    public HeavyStatusEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 
     @Override
-    public ParticleEffect createParticle(StatusEffectInstance effect) {
-        return super.createParticle(effect);
+    public ParticleOptions createParticleOptions(MobEffectInstance effect) {
+        return super.createParticleOptions(effect);
     }
 }

@@ -1,13 +1,13 @@
 package net.myriantics.klaxon.mechanics.advanced_item_models;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public abstract class AdvancedItemModelHelper {
-    public static Identifier getAlternateModelId(Identifier identifier, String suffix) {
+    public static ResourceLocation getAlternateModelId(ResourceLocation identifier, String suffix) {
         return identifier.withPath((path) -> path + suffix);
     }
 
-    public static Identifier getMirroredId(Identifier identifier) {
+    public static ResourceLocation getMirroredId(ResourceLocation identifier) {
         return identifier.withPath((path) -> path + "_mirrored");
     }
 }

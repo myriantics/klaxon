@@ -5,30 +5,30 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionConversionListener;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeLogic;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
@@ -55,49 +55,49 @@ public abstract class ExplosionMixin {
     @Mutable
     @Shadow
     @Final
-    private ParticleEffect particle;
+    private ParticleOptions smallExplosionParticles;
 
     @Mutable
     @Shadow
     @Final
-    private RegistryEntry<SoundEvent> soundEvent;
+    private Holder<SoundEvent> explosionSound;
 
     @Mutable
     @Shadow
     @Final
-    private ParticleEffect emitterParticle;
+    private ParticleOptions largeExplosionParticles;
     @Unique
     private boolean klaxon$isNetherReactionExplosion = false;
 
     @Inject(
-            method = "<init>(Lnet/minecraft/world/World;Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/damage/DamageSource;Lnet/minecraft/world/explosion/ExplosionBehavior;DDDFZLnet/minecraft/world/explosion/Explosion$DestructionType;Lnet/minecraft/particle/ParticleEffect;Lnet/minecraft/particle/ParticleEffect;Lnet/minecraft/registry/entry/RegistryEntry;)V",
+            method = "<init>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;Lnet/minecraft/world/level/ExplosionDamageCalculator;DDDFZLnet/minecraft/world/level/Explosion$BlockInteraction;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/core/Holder;)V",
             at = @At(value = "TAIL")
     )
-    private void klaxon$setOriginState(World world, Entity entity, DamageSource damageSource, ExplosionBehavior behavior, double x, double y, double z, float power, boolean createFire, Explosion.DestructionType destructionType, ParticleEffect particle, ParticleEffect emitterParticle, RegistryEntry<SoundEvent> soundEvent, CallbackInfo ci) {
-        BlockState explosionOriginBlockState = world.getBlockState(BlockPos.ofFloored(x, y, z));
+    private void klaxon$setOriginState(Level world, Entity entity, DamageSource damageSource, ExplosionDamageCalculator behavior, double x, double y, double z, float power, boolean createFire, Explosion.BlockInteraction destructionType, ParticleOptions particle, ParticleOptions emitterParticle, Holder<SoundEvent> soundEvent, CallbackInfo ci) {
+        BlockState explosionOriginBlockState = world.getBlockState(BlockPos.containing(x, y, z));
 
         // if the blockstate at the explosion's origin is a valid conversion catalyst, update the stored variable to say so.
         if (NetherReactionRecipeLogic.test(explosionOriginBlockState)) {
             this.klaxon$isNetherReactionExplosion = true;
 
             // proc block activation advancement
-            for (ServerPlayerEntity serverPlayerEntity : world.getNonSpectatingEntities(ServerPlayerEntity.class, Box.of(new Vec3d(x, y, z), 24, 24, 24))) {
+            for (ServerPlayer serverPlayerEntity : world.getEntitiesOfClass(ServerPlayer.class, AABB.ofSize(new Vec3(x, y, z), 24, 24, 24))) {
                 KlaxonAdvancementTriggers.triggerBlockActivation(serverPlayerEntity, explosionOriginBlockState);
             }
 
-            this.particle = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION;
-            this.emitterParticle = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION_EMITTER;
-            this.soundEvent = KlaxonSoundEvents.NETHER_REACTION_EXPLOSION;
+            this.smallExplosionParticles = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION;
+            this.largeExplosionParticles = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION_EMITTER;
+            this.explosionSound = KlaxonSoundEvents.NETHER_REACTION_EXPLOSION;
         }
     }
 
     @WrapOperation(
-            method = "collectBlocksAndDamageEntities",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/explosion/ExplosionBehavior;getBlastResistance(Lnet/minecraft/world/explosion/Explosion;Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/fluid/FluidState;)Ljava/util/Optional;")
+            method = "explode",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ExplosionDamageCalculator;getBlockExplosionResistance(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Ljava/util/Optional;")
     )
-    private Optional<Float> klaxon$ignoreOriginConversionCatalyst(ExplosionBehavior instance, Explosion explosion, BlockView world, BlockPos targetPos, BlockState targetState, FluidState fluidState, Operation<Optional<Float>> original) {
+    private Optional<Float> klaxon$ignoreOriginConversionCatalyst(ExplosionDamageCalculator instance, Explosion explosion, BlockGetter world, BlockPos targetPos, BlockState targetState, FluidState fluidState, Operation<Optional<Float>> original) {
         // this is to prevent high blast resistance catalysts completely bonking the strength of the conversion reaction.
-        if (klaxon$isNetherReactionExplosion && targetPos.equals(BlockPos.ofFloored(x, y, z))) {
+        if (klaxon$isNetherReactionExplosion && targetPos.equals(BlockPos.containing(x, y, z))) {
             return Optional.of(0.0f);
         }
 
@@ -106,19 +106,19 @@ public abstract class ExplosionMixin {
     }
 
     @WrapMethod(
-            method = "affectWorld"
+            method = "finalizeExplosion"
     )
     private void klaxon$alwaysEnableParticlesForNetherReactionExplosions(boolean particles, Operation<Void> original) {
         original.call(particles);
     }
 
     @WrapOperation(
-            method = "affectWorld",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;onExploded(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/explosion/Explosion;Ljava/util/function/BiConsumer;)V")
+            method = "finalizeExplosion",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onExploded(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Explosion;Ljava/util/function/BiConsumer;)V")
     )
     private void klaxon$hijackBlockDestruction(
             BlockState instance,
-            World world,
+            Level world,
             BlockPos pos,
             Explosion explosion,
             BiConsumer<ItemStack, BlockPos> biConsumer,
@@ -132,42 +132,42 @@ public abstract class ExplosionMixin {
         }
 
         // if the target state is immune to nether reaction, skip operating on it
-        if (instance.isIn(KlaxonBlockTags.NETHER_REACTION_IMMUNE)) {
+        if (instance.is(KlaxonBlockTags.NETHER_REACTION_IMMUNE)) {
             return;
         }
 
         // don't convert any nether reactor cores aside from the origin one
-        if (instance.isIn(KlaxonBlockTags.NETHER_REACTOR_CORES) && !pos.equals(BlockPos.ofFloored(x, y, z))) {
+        if (instance.is(KlaxonBlockTags.NETHER_REACTOR_CORES) && !pos.equals(BlockPos.containing(x, y, z))) {
             return;
         }
 
         // sign text preserved for reapplication later
-        NbtCompound signNbt = null;
+        CompoundTag signNbt = null;
 
         // yonk the blockentity from the target position
         BlockEntity targetBlockEntity = world.getBlockEntity(pos);
         if (targetBlockEntity != null) {
 
             // if there is a blockentity, make sure it's tagged as overwritable before replacing it
-            RegistryEntry<BlockEntityType<?>> entry = targetBlockEntity.getType().getRegistryEntry();
-            if (entry != null && !entry.isIn(KlaxonBlockEntityTypeTags.NETHER_REACTION_OVERWRITABLE) && !(targetBlockEntity instanceof SignBlockEntity)) {
+            Holder<BlockEntityType<?>> entry = targetBlockEntity.getType().builtInRegistryHolder();
+            if (entry != null && !entry.is(KlaxonBlockEntityTypeTags.NETHER_REACTION_OVERWRITABLE) && !(targetBlockEntity instanceof SignBlockEntity)) {
                 // if it's not overwritable, skip further operations
                 return;
             }
 
             // preserve the data from sign block entities
             if (targetBlockEntity instanceof SignBlockEntity) {
-                signNbt = targetBlockEntity.createNbt(world.getRegistryManager());
+                signNbt = targetBlockEntity.saveWithoutMetadata(world.registryAccess());
             }
         }
 
         // override for door blocks because i cant think of a better way to handle them
-        if (instance.getBlock() instanceof DoorBlock && instance.get(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER)) {
-            pos = pos.down();
+        if (instance.getBlock() instanceof DoorBlock && instance.getValue(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER)) {
+            pos = pos.below();
             instance = world.getBlockState(pos);
         }
 
-        if (world instanceof ServerWorld serverWorld) {
+        if (world instanceof ServerLevel serverWorld) {
             BlockState newState = NetherReactionRecipeLogic.getOutputState(instance, pos, serverWorld, explosion);
 
             // make sure we've changed something before setting the blockstate
@@ -176,15 +176,15 @@ public abstract class ExplosionMixin {
                     listener.klaxon$beforeConversion(instance, newState);
                 }
 
-                serverWorld.setBlockState(pos, newState);
+                serverWorld.setBlockAndUpdate(pos, newState);
                 // tick stuff so it doesnt get stuck
-                serverWorld.scheduleBlockTick(pos, newState.getBlock(), 1);
+                serverWorld.scheduleTick(pos, newState.getBlock(), 1);
             }
         }
 
         // apply the preserved sign text if present
         if (signNbt != null && world.getBlockEntity(pos) instanceof SignBlockEntity signBlockEntity) {
-            signBlockEntity.read(signNbt, world.getRegistryManager());
+            signBlockEntity.loadWithComponents(signNbt, world.registryAccess());
         }
     }
 }

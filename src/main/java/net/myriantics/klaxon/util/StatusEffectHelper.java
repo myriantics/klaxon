@@ -1,38 +1,38 @@
 package net.myriantics.klaxon.util;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
 
 public abstract class StatusEffectHelper {
 
     // FYI - getAmplifier() counts up from 0; returning 1 would indicate a level II effect
-    public static int getUnborkedStatusEffectAmplifier(LivingEntity livingEntity, RegistryEntry<StatusEffect> statusEffect) {
-        if (livingEntity != null && livingEntity.getStatusEffect(statusEffect) != null) {
-            int amplifier = livingEntity.getStatusEffect(statusEffect).getAmplifier();
+    public static int getUnborkedStatusEffectAmplifier(LivingEntity livingEntity, Holder<MobEffect> statusEffect) {
+        if (livingEntity != null && livingEntity.getEffect(statusEffect) != null) {
+            int amplifier = livingEntity.getEffect(statusEffect).getAmplifier();
 
             return amplifier + 1;
         }
         return 0;
     }
 
-    public static int totalLevelOfTagContents(Collection<StatusEffectInstance> effects, TagKey<StatusEffect> tagKey) {
+    public static int totalLevelOfTagContents(Collection<MobEffectInstance> effects, TagKey<MobEffect> tagKey) {
         int cumulativeLevel = 0;
-        for (StatusEffectInstance instance : effects) {
-            if (instance.getEffectType().isIn(tagKey)) {
+        for (MobEffectInstance instance : effects) {
+            if (instance.getEffect().is(tagKey)) {
                 cumulativeLevel += instance.getAmplifier() + 1;
             }
         }
         return cumulativeLevel;
     }
 
-    public static boolean containsAnyEffectIn(Collection<StatusEffectInstance> effects, TagKey<StatusEffect> tagKey) {
-        for (StatusEffectInstance effectInstance : effects) {
-            if (effectInstance.getEffectType().isIn(tagKey)) return true;
+    public static boolean containsAnyEffectIn(Collection<MobEffectInstance> effects, TagKey<MobEffect> tagKey) {
+        for (MobEffectInstance effectInstance : effects) {
+            if (effectInstance.getEffect().is(tagKey)) return true;
         }
         return false;
     }

@@ -2,33 +2,33 @@ package net.myriantics.klaxon.mechanics.wrench;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.predicate.StatePredicate;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 
 import java.util.List;
 import java.util.Optional;
 
-public record WrenchInteractionDenialPredicate(StatePredicate predicate) {
+public record WrenchInteractionDenialPredicate(StatePropertiesPredicate predicate) {
     public static final Codec<WrenchInteractionDenialPredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            StatePredicate.CODEC.fieldOf("properties").forGetter(WrenchInteractionDenialPredicate::predicate)
+            StatePropertiesPredicate.CODEC.fieldOf("properties").forGetter(WrenchInteractionDenialPredicate::predicate)
     ).apply(instance, WrenchInteractionDenialPredicate::new));
 
-    public static final WrenchInteractionDenialPredicate NEVER = new WrenchInteractionDenialPredicate(new StatePredicate(List.of()));
+    public static final WrenchInteractionDenialPredicate NEVER = new WrenchInteractionDenialPredicate(new StatePropertiesPredicate(List.of()));
 
     public boolean anyMatch(BlockState state) {
-        for (StatePredicate.Condition property : predicate.conditions()) {
-            if (property.test(state.getBlock().getStateManager(), state)) {
+        for (StatePropertiesPredicate.PropertyMatcher property : predicate.properties()) {
+            if (property.match(state.getBlock().getStateDefinition(), state)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean wrenchInteractionBlocked(DynamicRegistryManager registryManager, BlockState state) {
-        Optional<WrenchInteractionDenialPredicate> predicate = registryManager.get(KlaxonRegistryKeys.WRENCH_INTERACTION_DENIAL_PREDICATE).getOrEmpty(Registries.BLOCK.getId(state.getBlock()));
+    public static boolean wrenchInteractionBlocked(RegistryAccess registryManager, BlockState state) {
+        Optional<WrenchInteractionDenialPredicate> predicate = registryManager.registryOrThrow(KlaxonRegistryKeys.WRENCH_INTERACTION_DENIAL_PREDICATE).getOptional(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
 
         // cancel behavior if the predicate passes
         return predicate.isPresent() && predicate.get().anyMatch(state);

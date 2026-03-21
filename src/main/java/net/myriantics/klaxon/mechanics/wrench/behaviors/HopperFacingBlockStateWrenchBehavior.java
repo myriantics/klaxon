@@ -1,9 +1,8 @@
 package net.myriantics.klaxon.mechanics.wrench.behaviors;
 
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
@@ -12,19 +11,19 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class HopperFacingBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Direction> {
-    public HopperFacingBlockStateWrenchBehavior(Identifier id) {
-        super(Properties.HOPPER_FACING, id);
+    public HopperFacingBlockStateWrenchBehavior(ResourceLocation id) {
+        super(BlockStateProperties.FACING_HOPPER, id);
     }
 
     @Override
     protected Optional<Direction> applyManual(Direction original, ManualWrenchInteractionContext context) {
-        Direction hitSide = context.hitResult().getSide();
+        Direction hitSide = context.hitResult().getDirection();
 
         if (hitSide.equals(Direction.UP)) {
             if (original.equals(Direction.DOWN)) {
                 return Optional.empty();
             } else {
-                return Optional.ofNullable(original.rotateClockwise(Direction.Axis.Y));
+                return Optional.ofNullable(original.getClockWise(Direction.Axis.Y));
             }
         }
 
@@ -41,7 +40,7 @@ public class HopperFacingBlockStateWrenchBehavior extends BlockStateWrenchBehavi
             if (Objects.requireNonNull(original) == Direction.DOWN) {
                 return Optional.of(Direction.NORTH);
             }
-            return Optional.ofNullable(original.rotateClockwise(Direction.Axis.Y));
+            return Optional.ofNullable(original.getClockWise(Direction.Axis.Y));
         }
 
         if (context.dispenserFacing().equals(original.getOpposite())) {

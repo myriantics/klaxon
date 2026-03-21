@@ -1,10 +1,15 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch.connection;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.profiler.Profiler;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -14,32 +19,32 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(WorldRenderer.class)
+@Mixin(LevelRenderer.class)
 public abstract class WorldRendererMixin {
 
     @Shadow
-    private @Nullable ClientWorld world;
+    private @Nullable ClientLevel level;
 
     @Inject(
-            method = "render",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;drawCurrentLayer()V", ordinal = 0)
+            method = "renderLevel",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endLastBatch()V", ordinal = 0)
     )
     private void klaxon$renderGrappleWinchCables(
-            RenderTickCounter tickCounter,
+            DeltaTracker tickCounter,
             boolean renderBlockOutline,
             Camera camera,
             GameRenderer gameRenderer,
-            LightmapTextureManager lightmapTextureManager,
+            LightTexture lightmapTextureManager,
             Matrix4f matrix4f,
             Matrix4f matrix4f2,
             CallbackInfo ci,
-            @Local MatrixStack matrixStack,
-            @Local VertexConsumerProvider.Immediate immediate,
-            @Local Profiler profiler
+            @Local PoseStack matrixStack,
+            @Local MultiBufferSource.BufferSource immediate,
+            @Local ProfilerFiller profiler
     ) {
         profiler.push("grapple_winch_cable");
-        ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(this.world);
-        manager.render(this.world, camera, tickCounter, matrixStack, immediate);
+        ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(this.level);
+        manager.render(this.level, camera, tickCounter, matrixStack, immediate);
         profiler.pop();
     }
 }

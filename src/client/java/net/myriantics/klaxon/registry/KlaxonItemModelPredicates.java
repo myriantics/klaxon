@@ -1,12 +1,12 @@
 package net.myriantics.klaxon.registry;
 
-import net.minecraft.client.item.ClampedModelPredicateProvider;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ChargedProjectilesComponent;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnection;
@@ -17,10 +17,10 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class KlaxonItemModelPredicates {
 
-    public static final Identifier GRAPPLE_WINCH_CABLE = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH, ((stack, world, entity, seed) -> {
+    public static final ResourceLocation GRAPPLE_WINCH_CABLE = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.WINCH_CABLE_LENGTH, ((stack, world, entity, seed) -> {
         boolean supportsCable = stack.getItem() instanceof GrappleWinchItem grappleWinch && grappleWinch.canSupportCable(stack);
 
-        if (entity instanceof AbstractClientPlayerEntity player && supportsCable) {
+        if (entity instanceof AbstractClientPlayer player && supportsCable) {
             ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(world);
             @Nullable ClientGrappleWinchConnection connection = manager.fromPlayer(player);
 
@@ -35,8 +35,8 @@ public abstract class KlaxonItemModelPredicates {
         return 0f;
     }));
 
-    public static final Identifier GRAPPLE_WINCH_CHARGED = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.CHARGED, ((stack, world, entity, seed) -> {
-        ChargedProjectilesComponent component = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
+    public static final ResourceLocation GRAPPLE_WINCH_CHARGED = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.CHARGED, ((stack, world, entity, seed) -> {
+        ChargedProjectiles component = stack.get(DataComponents.CHARGED_PROJECTILES);
         if (component == null || component.isEmpty()) {
             return 0;
         } else {
@@ -44,7 +44,7 @@ public abstract class KlaxonItemModelPredicates {
         }
     }));
 
-    public static final Identifier GRAPPLE_WINCH_RETRACTING = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.RETRACTING, (((stack, world, entity, seed) -> {
+    public static final ResourceLocation GRAPPLE_WINCH_RETRACTING = register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.RETRACTING, (((stack, world, entity, seed) -> {
         ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(world);
         /*if (entity instanceof PlayerEntity player && manager.fromPlayer(player) instanceof ClientGrappleWinchConnection connection && connection.isRetracting()) {
             return 1.0f;
@@ -52,8 +52,8 @@ public abstract class KlaxonItemModelPredicates {
         return 0;
     })));
 
-    private static Identifier register(Item item, Identifier id, ClampedModelPredicateProvider provider) {
-        ModelPredicateProviderRegistry.register(item, id, provider);
+    private static ResourceLocation register(Item item, ResourceLocation id, ClampedItemPropertyFunction provider) {
+        ItemProperties.register(item, id, provider);
         return id;
     }
 

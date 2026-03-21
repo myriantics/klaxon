@@ -1,20 +1,20 @@
 package net.myriantics.klaxon.mixin.minecraft.datagen;
 
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.TextureKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.data.models.model.ModelTemplate;
+import net.minecraft.data.models.model.TextureSlot;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Optional;
 import java.util.Set;
 
-@Mixin(Model.class)
+@Mixin(ModelTemplate.class)
 public interface ModelAccessor {
 
-    @Accessor("requiredTextures")
-    public Set<TextureKey> klaxon$getRequiredTextures();
+    @Accessor("requiredSlots")
+    public Set<TextureSlot> klaxon$getRequiredTextures();
 
-    @Accessor("parent")
-    public Optional<Identifier> klaxon$getParent();
+    @Accessor("model")
+    public Optional<ResourceLocation> klaxon$getParent();
 }

@@ -1,14 +1,14 @@
 package net.myriantics.klaxon.registry.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.item.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
@@ -99,7 +99,7 @@ public abstract class KlaxonBlockItems {
     public static final Item HALLNOX_FENCE_GATE = registerBlockItem(KlaxonBlocks.HALLNOX_FENCE_GATE);
     public static final Item HALLNOX_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_SIGN,
             new SignItem(
-                    new Item.Settings().maxCount(16),
+                    new Item.Properties().stacksTo(16),
                     KlaxonBlocks.HALLNOX_SIGN,
                     KlaxonBlocks.HALLNOX_WALL_SIGN
             )
@@ -108,25 +108,25 @@ public abstract class KlaxonBlockItems {
             new HangingSignItem(
                     KlaxonBlocks.HALLNOX_HANGING_SIGN,
                     KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN,
-                    new Item.Settings().maxCount(16)
+                    new Item.Properties().stacksTo(16)
             )
     );
     public static final Item HALLNOX_BULB = registerBlockItem(KlaxonBlocks.HALLNOX_BULB);
 
     private static Item registerBlockItem(String name, Block block) {
-        return registerBlockItem(name, new AliasedBlockItem(block, new Item.Settings()));
+        return registerBlockItem(name, new ItemNameBlockItem(block, new Item.Properties()));
     }
 
     private static Item registerBlockItem(Block block) {
-        return registerBlockItem(block, new BlockItem(block, new Item.Settings()));
+        return registerBlockItem(block, new BlockItem(block, new Item.Properties()));
     }
 
     private static Item registerBlockItem(Block block, BlockItem blockItem) {
-        return registerBlockItem(Registries.BLOCK.getId(block).getPath(), blockItem);
+        return registerBlockItem(BuiltInRegistries.BLOCK.getKey(block).getPath(), blockItem);
     }
 
     private static Item registerBlockItem(String name, BlockItem blockItem) {
-        return Registry.register(Registries.ITEM, KlaxonCommon.locate(name), blockItem);
+        return Registry.register(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), blockItem);
     }
 
     /**
@@ -140,7 +140,7 @@ public abstract class KlaxonBlockItems {
         // try to yonk the pick stack
         if (item == null || item.equals(Items.AIR)) {
             try {
-                item = block.getPickStack(null, null, null).getItem();
+                item = block.getCloneItemStack(null, null, null).getItem();
             } catch (Exception ignored) {
 
             }
@@ -152,19 +152,19 @@ public abstract class KlaxonBlockItems {
             ItemStack displayStack = new ItemStack(Items.BARRIER);
 
             // apply components
-            displayStack.applyComponentsFrom(ComponentMap.builder()
-                    .add(DataComponentTypes.ITEM_NAME, block.getName().formatted(Formatting.RED))
-                    .add(DataComponentTypes.LORE, new LoreComponent(
-                            List.of(Text.translatable("klaxon.text.tooltip.missing_block_item")
-                                    .formatted(Formatting.BOLD))
+            displayStack.applyComponents(DataComponentMap.builder()
+                    .set(DataComponents.ITEM_NAME, block.getName().withStyle(ChatFormatting.RED))
+                    .set(DataComponents.LORE, new ItemLore(
+                            List.of(Component.translatable("klaxon.text.tooltip.missing_block_item")
+                                    .withStyle(ChatFormatting.BOLD))
                     )).build()
             );
 
             return displayStack;
         } else {
             ItemStack displayStack = new ItemStack(item);
-            displayStack.applyComponentsFrom(ComponentMap.builder()
-                    .add(DataComponentTypes.ITEM_NAME, block.getName())
+            displayStack.applyComponents(DataComponentMap.builder()
+                    .set(DataComponents.ITEM_NAME, block.getName())
                     .build()
             );
             return displayStack;

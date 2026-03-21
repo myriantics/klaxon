@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.recipe.blast_processing;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
 public class BlastProcessingRecipeInput implements RecipeInput {
@@ -18,12 +18,12 @@ public class BlastProcessingRecipeInput implements RecipeInput {
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
+    public ItemStack getItem(int slot) {
         return slot == 0 ? inputStack : ItemStack.EMPTY;
     }
 
     @Override
-    public int getSize() {
+    public int size() {
         return 1;
     }
 }

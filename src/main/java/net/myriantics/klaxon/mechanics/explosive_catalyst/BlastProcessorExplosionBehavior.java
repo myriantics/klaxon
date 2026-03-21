@@ -1,12 +1,12 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class BlastProcessorExplosionBehavior extends ExplosionBehavior {
+public class BlastProcessorExplosionBehavior extends ExplosionDamageCalculator {
 
     boolean canModifyWorld;
 
@@ -16,7 +16,7 @@ public class BlastProcessorExplosionBehavior extends ExplosionBehavior {
     }
 
     @Override
-    public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
-        return canModifyWorld && super.canDestroyBlock(explosion, world, pos, state, power);
+    public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float power) {
+        return canModifyWorld && super.shouldBlockExplode(explosion, world, pos, state, power);
     }
 }

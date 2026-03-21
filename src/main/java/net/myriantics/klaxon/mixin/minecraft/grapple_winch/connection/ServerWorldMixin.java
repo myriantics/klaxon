@@ -1,21 +1,21 @@
 package net.myriantics.klaxon.mixin.minecraft.grapple_winch.connection;
 
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.random.RandomSequencesState;
-import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.PersistentStateManager;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.level.ServerWorldProperties;
-import net.minecraft.world.level.storage.LevelStorage;
-import net.minecraft.world.spawner.SpecialSpawner;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.RandomSequences;
+import net.minecraft.world.level.CustomSpawner;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.LevelStorageSource;
+import net.minecraft.world.level.storage.ServerLevelData;
+import net.minecraft.world.level.storage.WritableLevelData;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,16 +29,16 @@ import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin extends World implements ServerGrappleWinchConnectionManager.Access {
+@Mixin(ServerLevel.class)
+public abstract class ServerWorldMixin extends Level implements ServerGrappleWinchConnectionManager.Access {
 
     @Shadow
-    public abstract PersistentStateManager getPersistentStateManager();
+    public abstract DimensionDataStorage getDataStorage();
 
     @Unique
     private ServerGrappleWinchConnectionManager klaxon$connectionManager;
 
-    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
+    protected ServerWorldMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, Supplier<ProfilerFiller> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
     }
 
@@ -46,9 +46,9 @@ public abstract class ServerWorldMixin extends World implements ServerGrappleWin
             method = "<init>",
             at = @At(value = "TAIL")
     )
-    private void klaxon$initGrappleWinchConnectionManager(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, RandomSequencesState randomSequencesState, CallbackInfo ci) {
-        this.klaxon$connectionManager = this.getPersistentStateManager().getOrCreate(
-                ServerGrappleWinchConnectionManager.getPersistentStateType((ServerWorld) (Object) this),
+    private void klaxon$initGrappleWinchConnectionManager(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<CustomSpawner> spawners, boolean shouldTickTime, RandomSequences randomSequencesState, CallbackInfo ci) {
+        this.klaxon$connectionManager = this.getDataStorage().computeIfAbsent(
+                ServerGrappleWinchConnectionManager.getPersistentStateType((ServerLevel) (Object) this),
                 ServerGrappleWinchConnectionManager.nameFor(worldKey)
         );
     }

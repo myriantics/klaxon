@@ -1,31 +1,29 @@
 package net.myriantics.klaxon.registry.item;
 
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.item.*;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
-import net.myriantics.klaxon.KlaxonCommon;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
-import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 
 public abstract class KlaxonAttributeModifierComponentModifications {
 
-    public static AttributeModifiersComponent applyArmorModifications(ArmorItem armorItem, AttributeModifiersComponent original) {
-        RegistryEntry<ArmorMaterial> material = armorItem.getMaterial();
-        EquipmentSlot slot = armorItem.getSlotType();
+    public static ItemAttributeModifiers applyArmorModifications(ArmorItem armorItem, ItemAttributeModifiers original) {
+        Holder<ArmorMaterial> material = armorItem.getMaterial();
+        EquipmentSlot slot = armorItem.getEquipmentSlot();
 
         // apply steel armor modifiers if it's steel armor
         if (material.equals(KlaxonArmorMaterials.STEEL_PLATE)) {
-            original = SteelArmorItem.appendAttributeModifiers(original, AttributeModifierSlot.forEquipmentSlot(slot));
+            original = SteelArmorItem.appendAttributeModifiers(original, EquipmentSlotGroup.bySlot(slot));
         }
 
         return original;
     }
 
-    public static Identifier idFromSlot(Identifier id, AttributeModifierSlot slot) {
-        return id.withPath(id.getPath() + "_" + slot.asString().toLowerCase());
+    public static ResourceLocation idFromSlot(ResourceLocation id, EquipmentSlotGroup slot) {
+        return id.withPath(id.getPath() + "_" + slot.getSerializedName().toLowerCase());
     }
 }

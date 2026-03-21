@@ -1,10 +1,7 @@
 package net.myriantics.klaxon.util;
 
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.Holder;
+import net.minecraft.world.damagesource.DamageType;
 import org.spongepowered.asm.mixin.Unique;
 
 public interface DamageSourceMixinAccess {
@@ -15,5 +12,5 @@ public interface DamageSourceMixinAccess {
     void klaxon$setShieldBreaching(boolean breaching);
 
     @Unique
-    void klaxon$setDamageType(RegistryEntry<DamageType> damageType);
+    void klaxon$setDamageType(Holder<DamageType> damageType);
 }

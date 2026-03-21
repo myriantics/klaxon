@@ -1,18 +1,10 @@
 package net.myriantics.klaxon.mechanics.wrench.behaviors;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
@@ -20,8 +12,8 @@ import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import java.util.Optional;
 
 public class HorizontalAxisBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Direction.Axis> {
-    public HorizontalAxisBlockStateWrenchBehavior(Identifier id) {
-        super(Properties.HORIZONTAL_AXIS, id);
+    public HorizontalAxisBlockStateWrenchBehavior(ResourceLocation id) {
+        super(BlockStateProperties.HORIZONTAL_AXIS, id);
     }
 
     @Override

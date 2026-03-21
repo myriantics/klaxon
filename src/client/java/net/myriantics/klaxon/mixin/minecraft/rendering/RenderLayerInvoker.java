@@ -1,21 +1,21 @@
 package net.myriantics.klaxon.mixin.minecraft.rendering;
 
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(RenderLayer.class)
+@Mixin(RenderType.class)
 public interface RenderLayerInvoker {
-    @Invoker(value = "of")
-    static RenderLayer.MultiPhase klaxon$invokeCreateMultiphase(
+    @Invoker(value = "create")
+    static RenderType.CompositeRenderType klaxon$invokeCreateMultiphase(
             String name,
             VertexFormat vertexFormat,
-            VertexFormat.DrawMode drawMode,
+            VertexFormat.Mode drawMode,
             int expectedBufferSize,
             boolean hasCrumbling,
             boolean translucent,
-            RenderLayer.MultiPhaseParameters phases
+            RenderType.CompositeState phases
     ) {
         throw new AssertionError();
     }

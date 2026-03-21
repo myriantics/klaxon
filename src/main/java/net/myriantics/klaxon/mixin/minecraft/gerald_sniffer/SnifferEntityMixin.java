@@ -2,37 +2,35 @@ package net.myriantics.klaxon.mixin.minecraft.gerald_sniffer;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.SnifferEntity;
-import net.minecraft.loot.LootTable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.ReloadableRegistries;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.ReloadableServerRegistries;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.sniffer.Sniffer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.myriantics.klaxon.mechanics.gerald_sniffer.GeraldSnifferHelper;
 import net.myriantics.klaxon.mechanics.gerald_sniffer.GeraldSnifferState;
 import net.myriantics.klaxon.mechanics.gerald_sniffer.SnifferEntityMixinAccess;
 import net.myriantics.klaxon.registry.dynamic.KlaxonLootTables;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(SnifferEntity.class)
-public abstract class SnifferEntityMixin extends AnimalEntity implements SnifferEntityMixinAccess {
+@Mixin(Sniffer.class)
+public abstract class SnifferEntityMixin extends Animal implements SnifferEntityMixinAccess {
 
     @Unique
     private GeraldSnifferState klaxon$geraldSnifferState = GeraldSnifferState.TRACKING_UNSUPPORTED;
 
-    protected SnifferEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
+    protected SnifferEntityMixin(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -52,17 +50,17 @@ public abstract class SnifferEntityMixin extends AnimalEntity implements Sniffer
     )
     private void klaxon$lockOnToGeraldTargetIfGeraldTrackingIsActive(CallbackInfo ci) {
         if (this.klaxon$geraldSnifferState.isReadyToStartTracking()) {
-            GeraldSnifferHelper.lockOnToTrackingPos((SnifferEntity) (Object) this);
+            GeraldSnifferHelper.lockOnToTrackingPos((Sniffer) (Object) this);
         }
     }
 
     @WrapOperation(
-            method = "dropSeeds",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/registry/ReloadableRegistries$Lookup;getLootTable(Lnet/minecraft/registry/RegistryKey;)Lnet/minecraft/loot/LootTable;")
+            method = "dropSeed",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/ReloadableServerRegistries$Holder;getLootTable(Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/level/storage/loot/LootTable;")
     )
     private LootTable klaxon$overrideLootTableIfGeraldTrackingActive(
-            ReloadableRegistries.Lookup instance,
-            RegistryKey<LootTable> key,
+            ReloadableServerRegistries.Holder instance,
+            ResourceKey<LootTable> key,
             Operation<LootTable> original
     ) {
         return this.klaxon$geraldSnifferState.isActivelyTracking()
@@ -71,11 +69,11 @@ public abstract class SnifferEntityMixin extends AnimalEntity implements Sniffer
     }
 
     @WrapOperation(
-            method = "dropSeeds",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/SnifferEntity;playSound(Lnet/minecraft/sound/SoundEvent;FF)V")
+            method = "dropSeed",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/sniffer/Sniffer;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V")
     )
     private void klaxon$overrideSeedPickupSoundIfGeraldTrackingActive(
-            SnifferEntity instance,
+            Sniffer instance,
             SoundEvent soundEvent,
             float v, float p,
             Operation<Void> original
@@ -89,8 +87,8 @@ public abstract class SnifferEntityMixin extends AnimalEntity implements Sniffer
     }
 
     @WrapOperation(
-            method = "isDiggable",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z")
+            method = "canDig(Lnet/minecraft/core/BlockPos;)Z",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/tags/TagKey;)Z")
     )
     private boolean klaxon$canAlwaysDigIfGeraldTrackingActive(BlockState instance, TagKey<Block> tagKey, Operation<Boolean> original) {
         return !this.klaxon$geraldSnifferState.equals(GeraldSnifferState.TRACKING_UNSUPPORTED) || original.call(instance, tagKey);

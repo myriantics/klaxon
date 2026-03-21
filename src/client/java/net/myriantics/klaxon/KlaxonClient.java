@@ -7,12 +7,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
 import net.fabricmc.fabric.impl.resource.loader.FabricResource;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.block.entity.HangingSignBlockEntityRenderer;
-import net.minecraft.client.render.block.entity.SignBlockEntityRenderer;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.server.packs.PackType;
 import net.myriantics.klaxon.particle.HallnoxDripParticle;
 import net.myriantics.klaxon.particle.NetherReactionExplosionEmitterParticle;
 import net.myriantics.klaxon.particle.NetherReactionExplosionLargeParticle;
@@ -31,20 +28,20 @@ public class KlaxonClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // block transparency
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_BULB, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_DOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_TRAPDOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.STEEL_DOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.STEEL_TRAPDOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.CRUDE_STEEL_DOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.NETHER_REACTOR_CORE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_BULB, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_DOOR, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.HALLNOX_TRAPDOOR, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.STEEL_DOOR, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.STEEL_TRAPDOOR, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.CRUDE_STEEL_DOOR, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.NETHER_REACTOR_CORE, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, RenderType.cutout());
 
         EntityRendererRegistry.register(KlaxonEntityTypes.GRAPPLE_CLAW, GrappleClawEntityRenderer::new);
 
         // handled screens
-        HandledScreens.register(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);
+        MenuScreens.register(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);
 
         // packets
         KlaxonClientPackets.registerS2CPacketRecievers();
@@ -67,6 +64,6 @@ public class KlaxonClient implements ClientModInitializer {
         KlaxonItemColors.init();
 
         // splashes
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new KlaxonSplashTextResourceSupplier());
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new KlaxonSplashTextResourceSupplier());
     }
 }

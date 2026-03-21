@@ -1,22 +1,22 @@
 package net.myriantics.klaxon.mixin.minecraft.entity_attributes;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.player.Player;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class PlayerEntityMixin {
     @ModifyReturnValue(
-            method = "createPlayerAttributes",
+            method = "createAttributes",
             at = @At(value = "RETURN")
     )
-    private static DefaultAttributeContainer.Builder klaxon$appendKlaxonPlayerEntityAttributes(DefaultAttributeContainer.Builder original) {
-        for (RegistryEntry<EntityAttribute> entry : KlaxonEntityAttributes.getKlaxonPlayerEntityAttributes()) {
+    private static AttributeSupplier.Builder klaxon$appendKlaxonPlayerEntityAttributes(AttributeSupplier.Builder original) {
+        for (Holder<Attribute> entry : KlaxonEntityAttributes.getKlaxonPlayerEntityAttributes()) {
             original.add(entry);
         }
 

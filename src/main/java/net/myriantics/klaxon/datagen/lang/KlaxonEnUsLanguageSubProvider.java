@@ -1,18 +1,18 @@
 package net.myriantics.klaxon.datagen.lang;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.trim.ArmorTrimMaterial;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.armortrim.TrimMaterial;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.advancement.providers.KlaxonStageOneAdvancementProvider;
 import org.jetbrains.annotations.Nullable;
@@ -28,16 +28,16 @@ public abstract class KlaxonEnUsLanguageSubProvider {
 
     public abstract void generate();
 
-    protected void addItem(ItemConvertible itemConvertible, String name) {
+    protected void addItem(ItemLike itemConvertible, String name) {
         builder.add(itemConvertible.asItem(), name);
     }
 
-    protected void addEnchantment(RegistryKey<Enchantment> enchantment, String name) {
+    protected void addEnchantment(ResourceKey<Enchantment> enchantment, String name) {
         builder.addEnchantment(enchantment, name);
     }
 
-    protected void addTrimMaterial(RegistryKey<ArmorTrimMaterial> material, String name) {
-        builder.add("trim_material." + material.getValue().getNamespace() + "." + material.getValue().getPath(), name);
+    protected void addTrimMaterial(ResourceKey<TrimMaterial> material, String name) {
+        builder.add("trim_material." + material.location().getNamespace() + "." + material.location().getPath(), name);
     }
 
     protected void addBlock(Block block, String name) {
@@ -52,11 +52,11 @@ public abstract class KlaxonEnUsLanguageSubProvider {
         builder.add(tagKey, name);
     }
 
-    protected void addItemGroup(RegistryKey<ItemGroup> group, String name) {
+    protected void addItemGroup(ResourceKey<CreativeModeTab> group, String name) {
         builder.add(group, name);
     }
 
-    protected void addEntityAttribute(RegistryEntry<EntityAttribute> attribute, String name) {
+    protected void addEntityAttribute(Holder<Attribute> attribute, String name) {
         builder.add(attribute, name);
     }
 
@@ -98,8 +98,8 @@ public abstract class KlaxonEnUsLanguageSubProvider {
         addAdvancement(advancementName, KlaxonStageOneAdvancementProvider.STAGE, title, description);
     }
 
-    protected void addDeathMessage(RegistryKey<DamageType> type, String value, @Nullable String itemValue) {
-        String key = "death.attack." + type.getValue().getNamespace() + "." + type.getValue().getPath();
+    protected void addDeathMessage(ResourceKey<DamageType> type, String value, @Nullable String itemValue) {
+        String key = "death.attack." + type.location().getNamespace() + "." + type.location().getPath();
 
         builder.add(key, value);
         if (itemValue != null) {

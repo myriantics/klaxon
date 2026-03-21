@@ -1,8 +1,8 @@
 package net.myriantics.klaxon.entity.entities.grapple_claw;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 
 public enum Offset {
     UP(Direction.UP),
@@ -71,17 +71,17 @@ public enum Offset {
         this.directions = directions;
         Vec3i offsetVector = new Vec3i(0, 0, 0);
         for (Direction direction : directions) {
-            offsetVector = offsetVector.add(direction.getVector());
+            offsetVector = offsetVector.offset(direction.getNormal());
         }
         this.offsetVector = offsetVector;
     }
 
     public BlockPos offset(BlockPos pos) {
-        return pos.add(offsetVector);
+        return pos.offset(offsetVector);
     }
 
     public Vec3i offset(Vec3i vec3i) {
-        return vec3i.add(offsetVector);
+        return vec3i.offset(offsetVector);
     }
 
     public Vec3i getOffsetVector() {
@@ -89,7 +89,7 @@ public enum Offset {
     }
 
     static {
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         for (Offset offset : values()) {
             pos.move(offset.offsetVector);

@@ -3,9 +3,9 @@ package net.myriantics.klaxon.datagen.tag;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 import net.myriantics.klaxon.registry.behavior.KlaxonBlockStateWrenchBehaviors;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.tag.compat.KlaxonCompatBlockTags;
@@ -15,12 +15,12 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import java.util.concurrent.CompletableFuture;
 
 public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-    public KlaxonBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public KlaxonBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup arg) {
+    protected void addTags(HolderLookup.Provider arg) {
         buildMiningTags();
         buildVeinmineGroupTags();
         buildBehaviorTags();
@@ -82,7 +82,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // cleaver
         getOrCreateTagBuilder(KlaxonBlockTags.CLEAVER_MINEABLE)
                 .forceAddTag(KlaxonBlockTags.CLEAVER_INSTABREAKABLE)
-                .forceAddTag(BlockTags.AXE_MINEABLE)
+                .forceAddTag(BlockTags.MINEABLE_WITH_AXE)
                 .add(Blocks.COBWEB);
         getOrCreateTagBuilder(KlaxonBlockTags.CLEAVER_INSTABREAKABLE)
                 .forceAddTag(KlaxonConventionalBlockTags.VINES)
@@ -187,7 +187,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.CRAFTER);
 
         // pickaxe
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                 .forceAddTag(KlaxonBlockTags.WIRE_SPOOLS)
                 .forceAddTag(KlaxonBlockTags.PLATING_BLOCKS)
                 .forceAddTag(KlaxonBlockTags.PIPE_MATRICES)
@@ -210,7 +210,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 );
 
         // axe
-        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
                 .add(
                         KlaxonBlocks.HALLNOX_POD,
                         KlaxonBlocks.HALLNOX_STEM,
@@ -238,7 +238,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 );
 
         // hoe
-        getOrCreateTagBuilder(BlockTags.HOE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_HOE)
                 .add(KlaxonBlocks.HALLNOX_POD)
                 .add(KlaxonBlocks.HALLNOX_WART_BLOCK);
     }

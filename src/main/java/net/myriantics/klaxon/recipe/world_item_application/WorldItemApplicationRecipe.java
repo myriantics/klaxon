@@ -1,14 +1,14 @@
 package net.myriantics.klaxon.recipe.world_item_application;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 public class WorldItemApplicationRecipe implements Recipe<WorldItemApplicationRecipeInput> {
@@ -23,22 +23,22 @@ public class WorldItemApplicationRecipe implements Recipe<WorldItemApplicationRe
     }
 
     @Override
-    public boolean matches(WorldItemApplicationRecipeInput input, World world) {
-        return inputIngredient.test(input.usedStack()) && input.inputState().isIn(validBlocks);
+    public boolean matches(WorldItemApplicationRecipeInput input, Level world) {
+        return inputIngredient.test(input.usedStack()) && input.inputState().is(validBlocks);
     }
 
     @Override
-    public ItemStack craft(WorldItemApplicationRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return getResult(lookup);
+    public ItemStack assemble(WorldItemApplicationRecipeInput input, HolderLookup.Provider lookup) {
+        return getResultItem(lookup);
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width == 1 && height == 1;
     }
 
     @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
         return ItemStack.EMPTY;
     }
 

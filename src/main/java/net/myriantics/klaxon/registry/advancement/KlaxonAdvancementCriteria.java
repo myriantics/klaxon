@@ -1,8 +1,8 @@
 package net.myriantics.klaxon.registry.advancement;
 
-import net.minecraft.advancement.criterion.Criterion;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.criterion.*;
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.EntityGrappleCriterion;
@@ -22,8 +22,8 @@ public abstract class KlaxonAdvancementCriteria {
     public static final GrappleWinchCableDisconnectCriterion GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION = register("grapple_winch_cable_disconnect_criterion", new GrappleWinchCableDisconnectCriterion());
     public static final OneOffCriterion DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION = register("de_anchor_grapple_winch_claw", new OneOffCriterion());
 
-    private static <T extends Criterion<?>> T register(String name, T criterion) {
-        return Registry.register(Registries.CRITERION, KlaxonCommon.locate(name), criterion);
+    private static <T extends CriterionTrigger<?>> T register(String name, T criterion) {
+        return Registry.register(BuiltInRegistries.TRIGGER_TYPES, KlaxonCommon.locate(name), criterion);
     }
 
     public static void init() {

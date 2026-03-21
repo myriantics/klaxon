@@ -2,46 +2,47 @@ package net.myriantics.klaxon.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.gen.blockpredicate.BlockPredicate;
-import net.minecraft.world.gen.feature.*;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.worldgen.KlaxonWorldgenFeatures;
+import net.myriantics.klaxon.worldgen.features.hallnox.DownrightHallnoxGrowthFeatureConfig;
 import net.myriantics.klaxon.worldgen.features.hallnox.HorizontalHallnoxGrowthFeatureConfig;
 import net.myriantics.klaxon.worldgen.features.hallnox.UprightHallnoxGrowthFeatureConfig;
-import net.myriantics.klaxon.worldgen.features.hallnox.DownrightHallnoxGrowthFeatureConfig;
 
 import java.util.concurrent.CompletableFuture;
 
 // https://gist.github.com/Linguardium/b81e85b3541429bbd3ca63a93b24485f used as reference
 public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
-    public KlaxonFeatureProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public KlaxonFeatureProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
-    public static RegistryKey<ConfiguredFeature<?, ?>> UPRIGHT_DRY_HALLNOX_GROWTH = configuredFeatureKey(
+    public static ResourceKey<ConfiguredFeature<?, ?>> UPRIGHT_DRY_HALLNOX_GROWTH = configuredFeatureKey(
             "upright_dry_hallnox_growth");
-    public static RegistryKey<ConfiguredFeature<?, ?>> DOWNRIGHT_HALLNOX_GROWTH = configuredFeatureKey(
+    public static ResourceKey<ConfiguredFeature<?, ?>> DOWNRIGHT_HALLNOX_GROWTH = configuredFeatureKey(
             "downright_hallnox_growth");
-    public static RegistryKey<ConfiguredFeature<?, ?>> NORTH_HORIZONTAL_HALLNOX_GROWTH = configuredFeatureKey(
+    public static ResourceKey<ConfiguredFeature<?, ?>> NORTH_HORIZONTAL_HALLNOX_GROWTH = configuredFeatureKey(
             "north_horizontal_hallnox_growth");
-    public static RegistryKey<ConfiguredFeature<?, ?>> EAST_HORIZONTAL_HALLNOX_GROWTH = configuredFeatureKey(
+    public static ResourceKey<ConfiguredFeature<?, ?>> EAST_HORIZONTAL_HALLNOX_GROWTH = configuredFeatureKey(
             "east_horizontal_hallnox_growth");
-    public static RegistryKey<ConfiguredFeature<?, ?>> WEST_HORIZONTAL_HALLNOX_GROWTH = configuredFeatureKey(
+    public static ResourceKey<ConfiguredFeature<?, ?>> WEST_HORIZONTAL_HALLNOX_GROWTH = configuredFeatureKey(
             "west_horizontal_hallnox_growth");
-    public static RegistryKey<ConfiguredFeature<?, ?>> SOUTH_HORIZONTAL_HALLNOX_GROWTH = configuredFeatureKey(
+    public static ResourceKey<ConfiguredFeature<?, ?>> SOUTH_HORIZONTAL_HALLNOX_GROWTH = configuredFeatureKey(
             "south_horizontal_hallnox_growth");
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup wrapperLookup, Entries entries) {
-        entries.addAll(wrapperLookup.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE));
-        entries.addAll(wrapperLookup.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE));
+    protected void configure(HolderLookup.Provider wrapperLookup, Entries entries) {
+        entries.addAll(wrapperLookup.lookupOrThrow(Registries.CONFIGURED_FEATURE));
+        entries.addAll(wrapperLookup.lookupOrThrow(Registries.PLACED_FEATURE));
     }
 
     @Override
@@ -49,8 +50,8 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
         return KlaxonCommon.MOD_ID + "_feature_provider";
     }
 
-    public static void generateConfiguredFeatures(Registerable<ConfiguredFeature<?, ?>> registerable) {
-        BlockPredicate replaceableBlocks = BlockPredicate.matchingBlocks(
+    public static void generateConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> registerable) {
+        BlockPredicate replaceableBlocks = BlockPredicate.matchesBlocks(
                 Blocks.OAK_SAPLING,
                 Blocks.SPRUCE_SAPLING,
                 Blocks.BIRCH_SAPLING,
@@ -116,10 +117,10 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new UprightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 6,
-                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_HYPHAE.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_POD.getDefaultState()
+                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_HYPHAE.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
                         )
                 )
         );
@@ -129,10 +130,10 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new DownrightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 8,
-                                KlaxonBlocks.HALLNOX_HYPHAE.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_POD.getDefaultState()
+                                KlaxonBlocks.HALLNOX_HYPHAE.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
                         )
                 )
         );
@@ -142,9 +143,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.NORTH,
-                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_POD.getDefaultState()
+                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
                         )
                 )
         );
@@ -154,9 +155,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.EAST,
-                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_POD.getDefaultState()
+                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
                         )
                 )
         );
@@ -166,9 +167,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.WEST,
-                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_POD.getDefaultState()
+                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
                         )
                 )
         );
@@ -178,23 +179,23 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.SOUTH,
-                                KlaxonBlocks.HALLNOX_STEM.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.getDefaultState(),
-                                KlaxonBlocks.HALLNOX_POD.getDefaultState()
+                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
+                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
                         )
                 )
         );
     }
 
-    public static void generatePlacedFeatures(Registerable<PlacedFeature> registerable) {
+    public static void generatePlacedFeatures(BootstrapContext<PlacedFeature> registerable) {
 
     }
 
-    private static RegistryKey<ConfiguredFeature<?, ?>> configuredFeatureKey(String path) {
-        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, KlaxonCommon.locate(path));
+    private static ResourceKey<ConfiguredFeature<?, ?>> configuredFeatureKey(String path) {
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, KlaxonCommon.locate(path));
     }
 
-    private static RegistryKey<PlacedFeature> placedFeatureKey(String path) {
-        return RegistryKey.of(RegistryKeys.PLACED_FEATURE, KlaxonCommon.locate(path));
+    private static ResourceKey<PlacedFeature> placedFeatureKey(String path) {
+        return ResourceKey.create(Registries.PLACED_FEATURE, KlaxonCommon.locate(path));
     }
 }

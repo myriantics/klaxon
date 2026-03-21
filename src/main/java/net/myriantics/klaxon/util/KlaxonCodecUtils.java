@@ -1,52 +1,47 @@
 package net.myriantics.klaxon.util;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.dynamic.Codecs;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class KlaxonCodecUtils {
 
-    public static final Codec<List<Ingredient>> INGREDIENT_LIST_CODEC = Codec.list(Ingredient.ALLOW_EMPTY_CODEC);
-    public static final PacketCodec<RegistryByteBuf, List<Ingredient>> INGREDIENT_LIST_PACKET_CODEC = Ingredient.PACKET_CODEC.collect(PacketCodecs.toList());
-    public static final Codec<SoundEvent> OPTIONAL_SOUND_EVENT_CODEC = Codecs.optional(SoundEvent.CODEC)
+    public static final Codec<List<Ingredient>> INGREDIENT_LIST_CODEC = Codec.list(Ingredient.CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, List<Ingredient>> INGREDIENT_LIST_PACKET_CODEC = Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list());
+    public static final Codec<SoundEvent> OPTIONAL_SOUND_EVENT_CODEC = ExtraCodecs.optionalEmptyMap(SoundEvent.DIRECT_CODEC)
             .xmap(
-                    soundEvent -> soundEvent.orElse(SoundEvents.INTENTIONALLY_EMPTY),
-                    soundEvent -> soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? Optional.empty() : Optional.of(soundEvent)
+                    soundEvent -> soundEvent.orElse(SoundEvents.EMPTY),
+                    soundEvent -> soundEvent == null || soundEvent.equals(SoundEvents.EMPTY) ? Optional.empty() : Optional.of(soundEvent)
             );
-    public static final PacketCodec<ByteBuf, SoundEvent> OPTIONAL_SOUND_EVENT_PACKET_CODEC = PacketCodecs.optional(SoundEvent.PACKET_CODEC)
-            .xmap(
-                    soundEvent -> soundEvent.orElse(SoundEvents.INTENTIONALLY_EMPTY),
-                    soundEvent -> soundEvent == null || soundEvent.equals(SoundEvents.INTENTIONALLY_EMPTY) ? Optional.empty() : Optional.of(soundEvent)
+    public static final StreamCodec<ByteBuf, SoundEvent> OPTIONAL_SOUND_EVENT_PACKET_CODEC = ByteBufCodecs.optional(SoundEvent.DIRECT_STREAM_CODEC)
+            .map(
+                    soundEvent -> soundEvent.orElse(SoundEvents.EMPTY),
+                    soundEvent -> soundEvent == null || soundEvent.equals(SoundEvents.EMPTY) ? Optional.empty() : Optional.of(soundEvent)
             );
-    public static final Codec<TagKey<Block>> BLOCK_TAG_CODEC = tagCodec(RegistryKeys.BLOCK);
-    public static final PacketCodec<ByteBuf, TagKey<Block>> BLOCK_TAG_PACKET_CODEC = tagPacketCodec(RegistryKeys.BLOCK);
-    public static final Codec<Block> BLOCK_CODEC = Registries.BLOCK.getCodec();
-    public static final PacketCodec<ByteBuf, Block> BLOCK_PACKET_CODEC = PacketCodecs.codec(BLOCK_CODEC);
+    public static final Codec<TagKey<Block>> BLOCK_TAG_CODEC = tagCodec(Registries.BLOCK);
+    public static final StreamCodec<ByteBuf, TagKey<Block>> BLOCK_TAG_PACKET_CODEC = tagPacketCodec(Registries.BLOCK);
+    public static final Codec<Block> BLOCK_CODEC = BuiltInRegistries.BLOCK.byNameCodec();
+    public static final StreamCodec<ByteBuf, Block> BLOCK_PACKET_CODEC = ByteBufCodecs.fromCodec(BLOCK_CODEC);
 
-    public static <T> Codec<TagKey<T>> tagCodec(RegistryKey<? extends Registry<T>> registryKey) {
-        return TagKey.codec(registryKey);
+    public static <T> Codec<TagKey<T>> tagCodec(ResourceKey<? extends Registry<T>> registryKey) {
+        return TagKey.hashedCodec(registryKey);
     }
-    public static <T> PacketCodec<ByteBuf, TagKey<T>> tagPacketCodec(RegistryKey<? extends Registry<T>> registryKey) {
-        return PacketCodecs.codec(tagCodec(registryKey));
+    public static <T> StreamCodec<ByteBuf, TagKey<T>> tagPacketCodec(ResourceKey<? extends Registry<T>> registryKey) {
+        return ByteBufCodecs.fromCodec(tagCodec(registryKey));
     }
 }

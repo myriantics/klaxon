@@ -1,17 +1,17 @@
 package net.myriantics.klaxon.datagen.custom.providers;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.entity.damage.DamageEffects;
-import net.minecraft.entity.damage.DamageScaling;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.damagesource.DamageEffects;
+import net.minecraft.world.damagesource.DamageScaling;
+import net.minecraft.world.damagesource.DamageType;
 import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistrySubProvider;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 
 public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<DamageType> {
 
-    public KlaxonDamageTypeProvider(RegistryWrapper.WrapperLookup wrapperLookup, FabricDynamicRegistryProvider.Entries entries) {
+    public KlaxonDamageTypeProvider(HolderLookup.Provider wrapperLookup, FabricDynamicRegistryProvider.Entries entries) {
         super(wrapperLookup, entries);
     }
 
@@ -83,21 +83,21 @@ public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<D
         );
     }
 
-    private void addDamageType(RegistryKey<DamageType> key, float exhaustion) {
+    private void addDamageType(ResourceKey<DamageType> key, float exhaustion) {
         addDamageType(key, DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, exhaustion);
     }
 
-    private void addEnvironmentalDamageType(RegistryKey<DamageType> key, float exhaustion) {
+    private void addEnvironmentalDamageType(ResourceKey<DamageType> key, float exhaustion) {
         addDamageType(key, DamageScaling.ALWAYS, exhaustion);
     }
 
-    private void addDamageType(RegistryKey<DamageType> key, DamageScaling scaling, float exhaustion) {
+    private void addDamageType(ResourceKey<DamageType> key, DamageScaling scaling, float exhaustion) {
         addDamageType(key, scaling, exhaustion, DamageEffects.HURT);
     }
 
-    private void addDamageType(RegistryKey<DamageType> key, DamageScaling scaling, float exhaustion, DamageEffects effects) {
+    private void addDamageType(ResourceKey<DamageType> key, DamageScaling scaling, float exhaustion, DamageEffects effects) {
         this.add(key, new DamageType(
-                key.getValue().getNamespace() + "." + key.getValue().getPath(),
+                key.location().getNamespace() + "." + key.location().getPath(),
                 scaling,
                 exhaustion,
                 effects

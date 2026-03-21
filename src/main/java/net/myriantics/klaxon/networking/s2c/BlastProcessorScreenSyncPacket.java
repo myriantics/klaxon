@@ -1,34 +1,34 @@
 package net.myriantics.klaxon.networking.s2c;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 import java.util.Arrays;
 
-public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double explosionPowerMax, ItemStack[] displayStacks, double explosionPower, boolean producesFire) implements CustomPayload {
+public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double explosionPowerMax, ItemStack[] displayStacks, double explosionPower, boolean producesFire) implements CustomPacketPayload {
 
-    public static final CustomPayload.Id<BlastProcessorScreenSyncPacket> ID = new CustomPayload.Id<>(KlaxonPackets.BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID);
+    public static final CustomPacketPayload.Type<BlastProcessorScreenSyncPacket> ID = new CustomPacketPayload.Type<>(KlaxonPackets.BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID);
 
     // beeg packet
-    public static final PacketCodec<RegistryByteBuf, BlastProcessorScreenSyncPacket> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMin,
-            PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMax,
-            ItemStack.LIST_PACKET_CODEC.<ItemStack[]>xmap(
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlastProcessorScreenSyncPacket> PACKET_CODEC = StreamCodec.composite(
+            ByteBufCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMin,
+            ByteBufCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMax,
+            ItemStack.LIST_STREAM_CODEC.<ItemStack[]>map(
                     (stacks -> stacks.toArray(new ItemStack[0])),
                     (Arrays::asList)
             ), BlastProcessorScreenSyncPacket::displayStacks,
-            PacketCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPower,
-            PacketCodecs.BOOL, BlastProcessorScreenSyncPacket::producesFire,
+            ByteBufCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPower,
+            ByteBufCodecs.BOOL, BlastProcessorScreenSyncPacket::producesFire,
             BlastProcessorScreenSyncPacket::new
     );
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 }

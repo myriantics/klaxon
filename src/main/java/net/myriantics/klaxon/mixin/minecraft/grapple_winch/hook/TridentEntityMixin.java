@@ -6,19 +6,19 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
@@ -31,17 +31,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(TridentEntity.class)
-public abstract class TridentEntityMixin extends PersistentProjectileEntity implements GrapplingHook {
+@Mixin(ThrownTrident.class)
+public abstract class TridentEntityMixin extends AbstractArrow implements GrapplingHook {
     @Shadow
-    public abstract void age();
+    public abstract void tickDespawn();
 
-    protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
+    protected TridentEntityMixin(EntityType<? extends AbstractArrow> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    public void klaxon$onConnect(ServerPlayerEntity serverPlayer) {
+    public void klaxon$onConnect(ServerPlayer serverPlayer) {
         this.setOwner(serverPlayer);
     }
 
@@ -52,41 +52,41 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
 
     @Override
     public ItemStack klaxon$getItemStack() {
-        return this.getItemStack();
+        return this.getPickupItemStackOrigin();
     }
 
     @Override
     public boolean klaxon$isAnchored() {
-        return this.inGround && !this.isNoClip();
+        return this.inGround && !this.isNoPhysics();
     }
 
     @Override
-    public void klaxon$deAnchor(Vec3d deAnchoringDirection) {
+    public void klaxon$deAnchor(Vec3 deAnchoringDirection) {
         boolean success = false;
         if (this.inGround) {
-            BlockHitResult hitResult = this.getWorld().raycast(new RaycastContext(
-                    this.getPos(),
-                    this.getPos().add(deAnchoringDirection),
-                    RaycastContext.ShapeType.COLLIDER,
-                    RaycastContext.FluidHandling.NONE,
+            BlockHitResult hitResult = this.level().clip(new ClipContext(
+                    this.position(),
+                    this.position().add(deAnchoringDirection),
+                    ClipContext.Block.COLLIDER,
+                    ClipContext.Fluid.NONE,
                     this
             ));
 
             // make sure it's either a miss or we've got space to move a significant amount
-            if (hitResult.getType().equals(HitResult.Type.MISS) || hitResult.getPos().distanceTo(this.getPos()) > 0.1) {
+            if (hitResult.getType().equals(HitResult.Type.MISS) || hitResult.getLocation().distanceTo(this.position()) > 0.1) {
                 this.inGround = false;
                 success = true;
             }
         }
 
         if (success) {
-            KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayerEntity) this.getOwner());
+            KlaxonAdvancementTriggers.triggerGrappleWinchDeAnchorGrappleClaw((ServerPlayer) this.getOwner());
         }
     }
 
     @Override
-    public TridentEntity klaxon$asEntity() {
-        return (TridentEntity) (Object) this;
+    public ThrownTrident klaxon$asEntity() {
+        return (ThrownTrident) (Object) this;
     }
 
     @Override
@@ -95,14 +95,14 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     }
 
     @WrapMethod(
-            method = "onEntityHit"
+            method = "onHitEntity"
     )
     private void klaxon$attemptFastReloading(EntityHitResult entityHitResult, Operation<Void> original) {
-        if (entityHitResult.getEntity() instanceof ServerPlayerEntity serverPlayer) {
-            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get(serverPlayer.getServerWorld());
+        if (entityHitResult.getEntity() instanceof ServerPlayer serverPlayer) {
+            ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get(serverPlayer.serverLevel());
             @Nullable ServerGrappleWinchConnection connection = manager.fromHook(this);
             if (connection != null && serverPlayer.equals(connection.getPlayer())) {
-                if (this.klaxon$tryFastReload(serverPlayer, serverPlayer.getMainHandStack()) || this.klaxon$tryFastReload(serverPlayer, serverPlayer.getOffHandStack())) {
+                if (this.klaxon$tryFastReload(serverPlayer, serverPlayer.getMainHandItem()) || this.klaxon$tryFastReload(serverPlayer, serverPlayer.getOffhandItem())) {
                     return;
                 }
             }
@@ -111,12 +111,12 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     }
 
     @WrapOperation(
-            method = "age",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;age()V")
+            method = "tickDespawn",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;tickDespawn()V")
     )
-    private void klaxon$preventAgingIfGrappleWinchConnectionPresent(TridentEntity instance, Operation<Void> original) {
+    private void klaxon$preventAgingIfGrappleWinchConnectionPresent(ThrownTrident instance, Operation<Void> original) {
         // check if we have a connection - if we do, return early and don't age.
-        if (instance.getWorld() instanceof ServerWorld serverWorld) {
+        if (instance.level() instanceof ServerLevel serverWorld) {
             ServerGrappleWinchConnectionManager manager = ServerGrappleWinchConnectionManager.get(serverWorld);
             if (manager.fromHook(this) != null) {
                 return;
@@ -125,14 +125,14 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
         original.call(instance);
     }
 
-    @Definition(id = "dealtDamage", field = "Lnet/minecraft/entity/projectile/TridentEntity;dealtDamage:Z")
+    @Definition(id = "dealtDamage", field = "Lnet/minecraft/world/entity/projectile/ThrownTrident;dealtDamage:Z")
     @Expression("this.dealtDamage")
     @ModifyExpressionValue(
             method = "tick",
             at = @At(value = "MIXINEXTRAS:EXPRESSION")
     )
     private boolean klaxon$dontReturnWithLoyaltyIfRetracting(boolean original) {
-        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.getWorld());
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.level());
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
         // this makes it so that loyalty tridents are actually useful as a grappling hook
         // you just have to start retracting right before they land and then release when you want them to be recalled

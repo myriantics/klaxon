@@ -1,16 +1,16 @@
 package net.myriantics.klaxon.registry.entity;
 
-import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.EntityDataSerializers;
 
 import java.util.List;
 
 public abstract class KlaxonTrackedDataHandlerRegistry {
-    public static final TrackedDataHandler<List<Integer>> INT_LIST = register(TrackedDataHandler.create(PacketCodecs.VAR_INT.collect(PacketCodecs.toList())));
+    public static final EntityDataSerializer<List<Integer>> INT_LIST = register(EntityDataSerializer.forValueType(ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list())));
 
-    private static <T> TrackedDataHandler<T> register(TrackedDataHandler<T> handler) {
-        TrackedDataHandlerRegistry.register(handler);
+    private static <T> EntityDataSerializer<T> register(EntityDataSerializer<T> handler) {
+        EntityDataSerializers.registerSerializer(handler);
         return handler;
     }
 }

@@ -1,9 +1,8 @@
 package net.myriantics.klaxon.tag.klaxon;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.myriantics.klaxon.KlaxonCommon;
 
 public abstract class KlaxonEntityTypeTags {
@@ -30,6 +29,6 @@ public abstract class KlaxonEntityTypeTags {
             createTag("grapple_claw_collision_denylist");
 
     private static TagKey<EntityType<?>> createTag(String name) {
-        return TagKey.of(RegistryKeys.ENTITY_TYPE, KlaxonCommon.locate(name));
+        return TagKey.create(Registries.ENTITY_TYPE, KlaxonCommon.locate(name));
     }
 }

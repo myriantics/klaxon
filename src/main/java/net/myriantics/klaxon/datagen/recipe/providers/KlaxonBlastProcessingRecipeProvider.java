@@ -1,18 +1,18 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.myriantics.klaxon.datagen.NamedIngredient;
-import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
+import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider {
 
-    public KlaxonBlastProcessingRecipeProvider(KlaxonRecipeProvider provider, RecipeExporter exporter) {
+    public KlaxonBlastProcessingRecipeProvider(KlaxonRecipeProvider provider, RecipeOutput exporter) {
         super(provider, exporter);
     }
 

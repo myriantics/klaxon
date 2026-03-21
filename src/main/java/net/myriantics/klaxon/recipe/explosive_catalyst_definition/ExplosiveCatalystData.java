@@ -2,18 +2,18 @@ package net.myriantics.klaxon.recipe.explosive_catalyst_definition;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
 
 import java.util.Optional;
 
-public record ExplosiveCatalystData(RegistryEntry<ExplosiveCatalystBehavior> behavior, double explosionPower, boolean producesFire) {
-    public ExplosiveCatalystData(RegistryEntry<ExplosiveCatalystBehavior> behavior, double explosionPower, boolean producesFire) {
+public record ExplosiveCatalystData(Holder<ExplosiveCatalystBehavior> behavior, double explosionPower, boolean producesFire) {
+    public ExplosiveCatalystData(Holder<ExplosiveCatalystBehavior> behavior, double explosionPower, boolean producesFire) {
         this.behavior = behavior;
         this.explosionPower = KlaxonMathHelper.roundToTenth(explosionPower);
         this.producesFire = producesFire;
@@ -38,10 +38,10 @@ public record ExplosiveCatalystData(RegistryEntry<ExplosiveCatalystBehavior> beh
             Codec.BOOL.fieldOf("produces_fire").forGetter(ExplosiveCatalystData::producesFire)
     ).apply(instance, ExplosiveCatalystData::new));
 
-    public static final PacketCodec<RegistryByteBuf, ExplosiveCatalystData> PACKET_CODEC = PacketCodec.tuple(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ExplosiveCatalystData> PACKET_CODEC = StreamCodec.composite(
             ExplosiveCatalystBehavior.ENTRY_PACKET_CODEC, ExplosiveCatalystData::behavior,
-            PacketCodecs.DOUBLE, ExplosiveCatalystData::explosionPower,
-            PacketCodecs.BOOL, ExplosiveCatalystData::producesFire,
+            ByteBufCodecs.DOUBLE, ExplosiveCatalystData::explosionPower,
+            ByteBufCodecs.BOOL, ExplosiveCatalystData::producesFire,
             ExplosiveCatalystData::new
     );
 }

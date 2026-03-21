@@ -1,10 +1,10 @@
 package net.myriantics.klaxon.mechanics.wrench;
 
-import net.minecraft.block.AbstractRailBlock;
-import net.minecraft.block.enums.RailShape;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseRailBlock;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import org.jetbrains.annotations.Nullable;
 
 public class KlaxonRailHelper {
@@ -34,11 +34,11 @@ public class KlaxonRailHelper {
         return false;
     }
 
-    public static @Nullable RailShape tryToggleAscending(World world, RailShape railShape, BlockPos railPos, Direction.AxisDirection ascensionDirection) {
+    public static @Nullable RailShape tryToggleAscending(Level world, RailShape railShape, BlockPos railPos, Direction.AxisDirection ascensionDirection) {
         Direction.Axis railAxis = railShapeToAxis(railShape);
         if (railAxis == null) return null;
         // check to see if block can support ascending rails before doing it - won't stop you from correcting a wrongly ascending one, though
-        if (railShape.isAscending() || AbstractRailBlock.hasTopRim(world, railPos.offset(Direction.from(railAxis, ascensionDirection)))) {
+        if (railShape.isAscending() || BaseRailBlock.canSupportRigidBlock(world, railPos.relative(Direction.fromAxisAndDirection(railAxis, ascensionDirection)))) {
             return toggleAscent(railShape, ascensionDirection);
         }
 

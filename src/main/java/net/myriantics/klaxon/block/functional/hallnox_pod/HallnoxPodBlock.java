@@ -1,30 +1,33 @@
 package net.myriantics.klaxon.block.functional.hallnox_pod;
 
-import net.minecraft.block.*;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.block.NeighborUpdater;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.redstone.NeighborUpdater;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
@@ -35,52 +38,52 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Waterloggable {
+public class HallnoxPodBlock extends SaplingBlock implements Fallable, SimpleWaterloggedBlock {
 
-    public static final DirectionProperty FACING = Properties.FACING;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty GROWTH_DISABLED = KlaxonBlockStateProperties.GROWTH_DISABLED;
 
-    private static final VoxelShape UP_SHAPE = Block.createCuboidShape(2.0, 2.0, 2.0, 14.0, 16.0, 14.0);
-    private static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 14.0, 14.0);
-    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 14.0);
-    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(2.0, 2.0, 2.0, 16.0, 14.0, 14.0);
-    private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(2.0, 2.0, 2.0, 14.0, 14.0, 16.0);
-    private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(0.0, 2.0, 2.0, 14.0, 14.0, 14.0);
+    private static final VoxelShape UP_SHAPE = Block.box(2.0, 2.0, 2.0, 14.0, 16.0, 14.0);
+    private static final VoxelShape DOWN_SHAPE = Block.box(2.0, 0.0, 2.0, 14.0, 14.0, 14.0);
+    private static final VoxelShape NORTH_SHAPE = Block.box(2.0, 2.0, 0.0, 14.0, 14.0, 14.0);
+    private static final VoxelShape EAST_SHAPE = Block.box(2.0, 2.0, 2.0, 16.0, 14.0, 14.0);
+    private static final VoxelShape SOUTH_SHAPE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 16.0);
+    private static final VoxelShape WEST_SHAPE = Block.box(0.0, 2.0, 2.0, 14.0, 14.0, 14.0);
 
     private final int FALLING_DELAY = 2;
 
     private final DirectionalSaplingGenerator generator;
 
-    public HallnoxPodBlock(DirectionalSaplingGenerator generator, Settings settings) {
-        super(KlaxonSaplingGenerators.EMPTY, settings.pistonBehavior(PistonBehavior.DESTROY).ticksRandomly());
+    public HallnoxPodBlock(DirectionalSaplingGenerator generator, Properties settings) {
+        super(KlaxonSaplingGenerators.EMPTY, settings.pushReaction(PushReaction.DESTROY).randomTicks());
         this.generator = generator;
-        this.setDefaultState(getDefaultState()
-                .with(FACING, Direction.DOWN)
-                .with(WATERLOGGED, false)
-                .with(GROWTH_DISABLED, false)
+        this.registerDefaultState(defaultBlockState()
+                .setValue(FACING, Direction.DOWN)
+                .setValue(WATERLOGGED, false)
+                .setValue(GROWTH_DISABLED, false)
         );
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACING, WATERLOGGED, GROWTH_DISABLED);
     }
 
     @Override
     protected FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return isSupported(world, pos, state.get(FACING));
+    protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        return isSupported(world, pos, state.getValue(FACING));
     }
 
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return switch (state.get(FACING)) {
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(FACING)) {
             case DOWN -> DOWN_SHAPE;
             case UP -> UP_SHAPE;
             case NORTH -> NORTH_SHAPE;
@@ -91,75 +94,75 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        BlockState supportingState = world.getBlockState(pos.offset(state.get(FACING)));
-        if (!state.get(GROWTH_DISABLED) && !supportingState.isIn(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING) && random.nextInt(12) == 0) {
-            this.generate(world, pos, state, random);
+    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        BlockState supportingState = world.getBlockState(pos.relative(state.getValue(FACING)));
+        if (!state.getValue(GROWTH_DISABLED) && !supportingState.is(KlaxonBlockTags.HALLNOX_POD_NATURAL_GROWTH_INHIBITING) && random.nextInt(12) == 0) {
+            this.advanceTree(world, pos, state, random);
         }
     }
 
     @Override
-    public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity fallingBlockEntity) {
-        LandingBlock.super.onLanding(world, pos, fallingBlockState, currentStateInPos, fallingBlockEntity);
+    public void onLand(Level world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity fallingBlockEntity) {
+        Fallable.super.onLand(world, pos, fallingBlockState, currentStateInPos, fallingBlockEntity);
 
         BlockState newState = fallingBlockState;
 
         // if it lands properly, it should be sitting on the floor.
-        if (fallingBlockState.isOf(KlaxonBlocks.HALLNOX_POD)) {
-            newState = newState.with(FACING, Direction.DOWN);
+        if (fallingBlockState.is(KlaxonBlocks.HALLNOX_POD)) {
+            newState = newState.setValue(FACING, Direction.DOWN);
         }
 
         // no nether water fuckery for you
-        if (world.getDimension().ultrawarm()) {
-            newState = newState.with(WATERLOGGED, false);
+        if (world.dimensionType().ultraWarm()) {
+            newState = newState.setValue(WATERLOGGED, false);
         }
 
         // if we've made changes, update block state
-        if (!newState.equals(fallingBlockState)) world.setBlockState(pos, newState);
+        if (!newState.equals(fallingBlockState)) world.setBlockAndUpdate(pos, newState);
     }
 
     @Override
-    public DamageSource getDamageSource(Entity attacker) {
-        Optional<RegistryEntry.Reference<DamageType>> domed = attacker.getDamageSources().registry.getEntry(KlaxonDamageTypes.HALLNOX_POD_DOMED);
+    public DamageSource getFallDamageSource(Entity attacker) {
+        Optional<Holder.Reference<DamageType>> domed = attacker.damageSources().damageTypes.getHolder(KlaxonDamageTypes.HALLNOX_POD_DOMED);
         return domed.isPresent()
                 ? new DamageSource(domed.get(), attacker)
-                : LandingBlock.super.getDamageSource(attacker);
+                : Fallable.super.getFallDamageSource(attacker);
     }
 
     @Override
-    public void generate(ServerWorld world, BlockPos pos, BlockState state, Random random) {
-        if (state.get(STAGE) == 0) {
-            world.setBlockState(pos, state.cycle(STAGE), Block.NO_REDRAW);
+    public void advanceTree(ServerLevel world, BlockPos pos, BlockState state, RandomSource random) {
+        if (state.getValue(STAGE) == 0) {
+            world.setBlock(pos, state.cycle(STAGE), Block.UPDATE_INVISIBLE);
         } else {
-            this.generator.generate(state.get(FACING).getOpposite(), world, world.getChunkManager().getChunkGenerator(), pos, state, random);
+            this.generator.generate(state.getValue(FACING).getOpposite(), world, world.getChunkSource().getGenerator(), pos, state, random);
         }
     }
 
     @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState original = super.getPlacementState(ctx);
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState original = super.getStateForPlacement(ctx);
 
         if (original != null) {
-            World world = ctx.getWorld();
-            BlockPos pos = ctx.getBlockPos();
-            Direction facing = ctx.getSide().getOpposite();
-            boolean waterlogged = world.getFluidState(pos).isOf(Fluids.WATER.getStill());
+            Level world = ctx.getLevel();
+            BlockPos pos = ctx.getClickedPos();
+            Direction facing = ctx.getClickedFace().getOpposite();
+            boolean waterlogged = world.getFluidState(pos).is(Fluids.WATER.getSource());
 
-            BlockState newState = original.with(WATERLOGGED, waterlogged);
+            BlockState newState = original.setValue(WATERLOGGED, waterlogged);
 
             // try placing on clicked side first
-            if (isSupported(world, pos, facing)) return newState.with(FACING, facing);
+            if (isSupported(world, pos, facing)) return newState.setValue(FACING, facing);
 
-            Direction playerFacing = ctx.getHorizontalPlayerFacing();
+            Direction playerFacing = ctx.getHorizontalDirection();
             // next, try placing on player facing and its opposite.
-            if (!facing.equals(playerFacing) && isSupported(world, pos, playerFacing)) return newState.with(FACING, playerFacing);
-            if (isSupported(world, pos, playerFacing.getOpposite())) return newState.with(FACING, playerFacing.getOpposite());
+            if (!facing.equals(playerFacing) && isSupported(world, pos, playerFacing)) return newState.setValue(FACING, playerFacing);
+            if (isSupported(world, pos, playerFacing.getOpposite())) return newState.setValue(FACING, playerFacing.getOpposite());
 
             // try placing in all possible orientations
             for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
                 // don't check ones we've already checked
                 if (direction.equals(facing) || direction.equals(playerFacing) || direction.equals(playerFacing.getOpposite())) continue;
-                if (isSupported(world, pos, direction)) return newState.with(FACING, direction);
+                if (isSupported(world, pos, direction)) return newState.setValue(FACING, direction);
             }
         }
 
@@ -167,95 +170,95 @@ public class HallnoxPodBlock extends SaplingBlock implements LandingBlock, Water
         return null;
     }
 
-    private boolean isSupported(WorldView world, BlockPos pos, Direction facing) {
-        BlockPos neighborPos = pos.offset(facing);
-        return world.getBlockState(neighborPos).isSideSolid(world, neighborPos, facing.getOpposite(), SideShapeType.RIGID);
+    private boolean isSupported(LevelReader world, BlockPos pos, Direction facing) {
+        BlockPos neighborPos = pos.relative(facing);
+        return world.getBlockState(neighborPos).isFaceSturdy(world, neighborPos, facing.getOpposite(), SupportType.RIGID);
     }
 
     @Override
-    protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        super.scheduledTick(state, world, pos, random);
-        if (!isSupported(world, pos, state.get(FACING))) {
+    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        super.tick(state, world, pos, random);
+        if (!isSupported(world, pos, state.getValue(FACING))) {
             tryFall(world, pos, state);
         }
     }
 
     // fall if possible
     // if at the bottom of the world, break block
-    private void tryFall(ServerWorld serverWorld, BlockPos blockPos, BlockState blockState) {
-        if (blockPos.getY() >= serverWorld.getBottomY()) {
-            FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(serverWorld, blockPos, blockState);
+    private void tryFall(ServerLevel serverWorld, BlockPos blockPos, BlockState blockState) {
+        if (blockPos.getY() >= serverWorld.getMinBuildHeight()) {
+            FallingBlockEntity fallingBlockEntity = FallingBlockEntity.fall(serverWorld, blockPos, blockState);
             // this is because it's funny :)
-            fallingBlockEntity.setHurtEntities(1.5f, 10);
+            fallingBlockEntity.setHurtsEntities(1.5f, 10);
         } else {
-            serverWorld.breakBlock(blockPos, true);
+            serverWorld.destroyBlock(blockPos, true);
         }
     }
 
     @Override
-    protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        super.onBlockAdded(state, world, pos, oldState, notify);
-        world.scheduleBlockTick(pos, this, FALLING_DELAY);
+    protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+        super.onPlace(state, world, pos, oldState, notify);
+        world.scheduleTick(pos, this, FALLING_DELAY);
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        Direction facing = state.get(FACING);
-        BlockPos offsetPos = pos.offset(facing);
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        Direction facing = state.getValue(FACING);
+        BlockPos offsetPos = pos.relative(facing);
 
         // only schedule block tick if updater is the supporting block
-        if (!world.isClient() && offsetPos.equals(neighborPos)) world.scheduleBlockTick(pos, this, FALLING_DELAY);
+        if (!world.isClientSide() && offsetPos.equals(neighborPos)) world.scheduleTick(pos, this, FALLING_DELAY);
 
         return state;
     }
 
     // don't grow when connected to a tree or if it's been sheared
     @Override
-    public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return !state.get(GROWTH_DISABLED) && super.canGrow(world, random, pos, state);
+    public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state) {
+        return !state.getValue(GROWTH_DISABLED) && super.isBonemealSuccess(world, random, pos, state);
     }
 
     // don't let people waste bonemeal
     @Override
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-        return !state.get(GROWTH_DISABLED);
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+        return !state.getValue(GROWTH_DISABLED);
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         if (random.nextInt(8) == 0) {
-            Direction facing = state.get(FACING);
+            Direction facing = state.getValue(FACING);
 
-            BlockPos blockPos = pos.down();
-            if (!isSupported(world, pos, facing) && FallingBlock.canFallThrough(world.getBlockState(blockPos))) {
+            BlockPos blockPos = pos.below();
+            if (!isSupported(world, pos, facing) && FallingBlock.isFree(world.getBlockState(blockPos))) {
                 spawnParticle(world, pos, random, facing);
             }
         }
     }
 
-    private void spawnParticle(World world, BlockPos pos, Random random, Direction facing) {
+    private void spawnParticle(Level world, BlockPos pos, RandomSource random, Direction facing) {
 
         // make sure we're not emitting particles upwards
         if (!facing.equals(Direction.UP)) {
-            Vec3d centerPos = pos.toCenterPos();
-            Vec3i facingVector = facing.getVector();
+            Vec3 centerPos = pos.getCenter();
+            Vec3i facingVector = facing.getNormal();
 
             // make sure drips only originate from proper area on model
             float bound = (12f/16 - 4f/16) / 2;
 
-            double particleX = centerPos.getX() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
-            double particleY = centerPos.getY() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
-            double particleZ = centerPos.getZ() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
+            double particleX = centerPos.x() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
+            double particleY = centerPos.y() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
+            double particleZ = centerPos.z() + (bound * random.nextFloat() * (random.nextBoolean() ? 1 : -1));
 
             switch (facing.getAxis()) {
                 case X -> {
-                    particleX = centerPos.getX() + (0.55 * facingVector.getX());
+                    particleX = centerPos.x() + (0.55 * facingVector.getX());
                 }
                 case Y -> {
-                    particleY = centerPos.getY() + (0.65 * facingVector.getY());
+                    particleY = centerPos.y() + (0.65 * facingVector.getY());
                 }
                 case Z -> {
-                    particleZ = centerPos.getZ() + (0.55 * facingVector.getZ());
+                    particleZ = centerPos.z() + (0.55 * facingVector.getZ());
                 }
             }
 
