@@ -348,6 +348,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.GRAPPLE_WINCH);
         getOrCreateTagBuilder(ItemTags.CREEPER_IGNITERS)
                 .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
+        getOrCreateTagBuilder(KlaxonItemTags.WRENCHABLE_INTERFACE_TRIGGERING_TOOLS)
+                .addOptionalTag(KlaxonConventionalItemTags.WRENCHES);
     }
 
     private void buildRepairTags() {
@@ -398,23 +400,15 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_WRENCH)
                 .add(KlaxonItems.STEEL_CABLE_SHEARS);
 
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.CLEAVER)
-                .add(KlaxonItems.STEEL_CLEAVER);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CLEAVERS)
-                .add(KlaxonItems.STEEL_CLEAVER);
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.KNIFE)
                 .add(KlaxonItems.STEEL_CLEAVER);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.KNIVES)
                 .add(KlaxonItems.STEEL_CLEAVER);
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.HAMMERS)
                 .add(KlaxonItems.STEEL_HAMMER);
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.HAMMER)
-                .add(KlaxonItems.STEEL_HAMMER);
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCHES)
-                .add(KlaxonItems.STEEL_WRENCH);
-        getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCH)
                 .add(KlaxonItems.STEEL_WRENCH);
 
         getOrCreateTagBuilder(ConventionalItemTags.SHEAR_TOOLS)

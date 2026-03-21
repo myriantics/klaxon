@@ -16,7 +16,7 @@ import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeInput;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;
-import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -64,7 +64,7 @@ public abstract class KlaxonItemUsageTweaks {
         register((item, context) -> {
             ItemStack stack = context.getItemInHand();
             boolean sneaking = context.getPlayer() != null && context.getPlayer().isShiftKeyDown();
-            if (!stack.is(KlaxonConventionalItemTags.WRENCHES) || sneaking) {
+            if (!stack.is(KlaxonItemTags.WRENCHABLE_INTERFACE_TRIGGERING_TOOLS) || sneaking) {
                 return Optional.empty();
             }
             Level level = context.getLevel();

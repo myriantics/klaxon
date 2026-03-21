@@ -45,6 +45,8 @@ public abstract class KlaxonItemTags {
             createTag("unenchantable");
 
     // behavior tags
+    public static final TagKey<Item> WRENCHABLE_INTERFACE_TRIGGERING_TOOLS =
+            createTag("wrenchable_interface_triggering_tools");
     public static final TagKey<Item> HEAVY_EQUIPMENT =
             createTag("heavy_equipment");
     public static final TagKey<Item> FERROMAGNETIC_ITEMS =

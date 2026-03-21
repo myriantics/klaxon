@@ -52,14 +52,10 @@ public class KlaxonConventionalItemTags {
     public static final TagKey<Item> RUBBER_SHEETS = createConventionalSheetTag("rubber");
 
     // tools
-    public static final TagKey<Item> CLEAVER = createConventionalToolTag("cleaver");
-    public static final TagKey<Item> CLEAVERS = createConventionalToolTag("cleavers");
-    public static final TagKey<Item> KNIFE = createConventionalToolTag("knife");
-    public static final TagKey<Item> KNIVES = createConventionalToolTag("knives");
-    public static final TagKey<Item> HAMMER = createConventionalToolTag("hammer");
-    public static final TagKey<Item> HAMMERS = createConventionalToolTag("hammers");
-    public static final TagKey<Item> WRENCH = createConventionalToolTag("wrench");
-    public static final TagKey<Item> WRENCHES = createConventionalToolTag("wrenches");
+    public static final TagKey<Item> CLEAVERS = createConventionalToolTag("cleaver");
+    public static final TagKey<Item> KNIVES = createConventionalToolTag("knife");
+    public static final TagKey<Item> HAMMERS = createConventionalToolTag("hammer");
+    public static final TagKey<Item> WRENCHES = createConventionalToolTag("wrench");
 
     private static TagKey<Item> createConventionalNuggetTag(String name) {
         return createConventionalItemTag("nuggets/" + name);
