@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.client.resources.SplashManager;
 
 @Mixin(SplashManager.class)
-public interface SplashManagerMixin {
+public interface SplashManagerAccessor {
     @Accessor(value = "splashes")
     List<String> klaxon$getSplashTexts();
 }

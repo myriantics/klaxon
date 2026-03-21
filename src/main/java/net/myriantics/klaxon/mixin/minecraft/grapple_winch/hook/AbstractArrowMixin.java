@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(AbstractArrow.class)
-public abstract class PersistentProjectileEntityMixin extends Projectile {
-    public PersistentProjectileEntityMixin(EntityType<? extends Projectile> entityType, Level world) {
+public abstract class AbstractArrowMixin extends Projectile {
+    public AbstractArrowMixin(EntityType<? extends Projectile> entityType, Level world) {
         super(entityType, world);
     }
 

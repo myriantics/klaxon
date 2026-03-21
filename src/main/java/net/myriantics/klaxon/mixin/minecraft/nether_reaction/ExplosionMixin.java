@@ -114,7 +114,7 @@ public abstract class ExplosionMixin {
 
     @WrapOperation(
             method = "finalizeExplosion",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onExploded(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Explosion;Ljava/util/function/BiConsumer;)V")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onExplosionHit(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Explosion;Ljava/util/function/BiConsumer;)V")
     )
     private void klaxon$hijackBlockDestruction(
             BlockState instance,

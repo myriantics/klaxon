@@ -32,11 +32,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ThrownTrident.class)
-public abstract class TridentEntityMixin extends AbstractArrow implements GrapplingHook {
+public abstract class ThrownTridentMixin extends AbstractArrow implements GrapplingHook {
     @Shadow
     public abstract void tickDespawn();
 
-    protected TridentEntityMixin(EntityType<? extends AbstractArrow> entityType, Level world) {
+    protected ThrownTridentMixin(EntityType<? extends AbstractArrow> entityType, Level world) {
         super(entityType, world);
     }
 

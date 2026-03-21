@@ -17,7 +17,7 @@
     "minecraft.rendering.AgeableListModelAccessor",
     "minecraft.rendering.ArmorFeatureRendererMixin",
     "minecraft.rendering.RenderTypeInvoker",
-    "minecraft.splashes.SplashManagerMixin",
+    "minecraft.splashes.SplashManagerAccessor",
     "minecraft.world_item_application.MultiPlayerGameModeMixin",
     "minecraft.wrench.MultiPlayerGameModeMixin",
     "self.grapple_winch.tooltip.GrappleWinchItemMixin"

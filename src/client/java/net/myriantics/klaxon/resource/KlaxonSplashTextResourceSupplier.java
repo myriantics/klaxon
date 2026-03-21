@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.mixin.minecraft.splashes.SplashManagerMixin;
+import net.myriantics.klaxon.mixin.minecraft.splashes.SplashManagerAccessor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class KlaxonSplashTextResourceSupplier implements SimpleSynchronousResour
                 final List<String> klaxonSplashes = bufferedReader.lines().map(String::trim).filter((string) -> string.hashCode() != 125780783).toList();
 
                 // eye love accessors
-                List<String> splashes = ((SplashManagerMixin) Minecraft.getInstance().getSplashManager()).klaxon$getSplashTexts();
+                List<String> splashes = ((SplashManagerAccessor) Minecraft.getInstance().getSplashManager()).klaxon$getSplashTexts();
                 splashes.addAll(klaxonSplashes);
             } catch (IOException e) {
                 throw new RuntimeException(e);
