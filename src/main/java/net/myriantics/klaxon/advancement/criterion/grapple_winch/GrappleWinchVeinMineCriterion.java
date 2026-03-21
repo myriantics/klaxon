@@ -36,14 +36,14 @@ public class GrappleWinchVeinMineCriterion extends SimpleCriterionTrigger<Grappl
         );
 
         public static Criterion<GrappleWinchVeinMineCriterion.Conditions> create(TagKey<Block> blockTag) {
-            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_VEIN_MINE_CRITERION.createCriterion(new Conditions(
+            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_VEIN_MINE_CRITERION.value().createCriterion(new Conditions(
                     Optional.empty(),
                     Optional.of(BlockIngredient.fromTag(blockTag))
             ));
         }
 
         public static Criterion<GrappleWinchVeinMineCriterion.Conditions> create(Block... blocks) {
-            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_VEIN_MINE_CRITERION.createCriterion(new Conditions(
+            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_VEIN_MINE_CRITERION.value().createCriterion(new Conditions(
                     Optional.empty(),
                     Optional.of(BlockIngredient.ofBlocks(blocks))
             ));

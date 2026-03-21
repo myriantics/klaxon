@@ -41,7 +41,7 @@ public class ItemRepairCriterion extends SimpleCriterionTrigger<ItemRepairCriter
         }
 
         public static Criterion<ItemRepairCriterion.Conditions> createFromTag(TagKey<Item> itemTag, double durabilityMinProportion) {
-            return KlaxonAdvancementCriteria.ANVIL_REPAIR_CRITERION.createCriterion(new ItemRepairCriterion.Conditions(Optional.empty(), Ingredient.of(itemTag), durabilityMinProportion));
+            return KlaxonAdvancementCriteria.ANVIL_REPAIR_CRITERION.value().createCriterion(new ItemRepairCriterion.Conditions(Optional.empty(), Ingredient.of(itemTag), durabilityMinProportion));
         }
 
         boolean matches(ItemStack stack) {

@@ -39,11 +39,11 @@ public class WrenchUsageCriterion extends SimpleCriterionTrigger<WrenchUsageCrit
         );
 
         public static Criterion<WrenchUsageCriterion.Conditions> createRotation(@Nullable TagKey<Block> validBlocks) {
-            return KlaxonAdvancementCriteria.WRENCH_USAGE_CRITERION.createCriterion(new WrenchUsageCriterion.Conditions(Optional.empty(), WrenchItem.UsageType.ROTATION, Optional.ofNullable(validBlocks)));
+            return KlaxonAdvancementCriteria.WRENCH_USAGE_CRITERION.value().createCriterion(new WrenchUsageCriterion.Conditions(Optional.empty(), WrenchItem.UsageType.ROTATION, Optional.ofNullable(validBlocks)));
         }
 
         public static Criterion<WrenchUsageCriterion.Conditions> createPickup(@Nullable TagKey<Block> validBlocks) {
-            return KlaxonAdvancementCriteria.WRENCH_USAGE_CRITERION.createCriterion(new WrenchUsageCriterion.Conditions(Optional.empty(), WrenchItem.UsageType.PICKUP, Optional.ofNullable(validBlocks)));
+            return KlaxonAdvancementCriteria.WRENCH_USAGE_CRITERION.value().createCriterion(new WrenchUsageCriterion.Conditions(Optional.empty(), WrenchItem.UsageType.PICKUP, Optional.ofNullable(validBlocks)));
         }
 
         boolean matches(BlockState targetState, WrenchItem.UsageType usageType) {

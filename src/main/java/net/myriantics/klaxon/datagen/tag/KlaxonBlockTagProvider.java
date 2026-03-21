@@ -259,35 +259,35 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.LEVER)
                 .add(Blocks.PISTON_HEAD);
 
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.getAllowlistTag())
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.value().getAllowlistTag())
                 .forceAddTag(BlockTags.SHULKER_BOXES)
                 .add(Blocks.PISTON)
                 .add(Blocks.STICKY_PISTON)
                 .add(Blocks.OBSERVER);
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.getDenylistTag());
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getAllowlistTag())
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.value().getDenylistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.value().getAllowlistTag())
                 .add(Blocks.BLAST_FURNACE)
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR);
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getDenylistTag());
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.getAllowlistTag())
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.value().getDenylistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.value().getAllowlistTag())
                 .add(Blocks.HOPPER);
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.getDenylistTag());
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.AXIS.getAllowlistTag());
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.AXIS.getDenylistTag());
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.getAllowlistTag())
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HOPPER_FACING.value().getDenylistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.AXIS.value().getAllowlistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.AXIS.value().getDenylistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_AXIS.value().getAllowlistTag())
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE)
                 .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.getDenylistTag());
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getAllowlistTag())
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.value().getDenylistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.ORIENTATION.value().getAllowlistTag())
                 .add(Blocks.CRAFTER);
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.ORIENTATION.getDenylistTag());
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getAllowlistTag())
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.ORIENTATION.value().getDenylistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.value().getAllowlistTag())
                 .forceAddTag(BlockTags.RAILS);
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.getDenylistTag());
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getAllowlistTag())
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.CURVING_RAIL_SHAPE.value().getDenylistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.value().getAllowlistTag())
                 .forceAddTag(BlockTags.RAILS);
-        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.getDenylistTag());
+        getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.STRAIGHT_RAIL_SHAPE.value().getDenylistTag());
     }
 
     private void buildBehaviorTags() {

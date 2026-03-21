@@ -33,15 +33,15 @@ public class WalljumpAbilityCriterion extends SimpleCriterionTrigger<WalljumpAbi
         );
 
         public static Criterion<WalljumpAbilityCriterion.Conditions> createNormalWalljump() {
-            return KlaxonAdvancementCriteria.WALLJUMP_ABILITY_CRITERION.createCriterion(new WalljumpAbilityCriterion.Conditions(Optional.empty(), HammerItem.UsageType.NORMAL_WALLJUMP));
+            return KlaxonAdvancementCriteria.WALLJUMP_ABILITY_CRITERION.value().createCriterion(new WalljumpAbilityCriterion.Conditions(Optional.empty(), HammerItem.UsageType.NORMAL_WALLJUMP));
         }
 
         public static Criterion<WalljumpAbilityCriterion.Conditions> createStrengthWalljump() {
-            return KlaxonAdvancementCriteria.WALLJUMP_ABILITY_CRITERION.createCriterion(new WalljumpAbilityCriterion.Conditions(Optional.empty(), HammerItem.UsageType.BOOSTED_WALLJUMP));
+            return KlaxonAdvancementCriteria.WALLJUMP_ABILITY_CRITERION.value().createCriterion(new WalljumpAbilityCriterion.Conditions(Optional.empty(), HammerItem.UsageType.BOOSTED_WALLJUMP));
         }
 
         public static Criterion<WalljumpAbilityCriterion.Conditions> createMinecartWalljump() {
-            return KlaxonAdvancementCriteria.WALLJUMP_ABILITY_CRITERION.createCriterion(new WalljumpAbilityCriterion.Conditions(Optional.empty(), HammerItem.UsageType.MINECART_WALLJUMP));
+            return KlaxonAdvancementCriteria.WALLJUMP_ABILITY_CRITERION.value().createCriterion(new WalljumpAbilityCriterion.Conditions(Optional.empty(), HammerItem.UsageType.MINECART_WALLJUMP));
         }
 
         boolean matches(HammerItem.UsageType usageType) {

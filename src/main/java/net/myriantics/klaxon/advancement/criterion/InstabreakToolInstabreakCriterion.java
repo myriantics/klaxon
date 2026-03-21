@@ -39,7 +39,7 @@ public class InstabreakToolInstabreakCriterion extends SimpleCriterionTrigger<In
         );
 
         public static Criterion<InstabreakToolInstabreakCriterion.Conditions> create(@Nullable Ingredient toolUsed,  @Nullable TagKey<Block> validBlocks) {
-            return KlaxonAdvancementCriteria.INSTABREAK_TOOL_INSTABREAK_CRITERION.createCriterion(new InstabreakToolInstabreakCriterion.Conditions(Optional.empty(), Optional.ofNullable(toolUsed), Optional.ofNullable(validBlocks)));
+            return KlaxonAdvancementCriteria.INSTABREAK_TOOL_INSTABREAK_CRITERION.value().createCriterion(new InstabreakToolInstabreakCriterion.Conditions(Optional.empty(), Optional.ofNullable(toolUsed), Optional.ofNullable(validBlocks)));
         }
 
         boolean matches(ItemStack instabreakingTool, BlockState instabrokenState) {

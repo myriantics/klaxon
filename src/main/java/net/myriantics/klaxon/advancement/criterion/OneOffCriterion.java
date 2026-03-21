@@ -30,7 +30,7 @@ public class OneOffCriterion extends SimpleCriterionTrigger<OneOffCriterion.Cond
         );
 
         public static Criterion<OneOffCriterion.Conditions> createDeAnchorGrappleClaw() {
-            return KlaxonAdvancementCriteria.DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION.createCriterion(new Conditions(
+            return KlaxonAdvancementCriteria.DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION.value().createCriterion(new Conditions(
                     Optional.empty()
             ));
         }

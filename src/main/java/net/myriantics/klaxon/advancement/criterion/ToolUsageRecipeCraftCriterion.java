@@ -35,11 +35,11 @@ public class ToolUsageRecipeCraftCriterion extends SimpleCriterionTrigger<ToolUs
         });
 
         public static Criterion<ToolUsageRecipeCraftCriterion.Conditions> createHammering(Ingredient resultIngredient) {
-            return KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.createCriterion(new Conditions(Optional.empty(), Ingredient.of(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS), resultIngredient));
+            return KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.value().createCriterion(new Conditions(Optional.empty(), Ingredient.of(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS), resultIngredient));
         }
 
         public static Criterion<ToolUsageRecipeCraftCriterion.Conditions> createWirecutting(Ingredient resultIngredient) {
-            return KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.createCriterion(new Conditions(Optional.empty(), Ingredient.of(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS), resultIngredient));
+            return KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.value().createCriterion(new Conditions(Optional.empty(), Ingredient.of(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS), resultIngredient));
         }
 
         boolean matches(ItemStack toolStack, ItemStack resultStack) {

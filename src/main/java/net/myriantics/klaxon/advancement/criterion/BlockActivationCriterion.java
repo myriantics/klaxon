@@ -36,7 +36,7 @@ public class BlockActivationCriterion extends SimpleCriterionTrigger<BlockActiva
         );
 
         public static Criterion<BlockActivationCriterion.Conditions> create(TagKey<Block> blockTag) {
-            return KlaxonAdvancementCriteria.BLOCK_ACTIVATION_CRITERION.createCriterion(new BlockActivationCriterion.Conditions(Optional.empty(), blockTag));
+            return KlaxonAdvancementCriteria.BLOCK_ACTIVATION_CRITERION.value().createCriterion(new BlockActivationCriterion.Conditions(Optional.empty(), blockTag));
         }
 
         boolean matches(BlockState block) {

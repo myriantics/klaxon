@@ -33,23 +33,23 @@ public class GrappleWinchCableDisconnectCriterion extends SimpleCriterionTrigger
         ).apply(instance, Conditions::new));
 
         public static Criterion<Conditions> createWildcard() {
-            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.createCriterion(new Conditions(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));
+            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.value().createCriterion(new Conditions(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));
         }
 
         public static Criterion<Conditions> create(CableDetachmentReason reason) {
-            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.createCriterion(new Conditions(Optional.empty(), Optional.of(reason), Optional.empty(), Optional.empty()));
+            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.value().createCriterion(new Conditions(Optional.empty(), Optional.of(reason), Optional.empty(), Optional.empty()));
         }
 
         public static Criterion<Conditions> createPlayer(CableDetachmentReason reason, EntityPredicate player) {
-            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.createCriterion(new Conditions(Optional.empty(), Optional.of(reason), Optional.empty(), Optional.of(player)));
+            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.value().createCriterion(new Conditions(Optional.empty(), Optional.of(reason), Optional.empty(), Optional.of(player)));
         }
 
         public static Criterion<Conditions> createHook(CableDetachmentReason reason, EntityPredicate hook) {
-            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.createCriterion(new Conditions(Optional.empty(), Optional.of(reason), Optional.of(hook), Optional.empty()));
+            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.value().createCriterion(new Conditions(Optional.empty(), Optional.of(reason), Optional.of(hook), Optional.empty()));
         }
 
         public static Criterion<Conditions> create(CableDetachmentReason reason, EntityPredicate player, EntityPredicate hook) {
-            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.createCriterion(new Conditions(Optional.empty(), Optional.of(reason), Optional.of(hook), Optional.of(player)));
+            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION.value().createCriterion(new Conditions(Optional.empty(), Optional.of(reason), Optional.of(hook), Optional.of(player)));
         }
 
         @Override

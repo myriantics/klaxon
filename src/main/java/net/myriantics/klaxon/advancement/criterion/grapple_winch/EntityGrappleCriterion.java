@@ -33,14 +33,14 @@ public class EntityGrappleCriterion extends SimpleCriterionTrigger<EntityGrapple
         );
 
         public static Criterion<Conditions> create(TagKey<EntityType<?>> tagKey) {
-            return KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.createCriterion(new Conditions(
+            return KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.value().createCriterion(new Conditions(
                     Optional.empty(),
                     Optional.of(new EntityPredicate.Builder().of(tagKey).build())
             ));
         }
 
         public static Criterion<Conditions> create(EntityType<?> type) {
-            return KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.createCriterion(new Conditions(
+            return KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.value().createCriterion(new Conditions(
                     Optional.empty(),
                     Optional.of(new EntityPredicate.Builder().of(type).build())
             ));
