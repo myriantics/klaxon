@@ -44,7 +44,7 @@ public class DeepslateBlastProcessorBlockEntity extends RandomizableContainerBlo
     private final ArrayList<DeepslateBlastProcessorScreenHandler> activeScreenHandlers = new ArrayList<>();
 
     public DeepslateBlastProcessorBlockEntity(BlockPos pos, BlockState state) {
-        super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY, pos, state);
+        super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY.value(), pos, state);
         this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
     }
 

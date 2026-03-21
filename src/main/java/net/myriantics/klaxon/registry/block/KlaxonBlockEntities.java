@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry.block;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
@@ -9,7 +10,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 
 public abstract class KlaxonBlockEntities {
-    public static final BlockEntityType<DeepslateBlastProcessorBlockEntity> DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY = register(
+    public static final Holder<BlockEntityType<DeepslateBlastProcessorBlockEntity>> DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY = register(
             "deepslate_blast_processor",
             KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR,
             DeepslateBlastProcessorBlockEntity::new
@@ -23,8 +24,9 @@ public abstract class KlaxonBlockEntities {
         BlockEntityType.HANGING_SIGN.addSupportedBlock(KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
     }
 
-    public static <T extends BlockEntity> BlockEntityType<T> register(String id, Block block, BlockEntityType.BlockEntitySupplier<T> factory) {
-        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, KlaxonCommon.locate(id), BlockEntityType.Builder.of(factory, block).build());
+    @SuppressWarnings("unchecked")
+    public static <T extends BlockEntity> Holder<BlockEntityType<T>> register(String id, Block block, BlockEntityType.BlockEntitySupplier<T> factory) {
+        return (Holder<BlockEntityType<T>>) (Object) Registry.registerForHolder(BuiltInRegistries.BLOCK_ENTITY_TYPE, KlaxonCommon.locate(id), BlockEntityType.Builder.of(factory, block).build());
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, BlockEntityType.Builder<T> builder) {
