@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.block.decor;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -41,13 +42,13 @@ public class SteelTrapdoorBlock extends TrapDoorBlock implements Wrenchable {
     }
 
     @Override
-    public ItemInteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
+    public InteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
         BlockPos targetPos = context.hitResult().getBlockPos();
 
         this.playSound(context.player(), context.world(), targetPos, !context.targetState().getValue(OPEN));
         context.world().setBlockAndUpdate(targetPos, context.targetState().cycle(OPEN));
 
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override

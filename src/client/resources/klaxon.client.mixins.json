@@ -18,8 +18,6 @@
     "minecraft.rendering.ArmorFeatureRendererMixin",
     "minecraft.rendering.RenderTypeInvoker",
     "minecraft.splashes.SplashManagerAccessor",
-    "minecraft.world_item_application.MultiPlayerGameModeMixin",
-    "minecraft.wrench.MultiPlayerGameModeMixin",
     "self.grapple_winch.tooltip.GrappleWinchItemMixin"
   ],
   "injectors": {

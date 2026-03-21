@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -90,7 +91,7 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
     }
 
     @Override
-    public ItemInteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
+    public InteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
         BlockPos targetPos = context.hitResult().getBlockPos();
 
         Level world = context.world();
@@ -143,7 +144,7 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
         // trip sculk sensors because it's funny
         world.gameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Context.of(context.player(), context.targetState()));
 
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override

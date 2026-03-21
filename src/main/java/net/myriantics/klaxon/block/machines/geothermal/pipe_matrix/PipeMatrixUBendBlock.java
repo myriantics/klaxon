@@ -3,6 +3,7 @@ package net.myriantics.klaxon.block.machines.geothermal.pipe_matrix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -134,7 +135,7 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     }
 
     @Override
-    public ItemInteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
+    public InteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
         if (getSegmentBlock() != null) {
             BlockPos pos = context.hitResult().getBlockPos();
 
@@ -155,7 +156,7 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
             // trip sculk sensors because it's funny
             context.world().gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(context.player(), context.targetState()));
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             return null;
         }
