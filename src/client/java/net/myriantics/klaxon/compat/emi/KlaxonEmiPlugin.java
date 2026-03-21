@@ -98,15 +98,15 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerWorkstations(EmiRegistry registry) {
-        registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR));
         registry.addWorkstation(KlaxonEmiRecipeCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
         registry.addWorkstation(KlaxonEmiRecipeCategories.WORLD_ITEM_APPLICATION, EmiStack.of(Items.DISPENSER));
 
         // Steel Hammer can mimic AnvilScreenHandler functionality
         registry.addWorkstation(VanillaEmiRecipeCategories.ANVIL_REPAIRING, EmiStack.of(KlaxonItems.STEEL_HAMMER));
         // Blast Processors can mimic Blasting Smelting functionality when using a catalyst that produces Fire
-        registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, EmiStack.of(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR));
+        registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR));
     }
 
     private void registerRecipes(EmiRegistry registry) {
