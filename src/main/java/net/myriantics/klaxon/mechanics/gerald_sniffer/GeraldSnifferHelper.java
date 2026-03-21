@@ -7,7 +7,7 @@ import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.animal.sniffer.Sniffer;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.Level;
-import net.myriantics.klaxon.mixin.minecraft.gerald_sniffer.SnifferEntityInvoker;
+import net.myriantics.klaxon.mixin.minecraft.gerald_sniffer.SnifferInvoker;
 import net.myriantics.klaxon.registry.dynamic.KlaxonLootTables;
 
 public abstract class GeraldSnifferHelper {
@@ -50,7 +50,7 @@ public abstract class GeraldSnifferHelper {
         // instantly lock on to a searching pos
         // walking speed is greater than normal sniffer searching
         Brain<Sniffer> brain = snifferEntity.getBrain();
-        ((SnifferEntityInvoker) snifferEntity).klaxon$invokeFindSniffingTargetPos().ifPresent((pos -> {
+        ((SnifferInvoker) snifferEntity).klaxon$invokeFindSniffingTargetPos().ifPresent((pos -> {
             ((SnifferEntityMixinAccess) snifferEntity).klaxon$setGeraldSnifferState(GeraldSnifferState.TRACKING_IN_PROGRESS);
             brain.eraseMemory(MemoryModuleType.SNIFF_COOLDOWN);
             brain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(pos, 1.8f, 0));

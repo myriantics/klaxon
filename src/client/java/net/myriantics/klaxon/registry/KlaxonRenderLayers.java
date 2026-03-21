@@ -3,7 +3,7 @@ package net.myriantics.klaxon.registry;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderType.CompositeRenderType;
-import net.myriantics.klaxon.mixin.minecraft.rendering.RenderLayerInvoker;
+import net.myriantics.klaxon.mixin.minecraft.rendering.RenderTypeInvoker;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.OptionalDouble;
@@ -44,6 +44,6 @@ public abstract class KlaxonRenderLayers {
             boolean translucent,
             RenderType.CompositeState phases
     ) {
-        return RenderLayerInvoker.klaxon$invokeCreateMultiphase(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, phases);
+        return RenderTypeInvoker.klaxon$invokeCreateMultiphase(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, phases);
     }
 }

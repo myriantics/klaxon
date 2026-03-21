@@ -28,7 +28,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
-import net.myriantics.klaxon.mixin.minecraft.anvil_emulation.AnvilScreenHandlerInvoker;
+import net.myriantics.klaxon.mixin.minecraft.anvil_emulation.AnvilMenuInvoker;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
@@ -119,7 +119,7 @@ public class HammerItem extends DiggerItem {
                             targetItemEntity.setItem(anvilOutputStack);
 
                             // update exp costs and everything - this is done after other calculations because shits fucky
-                            ((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeOnTakeOutput(player, anvilOutputStack);
+                            ((AnvilMenuInvoker)screenHandler).klaxon$invokeOnTakeOutput(player, anvilOutputStack);
 
                             // now we can decrement the applied stack once the calculations have been done - only decrements when not in creative
                             if (!serverPlayer.isCreative()) serverPlayer.setItemInHand(oppositeHand, screenHandler.getItems().get(1));
@@ -172,7 +172,7 @@ public class HammerItem extends DiggerItem {
         Slot outputSlot = screenHandler.getSlot(2);
 
         // if we can't take output, no need to continue
-        if (!((AnvilScreenHandlerInvoker)screenHandler).klaxon$invokeCanTakeOutput(player, outputSlot.hasItem())) return screenHandler;
+        if (!((AnvilMenuInvoker)screenHandler).klaxon$invokeCanTakeOutput(player, outputSlot.hasItem())) return screenHandler;
 
         return screenHandler;
     }

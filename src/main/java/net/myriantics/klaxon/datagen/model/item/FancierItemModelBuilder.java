@@ -7,7 +7,7 @@ import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceLocation;
-import net.myriantics.klaxon.mixin.minecraft.datagen.ModelAccessor;
+import net.myriantics.klaxon.mixin.minecraft.datagen.ModelTemplateAccessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public final class FancierItemModelBuilder {
         this.parentModel = parentModel;
         this.modelId = modelId;
         this.defaultTextureMap = defaultTextureMap;
-        this.model = new ModelTemplate(Optional.of(modelId), Optional.empty(), ((ModelAccessor) parentModel).klaxon$getRequiredTextures().toArray(new TextureSlot[0]));
+        this.model = new ModelTemplate(Optional.of(modelId), Optional.empty(), ((ModelTemplateAccessor) parentModel).klaxon$getRequiredTextures().toArray(new TextureSlot[0]));
     }
 
     public static FancierItemModelBuilder of(ModelTemplate rootModel, ResourceLocation rootModelId, Map<TextureSlot, ResourceLocation> defaultTextureMap) {

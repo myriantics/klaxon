@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
-import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
+import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,7 +36,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             @Nullable ItemStack weaponStack = attacker.getWeaponItem();
 
             Entity attackedEntity = instance instanceof EnderDragonPart part
-                    ? ((EnderDragonEntityAccessor) part.parentMob).getBody()
+                    ? ((EnderDragonAccessor) part.parentMob).getBody()
                     : instance;
 
             // try to fast reload the grapple claw attached to the entity if it's attached

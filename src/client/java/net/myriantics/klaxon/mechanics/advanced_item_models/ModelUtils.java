@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.myriantics.klaxon.mixin.minecraft.advanced_item_models.JsonUnbakedModelAccessor;
-import net.myriantics.klaxon.mixin.minecraft.advanced_item_models.ModelOverrideAccessor;
+import net.myriantics.klaxon.mixin.minecraft.advanced_item_models.BlockModelAccessor;
+import net.myriantics.klaxon.mixin.minecraft.advanced_item_models.ItemOverrideAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -22,7 +22,7 @@ public abstract class ModelUtils {
     public static BlockModel generateInvertedModel(BlockModel model) {
         ArrayList<BlockElement> newElements = new ArrayList<>();
 
-        JsonUnbakedModelAccessor accessor = (JsonUnbakedModelAccessor) model;
+        BlockModelAccessor accessor = (BlockModelAccessor) model;
 
         // copy + mirror model elements
         for (BlockElement element : model.getElements()) {
@@ -84,7 +84,7 @@ public abstract class ModelUtils {
 
             newOverrides.add(new ItemOverride(
                     mirroredOverrideModelId,
-                    ((ModelOverrideAccessor) override).klaxon$getConditions()
+                    ((ItemOverrideAccessor) override).klaxon$getConditions()
             ));
         }
 

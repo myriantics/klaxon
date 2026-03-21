@@ -4,7 +4,7 @@ import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.mixin.minecraft.datagen.ModelAccessor;
+import net.myriantics.klaxon.mixin.minecraft.datagen.ModelTemplateAccessor;
 
 import java.util.Optional;
 
@@ -47,7 +47,7 @@ public abstract class KlaxonModels {
     public static final ModelTemplate ROTATED_NETHER_REACTOR_CORE = copyDir("rotated", NORMAL_NETHER_REACTOR_CORE);
 
     public static Optional<ResourceLocation> id(ModelTemplate model) {
-        return ((ModelAccessor) model).klaxon$getParent();
+        return ((ModelTemplateAccessor) model).klaxon$getParent();
     }
 
     private static ModelTemplate copyDir(String path, ModelTemplate parent, TextureSlot... textureKeys) {
@@ -68,7 +68,7 @@ public abstract class KlaxonModels {
     }
 
     private static ModelTemplate copyDir(String path, ModelTemplate parent) {
-        return copyDir(path, parent, ((ModelAccessor)parent).klaxon$getRequiredTextures().toArray(new TextureSlot[] {}));
+        return copyDir(path, parent, ((ModelTemplateAccessor)parent).klaxon$getRequiredTextures().toArray(new TextureSlot[] {}));
     }
 
     private static ModelTemplate block(String path, TextureSlot... requiredTextureKeys) {
@@ -80,6 +80,6 @@ public abstract class KlaxonModels {
     }
 
     private static ModelTemplate copyTextureMap(String path, ModelTemplate model) {
-        return new ModelTemplate(Optional.of(KlaxonCommon.locate("item/" + path)), Optional.empty(), ((ModelAccessor)model).klaxon$getRequiredTextures().toArray(new TextureSlot[]{}));
+        return new ModelTemplate(Optional.of(KlaxonCommon.locate("item/" + path)), Optional.empty(), ((ModelTemplateAccessor)model).klaxon$getRequiredTextures().toArray(new TextureSlot[]{}));
     }
 }

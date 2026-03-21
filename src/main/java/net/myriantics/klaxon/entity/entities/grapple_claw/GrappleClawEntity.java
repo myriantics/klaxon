@@ -36,7 +36,7 @@ import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConn
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
-import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonEntityAccessor;
+import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonAccessor;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
@@ -575,7 +575,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
             } else {
                 Entity entity = GrappleClawEntity.this.level().getEntity(newId);
                 switch (entity) {
-                    case EnderDragonEntityAccessor access -> this.setHookedEntity(access.getBody());
+                    case EnderDragonAccessor access -> this.setHookedEntity(access.getBody());
                     case null, default -> this.hookedEntity = entity;
                 }
             }
@@ -627,7 +627,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
 
             // hook onto the ender dragon body if possible
             entity = entity instanceof EnderDragonPart part
-                    ? ((EnderDragonEntityAccessor) part.parentMob).getBody()
+                    ? ((EnderDragonAccessor) part.parentMob).getBody()
                     : entity;
 
             DamageSource source = claw.createDamageSource(KlaxonDamageTypes.GRAPPLING);

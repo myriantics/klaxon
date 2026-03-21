@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
-import net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors.WindChargeEntityInvoker;
+import net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors.WindChargeInvoker;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
@@ -25,7 +25,7 @@ public class WindChargeExplosiveCatalystBehavior extends ItemExplosiveCatalystBe
     public void onExplosion(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData powerData, boolean shouldModifyWorld) {
         Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).getValue(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
         WindCharge windCharge = new WindCharge(world, outputPos.x(), outputPos.y(), outputPos.z(), Vec3.ZERO);
-        WindChargeEntityInvoker windChargeInvoker = ((WindChargeEntityInvoker) windCharge);
+        WindChargeInvoker windChargeInvoker = ((WindChargeInvoker) windCharge);
 
         world.addFreshEntity(windCharge);
 

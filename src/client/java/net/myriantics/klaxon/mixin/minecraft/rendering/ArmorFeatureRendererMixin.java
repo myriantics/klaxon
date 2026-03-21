@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.mixin.minecraft.rendering;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -79,11 +78,11 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, M extend
 
         matrices.pushPose();
 
-        if (this.getParentModel().young && ((AnimalModelAccessor) this.getParentModel()).klaxon$headScaled()) {
-            float f = 1.5F / ((AnimalModelAccessor) this.getParentModel()).klaxon$invertedChildHeadScale();
+        if (this.getParentModel().young && ((AgeableListModelAccessor) this.getParentModel()).klaxon$headScaled()) {
+            float f = 1.5F / ((AgeableListModelAccessor) this.getParentModel()).klaxon$invertedChildHeadScale();
             matrices.scale(f, f, f);
 
-            matrices.translate(0.0F, ((AnimalModelAccessor) this.getParentModel()).klaxon$childHeadYOffset() / 16.0F, ((AnimalModelAccessor) this.getParentModel()).klaxon$childHeadZOffset() / 16.0F);
+            matrices.translate(0.0F, ((AgeableListModelAccessor) this.getParentModel()).klaxon$childHeadYOffset() / 16.0F, ((AgeableListModelAccessor) this.getParentModel()).klaxon$childHeadZOffset() / 16.0F);
         }
 
         this.innerModel.copyPropertiesTo(this.klaxon$helmetCrestModel);
