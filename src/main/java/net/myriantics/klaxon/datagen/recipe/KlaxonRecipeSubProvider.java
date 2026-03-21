@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.datagen.recipe;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -326,7 +327,11 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
-    public void addManualItemApplicationRecipe(TagKey<Block> validBlockInputs, Ingredient ingredient, Block outputBlock, ResourceCondition... conditions) {
+    public void addWorldItemApplicationRecipe(TagKey<Block> validBlockInputs, Ingredient ingredient, Holder<Block> outputBlock, ResourceCondition... conditions) {
+        this.addWorldItemApplicationRecipe(validBlockInputs, ingredient, outputBlock.value(), conditions);
+    }
+
+    public void addWorldItemApplicationRecipe(TagKey<Block> validBlockInputs, Ingredient ingredient, Block outputBlock, ResourceCondition... conditions) {
         ResourceLocation recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID,
                 BuiltInRegistries.BLOCK.getKey(outputBlock).getPath(),
                 conditions);

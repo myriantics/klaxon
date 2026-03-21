@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.datagen.model;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.blockstates.*;
@@ -56,8 +57,20 @@ public abstract class KlaxonBlockModelSubProvider {
         generator.createDoor(doorBlock);
     }
 
+    protected void registerDoor(Holder<Block> holder) {
+        registerDoor(holder.value());
+    }
+
     protected void registerOrientableTrapdoor(Block trapdoorBlock) {
         generator.createOrientableTrapdoor(trapdoorBlock);
+    }
+
+    protected void registerOrientableTrapdoor(Holder<Block> holder) {
+        registerOrientableTrapdoor(holder.value());
+    }
+
+    protected void registerHangingSign(Holder<Block> strippedLogHolder, Holder<Block> hangingSignHolder, Holder<Block> wallHangingSignHolder) {
+        registerHangingSign(strippedLogHolder.value(), hangingSignHolder.value(), wallHangingSignHolder.value());
     }
 
     protected void registerHangingSign(Block strippedLog, Block hangingSign, Block wallHangingSign) {
@@ -74,9 +87,9 @@ public abstract class KlaxonBlockModelSubProvider {
         Variant fueled_open_lit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_open_lit"));
         Variant fueled_open_unlit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_open_unlit"));
 
-        generator.delegateItemModel(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_open_unlit"));
+        generator.delegateItemModel(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value(), getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value(), "empty_open_unlit"));
 
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value())
                 .with(PropertyDispatch.properties(KlaxonBlockStateProperties.FUELED, KlaxonBlockStateProperties.HATCH_OPEN, BlockStateProperties.LIT)
                         .select(false, false, true, empty_closed_lit)
                         .select(false, false, false, empty_closed_unlit)
@@ -137,11 +150,12 @@ public abstract class KlaxonBlockModelSubProvider {
         );
     }
 
-    protected void registerPipeMatrixSegment(Block segmentBlock, Item pipeMatrixItem) {
-        this.registerPipeMatrixSegment(segmentBlock, pipeMatrixItem, pipeMatrixItem);
+    protected void registerPipeMatrixSegment(Holder<Block> holder, Item pipeMatrixItem) {
+        this.registerPipeMatrixSegment(holder, pipeMatrixItem, pipeMatrixItem);
     }
 
-    protected void registerPipeMatrixSegment(Block segmentBlock, Item pipeMatrixItem, Item pipeMatrixItemThatIndicatesTextureDirectory) {
+    protected void registerPipeMatrixSegment(Holder<Block> segmentBlockHolder, Item pipeMatrixItem, Item pipeMatrixItemThatIndicatesTextureDirectory) {
+        Block segmentBlock = segmentBlockHolder.value();
         ResourceLocation modelIdentifier = ModelLocationUtils.getModelLocation(segmentBlock);
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(pipeMatrixItem);
         String texturePath = BuiltInRegistries.ITEM.getKey(pipeMatrixItemThatIndicatesTextureDirectory).getPath();
@@ -162,7 +176,8 @@ public abstract class KlaxonBlockModelSubProvider {
         generator.delegateItemModel(pipeMatrixItem, modelIdentifier);
     }
 
-    protected void registerPipeMatrixUBend(Block uBendBlock, Item pipeMatrixItemThatIndicatesTextureDirectory) {
+    protected void registerPipeMatrixUBend(Holder<Block> holder, Item pipeMatrixItemThatIndicatesTextureDirectory) {
+        Block uBendBlock = holder.value();
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(pipeMatrixItemThatIndicatesTextureDirectory);
 
         ResourceLocation baseModelIdentifier = ModelLocationUtils.getModelLocation(uBendBlock);
@@ -294,8 +309,8 @@ public abstract class KlaxonBlockModelSubProvider {
     protected void registerHallnoxPod(BlockModelGenerators generator) {
         // hallnox pod uses 2d item texture
         generator.createSimpleFlatItemModel(KlaxonItems.HALLNOX_POD);
-        ResourceLocation modelId = ModelLocationUtils.getModelLocation(KlaxonBlocks.HALLNOX_POD);
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(KlaxonBlocks.HALLNOX_POD,
+        ResourceLocation modelId = ModelLocationUtils.getModelLocation(KlaxonBlocks.HALLNOX_POD.value());
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(KlaxonBlocks.HALLNOX_POD.value(),
                         Variant.variant().with(VariantProperties.MODEL, modelId)
                 )
                 .with(createDownDefaultRotationStates()));
@@ -315,7 +330,8 @@ public abstract class KlaxonBlockModelSubProvider {
         return generator.family(baseBlock);
     }
 
-    protected void registerNetherReactorCore(Block block) {
+    protected void registerNetherReactorCore(Holder<Block> holder) {
+        Block block = holder.value();
         ResourceLocation normalModelIdentifier = ModelLocationUtils.getModelLocation(block);
         ResourceLocation rotatedModelIdentifier = normalModelIdentifier.withPath((path) -> path + "_rotated");
         ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
@@ -350,8 +366,16 @@ public abstract class KlaxonBlockModelSubProvider {
         generator.delegateItemModel(block, normalModelIdentifier);
     }
 
+    protected void acceptSingletonBlockState(Holder<Block> holder, ResourceLocation id) {
+        acceptSingletonBlockState(holder.value(), id);
+    }
+
     protected void acceptSingletonBlockState(Block block, ResourceLocation identifier) {
         generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, identifier));
+    }
+
+    private static ResourceLocation getNestedBlockSubModelId(Holder<Block> holder, String suffix) {
+        return getNestedBlockSubModelId(holder.value(), suffix);
     }
 
     private static ResourceLocation getNestedBlockSubModelId(Block block, String suffix) {

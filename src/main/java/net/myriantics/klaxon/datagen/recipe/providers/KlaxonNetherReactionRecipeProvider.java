@@ -19,7 +19,7 @@ public class KlaxonNetherReactionRecipeProvider extends KlaxonRecipeSubProvider 
 
     private void buildNetherReactionRecipes() {
         // misc
-        addNetherReactionRecipe(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE, KlaxonBlocks.STEEL_CASING);
+        addNetherReactionRecipe(KlaxonBlockTags.STEEL_CASING_CONVERTIBLE, KlaxonBlocks.STEEL_CASING.value());
         addNetherReactionRecipe(KlaxonBlockTags.AIR_CONVERTIBLE, Blocks.AIR);
         addNetherReactionRecipe(KlaxonBlockTags.FIRE_CONVERTIBLE, Blocks.FIRE);
         addNetherReactionRecipe(KlaxonBlockTags.SHROOMLIGHT_CONVERTIBLE, Blocks.SHROOMLIGHT);

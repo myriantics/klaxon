@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry.block;
 
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 
@@ -44,8 +45,16 @@ public abstract class KlaxonOxidationRegistry {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Oxidation Stages!");
     }
 
+    private static void registerOxidizable(Holder<Block> less, Holder<Block> more) {
+        registerOxidizable(less.value(), more.value());
+    }
+
     private static void registerOxidizable(Block less, Block more) {
         OxidizableBlocksRegistry.registerOxidizableBlockPair(less, more);
+    }
+
+    private static void registerWaxable(Holder<Block> unwaxed, Holder<Block> waxed) {
+        registerWaxable(unwaxed.value(), waxed.value());
     }
 
     private static void registerWaxable(Block unwaxed, Block waxed) {

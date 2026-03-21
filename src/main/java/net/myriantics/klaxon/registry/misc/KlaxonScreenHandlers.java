@@ -9,6 +9,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public abstract class KlaxonScreenHandlers {
     public static final ExtendedScreenHandlerType<DeepslateBlastProcessorScreenHandler, BlastProcessorScreenSyncPacket> BLAST_PROCESSOR_SCREEN_HANDLER
@@ -21,6 +22,6 @@ public abstract class KlaxonScreenHandlers {
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's ScreenHandlers!");
 
-        createScreenHandler(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.asItem().toString(), BLAST_PROCESSOR_SCREEN_HANDLER);
+        createScreenHandler(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.toString(), BLAST_PROCESSOR_SCREEN_HANDLER);
     }
 }

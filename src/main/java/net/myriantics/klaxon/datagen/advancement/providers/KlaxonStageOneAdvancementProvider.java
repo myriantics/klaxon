@@ -65,7 +65,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     }
 
     private AdvancementHolder generateRoot() {
-        return addRootAdvancement(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, AdvancementType.TASK, PlayerTrigger.TriggerInstance.tick());
+        return addRootAdvancement(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR, AdvancementType.TASK, PlayerTrigger.TriggerInstance.tick());
     }
 
     private void generateAdvancements(AdvancementHolder root) {

@@ -117,10 +117,10 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new UprightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 6,
-                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_HYPHAE.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
+                                KlaxonBlocks.HALLNOX_STEM,
+                                KlaxonBlocks.HALLNOX_HYPHAE,
+                                KlaxonBlocks.HALLNOX_WART_BLOCK,
+                                KlaxonBlocks.HALLNOX_POD
                         )
                 )
         );
@@ -130,10 +130,10 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new DownrightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 8,
-                                KlaxonBlocks.HALLNOX_HYPHAE.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
+                                KlaxonBlocks.HALLNOX_HYPHAE,
+                                KlaxonBlocks.HALLNOX_STEM,
+                                KlaxonBlocks.HALLNOX_WART_BLOCK,
+                                KlaxonBlocks.HALLNOX_POD
                         )
                 )
         );
@@ -143,9 +143,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.NORTH,
-                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
+                                KlaxonBlocks.HALLNOX_STEM,
+                                KlaxonBlocks.HALLNOX_WART_BLOCK,
+                                KlaxonBlocks.HALLNOX_POD
                         )
                 )
         );
@@ -155,9 +155,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.EAST,
-                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
+                                KlaxonBlocks.HALLNOX_STEM,
+                                KlaxonBlocks.HALLNOX_WART_BLOCK,
+                                KlaxonBlocks.HALLNOX_POD
                         )
                 )
         );
@@ -167,9 +167,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.WEST,
-                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
+                                KlaxonBlocks.HALLNOX_STEM,
+                                KlaxonBlocks.HALLNOX_WART_BLOCK,
+                                KlaxonBlocks.HALLNOX_POD
                         )
                 )
         );
@@ -179,9 +179,9 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.SOUTH,
-                                KlaxonBlocks.HALLNOX_STEM.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_WART_BLOCK.defaultBlockState(),
-                                KlaxonBlocks.HALLNOX_POD.defaultBlockState()
+                                KlaxonBlocks.HALLNOX_STEM,
+                                KlaxonBlocks.HALLNOX_WART_BLOCK,
+                                KlaxonBlocks.HALLNOX_POD
                         )
                 )
         );

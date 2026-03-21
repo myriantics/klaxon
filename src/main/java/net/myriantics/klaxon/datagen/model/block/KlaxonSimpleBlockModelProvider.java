@@ -1,6 +1,8 @@
 package net.myriantics.klaxon.datagen.model.block;
 
+import net.minecraft.core.Holder;
 import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.datagen.model.KlaxonBlockModelSubProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
@@ -33,10 +35,14 @@ public class KlaxonSimpleBlockModelProvider extends KlaxonBlockModelSubProvider 
         registerSimpleCubeAll(KlaxonBlocks.HALLNOX_WART_BLOCK);
     }
 
+    private void registerSimpleCubeAll(Holder<Block> holder) {
+        registerSimpleCubeAll(holder.value());
+    }
+
     private void registerAxisRotatedBlockModels() {
         // hallnox
-        registerLog(KlaxonBlocks.HALLNOX_STEM).log(KlaxonBlocks.HALLNOX_STEM).wood(KlaxonBlocks.HALLNOX_HYPHAE);
-        registerLog(KlaxonBlocks.STRIPPED_HALLNOX_STEM).log(KlaxonBlocks.STRIPPED_HALLNOX_STEM).wood(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
+        registerLog(KlaxonBlocks.HALLNOX_STEM).log(KlaxonBlocks.HALLNOX_STEM.value()).wood(KlaxonBlocks.HALLNOX_HYPHAE.value());
+        registerLog(KlaxonBlocks.STRIPPED_HALLNOX_STEM).log(KlaxonBlocks.STRIPPED_HALLNOX_STEM.value()).wood(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE.value());
 
         // steel
         registerPillarBlock(KlaxonBlocks.STEEL_PLATING_BLOCK);
@@ -73,5 +79,17 @@ public class KlaxonSimpleBlockModelProvider extends KlaxonBlockModelSubProvider 
 
         // rubber
         registerPillarBlock(KlaxonBlocks.RUBBER_SHEET_BLOCK);
+    }
+
+    private void registerOxidizedPillarBlock(Holder<Block> waxed, Holder<Block> unwaxed) {
+        registerOxidizedPillarBlock(waxed.value(), unwaxed.value());
+    }
+
+    private void registerPillarBlock(Holder<Block> block) {
+        registerPillarBlock(block.value());
+    }
+
+    private BlockModelGenerators.WoodProvider registerLog(Holder<Block> block) {
+        return registerLog(block.value());
     }
 }

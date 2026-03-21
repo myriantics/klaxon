@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.item;
 
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -11,7 +11,6 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
-import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonItemModelPredicateIds;
 import org.jetbrains.annotations.Nullable;
 

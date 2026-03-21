@@ -1,14 +1,11 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.item;
 
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.mixin.registry.sync.client.ItemColorsMixin;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.registry.item.KlaxonItems;
 
 public abstract class KlaxonItemColors {
 

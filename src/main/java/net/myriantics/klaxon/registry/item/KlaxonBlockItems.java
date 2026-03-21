@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -100,25 +101,37 @@ public abstract class KlaxonBlockItems {
     public static final Item HALLNOX_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_SIGN,
             new SignItem(
                     new Item.Properties().stacksTo(16),
-                    KlaxonBlocks.HALLNOX_SIGN,
-                    KlaxonBlocks.HALLNOX_WALL_SIGN
+                    KlaxonBlocks.HALLNOX_SIGN.value(),
+                    KlaxonBlocks.HALLNOX_WALL_SIGN.value()
             )
     );
     public static final Item HALLNOX_HANGING_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_HANGING_SIGN,
             new HangingSignItem(
-                    KlaxonBlocks.HALLNOX_HANGING_SIGN,
-                    KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN,
+                    KlaxonBlocks.HALLNOX_HANGING_SIGN.value(),
+                    KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN.value(),
                     new Item.Properties().stacksTo(16)
             )
     );
     public static final Item HALLNOX_BULB = registerBlockItem(KlaxonBlocks.HALLNOX_BULB);
 
+    private static Item registerBlockItem(String name, Holder<Block> holder) {
+        return registerBlockItem(name, holder.value());
+    }
+
     private static Item registerBlockItem(String name, Block block) {
         return registerBlockItem(name, new ItemNameBlockItem(block, new Item.Properties()));
     }
 
+    private static Item registerBlockItem(Holder<Block> holder) {
+        return registerBlockItem(holder.value());
+    }
+
     private static Item registerBlockItem(Block block) {
         return registerBlockItem(block, new BlockItem(block, new Item.Properties()));
+    }
+
+    private static Item registerBlockItem(Holder<Block> holder, BlockItem blockItem) {
+        return registerBlockItem(holder.value(), blockItem);
     }
 
     private static Item registerBlockItem(Block block, BlockItem blockItem) {

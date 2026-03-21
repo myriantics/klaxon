@@ -40,6 +40,10 @@ public abstract class KlaxonEnUsLanguageSubProvider {
         builder.add("trim_material." + material.location().getNamespace() + "." + material.location().getPath(), name);
     }
 
+    protected void addBlock(Holder<Block> holder, String name) {
+        this.addBlock(holder.value(), name);
+    }
+
     protected void addBlock(Block block, String name) {
         builder.add(block, name);
     }

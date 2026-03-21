@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
@@ -82,7 +83,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
     @Override
     public ItemStack getToastSymbol() {
-        return new ItemStack(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+        return new ItemStack(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
     }
 
     @Override

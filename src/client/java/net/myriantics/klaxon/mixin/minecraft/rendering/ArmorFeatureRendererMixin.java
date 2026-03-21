@@ -18,7 +18,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
-import net.myriantics.klaxon.registry.KlaxonEntityModelLayers;
+import net.myriantics.klaxon.registry.render.KlaxonEntityModelLayers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 import net.myriantics.klaxon.render.model.HelmetCrestEntityModel;

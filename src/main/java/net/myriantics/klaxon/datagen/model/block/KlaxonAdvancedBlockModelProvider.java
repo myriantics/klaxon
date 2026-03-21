@@ -32,7 +32,7 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         // hallnox
         registerHangingSign(KlaxonBlocks.STRIPPED_HALLNOX_STEM, KlaxonBlocks.HALLNOX_HANGING_SIGN, KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
         registerCubeAllModelTexturePool(KlaxonBlockFamilies.HALLNOX.getBaseBlock()).generateFor(KlaxonBlockFamilies.HALLNOX);
-        acceptSingletonBlockState(KlaxonBlocks.POTTED_HALLNOX_POD, ModelLocationUtils.getModelLocation(KlaxonBlocks.POTTED_HALLNOX_POD));
+        acceptSingletonBlockState(KlaxonBlocks.POTTED_HALLNOX_POD, ModelLocationUtils.getModelLocation(KlaxonBlocks.POTTED_HALLNOX_POD.value()));
         registerHallnoxPod(generator);
         registerHallnoxBulb((HallnoxBulbBlock) KlaxonBlocks.HALLNOX_BULB);
     }

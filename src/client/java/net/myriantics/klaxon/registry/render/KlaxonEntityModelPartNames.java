@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry;
+package net.myriantics.klaxon.registry.render;
 
 import net.myriantics.klaxon.KlaxonCommon;
 

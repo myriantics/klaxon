@@ -2,10 +2,14 @@ package net.myriantics.klaxon.datagen.loot_table;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
 
@@ -104,5 +108,17 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.HALLNOX_SIGN);
         dropSelf(KlaxonBlocks.HALLNOX_HANGING_SIGN);
         dropSelf(KlaxonBlocks.HALLNOX_BULB);
+    }
+
+    private void dropPottedContents(Holder<Block> block) {
+        dropPottedContents(block.value());
+    }
+
+    private void add(Holder<Block> holder, Function<Block, LootTable.Builder> function) {
+        add(holder.value(), function);
+    }
+
+    private void dropSelf(Holder<Block> holder) {
+        dropSelf(holder.value());
     }
 }
