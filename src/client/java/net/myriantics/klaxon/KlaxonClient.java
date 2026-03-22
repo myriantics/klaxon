@@ -18,6 +18,7 @@ import net.myriantics.klaxon.registry.network.KlaxonClientPackets;
 import net.myriantics.klaxon.registry.render.KlaxonBlockRenderTypes;
 import net.myriantics.klaxon.registry.render.KlaxonEntityModelLayers;
 import net.myriantics.klaxon.registry.render.KlaxonEntityRenderers;
+import net.myriantics.klaxon.registry.render.KlaxonParticleFactories;
 import net.myriantics.klaxon.resource.KlaxonSplashTextResourceSupplier;
 import net.myriantics.klaxon.screen.DeepslateBlastProcessorScreen;
 import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
@@ -49,9 +50,7 @@ public class KlaxonClient implements ClientModInitializer {
         KlaxonEntityModelLayers.init();
 
         // particles
-        ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.HALLNOX_POD_DRIP, HallnoxDripParticle.HallnoxDripParticleFactory::new);
-        ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.NETHER_REACTION_EXPLOSION, NetherReactionExplosionLargeParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(KlaxonParticleTypes.NETHER_REACTION_EXPLOSION_EMITTER, new NetherReactionExplosionEmitterParticle.Factory());
+        KlaxonParticleFactories.init();
 
         // item tinting
         KlaxonItemColors.init();
