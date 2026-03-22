@@ -21,7 +21,7 @@ public abstract class ExplosiveCatalystDefinitionRecipeLogic {
     }
 
     public static ExplosiveCatalystData computeExplosiveCatalystData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput input) {
-        if (input.catalystStack().get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT) instanceof ExplosiveCatalystData data) {
+        if (input.catalystStack().get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT.value()) instanceof ExplosiveCatalystData data) {
             return data.behavior().value().transformExplosiveCatalystData(world, pos, blastProcessor, data);
         } else {
             Optional<RecipeHolder<ExplosiveCatalystDefinitionRecipe>> match = world.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, input, world);

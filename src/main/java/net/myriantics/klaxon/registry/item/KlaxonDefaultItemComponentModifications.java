@@ -13,14 +13,14 @@ public abstract class KlaxonDefaultItemComponentModifications {
         // make flint and steel repairable with steel nuggets
         context.modify(Items.FLINT_AND_STEEL, builder -> {
             builder.set(
-                            KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE,
+                            KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE.value(),
                             new MeleeDamageTypeOverrideComponent(KlaxonDamageTypes.FLINT_AND_STEEELING)
                     );
         });
 
         context.modify(Items.SHEARS, builder -> {
             builder.set(
-                    KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG,
+                    KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG.value(),
                     new ToolUseRecipeConfigComponent(KlaxonSoundEvents.ITEM_SHEARS_USAGE)
             );
         });

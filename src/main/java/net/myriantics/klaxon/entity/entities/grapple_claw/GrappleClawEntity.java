@@ -645,7 +645,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                 entity.hurt(
                         source,
                         claw.getPickupItemStackOrigin().getOrDefault(
-                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
+                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT.value(),
                                 GrappleClawComponent.DEFAULT
                         ).computeGrappling(claw.getPickupItemStackOrigin())
                 );
@@ -689,7 +689,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                 hookedEntity.hurt(
                         claw.createDamageSource(KlaxonDamageTypes.RENDING),
                         claw.getPickupItemStackOrigin().getOrDefault(
-                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
+                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT.value(),
                                 GrappleClawComponent.DEFAULT
                         ).computeRending(claw.getPickupItemStackOrigin())
                 );

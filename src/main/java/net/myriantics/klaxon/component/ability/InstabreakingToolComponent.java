@@ -27,11 +27,11 @@ public record InstabreakingToolComponent(TagKey<Block> instabreakableBlocks) {
     );
 
     public @Nullable static InstabreakingToolComponent get(ItemStack stack) {
-        return stack.getComponents().get(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT);
+        return stack.getComponents().get(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT.value());
     }
 
     public void set(ItemStack stack) {
-        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, this).build());
+        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT.value(), this).build());
     }
 
     public boolean isCorrectForInstabreak(BlockState state)  {

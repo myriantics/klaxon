@@ -39,11 +39,11 @@ public record KnockbackHitModifierComponent(float multiplier, Optional<ResourceK
     );
 
     public static @Nullable KnockbackHitModifierComponent get(ItemStack stack) {
-        return stack.getComponents().get(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER);
+        return stack.getComponents().get(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER.value());
     }
 
     public void set(ItemStack stack) {
-        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, this).build());
+        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER.value(), this).build());
     }
 
     public boolean shouldFire(boolean knockbackHit) {

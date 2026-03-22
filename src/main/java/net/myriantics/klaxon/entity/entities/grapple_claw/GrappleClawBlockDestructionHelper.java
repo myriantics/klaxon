@@ -69,7 +69,7 @@ public abstract class GrappleClawBlockDestructionHelper {
     }
 
     private static boolean veinmineBlocksIfValid(GrappleClawEntity grappleClaw, Level world, BlockState originState, BlockPos originPos, Player owner) {
-        int maxVeinminedBlocks = grappleClaw.getPickupItemStackOrigin().getOrDefault(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT, GrappleClawComponent.DEFAULT).veinmineCap();
+        int maxVeinminedBlocks = grappleClaw.getPickupItemStackOrigin().getOrDefault(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT.value(), GrappleClawComponent.DEFAULT).veinmineCap();
 
         // don't veinmine anything if the source block is not veinmineable
         // also declare failure if radius is 0

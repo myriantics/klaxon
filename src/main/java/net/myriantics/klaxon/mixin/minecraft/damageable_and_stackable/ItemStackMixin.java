@@ -18,7 +18,7 @@ public class ItemStackMixin {
             at = @At(value = "RETURN", ordinal = 0)
     )
     private static DataResult<Unit> klaxon$checkForAllowlistComponent(DataResult<Unit> original, @Local(argsOnly = true) DataComponentMap components) {
-        if (original.isError() && components.has(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE)) {
+        if (original.isError() && components.has(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE.value())) {
             // erm... actually... this item CAN IN FACT be both damageable and stackable...
             return DataResult.success(Unit.INSTANCE);
         }

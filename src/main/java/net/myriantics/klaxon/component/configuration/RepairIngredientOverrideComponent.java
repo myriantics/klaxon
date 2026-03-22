@@ -23,10 +23,10 @@ public record RepairIngredientOverrideComponent(Ingredient repairMaterial) {
     );
 
     public static @Nullable RepairIngredientOverrideComponent get(ItemStack stack) {
-        return stack.getComponents().get(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE);
+        return stack.getComponents().get(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE.value());
     }
 
     public void set(ItemStack stack) {
-        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE, this).build());
+        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.REPAIR_INGREDIENT_OVERRIDE.value(), this).build());
     }
 }

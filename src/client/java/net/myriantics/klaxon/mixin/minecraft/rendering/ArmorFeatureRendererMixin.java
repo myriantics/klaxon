@@ -72,7 +72,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, M extend
             CallbackInfo ci
     ) {
         ItemStack stack = entity.getItemBySlot(armorSlot);
-        if (armorSlot != EquipmentSlot.HEAD || !stack.has(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT)) {
+        if (armorSlot != EquipmentSlot.HEAD || !stack.has(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT.value())) {
             return;
         }
 

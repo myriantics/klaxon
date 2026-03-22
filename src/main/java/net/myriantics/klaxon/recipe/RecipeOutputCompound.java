@@ -110,7 +110,7 @@ public final class RecipeOutputCompound {
 
                 if (chance > 0) {
                     ItemStack display = stack.copy();
-                    display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE, chance);
+                    display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE.value(), chance);
                     displayStacks[i] = display;
                 }
             }

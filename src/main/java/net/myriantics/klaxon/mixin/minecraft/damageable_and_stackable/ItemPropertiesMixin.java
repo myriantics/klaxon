@@ -18,7 +18,7 @@ public class ItemPropertiesMixin {
             cancellable = true)
     public void klaxon$checkForAllowlistComponent(CallbackInfoReturnable<DataComponentMap> cir, @Local DataComponentMap componentMap) {
         // feck you dont tell me what to do >:C
-        if (componentMap.has(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE)) {
+        if (componentMap.has(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE.value())) {
             cir.setReturnValue(componentMap);
         }
     }

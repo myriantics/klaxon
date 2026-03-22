@@ -97,7 +97,7 @@ public final class WeightedBlockOutputCompound {
                 // add chance lore and apply component changes
                 displayStack.applyComponents(
                         changesBuilder
-                                .set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE, chance)
+                                .set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE.value(), chance)
                                 .build()
                 );
 

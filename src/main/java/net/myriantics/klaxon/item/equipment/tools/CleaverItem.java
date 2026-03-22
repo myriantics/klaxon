@@ -23,7 +23,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 public class CleaverItem extends DiggerItem {
     public CleaverItem(Tier material, Properties settings) {
         super(material, KlaxonBlockTags.CLEAVER_MINEABLE, settings
-                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.CLEAVER_INSTABREAKABLE))
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT.value(), new InstabreakingToolComponent(KlaxonBlockTags.CLEAVER_INSTABREAKABLE))
         );
     }
 
