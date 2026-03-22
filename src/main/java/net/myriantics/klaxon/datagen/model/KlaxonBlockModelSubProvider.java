@@ -18,6 +18,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonModels;
 import net.myriantics.klaxon.registry.render.KlaxonTextureKeys;
+import net.myriantics.klaxon.registry.render.KlaxonTextures;
 
 import java.util.Map;
 
@@ -75,6 +76,27 @@ public abstract class KlaxonBlockModelSubProvider {
 
     protected void registerHangingSign(Block strippedLog, Block hangingSign, Block wallHangingSign) {
         generator.createHangingSign(strippedLog, hangingSign, wallHangingSign);
+    }
+
+    protected void registerSteelWorkbench(Holder<Block> holder) {
+        Block block = holder.value();
+        ResourceLocation modelId = ModelLocationUtils.getModelLocation(block);
+
+        Map<TextureSlot, ResourceLocation> textureMap = Map.of(
+                TextureSlot.TOP, KlaxonTextures.STEEL_WORKBENCH_TOP,
+                TextureSlot.SIDE, KlaxonTextures.STEEL_WORKBENCH_SIDE,
+                TextureSlot.BOTTOM, KlaxonTextures.STEEL_CASING,
+                TextureSlot.PARTICLE, KlaxonTextures.STEEL_WORKBENCH_SIDE
+        );
+
+        generator.delegateItemModel(block, modelId);
+
+        generator.modelOutput.accept(
+                modelId,
+                () -> ModelTemplates.CUBE_BOTTOM_TOP.createBaseTemplate(modelId, textureMap)
+        );
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, modelId).with(VariantProperties.UV_LOCK, true)).with(createUpDefaultRotationStates()));
     }
 
     protected void registerDeepslateBlastProcessor() {
@@ -325,6 +347,15 @@ public abstract class KlaxonBlockModelSubProvider {
                 .select(Direction.SOUTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90))
                 .select(Direction.EAST, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
                 .select(Direction.WEST, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90));
+    }
+    public static PropertyDispatch createUpDefaultRotationStates() {
+        return PropertyDispatch.property(BlockStateProperties.FACING)
+                .select(Direction.UP, Variant.variant())
+                .select(Direction.DOWN, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R180))
+                .select(Direction.NORTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90))
+                .select(Direction.SOUTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R270))
+                .select(Direction.EAST, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                .select(Direction.WEST, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270));
     }
 
     protected BlockModelGenerators.BlockFamilyProvider registerCubeAllModelTexturePool(Block baseBlock) {

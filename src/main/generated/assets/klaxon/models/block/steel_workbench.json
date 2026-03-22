@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "klaxon:block/steel_casing",
+    "particle": "klaxon:block/steel_workbench/side",
+    "side": "klaxon:block/steel_workbench/side",
+    "top": "klaxon:block/steel_workbench/top"
+  }
+}

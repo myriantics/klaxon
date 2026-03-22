@@ -25,6 +25,14 @@ public abstract class KlaxonTextures {
     // Helmet Crest
     public static final ResourceLocation HELMET_CREST = ofEntity("helmet_crest");
 
+    // Steel Workbench
+    public static final ResourceLocation STEEL_WORKBENCH_TOP = ofBlock("steel_workbench/top");
+    public static final ResourceLocation STEEL_WORKBENCH_SIDE = copyDir("side", STEEL_WORKBENCH_TOP);
+
+    // Steel Casing
+    public static final ResourceLocation STEEL_CASING = ofBlock("steel_casing");
+    public static final ResourceLocation CRUDE_STEEL_CASING = ofBlock("crude_steel_casing");
+
     // Nether Reaction EMI Background
     public static final ResourceLocation NETHER_REACTION_EMI_BACKGROUND = ofGui("emi/nether_reaction");
 
@@ -47,6 +55,10 @@ public abstract class KlaxonTextures {
 
     public static ResourceLocation ofItem(String path) {
         return KlaxonCommon.locate("item/" + path);
+    }
+
+    public static ResourceLocation ofBlock(String path) {
+        return KlaxonCommon.locate("block/" + path);
     }
 
     public static ResourceLocation ofEntity(String path) {

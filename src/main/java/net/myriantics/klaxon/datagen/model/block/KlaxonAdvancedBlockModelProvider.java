@@ -45,6 +45,9 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         registerNetherReactorCore(KlaxonBlocks.NETHER_REACTOR_CORE);
         registerNetherReactorCore(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
+        // workstations
+        registerSteelWorkbench(KlaxonBlocks.STEEL_WORKBENCH);
+
         // pipe matrices
         registerPipeMatrixUBend(KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.COPPER_PIPE_MATRIX);
         registerPipeMatrixUBend(KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);
