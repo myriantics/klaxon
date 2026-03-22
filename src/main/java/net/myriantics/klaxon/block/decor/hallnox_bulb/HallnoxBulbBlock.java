@@ -129,7 +129,7 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
         }
 
 
-        SoundType soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.defaultBlockState().getSoundType();
+        SoundType soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.value().defaultBlockState().getSoundType();
 
         world.playSound(
                 context.player(),
@@ -155,7 +155,7 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
         // calculations are simpler here because dispensers can only face 6 ways - also can't click on random parts of the block
         serverWorld.setBlockAndUpdate(context.targetPos(), context.targetState().cycle(toggledProperty));
 
-        SoundType soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.defaultBlockState().getSoundType();
+        SoundType soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.value().defaultBlockState().getSoundType();
         serverWorld.playSound(
                 null,
                 context.targetPos(),

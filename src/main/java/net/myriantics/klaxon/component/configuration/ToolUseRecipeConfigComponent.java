@@ -33,10 +33,10 @@ public record ToolUseRecipeConfigComponent(SoundEvent usageSound, boolean canCos
     );
 
     public static @Nullable ToolUseRecipeConfigComponent get(ItemStack stack) {
-        return stack.getComponents().get(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG);
+        return stack.getComponents().get(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG.value());
     }
 
     public void set(ItemStack stack) {
-        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, this).build());
+        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG.value(), this).build());
     }
 }

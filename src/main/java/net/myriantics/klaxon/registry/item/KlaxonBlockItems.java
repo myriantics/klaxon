@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -18,115 +19,127 @@ import java.util.List;
 public abstract class KlaxonBlockItems {
 
     // steel
-    public static final Item STEEL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_BLOCK);
-    public static final Item STEEL_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_PLATING_BLOCK);
-    public static final Item STEEL_CASING = registerBlockItem(KlaxonBlocks.STEEL_CASING);
-    public static final Item STEEL_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
-    public static final Item STEEL_DOOR = registerBlockItem(KlaxonBlocks.STEEL_DOOR);
-    public static final Item STEEL_TRAPDOOR = registerBlockItem(KlaxonBlocks.STEEL_TRAPDOOR);
+    public static final Holder<Item> STEEL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_BLOCK);
+    public static final Holder<Item> STEEL_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_PLATING_BLOCK);
+    public static final Holder<Item> STEEL_CASING = registerBlockItem(KlaxonBlocks.STEEL_CASING);
+    public static final Holder<Item> STEEL_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> STEEL_DOOR = registerBlockItem(KlaxonBlocks.STEEL_DOOR);
+    public static final Holder<Item> STEEL_TRAPDOOR = registerBlockItem(KlaxonBlocks.STEEL_TRAPDOOR);
 
     // crude steel
-    public static final Item CRUDE_STEEL_BLOCK = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_BLOCK);
-    public static final Item CRUDE_STEEL_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
-    public static final Item CRUDE_STEEL_CASING = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_CASING);
-    public static final Item CRUDE_STEEL_DOOR = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_DOOR);
-    public static final Item CRUDE_STEEL_TRAPDOOR = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
+    public static final Holder<Item> CRUDE_STEEL_BLOCK = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_BLOCK);
+    public static final Holder<Item> CRUDE_STEEL_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
+    public static final Holder<Item> CRUDE_STEEL_CASING = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_CASING);
+    public static final Holder<Item> CRUDE_STEEL_DOOR = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_DOOR);
+    public static final Holder<Item> CRUDE_STEEL_TRAPDOOR = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
 
     // iron
-    public static final Item IRON_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.IRON_PLATING_BLOCK);
-    public static final Item IRON_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> IRON_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.IRON_PLATING_BLOCK);
+    public static final Holder<Item> IRON_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.IRON_WIRE_SPOOL_BLOCK);
 
     // gold
-    public static final Item GOLD_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.GOLD_PLATING_BLOCK);
-    public static final Item GOLD_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> GOLD_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.GOLD_PLATING_BLOCK);
+    public static final Holder<Item> GOLD_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK);
 
     // copper
-    public static final Item COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.COPPER_PLATING_BLOCK);
-    public static final Item EXPOSED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
-    public static final Item WEATHERED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
-    public static final Item OXIDIZED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
-    public static final Item WAXED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK);
-    public static final Item WAXED_EXPOSED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
-    public static final Item WAXED_WEATHERED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
-    public static final Item WAXED_OXIDIZED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+    public static final Holder<Item> COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.COPPER_PLATING_BLOCK);
+    public static final Holder<Item> EXPOSED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.EXPOSED_COPPER_PLATING_BLOCK);
+    public static final Holder<Item> WEATHERED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WEATHERED_COPPER_PLATING_BLOCK);
+    public static final Holder<Item> OXIDIZED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.OXIDIZED_COPPER_PLATING_BLOCK);
+    public static final Holder<Item> WAXED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_COPPER_PLATING_BLOCK);
+    public static final Holder<Item> WAXED_EXPOSED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
+    public static final Holder<Item> WAXED_WEATHERED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
+    public static final Holder<Item> WAXED_OXIDIZED_COPPER_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
 
-    public static final Item COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK);
-    public static final Item EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
-    public static final Item WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
-    public static final Item OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
-    public static final Item WAXED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_COPPER_WIRE_SPOOL_BLOCK);
-    public static final Item WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
-    public static final Item WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
-    public static final Item WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.COPPER_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> WAXED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
+    public static final Holder<Item> WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
 
     // rubber
-    public static final Item RUBBER_BLOCK = registerBlockItem(KlaxonBlocks.RUBBER_BLOCK);
-    public static final Item RUBBER_SHEET_BLOCK = registerBlockItem(KlaxonBlocks.RUBBER_SHEET_BLOCK);
+    public static final Holder<Item> RUBBER_BLOCK = registerBlockItem(KlaxonBlocks.RUBBER_BLOCK);
+    public static final Holder<Item> RUBBER_SHEET_BLOCK = registerBlockItem(KlaxonBlocks.RUBBER_SHEET_BLOCK);
 
     // molten rubber
-    public static final Item MOLTEN_RUBBER_BLOCK = registerBlockItem(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
+    public static final Holder<Item> MOLTEN_RUBBER_BLOCK = registerBlockItem(KlaxonBlocks.MOLTEN_RUBBER_BLOCK);
 
     // machines
-    public static final Item DEEPSLATE_BLAST_PROCESSOR = registerBlockItem(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
-    public static final Item NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.NETHER_REACTOR_CORE);
-    public static final Item CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
+    public static final Holder<Item> DEEPSLATE_BLAST_PROCESSOR = registerBlockItem(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+    public static final Holder<Item> NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.NETHER_REACTOR_CORE);
+    public static final Holder<Item> CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
     // copper pipe matrices
-    public static final Item COPPER_PIPE_MATRIX = registerBlockItem("copper_pipe_matrix", KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
-    public static final Item EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("exposed_copper_pipe_matrix", KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
-    public static final Item WEATHERED_COPPER_PIPE_MATRIX = registerBlockItem("weathered_copper_pipe_matrix", KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
-    public static final Item OXIDIZED_COPPER_PIPE_MATRIX = registerBlockItem("oxidized_copper_pipe_matrix", KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
-    public static final Item WAXED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_copper_pipe_matrix", KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_SEGMENT);
-    public static final Item WAXED_EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_exposed_copper_pipe_matrix", KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
-    public static final Item WAXED_WEATHERED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_weathered_copper_pipe_matrix", KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
-    public static final Item WAXED_OXIDIZED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_oxidized_copper_pipe_matrix", KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Holder<Item> COPPER_PIPE_MATRIX = registerBlockItem("copper_pipe_matrix", KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Holder<Item> EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("exposed_copper_pipe_matrix", KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Holder<Item> WEATHERED_COPPER_PIPE_MATRIX = registerBlockItem("weathered_copper_pipe_matrix", KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Holder<Item> OXIDIZED_COPPER_PIPE_MATRIX = registerBlockItem("oxidized_copper_pipe_matrix", KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Holder<Item> WAXED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_copper_pipe_matrix", KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Holder<Item> WAXED_EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_exposed_copper_pipe_matrix", KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Holder<Item> WAXED_WEATHERED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_weathered_copper_pipe_matrix", KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT);
+    public static final Holder<Item> WAXED_OXIDIZED_COPPER_PIPE_MATRIX = registerBlockItem("waxed_oxidized_copper_pipe_matrix", KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT);
 
     // hallnox
-    public static final Item HALLNOX_POD = registerBlockItem(KlaxonBlocks.HALLNOX_POD);
-    public static final Item HALLNOX_WART_BLOCK = registerBlockItem(KlaxonBlocks.HALLNOX_WART_BLOCK);
-    public static final Item HALLNOX_STEM = registerBlockItem(KlaxonBlocks.HALLNOX_STEM);
-    public static final Item STRIPPED_HALLNOX_STEM = registerBlockItem(KlaxonBlocks.STRIPPED_HALLNOX_STEM);
-    public static final Item HALLNOX_HYPHAE = registerBlockItem(KlaxonBlocks.HALLNOX_HYPHAE);
-    public static final Item STRIPPED_HALLNOX_HYPHAE = registerBlockItem(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
-    public static final Item HALLNOX_PLANKS = registerBlockItem(KlaxonBlocks.HALLNOX_PLANKS);
-    public static final Item HALLNOX_STAIRS = registerBlockItem(KlaxonBlocks.HALLNOX_STAIRS);
-    public static final Item HALLNOX_SLAB = registerBlockItem(KlaxonBlocks.HALLNOX_SLAB);
-    public static final Item HALLNOX_BUTTON = registerBlockItem(KlaxonBlocks.HALLNOX_BUTTON);
-    public static final Item HALLNOX_PRESSURE_PLATE = registerBlockItem(KlaxonBlocks.HALLNOX_PRESSURE_PLATE);
-    public static final Item HALLNOX_DOOR = registerBlockItem(KlaxonBlocks.HALLNOX_DOOR);
-    public static final Item HALLNOX_TRAPDOOR = registerBlockItem(KlaxonBlocks.HALLNOX_TRAPDOOR);
-    public static final Item HALLNOX_FENCE = registerBlockItem(KlaxonBlocks.HALLNOX_FENCE);
-    public static final Item HALLNOX_FENCE_GATE = registerBlockItem(KlaxonBlocks.HALLNOX_FENCE_GATE);
-    public static final Item HALLNOX_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_SIGN,
+    public static final Holder<Item> HALLNOX_POD = registerBlockItem(KlaxonBlocks.HALLNOX_POD);
+    public static final Holder<Item> HALLNOX_WART_BLOCK = registerBlockItem(KlaxonBlocks.HALLNOX_WART_BLOCK);
+    public static final Holder<Item> HALLNOX_STEM = registerBlockItem(KlaxonBlocks.HALLNOX_STEM);
+    public static final Holder<Item> STRIPPED_HALLNOX_STEM = registerBlockItem(KlaxonBlocks.STRIPPED_HALLNOX_STEM);
+    public static final Holder<Item> HALLNOX_HYPHAE = registerBlockItem(KlaxonBlocks.HALLNOX_HYPHAE);
+    public static final Holder<Item> STRIPPED_HALLNOX_HYPHAE = registerBlockItem(KlaxonBlocks.STRIPPED_HALLNOX_HYPHAE);
+    public static final Holder<Item> HALLNOX_PLANKS = registerBlockItem(KlaxonBlocks.HALLNOX_PLANKS);
+    public static final Holder<Item> HALLNOX_STAIRS = registerBlockItem(KlaxonBlocks.HALLNOX_STAIRS);
+    public static final Holder<Item> HALLNOX_SLAB = registerBlockItem(KlaxonBlocks.HALLNOX_SLAB);
+    public static final Holder<Item> HALLNOX_BUTTON = registerBlockItem(KlaxonBlocks.HALLNOX_BUTTON);
+    public static final Holder<Item> HALLNOX_PRESSURE_PLATE = registerBlockItem(KlaxonBlocks.HALLNOX_PRESSURE_PLATE);
+    public static final Holder<Item> HALLNOX_DOOR = registerBlockItem(KlaxonBlocks.HALLNOX_DOOR);
+    public static final Holder<Item> HALLNOX_TRAPDOOR = registerBlockItem(KlaxonBlocks.HALLNOX_TRAPDOOR);
+    public static final Holder<Item> HALLNOX_FENCE = registerBlockItem(KlaxonBlocks.HALLNOX_FENCE);
+    public static final Holder<Item> HALLNOX_FENCE_GATE = registerBlockItem(KlaxonBlocks.HALLNOX_FENCE_GATE);
+    public static final Holder<Item> HALLNOX_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_SIGN,
             new SignItem(
                     new Item.Properties().stacksTo(16),
-                    KlaxonBlocks.HALLNOX_SIGN,
-                    KlaxonBlocks.HALLNOX_WALL_SIGN
+                    KlaxonBlocks.HALLNOX_SIGN.value(),
+                    KlaxonBlocks.HALLNOX_WALL_SIGN.value()
             )
     );
-    public static final Item HALLNOX_HANGING_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_HANGING_SIGN,
+    public static final Holder<Item> HALLNOX_HANGING_SIGN = registerBlockItem(KlaxonBlocks.HALLNOX_HANGING_SIGN,
             new HangingSignItem(
-                    KlaxonBlocks.HALLNOX_HANGING_SIGN,
-                    KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN,
+                    KlaxonBlocks.HALLNOX_HANGING_SIGN.value(),
+                    KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN.value(),
                     new Item.Properties().stacksTo(16)
             )
     );
-    public static final Item HALLNOX_BULB = registerBlockItem(KlaxonBlocks.HALLNOX_BULB);
+    public static final Holder<Item> HALLNOX_BULB = registerBlockItem(KlaxonBlocks.HALLNOX_BULB);
 
-    private static Item registerBlockItem(String name, Block block) {
+    private static Holder<Item> registerBlockItem(String name, Holder<Block> holder) {
+        return registerBlockItem(name, holder.value());
+    }
+
+    private static Holder<Item> registerBlockItem(String name, Block block) {
         return registerBlockItem(name, new ItemNameBlockItem(block, new Item.Properties()));
     }
 
-    private static Item registerBlockItem(Block block) {
+    private static Holder<Item> registerBlockItem(Holder<Block> holder) {
+        return registerBlockItem(holder.value());
+    }
+
+    private static Holder<Item> registerBlockItem(Block block) {
         return registerBlockItem(block, new BlockItem(block, new Item.Properties()));
     }
 
-    private static Item registerBlockItem(Block block, BlockItem blockItem) {
+    private static Holder<Item> registerBlockItem(Holder<Block> holder, BlockItem blockItem) {
+        return registerBlockItem(holder.value(), blockItem);
+    }
+
+    private static Holder<Item> registerBlockItem(Block block, BlockItem blockItem) {
         return registerBlockItem(BuiltInRegistries.BLOCK.getKey(block).getPath(), blockItem);
     }
 
-    private static Item registerBlockItem(String name, BlockItem blockItem) {
-        return Registry.register(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), blockItem);
+    private static Holder<Item> registerBlockItem(String name, BlockItem blockItem) {
+        return Registry.registerForHolder(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), blockItem);
     }
 
     /**

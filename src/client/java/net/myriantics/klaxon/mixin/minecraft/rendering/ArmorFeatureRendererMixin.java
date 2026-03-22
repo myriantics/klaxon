@@ -18,7 +18,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
-import net.myriantics.klaxon.registry.KlaxonEntityModelLayers;
+import net.myriantics.klaxon.registry.render.KlaxonEntityModelLayers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 import net.myriantics.klaxon.render.model.HelmetCrestEntityModel;
@@ -72,7 +72,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, M extend
             CallbackInfo ci
     ) {
         ItemStack stack = entity.getItemBySlot(armorSlot);
-        if (armorSlot != EquipmentSlot.HEAD || !stack.has(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT)) {
+        if (armorSlot != EquipmentSlot.HEAD || !stack.has(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT.value())) {
             return;
         }
 

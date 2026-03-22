@@ -262,7 +262,7 @@ public class HallnoxPodBlock extends SaplingBlock implements Fallable, SimpleWat
                 }
             }
 
-            world.addParticle(KlaxonParticleTypes.HALLNOX_POD_DRIP, particleX, particleY, particleZ, 0.0, 0.0, 0.0);
+            world.addParticle(KlaxonParticleTypes.HALLNOX_POD_DRIP.value(), particleX, particleY, particleZ, 0.0, 0.0, 0.0);
         }
     }
 }

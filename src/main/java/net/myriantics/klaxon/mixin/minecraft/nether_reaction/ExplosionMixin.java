@@ -85,8 +85,8 @@ public abstract class ExplosionMixin {
                 KlaxonAdvancementTriggers.triggerBlockActivation(serverPlayerEntity, explosionOriginBlockState);
             }
 
-            this.smallExplosionParticles = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION;
-            this.largeExplosionParticles = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION_EMITTER;
+            this.smallExplosionParticles = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION.value();
+            this.largeExplosionParticles = KlaxonParticleTypes.NETHER_REACTION_EXPLOSION_EMITTER.value();
             this.explosionSound = KlaxonSoundEvents.NETHER_REACTION_EXPLOSION;
         }
     }

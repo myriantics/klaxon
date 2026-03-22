@@ -52,7 +52,7 @@ public abstract class ModelBakeryMixin {
     ) {
         Item item = BuiltInRegistries.ITEM.get(itemId);
 
-        if (item.components().get(KlaxonDataComponentTypes.ALT_HAND_MODEL) instanceof String suffix) {
+        if (item.components().get(KlaxonDataComponentTypes.ALT_HAND_MODEL.value()) instanceof String suffix) {
             ResourceLocation modelId = AdvancedItemModelHelper.getAlternateModelId(BuiltInRegistries.ITEM.getKey(item), suffix);
 
             if (!(getModel(modelId.withPrefix("item/")) instanceof BlockModel model)) {

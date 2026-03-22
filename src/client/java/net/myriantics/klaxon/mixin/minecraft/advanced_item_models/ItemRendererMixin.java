@@ -32,10 +32,10 @@ public abstract class ItemRendererMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V")
     )
     private void klaxon$overrideItemModel(ItemRenderer instance, ItemStack stack, ItemDisplayContext renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model, Operation<Void> original, @Local(argsOnly = true) Level world, @Local(argsOnly = true) LivingEntity entity, @Local(argsOnly = true, ordinal = 2) int seed) {
-        if (stack.get(KlaxonDataComponentTypes.ALT_HAND_MODEL) instanceof String suffix && renderMode != ItemDisplayContext.GUI && renderMode != ItemDisplayContext.FIXED && renderMode != ItemDisplayContext.GROUND) {
+        if (stack.get(KlaxonDataComponentTypes.ALT_HAND_MODEL.value()) instanceof String suffix && renderMode != ItemDisplayContext.GUI && renderMode != ItemDisplayContext.FIXED && renderMode != ItemDisplayContext.GROUND) {
             ResourceLocation id = AdvancedItemModelHelper.getAlternateModelId(BuiltInRegistries.ITEM.getKey(stack.getItem()), suffix);
 
-            if (leftHanded && stack.has(KlaxonDataComponentTypes.MIRRORED_LEFT_HAND_MODEL)) {
+            if (leftHanded && stack.has(KlaxonDataComponentTypes.MIRRORED_LEFT_HAND_MODEL.value())) {
                 id = AdvancedItemModelHelper.getMirroredId(id);
             }
 

@@ -33,7 +33,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             CallbackInfoReturnable<List<Component>> cir,
             @Local Consumer<Component> consumer
     ) {
-        if (this.get(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE) instanceof Double chance) {
+        if (this.get(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE.value()) instanceof Double chance) {
             ChatFormatting color;
             if (chance >= 0.75) {
                 color = ChatFormatting.GREEN;

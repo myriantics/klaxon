@@ -90,7 +90,7 @@ public abstract class ToolUsageRecipeLogic {
             return ToolUsageRecipeResult.FAIL;
         }
 
-        ToolUseRecipeConfigComponent component = toolStack.getOrDefault(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, ToolUseRecipeConfigComponent.DEFAULT);
+        ToolUseRecipeConfigComponent component = toolStack.getOrDefault(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG.value(), ToolUseRecipeConfigComponent.DEFAULT);
 
         boolean didAtLeastOneRecipeSucceed = false;
         // this is in place to prevent hammering from taking up the whole sound cap

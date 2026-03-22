@@ -65,11 +65,11 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
     }
 
     public GrappleClawEntity(Level world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
-        super(KlaxonEntityTypes.GRAPPLE_CLAW, x, y, z, world, stack, shotFrom);
+        super(KlaxonEntityTypes.GRAPPLE_CLAW.value(), x, y, z, world, stack, shotFrom);
     }
 
     public GrappleClawEntity(Level world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
-        super(KlaxonEntityTypes.GRAPPLE_CLAW, owner, world, stack, shotFrom);
+        super(KlaxonEntityTypes.GRAPPLE_CLAW.value(), owner, world, stack, shotFrom);
     }
 
     @Override
@@ -645,7 +645,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                 entity.hurt(
                         source,
                         claw.getPickupItemStackOrigin().getOrDefault(
-                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
+                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT.value(),
                                 GrappleClawComponent.DEFAULT
                         ).computeGrappling(claw.getPickupItemStackOrigin())
                 );
@@ -689,7 +689,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                 hookedEntity.hurt(
                         claw.createDamageSource(KlaxonDamageTypes.RENDING),
                         claw.getPickupItemStackOrigin().getOrDefault(
-                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT,
+                                KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT.value(),
                                 GrappleClawComponent.DEFAULT
                         ).computeRending(claw.getPickupItemStackOrigin())
                 );

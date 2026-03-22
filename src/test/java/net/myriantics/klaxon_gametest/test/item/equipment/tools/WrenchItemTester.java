@@ -21,7 +21,7 @@ public class WrenchItemTester {
     @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
     public void testWrenchBlockPickup(KlaxonGameTestHelper context) {
         Vec3 targetPos = Vec3.atCenterOf(BlockPos.ZERO);
-        context.setBlock(BlockPos.ZERO, KlaxonBlocks.NETHER_REACTOR_CORE.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_AXIS, Direction.Axis.X));
+        context.setBlock(BlockPos.ZERO, KlaxonBlocks.NETHER_REACTOR_CORE.value().defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_AXIS, Direction.Axis.X));
 
         Player player = context.makeMockPlayer(GameType.SURVIVAL);
         player.lookAt(EntityAnchorArgument.Anchor.EYES, targetPos);

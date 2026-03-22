@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
@@ -28,6 +29,10 @@ public abstract class KlaxonEnUsLanguageSubProvider {
 
     public abstract void generate();
 
+    protected void addItem(Holder<Item> itemHolder, String name) {
+        addItem(itemHolder.value(), name);
+    }
+
     protected void addItem(ItemLike itemConvertible, String name) {
         builder.add(itemConvertible.asItem(), name);
     }
@@ -40,11 +45,19 @@ public abstract class KlaxonEnUsLanguageSubProvider {
         builder.add("trim_material." + material.location().getNamespace() + "." + material.location().getPath(), name);
     }
 
+    protected void addBlock(Holder<Block> holder, String name) {
+        this.addBlock(holder.value(), name);
+    }
+
     protected void addBlock(Block block, String name) {
         builder.add(block, name);
     }
 
-    protected void addEntityType(EntityType<? extends Entity> type, String name) {
+    protected void addEntityType(Holder<EntityType<?>> typeHolder, String name) {
+        addEntityType(typeHolder.value(), name);
+    }
+
+    protected void addEntityType(EntityType<?> type, String name) {
         builder.add(type, name);
     }
 

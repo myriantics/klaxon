@@ -26,7 +26,7 @@ public class KlaxonGameplayLootTableProvider extends SimpleFabricLootTableProvid
                 new LootTable.Builder().pool(
                         LootPool.lootPool()
                                 .add(
-                                        LootItem.lootTableItem(KlaxonItems.CRESTED_STEEL_HELMET)
+                                        LootItem.lootTableItem(KlaxonItems.CRESTED_STEEL_HELMET.value())
                                 ).build()
                 )
         );

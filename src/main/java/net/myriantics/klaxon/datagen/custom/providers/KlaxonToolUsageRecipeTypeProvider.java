@@ -21,14 +21,14 @@ public class KlaxonToolUsageRecipeTypeProvider extends KlaxonDynamicRegistrySubP
                 KlaxonToolUsageRecipeTypes.HAMMERING,
                 new ToolUsageRecipeType(
                         Ingredient.of(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS),
-                        BuiltInRegistries.ITEM.getResourceKey(KlaxonItems.STEEL_HAMMER)
+                        KlaxonItems.STEEL_HAMMER.unwrapKey().get()
                 )
         );
         this.add(
                 KlaxonToolUsageRecipeTypes.WIRECUTTING,
                 new ToolUsageRecipeType(
                         Ingredient.of(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS),
-                        BuiltInRegistries.ITEM.getResourceKey(KlaxonItems.STEEL_CABLE_SHEARS)
+                        KlaxonItems.STEEL_CABLE_SHEARS.unwrapKey().get()
                 )
         );
     }

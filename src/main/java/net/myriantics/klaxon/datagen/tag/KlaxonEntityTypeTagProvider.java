@@ -64,6 +64,6 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
         getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_COLLISION_DENYLIST);
 
         getOrCreateTagBuilder(EntityTypeTags.IMPACT_PROJECTILES)
-                .add(KlaxonEntityTypes.GRAPPLE_CLAW);
+                .add(KlaxonEntityTypes.GRAPPLE_CLAW.value());
     }
 }

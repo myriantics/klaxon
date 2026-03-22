@@ -39,11 +39,11 @@ public record ShieldBreachingComponent(Optional<ResourceKey<DamageType>> damageT
     );
 
     public static @Nullable ShieldBreachingComponent get(ItemStack stack) {
-        return stack.getComponents().get(KlaxonDataComponentTypes.SHIELD_BREACHING);
+        return stack.getComponents().get(KlaxonDataComponentTypes.SHIELD_BREACHING.value());
     }
 
     public void set(ItemStack stack) {
-        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.SHIELD_BREACHING, this).build());
+        stack.applyComponents(DataComponentMap.builder().set(KlaxonDataComponentTypes.SHIELD_BREACHING.value(), this).build());
     }
 
     public boolean shouldFire(boolean critical, boolean fullyCharged, boolean knockbackHit) {

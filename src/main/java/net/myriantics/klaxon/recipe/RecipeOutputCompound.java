@@ -2,6 +2,7 @@ package net.myriantics.klaxon.recipe;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -40,8 +41,16 @@ public final class RecipeOutputCompound {
         return new RecipeOutputCompound(List.copyOf(dropsAndChances));
     }
 
+    public static RecipeOutputCompound of(Holder<Item> itemHolder, double d) {
+        return new RecipeOutputCompound(List.of(new Pair<>(new ItemStack(itemHolder), d)));
+    }
+
     public static RecipeOutputCompound of(ItemLike item, double d) {
         return new RecipeOutputCompound(List.of(new Pair<>(new ItemStack(item), d)));
+    }
+
+    public static RecipeOutputCompound of(Holder<Item> item, double d, Holder<Item> item1, double d1) {
+        return new RecipeOutputCompound(List.of(new Pair<>(new ItemStack(item), d), new Pair<>(new ItemStack(item1), d1)));
     }
 
     public static RecipeOutputCompound of(ItemLike item, double d, ItemLike item1, double d1) {
@@ -101,7 +110,7 @@ public final class RecipeOutputCompound {
 
                 if (chance > 0) {
                     ItemStack display = stack.copy();
-                    display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE, chance);
+                    display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE.value(), chance);
                     displayStacks[i] = display;
                 }
             }
@@ -190,11 +199,19 @@ public final class RecipeOutputCompound {
             return this;
         }
 
-        public Builder chance(Item item, double chance) {
+        public Builder chance(Holder<Item> item, double chance) {
             return chance(new ItemStack(item), chance);
         }
 
-        public Builder chance(Item item, int count, double chance) {
+        public Builder chance(ItemLike item, double chance) {
+            return chance(new ItemStack(item), chance);
+        }
+
+        public Builder chance(Holder<Item> item, int count, double chance) {
+            return chance(new ItemStack(item, count), chance);
+        }
+
+        public Builder chance(ItemLike item, int count, double chance) {
             return chance(new ItemStack(item, count), chance);
         }
 

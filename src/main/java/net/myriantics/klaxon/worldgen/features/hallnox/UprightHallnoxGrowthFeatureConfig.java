@@ -2,12 +2,22 @@ package net.myriantics.klaxon.worldgen.features.hallnox;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
 public record UprightHallnoxGrowthFeatureConfig(BlockPredicate replaceableBlocks, int maxHeight, BlockState denseStemBlock, BlockState stemBlock, BlockState wartBlock, BlockState podBlock) implements FeatureConfiguration {
+    public UprightHallnoxGrowthFeatureConfig(BlockPredicate replaceableBlocks, int maxHeight, Block denseStemBlock, Block stemBlock, Block wartBlock, Block podBlock) {
+        this(replaceableBlocks, maxHeight, denseStemBlock.defaultBlockState(), stemBlock.defaultBlockState(), wartBlock.defaultBlockState(), podBlock.defaultBlockState());
+    }
+
+    public UprightHallnoxGrowthFeatureConfig(BlockPredicate replaceableBlocks, int maxHeight, Holder<Block> denseStemBlockHolder, Holder<Block> stemBlockHolder, Holder<Block> wartBlockHolder, Holder<Block> podBlockHolder) {
+        this(replaceableBlocks, maxHeight, denseStemBlockHolder.value(), stemBlockHolder.value(), wartBlockHolder.value(), podBlockHolder.value());
+    }
+
     public static final Codec<UprightHallnoxGrowthFeatureConfig> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                             BlockPredicate.CODEC.fieldOf("replaceable_blocks").forGetter(UprightHallnoxGrowthFeatureConfig::replaceableBlocks),

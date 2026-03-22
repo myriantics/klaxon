@@ -2,6 +2,7 @@ package net.myriantics.klaxon.datagen.recipe.providers;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Item;
@@ -49,18 +50,18 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         addGrappleWinchRecipe(
                 Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
                 Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING),
-                Ingredient.of(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK),
+                Ingredient.of(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK.value()),
                 Ingredient.of(KlaxonItemTags.GEAR_GRIP_MATERIALS),
                 new ItemStack(KlaxonItems.GRAPPLE_WINCH)
         );
     }
 
     private void buildWoodCraftingRecipes() {
-        add2x2PackingRecipe(Ingredient.of(KlaxonItems.HALLNOX_STEM), new ItemStack(KlaxonItems.HALLNOX_HYPHAE, 3), CraftingBookCategory.BUILDING, null);
-        add2x2PackingRecipe(Ingredient.of(KlaxonItems.STRIPPED_HALLNOX_STEM), new ItemStack(KlaxonItems.STRIPPED_HALLNOX_HYPHAE, 3), CraftingBookCategory.BUILDING, null);
-        add2x2UnpackingRecipe(Ingredient.of(KlaxonItemTags.HALLNOX_STEMS), KlaxonItems.HALLNOX_PLANKS, CraftingBookCategory.BUILDING, null);
+        add2x2PackingRecipe(Ingredient.of(KlaxonItems.HALLNOX_STEM.value()), new ItemStack(KlaxonItems.HALLNOX_HYPHAE, 3), CraftingBookCategory.BUILDING, null);
+        add2x2PackingRecipe(Ingredient.of(KlaxonItems.STRIPPED_HALLNOX_STEM.value()), new ItemStack(KlaxonItems.STRIPPED_HALLNOX_HYPHAE, 3), CraftingBookCategory.BUILDING, null);
+        add2x2UnpackingRecipe(Ingredient.of(KlaxonItemTags.HALLNOX_STEMS), KlaxonItems.HALLNOX_PLANKS.value(), CraftingBookCategory.BUILDING, null);
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS)),
+                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value())),
                 new String[]{
                         "P  ",
                         "PP ",
@@ -71,7 +72,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS)),
+                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value())),
                 new String[]{
                         "PPP"
                 },
@@ -80,7 +81,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS)),
+                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value())),
                 new String[]{
                         "PP"
                 },
@@ -89,7 +90,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS)),
+                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value())),
                 new String[]{
                         "PP",
                         "PP",
@@ -100,7 +101,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS)),
+                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value())),
                 new String[]{
                         "PPP",
                         "PPP",
@@ -110,7 +111,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS),
+                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value()),
                         'S', Ingredient.of(Items.STICK)),
                 new String[]{
                         "PSP",
@@ -121,7 +122,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS),
+                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value()),
                         'S', Ingredient.of(Items.STICK)),
                 new String[]{
                         "SPS",
@@ -132,7 +133,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS),
+                        'P', Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value()),
                         'S', Ingredient.of(Items.STICK)),
                 new String[]{
                         "PPP",
@@ -144,7 +145,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'S', Ingredient.of(KlaxonItems.STRIPPED_HALLNOX_STEM),
+                        'S', Ingredient.of(KlaxonItems.STRIPPED_HALLNOX_STEM.value()),
                         'C', Ingredient.of(Items.CHAIN)),
                 new String[]{
                         "C C",
@@ -156,7 +157,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapelessCraftingRecipe(
-                NonNullList.of(Ingredient.EMPTY, Ingredient.of(KlaxonItems.HALLNOX_PLANKS)),
+                NonNullList.of(Ingredient.EMPTY, Ingredient.of(KlaxonItems.HALLNOX_PLANKS.value())),
                 new ItemStack(KlaxonItems.HALLNOX_BUTTON),
                 CraftingBookCategory.REDSTONE,
                 null
@@ -178,8 +179,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         );
 
         addShapedCraftingRecipe(Map.of(
-                'P', Ingredient.of(KlaxonItems.CRUDE_STEEL_PLATE),
-                'I', Ingredient.of(KlaxonItems.CRUDE_STEEL_INGOT)),
+                'P', Ingredient.of(KlaxonItems.CRUDE_STEEL_PLATE.value()),
+                'I', Ingredient.of(KlaxonItems.CRUDE_STEEL_INGOT.value())),
                 new String[]{
                         "IPI",
                         "P P",
@@ -191,8 +192,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         );
 
         addShapedCraftingRecipe(Map.of(
-                'P', Ingredient.of(KlaxonItems.STEEL_PLATE),
-                'I', Ingredient.of(KlaxonItems.STEEL_INGOT)),
+                'P', Ingredient.of(KlaxonItems.STEEL_PLATE.value()),
+                'I', Ingredient.of(KlaxonItems.STEEL_INGOT.value())),
                 new String[]{
                         "IPI",
                         "P P",
@@ -246,7 +247,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                'H', Ingredient.of(KlaxonItems.HALLNOX_POD),
+                'H', Ingredient.of(KlaxonItems.HALLNOX_POD.value()),
                 'P', Ingredient.of(KlaxonConventionalItemTags.PLATES),
                 'G', Ingredient.of(ConventionalItemTags.GLASS_BLOCKS)),
                 new String[] {
@@ -324,7 +325,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
 
         // more efficient copper bulbs
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.COPPER_PLATING_BLOCK),
+                        'P', Ingredient.of(KlaxonItems.COPPER_PLATING_BLOCK.value()),
                         'B', Ingredient.of(Items.BLAZE_ROD),
                         'R', Ingredient.of(Items.REDSTONE)),
                 new String[]{
@@ -337,7 +338,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.EXPOSED_COPPER_PLATING_BLOCK),
+                        'P', Ingredient.of(KlaxonItems.EXPOSED_COPPER_PLATING_BLOCK.value()),
                         'B', Ingredient.of(Items.BLAZE_ROD),
                         'R', Ingredient.of(Items.REDSTONE)),
                 new String[]{
@@ -350,7 +351,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.WEATHERED_COPPER_PLATING_BLOCK),
+                        'P', Ingredient.of(KlaxonItems.WEATHERED_COPPER_PLATING_BLOCK.value()),
                         'B', Ingredient.of(Items.BLAZE_ROD),
                         'R', Ingredient.of(Items.REDSTONE)),
                 new String[]{
@@ -363,7 +364,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.OXIDIZED_COPPER_PLATING_BLOCK),
+                        'P', Ingredient.of(KlaxonItems.OXIDIZED_COPPER_PLATING_BLOCK.value()),
                         'B', Ingredient.of(Items.BLAZE_ROD),
                         'R', Ingredient.of(Items.REDSTONE)),
                 new String[]{
@@ -376,7 +377,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.WAXED_COPPER_PLATING_BLOCK),
+                        'P', Ingredient.of(KlaxonItems.WAXED_COPPER_PLATING_BLOCK.value()),
                         'B', Ingredient.of(Items.BLAZE_ROD),
                         'R', Ingredient.of(Items.REDSTONE)),
                 new String[]{
@@ -389,7 +390,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK),
+                        'P', Ingredient.of(KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK.value()),
                         'B', Ingredient.of(Items.BLAZE_ROD),
                         'R', Ingredient.of(Items.REDSTONE)),
                 new String[]{
@@ -402,7 +403,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK),
+                        'P', Ingredient.of(KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK.value()),
                         'B', Ingredient.of(Items.BLAZE_ROD),
                         'R', Ingredient.of(Items.REDSTONE)),
                 new String[]{
@@ -415,7 +416,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 null
         );
         addShapedCraftingRecipe(Map.of(
-                        'P', Ingredient.of(KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK),
+                        'P', Ingredient.of(KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK.value()),
                         'B', Ingredient.of(Items.BLAZE_ROD),
                         'R', Ingredient.of(Items.REDSTONE)),
                 new String[]{
@@ -438,39 +439,20 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 new ItemStack(KlaxonItems.CRUDE_STEEL_MIXTURE, 3),
                 null, null);
 
-        add2x2PackingRecipe(Ingredient.of(KlaxonItems.FRACTURED_COAL), new ItemStack(Items.COAL), null, null);
-        add2x2PackingRecipe(Ingredient.of(KlaxonItems.FRACTURED_CHARCOAL), new ItemStack(Items.CHARCOAL), null, null);
+        add2x2PackingRecipe(Ingredient.of(KlaxonItems.FRACTURED_COAL.value()), new ItemStack(Items.COAL), null, null);
+        add2x2PackingRecipe(Ingredient.of(KlaxonItems.FRACTURED_CHARCOAL.value()), new ItemStack(Items.CHARCOAL), null, null);
 
         // these take fences in the center and don't give them back because i'm EVIL HAHAHAHAHA
-        addWireSpoolRecipe(Ingredient.of(KlaxonItems.IRON_WIRE), new ItemStack(KlaxonItems.IRON_WIRE_SPOOL_BLOCK));
-        addWireSpoolRecipe(Ingredient.of(KlaxonItems.STEEL_WIRE), new ItemStack(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK));
-        addWireSpoolRecipe(Ingredient.of(KlaxonItems.GOLD_WIRE), new ItemStack(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK));
-        addWireSpoolRecipe(Ingredient.of(KlaxonItems.COPPER_WIRE), new ItemStack(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK));
+        addWireSpoolRecipe(Ingredient.of(KlaxonItems.IRON_WIRE.value()), new ItemStack(KlaxonItems.IRON_WIRE_SPOOL_BLOCK));
+        addWireSpoolRecipe(Ingredient.of(KlaxonItems.STEEL_WIRE.value()), new ItemStack(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK));
+        addWireSpoolRecipe(Ingredient.of(KlaxonItems.GOLD_WIRE.value()), new ItemStack(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK));
+        addWireSpoolRecipe(Ingredient.of(KlaxonItems.COPPER_WIRE.value()), new ItemStack(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK));
 
-        addShapelessCraftingRecipe(
-                Ingredient.of(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK),
-                new ItemStack(KlaxonItems.STEEL_WIRE, 8),
-                CraftingBookCategory.MISC,
-                null
-        );
-        addShapelessCraftingRecipe(
-                Ingredient.of(KlaxonItems.IRON_WIRE_SPOOL_BLOCK),
-                new ItemStack(KlaxonItems.IRON_WIRE, 8),
-                CraftingBookCategory.MISC,
-                null
-        );
-        addShapelessCraftingRecipe(
-                Ingredient.of(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK),
-                new ItemStack(KlaxonItems.GOLD_WIRE, 8),
-                CraftingBookCategory.MISC,
-                null
-        );
-        addShapelessCraftingRecipe(
-                Ingredient.of(KlaxonItemTags.WAXING_STATUS_INCLUSIVE_COPPER_WIRE_SPOOL_BLOCKS),
-                new ItemStack(KlaxonItems.COPPER_WIRE, 8),
-                CraftingBookCategory.MISC,
-                null
-        );
+        addWireSpoolUncraftingRecipe(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK, KlaxonItems.STEEL_WIRE);
+        addWireSpoolUncraftingRecipe(KlaxonItems.IRON_WIRE_SPOOL_BLOCK, KlaxonItems.IRON_WIRE);
+        addWireSpoolUncraftingRecipe(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK, KlaxonItems.GOLD_WIRE);
+        addWireSpoolUncraftingRecipe(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK, KlaxonItems.COPPER_WIRE);
+        addWireSpoolUncraftingRecipe(KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK, KlaxonItems.COPPER_WIRE);
     }
 
     private void buildCompressionCraftingRecipes() {
@@ -482,7 +464,7 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
 
         // ingot / nugget
         add3x3PackingRecipe(Ingredient.of(KlaxonConventionalItemTags.COPPER_NUGGETS), new ItemStack(Items.COPPER_INGOT), null, null);
-        add3x3UnpackingRecipe(Ingredient.of(Items.COPPER_INGOT), KlaxonItems.COPPER_NUGGET, null, null);
+        add3x3UnpackingRecipe(Ingredient.of(Items.COPPER_INGOT), KlaxonItems.COPPER_NUGGET.value(), null, null);
 
         // plating blocks
         add2x2CompressionDecompressionRecipes(KlaxonItems.STEEL_PLATE, KlaxonItems.STEEL_PLATING_BLOCK);
@@ -490,7 +472,11 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         add2x2CompressionDecompressionRecipes(KlaxonItems.IRON_PLATE, KlaxonItems.IRON_PLATING_BLOCK);
         add2x2CompressionDecompressionRecipes(KlaxonItems.GOLD_PLATE, KlaxonItems.GOLD_PLATING_BLOCK);
         add2x2CompressionDecompressionRecipes(KlaxonItems.COPPER_PLATE, KlaxonItems.COPPER_PLATING_BLOCK);
-        add2x2UnpackingRecipe(Ingredient.of(KlaxonItems.WAXED_COPPER_PLATING_BLOCK), KlaxonItems.COPPER_PLATE, null, null);
+        add2x2UnpackingRecipe(Ingredient.of(KlaxonItems.WAXED_COPPER_PLATING_BLOCK.value()), KlaxonItems.COPPER_PLATE.value(), null, null);
+    }
+
+    private void add3x3IngotNuggetBlockCompressionDecompressionRecipes(Holder<Item> tiny, Holder<Item> small, Holder<Item> large, ResourceCondition... conditions) {
+        add3x3IngotNuggetBlockCompressionDecompressionRecipes(tiny.value(), small.value(), large.value(), conditions);
     }
 
     private void add3x3IngotNuggetBlockCompressionDecompressionRecipes(ItemLike tiny, ItemLike small, ItemLike large, ResourceCondition... conditions) {
@@ -498,14 +484,39 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         add3x3CompressionDecompressionRecipes(small, large);
     }
 
+    private void add3x3CompressionDecompressionRecipes(Holder<Item> small, Holder<Item> large, ResourceCondition... conditions) {
+        add3x3CompressionDecompressionRecipes(small.value(), large.value(), conditions);
+    }
+
     private void add3x3CompressionDecompressionRecipes(ItemLike small, ItemLike large, ResourceCondition... conditions) {
         add3x3PackingRecipe(Ingredient.of(small), new ItemStack(large, 1), null, null, conditions);
         add3x3UnpackingRecipe(Ingredient.of(large), small, null, null, conditions);
     }
 
+    private void add2x2CompressionDecompressionRecipes(Holder<Item> small, Holder<Item> large, ResourceCondition... conditions) {
+        add2x2CompressionDecompressionRecipes(small.value(), large.value(), conditions);
+    }
+
     private void add2x2CompressionDecompressionRecipes(ItemLike small, ItemLike large, ResourceCondition... conditions) {
         add2x2PackingRecipe(Ingredient.of(small), new ItemStack(large, 1), null, null, conditions);
         add2x2UnpackingRecipe(Ingredient.of(large), small, null, null, conditions);
+    }
+
+    private void addWaxingRecipe(Holder<Item> unwaxed, Holder<Item> waxed) {
+        addWaxingRecipe(unwaxed.value(), waxed.value());
+    }
+
+    private void addWireSpoolUncraftingRecipe(Holder<Item> spool, Holder<Item> wire) {
+        addWireSpoolUncraftingRecipe(Ingredient.of(spool.value()), wire);
+    }
+
+    private void addWireSpoolUncraftingRecipe(Ingredient spool, Holder<Item> wire) {
+        addShapelessCraftingRecipe(
+                spool,
+                new ItemStack(wire, 8),
+                CraftingBookCategory.MISC,
+                null
+        );
     }
 
     private void addWaxingRecipe(Item unwaxed, Item waxed) {

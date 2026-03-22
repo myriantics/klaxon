@@ -29,8 +29,8 @@ public class CableShearsItem extends ShearsItem {
         super(settings
                 .durability(material.getUses())
                 .component(DataComponents.TOOL, tupleToolComponent(ShearsItem.createToolProperties(), material, KlaxonBlockTags.CABLE_SHEARS_MINEABLE))
-                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(KlaxonSoundEvents.ITEM_CABLE_SHEARS_USAGE))
-                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE))
+                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG.value(), new ToolUseRecipeConfigComponent(KlaxonSoundEvents.ITEM_CABLE_SHEARS_USAGE))
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT.value(), new InstabreakingToolComponent(KlaxonBlockTags.CABLE_SHEARS_INSTABREAKABLE))
         );
         this.material = material;
     }

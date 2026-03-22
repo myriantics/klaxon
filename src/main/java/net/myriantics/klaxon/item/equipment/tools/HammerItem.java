@@ -41,8 +41,8 @@ public class HammerItem extends DiggerItem {
 
     public HammerItem(Tier toolMaterial, Properties settings) {
         super(toolMaterial, KlaxonBlockTags.HAMMER_MINEABLE, settings
-                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG, new ToolUseRecipeConfigComponent(KlaxonSoundEvents.ITEM_HAMMER_USAGE, true))
-                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.HAMMER_INSTABREAKABLE))
+                .component(KlaxonDataComponentTypes.TOOL_USE_RECIPE_CONFIG.value(), new ToolUseRecipeConfigComponent(KlaxonSoundEvents.ITEM_HAMMER_USAGE, true))
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT.value(), new InstabreakingToolComponent(KlaxonBlockTags.HAMMER_INSTABREAKABLE))
         );
     }
 

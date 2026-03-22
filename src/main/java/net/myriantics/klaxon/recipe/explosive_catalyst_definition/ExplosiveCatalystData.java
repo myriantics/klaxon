@@ -23,7 +23,7 @@ public record ExplosiveCatalystData(Holder<ExplosiveCatalystBehavior> behavior, 
         this(behavior.getRegistryEntry(), explosionPower, producesFire);
     }
 
-    public static final ExplosiveCatalystData ZERO = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.DEFAULT.getRegistryEntry(), 0.0, false);
+    public static final ExplosiveCatalystData ZERO = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.DEFAULT, 0.0, false);
 
     public boolean matchesConditions(double explosionPowerMin, double explosionPowerMax) {
         return explosionPowerMin <= explosionPower && explosionPower <= explosionPowerMax;
@@ -31,7 +31,7 @@ public record ExplosiveCatalystData(Holder<ExplosiveCatalystBehavior> behavior, 
 
     public static final Codec<ExplosiveCatalystData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ExplosiveCatalystBehavior.ENTRY_CODEC.optionalFieldOf("behavior").xmap(
-                    (entry) -> entry.orElse(KlaxonExplosiveCatalystBehaviors.DEFAULT.getRegistryEntry()),
+                    (entry) -> entry.orElse(KlaxonExplosiveCatalystBehaviors.DEFAULT),
                     Optional::of
             ).forGetter(ExplosiveCatalystData::behavior),
             Codec.DOUBLE.fieldOf("explosion_power").forGetter(ExplosiveCatalystData::explosionPower),

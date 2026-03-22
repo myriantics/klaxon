@@ -43,7 +43,7 @@ import java.util.List;
 public class WrenchItem extends DiggerItem {
     public WrenchItem(Tier material, Properties settings) {
         super(material, KlaxonBlockTags.WRENCH_MINEABLE, settings
-                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT, new InstabreakingToolComponent(KlaxonBlockTags.WRENCH_INSTABREAKABLE))
+                .component(KlaxonDataComponentTypes.INSTABREAK_TOOL_COMPONENT.value(), new InstabreakingToolComponent(KlaxonBlockTags.WRENCH_INSTABREAKABLE))
         );
     }
 

@@ -19,14 +19,14 @@ public class KlaxonManualItemApplicationRecipeProvider extends KlaxonRecipeSubPr
     }
 
     private void generateManualItemApplicationRecipes() {
-        addManualItemApplicationRecipe(
+        this.addWorldItemApplicationRecipe(
                 KlaxonBlockTags.NETHER_REACTOR_CORE_CONVERTIBLE,
-                Ingredient.of(KlaxonItems.HALLNOX_POD),
+                Ingredient.of(KlaxonItems.HALLNOX_POD.value()),
                 KlaxonBlocks.NETHER_REACTOR_CORE
         );
-        addManualItemApplicationRecipe(
+        this.addWorldItemApplicationRecipe(
                 KlaxonBlockTags.CRUDE_NETHER_REACTOR_CORE_CONVERTIBLE,
-                Ingredient.of(KlaxonItems.HALLNOX_POD),
+                Ingredient.of(KlaxonItems.HALLNOX_POD.value()),
                 KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE
         );
     }

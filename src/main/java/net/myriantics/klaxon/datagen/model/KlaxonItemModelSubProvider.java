@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.datagen.model;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.model.ModelTemplates;
@@ -32,7 +33,7 @@ public abstract class KlaxonItemModelSubProvider {
     }
 
     protected void register2DGrappleWinch() {
-        ResourceLocation modelId = getItemId(BuiltInRegistries.ITEM.getKey(KlaxonItems.GRAPPLE_WINCH));
+        ResourceLocation modelId = getItemId(KlaxonItems.GRAPPLE_WINCH.unwrapKey().get().location());
 
         // predicate
         ResourceLocation chargedPredicate = KlaxonItemModelPredicateIds.CHARGED;
@@ -51,7 +52,7 @@ public abstract class KlaxonItemModelSubProvider {
     }
 
     protected void register3DGrappleWinch() {
-        ResourceLocation raw3dId = BuiltInRegistries.ITEM.getKey(KlaxonItems.GRAPPLE_WINCH).withPath((path) -> path + "_3d");
+        ResourceLocation raw3dId = KlaxonItems.GRAPPLE_WINCH.unwrapKey().get().location().withPath((path) -> path + "_3d");
         ResourceLocation modelId = getItemId(raw3dId);
 
         // predicates
@@ -87,6 +88,10 @@ public abstract class KlaxonItemModelSubProvider {
                 .add(1, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL_RETRACTING)
                 .build()
                 .build(generator);
+    }
+
+    protected void registerArmor(Holder<Item> armor) {
+        registerArmor(armor.value());
     }
 
     protected void registerArmor(Item armor) {

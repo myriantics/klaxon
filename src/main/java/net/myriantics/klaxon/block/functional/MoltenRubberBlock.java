@@ -28,7 +28,7 @@ public class MoltenRubberBlock extends MagmaBlock {
         for (Direction dir : NeighborUpdater.UPDATE_ORDER) {
             if (testForColdness(world, pos.relative(dir), dir)) {
                 world.levelEvent(LevelEvent.LAVA_FIZZ, pos, 0);
-                return KlaxonBlocks.RUBBER_BLOCK.defaultBlockState();
+                return KlaxonBlocks.RUBBER_BLOCK.value().defaultBlockState();
             }
         }
 
@@ -39,7 +39,7 @@ public class MoltenRubberBlock extends MagmaBlock {
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
         if (!world.isClientSide() && testForColdness(world, neighborPos, direction)) {
             world.levelEvent(LevelEvent.LAVA_FIZZ, pos, 0);
-            return KlaxonBlocks.RUBBER_BLOCK.defaultBlockState();
+            return KlaxonBlocks.RUBBER_BLOCK.value().defaultBlockState();
         }
 
         return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
