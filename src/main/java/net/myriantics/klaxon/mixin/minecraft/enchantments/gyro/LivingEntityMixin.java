@@ -31,7 +31,7 @@ public abstract class LivingEntityMixin extends Entity {
         boolean detected = false;
         if (instance instanceof Player player && source.is(KlaxonDamageTypeTags.STREAMLINE_ENCHANTMENT_CANCELS_VELOCITY_UPDATE)) {
             for (ItemStack stack : player.getArmorSlots()) {
-                if (EnchantmentHelper.has(stack, KlaxonEnchantmentEffectComponentTypes.CANCEL_CERTAIN_VELOCITY_UPDATES)) {
+                if (EnchantmentHelper.has(stack, KlaxonEnchantmentEffectComponentTypes.CANCEL_CERTAIN_VELOCITY_UPDATES.value())) {
                     detected = true;
                     break;
                 }

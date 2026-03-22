@@ -43,7 +43,7 @@ public class KlaxonEnchantmentProvider extends FabricDynamicRegistryProvider {
                         )
                 )
                         .withEffect(
-                                KlaxonEnchantmentEffectComponentTypes.CANCEL_CERTAIN_VELOCITY_UPDATES
+                                KlaxonEnchantmentEffectComponentTypes.CANCEL_CERTAIN_VELOCITY_UPDATES.value()
                         ).build(KlaxonEnchantments.STREAMLINE.location())
         );
     }
