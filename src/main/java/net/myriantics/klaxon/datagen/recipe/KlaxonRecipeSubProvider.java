@@ -292,7 +292,7 @@ public abstract class KlaxonRecipeSubProvider {
 
     public void addExplosiveCatalystDefinitionRecipe(
             NamedIngredient input,
-            ExplosiveCatalystBehavior behavior,
+            Holder<ExplosiveCatalystBehavior> behavior,
             double explosionPower, boolean producesFire,
             boolean isHidden,
             final ResourceCondition... conditions
