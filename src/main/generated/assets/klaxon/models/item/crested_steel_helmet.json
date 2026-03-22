@@ -63,7 +63,6 @@
     }
   ],
   "textures": {
-    "layer0": "klaxon:item/crested_steel_helmet",
-    "layer1": "klaxon:item/crested_steel_helmet_overlay"
+    "layer0": "klaxon:item/crested_steel_helmet"
   }
 }

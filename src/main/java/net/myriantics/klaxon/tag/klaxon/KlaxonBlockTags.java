@@ -177,6 +177,8 @@ public abstract class KlaxonBlockTags {
             createManualItemApplicationTag("nether_reactor_core");
     public static final TagKey<Block> CRUDE_NETHER_REACTOR_CORE_CONVERTIBLE =
             createManualItemApplicationTag("crude_nether_reactor_core");
+    public static final TagKey<Block> STEEL_WORKBENCH_CONVERTIBLE =
+            createManualItemApplicationTag("steel_workbench");
 
     // category tags
     public static final TagKey<Block> BLAST_PROCESSORS =

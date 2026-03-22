@@ -1,6 +1,7 @@
 {
   "values": [
     "#minecraft:shulker_boxes",
+    "klaxon:steel_workbench",
     "minecraft:piston",
     "minecraft:sticky_piston",
     "minecraft:observer"

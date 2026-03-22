@@ -72,6 +72,9 @@ public abstract class KlaxonBlockItems {
     public static final Holder<Item> NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.NETHER_REACTOR_CORE);
     public static final Holder<Item> CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
 
+    // workstations
+    public static final Holder<Item> STEEL_WORKBENCH = registerBlockItem(KlaxonBlocks.STEEL_WORKBENCH);
+
     // copper pipe matrices
     public static final Holder<Item> COPPER_PIPE_MATRIX = registerBlockItem("copper_pipe_matrix", KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT);
     public static final Holder<Item> EXPOSED_COPPER_PIPE_MATRIX = registerBlockItem("exposed_copper_pipe_matrix", KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT);

@@ -163,6 +163,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.NETHER_REACTOR_CORE.value(),
                         KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE.value()
                 )
+                .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(
                         Blocks.COPPER_BULB,
                         Blocks.EXPOSED_COPPER_BULB,
@@ -200,6 +201,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.STEEL_DOOR.value(),
                         KlaxonBlocks.STEEL_TRAPDOOR.value()
                 )
+                .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(
                         KlaxonBlocks.CRUDE_STEEL_BLOCK.value(),
                         KlaxonBlocks.CRUDE_STEEL_CASING.value(),
@@ -263,6 +265,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.value().getAllowlistTag())
                 .forceAddTag(BlockTags.SHULKER_BOXES)
+                .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(Blocks.PISTON)
                 .add(Blocks.STICKY_PISTON)
                 .add(Blocks.OBSERVER);
@@ -627,6 +630,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_CASING.value());
         getOrCreateTagBuilder(KlaxonBlockTags.CRUDE_NETHER_REACTOR_CORE_CONVERTIBLE)
                 .add(KlaxonBlocks.CRUDE_STEEL_CASING.value());
+        getOrCreateTagBuilder(KlaxonBlockTags.STEEL_WORKBENCH_CONVERTIBLE)
+                .add(KlaxonBlocks.STEEL_CASING.value());
     }
 
     private void buildCategoricalTags() {
@@ -648,6 +653,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.TWISTING_VINES_PLANT)
                 .add(Blocks.TWISTING_VINES)
                 .add(Blocks.VINE);
+        getOrCreateTagBuilder(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
+                .add(KlaxonBlocks.STEEL_WORKBENCH.value());
 
         // wire spools
         getOrCreateTagBuilder(KlaxonBlockTags.WIRE_SPOOLS)
@@ -885,6 +892,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_CASING.value())
                 .add(KlaxonBlocks.STEEL_DOOR.value())
                 .add(KlaxonBlocks.STEEL_TRAPDOOR.value())
+                .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE.value());
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
                 .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_SEGMENTS)

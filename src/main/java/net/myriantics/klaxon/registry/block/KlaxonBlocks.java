@@ -13,6 +13,7 @@ import net.myriantics.klaxon.block.decor.SteelDoorBlock;
 import net.myriantics.klaxon.block.decor.SteelTrapdoorBlock;
 import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.MoltenRubberBlock;
+import net.myriantics.klaxon.block.functional.SteelWorkbenchBlock;
 import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
 import net.myriantics.klaxon.block.machines.CasingBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
@@ -60,6 +61,12 @@ public abstract class KlaxonBlocks {
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.STEEL_CASING).lightLevel((state) -> 15).noOcclusion()));
     public static final Holder<Block> CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.CRUDE_STEEL_CASING).lightLevel((state) -> 12).noOcclusion()));
+
+    // workstations
+    public static final Holder<Block> STEEL_WORKBENCH = registerBlock(
+            "steel_workbench",
+            new SteelWorkbenchBlock(copyProperties(KlaxonBlocks.STEEL_CASING))
+    );
 
     // pipe matrices
     public static final Holder<Block> COPPER_PIPE_MATRIX_U_BEND = registerBlock("copper_pipe_matrix_u_bend",

@@ -23,6 +23,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
         dropSelf(KlaxonBlocks.NETHER_REACTOR_CORE);
         dropSelf(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
+        dropSelf(KlaxonBlocks.STEEL_WORKBENCH);
 
         // steel
         dropSelf(KlaxonBlocks.STEEL_BLOCK);

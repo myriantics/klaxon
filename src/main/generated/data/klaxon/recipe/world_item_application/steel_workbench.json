@@ -1,0 +1,8 @@
+{
+  "type": "klaxon:world_item_application",
+  "input_ingredient": {
+    "item": "minecraft:crafting_table"
+  },
+  "output_block": "klaxon:steel_workbench",
+  "valid_blocks_tag": "#klaxon:manual_item_application/steel_workbench_convertible"
+}

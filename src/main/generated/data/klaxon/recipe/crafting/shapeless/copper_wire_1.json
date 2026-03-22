@@ -4,7 +4,7 @@
   "group": "copper_wire",
   "ingredients": [
     {
-      "item": "klaxon:copper_wire_spool"
+      "item": "klaxon:waxed_copper_wire_spool"
     }
   ],
   "result": {

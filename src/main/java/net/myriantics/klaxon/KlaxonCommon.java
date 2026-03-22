@@ -52,7 +52,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonPackets.init();
 		KlaxonPackets.initC2SRecievers();
 		KlaxonScreenHandlers.init();
-		KlaxonItemGroups.init();
+		KlaxonCreativeModeTabs.init();
 		KlaxonExplosiveCatalystBehaviors.init();
 		KlaxonDataComponentTypes.init();
 		KlaxonAdvancementCriteria.init();

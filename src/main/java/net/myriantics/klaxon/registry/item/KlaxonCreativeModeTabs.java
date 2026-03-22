@@ -10,7 +10,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
 
-public abstract class KlaxonItemGroups {
+public abstract class KlaxonCreativeModeTabs {
 
     public static final ResourceKey<CreativeModeTab> KLAXON_BUILDING_BLOCKS_ID = locateItemGroupId("building_blocks");
     public static final ResourceKey<CreativeModeTab> KLAXON_EQUIPMENT_ID = locateItemGroupId("equipment");
@@ -46,6 +46,7 @@ public abstract class KlaxonItemGroups {
                 entries.accept(KlaxonItems.CRUDE_NETHER_REACTOR_CORE.value());
                 entries.accept(KlaxonItems.STEEL_CASING.value());
                 entries.accept(KlaxonItems.CRUDE_STEEL_CASING.value());
+                entries.accept(KlaxonItems.STEEL_WORKBENCH.value());
                 // entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
             })).build();
 

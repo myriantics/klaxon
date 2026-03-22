@@ -34,7 +34,7 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         registerCubeAllModelTexturePool(KlaxonBlockFamilies.HALLNOX.getBaseBlock()).generateFor(KlaxonBlockFamilies.HALLNOX);
         acceptSingletonBlockState(KlaxonBlocks.POTTED_HALLNOX_POD, ModelLocationUtils.getModelLocation(KlaxonBlocks.POTTED_HALLNOX_POD.value()));
         registerHallnoxPod(generator);
-        registerHallnoxBulb((HallnoxBulbBlock) KlaxonBlocks.HALLNOX_BULB);
+        registerHallnoxBulb((HallnoxBulbBlock) KlaxonBlocks.HALLNOX_BULB.value());
     }
 
     private void registerMachineBlockStateModels() {
