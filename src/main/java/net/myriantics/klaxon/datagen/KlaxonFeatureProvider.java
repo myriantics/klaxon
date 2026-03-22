@@ -113,7 +113,7 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
 
         registerable.register(
                 UPRIGHT_DRY_HALLNOX_GROWTH,
-                new ConfiguredFeature<>(KlaxonWorldgenFeatures.UPRIGHT_HALLNOX_GROWTH,
+                new ConfiguredFeature<>(KlaxonWorldgenFeatures.UPRIGHT_HALLNOX_GROWTH.value(),
                         new UprightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 6,
@@ -126,7 +126,7 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
         );
         registerable.register(
                 DOWNRIGHT_HALLNOX_GROWTH,
-                new ConfiguredFeature<>(KlaxonWorldgenFeatures.UPSIDE_DOWN_HALLNOX_GROWTH,
+                new ConfiguredFeature<>(KlaxonWorldgenFeatures.UPSIDE_DOWN_HALLNOX_GROWTH.value(),
                         new DownrightHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 8,
@@ -139,7 +139,7 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
         );
         registerable.register(
                 NORTH_HORIZONTAL_HALLNOX_GROWTH,
-                new ConfiguredFeature<>(KlaxonWorldgenFeatures.HORIZONTAL_HALLNOX_GROWTH,
+                new ConfiguredFeature<>(KlaxonWorldgenFeatures.HORIZONTAL_HALLNOX_GROWTH.value(),
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.NORTH,
@@ -151,7 +151,7 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
         );
         registerable.register(
                 EAST_HORIZONTAL_HALLNOX_GROWTH,
-                new ConfiguredFeature<>(KlaxonWorldgenFeatures.HORIZONTAL_HALLNOX_GROWTH,
+                new ConfiguredFeature<>(KlaxonWorldgenFeatures.HORIZONTAL_HALLNOX_GROWTH.value(),
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.EAST,
@@ -163,7 +163,7 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
         );
         registerable.register(
                 WEST_HORIZONTAL_HALLNOX_GROWTH,
-                new ConfiguredFeature<>(KlaxonWorldgenFeatures.HORIZONTAL_HALLNOX_GROWTH,
+                new ConfiguredFeature<>(KlaxonWorldgenFeatures.HORIZONTAL_HALLNOX_GROWTH.value(),
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.WEST,
@@ -175,7 +175,7 @@ public class KlaxonFeatureProvider extends FabricDynamicRegistryProvider {
         );
         registerable.register(
                 SOUTH_HORIZONTAL_HALLNOX_GROWTH,
-                new ConfiguredFeature<>(KlaxonWorldgenFeatures.HORIZONTAL_HALLNOX_GROWTH,
+                new ConfiguredFeature<>(KlaxonWorldgenFeatures.HORIZONTAL_HALLNOX_GROWTH.value(),
                         new HorizontalHallnoxGrowthFeatureConfig(
                                 replaceableBlocks,
                                 Direction.SOUTH,
