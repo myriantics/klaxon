@@ -29,7 +29,9 @@ public abstract class KlaxonItemUsageTweaks {
         register((item, context) -> {
             Level level = context.getLevel();
             ItemStack stack = context.getItemInHand();
-            if (WorldItemApplicationRecipeLogic.test(level, stack)) {
+            Player player = context.getPlayer();
+            boolean sneakDown = player != null && player.isShiftKeyDown();
+            if (!sneakDown && WorldItemApplicationRecipeLogic.test(level, stack)) {
                 BlockPos targetPos = context.getClickedPos();
                 BlockState state = level.getBlockState(targetPos);
 
@@ -37,12 +39,11 @@ public abstract class KlaxonItemUsageTweaks {
                 Optional<BlockState> newState = WorldItemApplicationRecipeLogic.getResultState(level, input);
 
                 if (newState.isPresent()) {
-                    Player player = context.getPlayer();
                     if (level instanceof ServerLevel serverLevel) {
                         WorldItemApplicationRecipeLogic.affectWorld(serverLevel, targetPos, newState.get(), context.getClickedFace(), player, input);
 
                         // remainder fuckery
-                        if (!player.isCreative()) {
+                        if (player != null && !player.isCreative()) {
                             ItemStack remainder = stack.getRecipeRemainder();
                             stack.shrink(1);
                             if (!player.getInventory().add(remainder)) {
