@@ -25,13 +25,13 @@ public class KlaxonToolUsageRecipeProvider extends KlaxonRecipeSubProvider {
         addHammeringRecipe(Ingredient.of(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 4));
         addHammeringRecipe(Ingredient.of(Items.SNOWBALL), new ItemStack(Items.SNOW));
 
-        addHammeringRecipe(Ingredient.of(KlaxonItems.STEEL_INGOT), new ItemStack(KlaxonItems.STEEL_PLATE));
-        addHammeringRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_INGOT), new ItemStack(KlaxonItems.CRUDE_STEEL_PLATE));
+        addHammeringRecipe(Ingredient.of(KlaxonItems.STEEL_INGOT.value()), new ItemStack(KlaxonItems.STEEL_PLATE));
+        addHammeringRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_INGOT.value()), new ItemStack(KlaxonItems.CRUDE_STEEL_PLATE));
         addHammeringRecipe(Ingredient.of(Items.IRON_INGOT), new ItemStack(KlaxonItems.IRON_PLATE));
         addHammeringRecipe(Ingredient.of(Items.GOLD_INGOT), new ItemStack(KlaxonItems.GOLD_PLATE));
         addHammeringRecipe(Ingredient.of(Items.COPPER_INGOT), new ItemStack(KlaxonItems.COPPER_PLATE));
 
-        addHammeringRecipe(Ingredient.of(KlaxonItems.RUBBER_GLOB), new ItemStack(KlaxonItems.RUBBER_SHEET));
+        addHammeringRecipe(Ingredient.of(KlaxonItems.RUBBER_GLOB.value()), new ItemStack(KlaxonItems.RUBBER_SHEET));
     }
 
     private void buildWirecuttingRecipes() {

@@ -21,12 +21,12 @@ public class KlaxonManualItemApplicationRecipeProvider extends KlaxonRecipeSubPr
     private void generateManualItemApplicationRecipes() {
         this.addWorldItemApplicationRecipe(
                 KlaxonBlockTags.NETHER_REACTOR_CORE_CONVERTIBLE,
-                Ingredient.of(KlaxonItems.HALLNOX_POD),
+                Ingredient.of(KlaxonItems.HALLNOX_POD.value()),
                 KlaxonBlocks.NETHER_REACTOR_CORE
         );
         this.addWorldItemApplicationRecipe(
                 KlaxonBlockTags.CRUDE_NETHER_REACTOR_CORE_CONVERTIBLE,
-                Ingredient.of(KlaxonItems.HALLNOX_POD),
+                Ingredient.of(KlaxonItems.HALLNOX_POD.value()),
                 KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE
         );
     }

@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry.item;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,7 +25,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static ArrayList<Item> simpleItems = new ArrayList<>();
 
     // tools
-    public static final Item STEEL_HAMMER = registerSimpleItem("steel_hammer",
+    public static final Holder<Item> STEEL_HAMMER = registerSimpleItem("steel_hammer",
             new HammerItem(KlaxonToolMaterials.STEEL_INGOT, new KlaxonItemSettings()
                     .attributeModifiers(HammerItem.createAttributes(KlaxonToolMaterials.STEEL_INGOT, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
@@ -34,39 +35,39 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .with3dHandModel()
                     .getSettings()
             ));
-    public static final Item STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
+    public static final Holder<Item> STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
             new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
                     .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1.0f, -2.8f))
                     .getSettings()
             ));
-    public static final Item STEEL_CLEAVER = registerItem("steel_cleaver",
+    public static final Holder<Item> STEEL_CLEAVER = registerItem("steel_cleaver",
             new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
                     .attributeModifiers(CleaverItem.createAttributes(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .damageTypeOverride(KlaxonDamageTypes.CLEAVING)
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), ShieldBreachingComponent.Condition.CRITICAL))
                     .getSettings()
             ));
-    public static final Item STEEL_WRENCH = registerItem("steel_wrench",
+    public static final Holder<Item> STEEL_WRENCH = registerItem("steel_wrench",
             new WrenchItem(KlaxonToolMaterials.STEEL_INGOT, new KlaxonItemSettings()
                     .attributeModifiers(WrenchItem.createAttributes(KlaxonToolMaterials.STEEL_INGOT, 0f, -2.6f))
                     .damageTypeOverride(KlaxonDamageTypes.WRENCH_OVERTUNING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
                     .getSettings()
             ));
-    public static final Item REINFORCED_FLINT_AND_STEEL = registerSimpleItem("reinforced_flint_and_steel",
+    public static final Holder<Item> REINFORCED_FLINT_AND_STEEL = registerSimpleItem("reinforced_flint_and_steel",
             new ReinforcedFlintAndSteelItem(new KlaxonItemSettings()
                     .damageTypeOverride(KlaxonDamageTypes.FLINT_AND_STEEELING)
                     .getSettings(),
                     KlaxonToolMaterials.STEEL_NUGGET
             )
     );
-    public static final Item STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
+    public static final Holder<Item> STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
             new GrappleClawItem(new KlaxonItemSettings()
                     .maxCount(16)
                     .grappleClaw(4.0f, 6.0f, 67)
                     .getSettings()
             ));
-    public static final Item GRAPPLE_WINCH = registerItem("grapple_winch",
+    public static final Holder<Item> GRAPPLE_WINCH = registerItem("grapple_winch",
             new GrappleWinchItem(new KlaxonItemSettings()
                     .component(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY)
                     .maxCount(1)
@@ -78,70 +79,70 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             ));
 
     // armor
-    public static final Item CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
+    public static final Holder<Item> CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
             .helmetCrest()
             .rarity(Rarity.UNCOMMON)
             .getSettings()
     ));
-    public static final Item STEEL_HELMET = registerItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
+    public static final Holder<Item> STEEL_HELMET = registerItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
             .getSettings()
     ));
-    public static final Item STEEL_CHESTPLATE = registerItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new KlaxonItemSettings()
+    public static final Holder<Item> STEEL_CHESTPLATE = registerItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new KlaxonItemSettings()
             .getSettings()
     ));
-    public static final Item STEEL_LEGGINGS = registerItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new KlaxonItemSettings()
+    public static final Holder<Item> STEEL_LEGGINGS = registerItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new KlaxonItemSettings()
             .getSettings()
     ));
-    public static final Item STEEL_BOOTS = registerItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new KlaxonItemSettings()
+    public static final Holder<Item> STEEL_BOOTS = registerItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new KlaxonItemSettings()
             .getSettings()
     ));
 
     // fractured materials
-    public static final Item FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");
-    public static final Item FRACTURED_RAW_COPPER = registerReallySimpleItem("fractured_raw_copper");
-    public static final Item FRACTURED_RAW_GOLD = registerReallySimpleItem("fractured_raw_gold");
-    public static final Item FRACTURED_IRON = registerReallySimpleItem("fractured_iron");
-    public static final Item FRACTURED_COPPER = registerReallySimpleItem("fractured_copper");
-    public static final Item FRACTURED_GOLD = registerReallySimpleItem("fractured_gold");
-    public static final Item FRACTURED_COAL = registerReallySimpleItem("fractured_coal");
-    public static final Item FRACTURED_CHARCOAL = registerReallySimpleItem("fractured_charcoal");
+    public static final Holder<Item> FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");
+    public static final Holder<Item> FRACTURED_RAW_COPPER = registerReallySimpleItem("fractured_raw_copper");
+    public static final Holder<Item> FRACTURED_RAW_GOLD = registerReallySimpleItem("fractured_raw_gold");
+    public static final Holder<Item> FRACTURED_IRON = registerReallySimpleItem("fractured_iron");
+    public static final Holder<Item> FRACTURED_COPPER = registerReallySimpleItem("fractured_copper");
+    public static final Holder<Item> FRACTURED_GOLD = registerReallySimpleItem("fractured_gold");
+    public static final Holder<Item> FRACTURED_COAL = registerReallySimpleItem("fractured_coal");
+    public static final Holder<Item> FRACTURED_CHARCOAL = registerReallySimpleItem("fractured_charcoal");
 
     // alloy blends
-    public static final Item CRUDE_STEEL_MIXTURE = registerReallySimpleItem("crude_steel_mixture");
+    public static final Holder<Item> CRUDE_STEEL_MIXTURE = registerReallySimpleItem("crude_steel_mixture");
 
     // raw materials
-    public static final Item STEEL_INGOT = registerReallySimpleItem("steel_ingot");
-    public static final Item STEEL_NUGGET = registerReallySimpleItem("steel_nugget");
-    public static final Item CRUDE_STEEL_INGOT = registerReallySimpleItem("crude_steel_ingot");
-    public static final Item CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
-    public static final Item RUBBER_GLOB = registerReallySimpleItem("rubber_glob");
-    public static final Item COPPER_NUGGET = registerReallySimpleItem("copper_nugget");
+    public static final Holder<Item> STEEL_INGOT = registerReallySimpleItem("steel_ingot");
+    public static final Holder<Item> STEEL_NUGGET = registerReallySimpleItem("steel_nugget");
+    public static final Holder<Item> CRUDE_STEEL_INGOT = registerReallySimpleItem("crude_steel_ingot");
+    public static final Holder<Item> CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
+    public static final Holder<Item> RUBBER_GLOB = registerReallySimpleItem("rubber_glob");
+    public static final Holder<Item> COPPER_NUGGET = registerReallySimpleItem("copper_nugget");
 
     // plates / sheets
-    public static final Item STEEL_PLATE = registerReallySimpleItem("steel_plate");
-    public static final Item CRUDE_STEEL_PLATE = registerReallySimpleItem("crude_steel_plate");
-    public static final Item IRON_PLATE = registerReallySimpleItem("iron_plate");
-    public static final Item GOLD_PLATE = registerReallySimpleItem("gold_plate");
-    public static final Item COPPER_PLATE = registerReallySimpleItem("copper_plate");
-    public static final Item RUBBER_SHEET = registerReallySimpleItem("rubber_sheet");
+    public static final Holder<Item> STEEL_PLATE = registerReallySimpleItem("steel_plate");
+    public static final Holder<Item> CRUDE_STEEL_PLATE = registerReallySimpleItem("crude_steel_plate");
+    public static final Holder<Item> IRON_PLATE = registerReallySimpleItem("iron_plate");
+    public static final Holder<Item> GOLD_PLATE = registerReallySimpleItem("gold_plate");
+    public static final Holder<Item> COPPER_PLATE = registerReallySimpleItem("copper_plate");
+    public static final Holder<Item> RUBBER_SHEET = registerReallySimpleItem("rubber_sheet");
 
     // wires
-    public static final Item STEEL_WIRE = registerReallySimpleItem("steel_wire");
-    public static final Item IRON_WIRE = registerReallySimpleItem("iron_wire");
-    public static final Item GOLD_WIRE = registerReallySimpleItem("gold_wire");
-    public static final Item COPPER_WIRE = registerReallySimpleItem("copper_wire");
+    public static final Holder<Item> STEEL_WIRE = registerReallySimpleItem("steel_wire");
+    public static final Holder<Item> IRON_WIRE = registerReallySimpleItem("iron_wire");
+    public static final Holder<Item> GOLD_WIRE = registerReallySimpleItem("gold_wire");
+    public static final Holder<Item> COPPER_WIRE = registerReallySimpleItem("copper_wire");
 
-    private static Item registerItem(String name, Item item) {
-        return Registry.register(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), item);
+    private static Holder<Item> registerItem(String name, Item item) {
+        return Registry.registerForHolder(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), item);
     }
 
-    private static Item registerReallySimpleItem(String name) {
+    private static Holder<Item> registerReallySimpleItem(String name) {
         return registerSimpleItem(name, new Item(new Item.Properties()));
     }
 
-    private static Item registerSimpleItem(String name, Item item) {
+    private static Holder<Item> registerSimpleItem(String name, Item item) {
         simpleItems.add(item);
-        return Registry.register(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), item);
+        return Registry.registerForHolder(BuiltInRegistries.ITEM, KlaxonCommon.locate(name), item);
     }
 
     public static void init() {

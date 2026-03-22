@@ -41,7 +41,7 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
     private void buildExplosiveDisassemblyRecipes() {
         // casings
         addExplosiveDisassemblyRecipe(
-                NamedIngredient.ofItems(KlaxonItems.STEEL_CASING),
+                NamedIngredient.ofItems(KlaxonItems.STEEL_CASING.value()),
                 1.5,
                 4.0,
                 builder -> builder
@@ -50,7 +50,7 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
                         .chance(KlaxonItems.STEEL_NUGGET, 4, 0.4)
         );
         addExplosiveDisassemblyRecipe(
-                NamedIngredient.ofItems(KlaxonItems.CRUDE_STEEL_CASING),
+                NamedIngredient.ofItems(KlaxonItems.CRUDE_STEEL_CASING.value()),
                 0.8,
                 2.4,
                 builder -> builder
@@ -61,7 +61,7 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
 
         // nether reactor cores
         addExplosiveDisassemblyRecipe(
-                NamedIngredient.ofItems(KlaxonItems.NETHER_REACTOR_CORE),
+                NamedIngredient.ofItems(KlaxonItems.NETHER_REACTOR_CORE.value()),
                 1.5,
                 4.0,
                 builder -> builder
@@ -71,7 +71,7 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
                         .chance(KlaxonItems.STEEL_NUGGET, 4, 0.4)
         );
         addExplosiveDisassemblyRecipe(
-                NamedIngredient.ofItems(KlaxonItems.CRUDE_NETHER_REACTOR_CORE),
+                NamedIngredient.ofItems(KlaxonItems.CRUDE_NETHER_REACTOR_CORE.value()),
                 0.8,
                 2.4,
                 builder -> builder

@@ -32,13 +32,13 @@ public class KlaxonJadePlugin implements IWailaPlugin {
         HarvestToolProvider.registerHandler(SimpleToolHandler.create(
                 KlaxonCommon.locate("hammer"),
                 List.of(
-                        KlaxonItems.STEEL_HAMMER
+                        KlaxonItems.STEEL_HAMMER.value()
                 )
         ));
         HarvestToolProvider.registerHandler(SimpleToolHandler.create(
                 KlaxonCommon.locate("wrench"),
                 List.of(
-                        KlaxonItems.STEEL_WRENCH
+                        KlaxonItems.STEEL_WRENCH.value()
                 )
         ));
 
@@ -53,14 +53,14 @@ public class KlaxonJadePlugin implements IWailaPlugin {
     // called in ShearsToolHandlerMixin
     public static List<ItemStack> appendCableShears(List<ItemStack> original) {
         List<ItemStack> appendedList = new ArrayList<>(original);
-        appendedList.add(KlaxonItems.STEEL_CABLE_SHEARS.getDefaultInstance());
+        appendedList.add(KlaxonItems.STEEL_CABLE_SHEARS.value().getDefaultInstance());
         return List.copyOf(appendedList);
     }
 
     // called in HarvestToolProviderMixin
     public static List<Item> appendCleaver(List<Item> original) {
         List<Item> appendedList = new ArrayList<>(original);
-        appendedList.add(KlaxonItems.STEEL_CLEAVER);
+        appendedList.add(KlaxonItems.STEEL_CLEAVER.value());
         return List.copyOf(appendedList);
     }
 }

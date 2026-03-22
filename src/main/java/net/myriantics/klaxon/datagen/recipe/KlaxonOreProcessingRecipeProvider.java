@@ -21,9 +21,9 @@ public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
     }
 
     private void buildFracturedOreProcessingRecipes() {
-        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_IRON, Items.RAW_IRON, KlaxonItems.FRACTURED_IRON, Items.IRON_INGOT);
-        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_GOLD, Items.RAW_GOLD, KlaxonItems.FRACTURED_GOLD, Items.GOLD_INGOT);
-        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_COPPER, Items.RAW_COPPER, KlaxonItems.FRACTURED_COPPER, Items.COPPER_INGOT);
+        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_IRON.value(), Items.RAW_IRON, KlaxonItems.FRACTURED_IRON.value(), Items.IRON_INGOT);
+        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_GOLD.value(), Items.RAW_GOLD, KlaxonItems.FRACTURED_GOLD.value(), Items.GOLD_INGOT);
+        addFracturedOreProcessingRecipes(KlaxonItems.FRACTURED_RAW_COPPER.value(), Items.RAW_COPPER, KlaxonItems.FRACTURED_COPPER.value(), Items.COPPER_INGOT);
     }
 
     public void addFracturedOreProcessingRecipes(Item fracturedRawOreItem, Item rawOreItem, Item fracturedOreFragmentsItem, Item oreIngotItem,

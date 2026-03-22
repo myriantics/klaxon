@@ -98,15 +98,15 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerWorkstations(EmiRegistry registry) {
-        registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value()));
+        registry.addWorkstation(KlaxonEmiRecipeCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value()));
         registry.addWorkstation(KlaxonEmiRecipeCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
         registry.addWorkstation(KlaxonEmiRecipeCategories.WORLD_ITEM_APPLICATION, EmiStack.of(Items.DISPENSER));
 
         // Steel Hammer can mimic AnvilScreenHandler functionality
-        registry.addWorkstation(VanillaEmiRecipeCategories.ANVIL_REPAIRING, EmiStack.of(KlaxonItems.STEEL_HAMMER));
+        registry.addWorkstation(VanillaEmiRecipeCategories.ANVIL_REPAIRING, EmiStack.of(KlaxonItems.STEEL_HAMMER.value()));
         // Blast Processors can mimic Blasting Smelting functionality when using a catalyst that produces Fire
-        registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR));
+        registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value()));
     }
 
     private void registerRecipes(EmiRegistry registry) {
@@ -131,8 +131,12 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerMiscRecipes(EmiRegistry registry) {
-        registry.addRecipe(new KlaxonEMIAnvilRecipe(EmiStack.of(KlaxonItems.REINFORCED_FLINT_AND_STEEL), EmiIngredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS), "flint_and_steel"));
-        registry.addRecipe(new KlaxonEMIAnvilRecipe(EmiStack.of(KlaxonItems.STEEL_CABLE_SHEARS), EmiIngredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES), "steel_cable_shears"));
+        addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value()), EmiIngredient.of(KlaxonItemTags.STEEL_NUGGET_TOOL_MATERIAL_REPAIR_MATERIALS), "reinforced_flint_and_steel");
+        addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_CABLE_SHEARS.value()), EmiIngredient.of(KlaxonItemTags.STEEL_PLATE_TOOL_MATERIAL_REPAIR_MATERIALS), "steel_cable_shears");
+    }
+
+    private void addSyntheticAnvilRecipe(EmiRegistry registry, EmiStack tool, EmiIngredient repairMaterial, String path) {
+        registry.addRecipe(new KlaxonEMIAnvilRecipe(tool, repairMaterial, path));
     }
 
     public <C extends Recipe<V>, T extends RecipeHolder<C>, V extends RecipeInput> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeHolder<C>, EmiRecipe> constructor) {

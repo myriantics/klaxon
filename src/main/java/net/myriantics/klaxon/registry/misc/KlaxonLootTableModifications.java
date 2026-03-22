@@ -15,7 +15,7 @@ public abstract class KlaxonLootTableModifications {
 
         // add hallnox pod
         if (BuiltInLootTables.SNIFFER_DIGGING.equals(lootTableRegistryKey)) {
-            builder.modifyPools((builder1 -> builder1.add(LootItem.lootTableItem(KlaxonItems.HALLNOX_POD))));
+            builder.modifyPools((builder1 -> builder1.add(LootItem.lootTableItem(KlaxonItems.HALLNOX_POD.value()))));
         }
     }
 }

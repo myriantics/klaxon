@@ -40,6 +40,9 @@ public class KlaxonArmorTrimMaterialProvider extends FabricDynamicRegistryProvid
         );
     }
 
+    private static void register(BootstrapContext<TrimMaterial> registry, ResourceKey<TrimMaterial> key, Holder<Item> ingredientHolder, Style style, float itemModelIndex) {
+        register(registry, key, ingredientHolder.value(), style, itemModelIndex, Map.of());
+    }
     private static void register(BootstrapContext<TrimMaterial> registry, ResourceKey<TrimMaterial> key, Item ingredient, Style style, float itemModelIndex) {
         register(registry, key, ingredient, style, itemModelIndex, Map.of());
     }

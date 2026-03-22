@@ -23,18 +23,18 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
 
     private void buildRecyclingRecipes() {
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItemTags.STEEL_EQUIPMENT), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.IRON_WIRE), new ItemStack(Items.IRON_NUGGET), 1.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.IRON_PLATE), new ItemStack(Items.IRON_NUGGET), 1.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.GOLD_WIRE), new ItemStack(Items.GOLD_NUGGET), 1.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.GOLD_PLATE), new ItemStack(Items.GOLD_NUGGET), 1.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.COPPER_WIRE), new ItemStack(KlaxonItems.COPPER_NUGGET), 1.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.COPPER_PLATE), new ItemStack(KlaxonItems.COPPER_NUGGET), 1.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.STEEL_WIRE), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_PLATE), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_INGOT), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.IRON_WIRE.value()), new ItemStack(Items.IRON_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.IRON_PLATE.value()), new ItemStack(Items.IRON_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.GOLD_WIRE.value()), new ItemStack(Items.GOLD_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.GOLD_PLATE.value()), new ItemStack(Items.GOLD_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.COPPER_WIRE.value()), new ItemStack(KlaxonItems.COPPER_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.COPPER_PLATE.value()), new ItemStack(KlaxonItems.COPPER_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.STEEL_WIRE.value()), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_PLATE.value()), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_INGOT.value()), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
     }
 
     private void buildCookingRecipes() {
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_MIXTURE), new ItemStack(KlaxonItems.CRUDE_STEEL_INGOT), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_MIXTURE.value()), new ItemStack(KlaxonItems.CRUDE_STEEL_INGOT), 1.0f, null, null);
     }
 }

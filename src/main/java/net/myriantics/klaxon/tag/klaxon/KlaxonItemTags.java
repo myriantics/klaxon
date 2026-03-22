@@ -33,8 +33,6 @@ public abstract class KlaxonItemTags {
             createTag("high_yield_rubber_extractable_logs");
     public static final TagKey<Item> GEAR_GRIP_MATERIALS =
             createTag("gear_grip_materials");
-    public static final TagKey<Item> WAXING_STATUS_INCLUSIVE_COPPER_WIRE_SPOOL_BLOCKS =
-            createTag("waxing_status_inclusive_copper_wire_spool_blocks");
 
     // anvil related tags
     public static final TagKey<Item> INFINITELY_REPAIRABLE =

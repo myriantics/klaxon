@@ -176,8 +176,9 @@ public abstract class KlaxonBlockModelSubProvider {
         generator.delegateItemModel(pipeMatrixItem, modelIdentifier);
     }
 
-    protected void registerPipeMatrixUBend(Holder<Block> holder, Item pipeMatrixItemThatIndicatesTextureDirectory) {
+    protected void registerPipeMatrixUBend(Holder<Block> holder, Holder<Item> pipeMatrixItemThatIndicatesTextureDirectoryHolder) {
         Block uBendBlock = holder.value();
+        Item pipeMatrixItemThatIndicatesTextureDirectory = pipeMatrixItemThatIndicatesTextureDirectoryHolder.value();
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(pipeMatrixItemThatIndicatesTextureDirectory);
 
         ResourceLocation baseModelIdentifier = ModelLocationUtils.getModelLocation(uBendBlock);
@@ -308,7 +309,7 @@ public abstract class KlaxonBlockModelSubProvider {
 
     protected void registerHallnoxPod(BlockModelGenerators generator) {
         // hallnox pod uses 2d item texture
-        generator.createSimpleFlatItemModel(KlaxonItems.HALLNOX_POD);
+        generator.createSimpleFlatItemModel(KlaxonItems.HALLNOX_POD.value());
         ResourceLocation modelId = ModelLocationUtils.getModelLocation(KlaxonBlocks.HALLNOX_POD.value());
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(KlaxonBlocks.HALLNOX_POD.value(),
                         Variant.variant().with(VariantProperties.MODEL, modelId)

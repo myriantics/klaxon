@@ -21,31 +21,31 @@ public abstract class KlaxonItemGroups {
             .icon(() -> new ItemStack(KlaxonItems.STEEL_HAMMER))
             .title(Component.translatable("itemGroup.klaxon.equipment"))
             .displayItems(((displayContext, entries) -> {
-                entries.accept(KlaxonItems.STEEL_HAMMER);
-                entries.accept(KlaxonItems.STEEL_CABLE_SHEARS);
-                entries.accept(KlaxonItems.STEEL_WRENCH);
-                entries.accept(KlaxonItems.STEEL_CLEAVER);
-                entries.accept(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
+                entries.accept(KlaxonItems.STEEL_HAMMER.value());
+                entries.accept(KlaxonItems.STEEL_CABLE_SHEARS.value());
+                entries.accept(KlaxonItems.STEEL_WRENCH.value());
+                entries.accept(KlaxonItems.STEEL_CLEAVER.value());
+                entries.accept(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
 
-                entries.accept(KlaxonItems.STEEL_HELMET);
-                entries.accept(KlaxonItems.STEEL_CHESTPLATE);
-                entries.accept(KlaxonItems.STEEL_LEGGINGS);
-                entries.accept(KlaxonItems.STEEL_BOOTS);
-                entries.accept(KlaxonItems.CRESTED_STEEL_HELMET);
+                entries.accept(KlaxonItems.STEEL_HELMET.value());
+                entries.accept(KlaxonItems.STEEL_CHESTPLATE.value());
+                entries.accept(KlaxonItems.STEEL_LEGGINGS.value());
+                entries.accept(KlaxonItems.STEEL_BOOTS.value());
+                entries.accept(KlaxonItems.CRESTED_STEEL_HELMET.value());
 
-                entries.accept(KlaxonItems.GRAPPLE_WINCH);
-                entries.accept(KlaxonItems.STEEL_GRAPPLE_CLAW);
+                entries.accept(KlaxonItems.GRAPPLE_WINCH.value());
+                entries.accept(KlaxonItems.STEEL_GRAPPLE_CLAW.value());
             })).build();
 
     public static final CreativeModeTab KLAXON_MACHINES = FabricItemGroup.builder()
             .icon(() -> new ItemStack(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR))
             .title(Component.translatable("itemGroup.klaxon.machines"))
             .displayItems(((displayContext, entries) -> {
-                entries.accept(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
-                entries.accept(KlaxonItems.NETHER_REACTOR_CORE);
-                entries.accept(KlaxonItems.CRUDE_NETHER_REACTOR_CORE);
-                entries.accept(KlaxonItems.STEEL_CASING);
-                entries.accept(KlaxonItems.CRUDE_STEEL_CASING);
+                entries.accept(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value());
+                entries.accept(KlaxonItems.NETHER_REACTOR_CORE.value());
+                entries.accept(KlaxonItems.CRUDE_NETHER_REACTOR_CORE.value());
+                entries.accept(KlaxonItems.STEEL_CASING.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_CASING.value());
                 // entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
             })).build();
 
@@ -54,70 +54,70 @@ public abstract class KlaxonItemGroups {
             .title(Component.translatable("itemGroup.klaxon.materials"))
             .displayItems(((displayContext, entries) -> {
                 // storage blocks
-                entries.accept(KlaxonItems.STEEL_BLOCK);
-                entries.accept(KlaxonItems.CRUDE_STEEL_BLOCK);
-                entries.accept(KlaxonItems.RUBBER_BLOCK);
+                entries.accept(KlaxonItems.STEEL_BLOCK.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_BLOCK.value());
+                entries.accept(KlaxonItems.RUBBER_BLOCK.value());
                 // entries.add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
 
                 // plating storage blocks
-                entries.accept(KlaxonItems.STEEL_PLATING_BLOCK);
-                entries.accept(KlaxonItems.CRUDE_STEEL_PLATING_BLOCK);
-                entries.accept(KlaxonItems.IRON_PLATING_BLOCK);
-                entries.accept(KlaxonItems.GOLD_PLATING_BLOCK);
-                entries.accept(KlaxonItems.COPPER_PLATING_BLOCK);
-                entries.accept(KlaxonItems.RUBBER_SHEET_BLOCK);
+                entries.accept(KlaxonItems.STEEL_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.IRON_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.GOLD_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.COPPER_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.RUBBER_SHEET_BLOCK.value());
 
                 // wire spools / wire storage blocks
-                entries.accept(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.IRON_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK);
+                entries.accept(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.IRON_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK.value());
 
                 // casings and hulls
-                entries.accept(KlaxonItems.STEEL_CASING);
-                entries.accept(KlaxonItems.CRUDE_STEEL_CASING);
+                entries.accept(KlaxonItems.STEEL_CASING.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_CASING.value());
 
                 // ingots
-                entries.accept(KlaxonItems.STEEL_INGOT);
-                entries.accept(KlaxonItems.CRUDE_STEEL_INGOT);
+                entries.accept(KlaxonItems.STEEL_INGOT.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_INGOT.value());
 
                 // nuggets
-                entries.accept(KlaxonItems.STEEL_NUGGET);
-                entries.accept(KlaxonItems.CRUDE_STEEL_NUGGET);
-                entries.accept(KlaxonItems.COPPER_NUGGET);
+                entries.accept(KlaxonItems.STEEL_NUGGET.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_NUGGET.value());
+                entries.accept(KlaxonItems.COPPER_NUGGET.value());
 
                 // raw materials
-                entries.accept(KlaxonItems.RUBBER_GLOB);
+                entries.accept(KlaxonItems.RUBBER_GLOB.value());
 
                 // hallnox
-                entries.accept(KlaxonItems.HALLNOX_POD);
+                entries.accept(KlaxonItems.HALLNOX_POD.value());
 
                 // plates
-                entries.accept(KlaxonItems.IRON_PLATE);
-                entries.accept(KlaxonItems.COPPER_PLATE);
-                entries.accept(KlaxonItems.GOLD_PLATE);
-                entries.accept(KlaxonItems.CRUDE_STEEL_PLATE);
-                entries.accept(KlaxonItems.STEEL_PLATE);
-                entries.accept(KlaxonItems.RUBBER_SHEET);
+                entries.accept(KlaxonItems.IRON_PLATE.value());
+                entries.accept(KlaxonItems.COPPER_PLATE.value());
+                entries.accept(KlaxonItems.GOLD_PLATE.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_PLATE.value());
+                entries.accept(KlaxonItems.STEEL_PLATE.value());
+                entries.accept(KlaxonItems.RUBBER_SHEET.value());
 
                 // wires
-                entries.accept(KlaxonItems.STEEL_WIRE);
-                entries.accept(KlaxonItems.IRON_WIRE);
-                entries.accept(KlaxonItems.GOLD_WIRE);
-                entries.accept(KlaxonItems.COPPER_WIRE);
+                entries.accept(KlaxonItems.STEEL_WIRE.value());
+                entries.accept(KlaxonItems.IRON_WIRE.value());
+                entries.accept(KlaxonItems.GOLD_WIRE.value());
+                entries.accept(KlaxonItems.COPPER_WIRE.value());
 
                 // blends
-                entries.accept(KlaxonItems.CRUDE_STEEL_MIXTURE);
+                entries.accept(KlaxonItems.CRUDE_STEEL_MIXTURE.value());
 
                 // fractured items
-                entries.accept(KlaxonItems.FRACTURED_IRON);
-                entries.accept(KlaxonItems.FRACTURED_COPPER);
-                entries.accept(KlaxonItems.FRACTURED_GOLD);
-                entries.accept(KlaxonItems.FRACTURED_COAL);
-                entries.accept(KlaxonItems.FRACTURED_CHARCOAL);
-                entries.accept(KlaxonItems.FRACTURED_RAW_IRON);
-                entries.accept(KlaxonItems.FRACTURED_RAW_COPPER);
-                entries.accept(KlaxonItems.FRACTURED_RAW_GOLD);
+                entries.accept(KlaxonItems.FRACTURED_IRON.value());
+                entries.accept(KlaxonItems.FRACTURED_COPPER.value());
+                entries.accept(KlaxonItems.FRACTURED_GOLD.value());
+                entries.accept(KlaxonItems.FRACTURED_COAL.value());
+                entries.accept(KlaxonItems.FRACTURED_CHARCOAL.value());
+                entries.accept(KlaxonItems.FRACTURED_RAW_IRON.value());
+                entries.accept(KlaxonItems.FRACTURED_RAW_COPPER.value());
+                entries.accept(KlaxonItems.FRACTURED_RAW_GOLD.value());
             })).build();
 
     public static final CreativeModeTab KLAXON_BUILDING_BLOCKS = FabricItemGroup.builder()
@@ -125,38 +125,38 @@ public abstract class KlaxonItemGroups {
             .title(Component.translatable("itemGroup.klaxon.building_blocks"))
             .displayItems(((displayContext, entries) -> {
                 // storage blocks
-                entries.accept(KlaxonItems.STEEL_BLOCK);
-                entries.accept(KlaxonItems.CRUDE_STEEL_BLOCK);
-                entries.accept(KlaxonItems.RUBBER_BLOCK);
-                entries.accept(KlaxonItems.MOLTEN_RUBBER_BLOCK);
+                entries.accept(KlaxonItems.STEEL_BLOCK.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_BLOCK.value());
+                entries.accept(KlaxonItems.RUBBER_BLOCK.value());
+                entries.accept(KlaxonItems.MOLTEN_RUBBER_BLOCK.value());
 
                 // plating blocks
-                entries.accept(KlaxonItems.STEEL_PLATING_BLOCK);
-                entries.accept(KlaxonItems.CRUDE_STEEL_PLATING_BLOCK);
-                entries.accept(KlaxonItems.RUBBER_SHEET_BLOCK);
-                entries.accept(KlaxonItems.IRON_PLATING_BLOCK);
-                entries.accept(KlaxonItems.GOLD_PLATING_BLOCK);
-                entries.accept(KlaxonItems.COPPER_PLATING_BLOCK);
-                entries.accept(KlaxonItems.EXPOSED_COPPER_PLATING_BLOCK);
-                entries.accept(KlaxonItems.WEATHERED_COPPER_PLATING_BLOCK);
-                entries.accept(KlaxonItems.OXIDIZED_COPPER_PLATING_BLOCK);
-                entries.accept(KlaxonItems.WAXED_COPPER_PLATING_BLOCK);
-                entries.accept(KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK);
-                entries.accept(KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK);
-                entries.accept(KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK);
+                entries.accept(KlaxonItems.STEEL_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.RUBBER_SHEET_BLOCK.value());
+                entries.accept(KlaxonItems.IRON_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.GOLD_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.COPPER_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.EXPOSED_COPPER_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.WEATHERED_COPPER_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.OXIDIZED_COPPER_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.WAXED_COPPER_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.WAXED_EXPOSED_COPPER_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.WAXED_WEATHERED_COPPER_PLATING_BLOCK.value());
+                entries.accept(KlaxonItems.WAXED_OXIDIZED_COPPER_PLATING_BLOCK.value());
 
                 // wire spool blocks
-                entries.accept(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.IRON_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK);
-                entries.accept(KlaxonItems.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK);
+                entries.accept(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.IRON_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.EXPOSED_COPPER_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.WEATHERED_COPPER_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.OXIDIZED_COPPER_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.WAXED_EXPOSED_COPPER_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.WAXED_WEATHERED_COPPER_WIRE_SPOOL_BLOCK.value());
+                entries.accept(KlaxonItems.WAXED_OXIDIZED_COPPER_WIRE_SPOOL_BLOCK.value());
 
                 // pipe matrices
                 /*
@@ -171,36 +171,36 @@ public abstract class KlaxonItemGroups {
                  */
 
                 // casings
-                entries.accept(KlaxonItems.STEEL_CASING);
-                entries.accept(KlaxonItems.CRUDE_STEEL_CASING);
+                entries.accept(KlaxonItems.STEEL_CASING.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_CASING.value());
 
                 // hallnox
-                entries.accept(KlaxonItems.HALLNOX_STEM);
-                entries.accept(KlaxonItems.HALLNOX_HYPHAE);
-                entries.accept(KlaxonItems.STRIPPED_HALLNOX_STEM);
-                entries.accept(KlaxonItems.STRIPPED_HALLNOX_HYPHAE);
-                entries.accept(KlaxonItems.HALLNOX_PLANKS);
-                entries.accept(KlaxonItems.HALLNOX_STAIRS);
-                entries.accept(KlaxonItems.HALLNOX_SLAB);
-                entries.accept(KlaxonItems.HALLNOX_FENCE);
-                entries.accept(KlaxonItems.HALLNOX_FENCE_GATE);
-                entries.accept(KlaxonItems.HALLNOX_DOOR);
-                entries.accept(KlaxonItems.HALLNOX_TRAPDOOR);
-                entries.accept(KlaxonItems.HALLNOX_PRESSURE_PLATE);
-                entries.accept(KlaxonItems.HALLNOX_BUTTON);
-                entries.accept(KlaxonItems.HALLNOX_POD);
-                entries.accept(KlaxonItems.HALLNOX_WART_BLOCK);
-                entries.accept(KlaxonItems.HALLNOX_SIGN);
-                entries.accept(KlaxonItems.HALLNOX_HANGING_SIGN);
+                entries.accept(KlaxonItems.HALLNOX_STEM.value());
+                entries.accept(KlaxonItems.HALLNOX_HYPHAE.value());
+                entries.accept(KlaxonItems.STRIPPED_HALLNOX_STEM.value());
+                entries.accept(KlaxonItems.STRIPPED_HALLNOX_HYPHAE.value());
+                entries.accept(KlaxonItems.HALLNOX_PLANKS.value());
+                entries.accept(KlaxonItems.HALLNOX_STAIRS.value());
+                entries.accept(KlaxonItems.HALLNOX_SLAB.value());
+                entries.accept(KlaxonItems.HALLNOX_FENCE.value());
+                entries.accept(KlaxonItems.HALLNOX_FENCE_GATE.value());
+                entries.accept(KlaxonItems.HALLNOX_DOOR.value());
+                entries.accept(KlaxonItems.HALLNOX_TRAPDOOR.value());
+                entries.accept(KlaxonItems.HALLNOX_PRESSURE_PLATE.value());
+                entries.accept(KlaxonItems.HALLNOX_BUTTON.value());
+                entries.accept(KlaxonItems.HALLNOX_POD.value());
+                entries.accept(KlaxonItems.HALLNOX_WART_BLOCK.value());
+                entries.accept(KlaxonItems.HALLNOX_SIGN.value());
+                entries.accept(KlaxonItems.HALLNOX_HANGING_SIGN.value());
 
                 // decor
-                entries.accept(KlaxonItems.HALLNOX_BULB);
+                entries.accept(KlaxonItems.HALLNOX_BULB.value());
 
                 // misc
-                entries.accept(KlaxonItems.STEEL_DOOR);
-                entries.accept(KlaxonItems.STEEL_TRAPDOOR);
-                entries.accept(KlaxonItems.CRUDE_STEEL_DOOR);
-                entries.accept(KlaxonItems.CRUDE_STEEL_TRAPDOOR);
+                entries.accept(KlaxonItems.STEEL_DOOR.value());
+                entries.accept(KlaxonItems.STEEL_TRAPDOOR.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_DOOR.value());
+                entries.accept(KlaxonItems.CRUDE_STEEL_TRAPDOOR.value());
             })).build();
 
 

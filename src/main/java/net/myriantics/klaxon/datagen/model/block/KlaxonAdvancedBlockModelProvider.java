@@ -54,13 +54,13 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         registerPipeMatrixUBend(KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);
         registerPipeMatrixUBend(KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.WAXED_WEATHERED_COPPER_PIPE_MATRIX);
         registerPipeMatrixUBend(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.OXIDIZED_COPPER_PIPE_MATRIX);
-        registerPipeMatrixSegment(KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.COPPER_PIPE_MATRIX);
-        registerPipeMatrixSegment(KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);
-        registerPipeMatrixSegment(KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WEATHERED_COPPER_PIPE_MATRIX);
-        registerPipeMatrixSegment(KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.OXIDIZED_COPPER_PIPE_MATRIX);
-        registerPipeMatrixSegment(KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WAXED_COPPER_PIPE_MATRIX, KlaxonItems.COPPER_PIPE_MATRIX);
-        registerPipeMatrixSegment(KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WAXED_EXPOSED_COPPER_PIPE_MATRIX, KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);
-        registerPipeMatrixSegment(KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WAXED_WEATHERED_COPPER_PIPE_MATRIX, KlaxonItems.WEATHERED_COPPER_PIPE_MATRIX);
-        registerPipeMatrixSegment(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WAXED_OXIDIZED_COPPER_PIPE_MATRIX, KlaxonItems.OXIDIZED_COPPER_PIPE_MATRIX);
+        registerPipeMatrixSegment(KlaxonBlocks.COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.COPPER_PIPE_MATRIX.value());
+        registerPipeMatrixSegment(KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX.value());
+        registerPipeMatrixSegment(KlaxonBlocks.WEATHERED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WEATHERED_COPPER_PIPE_MATRIX.value());
+        registerPipeMatrixSegment(KlaxonBlocks.OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.OXIDIZED_COPPER_PIPE_MATRIX.value());
+        registerPipeMatrixSegment(KlaxonBlocks.WAXED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WAXED_COPPER_PIPE_MATRIX.value(), KlaxonItems.COPPER_PIPE_MATRIX.value());
+        registerPipeMatrixSegment(KlaxonBlocks.WAXED_EXPOSED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WAXED_EXPOSED_COPPER_PIPE_MATRIX.value(), KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX.value());
+        registerPipeMatrixSegment(KlaxonBlocks.WAXED_WEATHERED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WAXED_WEATHERED_COPPER_PIPE_MATRIX.value(), KlaxonItems.WEATHERED_COPPER_PIPE_MATRIX.value());
+        registerPipeMatrixSegment(KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT, KlaxonItems.WAXED_OXIDIZED_COPPER_PIPE_MATRIX.value(), KlaxonItems.OXIDIZED_COPPER_PIPE_MATRIX.value());
     }
 }

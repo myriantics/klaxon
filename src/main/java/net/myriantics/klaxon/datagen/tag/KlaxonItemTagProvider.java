@@ -59,57 +59,57 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     private void buildWoodTags() {
         getOrCreateTagBuilder(ConventionalItemTags.STRIPPED_LOGS)
-                .add(KlaxonItems.STRIPPED_HALLNOX_STEM);
+                .add(KlaxonItems.STRIPPED_HALLNOX_STEM.value());
         getOrCreateTagBuilder(ConventionalItemTags.STRIPPED_WOODS)
-                .add(KlaxonItems.STRIPPED_HALLNOX_HYPHAE);
+                .add(KlaxonItems.STRIPPED_HALLNOX_HYPHAE.value());
         getOrCreateTagBuilder(ItemTags.LOGS)
                 .forceAddTag(KlaxonItemTags.HALLNOX_STEMS);
         getOrCreateTagBuilder(ItemTags.NON_FLAMMABLE_WOOD)
                 .forceAddTag(KlaxonItemTags.HALLNOX_STEMS)
-                .add(KlaxonItems.HALLNOX_PLANKS)
-                .add(KlaxonItems.HALLNOX_SLAB)
-                .add(KlaxonItems.HALLNOX_PRESSURE_PLATE)
-                .add(KlaxonItems.HALLNOX_FENCE)
-                .add(KlaxonItems.HALLNOX_TRAPDOOR)
-                .add(KlaxonItems.HALLNOX_FENCE_GATE)
-                .add(KlaxonItems.HALLNOX_STAIRS)
-                .add(KlaxonItems.HALLNOX_BUTTON)
-                .add(KlaxonItems.HALLNOX_DOOR)
-                .add(KlaxonItems.HALLNOX_SIGN)
-                .add(KlaxonItems.HALLNOX_HANGING_SIGN);
+                .add(KlaxonItems.HALLNOX_PLANKS.value())
+                .add(KlaxonItems.HALLNOX_SLAB.value())
+                .add(KlaxonItems.HALLNOX_PRESSURE_PLATE.value())
+                .add(KlaxonItems.HALLNOX_FENCE.value())
+                .add(KlaxonItems.HALLNOX_TRAPDOOR.value())
+                .add(KlaxonItems.HALLNOX_FENCE_GATE.value())
+                .add(KlaxonItems.HALLNOX_STAIRS.value())
+                .add(KlaxonItems.HALLNOX_BUTTON.value())
+                .add(KlaxonItems.HALLNOX_DOOR.value())
+                .add(KlaxonItems.HALLNOX_SIGN.value())
+                .add(KlaxonItems.HALLNOX_HANGING_SIGN.value());
         getOrCreateTagBuilder(KlaxonItemTags.HALLNOX_STEMS)
-                .add(KlaxonItems.HALLNOX_STEM)
-                .add(KlaxonItems.STRIPPED_HALLNOX_STEM)
-                .add(KlaxonItems.HALLNOX_HYPHAE)
-                .add(KlaxonItems.STRIPPED_HALLNOX_HYPHAE);
+                .add(KlaxonItems.HALLNOX_STEM.value())
+                .add(KlaxonItems.STRIPPED_HALLNOX_STEM.value())
+                .add(KlaxonItems.HALLNOX_HYPHAE.value())
+                .add(KlaxonItems.STRIPPED_HALLNOX_HYPHAE.value());
         getOrCreateTagBuilder(ItemTags.PLANKS)
-                .add(KlaxonItems.HALLNOX_PLANKS);
+                .add(KlaxonItems.HALLNOX_PLANKS.value());
         getOrCreateTagBuilder(ItemTags.WOODEN_STAIRS)
-                .add(KlaxonItems.HALLNOX_STAIRS);
+                .add(KlaxonItems.HALLNOX_STAIRS.value());
         getOrCreateTagBuilder(ItemTags.WOODEN_SLABS)
-                .add(KlaxonItems.HALLNOX_SLAB);
+                .add(KlaxonItems.HALLNOX_SLAB.value());
 
         getOrCreateTagBuilder(ItemTags.WOODEN_BUTTONS)
-                .add(KlaxonItems.HALLNOX_BUTTON);
+                .add(KlaxonItems.HALLNOX_BUTTON.value());
         getOrCreateTagBuilder(ItemTags.WOODEN_PRESSURE_PLATES)
-                .add(KlaxonItems.HALLNOX_PRESSURE_PLATE);
+                .add(KlaxonItems.HALLNOX_PRESSURE_PLATE.value());
         getOrCreateTagBuilder(ItemTags.WOODEN_DOORS)
-                .add(KlaxonItems.HALLNOX_DOOR);
+                .add(KlaxonItems.HALLNOX_DOOR.value());
         getOrCreateTagBuilder(ItemTags.WOODEN_TRAPDOORS)
-                .add(KlaxonItems.HALLNOX_TRAPDOOR);
+                .add(KlaxonItems.HALLNOX_TRAPDOOR.value());
         getOrCreateTagBuilder(ItemTags.WOODEN_FENCES)
-                .add(KlaxonItems.HALLNOX_FENCE);
+                .add(KlaxonItems.HALLNOX_FENCE.value());
         getOrCreateTagBuilder(ConventionalItemTags.WOODEN_FENCES)
-                .add(KlaxonItems.HALLNOX_FENCE);
+                .add(KlaxonItems.HALLNOX_FENCE.value());
         getOrCreateTagBuilder(ConventionalItemTags.WOODEN_FENCE_GATES)
-                .add(KlaxonItems.HALLNOX_FENCE_GATE);
+                .add(KlaxonItems.HALLNOX_FENCE_GATE.value());
         getOrCreateTagBuilder(ItemTags.SIGNS)
-                .add(KlaxonItems.HALLNOX_SIGN);
+                .add(KlaxonItems.HALLNOX_SIGN.value());
         getOrCreateTagBuilder(ItemTags.HANGING_SIGNS)
-                .add(KlaxonItems.HALLNOX_HANGING_SIGN);
+                .add(KlaxonItems.HALLNOX_HANGING_SIGN.value());
 
         getOrCreateTagBuilder(ItemTags.WART_BLOCKS)
-                .add(KlaxonItems.HALLNOX_WART_BLOCK);
+                .add(KlaxonItems.HALLNOX_WART_BLOCK.value());
     }
 
     private void buildMaterialIngotTags() {
@@ -117,16 +117,16 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_INGOTS)
-                .add(KlaxonItems.STEEL_INGOT);
+                .add(KlaxonItems.STEEL_INGOT.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_INGOTS)
-                .add(KlaxonItems.CRUDE_STEEL_INGOT);
+                .add(KlaxonItems.CRUDE_STEEL_INGOT.value());
     }
 
     private void buildMaterialGlobTags() {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.GLOBS)
                 .forceAddTag(KlaxonConventionalItemTags.RUBBER_GLOBS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_GLOBS)
-                .add(KlaxonItems.RUBBER_GLOB);
+                .add(KlaxonItems.RUBBER_GLOB.value());
     }
 
     private void buildMaterialStorageBlockTags() {
@@ -136,14 +136,14 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.RUBBER_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_BLOCKS)
-                .add(KlaxonItems.STEEL_BLOCK);
+                .add(KlaxonItems.STEEL_BLOCK.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_BLOCKS)
-                .add(KlaxonItems.CRUDE_STEEL_BLOCK);
+                .add(KlaxonItems.CRUDE_STEEL_BLOCK.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_BLOCKS)
-                .add(KlaxonItems.RUBBER_BLOCK)
-                .add(KlaxonItems.RUBBER_SHEET_BLOCK);
+                .add(KlaxonItems.RUBBER_BLOCK.value())
+                .add(KlaxonItems.RUBBER_SHEET_BLOCK.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS)
-                .add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
+                .add(KlaxonItems.MOLTEN_RUBBER_BLOCK.value());
     }
 
     private void buildMaterialNuggetTags() {
@@ -152,11 +152,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)
                 .forceAddTag(KlaxonConventionalItemTags.COPPER_NUGGETS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_NUGGETS)
-                .add(KlaxonItems.STEEL_NUGGET);
+                .add(KlaxonItems.STEEL_NUGGET.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_NUGGETS)
-                .add(KlaxonItems.CRUDE_STEEL_NUGGET);
+                .add(KlaxonItems.CRUDE_STEEL_NUGGET.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_NUGGETS)
-                .add(KlaxonItems.COPPER_NUGGET);
+                .add(KlaxonItems.COPPER_NUGGET.value());
     }
 
     private void buildMaterialWireTags() {
@@ -166,16 +166,13 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.GOLD_WIRES)
                 .forceAddTag(KlaxonConventionalItemTags.COPPER_WIRES);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_WIRES)
-                .add(KlaxonItems.STEEL_WIRE);
+                .add(KlaxonItems.STEEL_WIRE.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.IRON_WIRES)
-                .add(KlaxonItems.IRON_WIRE);
+                .add(KlaxonItems.IRON_WIRE.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_WIRES)
-                .add(KlaxonItems.GOLD_WIRE);
+                .add(KlaxonItems.GOLD_WIRE.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_WIRES)
-                .add(KlaxonItems.COPPER_WIRE);
-        getOrCreateTagBuilder(KlaxonItemTags.WAXING_STATUS_INCLUSIVE_COPPER_WIRE_SPOOL_BLOCKS)
-                .add(KlaxonItems.COPPER_WIRE_SPOOL_BLOCK)
-                .add(KlaxonItems.WAXED_COPPER_WIRE_SPOOL_BLOCK);
+                .add(KlaxonItems.COPPER_WIRE.value());
     }
 
     private void buildMakeshiftCraftingIngredientTags() {
@@ -192,8 +189,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES);
         getOrCreateTagBuilder(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_CASING)
-                .add(KlaxonItems.STEEL_CASING)
-                .add(KlaxonItems.CRUDE_STEEL_CASING);
+                .add(KlaxonItems.STEEL_CASING.value())
+                .add(KlaxonItems.CRUDE_STEEL_CASING.value());
         getOrCreateTagBuilder(KlaxonItemTags.MOLTEN_INCLUSIVE_RUBBER_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.RUBBER_BLOCKS)
                 .forceAddTag(KlaxonConventionalItemTags.MOLTEN_RUBBER_BLOCKS);
@@ -207,15 +204,15 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonConventionalItemTags.COPPER_PLATES)
                 .forceAddTag(KlaxonConventionalItemTags.GOLD_PLATES);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.STEEL_PLATES)
-                .add(KlaxonItems.STEEL_PLATE);
+                .add(KlaxonItems.STEEL_PLATE.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CRUDE_STEEL_PLATES)
-                .add(KlaxonItems.CRUDE_STEEL_PLATE);
+                .add(KlaxonItems.CRUDE_STEEL_PLATE.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.IRON_PLATES)
-                .add(KlaxonItems.IRON_PLATE);
+                .add(KlaxonItems.IRON_PLATE.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.COPPER_PLATES)
-                .add(KlaxonItems.COPPER_PLATE);
+                .add(KlaxonItems.COPPER_PLATE.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.GOLD_PLATES)
-                .add(KlaxonItems.GOLD_PLATE);
+                .add(KlaxonItems.GOLD_PLATE.value());
     }
 
     private void buildFracturedMaterialTags() {
@@ -228,36 +225,36 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(KlaxonItemTags.FRACTURED_RAW_GOLD)
                 .forceAddTag(KlaxonItemTags.FRACTURED_RAW_IRON);
         getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_COALS)
-                .add(KlaxonItems.FRACTURED_COAL)
-                .add(KlaxonItems.FRACTURED_CHARCOAL);
+                .add(KlaxonItems.FRACTURED_COAL.value())
+                .add(KlaxonItems.FRACTURED_CHARCOAL.value());
         getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_IRON)
-                .add(KlaxonItems.FRACTURED_IRON);
+                .add(KlaxonItems.FRACTURED_IRON.value());
         getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_GOLD)
-                .add(KlaxonItems.FRACTURED_GOLD);
+                .add(KlaxonItems.FRACTURED_GOLD.value());
         getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_COPPER)
-                .add(KlaxonItems.FRACTURED_COPPER);
+                .add(KlaxonItems.FRACTURED_COPPER.value());
         getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_RAW_IRON)
-                .add(KlaxonItems.FRACTURED_RAW_IRON);
+                .add(KlaxonItems.FRACTURED_RAW_IRON.value());
         getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_RAW_GOLD)
-                .add(KlaxonItems.FRACTURED_RAW_GOLD);
+                .add(KlaxonItems.FRACTURED_RAW_GOLD.value());
         getOrCreateTagBuilder(KlaxonItemTags.FRACTURED_RAW_COPPER)
-                .add(KlaxonItems.FRACTURED_RAW_COPPER);
+                .add(KlaxonItems.FRACTURED_RAW_COPPER.value());
     }
 
     private void buildMaterialSheetTags() {
         getOrCreateTagBuilder(KlaxonConventionalItemTags.SHEETS)
                 .forceAddTag(KlaxonConventionalItemTags.RUBBER_SHEETS);
         getOrCreateTagBuilder(KlaxonConventionalItemTags.RUBBER_SHEETS)
-                .add(KlaxonItems.RUBBER_SHEET);
+                .add(KlaxonItems.RUBBER_SHEET.value());
     }
 
     private void buildMakeshiftCraftingLogisticsTags() {
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS)
-                .add(KlaxonItems.CRUDE_STEEL_PLATE)
-                .add(KlaxonItems.CRUDE_STEEL_INGOT)
-                .add(KlaxonItems.CRUDE_STEEL_BLOCK)
-                .add(KlaxonItems.CRUDE_STEEL_NUGGET)
-                .add(KlaxonItems.MOLTEN_RUBBER_BLOCK);
+                .add(KlaxonItems.CRUDE_STEEL_PLATE.value())
+                .add(KlaxonItems.CRUDE_STEEL_INGOT.value())
+                .add(KlaxonItems.CRUDE_STEEL_BLOCK.value())
+                .add(KlaxonItems.CRUDE_STEEL_NUGGET.value())
+                .add(KlaxonItems.MOLTEN_RUBBER_BLOCK.value());
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_REPAIR_MATERIALS)
                 .forceAddTag(KlaxonItemTags.MAKESHIFT_CRAFTING_INGREDIENTS);
     }
@@ -273,25 +270,25 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .forceAddTag(ItemTags.MANGROVE_LOGS);
         getOrCreateTagBuilder(KlaxonItemTags.GEAR_GRIP_MATERIALS)
                 .add(Items.LEATHER)
-                .add(KlaxonItems.RUBBER_SHEET);
+                .add(KlaxonItems.RUBBER_SHEET.value());
     }
 
     private void buildAdvancementRelatedTags() {
         getOrCreateTagBuilder(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(KlaxonItems.STEEL_CLEAVER)
-                .add(KlaxonItems.STEEL_WRENCH)
-                .add(KlaxonItems.STEEL_CABLE_SHEARS)
+                .add(KlaxonItems.STEEL_HAMMER.value())
+                .add(KlaxonItems.STEEL_CLEAVER.value())
+                .add(KlaxonItems.STEEL_WRENCH.value())
+                .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
                 .add(Items.FLINT_AND_STEEL);
         getOrCreateTagBuilder(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
-                .add(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
+                .add(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value());
     }
 
     private void buildMechanicsTags() {
         getOrCreateTagBuilder(ItemTags.DYEABLE)
-                .add(KlaxonItems.CRESTED_STEEL_HELMET);
+                .add(KlaxonItems.CRESTED_STEEL_HELMET.value());
         getOrCreateTagBuilder(KlaxonItemTags.HEAVY_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(Items.NETHERITE_HELMET)
@@ -313,22 +310,22 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.CHAINMAIL_LEGGINGS)
                 .add(Items.CHAINMAIL_BOOTS);
         getOrCreateTagBuilder(ItemTags.PIGLIN_LOVED)
-                .add(KlaxonItems.GOLD_PLATE)
-                .add(KlaxonItems.FRACTURED_RAW_GOLD)
-                .add(KlaxonItems.FRACTURED_GOLD)
-                .add(KlaxonItems.GOLD_PLATING_BLOCK)
-                .add(KlaxonItems.GOLD_WIRE)
-                .add(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK);
+                .add(KlaxonItems.GOLD_PLATE.value())
+                .add(KlaxonItems.FRACTURED_RAW_GOLD.value())
+                .add(KlaxonItems.FRACTURED_GOLD.value())
+                .add(KlaxonItems.GOLD_PLATING_BLOCK.value())
+                .add(KlaxonItems.GOLD_WIRE.value())
+                .add(KlaxonItems.GOLD_WIRE_SPOOL_BLOCK.value());
         getOrCreateTagBuilder(ItemTags.BREAKS_DECORATED_POTS)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(KlaxonItems.STEEL_CLEAVER)
-                .add(KlaxonItems.STEEL_WRENCH);
+                .add(KlaxonItems.STEEL_HAMMER.value())
+                .add(KlaxonItems.STEEL_CLEAVER.value())
+                .add(KlaxonItems.STEEL_WRENCH.value());
         getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_HAMMERS)
-                .add(KlaxonItems.STEEL_HAMMER);
+                .add(KlaxonItems.STEEL_HAMMER.value());
         getOrCreateTagBuilder(KlaxonItemTags.RECIPE_PROCESSING_WIRECUTTERS)
-                .add(KlaxonItems.STEEL_CABLE_SHEARS);
+                .add(KlaxonItems.STEEL_CABLE_SHEARS.value());
         getOrCreateTagBuilder(ItemTags.TRIM_MATERIALS)
-                .add(KlaxonItems.STEEL_INGOT);
+                .add(KlaxonItems.STEEL_INGOT.value());
         getOrCreateTagBuilder(KlaxonItemTags.EFFECTIVE_AGAINST_METAL_ENTITIES)
                 .forceAddTag(ConventionalItemTags.MINING_TOOL_TOOLS);
         getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAW_INSTAKILL)
@@ -337,17 +334,17 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_WINCH_CABLE_DETACHERS)
                 .forceAddTag(ConventionalItemTags.SHEAR_TOOLS);
         getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS)
-                .add(KlaxonItems.STEEL_INGOT);
+                .add(KlaxonItems.STEEL_INGOT.value());
         getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
-                .add(KlaxonItems.STEEL_HAMMER);
+                .add(KlaxonItems.STEEL_HAMMER.value());
         getOrCreateTagBuilder(KlaxonItemTags.PICK_BLOCK_SLOT_REPLACEMENT_DISCOURAGED)
-                .add(KlaxonItems.STEEL_CLEAVER)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(KlaxonItems.STEEL_WRENCH)
-                .add(KlaxonItems.STEEL_CABLE_SHEARS)
-                .add(KlaxonItems.GRAPPLE_WINCH);
+                .add(KlaxonItems.STEEL_CLEAVER.value())
+                .add(KlaxonItems.STEEL_HAMMER.value())
+                .add(KlaxonItems.STEEL_WRENCH.value())
+                .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
+                .add(KlaxonItems.GRAPPLE_WINCH.value());
         getOrCreateTagBuilder(ItemTags.CREEPER_IGNITERS)
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
         getOrCreateTagBuilder(KlaxonItemTags.WRENCHABLE_INTERFACE_TRIGGERING_TOOLS)
                 .addOptionalTag(KlaxonConventionalItemTags.WRENCHES);
     }
@@ -379,65 +376,65 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     private void buildEquipmentCategoryTags() {
         getOrCreateTagBuilder(KlaxonItemTags.GRAPPLE_CLAWS)
-                .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
+                .add(KlaxonItems.STEEL_GRAPPLE_CLAW.value());
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_EQUIPMENT)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(KlaxonItems.STEEL_CABLE_SHEARS)
-                .add(KlaxonItems.STEEL_CLEAVER)
-                .add(KlaxonItems.STEEL_WRENCH)
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL)
-                .add(KlaxonItems.GRAPPLE_WINCH)
-                .add(KlaxonItems.STEEL_GRAPPLE_CLAW);
+                .add(KlaxonItems.STEEL_HAMMER.value())
+                .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
+                .add(KlaxonItems.STEEL_CLEAVER.value())
+                .add(KlaxonItems.STEEL_WRENCH.value())
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value())
+                .add(KlaxonItems.GRAPPLE_WINCH.value())
+                .add(KlaxonItems.STEEL_GRAPPLE_CLAW.value());
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
-                .add(KlaxonItems.STEEL_HELMET)
-                .add(KlaxonItems.CRESTED_STEEL_HELMET)
-                .add(KlaxonItems.STEEL_CHESTPLATE)
-                .add(KlaxonItems.STEEL_LEGGINGS)
-                .add(KlaxonItems.STEEL_BOOTS);
+                .add(KlaxonItems.STEEL_HELMET.value())
+                .add(KlaxonItems.CRESTED_STEEL_HELMET.value())
+                .add(KlaxonItems.STEEL_CHESTPLATE.value())
+                .add(KlaxonItems.STEEL_LEGGINGS.value())
+                .add(KlaxonItems.STEEL_BOOTS.value());
         getOrCreateTagBuilder(ConventionalItemTags.TOOLS)
-                .add(KlaxonItems.GRAPPLE_WINCH);
+                .add(KlaxonItems.GRAPPLE_WINCH.value());
         getOrCreateTagBuilder(ConventionalItemTags.MINING_TOOL_TOOLS)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(KlaxonItems.STEEL_CLEAVER)
-                .add(KlaxonItems.STEEL_WRENCH)
-                .add(KlaxonItems.STEEL_CABLE_SHEARS);
+                .add(KlaxonItems.STEEL_HAMMER.value())
+                .add(KlaxonItems.STEEL_CLEAVER.value())
+                .add(KlaxonItems.STEEL_WRENCH.value())
+                .add(KlaxonItems.STEEL_CABLE_SHEARS.value());
         getOrCreateTagBuilder(ConventionalItemTags.MELEE_WEAPON_TOOLS)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(KlaxonItems.STEEL_CLEAVER)
-                .add(KlaxonItems.STEEL_WRENCH)
-                .add(KlaxonItems.STEEL_CABLE_SHEARS);
+                .add(KlaxonItems.STEEL_HAMMER.value())
+                .add(KlaxonItems.STEEL_CLEAVER.value())
+                .add(KlaxonItems.STEEL_WRENCH.value())
+                .add(KlaxonItems.STEEL_CABLE_SHEARS.value());
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.CLEAVERS)
-                .add(KlaxonItems.STEEL_CLEAVER);
+                .add(KlaxonItems.STEEL_CLEAVER.value());
         getOrCreateTagBuilder(KlaxonConventionalItemTags.KNIVES)
-                .add(KlaxonItems.STEEL_CLEAVER);
+                .add(KlaxonItems.STEEL_CLEAVER.value());
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.HAMMERS)
-                .add(KlaxonItems.STEEL_HAMMER);
+                .add(KlaxonItems.STEEL_HAMMER.value());
 
         getOrCreateTagBuilder(KlaxonConventionalItemTags.WRENCHES)
-                .add(KlaxonItems.STEEL_WRENCH);
+                .add(KlaxonItems.STEEL_WRENCH.value());
 
         getOrCreateTagBuilder(ConventionalItemTags.SHEAR_TOOLS)
                 .forceAddTag(KlaxonItemTags.CABLE_SHEARS);
         getOrCreateTagBuilder(KlaxonItemTags.CABLE_SHEARS)
-                .add(KlaxonItems.STEEL_CABLE_SHEARS);
+                .add(KlaxonItems.STEEL_CABLE_SHEARS.value());
 
         getOrCreateTagBuilder(ConventionalItemTags.ARMORS)
                 .forceAddTag(KlaxonItemTags.STEEL_ARMOR);
         getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)
-                .add(KlaxonItems.STEEL_HELMET)
-                .add(KlaxonItems.CRESTED_STEEL_HELMET);
+                .add(KlaxonItems.STEEL_HELMET.value())
+                .add(KlaxonItems.CRESTED_STEEL_HELMET.value());
         getOrCreateTagBuilder(ItemTags.CHEST_ARMOR)
-                .add(KlaxonItems.STEEL_CHESTPLATE);
+                .add(KlaxonItems.STEEL_CHESTPLATE.value());
         getOrCreateTagBuilder(ItemTags.LEG_ARMOR)
-                .add(KlaxonItems.STEEL_LEGGINGS);
+                .add(KlaxonItems.STEEL_LEGGINGS.value());
         getOrCreateTagBuilder(ItemTags.FOOT_ARMOR)
-                .add(KlaxonItems.STEEL_BOOTS);
+                .add(KlaxonItems.STEEL_BOOTS.value());
 
         getOrCreateTagBuilder(ConventionalItemTags.IGNITER_TOOLS)
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL);
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
     }
 
     private void buildBlastProcessorCatalystBehaviorTags() {
@@ -462,7 +459,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     private void buildCompatTags() {
         getOrCreateTagBuilder(KlaxonCompatItemTags.PEDESTAL_DOWNRIGHT)
-                .add(KlaxonItems.STEEL_HAMMER)
-                .add(KlaxonItems.STEEL_CLEAVER);
+                .add(KlaxonItems.STEEL_HAMMER.value())
+                .add(KlaxonItems.STEEL_CLEAVER.value());
     }
 }
