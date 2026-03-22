@@ -18,7 +18,7 @@ import net.myriantics.klaxon_gametest.util.KlaxonTestPlayer;
 public class GrappleClawEntityTester {
     @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
     public static void testGrappleClawFastReload(KlaxonGameTestHelper context) {
-        GrappleClawEntity grappleClaw = context.spawn(KlaxonEntityTypes.GRAPPLE_CLAW, new Vec3(3, 0, 3));
+        GrappleClawEntity grappleClaw = context.spawn(KlaxonEntityTypes.GRAPPLE_CLAW.value(), new Vec3(3, 0, 3));
         KlaxonTestPlayer player = context.createFakePlayer(GameType.SURVIVAL);
         player.lookAt(EntityAnchorArgument.Anchor.EYES, grappleClaw.getEyePosition());
         context.getLevel().addFreshEntity(player);
@@ -28,7 +28,7 @@ public class GrappleClawEntityTester {
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(KlaxonItems.GRAPPLE_WINCH));
                 player.attack(grappleClaw);
 
-                context.assertEntityNotPresent(KlaxonEntityTypes.GRAPPLE_CLAW);
+                context.assertEntityNotPresent(KlaxonEntityTypes.GRAPPLE_CLAW.value());
                 context.expectBoolean(false, player.getItemInHand(InteractionHand.MAIN_HAND).getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).isEmpty(), "Grapple Winch Charged Projectiles empty when it shouldn't be!");
 
                 player.kill();

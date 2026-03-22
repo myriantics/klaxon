@@ -16,10 +16,10 @@ import net.myriantics.klaxon_gametest.util.KlaxonGameTestHelper;
 public class DeepslateBlastProcessorBlockTester {
     @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
     public static void test(KlaxonGameTestHelper context) {
-        context.setBlock(BlockPos.ZERO, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+        context.setBlock(BlockPos.ZERO, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value());
         context.assertBlock(
                 BlockPos.ZERO,
-                (block) -> block.equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR),
+                (block) -> block.equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value()),
                 "Expected Deepslate Blast Processor at: " + BlockPos.ZERO
         );
         context.succeed();
@@ -28,7 +28,7 @@ public class DeepslateBlastProcessorBlockTester {
     @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
     public static void testFastInput(KlaxonGameTestHelper context) {
         BlockPos pos = BlockPos.ZERO;
-        context.setBlock(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.defaultBlockState());
+        context.setBlock(pos, KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value().defaultBlockState());
         FakePlayer player = context.createFakePlayer(GameType.SURVIVAL);
         ItemStack gunpowderStack = new ItemStack(Items.GUNPOWDER, 64);
         ItemStack coalStack = new ItemStack(Items.COAL, 64);

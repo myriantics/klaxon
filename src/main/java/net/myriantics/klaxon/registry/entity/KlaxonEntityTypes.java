@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry.entity;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
@@ -10,7 +11,7 @@ import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 
 public abstract class KlaxonEntityTypes {
 
-    public static final EntityType<GrappleClawEntity> GRAPPLE_CLAW = register(
+    public static final Holder<EntityType<GrappleClawEntity>> GRAPPLE_CLAW = register(
             "grapple_claw",
             EntityType.Builder.<GrappleClawEntity>of(GrappleClawEntity::new, MobCategory.MISC)
                     .sized(0.8f, 0.8f)
@@ -23,8 +24,9 @@ public abstract class KlaxonEntityTypes {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Entities!");
     }
 
-    private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder<T> type) {
+    @SuppressWarnings("unchecked")
+    private static <T extends Entity> Holder<EntityType<T>> register(String id, EntityType.Builder<T> type) {
         // built with null identifier to stop missing datafixer log message
-        return Registry.register(BuiltInRegistries.ENTITY_TYPE, KlaxonCommon.locate(id), type.build(null));
+        return (Holder<EntityType<T>>) (Object) Registry.registerForHolder(BuiltInRegistries.ENTITY_TYPE, KlaxonCommon.locate(id), type.build(null));
     }
 }

@@ -17,6 +17,7 @@ import net.myriantics.klaxon.registry.item.KlaxonItemModelPredicates;
 import net.myriantics.klaxon.registry.network.KlaxonClientPackets;
 import net.myriantics.klaxon.registry.render.KlaxonBlockRenderTypes;
 import net.myriantics.klaxon.registry.render.KlaxonEntityModelLayers;
+import net.myriantics.klaxon.registry.render.KlaxonEntityRenderers;
 import net.myriantics.klaxon.resource.KlaxonSplashTextResourceSupplier;
 import net.myriantics.klaxon.screen.DeepslateBlastProcessorScreen;
 import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
@@ -29,7 +30,8 @@ public class KlaxonClient implements ClientModInitializer {
         // block transparency
         KlaxonBlockRenderTypes.init();
 
-        EntityRendererRegistry.register(KlaxonEntityTypes.GRAPPLE_CLAW, GrappleClawEntityRenderer::new);
+        // entity renderers
+        KlaxonEntityRenderers.init();
 
         // handled screens
         MenuScreens.register(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);

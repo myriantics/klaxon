@@ -53,7 +53,11 @@ public abstract class KlaxonEnUsLanguageSubProvider {
         builder.add(block, name);
     }
 
-    protected void addEntityType(EntityType<? extends Entity> type, String name) {
+    protected void addEntityType(Holder<EntityType<?>> typeHolder, String name) {
+        addEntityType(typeHolder.value(), name);
+    }
+
+    protected void addEntityType(EntityType<?> type, String name) {
         builder.add(type, name);
     }
 
