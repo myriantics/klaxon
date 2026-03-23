@@ -19,7 +19,8 @@
     "facing=south": {
       "model": "klaxon:block/steel_workbench",
       "uvlock": false,
-      "x": 270
+      "x": 90,
+      "y": 180
     },
     "facing=up": {
       "model": "klaxon:block/steel_workbench",
