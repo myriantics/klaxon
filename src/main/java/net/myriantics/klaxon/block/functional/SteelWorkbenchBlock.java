@@ -35,7 +35,7 @@ public class SteelWorkbenchBlock extends CraftingTableBlock implements WorldItem
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         @Nullable BlockState superState = super.getStateForPlacement(context);
-        return superState == null ? this.defaultBlockState() : superState.setValue(FACING, context.getClickedFace());
+        return superState == null ? this.defaultBlockState() : superState.setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
