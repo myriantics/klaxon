@@ -25,7 +25,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
 
     @ModifyExpressionValue(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;canBeReplaced(Lnet/minecraft/world/item/context/BlockPlaceContext;)Z")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;canSurvive(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z")
     )
     private boolean klaxon$rotateHallnoxPodWhenLanding(boolean original, @Local BlockPos blockPos) {
         // if we fail to place the hallnox pod, rotate it and try again
