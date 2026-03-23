@@ -96,7 +96,7 @@ public abstract class KlaxonBlockModelSubProvider {
                 () -> ModelTemplates.CUBE_BOTTOM_TOP.createBaseTemplate(modelId, textureMap)
         );
 
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, modelId).with(VariantProperties.UV_LOCK, true)).with(createUpDefaultRotationStates()));
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, modelId).with(VariantProperties.UV_LOCK, false)).with(createUpDefaultRotationStates()));
     }
 
     protected void registerDeepslateBlastProcessor() {

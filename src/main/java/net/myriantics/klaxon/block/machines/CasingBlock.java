@@ -22,4 +22,10 @@ public class CasingBlock extends Block {
     protected boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        // identical to super method but here for readability
+        return 0;
+    }
 }
