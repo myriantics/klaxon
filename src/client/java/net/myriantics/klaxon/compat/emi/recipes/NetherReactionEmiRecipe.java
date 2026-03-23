@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
+import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
@@ -50,7 +50,7 @@ public class NetherReactionEmiRecipe implements EmiRecipe {
 
     @Override
     public EmiRecipeCategory getCategory() {
-        return KlaxonEmiRecipeCategories.NETHER_REACTION;
+        return KlaxonEmiCategories.NETHER_REACTION;
     }
 
     @Override

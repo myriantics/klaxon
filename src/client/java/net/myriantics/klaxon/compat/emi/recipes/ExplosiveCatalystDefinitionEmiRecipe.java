@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.myriantics.klaxon.compat.emi.KlaxonEmiRecipeCategories;
+import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class ExplosiveCatalystDefinitionEmiRecipe extends EmiInfoRecipe {
 
     @Override
     public EmiRecipeCategory getCategory() {
-        return KlaxonEmiRecipeCategories.EXPLOSIVE_CATALYST_DEFINITION;
+        return KlaxonEmiCategories.EXPLOSIVE_CATALYST_DEFINITION;
     }
 
 }

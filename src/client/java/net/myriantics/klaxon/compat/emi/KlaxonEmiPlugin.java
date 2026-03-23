@@ -5,7 +5,6 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
-import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -22,18 +21,18 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
+import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
-import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
-import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.Optional;
@@ -48,8 +47,8 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
-        registerCategories(registry);
-        registerWorkstations(registry);
+        KlaxonEmiCategories.init(registry);
+        KlaxonEmiWorkstations.init(registry);
         registerRecipes(registry);
 
         Level world = Minecraft.getInstance().level;
@@ -69,7 +68,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
                         renderable = validTools;
                     }
 
-                    EmiRecipeCategory category = KlaxonEmiRecipeCategories.of(
+                    EmiRecipeCategory category = KlaxonEmiCategories.of(
                             optionalKey.get().location(), renderable
                     );
 
@@ -91,24 +90,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         }
     }
 
-    private void registerCategories(EmiRegistry registry) {
-        for (EmiRecipeCategory category : KlaxonEmiRecipeCategories.CATEGORIES) {
-            registry.addCategory(category);
-        }
-    }
-
-    private void registerWorkstations(EmiRegistry registry) {
-        registry.addWorkstation(KlaxonEmiRecipeCategories.BLAST_PROCESSING, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value()));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value()));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
-        registry.addWorkstation(KlaxonEmiRecipeCategories.WORLD_ITEM_APPLICATION, EmiStack.of(Items.DISPENSER));
-
-        // Steel Hammer can mimic AnvilScreenHandler functionality
-        registry.addWorkstation(VanillaEmiRecipeCategories.ANVIL_REPAIRING, EmiStack.of(KlaxonItems.STEEL_HAMMER.value()));
-        // Blast Processors can mimic Blasting Smelting functionality when using a catalyst that produces Fire
-        registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value()));
-    }
-
     private void registerRecipes(EmiRegistry registry) {
         addAllExplosiveCatalystDefinition(registry, KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, ExplosiveCatalystDefinitionEmiRecipe::new);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
@@ -124,7 +105,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             ) {
                 @Override
                 public EmiRecipeCategory getCategory() {
-                    return KlaxonEmiRecipeCategories.WORLD_ITEM_APPLICATION;
+                    return KlaxonEmiCategories.WORLD_ITEM_APPLICATION;
                 }
             };
         });

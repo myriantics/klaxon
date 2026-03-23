@@ -1,41 +1,57 @@
-package net.myriantics.klaxon.compat.emi;
+package net.myriantics.klaxon.compat.emi.registry;
 
+import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiRecipeSorting;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 import java.util.ArrayList;
 
-// also yoinked from spectrum
-public abstract class KlaxonEmiRecipeCategories {
-    public static final ArrayList<EmiRecipeCategory> CATEGORIES = new ArrayList<>();
+public abstract class KlaxonEmiCategories {
+    private static final ArrayList<EmiRecipeCategory> CATEGORIES = new ArrayList<>();
 
     public static final EmiRecipeCategory BLAST_PROCESSING = register(
             KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
-            EmiStack.of(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value())
+            KlaxonItems.DEEPSLATE_BLAST_PROCESSOR
     );
     public static final EmiRecipeCategory EXPLOSIVE_CATALYST_DEFINITION = register(
             KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
-            EmiStack.of(Items.TNT)
+            Items.TNT
     );
     public static final EmiRecipeCategory NETHER_REACTION = register(
             KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
-            EmiStack.of(KlaxonItems.NETHER_REACTOR_CORE.value())
+            KlaxonItems.NETHER_REACTOR_CORE
     );
     public static final EmiRecipeCategory WORLD_ITEM_APPLICATION = register(
             KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID,
-            EmiStack.of(Items.DISPENSER)
+            Items.DISPENSER
     );
 
-    private static KlaxonCategory register(String name, EmiRenderable icon) {
-        KlaxonCategory category = new KlaxonCategory(KlaxonCommon.locate(name), icon);
+    public static void init(EmiRegistry registry) {
+        CATEGORIES.forEach(registry::addCategory);
+        KlaxonCommon.LOGGER.info("Registered KLAXON's EMI Categories!");
+    }
+
+    private static EmiRecipeCategory register(String name, Holder<Item> iconHolder) {
+        return register(name, iconHolder.value());
+    }
+
+    private static EmiRecipeCategory register(String name, ItemLike icon) {
+        return register(name, EmiStack.of(icon));
+    }
+
+    private static EmiRecipeCategory register(String name, EmiRenderable icon) {
+        EmiRecipeCategory category = of(name, icon);
         CATEGORIES.add(category);
         return category;
     }
