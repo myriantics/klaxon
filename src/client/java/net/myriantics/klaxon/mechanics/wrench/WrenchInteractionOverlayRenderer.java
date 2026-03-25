@@ -20,6 +20,8 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 
+import java.util.ArrayList;
+
 public class WrenchInteractionOverlayRenderer {
 
     private static final ResourceLocation TEXTURE = KlaxonTextures.decorate(KlaxonTextures.WRENCH_OVERLAY_TEST_ARROW);
@@ -41,7 +43,7 @@ public class WrenchInteractionOverlayRenderer {
         Vec3 offset = clickedPos.multiply(Math.abs(faceDir.getStepX()), Math.abs(faceDir.getStepY()), Math.abs(faceDir.getStepZ()));
         // Vec3 offset = clickedPos.multiply(faceDir.getNormal().getX(), faceDir.getNormal().getY(), faceDir.getNormal().getZ());
         // go go gadget anti centerZ fighting
-        offset = offset.relative(faceDir, 0.0001);
+        offset = offset.relative(faceDir, 0.005);
         poseStack.pushPose();
 
         float centerX = (float) (blockCenterPos.x - cameraPos.x);
@@ -50,7 +52,7 @@ public class WrenchInteractionOverlayRenderer {
 
         poseStack.translate(centerX, centerY, centerZ);
         poseStack.translate(offset.x, offset.y, offset.z);
-        poseStack.scale(1f/16, 1f/16, 1f/16);
+        // poseStack.scale(1f/16, 1f/16, 1f/16);
 
         poseStack.mulPose(faceDir.getRotation());
         poseStack.mulPose(Axis.ZN.rotationDegrees(180));
@@ -64,73 +66,12 @@ public class WrenchInteractionOverlayRenderer {
 
         PoseStack.Pose pose = poseStack.last();
 
-        state.getShape(level, pos).forAllBoxes((x, y, z, x1, y1, z1) -> {
-            double i = clickedPos.x + 0.5;
-            double j = clickedPos.y + 0.5;
-            double k = clickedPos.z + 0.5;
+        BlockFaceGroup group = new BlockFaceGroup(faceDir, clickedPos.add(0.5f, 0.5f, 0.5f).toVector3f());
 
-            boolean win = switch (faceDir.getAxis()) {
-                case X -> (testAllowance(i, x) || testAllowance(i, x1)) && isBetweenInc(j, y, y1) && isBetweenInc(k, z, z1);
-                case Y -> (testAllowance(j, y) || testAllowance(j, y1)) && isBetweenInc(i, x, x1) && isBetweenInc(k, z, z1);
-                case Z -> (testAllowance(k, z) || testAllowance(k, z1)) && isBetweenInc(i, x, x1) && isBetweenInc(j, y, y1);
-            };
+        state.getShape(level, pos).forAllBoxes(group::tryAdd);
 
-            if (win) {
-                final float[] min = new float[2];
-                final float[] max = new float[2];
-                switch (faceDir) {
-                    case UP -> {
-                        min[0] = (float) (1 - x);
-                        min[1] = (float) (1 - z);
-                        max[0] = (float) (1 - x1);
-                        max[1] = (float) (1 - z1);
-                    }
-                    case DOWN -> {
-                        min[0] = (float) (1 - x1);
-                        min[1] = (float) z;
-                        max[0] = (float) (1 - x);
-                        max[1] = (float) z1;
-                    }
-                    case NORTH -> {
-                        min[0] = (float) x;
-                        min[1] = (float) y;
-                        max[0] = (float) x1;
-                        max[1] = (float) y1;
-                    }
-                    case SOUTH -> {
-                        min[0] = (float) (1 - x1);
-                        min[1] = (float) y;
-                        max[0] = (float) (1 - x);
-                        max[1] = (float) y1;
-                    }
-                    case EAST -> {
-                        min[0] = (float) z;
-                        min[1] = (float) y;
-                        max[0] = (float) z1;
-                        max[1] = (float) y1;
-                    }
-                    case WEST -> {
-                        min[0] = (float) (1f - z1);
-                        min[1] = (float) y;
-                        max[0] = (float) (1f - z);
-                        max[1] = (float) y1;
-                    }
-                }
-
-                min[0] *= 16;
-                min[1] *= 16;
-                max[0] *= 16;
-                max[1] *= 16;
-
-                int light = LightTexture.pack(15, 15);
-
-                this.vertex(pose, consumer, min[0] - 8,max[1] - 8, 0, min[0]/16 ,min[1]/16, 0, 0, 0, light);
-                this.vertex(pose, consumer, max[0] - 8,max[1] - 8, 0, max[0]/16 ,min[1]/16, 0, 0, 0, light);
-                this.vertex(pose, consumer, max[0] - 8, min[1] - 8, 0, max[0]/16 ,max[1]/16, 0, 0, 0, light);
-                this.vertex(pose, consumer, min[0] - 8,min[1] - 8, 0, min[0]/16 , max[1]/16, 0, 0, 0, light);
-            }
-        });
-
+        int light = LightTexture.pack(15, 15);
+        group.renderSelected(pose, consumer, light);
 
         poseStack.popPose();
     }
@@ -146,11 +87,5 @@ public class WrenchInteractionOverlayRenderer {
                 .setNormal(poseStack, normalX, normalY, normalZ);
     }
 
-    private boolean isBetweenInc(double val, double min, double max) {
-        return val >= min && val <= max;
-    }
 
-    private boolean testAllowance(double a, double b) {
-        return a >= b - 0.01 && a <= b + 0.01;
-    }
 }
