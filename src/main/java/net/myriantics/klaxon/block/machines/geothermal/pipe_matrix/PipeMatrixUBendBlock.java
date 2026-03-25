@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -18,9 +17,11 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.myriantics.klaxon.block.decor.hallnox_bulb.NeighborPlacementListener;
-import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
-import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
+import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +35,8 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     // Tracks whether this pipe matrix loop is part of a valid structure or not.
     public static final BooleanProperty FORMED = KlaxonBlockStateProperties.FORMED;
+
+    protected static final WrenchInteraction DISCONNECT_INTERACTION = WrenchInteraction.of(KlaxonWrenchActionTypes.DISCONNECT, context -> handleDisconnect(context));
 
     private PipeMatrixSegmentBlock segmentBlock;
 
@@ -134,57 +137,47 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
         }
     }
 
-    @Override
-    public InteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
-        if (getSegmentBlock() != null) {
-            BlockPos pos = context.hitResult().getBlockPos();
+    private static Optional<InteractionResult> handleDisconnect(WrenchActionContext context) {
+        Level level = context.level();
+        BlockState state = context.getTargetState();
+        BlockPos pos = context.getTargetPos();
 
-            context.world().setBlockAndUpdate(
-                    context.hitResult().getBlockPos(),
-                    getSegmentBlock().defaultBlockState().setValue(PipeMatrixSegmentBlock.AXIS, context.targetState().getValue(FACING).getAxis())
-            );
+        if (!(state.getBlock() instanceof PipeMatrixUBendBlock uBendBlock)) {
+            throw new AssertionError();
+        }
 
-            context.world().playSound(
-                    context.player(),
+        @Nullable PipeMatrixSegmentBlock segmentBlock = uBendBlock.getSegmentBlock();
+
+        if (segmentBlock != null) {
+            if (!level.isClientSide()) {
+                level.setBlockAndUpdate(pos, segmentBlock.defaultBlockState().setValue(PipeMatrixSegmentBlock.AXIS, state.getValue(FACING).getAxis()));
+            }
+            level.playSound(
+                    context instanceof WrenchActionContext.Manual manual ? manual.getPlayer() : null,
                     pos,
-                    soundType.getPlaceSound(),
-                    context.player().getSoundSource(),
-                    0.8f + (0.2f * context.world().getRandom().nextFloat()),
-                    0.4f + (0.4f * context.world().getRandom().nextFloat())
+                    uBendBlock.soundType.getPlaceSound(),
+                    SoundSource.BLOCKS,
+                    0.8f + (0.2f * level.getRandom().nextFloat()),
+                    0.4f + (0.4f * level.getRandom().nextFloat())
             );
+            switch (context) {
+                case WrenchActionContext.Manual manual -> level.gameEvent(manual.getPlayer(), GameEvent.BLOCK_CHANGE, pos);
+                case WrenchActionContext.Dispenser dispenser -> level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(state));
+            }
 
-            // trip sculk sensors because it's funny
-            context.world().gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(context.player(), context.targetState()));
-
-            return InteractionResult.SUCCESS;
+            return Optional.of(InteractionResult.SUCCESS);
         } else {
-            return null;
+            return Optional.of(InteractionResult.FAIL);
         }
     }
 
     @Override
-    public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
-        if (getSegmentBlock() != null) {
-            context.serverWorld().setBlockAndUpdate(
-                    context.targetPos(),
-                    getSegmentBlock().defaultBlockState().setValue(PipeMatrixSegmentBlock.AXIS, context.targetState().getValue(FACING).getAxis())
-            );
+    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
+        return DISCONNECT_INTERACTION.toSingletonMap();
+    }
 
-            context.serverWorld().playSound(
-                    null,
-                    context.targetPos(),
-                    soundType.getPlaceSound(),
-                    SoundSource.BLOCKS,
-                    0.8f + (0.2f * context.serverWorld().getRandom().nextFloat()),
-                    0.4f + (0.4f * context.serverWorld().getRandom().nextFloat())
-            );
-
-            // trip sculk sensors because it's funny
-            context.serverWorld().gameEvent(GameEvent.BLOCK_CHANGE, context.targetPos(), GameEvent.Context.of(context.targetState()));
-
-            return true;
-        } else {
-            return false;
-        }
+    @Override
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        return DISCONNECT_INTERACTION;
     }
 }

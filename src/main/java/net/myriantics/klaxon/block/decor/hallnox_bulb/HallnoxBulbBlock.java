@@ -3,10 +3,9 @@ package net.myriantics.klaxon.block.decor.hallnox_bulb;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,11 +25,17 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
-import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionType;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
+import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
+import java.util.Optional;
 
 public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBlock, Wrenchable, NeighborPlacementListener {
 
@@ -40,6 +45,75 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
     private static final VoxelShape BASE_SHAPE = Block.box(2, 2, 2, 14, 14, 14);
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
+    protected static final DirectionalWrenchInteraction EXTRUDE = DirectionalWrenchInteraction.of(KlaxonWrenchActionTypes.EXTRUDE, HallnoxBulbBlock::handleExtrude);
+    protected static final DirectionalWrenchInteraction RETRACT = DirectionalWrenchInteraction.of(KlaxonWrenchActionTypes.RETRACT, HallnoxBulbBlock::handleRetract);
+    protected static final DirectionalWrenchInteraction CONNECT = DirectionalWrenchInteraction.of(KlaxonWrenchActionTypes.CONNECT, HallnoxBulbBlock::handleConnect);
+    protected static final DirectionalWrenchInteraction DISCONNECT = DirectionalWrenchInteraction.of(KlaxonWrenchActionTypes.DISCONNECT, HallnoxBulbBlock::handleDisconnect);
+
+    private static Optional<InteractionResult> handleDisconnect(WrenchActionContext context, Direction direction) {
+        Level level = context.level();
+        BlockPos pos = context.getTargetPos();
+        BlockState state = context.getTargetState();
+
+        BlockPos conjoiningPos = pos.relative(direction);
+        BlockState conjoiningState = level.getBlockState(conjoiningPos);
+
+        // just make sure its got the property this time - we check for whether its extruded or not before calling this.
+        BooleanProperty oppositeProperty = PROPERTY_BY_DIRECTION.get(direction.getOpposite());
+        if (conjoiningState.getBlock() instanceof HallnoxBulbBlock && conjoiningState.hasProperty(oppositeProperty)) {
+            level.setBlockAndUpdate(conjoiningPos, conjoiningState.setValue(oppositeProperty, true));
+        }
+
+        // we know we can set our own state
+        level.setBlockAndUpdate(pos, state.setValue(PROPERTY_BY_DIRECTION.get(direction), true));
+        playToggleSound(level, context, false);
+
+        return Optional.of(InteractionResult.SUCCESS);
+    }
+
+    private static Optional<InteractionResult> handleConnect(WrenchActionContext context, Direction direction) {
+        Level level = context.level();
+        BlockPos pos = context.getTargetPos();
+        BlockState state = context.getTargetState();
+
+        BlockPos conjoiningPos = pos.relative(direction);
+        BlockState conjoiningState = level.getBlockState(conjoiningPos);
+
+        // only change the other state if we're sure it's not extruded
+        BooleanProperty oppositeProperty = PROPERTY_BY_DIRECTION.get(direction.getOpposite());
+        if (conjoiningState.getBlock() instanceof HallnoxBulbBlock && conjoiningState.hasProperty(oppositeProperty) && !conjoiningState.getValue(oppositeProperty)) {
+            level.setBlockAndUpdate(conjoiningPos, conjoiningState.setValue(oppositeProperty, true));
+        }
+
+        // we know we can set our own state
+        level.setBlockAndUpdate(pos, state.setValue(PROPERTY_BY_DIRECTION.get(direction), true));
+        playToggleSound(level, context, false);
+
+        return Optional.of(InteractionResult.SUCCESS);
+    }
+
+    private static Optional<InteractionResult> handleRetract(WrenchActionContext context, Direction direction) {
+        Level level = context.level();
+        BlockPos pos = context.getTargetPos();
+        BlockState state = context.getTargetState();
+
+        level.setBlockAndUpdate(pos, state.setValue(PROPERTY_BY_DIRECTION.get(direction), false));
+        playToggleSound(level, context, false);
+
+        return Optional.of(InteractionResult.SUCCESS);
+    }
+
+    private static Optional<InteractionResult> handleExtrude(WrenchActionContext context, Direction direction) {
+        Level level = context.level();
+        BlockPos pos = context.getTargetPos();
+        BlockState state = context.getTargetState();
+
+        level.setBlockAndUpdate(pos, state.setValue(PROPERTY_BY_DIRECTION.get(direction), true));
+        playToggleSound(level, context, true);
+
+        return Optional.of(InteractionResult.SUCCESS);
+    }
 
     protected final VoxelShape[] facingsToFusedShape = new VoxelShape[64];
 
@@ -83,95 +157,24 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
         }
     }
 
-
-    public void onAdjacentPlaceOnSideWhileNotCrouching(Level world, BlockPos bulbPos, BlockState bulbState, BlockPos placedPos, BlockState placedState, Direction clickedSide) {
-        if (shouldConnect(world, placedState, placedPos, clickedSide)) {
-            world.setBlockAndUpdate(bulbPos, bulbState.setValue(PROPERTY_BY_DIRECTION.get(clickedSide), true));
-        }
-    }
-
-    @Override
-    public InteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
-        BlockPos targetPos = context.hitResult().getBlockPos();
-
-        Level world = context.world();
-        Vec3 hitPos = context.hitResult().getLocation().subtract(Vec3.atCenterOf(targetPos));
-        Direction togglingDirection = Direction.getNearest(hitPos.x(), hitPos.y(), hitPos.z());
-
-        BlockPos conjoiningPos = targetPos.relative(togglingDirection);
-        BlockState conjoiningState = world.getBlockState(conjoiningPos);
-
-        BooleanProperty toggledProperty = PROPERTY_BY_DIRECTION.get(togglingDirection);
-        BooleanProperty conjoiningToggledProperty = PROPERTY_BY_DIRECTION.get(togglingDirection.getOpposite());
-
-        // don't update block states on the client
-        if (!world.isClientSide()) {
-            // cycle conjoining bulb connector state if possible
-            if (
-                // make sure conjoining state is also a hallnox bulb
-                    conjoiningState.getBlock() instanceof HallnoxBulbBlock
-                            // make sure the states match
-                            && conjoiningState.getValue(conjoiningToggledProperty)
-                            .equals(context.targetState().getValue(toggledProperty)
-                            )
-            ) {
-                world.setBlockAndUpdate(
-                        conjoiningPos,
-                        conjoiningState.cycle(conjoiningToggledProperty)
-                );
-            }
-
-            // cycle bulb connector state
-            world.setBlockAndUpdate(
-                    targetPos,
-                    context.targetState().cycle(toggledProperty)
-            );
-        }
-
-
+    private static void playToggleSound(Level level, WrenchActionContext context, boolean extrude) {
+        BlockPos pos = context.getTargetPos();
         SoundType soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.value().defaultBlockState().getSoundType();
-
-        world.playSound(
-                context.player(),
-                targetPos,
-                context.targetState().getValue(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
+        level.playSound(
+                context instanceof WrenchActionContext.Manual manual ? manual.getPlayer() : null,
+                pos,
+                extrude ? soundGroup.getPlaceSound() : soundGroup.getBreakSound(),
                 SoundSource.BLOCKS,
-                0.6f + (0.2f * world.getRandom().nextFloat()),
-                0.2f + (0.4f * world.getRandom().nextFloat())
-        );
-
-        // this is a stub implementation in ClientWorld so it's fine
-        // trip sculk sensors because it's funny
-        world.gameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Context.of(context.player(), context.targetState()));
-
-        return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
-        BooleanProperty toggledProperty = PROPERTY_BY_DIRECTION.get(context.dispenserFacing().getOpposite());
-        ServerLevel serverWorld = context.serverWorld();
-
-        // calculations are simpler here because dispensers can only face 6 ways - also can't click on random parts of the block
-        serverWorld.setBlockAndUpdate(context.targetPos(), context.targetState().cycle(toggledProperty));
-
-        SoundType soundGroup = KlaxonBlocks.STEEL_PLATING_BLOCK.value().defaultBlockState().getSoundType();
-        serverWorld.playSound(
-                null,
-                context.targetPos(),
-                context.targetState().getValue(toggledProperty) ? soundGroup.getBreakSound() : soundGroup.getPlaceSound(),
-                SoundSource.BLOCKS,
-                0.6f + (0.2f * serverWorld.getRandom().nextFloat()),
-                0.2f + (0.4f * serverWorld.getRandom().nextFloat())
+                0.6f + (0.2f * level.getRandom().nextFloat()),
+                0.2f + (0.4f * level.getRandom().nextFloat())
         );
 
         // proc sculk sensors
-        serverWorld.gameEvent(GameEvent.BLOCK_CHANGE, context.targetPos(), GameEvent.Context.of(context.targetState()));
-
-        return true;
+        switch (context) {
+            case WrenchActionContext.Manual manual -> level.gameEvent(manual.getPlayer(), GameEvent.BLOCK_CHANGE, pos);
+            case WrenchActionContext.Dispenser dispenser -> level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(context.getTargetState()));
+        }
     }
-
-
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
@@ -242,5 +245,84 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
     @Override
     protected FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    protected static Direction selectFaceFromContext(WrenchActionContext context) {
+        return switch (context) {
+            case WrenchActionContext.Dispenser dispenser -> dispenser.getDispenserFacing().getOpposite();
+            case WrenchActionContext.Manual manual -> {
+                Vec3 hitPos = manual.getHitResult().getLocation().subtract(Vec3.atCenterOf(context.getTargetPos()));
+                yield Direction.getNearest(hitPos.x(), hitPos.y(), hitPos.z());
+            }
+        };
+    }
+
+    @Override
+    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
+        Level level = context.level();
+        BlockState state = context.getTargetState();
+        BlockPos pos = context.getTargetPos();
+
+        Direction selectedFace = selectFaceFromContext(context);
+
+        BlockPos conjoiningPos = pos.relative(selectedFace);
+        BlockState conjoiningState = level.getBlockState(conjoiningPos);
+
+        boolean extruded = state.getValue(PROPERTY_BY_DIRECTION.get(selectedFace));
+
+        BooleanProperty opposingDirection = PROPERTY_BY_DIRECTION.get(selectedFace.getOpposite());
+        if (conjoiningState.getBlock() instanceof HallnoxBulbBlock && conjoiningState.hasProperty(opposingDirection)) {
+            boolean conjoiningExtruded = conjoiningState.getValue(opposingDirection);
+            if (extruded && conjoiningExtruded) { // if both are extruded, perform disconnect
+                return DISCONNECT.forDirection(selectedFace).toSingletonMap();
+            } else if (conjoiningExtruded || !extruded) { // if conjoining is extruded or origin isn't, perform connect
+                return CONNECT.forDirection(selectedFace).toSingletonMap();
+            }
+        }
+
+        // conjoining special cases have been accounted for, so do basic behavior
+        return extruded
+                ? RETRACT.forDirection(selectedFace).toSingletonMap()
+                : EXTRUDE.forDirection(selectedFace).toSingletonMap();
+    }
+
+    @Override
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        Direction selectedFace = context.getDispenserFacing().getOpposite();
+        return context.getTargetState().getValue(PROPERTY_BY_DIRECTION.get(selectedFace))
+                ? RETRACT.forDirection(selectedFace)
+                : EXTRUDE.forDirection(selectedFace);
+    }
+
+    protected static class DirectionalWrenchInteraction {
+        private final Map<Direction, WrenchInteraction> direction2Interaction;
+
+        protected DirectionalWrenchInteraction(WrenchActionType type, DirectionalWrenchActionHandler handler) {
+            this.direction2Interaction = Map.of(
+                    Direction.DOWN, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.DOWN))),
+                    Direction.UP, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.UP))),
+                    Direction.NORTH, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.NORTH))),
+                    Direction.SOUTH, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.SOUTH))),
+                    Direction.EAST, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.EAST))),
+                    Direction.WEST, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.WEST)))
+            );
+        }
+
+        public static DirectionalWrenchInteraction of(Holder<WrenchActionType> typeHolder, DirectionalWrenchActionHandler handler) {
+            return of(typeHolder.value(), handler);
+        }
+
+        public static DirectionalWrenchInteraction of(WrenchActionType type, DirectionalWrenchActionHandler handler) {
+            return new DirectionalWrenchInteraction(type, handler);
+        }
+
+        public WrenchInteraction forDirection(Direction direction) {
+            return this.direction2Interaction.get(direction);
+        }
+
+    }
+
+    protected interface DirectionalWrenchActionHandler {
+        Optional<InteractionResult> handle(WrenchActionContext context, Direction direction);
     }
 }

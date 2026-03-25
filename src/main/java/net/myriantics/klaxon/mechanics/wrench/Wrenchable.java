@@ -1,9 +1,11 @@
 package net.myriantics.klaxon.mechanics.wrench;
 
-import net.minecraft.world.InteractionResult;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 
 public interface Wrenchable {
-    InteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context);
 
-    boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context);
+    WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context);
+
+    WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context);
 }

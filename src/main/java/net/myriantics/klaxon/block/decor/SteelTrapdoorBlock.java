@@ -2,18 +2,24 @@ package net.myriantics.klaxon.block.decor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.material.Fluids;
-import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
-import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
+import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
+
+import java.util.Optional;
 
 public class SteelTrapdoorBlock extends TrapDoorBlock implements Wrenchable {
+
+    protected static final WrenchInteraction FLIP = WrenchInteraction.of(KlaxonWrenchActionTypes.FLIP, SteelTrapdoorBlock::handleFlipAction);
+
     public SteelTrapdoorBlock(BlockSetType type, Properties settings) {
         super(type, settings);
     }
@@ -41,21 +47,35 @@ public class SteelTrapdoorBlock extends TrapDoorBlock implements Wrenchable {
         }
     }
 
-    @Override
-    public InteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
-        BlockPos targetPos = context.hitResult().getBlockPos();
+    private static Optional<InteractionResult> handleFlipAction(WrenchActionContext context) {
+        Level level = context.level();
+        BlockPos pos = context.getTargetPos();
+        BlockState state = context.getTargetState();
+        if (!(state.getBlock() instanceof SteelTrapdoorBlock trapdoor)) {
+            throw new AssertionError();
+        }
 
-        this.playSound(context.player(), context.world(), targetPos, !context.targetState().getValue(OPEN));
-        context.world().setBlockAndUpdate(targetPos, context.targetState().cycle(OPEN));
+        trapdoor.playSound(
+                context instanceof WrenchActionContext.Manual manual ? manual.getPlayer() : null,
+                level,
+                pos,
+                !state.getValue(OPEN)
+        );
 
-        return InteractionResult.SUCCESS;
+        if (!level.isClientSide()) {
+            level.setBlockAndUpdate(pos, state.cycle(OPEN));
+        }
+
+        return Optional.of(InteractionResult.SUCCESS);
     }
 
     @Override
-    public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
-        this.playSound(null, context.serverWorld(), context.targetPos(), !context.targetState().getValue(OPEN));
-        context.serverWorld().setBlockAndUpdate(context.targetPos(), context.targetState().cycle(OPEN));
+    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
+        return FLIP.toSingletonMap();
+    }
 
-        return true;
+    @Override
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        return FLIP;
     }
 }

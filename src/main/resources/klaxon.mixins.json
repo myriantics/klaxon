@@ -73,7 +73,8 @@
     "minecraft.tool_usage.ItemStackMixin",
     "minecraft.unenchantability.AnvilMenuMixin",
     "minecraft.unenchantability.EnchantmentMixin",
-    "minecraft.world_item_application.DispenserBlockMixin"
+    "minecraft.world_item_application.DispenserBlockMixin",
+    "minecraft.wrench.BlockStateBaseMixin"
   ],
   "client": [
   ],

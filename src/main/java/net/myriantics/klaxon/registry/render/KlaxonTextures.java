@@ -36,6 +36,9 @@ public abstract class KlaxonTextures {
     // Nether Reaction EMI Background
     public static final ResourceLocation NETHER_REACTION_EMI_BACKGROUND = ofGui("emi/nether_reaction");
 
+    // Wrench
+    public static final ResourceLocation WRENCH_OVERLAY_TEST_ARROW = ofEntity("test_arrow");
+
     public static ResourceLocation copyDir(String path, ResourceLocation parent) {
         return copyDir(path, parent.getPath());
     }

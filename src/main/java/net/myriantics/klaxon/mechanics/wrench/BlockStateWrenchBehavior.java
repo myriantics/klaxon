@@ -7,6 +7,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 
 public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
     private final Property<T> property;
@@ -36,6 +38,10 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
     public TagKey<Block> getDenylistTag() {
         return denylistTag;
     }
+
+    // public abstract WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context);
+
+    // public abstract WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context);
 
     public boolean test(BlockState state) {
         return !state.is(this.getDenylistTag()) && state.is(this.getAllowlistTag()) && state.hasProperty(property);
