@@ -68,7 +68,7 @@ public class WrenchInteractionOverlayRenderer {
 
         BlockFaceGroup group = new BlockFaceGroup(faceDir, clickedPos.add(0.5f, 0.5f, 0.5f).toVector3f());
 
-        state.getShape(level, pos).forAllBoxes(group::tryAdd);
+        state.getShape(level, pos).forAllEdges(group::tryAdd);
 
         int light = LightTexture.pack(15, 15);
         group.renderSelected(pose, consumer, light);
