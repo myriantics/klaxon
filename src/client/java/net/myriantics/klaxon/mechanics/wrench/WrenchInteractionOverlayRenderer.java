@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -30,8 +31,9 @@ public class WrenchInteractionOverlayRenderer {
     private float clickedAxisValCache = 0;
     private BlockFaceRegion blockFaceRegionCache = null;
 
-    public boolean shouldRender() {
-        return true;
+    public boolean shouldRender(LocalPlayer player, WrenchActionContext.Manual manual) {
+        Direction dir = manual.getHitResult().getDirection();
+        return player.mayUseItemAt(manual.getTargetPos().relative(dir, -1), dir, manual.getWrenchStack());
     }
 
     public void render(ClientLevel level, WrenchActionContext.Manual context, Camera camera, DeltaTracker deltaTracker, PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, ProfilerFiller profilerFiller) {

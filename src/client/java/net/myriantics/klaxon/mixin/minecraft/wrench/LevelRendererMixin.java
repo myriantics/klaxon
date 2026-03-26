@@ -65,7 +65,7 @@ public abstract class LevelRendererMixin {
 
                 WrenchActionContext.Manual manual = new WrenchActionContext.Manual(this.level, state, pos, wrenchStack, player, blockHitResult, wrenchHand);
 
-                if (!state.isAir() && this.klaxon$wrenchOverlayRenderer.shouldRender()) {
+                if (!state.isAir() && this.klaxon$wrenchOverlayRenderer.shouldRender(player, manual)) {
                     profilerFiller.popPush("klaxon:wrench_overlay");
                     this.klaxon$wrenchOverlayRenderer.render(this.level, manual, camera, deltaTracker, poseStack, bufferSource, profilerFiller);
                 }

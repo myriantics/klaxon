@@ -5,5 +5,13 @@
   "input_ingredient": {
     "item": "minecraft:decorated_pot"
   },
-  "recipe_output_compound": []
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:decorated_pot"
+      }
+    }
+  ]
 }
