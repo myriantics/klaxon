@@ -10,6 +10,8 @@ import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.List;
+
 public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider {
 
     public KlaxonBlastProcessingRecipeProvider(KlaxonRecipeProvider provider, RecipeOutput exporter) {
@@ -30,6 +32,9 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.POLISHED_BLACKSTONE_BRICKS), 0.3, 0.8, new ItemStack(Items.CRACKED_POLISHED_BLACKSTONE_BRICKS));
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.STONE_BRICKS), 0.3, 0.8, new ItemStack(Items.CRACKED_STONE_BRICKS));
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.INFESTED_STONE_BRICKS), 0.1, 0.3, new ItemStack(Items.INFESTED_CRACKED_STONE_BRICKS));
+
+        // pot cracking
+        addDecoratedPotCrackingBlastProcessingRecipe(NamedIngredient.ofItems(Items.DECORATED_POT), 0.1, 0.4, RecipeOutputCompound.of(new ItemStack(Items.DECORATED_POT)));
 
         // misc
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.COAL), 0.3, 1.4, RecipeOutputCompound.of(KlaxonItems.FRACTURED_COAL, 1.0, KlaxonItems.FRACTURED_COAL, 0.5));
