@@ -67,9 +67,11 @@ public abstract class PlayerMixin extends LivingEntity {
         // check for knockback modifier component - change damage type if present
         KnockbackHitModifierComponent knockbackModifier = KnockbackHitModifierComponent.get(weaponStack);
         if (knockbackModifier != null && knockbackModifier.shouldFire(knockbackHit)) {
-            this.damageSources().damageTypes.getHolder(knockbackModifier.damageType().get()).ifPresent(
-                    entry -> KlaxonDamageTypes.modifyDamageSourceType(original, entry
-            ));
+            if (knockbackModifier.damageType().isPresent()) {
+                this.damageSources().damageTypes.getHolder(knockbackModifier.damageType().get()).ifPresent(
+                        entry -> KlaxonDamageTypes.modifyDamageSourceType(original, entry
+                        ));
+            }
         }
 
         return original;
