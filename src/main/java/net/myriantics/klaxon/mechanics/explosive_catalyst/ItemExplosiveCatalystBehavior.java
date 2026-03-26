@@ -50,7 +50,7 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
     public void onExplosion(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData powerData, boolean shouldModifyWorld) {
         if (world instanceof ServerLevel serverWorld) {
             BlockState activeBlockState = world.getBlockState(pos);
-            if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
+            if (activeBlockState.is(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
                 if (powerData.explosionPower() > 0.0) {
                     Direction direction = activeBlockState.getValue(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
                     Position position = blastProcessor.getExplosionOutputLocation(direction);
