@@ -24,7 +24,7 @@ public abstract class HugeExplosionSeedParticleMixin extends NoRenderParticle {
     private void klaxon$overrideParticleIfNeeded(ClientLevel instance, ParticleOptions parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Operation<Void> original) {
         original.call(
                 instance,
-                ((Object) this) instanceof NetherReactionExplosionEmitterParticle ? KlaxonParticleTypes.NETHER_REACTION_EXPLOSION : parameters,
+                ((Object) this) instanceof NetherReactionExplosionEmitterParticle ? KlaxonParticleTypes.NETHER_REACTION_EXPLOSION.value() : parameters,
                 x, y, z,
                 velocityX, velocityY, velocityZ
         );

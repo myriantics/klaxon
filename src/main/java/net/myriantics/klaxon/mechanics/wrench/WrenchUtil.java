@@ -5,6 +5,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
+import net.myriantics.klaxon.util.BlockFaceRegion;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class WrenchUtil {
@@ -23,5 +24,9 @@ public abstract class WrenchUtil {
             return InteractionHand.OFF_HAND;
         }
         return null;
+    }
+
+    public static BlockFaceRegion getRegionForContext(WrenchActionContext.Manual manual) {
+        return BlockFaceRegion.FULL_BLOCK;
     }
 }
