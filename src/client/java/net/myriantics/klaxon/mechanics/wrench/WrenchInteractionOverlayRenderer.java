@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -24,11 +25,16 @@ public class WrenchInteractionOverlayRenderer {
 
     private static final ResourceLocation TEXTURE = KlaxonTextures.decorate(KlaxonTextures.WRENCH_OVERLAY_9SLICE);
 
+    private BlockState stateCache = null;
+    private Direction directionCache = null;
+    private float clickedAxisValCache = 0;
+    private BlockFaceRegion blockFaceRegionCache = null;
+
     public boolean shouldRender() {
         return true;
     }
 
-    public void render(ClientLevel level, WrenchActionContext.Manual context, Camera camera, DeltaTracker deltaTracker, PoseStack poseStack, MultiBufferSource.BufferSource bufferSource) {
+    public void render(ClientLevel level, WrenchActionContext.Manual context, Camera camera, DeltaTracker deltaTracker, PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, ProfilerFiller profilerFiller) {
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityTranslucentCull(TEXTURE));
         BlockState state = context.getTargetState();
         BlockPos pos = context.getTargetPos();
@@ -58,13 +64,28 @@ public class WrenchInteractionOverlayRenderer {
 
         PoseStack.Pose pose = poseStack.last();
 
-        SelectedFaceCalculator calculator = new SelectedFaceCalculator(faceDir, clickedPos.add(0.5f, 0.5f, 0.5f).toVector3f());
+        profilerFiller.push("compute_region");
+        float clickedAxisVal = (float) clickedPos.get(faceDir.getAxis());
+        final BlockFaceRegion region;
+        if (faceDir.equals(this.directionCache) && state.equals(this.stateCache) && SelectedFaceCalculator.testWithAllowance(this.clickedAxisValCache, clickedAxisVal) && this.blockFaceRegionCache != null) {
+            region = this.blockFaceRegionCache;
+        } else {
+            SelectedFaceCalculator calculator = new SelectedFaceCalculator(faceDir, clickedPos.add(0.5f, 0.5f, 0.5f).toVector3f());
+            state.getShape(level, pos).forAllEdges(calculator::tryAdd);
+            region = calculator.get();
+            this.directionCache = faceDir;
+            this.stateCache = state;
+            this.clickedAxisValCache = clickedAxisVal;
+            this.blockFaceRegionCache = region;
+        }
 
-        state.getShape(level, pos).forAllEdges(calculator::tryAdd);
+        profilerFiller.popPush("render");
 
         int color = 0xB000FF00;
         int light = LightTexture.pack(15, 15);
-        renderBlockFaceRegion(calculator.get(), pose, consumer, color, light);
+        renderBlockFaceRegion(region, pose, consumer, color, light);
+
+        profilerFiller.pop();
 
         poseStack.popPose();
     }

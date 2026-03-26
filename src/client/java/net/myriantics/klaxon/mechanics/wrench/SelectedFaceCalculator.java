@@ -47,12 +47,12 @@ public class SelectedFaceCalculator {
         return this.builder.build();
     }
 
-    private static boolean isBetweenInc(float val, float min, float max) {
+    public static boolean isBetweenInc(float val, float min, float max) {
         return val >= min - TOLERANCE && val <= max + TOLERANCE;
     }
 
-    private static boolean testWithAllowance(float a, float b) {
-        return isBetweenInc(a, b - TOLERANCE, b + TOLERANCE);
+    public static boolean testWithAllowance(float a, float b) {
+        return isBetweenInc(a, b, b);
     }
 
     private float getTargetedX() {

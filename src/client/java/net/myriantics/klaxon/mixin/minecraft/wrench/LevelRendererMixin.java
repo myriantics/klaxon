@@ -67,7 +67,7 @@ public abstract class LevelRendererMixin {
 
                 if (!state.isAir() && this.klaxon$wrenchOverlayRenderer.shouldRender()) {
                     profilerFiller.popPush("klaxon:wrench_overlay");
-                    this.klaxon$wrenchOverlayRenderer.render(this.level, manual, camera, deltaTracker, poseStack, bufferSource);
+                    this.klaxon$wrenchOverlayRenderer.render(this.level, manual, camera, deltaTracker, poseStack, bufferSource, profilerFiller);
                 }
             }
         }
