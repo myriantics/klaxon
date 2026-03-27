@@ -42,7 +42,7 @@ public abstract sealed class AbstractWrenchInteractionOverlay permits DetachedWr
 
     public boolean validate(WrenchActionContext.Manual manual) {
         Direction clickedDirection = manual.getHitResult().getDirection();
-        BlockState newState = manual.getTargetState();
+        BlockState newState = manual.level().getBlockState(manual.getTargetPos());
         float clickedAxisVal = (float) manual.getClickPosFromCenter().get(clickedDirection.getAxis());
 
         return clickedDirection.equals(this.directionCache) && newState.equals(this.stateCache) && SelectedFaceCalculator.testWithAllowance(this.clickedAxisValCache, clickedAxisVal);
