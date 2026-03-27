@@ -33,7 +33,7 @@ public abstract class ClientLevelMixin extends Level implements ClientGrappleWin
             at = @At(value = "TAIL")
     )
     private void klaxon$tickGrappleWinchConnectionManager(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-        this.getProfiler().push("client_grapple_winch_connection_manager");
+        this.getProfiler().push("klaxon:grapple_winch_connecton_manager");
         this.klaxon$grappleWinchConnectionManager.tick();
         this.getProfiler().pop();
     }

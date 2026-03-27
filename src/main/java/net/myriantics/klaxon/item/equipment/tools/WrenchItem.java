@@ -128,7 +128,7 @@ public class WrenchItem extends DiggerItem {
             }
         }
 
-        return super.useOn(context);
+        return InteractionResult.FAIL;
     }
 
     public static boolean canRotate(RegistryAccess manager, BlockState targetState) {

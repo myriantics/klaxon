@@ -1,12 +1,10 @@
-package net.myriantics.klaxon.mechanics.wrench;
+package net.myriantics.klaxon.mechanics.wrench.overlays;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,33 +13,55 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.mechanics.wrench.SelectedFaceCalculator;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 import net.myriantics.klaxon.util.BlockFaceRegion;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class WrenchInteractionOverlayRenderer {
+public abstract sealed class AbstractWrenchInteractionOverlay permits DetachedWrenchInteractionOverlay, SelectedWrenchInteractionOverlay {
 
     private static final ResourceLocation TEXTURE = KlaxonTextures.decorate(KlaxonTextures.WRENCH_OVERLAY_9SLICE);
 
-    private BlockState stateCache = null;
-    private Direction directionCache = null;
-    private float clickedAxisValCache = 0;
-    private BlockFaceRegion blockFaceRegionCache = null;
+    protected BlockState stateCache = null;
+    protected Direction directionCache = null;
+    protected float clickedAxisValCache = 0;
 
-    public boolean shouldRender(LocalPlayer player, WrenchActionContext.Manual manual) {
-        Direction dir = manual.getHitResult().getDirection();
-        return player.mayUseItemAt(manual.getTargetPos().relative(dir, -1), dir, manual.getWrenchStack());
+    public void resetCache(WrenchActionContext.Manual manual) {
+        this.directionCache = manual.getHitResult().getDirection();
+        this.stateCache = manual.getTargetState();
+        this.clickedAxisValCache = (float) manual.getClickPosFromCenter().get(this.directionCache.getAxis());
     }
 
-    public void render(ClientLevel level, WrenchActionContext.Manual context, Camera camera, DeltaTracker deltaTracker, PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, ProfilerFiller profilerFiller) {
+    public Direction getDirectionCache() {
+        return directionCache;
+    }
+
+    public boolean validate(WrenchActionContext.Manual manual) {
+        Direction clickedDirection = manual.getHitResult().getDirection();
+        BlockState newState = manual.getTargetState();
+        float clickedAxisVal = (float) manual.getClickPosFromCenter().get(clickedDirection.getAxis());
+
+        return clickedDirection.equals(this.directionCache) && newState.equals(this.stateCache) && SelectedFaceCalculator.testWithAllowance(this.clickedAxisValCache, clickedAxisVal);
+    }
+
+    public abstract @Nullable BlockFaceRegion getRegion();
+
+    protected int getColor(float tickDelta) {
+        return 0xB000FF00;
+    }
+
+    public void tick(WrenchActionContext.Manual context) {
+
+    }
+
+    public void render(WrenchActionContext.Manual context, Camera camera, DeltaTracker deltaTracker, PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, ProfilerFiller profilerFiller) {
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityTranslucentCull(TEXTURE));
-        BlockState state = context.getTargetState();
         BlockPos pos = context.getTargetPos();
         Direction faceDir = context.getHitResult().getDirection();
-        Player player = context.getPlayer();
         Vec3 blockCenterPos = pos.getCenter();
         Vec3 clickedPos = context.getHitResult().getLocation().subtract(blockCenterPos);
         Vec3 cameraPos = camera.getPosition();
@@ -66,28 +86,13 @@ public class WrenchInteractionOverlayRenderer {
 
         PoseStack.Pose pose = poseStack.last();
 
-        profilerFiller.push("compute_region");
-        float clickedAxisVal = (float) clickedPos.get(faceDir.getAxis());
-        final BlockFaceRegion region;
-        if (faceDir.equals(this.directionCache) && state.equals(this.stateCache) && SelectedFaceCalculator.testWithAllowance(this.clickedAxisValCache, clickedAxisVal) && this.blockFaceRegionCache != null) {
-            region = this.blockFaceRegionCache;
-        } else {
-            SelectedFaceCalculator calculator = new SelectedFaceCalculator(faceDir, clickedPos.add(0.5f, 0.5f, 0.5f).toVector3f());
-            state.getShape(level, pos).forAllEdges(calculator::tryAdd);
-            region = calculator.get();
-            this.directionCache = faceDir;
-            this.stateCache = state;
-            this.clickedAxisValCache = clickedAxisVal;
-            this.blockFaceRegionCache = region;
-        }
-
-        profilerFiller.popPush("render");
-
-        int color = 0xB000FF00;
+        int color = this.getColor(deltaTracker.getGameTimeDeltaPartialTick(false));
         int light = LightTexture.pack(15, 15);
-        renderBlockFaceRegion(region, pose, consumer, color, light);
+        BlockFaceRegion region = this.getRegion();
+        if (region != null) {
 
-        profilerFiller.pop();
+            this.renderBlockFaceRegion(region, pose, consumer, color, light);
+        }
 
         poseStack.popPose();
     }

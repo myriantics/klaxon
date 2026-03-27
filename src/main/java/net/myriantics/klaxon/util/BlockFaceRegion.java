@@ -2,7 +2,7 @@ package net.myriantics.klaxon.util;
 
 public final class BlockFaceRegion {
 
-    public static final BlockFaceRegion FULL_BLOCK = of(0, 0, 16, 16);
+    public static final BlockFaceRegion FULL_BLOCK = of(0, 0, 1, 1);
 
     public final float minX;
     public final float minY;

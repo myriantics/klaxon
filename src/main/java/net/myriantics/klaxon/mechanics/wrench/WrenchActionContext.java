@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public sealed abstract class WrenchActionContext permits WrenchActionContext.Manual, WrenchActionContext.Dispenser {
     private final Level level;
@@ -19,7 +20,7 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
     public WrenchActionContext(Level level, BlockState targetState, BlockPos targetPos, ItemStack wrenchStack) {
         this.level = level;
         this.targetState = targetState;
-        this.targetPos = targetPos;
+        this.targetPos = targetPos.immutable();
         this.wrenchStack = wrenchStack;
     }
 
@@ -42,6 +43,8 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
     public static final class Manual extends WrenchActionContext {
         private final Player player;
         private final BlockHitResult hitResult;
+        private final Vec3 clickPosFromCenter;
+        private final Vec3 clickPosFromCorner;
         private final InteractionHand hand;
 
         public Manual(Level level, BlockState targetState, BlockPos targetPos, ItemStack wrenchStack, Player player, BlockHitResult hitResult, InteractionHand hand) {
@@ -49,6 +52,8 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
             this.player = player;
             this.hitResult = hitResult;
             this.hand = hand;
+            this.clickPosFromCenter = hitResult.getLocation().subtract(targetPos.getCenter());
+            this.clickPosFromCorner = hitResult.getLocation().subtract(targetPos.getX(), targetPos.getY(), targetPos.getZ());
         }
 
         public Player getPlayer() {
@@ -61,6 +66,14 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
 
         public InteractionHand getHand() {
             return this.hand;
+        }
+
+        public Vec3 getClickPosFromCenter() {
+            return this.clickPosFromCenter;
+        }
+
+        public Vec3 getClickPosFromCorner() {
+            return clickPosFromCorner;
         }
     }
 
