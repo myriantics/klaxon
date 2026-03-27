@@ -25,6 +25,10 @@ public abstract class KlaxonTextures {
     // Helmet Crest
     public static final ResourceLocation HELMET_CREST = ofEntity("helmet_crest");
 
+    // Crested Steel Helmet 2D
+    public static final ResourceLocation CRESTED_STEEL_HELMET_2D_BASE = ofItem("crested_steel_helmet_base");
+    public static final ResourceLocation CRESTED_STEEL_HELMET_2D_CREST = ofItem("crested_steel_helmet_crest");
+
     // Steel Workbench
     public static final ResourceLocation STEEL_WORKBENCH_TOP = ofBlock("steel_workbench/top");
     public static final ResourceLocation STEEL_WORKBENCH_SIDE = copyDir("side", STEEL_WORKBENCH_TOP);
