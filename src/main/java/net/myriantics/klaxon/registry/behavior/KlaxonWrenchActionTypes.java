@@ -7,10 +7,13 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionType;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 
+import java.util.function.Supplier;
+
 public abstract class KlaxonWrenchActionTypes {
 
-    public static final Holder<WrenchActionType> PASS = register("pass");
-    public static final Holder<WrenchActionType> FAIL = register("fail");
+    public static final Holder<WrenchActionType> PASS = register("pass", WrenchActionType::colorless);
+    public static final Holder<WrenchActionType> PICKUP = register("pickup", WrenchActionType::orange);
+    public static final Holder<WrenchActionType> FAIL = register("fail", WrenchActionType::red);
     public static final Holder<WrenchActionType> CURVE_RIGHT = register("curve_right");
     public static final Holder<WrenchActionType> CURVE_LEFT = register("curve_left");
     public static final Holder<WrenchActionType> ROTATE_CLOCKWISE = register("rotate_clockwise");
@@ -32,7 +35,15 @@ public abstract class KlaxonWrenchActionTypes {
     }
 
     private static Holder<WrenchActionType> register(String name) {
+        return register(name, WrenchActionType::green);
+    }
+
+    private static Holder<WrenchActionType> register(String name, Supplier<WrenchActionType> supplier) {
+        return register(name, supplier.get());
+    }
+
+    private static Holder<WrenchActionType> register(String name, WrenchActionType type) {
         ResourceLocation id = KlaxonCommon.locate(name);
-        return Registry.registerForHolder(KlaxonRegistries.WRENCH_ACTION_TYPE, id, new WrenchActionType());
+        return Registry.registerForHolder(KlaxonRegistries.WRENCH_ACTION_TYPE, id, type);
     }
 }

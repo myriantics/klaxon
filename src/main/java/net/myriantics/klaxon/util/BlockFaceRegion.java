@@ -1,5 +1,9 @@
 package net.myriantics.klaxon.util;
 
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
+
+import java.util.List;
+
 public final class BlockFaceRegion {
 
     public static final BlockFaceRegion FULL_BLOCK = of(0, 0, 1, 1);
@@ -32,6 +36,18 @@ public final class BlockFaceRegion {
         return this.maxY - this.minY;
     }
 
+    public boolean contains(float x, float y) {
+        return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
+    }
+
+    public boolean intersects(float minX, float minY, float maxX, float maxY) {
+        return contains(minX, minY) || contains(minX, maxY) || contains(maxX, minY) || contains(maxX, maxY);
+    }
+
+    public boolean intersects(BlockFaceRegion region) {
+        return intersects(region.minX, region.minY, region.maxX, region.maxY);
+    }
+
     public static class Builder {
         private float minX;
         private float minY;
@@ -47,8 +63,9 @@ public final class BlockFaceRegion {
             return otherMinX <= this.minX || otherMaxX >= this.maxX || otherMinY <= this.minY || otherMaxY >= this.maxY;
         }
 
-        public boolean tryMerge(BlockFaceRegion region) {
-            return this.tryMerge(region.minX, region.minY, region.maxX, region.maxY);
+        public Builder tryMerge(BlockFaceRegion region) {
+            this.tryMerge(region.minX, region.minY, region.maxX, region.maxY);
+            return this;
         }
 
         public boolean tryMerge(float otherMinX, float otherMinY, float otherMaxX, float otherMaxY) {

@@ -1,15 +1,17 @@
 package net.myriantics.klaxon.mechanics.wrench.interaction;
 
-import net.minecraft.world.phys.Vec2;
-import net.myriantics.klaxon.mechanics.wrench.interaction.layers.QuadInteractionMapLayer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
+import net.myriantics.klaxon.mechanics.wrench.interaction.segments.InteractionMapSegment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class WrenchInteractionMap {
+    public final List<InteractionMapSegment> segments = new ArrayList<>();
 
-    private final List<InteractionMapLayer> layers = new ArrayList<>();
+    private @Nullable State2Rotation state2Rotation = null;
 
     private WrenchInteractionMap() {
     }
@@ -18,29 +20,58 @@ public final class WrenchInteractionMap {
         return new WrenchInteractionMap();
     }
 
-    public WrenchInteractionMap add(InteractionMapLayer layer) {
-        this.layers.add(layer);
+    public WrenchInteractionMap add(InteractionMapSegment layer) {
+        this.segments.add(layer);
         return this;
     }
 
-    public static WrenchInteractionMap fullBlock(WrenchInteraction actionType) {
-        return create().add(QuadInteractionMapLayer.fullBlock(actionType));
+    public static WrenchInteractionMap fullBlock(WrenchInteraction interaction) {
+        return create().add(InteractionMapSegment.fullBlock(interaction));
     }
 
-    public static WrenchInteractionMap split(WrenchInteraction left, WrenchInteraction right) {
+    public static WrenchInteractionMap splitHorizontal(WrenchInteraction top, WrenchInteraction bottom) {
         return create()
-                .add(new QuadInteractionMapLayer(left, 0, 0, 8, 16))
-                .add(new QuadInteractionMapLayer(right, 8, 0, 16, 16));
+                .add(InteractionMapSegment.of(bottom, 0, 0, 1f, 0.5f))
+                .add(InteractionMapSegment.of(top, 0, 0.5f, 1, 1));
     }
 
-    public WrenchInteraction select(Vec2 faceClickedPos) {
-        for (int i = layers.size(); i > 0; i--) {
-            InteractionMapLayer layer = layers.get(i - 1);
-            @Nullable WrenchInteraction type = layer.getInteraction(faceClickedPos);
-            if (type != null) {
-                return type;
+    public static WrenchInteractionMap splitVertical(WrenchInteraction left, WrenchInteraction right) {
+        return create()
+                .add(InteractionMapSegment.of(left, 0, 0, 0.5f, 1))
+                .add(InteractionMapSegment.of(right, 0.5f, 0, 1, 1));
+    }
+
+    public WrenchInteractionMap state2Rotation(State2Rotation state2Rotation) {
+        this.state2Rotation = state2Rotation;
+        return this;
+    }
+
+    public Rotation getRotation(BlockState state, WrenchActionContext.GuiOrientation orientation) {
+        return this.state2Rotation == null ? Rotation.R0 : this.state2Rotation.getRotation(state, orientation);
+    }
+
+    public WrenchInteraction select(float x, float y) {
+        for (int i = segments.size(); i > 0; i--) {
+            InteractionMapSegment layer = segments.get(i - 1);
+            if (layer.getRegion().contains(x, y)) {
+                @Nullable WrenchInteraction interaction = layer.getInteraction();
+                if (interaction != null) {
+                    return interaction;
+                }
             }
         }
         return WrenchInteraction.NO_OP;
+    }
+
+
+    public interface State2Rotation {
+        Rotation getRotation(BlockState state, WrenchActionContext.GuiOrientation orientation);
+    }
+
+    public enum Rotation {
+        R0,
+        R90,
+        R180,
+        R270
     }
 }

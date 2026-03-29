@@ -18,6 +18,8 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
     private static final String ALLOWLIST_SUBDIRECTORY = "wrench_behavior/allowlist";
     private static final String DENYLIST_SUBDIRECTORY = "wrench_behavior/denylist";
 
+    private static final WrenchInteractionMap EMPTY = WrenchInteractionMap.create();
+
     public BlockStateWrenchBehavior(
             Property<T> property,
             ResourceLocation id
@@ -39,34 +41,16 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
         return denylistTag;
     }
 
-    // public abstract WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context);
+    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
+        return EMPTY;
+    }
 
-    // public abstract WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context);
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        return WrenchInteraction.NO_OP;
+    }
 
     public boolean test(BlockState state) {
         return !state.is(this.getDenylistTag()) && state.is(this.getAllowlistTag()) && state.hasProperty(property);
-    }
-
-    public BlockState applyDispenser(BlockState state, DispenserWrenchInteractionContext context) {
-        if (this.test(state)) {
-            Optional<T> result = this.applyDispenser(state.getValue(this.property), context);
-            if (result.isPresent()) {
-                return state.setValue(this.property, result.get());
-            }
-        }
-
-        return state;
-    }
-
-    public BlockState applyManual(BlockState state, ManualWrenchInteractionContext context) {
-        if (this.test(state)) {
-            Optional<T> result = this.applyManual(state.getValue(this.property), context);
-            if (result.isPresent()) {
-                return state.setValue(this.property, result.get());
-            }
-        }
-
-        return state;
     }
 
     protected abstract Optional<T> applyManual(T original, ManualWrenchInteractionContext context);

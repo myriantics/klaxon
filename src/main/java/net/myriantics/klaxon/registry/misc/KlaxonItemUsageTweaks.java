@@ -79,26 +79,14 @@ public abstract class KlaxonItemUsageTweaks {
             BlockState targetState = level.getBlockState(targetPos);
             if (targetState.getBlock() instanceof Wrenchable wrenchable) {
                 Direction clickedFace = context.getClickedFace();
-                Vec3 clickLocation = context.getClickLocation();
                 Player player = context.getPlayer();
                 BlockHitResult hitResult = new BlockHitResult(context.getClickLocation(), clickedFace, targetPos, false);
 
                 WrenchActionContext.Manual manual = new WrenchActionContext.Manual(level, targetState, targetPos, stack, player, hitResult, context.getHand());
                 WrenchInteractionMap interactionMap = wrenchable.getManualInteractionMap(manual);
-
-                /*
-                Vec3 inBlockPos = clickLocation.subtract(targetPos.getX(), targetPos.getY(), targetPos.getZ());
-                Vec2 cords = switch (player.getDirection()) {
-                    case DOWN, UP ->
-                    case NORTH -> new Vec2();
-                    case SOUTH -> null;
-                    case WEST -> null;
-                    case EAST -> null;
-                }
-                cords.scale(16);
-                 */
-
-                return Optional.empty(); // interactionMap.select(cords).handle(manual);
+                float x = manual.getGuiOrientation().getClickedX(manual.getClickPosFromCorner());
+                float y = manual.getGuiOrientation().getClickedY(manual.getClickPosFromCorner());
+                return interactionMap.select(x, y).handle(manual);
             } else {
                 return Optional.empty();
             }

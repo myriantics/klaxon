@@ -54,26 +54,4 @@ public class SelectedFaceCalculator {
     public static boolean testWithAllowance(float a, float b) {
         return isBetweenInc(a, b, b);
     }
-
-    private float getTargetedX() {
-        return switch (facing) {
-            case DOWN -> 1 - this.clickedPos.x;
-            case UP -> 1 - this.clickedPos.x;
-            case NORTH -> this.clickedPos.x;
-            case SOUTH -> 1 -this.clickedPos.x;
-            case WEST -> 1 - this.clickedPos.z;
-            case EAST -> this.clickedPos.z;
-        };
-    }
-
-    private float getTargetedY() {
-        return switch (facing) {
-            case DOWN -> this.clickedPos.z;
-            case UP -> 1 - this.clickedPos.z;
-            case NORTH -> this.clickedPos.y;
-            case SOUTH -> this.clickedPos.y;
-            case WEST -> this.clickedPos.y;
-            case EAST -> this.clickedPos.y;
-        };
-    }
 }

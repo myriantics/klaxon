@@ -14,7 +14,6 @@ import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
-import net.myriantics.klaxon.mechanics.wrench.interaction.layers.XInteractionMapLayer;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 
 import java.util.Optional;
@@ -27,8 +26,7 @@ public class AxisBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Direc
     //protected final WrenchInteraction ROTATE_DOWN = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_DOWN, context -> handleRotateVertical(context, this.getProperty()));
     protected final WrenchInteraction FLIP = WrenchInteraction.of(KlaxonWrenchActionTypes.FLIP, AxisBlockStateWrenchBehavior::handleFlip);
 
-    protected final WrenchInteractionMap AXIS_MATCH = WrenchInteractionMap.create()
-            .add(XInteractionMapLayer.fullBlock(/*ROTATE_UP, ROTATE_DOWN*/ROTATE_LEFT, ROTATE_RIGHT, ROTATE_LEFT, ROTATE_RIGHT));
+    protected final WrenchInteractionMap AXIS_MATCH = WrenchInteractionMap.create();
 
     public AxisBlockStateWrenchBehavior(ResourceLocation id) {
         super(BlockStateProperties.AXIS, id);

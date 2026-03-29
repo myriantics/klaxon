@@ -46,6 +46,8 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
         private final Vec3 clickPosFromCenter;
         private final Vec3 clickPosFromCorner;
         private final InteractionHand hand;
+        private final Direction interactedFace;
+        private final GuiOrientation orientation;
 
         public Manual(Level level, BlockState targetState, BlockPos targetPos, ItemStack wrenchStack, Player player, BlockHitResult hitResult, InteractionHand hand) {
             super(level, targetState, targetPos, wrenchStack);
@@ -54,6 +56,8 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
             this.hand = hand;
             this.clickPosFromCenter = hitResult.getLocation().subtract(targetPos.getCenter());
             this.clickPosFromCorner = hitResult.getLocation().subtract(targetPos.getX(), targetPos.getY(), targetPos.getZ());
+            this.interactedFace = targetState.getBlock() instanceof Wrenchable wrenchable ? wrenchable.getManualInteractedFace(targetState, hitResult.getDirection(), this.clickPosFromCenter) : hitResult.getDirection();
+            this.orientation = new GuiOrientation(this.interactedFace, this.interactedFace.getAxis().equals(Direction.Axis.Y) ? player.getMotionDirection() : Direction.UP);
         }
 
         public Player getPlayer() {
@@ -68,12 +72,65 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
             return this.hand;
         }
 
+        public Direction clickedDirection() {
+            return this.interactedFace;
+        }
+
         public Vec3 getClickPosFromCenter() {
             return this.clickPosFromCenter;
         }
 
         public Vec3 getClickPosFromCorner() {
             return clickPosFromCorner;
+        }
+
+        public GuiOrientation getGuiOrientation() {
+            return orientation;
+        }
+    }
+
+    public static class GuiOrientation {
+
+        private final Direction facing;
+        private final Direction guiUpDir;
+
+        GuiOrientation(Direction attachedToFace, Direction guiUpDir) {
+            this.facing = attachedToFace;
+            this.guiUpDir = guiUpDir;
+        }
+
+        public float getClickedX(Vec3 fromCorner) {
+            return (float) switch (this.facing) {
+                case DOWN -> 1 - fromCorner.x;
+                case UP -> 1 - fromCorner.x;
+                case NORTH -> fromCorner.x;
+                case SOUTH -> 1 - fromCorner.x;
+                case WEST -> 1 - fromCorner.z;
+                case EAST -> fromCorner.z;
+            };
+        }
+
+        public float getClickedY(Vec3 fromCorner) {
+            return (float) switch (this.facing) {
+                case DOWN -> fromCorner.z;
+                case UP -> 1 - fromCorner.z;
+                case NORTH -> fromCorner.y;
+                case SOUTH -> fromCorner.y;
+                case WEST -> fromCorner.y;
+                case EAST -> fromCorner.y;
+            };
+        }
+
+        public Direction getFacing() {
+            return this.facing;
+        }
+
+        public Direction getGuiUpDir() {
+            return this.guiUpDir;
+        }
+
+        public Direction getFacingDir() {
+            return this.facing.getOpposite();
         }
     }
 

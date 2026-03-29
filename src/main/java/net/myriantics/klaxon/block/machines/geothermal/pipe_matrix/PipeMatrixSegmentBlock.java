@@ -38,7 +38,7 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
 
     protected static final WrenchInteraction CONNECT = WrenchInteraction.of(KlaxonWrenchActionTypes.CONNECT, PipeMatrixSegmentBlock::handleConnect);
     protected static final WrenchInteractionMap SOLID_MAP = CONNECT.toSingletonMap();
-    protected static final WrenchInteractionMap SPLIT_MAP = WrenchInteractionMap.split(CONNECT, CONNECT);
+    protected static final WrenchInteractionMap SPLIT_MAP = WrenchInteractionMap.splitVertical(CONNECT, CONNECT);
 
     private final PipeMatrixUBendBlock uBendBlock;
 
