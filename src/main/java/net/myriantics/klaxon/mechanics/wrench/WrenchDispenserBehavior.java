@@ -47,20 +47,15 @@ public class WrenchDispenserBehavior extends OptionalDispenseItemBehavior {
             }
         }
 
-        BlockState newState = targetState;
-
         // apply all valid behaviors to the new state
         for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
-            //newState = behavior.applyDispenser(newState, context);
-        }
-
-        // only commit changes to the world if we've changed the block state
-        if (!newState.equals(targetState)) {
-            serverLevel.setBlockAndUpdate(targetPos, newState);
-            serverLevel.neighborChanged(targetPos, source.state().getBlock(), source.pos());
-            serverLevel.updateNeighbourForOutputSignal(source.pos(), source.state().getBlock());
-            setSuccess(true);
-            shouldPlayEffects = false;
+            WrenchInteraction interaction = behavior.getDispenserInteraction(context);
+            Optional<InteractionResult> result = interaction.handle(context);
+            if (result.isPresent()) {
+                serverLevel.updateNeighbourForOutputSignal(source.pos(), source.state().getBlock());
+                setSuccess(true);
+                return stack;
+            }
         }
 
         return stack;

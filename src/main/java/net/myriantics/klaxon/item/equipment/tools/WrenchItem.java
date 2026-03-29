@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.mechanics.wrench.*;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
@@ -109,8 +110,8 @@ public class WrenchItem extends DiggerItem {
             for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
                 if (behavior.test(targetState)) {
                     WrenchInteractionMap map = behavior.getManualInteractionMap(manual);
-                    float clickedX = manual.getGuiOrientation().getClickedX(manual.getClickPosFromCorner());
-                    float clickedY = manual.getGuiOrientation().getClickedY(manual.getClickPosFromCorner());
+                    float clickedX = manual.getGuiOrientation().getClickedX();
+                    float clickedY = manual.getGuiOrientation().getClickedY();
                     result = map.select(clickedX, clickedY).handle(manual);
                     if (result.isPresent()) {
                         break;

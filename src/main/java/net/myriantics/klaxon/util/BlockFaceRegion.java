@@ -1,17 +1,16 @@
 package net.myriantics.klaxon.util;
 
+import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
-
-import java.util.List;
 
 public final class BlockFaceRegion {
 
     public static final BlockFaceRegion FULL_BLOCK = of(0, 0, 1, 1);
 
-    public final float minX;
-    public final float minY;
-    public final float maxX;
-    public final float maxY;
+    private final float minX;
+    private final float minY;
+    private final float maxX;
+    private final float maxY;
 
     private BlockFaceRegion(float minX, float minY, float maxX, float maxY) {
         this.minX = minX;
@@ -28,8 +27,68 @@ public final class BlockFaceRegion {
         return new Builder();
     }
 
+    public float minX(Rotation rotation) {
+        return switch (rotation) {
+            case R0 -> this.minX;
+            case R90 -> this.maxY;
+            case R180 -> this.maxX;
+            case R270 -> this.minY;
+        };
+    }
+
+    public float minX() {
+        return this.minX;
+    }
+
+    public float minY(Rotation rotation) {
+        return switch (rotation) {
+            case R0 -> this.minY;
+            case R90 -> this.maxX;
+            case R180 -> this.maxY;
+            case R270 -> this.minX;
+        };
+    }
+
+    public float minY() {
+        return this.minY;
+    }
+
+    public float maxX(Rotation rotation) {
+        return switch (rotation) {
+            case R0 -> this.maxX;
+            case R90 -> this.minY;
+            case R180 -> this.minX;
+            case R270 -> this.maxY;
+        };
+    }
+
+    public float maxX() {
+        return this.maxX;
+    }
+
+    public float maxY(Rotation rotation) {
+        return switch (rotation) {
+            case R0 -> this.maxY;
+            case R90 -> this.minX;
+            case R180 -> this.minY;
+            case R270 -> this.maxX;
+        };
+    }
+
+    public float maxY() {
+        return this.maxY;
+    }
+
+    public float width(Rotation rotation) {
+        return this.maxX(rotation) - this.minX(rotation);
+    }
+
     public float width() {
         return this.maxX - this.minX;
+    }
+
+    public float height(Rotation rotation) {
+        return this.maxY(rotation) - this.minY(rotation);
     }
 
     public float height() {
@@ -46,6 +105,26 @@ public final class BlockFaceRegion {
 
     public boolean intersects(BlockFaceRegion region) {
         return intersects(region.minX, region.minY, region.maxX, region.maxY);
+    }
+
+    public enum Rotation {
+        R0,
+        R90,
+        R180,
+        R270;
+    }
+
+    public interface State2Rotation {
+        Rotation getRotation(BlockState state, WrenchActionContext.GuiOrientation orientation);
+
+        static Rotation topOnly(BlockState state, WrenchActionContext.GuiOrientation orientation) {
+            return switch (orientation.getGuiUpDir()) {
+                case EAST -> Rotation.R90;
+                case SOUTH -> Rotation.R180;
+                case WEST -> Rotation.R270;
+                default -> Rotation.R0;
+            };
+        }
     }
 
     public static class Builder {

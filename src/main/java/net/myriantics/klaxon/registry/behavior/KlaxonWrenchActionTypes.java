@@ -18,6 +18,8 @@ public abstract class KlaxonWrenchActionTypes {
     public static final Holder<WrenchActionType> CURVE_LEFT = register("curve_left");
     public static final Holder<WrenchActionType> ROTATE_CLOCKWISE = register("rotate_clockwise");
     public static final Holder<WrenchActionType> ROTATE_COUNTERCLOCKWISE = register("rotate_counterclockwise");
+    public static final Holder<WrenchActionType> ROTATE_FORWARD = register("rotate_forward");
+    public static final Holder<WrenchActionType> ROTATE_BACKWARD = register("rotate_backward");
     public static final Holder<WrenchActionType> ROTATE_LEFT = register("rotate_left");
     public static final Holder<WrenchActionType> ROTATE_RIGHT = register("rotate_right");
     public static final Holder<WrenchActionType> ROTATE_UP = register("rotate_up");

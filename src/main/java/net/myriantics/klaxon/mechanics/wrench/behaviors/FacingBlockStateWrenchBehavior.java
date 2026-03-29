@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -16,40 +15,53 @@ import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
+import net.myriantics.klaxon.util.BlockFaceRegion;
+import net.myriantics.klaxon.util.KlaxonMathHelper;
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 public class FacingBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Direction> {
 
-
     private final WrenchInteraction ROTATE_COUNTERCLOCKWISE = WrenchInteraction.of(
             KlaxonWrenchActionTypes.ROTATE_COUNTERCLOCKWISE,
-            context -> this.rotate(context, Direction::getCounterClockWise, manual -> manual.clickedDirection().getAxis())
+            context -> this.rotateAround(context, manual -> Direction.fromAxisAndDirection(manual.clickedDirection().getAxis(), Direction.AxisDirection.POSITIVE))
     );
     private final WrenchInteraction ROTATE_CLOCKWISE = WrenchInteraction.of(
             KlaxonWrenchActionTypes.ROTATE_CLOCKWISE,
-            context -> this.rotate(context, Direction::getClockWise, manual -> manual.clickedDirection().getAxis())
+            context -> this.rotateAround(context, manual -> Direction.fromAxisAndDirection(manual.clickedDirection().getAxis(), Direction.AxisDirection.NEGATIVE))
     );
-
-    private final WrenchInteractionMap EMPTY = WrenchInteractionMap.create();
+    private final WrenchInteraction ROTATE_FORWARDS = WrenchInteraction.of(
+            KlaxonWrenchActionTypes.ROTATE_FORWARD,
+            context -> this.rotateAround(context, manual -> Direction.fromAxisAndDirection(manual.getGuiOrientation().getSidesAxis(), Direction.AxisDirection.POSITIVE))
+    );
+    private final WrenchInteraction ROTATE_BACKWARDS = WrenchInteraction.of(
+            KlaxonWrenchActionTypes.ROTATE_BACKWARD,
+            context -> this.rotateAround(context, manual -> Direction.fromAxisAndDirection(manual.getGuiOrientation().getSidesAxis(), Direction.AxisDirection.NEGATIVE))
+    );
 
     private final WrenchInteractionMap AXIS_MISMATCH = WrenchInteractionMap.splitVertical(
             ROTATE_COUNTERCLOCKWISE,
             ROTATE_CLOCKWISE
-    );
+    ).state2Rotation(BlockFaceRegion.State2Rotation::topOnly);
+    private final WrenchInteractionMap AXIS_MATCH = WrenchInteractionMap.splitHorizontal(
+            ROTATE_FORWARDS,
+            ROTATE_BACKWARDS
+    ).state2Rotation(BlockFaceRegion.State2Rotation::topOnly);
 
-    private Optional<InteractionResult> rotate(WrenchActionContext context, RotationFunction rotationFunction, Function<WrenchActionContext.Manual, Direction.Axis> manualAxisFunction) {
+    private Optional<InteractionResult> rotateAround(WrenchActionContext context, Function<WrenchActionContext.Manual, Direction> manualDirectionFunction) {
         Level level = context.level();
         BlockPos pos = context.getTargetPos();
         BlockState state = context.getTargetState();
-        Direction.Axis clickedAxis = switch (context) {
-            case WrenchActionContext.Dispenser dispenser -> dispenser.getDispenserFacing().getAxis();
-            case WrenchActionContext.Manual manual -> manualAxisFunction.apply(manual);
+        Direction direction = switch (context) {
+            case WrenchActionContext.Dispenser dispenser -> dispenser.getDispenserFacing();
+            case WrenchActionContext.Manual manual -> manualDirectionFunction.apply(manual);
         };
         Property<Direction> property = this.getProperty();
-        level.setBlockAndUpdate(pos, state.setValue(property, rotationFunction.rotate(state.getValue(property), clickedAxis)));
+        level.setBlockAndUpdate(pos, state.setValue(
+                property,
+                KlaxonMathHelper.rotateAround(state.getValue(property), direction.getAxis(), direction.getAxisDirection())
+        ));
         return Optional.of(InteractionResult.SUCCESS);
     }
 
@@ -67,7 +79,7 @@ public class FacingBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Dir
     @Override
     public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
         return context.getTargetState().getValue(this.getProperty()).getAxis().equals(context.clickedDirection().getAxis())
-                ? EMPTY
+                ? AXIS_MATCH
                 : AXIS_MISMATCH;
     }
 
@@ -91,9 +103,5 @@ public class FacingBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Dir
         } else {
             return Optional.of(original.getClockWise(dispenserAxis));
         }
-    }
-
-    private interface RotationFunction {
-        Direction rotate(Direction facing, Direction.Axis rotateAround);
     }
 }

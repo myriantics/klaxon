@@ -84,8 +84,8 @@ public abstract class KlaxonItemUsageTweaks {
 
                 WrenchActionContext.Manual manual = new WrenchActionContext.Manual(level, targetState, targetPos, stack, player, hitResult, context.getHand());
                 WrenchInteractionMap interactionMap = wrenchable.getManualInteractionMap(manual);
-                float x = manual.getGuiOrientation().getClickedX(manual.getClickPosFromCorner());
-                float y = manual.getGuiOrientation().getClickedY(manual.getClickPosFromCorner());
+                float x = manual.getGuiOrientation().getClickedX();
+                float y = manual.getGuiOrientation().getClickedY();
                 return interactionMap.select(x, y).handle(manual);
             } else {
                 return Optional.empty();

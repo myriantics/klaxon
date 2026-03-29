@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.util.KlaxonMathHelper;
 
 public sealed abstract class WrenchActionContext permits WrenchActionContext.Manual, WrenchActionContext.Dispenser {
     private final Level level;
@@ -57,7 +58,7 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
             this.clickPosFromCenter = hitResult.getLocation().subtract(targetPos.getCenter());
             this.clickPosFromCorner = hitResult.getLocation().subtract(targetPos.getX(), targetPos.getY(), targetPos.getZ());
             this.interactedFace = targetState.getBlock() instanceof Wrenchable wrenchable ? wrenchable.getManualInteractedFace(targetState, hitResult.getDirection(), this.clickPosFromCenter) : hitResult.getDirection();
-            this.orientation = new GuiOrientation(this.interactedFace, this.interactedFace.getAxis().equals(Direction.Axis.Y) ? player.getMotionDirection() : Direction.UP);
+            this.orientation = new GuiOrientation(this.interactedFace, this.interactedFace.getAxis().equals(Direction.Axis.Y) ? player.getMotionDirection() : Direction.UP, clickPosFromCorner, player.getMotionDirection());
         }
 
         public Player getPlayer() {
@@ -93,32 +94,43 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
 
         private final Direction facing;
         private final Direction guiUpDir;
+        private final Direction.Axis sidesAxis;
+        private final float clickedX;
+        private final float clickedY;
 
-        GuiOrientation(Direction attachedToFace, Direction guiUpDir) {
+        GuiOrientation(Direction attachedToFace, Direction guiUpDir, Vec3 fromCorner, Direction playerHorizontalFacing) {
             this.facing = attachedToFace;
             this.guiUpDir = guiUpDir;
-        }
-
-        public float getClickedX(Vec3 fromCorner) {
-            return (float) switch (this.facing) {
-                case DOWN -> 1 - fromCorner.x;
-                case UP -> 1 - fromCorner.x;
-                case NORTH -> fromCorner.x;
-                case SOUTH -> 1 - fromCorner.x;
-                case WEST -> 1 - fromCorner.z;
-                case EAST -> fromCorner.z;
+            this.sidesAxis = KlaxonMathHelper.neither(attachedToFace.getAxis(), guiUpDir.getAxis());
+            this.clickedX = (float) switch (this.facing) {
+                case DOWN, UP -> switch (playerHorizontalFacing) {
+                    case SOUTH -> fromCorner.x;
+                    case WEST -> fromCorner.z;
+                    case EAST -> fromCorner.z;
+                    default -> fromCorner.x;
+                };
+                case NORTH -> 1 - fromCorner.x;
+                case SOUTH -> fromCorner.x;
+                case WEST -> fromCorner.z;
+                case EAST -> 1 - fromCorner.z;
+            };
+            this.clickedY = (float) switch (this.facing) {
+                case DOWN, UP -> switch (playerHorizontalFacing) {
+                    case SOUTH -> fromCorner.z;
+                    case WEST -> 1 - fromCorner.x;
+                    case EAST -> fromCorner.x;
+                    default -> 1 - fromCorner.z;
+                };
+                case NORTH, EAST, SOUTH, WEST -> fromCorner.y;
             };
         }
 
-        public float getClickedY(Vec3 fromCorner) {
-            return (float) switch (this.facing) {
-                case DOWN -> fromCorner.z;
-                case UP -> 1 - fromCorner.z;
-                case NORTH -> fromCorner.y;
-                case SOUTH -> fromCorner.y;
-                case WEST -> fromCorner.y;
-                case EAST -> fromCorner.y;
-            };
+        public float getClickedX() {
+            return this.clickedX;
+        }
+
+        public float getClickedY() {
+            return this.clickedY;
         }
 
         public Direction getFacing() {
@@ -131,6 +143,10 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
 
         public Direction getFacingDir() {
             return this.facing.getOpposite();
+        }
+
+        public Direction.Axis getSidesAxis() {
+            return sidesAxis;
         }
     }
 

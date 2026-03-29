@@ -12,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -62,8 +63,21 @@ public final class WrenchInteractionOverlayManager {
     }
 
     public void spawnDetachedInteractionOverlay(int ticksToDespawn) {
-        BlockFaceRegion selected = this.selected.getRegion();
-        if (this.context != null && selected != null) {
+        BakedWrenchOverlay selected = this.selected.getBakedOverlay();
+
+
+        if (this.context != null) {
+            if (selected == null) {
+                Direction dir = this.context.clickedDirection();
+                Level level = this.context.level();
+                BlockState targetState = this.context.getTargetState();
+                BlockPos targetPos = this.context.getTargetPos();
+
+                SelectedFaceCalculator calculator = new SelectedFaceCalculator(dir, this.context.getClickPosFromCorner().toVector3f());
+                targetState.getShape(level, targetPos).forAllEdges(calculator::tryAdd);
+                selected = BakedWrenchOverlay.of(calculator.get(), this.context);
+            }
+
             DetachedWrenchInteractionOverlay overlay = new DetachedWrenchInteractionOverlay(this.context, selected, ticksToDespawn);
             overlay.resetCache(this.context);
             this.detachedOverlays.put(this.context.getTargetPos(), overlay);

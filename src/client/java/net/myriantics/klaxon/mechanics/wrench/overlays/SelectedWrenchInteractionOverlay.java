@@ -4,26 +4,26 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.myriantics.klaxon.mechanics.wrench.BakedWrenchOverlay;
 import net.myriantics.klaxon.mechanics.wrench.SelectedFaceCalculator;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.util.BlockFaceRegion;
+import org.jetbrains.annotations.Nullable;
 
 public final class SelectedWrenchInteractionOverlay extends AbstractWrenchInteractionOverlay {
 
-    private BlockFaceRegion blockFaceRegionCache = null;
+    private @Nullable BakedWrenchOverlay bakedWrenchOverlayCache = null;
 
     @Override
-    public BlockFaceRegion getRegion() {
-        return this.blockFaceRegionCache;
+    public @Nullable BakedWrenchOverlay getBakedOverlay() {
+        return this.bakedWrenchOverlayCache;
     }
 
     @Override
     public void tick(WrenchActionContext.Manual context) {
         super.tick(context);
-        if (!this.validate(context)) {
-            this.recomputeRenderRegion(context);
-            this.resetCache(context);
-        }
+        this.recomputeRenderRegion(context);
+        this.resetCache(context);
     }
 
     private void recomputeRenderRegion(WrenchActionContext.Manual context) {
@@ -34,6 +34,6 @@ public final class SelectedWrenchInteractionOverlay extends AbstractWrenchIntera
 
         SelectedFaceCalculator calculator = new SelectedFaceCalculator(direction, context.getClickPosFromCorner().toVector3f());
         state.getShape(level, pos).forAllEdges(calculator::tryAdd);
-        this.blockFaceRegionCache = calculator.get();
+        this.bakedWrenchOverlayCache = BakedWrenchOverlay.of(calculator.get(), context);
     }
 }

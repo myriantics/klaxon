@@ -4,7 +4,7 @@ import net.minecraft.util.CommonColors;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 
 public class WrenchActionType {
-    private final int color;
+    public final int color;
 
     private WrenchActionType(int color) {
         this.color = color;
