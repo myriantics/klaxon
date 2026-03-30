@@ -22,6 +22,7 @@ import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
+import net.myriantics.klaxon.util.BlockFaceRegion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -91,7 +92,7 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
         return this.defaultBlockState().setValue(AXIS, clickedSide.getAxis());
     }
 
-    private static Optional<InteractionResult> handleConnect(WrenchActionContext context) {
+    private static Optional<InteractionResult> handleConnect(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
         Level level = context.level();
         BlockState state = context.getTargetState();
         BlockPos pos = context.getTargetPos();

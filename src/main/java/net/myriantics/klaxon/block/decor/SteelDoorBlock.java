@@ -22,7 +22,7 @@ public class SteelDoorBlock extends DoorBlock implements Wrenchable {
         super(type, settings);
     }
 
-    protected static final WrenchInteraction FLIP = WrenchInteraction.of(KlaxonWrenchActionTypes.FLIP, context -> java.util.Optional.ofNullable(handleFlipAction(context)));
+    protected static final WrenchInteraction FLIP = WrenchInteraction.of(KlaxonWrenchActionTypes.FLIP, (context, rotation) -> java.util.Optional.ofNullable(handleFlipAction(context)));
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {

@@ -86,7 +86,7 @@ public abstract class KlaxonItemUsageTweaks {
                 WrenchInteractionMap interactionMap = wrenchable.getManualInteractionMap(manual);
                 float x = manual.getGuiOrientation().getClickedX();
                 float y = manual.getGuiOrientation().getClickedY();
-                return interactionMap.select(x, y).handle(manual);
+                return interactionMap.select(x, y).handle(manual, interactionMap.getRotation(targetState, manual.getGuiOrientation()));
             } else {
                 return Optional.empty();
             }

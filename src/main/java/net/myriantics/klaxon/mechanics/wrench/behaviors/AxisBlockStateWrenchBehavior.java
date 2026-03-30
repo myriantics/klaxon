@@ -15,13 +15,14 @@ import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
+import net.myriantics.klaxon.util.BlockFaceRegion;
 
 import java.util.Optional;
 
 public class AxisBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Direction.Axis> {
 
-    protected final WrenchInteraction ROTATE_LEFT = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_LEFT, context -> handleRotateHorizontal(context, this.getProperty()));
-    protected final WrenchInteraction ROTATE_RIGHT = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_RIGHT, context -> handleRotateHorizontal(context, this.getProperty()));
+    protected final WrenchInteraction ROTATE_LEFT = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_LEFT, (context, rotation) -> handleRotateHorizontal(context, this.getProperty()));
+    protected final WrenchInteraction ROTATE_RIGHT = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_RIGHT, (context, rotation) -> handleRotateHorizontal(context, this.getProperty()));
     //protected final WrenchInteraction ROTATE_UP = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_UP, context -> handleRotateVertical(context, this.getProperty()));
     //protected final WrenchInteraction ROTATE_DOWN = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_DOWN, context -> handleRotateVertical(context, this.getProperty()));
     protected final WrenchInteraction FLIP = WrenchInteraction.of(KlaxonWrenchActionTypes.FLIP, AxisBlockStateWrenchBehavior::handleFlip);
@@ -32,7 +33,7 @@ public class AxisBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Direc
         super(BlockStateProperties.AXIS, id);
     }
 
-    private static Optional<InteractionResult> handleFlip(WrenchActionContext context) {
+    private static Optional<InteractionResult> handleFlip(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
         return Optional.empty();
     }
 

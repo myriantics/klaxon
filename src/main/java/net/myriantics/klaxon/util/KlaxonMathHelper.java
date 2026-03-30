@@ -50,7 +50,7 @@ public abstract class KlaxonMathHelper {
 
     public static Direction rotateAround(Direction direction, Direction.Axis axis, Direction.AxisDirection axisDirection) {
         return axisDirection.equals(Direction.AxisDirection.POSITIVE)
-                ? direction.getClockWise(axis)
-                : direction.getCounterClockWise(axis);
+                ? direction.getCounterClockWise(axis)
+                : direction.getClockWise(axis);
     }
 }

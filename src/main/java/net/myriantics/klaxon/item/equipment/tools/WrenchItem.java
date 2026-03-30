@@ -112,7 +112,7 @@ public class WrenchItem extends DiggerItem {
                     WrenchInteractionMap map = behavior.getManualInteractionMap(manual);
                     float clickedX = manual.getGuiOrientation().getClickedX();
                     float clickedY = manual.getGuiOrientation().getClickedY();
-                    result = map.select(clickedX, clickedY).handle(manual);
+                    result = map.select(clickedX, clickedY).handle(manual, map.getRotation(targetState, manual.getGuiOrientation()));
                     if (result.isPresent()) {
                         break;
                     }

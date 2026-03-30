@@ -31,6 +31,8 @@ public abstract class KlaxonWrenchActionTypes {
     public static final Holder<WrenchActionType> FLIP = register("flip");
     public static final Holder<WrenchActionType> CYCLE = register("cycle");
     public static final Holder<WrenchActionType> ALIGN = register("align");
+    public static final Holder<WrenchActionType> RAISE = register("raise");
+    public static final Holder<WrenchActionType> LOWER = register("lower");
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Wrench Action Types!");

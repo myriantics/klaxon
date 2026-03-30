@@ -13,6 +13,7 @@ import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
+import net.myriantics.klaxon.util.BlockFaceRegion;
 
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public class SteelTrapdoorBlock extends TrapDoorBlock implements Wrenchable {
         }
     }
 
-    private static Optional<InteractionResult> handleFlipAction(WrenchActionContext context) {
+    private static Optional<InteractionResult> handleFlipAction(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
         Level level = context.level();
         BlockPos pos = context.getTargetPos();
         BlockState state = context.getTargetState();

@@ -19,11 +19,12 @@ public class BakedWrenchOverlay {
     }
 
     public static BakedWrenchOverlay of(BlockFaceRegion bounds, WrenchActionContext.Manual manual) {
-        float x = manual.getGuiOrientation().getClickedX();
-        float y = manual.getGuiOrientation().getClickedY();
 
         WrenchInteractionMap map = WrenchUtil.getInteractionMap(manual);
         BlockFaceRegion.Rotation rotation = map.getRotation(manual.getTargetState(), manual.getGuiOrientation());
+
+        float x = manual.getGuiOrientation().getClickedX(rotation);
+        float y = manual.getGuiOrientation().getClickedY(rotation);
 
         ArrayList<Entry> entries = new ArrayList<>(map.segments.size());
         for (InteractionMapSegment segment : map.segments) {
@@ -70,6 +71,7 @@ public class BakedWrenchOverlay {
         private void render(PoseStack.Pose pose, VertexConsumer consumer, int alpha, int light) {
             final float texCornerSliceLength = 2f/16;
 
+            alpha = (int) (alpha * (this.selected ? 1 : 0.5f));
             int color = this.type.color;
             color &= 0x00FFFFFF; // clear alpha
             alpha <<= 24; // prep alpha

@@ -34,6 +34,11 @@ public class KlaxonRailHelper {
         return false;
     }
 
+    public static boolean canAscend(Level level, RailShape railShape, BlockPos railPos, Direction ascensionDirection) {
+        Direction.Axis railAxis = railShapeToAxis(railShape);
+        return ascensionDirection.getAxis().equals(railAxis) && !railShape.isAscending() && BaseRailBlock.canSupportRigidBlock(level, railPos.relative(ascensionDirection));
+    }
+
     public static @Nullable RailShape tryToggleAscending(Level world, RailShape railShape, BlockPos railPos, Direction.AxisDirection ascensionDirection) {
         Direction.Axis railAxis = railShapeToAxis(railShape);
         if (railAxis == null) return null;

@@ -5,6 +5,7 @@ import net.minecraft.world.InteractionResult;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionType;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
+import net.myriantics.klaxon.util.BlockFaceRegion;
 
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ public class WrenchInteraction {
     private final WrenchActionHandler handler;
     private final WrenchInteractionMap singletonMap;
 
-    public static final WrenchInteraction NO_OP = of(KlaxonWrenchActionTypes.PASS, context -> Optional.empty());
+    public static final WrenchInteraction NO_OP = of(KlaxonWrenchActionTypes.PASS, (context, rotation) -> Optional.empty());
 
     protected WrenchInteraction(WrenchActionType type, WrenchActionHandler handler) {
         this.type = type;
@@ -37,7 +38,7 @@ public class WrenchInteraction {
         return this.type;
     }
 
-    public Optional<InteractionResult> handle(WrenchActionContext context) {
-        return this.handler.handle(context);
+    public Optional<InteractionResult> handle(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
+        return this.handler.handle(context, rotation);
     }
 }

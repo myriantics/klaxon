@@ -299,12 +299,12 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
 
         protected DirectionalWrenchInteraction(WrenchActionType type, DirectionalWrenchActionHandler handler) {
             this.direction2Interaction = Map.of(
-                    Direction.DOWN, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.DOWN))),
-                    Direction.UP, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.UP))),
-                    Direction.NORTH, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.NORTH))),
-                    Direction.SOUTH, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.SOUTH))),
-                    Direction.EAST, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.EAST))),
-                    Direction.WEST, WrenchInteraction.of(type, (context -> handler.handle(context, Direction.WEST)))
+                    Direction.DOWN, WrenchInteraction.of(type, ((context, rotation) -> handler.handle(context, Direction.DOWN))),
+                    Direction.UP, WrenchInteraction.of(type, ((context, rotation) -> handler.handle(context, Direction.UP))),
+                    Direction.NORTH, WrenchInteraction.of(type, ((context, rotation) -> handler.handle(context, Direction.NORTH))),
+                    Direction.SOUTH, WrenchInteraction.of(type, ((context, rotation) -> handler.handle(context, Direction.SOUTH))),
+                    Direction.EAST, WrenchInteraction.of(type, ((context, rotation) -> handler.handle(context, Direction.EAST))),
+                    Direction.WEST, WrenchInteraction.of(type, ((context, rotation) -> handler.handle(context, Direction.WEST)))
             );
         }
 

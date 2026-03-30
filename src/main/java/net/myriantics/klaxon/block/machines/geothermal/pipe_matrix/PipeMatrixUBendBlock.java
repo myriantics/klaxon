@@ -36,7 +36,7 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     // Tracks whether this pipe matrix loop is part of a valid structure or not.
     public static final BooleanProperty FORMED = KlaxonBlockStateProperties.FORMED;
 
-    protected static final WrenchInteraction DISCONNECT_INTERACTION = WrenchInteraction.of(KlaxonWrenchActionTypes.DISCONNECT, context -> handleDisconnect(context));
+    protected static final WrenchInteraction DISCONNECT_INTERACTION = WrenchInteraction.of(KlaxonWrenchActionTypes.DISCONNECT, (context, rotation) -> handleDisconnect(context));
 
     private PipeMatrixSegmentBlock segmentBlock;
 

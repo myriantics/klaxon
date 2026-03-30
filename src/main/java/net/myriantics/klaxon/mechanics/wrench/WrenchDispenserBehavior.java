@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.util.BlockFaceRegion;
 
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class WrenchDispenserBehavior extends OptionalDispenseItemBehavior {
         // run custom behavior if present
         if (targetState.getBlock() instanceof Wrenchable wrenchable) {
             WrenchInteraction type = wrenchable.getDispenserInteraction(context);
-            Optional<InteractionResult> result = type.handle(context);
+            Optional<InteractionResult> result = type.handle(context, BlockFaceRegion.Rotation.R0);
 
             // we don't need to set blockstate here because it's done in the above method
             if (result.isPresent()) {
@@ -50,7 +51,7 @@ public class WrenchDispenserBehavior extends OptionalDispenseItemBehavior {
         // apply all valid behaviors to the new state
         for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
             WrenchInteraction interaction = behavior.getDispenserInteraction(context);
-            Optional<InteractionResult> result = interaction.handle(context);
+            Optional<InteractionResult> result = interaction.handle(context, BlockFaceRegion.Rotation.R0);
             if (result.isPresent()) {
                 serverLevel.updateNeighbourForOutputSignal(source.pos(), source.state().getBlock());
                 setSuccess(true);
