@@ -2,6 +2,7 @@ package net.myriantics.klaxon.util;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 
 public enum RelativeDirection {
     LEFT {
@@ -88,5 +89,9 @@ public enum RelativeDirection {
 
     public Direction get(FrontAndTop frontAndTop) {
         return this.get(frontAndTop.front(), frontAndTop.top());
+    }
+
+    public Direction get(WrenchActionContext.GuiOrientation orientation) {
+        return this.get(orientation.getFacing(), orientation.getGuiUpDir());
     }
 }
