@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchActionHandler;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
@@ -17,8 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class WrenchUtil {
 
-    // private static final WrenchInteractionMap PICKUP = WrenchInteractionMap.fullBlock(WrenchInteraction.of(Wren))
-
+    private static final WrenchInteractionMap PICKUP = WrenchInteractionMap.fullBlock(WrenchInteraction.of(KlaxonWrenchActionTypes.PICKUP, WrenchActionHandler::noOp));
     private static final WrenchInteractionMap EMPTY = WrenchInteractionMap.create();
 
     public static boolean isOverlayEnabling(ItemStack stack) {
@@ -26,12 +26,21 @@ public abstract class WrenchUtil {
     }
 
     public static WrenchInteractionMap getInteractionMap(WrenchActionContext.Manual manual) {
-        BlockState targetState = manual.getTargetState();
+        Level level = manual.level();
+        BlockPos pos = manual.getTargetPos();
+        BlockState state = manual.getTargetState();
+        ItemStack wrenchStack = manual.getWrenchStack();
+
+        if (wrenchStack.getItem() instanceof WrenchItem wrenchItem && wrenchItem.canPickup(state, pos, level, manual.getPlayer(), wrenchStack)) {
+            return PICKUP;
+        }
+
         for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
-            if (behavior.test(targetState)) {
+            if (behavior.test(state)) {
                 return behavior.getManualInteractionMap(manual);
             }
         }
+
         return EMPTY;
     }
 
