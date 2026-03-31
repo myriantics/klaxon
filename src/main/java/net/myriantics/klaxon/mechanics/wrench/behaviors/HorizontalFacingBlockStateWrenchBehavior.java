@@ -23,11 +23,11 @@ public class HorizontalFacingBlockStateWrenchBehavior extends BlockStateWrenchBe
 
     private final WrenchInteraction ROTATE_CLOCKWISE = WrenchInteraction.of(
             KlaxonWrenchActionTypes.ROTATE_CLOCKWISE,
-            (context, rotation) -> this.rotate(context, rotation, RelativeDirection.RIGHT)
+            (context, rotation) -> this.rotate(context, rotation, RelativeDirection.LEFT)
     );
     private final WrenchInteraction ROTATE_COUNTERCLOCKWISE = WrenchInteraction.of(
             KlaxonWrenchActionTypes.ROTATE_COUNTERCLOCKWISE,
-            (context, rotation) -> this.rotate(context, rotation, RelativeDirection.LEFT)
+            (context, rotation) -> this.rotate(context, rotation, RelativeDirection.RIGHT)
     );
     private final WrenchInteraction FLIP = WrenchInteraction.of(
             KlaxonWrenchActionTypes.FLIP,
@@ -74,9 +74,10 @@ public class HorizontalFacingBlockStateWrenchBehavior extends BlockStateWrenchBe
 
     @Override
     public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
-        return switch (context.getDispenserFacing().getAxis()) {
-            case Y -> ROTATE_CLOCKWISE;
-            case X, Z -> FLIP;
+        return switch (context.getDispenserFacing()) {
+            case DOWN -> ROTATE_CLOCKWISE;
+            case UP -> ROTATE_COUNTERCLOCKWISE;
+            default -> FLIP;
         };
     }
 
