@@ -100,12 +100,12 @@ public final class BlockFaceRegion {
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
     }
 
-    public boolean intersects(float minX, float minY, float maxX, float maxY) {
+    private boolean intersects(float minX, float minY, float maxX, float maxY) {
         return (minX >= this.minX && minX <= this.maxX) || (minY >= this.minY && minY <= this.maxY) || (maxX <= this.maxX && maxX >= this.minX) || (maxY <= this.maxX && maxY >= this.minY);
     }
 
-    public boolean intersects(BlockFaceRegion region) {
-        return intersects(region.minX, region.minY, region.maxX, region.maxY);
+    public boolean intersects(BlockFaceRegion region) { // hack fix but whatevs
+        return intersects(region.minX, region.minY, region.maxX, region.maxY) || region.intersects(this.minX, this.minY, this.maxX, this.maxY);
     }
 
     public enum Rotation {

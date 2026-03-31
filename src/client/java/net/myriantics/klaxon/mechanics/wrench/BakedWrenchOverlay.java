@@ -30,7 +30,7 @@ public class BakedWrenchOverlay {
         for (InteractionMapSegment segment : map.segments) {
             WrenchInteraction interaction = segment.getInteraction();
             BlockFaceRegion region = segment.getRegion();
-            if (interaction != null && bounds.intersects(region)) {
+             if (interaction != null && bounds.intersects(region)) {
                 entries.add(Entry.of(region, bounds, interaction.getType(), rotation, x, y));
             }
         }
