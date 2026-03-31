@@ -143,23 +143,19 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
 
         public float getClickedX(BlockFaceRegion.Rotation rotation) {
             return switch (rotation) {
-                /*
                 case R0 -> this.clickedX;
-                case R90 -> this.clickedY;
+                case R90 -> 1 - this.clickedY;
                 case R180 -> 1 - this.clickedX;
-                case R270 -> 1 - this.clickedY;*/
-                default -> this.clickedX;
+                case R270 -> this.clickedY;
             };
         }
 
         public float getClickedY(BlockFaceRegion.Rotation rotation) {
             return switch (rotation) {
-                /*
-                case R0 -> 1 - this.clickedY;
+                case R0 -> this.clickedY;
                 case R90 -> 1 - this.clickedX;
-                case R180 -> this.clickedY;
-                case R270 -> this.clickedX;*/
-                default -> this.clickedY;
+                case R180 -> 1 - this.clickedY;
+                case R270 -> this.clickedX;
             };
         }
 

@@ -30,8 +30,8 @@ public class BakedWrenchOverlay {
         for (InteractionMapSegment segment : map.segments) {
             WrenchInteraction interaction = segment.getInteraction();
             BlockFaceRegion region = segment.getRegion();
-            if (interaction != null && region.intersects(bounds)) {
-                entries.add(Entry.of(region, bounds, interaction.getType(), rotation, region.contains(x, y)));
+            if (interaction != null && bounds.intersects(region)) {
+                entries.add(Entry.of(region, bounds, interaction.getType(), rotation, x, y));
             }
         }
 
@@ -55,16 +55,18 @@ public class BakedWrenchOverlay {
             this.selected = selected;
         }
 
-        private static Entry of(BlockFaceRegion untrimmed, BlockFaceRegion bounds, WrenchActionType type, BlockFaceRegion.Rotation rotation, boolean selected) {
+        private static Entry of(BlockFaceRegion untrimmed, BlockFaceRegion bounds, WrenchActionType type, BlockFaceRegion.Rotation rotation, float x, float y) {
+            BlockFaceRegion region = BlockFaceRegion.of(
+                    Math.max(bounds.minX(), untrimmed.minX(rotation)),
+                    Math.max(bounds.minY(), untrimmed.minY(rotation)),
+                    Math.min(bounds.maxX(), untrimmed.maxX(rotation)),
+                    Math.min(bounds.maxY(), untrimmed.maxY(rotation))
+            );
             return new Entry(
-                    BlockFaceRegion.of(
-                            Math.max(bounds.minX(rotation), untrimmed.minX(rotation)),
-                            Math.max(bounds.minY(rotation), untrimmed.minY(rotation)),
-                            Math.min(bounds.maxX(rotation), untrimmed.maxX(rotation)),
-                            Math.min(bounds.maxY(rotation), untrimmed.maxY(rotation))
-                    ),
+                    region,
                     type,
-                    selected);
+                    region.contains(x, y)
+            );
         }
 
         private void render(PoseStack.Pose pose, VertexConsumer consumer, int alpha, int light) {

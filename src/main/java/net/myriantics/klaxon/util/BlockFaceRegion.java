@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.util;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 
@@ -100,7 +101,7 @@ public final class BlockFaceRegion {
     }
 
     public boolean intersects(float minX, float minY, float maxX, float maxY) {
-        return contains(minX, minY) || contains(minX, maxY) || contains(maxX, minY) || contains(maxX, maxY);
+        return (minX >= this.minX && minX <= this.maxX) || (minY >= this.minY && minY <= this.maxY) || (maxX <= this.maxX && maxX >= this.minX) || (maxY <= this.maxX && maxY >= this.minY);
     }
 
     public boolean intersects(BlockFaceRegion region) {
@@ -119,9 +120,9 @@ public final class BlockFaceRegion {
 
         static Rotation topOnly(BlockState state, WrenchActionContext.GuiOrientation orientation) {
             return switch (orientation.getGuiUpDir()) {
-                case EAST -> Rotation.R90;
+                case EAST -> orientation.getFacing().getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? Rotation.R90 : Rotation.R270;
                 case SOUTH -> Rotation.R180;
-                case WEST -> Rotation.R270;
+                case WEST -> orientation.getFacing().getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? Rotation.R270 : Rotation.R90;
                 default -> Rotation.R0;
             };
         }
