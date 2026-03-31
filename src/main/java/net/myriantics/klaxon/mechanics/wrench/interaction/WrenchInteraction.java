@@ -15,6 +15,7 @@ public class WrenchInteraction {
     private final WrenchInteractionMap singletonMap;
 
     public static final WrenchInteraction NO_OP = of(KlaxonWrenchActionTypes.PASS, (context, rotation) -> Optional.empty());
+    public static final WrenchInteraction FAIL = of(KlaxonWrenchActionTypes.FAIL, (context, rotation) -> Optional.of(InteractionResult.FAIL));
 
     protected WrenchInteraction(WrenchActionType type, WrenchActionHandler handler) {
         this.type = type;

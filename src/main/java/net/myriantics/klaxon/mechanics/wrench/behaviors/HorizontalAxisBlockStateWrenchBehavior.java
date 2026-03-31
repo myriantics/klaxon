@@ -3,42 +3,45 @@ package net.myriantics.klaxon.mechanics.wrench.behaviors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
+import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
+import net.myriantics.klaxon.util.BlockFaceRegion;
 
 import java.util.Optional;
 
 public class HorizontalAxisBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Direction.Axis> {
+
+    private final WrenchInteraction FLIP = WrenchInteraction.of(
+            KlaxonWrenchActionTypes.FLIP,
+            this::flip
+    );
+
+    private final WrenchInteractionMap FLIP_MAP = WrenchInteractionMap.fullBlock(FLIP);
+
     public HorizontalAxisBlockStateWrenchBehavior(ResourceLocation id) {
         super(BlockStateProperties.HORIZONTAL_AXIS, id);
     }
 
-    @Override
-    protected Optional<Direction.Axis> applyManual(Direction.Axis original, ManualWrenchInteractionContext context) {
-        return doThing(original, context.targetState(), context.hitResult().getBlockPos());
+    private Optional<InteractionResult> flip(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
+        context.level().setBlockAndUpdate(context.getTargetPos(), context.getTargetState().cycle(this.getProperty()));
+        return Optional.of(InteractionResult.SUCCESS);
     }
 
     @Override
-    protected Optional<Direction.Axis> applyDispenser(Direction.Axis original, DispenserWrenchInteractionContext context) {
-        return doThing(original, context.targetState(), context.targetPos());
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        return FLIP;
     }
 
-    private static Optional<Direction.Axis> doThing(Direction.Axis original, BlockState state, BlockPos pos) {
-        switch (original) {
-            case X -> {
-                return Optional.of(Direction.Axis.Z);
-            }
-            case Z -> {
-                return Optional.of(Direction.Axis.X);
-            }
-            case Y -> {
-                throw new IllegalStateException("Encountered Y axis when performing wrench operation on horizontal block state " + state + " at " + pos);
-            }
-        };
-
-        return Optional.empty();
+    @Override
+    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
+        return FLIP_MAP;
     }
 }

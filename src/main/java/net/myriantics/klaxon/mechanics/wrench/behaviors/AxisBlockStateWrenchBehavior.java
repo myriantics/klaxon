@@ -16,85 +16,66 @@ import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 import net.myriantics.klaxon.util.BlockFaceRegion;
+import net.myriantics.klaxon.util.KlaxonMathHelper;
 
 import java.util.Optional;
 
 public class AxisBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Direction.Axis> {
 
-    protected final WrenchInteraction ROTATE_LEFT = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_LEFT, (context, rotation) -> handleRotateHorizontal(context, this.getProperty()));
-    protected final WrenchInteraction ROTATE_RIGHT = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_RIGHT, (context, rotation) -> handleRotateHorizontal(context, this.getProperty()));
-    //protected final WrenchInteraction ROTATE_UP = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_UP, context -> handleRotateVertical(context, this.getProperty()));
-    //protected final WrenchInteraction ROTATE_DOWN = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_DOWN, context -> handleRotateVertical(context, this.getProperty()));
-    protected final WrenchInteraction FLIP = WrenchInteraction.of(KlaxonWrenchActionTypes.FLIP, AxisBlockStateWrenchBehavior::handleFlip);
+    private final WrenchInteraction FLIP = WrenchInteraction.of(KlaxonWrenchActionTypes.FLIP, this::handleFlip);
+    private final WrenchInteraction ROTATE_FORWARD = WrenchInteraction.of(KlaxonWrenchActionTypes.ROTATE_FORWARD, this::rotateForward);
 
-    protected final WrenchInteractionMap AXIS_MATCH = WrenchInteractionMap.create();
+    protected final WrenchInteractionMap AXIS_MISMATCH = WrenchInteractionMap.fullBlock(FLIP);
+    protected final WrenchInteractionMap AXIS_MATCH = WrenchInteractionMap.fullBlock(ROTATE_FORWARD);
 
     public AxisBlockStateWrenchBehavior(ResourceLocation id) {
         super(BlockStateProperties.AXIS, id);
     }
 
-    private static Optional<InteractionResult> handleFlip(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
-        return Optional.empty();
-    }
-
-    //@Override
-    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
-        return null;
-    }
-
-    //@Override
-    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
-        return context.getTargetState().getValue(getProperty()).equals(context.getDispenserFacing().getAxis())
-                ? WrenchInteraction.NO_OP
-                : FLIP;
-    }
-
-    @Override
-    protected Optional<Direction.Axis> applyManual(Direction.Axis original, ManualWrenchInteractionContext context) {
-        Direction.Axis dispenserAxis = context.hitResult().getDirection().getAxis();
-
-        if (dispenserAxis.equals(original)) {
-            return Optional.empty();
-        }
-
-        for (Direction.Axis axis : Direction.Axis.VALUES) {
-            if (!axis.equals(dispenserAxis) && !axis.equals(original)) {
-                return Optional.of(axis);
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    private static Optional<InteractionResult> handleRotateHorizontal(WrenchActionContext context, Property<Direction.Axis> property) {
-        if (!(context instanceof WrenchActionContext.Manual manual)) {
-            throw new AssertionError();
-        }
-
+    private Optional<InteractionResult> rotateForward(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
         Level level = context.level();
         BlockState state = context.getTargetState();
-        BlockPos pos = context.getTargetPos();
+        Property<Direction.Axis> property = this.getProperty();
 
+        return switch (context) {
+            case WrenchActionContext.Dispenser dispenser -> Optional.of(InteractionResult.FAIL);
+            case WrenchActionContext.Manual manual -> {
+                level.setBlockAndUpdate(context.getTargetPos(), state.setValue(property, manual.getGuiOrientation().getGuiUpDir().getAxis()));
+                yield Optional.of(InteractionResult.SUCCESS);
+            }
+        };
+    }
+
+    private Optional<InteractionResult> handleFlip(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
+        Level level = context.level();
+        BlockState state = context.getTargetState();
+        Property<Direction.Axis> property = this.getProperty();
         Direction.Axis axis = state.getValue(property);
-        // manual.getHitResult().getLocation().
 
-        return Optional.of(InteractionResult.SUCCESS);
+        Direction.Axis userAxis = switch (context) {
+            case WrenchActionContext.Dispenser dispenser -> dispenser.getDispenserFacing().getAxis();
+            case WrenchActionContext.Manual manual -> manual.getGuiOrientation().getFacing().getAxis();
+        };
+
+        if (axis.equals(userAxis)) {
+            return Optional.of(InteractionResult.FAIL);
+        } else {
+            level.setBlockAndUpdate(context.getTargetPos(), state.setValue(property, KlaxonMathHelper.neither(axis, userAxis)));
+            return Optional.of(InteractionResult.SUCCESS);
+        }
     }
 
     @Override
-    protected Optional<Direction.Axis> applyDispenser(Direction.Axis original, DispenserWrenchInteractionContext context) {
-        Direction.Axis dispenserAxis = context.dispenserFacing().getAxis();
+    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
+        return context.getTargetState().getValue(this.getProperty()).equals(context.getGuiOrientation().getFacing().getAxis())
+                ? AXIS_MATCH
+                : AXIS_MISMATCH;
+    }
 
-        if (dispenserAxis.equals(original)) {
-            return Optional.empty();
-        }
-
-        for (Direction.Axis axis : Direction.Axis.VALUES) {
-            if (!axis.equals(dispenserAxis) && !axis.equals(original)) {
-                return Optional.of(axis);
-            }
-        }
-
-        return Optional.empty();
+    @Override
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        return context.getTargetState().getValue(this.getProperty()).equals(context.getDispenserFacing().getAxis())
+                ? WrenchInteraction.FAIL
+                : FLIP;
     }
 }
