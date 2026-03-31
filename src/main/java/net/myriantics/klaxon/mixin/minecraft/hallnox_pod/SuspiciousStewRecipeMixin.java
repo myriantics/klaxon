@@ -24,6 +24,6 @@ public abstract class SuspiciousStewRecipeMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/tags/TagKey;)Z")
     )
     private boolean klaxon$checkForHallnoxPod(ItemStack instance, TagKey<Item> tag, Operation<Boolean> original) {
-        return original.call(instance, tag) || instance.is(KlaxonItems.HALLNOX_POD);
+        return original.call(instance, tag) || instance.is(KlaxonItemTags.SUSPICIOUS_STEW_INGREDIENTS);
     }
 }

@@ -271,6 +271,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.GEAR_GRIP_MATERIALS)
                 .add(Items.LEATHER)
                 .add(KlaxonItems.RUBBER_SHEET.value());
+        getOrCreateTagBuilder(KlaxonItemTags.SUSPICIOUS_STEW_INGREDIENTS)
+                .add(KlaxonItems.HALLNOX_POD.value());
     }
 
     private void buildAdvancementRelatedTags() {

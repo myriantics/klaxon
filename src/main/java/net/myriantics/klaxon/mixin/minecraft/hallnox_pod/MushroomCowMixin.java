@@ -7,6 +7,7 @@ import net.minecraft.world.entity.animal.MushroomCow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,6 +24,6 @@ public abstract class MushroomCowMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/tags/TagKey;)Z")
     )
     private boolean klaxon$checkForHallnoxPod(ItemStack instance, TagKey<Item> tag, Operation<Boolean> original) {
-        return original.call(instance, tag) || instance.is(KlaxonItems.HALLNOX_POD);
+        return original.call(instance, tag) || instance.is(KlaxonItemTags.SUSPICIOUS_STEW_INGREDIENTS);
     }
 }
