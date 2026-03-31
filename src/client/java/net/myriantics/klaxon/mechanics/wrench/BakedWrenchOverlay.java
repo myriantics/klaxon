@@ -30,7 +30,7 @@ public class BakedWrenchOverlay {
         for (InteractionMapSegment segment : map.segments) {
             WrenchInteraction interaction = segment.getInteraction();
             BlockFaceRegion region = segment.getRegion();
-            if (interaction != null) {
+            if (interaction != null && region.intersects(bounds)) {
                 entries.add(Entry.of(region, bounds, interaction.getType(), rotation, region.contains(x, y)));
             }
         }
@@ -55,17 +55,16 @@ public class BakedWrenchOverlay {
             this.selected = selected;
         }
 
-        private static Entry of(BlockFaceRegion unscaled, BlockFaceRegion bounds, WrenchActionType type, BlockFaceRegion.Rotation rotation, boolean selected) {
+        private static Entry of(BlockFaceRegion untrimmed, BlockFaceRegion bounds, WrenchActionType type, BlockFaceRegion.Rotation rotation, boolean selected) {
             return new Entry(
                     BlockFaceRegion.of(
-                                bounds.minX() + (bounds.width() * unscaled.minX(rotation)),
-                                bounds.minY() + (bounds.height() * unscaled.minY(rotation)),
-                                bounds.minX() + (bounds.width() * unscaled.maxX(rotation)),
-                                bounds.minY() + (bounds.height() * unscaled.maxY(rotation))
+                            Math.max(bounds.minX(rotation), untrimmed.minX(rotation)),
+                            Math.max(bounds.minY(rotation), untrimmed.minY(rotation)),
+                            Math.min(bounds.maxX(rotation), untrimmed.maxX(rotation)),
+                            Math.min(bounds.maxY(rotation), untrimmed.maxY(rotation))
                     ),
                     type,
-                    selected
-            );
+                    selected);
         }
 
         private void render(PoseStack.Pose pose, VertexConsumer consumer, int alpha, int light) {

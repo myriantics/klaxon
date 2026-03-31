@@ -30,8 +30,8 @@ public final class BlockFaceRegion {
     public float minX(Rotation rotation) {
         return switch (rotation) {
             case R0 -> this.minX;
-            case R90 -> this.maxY;
-            case R180 -> this.maxX;
+            case R90 -> 1 - this.maxY;
+            case R180 -> 1 - this.maxX;
             case R270 -> this.minY;
         };
     }
@@ -43,8 +43,8 @@ public final class BlockFaceRegion {
     public float minY(Rotation rotation) {
         return switch (rotation) {
             case R0 -> this.minY;
-            case R90 -> this.maxX;
-            case R180 -> this.maxY;
+            case R90 -> 1 - this.maxX;
+            case R180 -> 1 - this.maxY;
             case R270 -> this.minX;
         };
     }
@@ -56,8 +56,8 @@ public final class BlockFaceRegion {
     public float maxX(Rotation rotation) {
         return switch (rotation) {
             case R0 -> this.maxX;
-            case R90 -> this.minY;
-            case R180 -> this.minX;
+            case R90 -> 1 - this.minY;
+            case R180 -> 1 - this.minX;
             case R270 -> this.maxY;
         };
     }
@@ -69,8 +69,8 @@ public final class BlockFaceRegion {
     public float maxY(Rotation rotation) {
         return switch (rotation) {
             case R0 -> this.maxY;
-            case R90 -> this.minX;
-            case R180 -> this.minY;
+            case R90 -> 1 - this.minX;
+            case R180 -> 1 - this.minY;
             case R270 -> this.maxX;
         };
     }

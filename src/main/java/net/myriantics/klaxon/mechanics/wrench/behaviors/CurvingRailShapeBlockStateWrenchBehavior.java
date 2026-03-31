@@ -36,18 +36,23 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
             KlaxonWrenchActionTypes.LOWER,
             this::toggleAscension
     );
+    private final WrenchInteraction CURVE_LEFT = WrenchInteraction.of(
+            KlaxonWrenchActionTypes.CURVE_LEFT,
+            (context, rotation) -> this.curve(context, rotation, true);
 
+    )
     private final WrenchInteractionMap ALIGN_MAP = WrenchInteractionMap.fullBlock(ALIGN);
+
     private final WrenchInteractionMap LOWER_MAP = WrenchInteractionMap.fullBlock(LOWER);
     private final WrenchInteractionMap CURVE = WrenchInteractionMap.splitVertical(
             WrenchInteraction.NO_OP,
             WrenchInteraction.NO_OP
-    );
+    ).state2Rotation(BlockFaceRegion.State2Rotation::topOnly);
     private final WrenchInteractionMap RAISE_OR_CURVE = WrenchInteractionMap.create()
             .add(InteractionMapSegment.of(RAISE, 0, 6f/16, 1, 1))
             .add(InteractionMapSegment.of(WrenchInteraction.NO_OP, 0, 0, 0.5f, 6f/16))
-            .add(InteractionMapSegment.of(WrenchInteraction.NO_OP, 0.5f, 0, 1, 6f/16));
-
+            .add(InteractionMapSegment.of(WrenchInteraction.NO_OP, 0.5f, 0, 1, 6f/16))
+            .state2Rotation(BlockFaceRegion.State2Rotation::topOnly);
     public CurvingRailShapeBlockStateWrenchBehavior(ResourceLocation id) {
         super(BlockStateProperties.RAIL_SHAPE, id);
     }
@@ -74,6 +79,10 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
             this.updateState(level, pos, state.setValue(this.getProperty(), newShape), context.getUser());
             return Optional.of(InteractionResult.SUCCESS);
         }
+    }
+
+    private Optional<InteractionResult> curve(WrenchActionContext context, BlockFaceRegion.Rotation rotation, boolean left) {
+        KlaxonRailHelper.rotateCurvingRail()
     }
 
     private Optional<InteractionResult> align(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {

@@ -66,7 +66,7 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
             this.clickPosFromCenter = hitResult.getLocation().subtract(targetPos.getCenter());
             this.clickPosFromCorner = hitResult.getLocation().subtract(targetPos.getX(), targetPos.getY(), targetPos.getZ());
             this.interactedFace = targetState.getBlock() instanceof Wrenchable wrenchable ? wrenchable.getManualInteractedFace(targetState, hitResult.getDirection(), this.clickPosFromCenter) : hitResult.getDirection();
-            this.orientation = new GuiOrientation(this.interactedFace, this.interactedFace.getAxis().equals(Direction.Axis.Y) ? player.getMotionDirection() : Direction.UP, clickPosFromCorner, player.getMotionDirection());
+            this.orientation = new  GuiOrientation(this.interactedFace, this.interactedFace.getAxis().equals(Direction.Axis.Y) ? player.getMotionDirection() : Direction.UP, clickPosFromCorner, player.getMotionDirection());
         }
 
         public Player getPlayer() {
@@ -111,43 +111,55 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
             this.guiUpDir = guiUpDir;
             this.sidesAxis = KlaxonMathHelper.neither(attachedToFace.getAxis(), guiUpDir.getAxis());
             this.clickedX = (float) switch (this.facing) {
-                case DOWN, UP -> fromCorner.x;
+                case DOWN, UP -> switch (this.guiUpDir) {
+                    case SOUTH -> fromCorner.x;
+                    case WEST -> 1 - fromCorner.z;
+                    case EAST -> fromCorner.z;
+                    default -> 1 - fromCorner.x;
+                };
                 case NORTH -> fromCorner.x;
                 case SOUTH -> 1 - fromCorner.x;
                 case WEST -> 1 - fromCorner.z;
                 case EAST -> fromCorner.z;
             };
             this.clickedY = (float) switch (this.facing) {
-                case DOWN, UP -> switch (playerHorizontalFacing) {
-                    case DOWN, UP -> fromCorner.z;
+                case DOWN, UP -> switch (guiUpDir) {
+                    case DOWN -> 1 - fromCorner.y;
+                    case UP -> fromCorner.y;
                     case SOUTH -> fromCorner.z;
                     case WEST -> 1 - fromCorner.x;
                     case EAST -> fromCorner.x;
-                    default -> 1 - fromCorner.z;
+                    case NORTH -> 1 - fromCorner.z;
                 };
                 case NORTH, EAST, SOUTH, WEST -> fromCorner.y;
             };
+
             /*
             KlaxonCommon.LOGGER.info("Wrench Click Cords: [{}, {}]", clickedX, clickedY);
             KlaxonCommon.LOGGER.info("Gui Top: [{}], Gui Facing; [{}]", guiUpDir, facing);
-            */
+
+             */
         }
 
         public float getClickedX(BlockFaceRegion.Rotation rotation) {
             return switch (rotation) {
+                /*
                 case R0 -> this.clickedX;
                 case R90 -> this.clickedY;
                 case R180 -> 1 - this.clickedX;
-                case R270 -> 1 - this.clickedY;
+                case R270 -> 1 - this.clickedY;*/
+                default -> this.clickedX;
             };
         }
 
         public float getClickedY(BlockFaceRegion.Rotation rotation) {
             return switch (rotation) {
-                case R0 -> this.clickedY;
+                /*
+                case R0 -> 1 - this.clickedY;
                 case R90 -> 1 - this.clickedX;
-                case R180 -> 1 - this.clickedY;
-                case R270 -> 1 - this.clickedX;
+                case R180 -> this.clickedY;
+                case R270 -> this.clickedX;*/
+                default -> this.clickedY;
             };
         }
 
