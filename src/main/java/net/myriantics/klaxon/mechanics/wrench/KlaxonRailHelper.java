@@ -10,60 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class KlaxonRailHelper {
 
-    public static boolean isCurved(RailShape railShape) {
-        switch (railShape) {
-            case SOUTH_EAST, NORTH_EAST, NORTH_WEST, SOUTH_WEST -> {
-                return true;
-            }
-        }
-
-        // if we didnt hit any curved ones, it's not curved
-        return false;
-    }
-
-    public static boolean isStraight(RailShape railShape, boolean allowAscending) {
-        switch (railShape) {
-            case NORTH_SOUTH, EAST_WEST -> {
-                return true;
-            }
-            case ASCENDING_NORTH, ASCENDING_SOUTH, ASCENDING_EAST, ASCENDING_WEST -> {
-                return allowAscending;
-            }
-        }
-
-        // if we get here, it's curving
-        return false;
-    }
-
     public static boolean canAscend(Level level, RailShape railShape, BlockPos railPos, Direction ascensionDirection) {
         Direction.Axis railAxis = railShapeToAxis(railShape);
         return ascensionDirection.getAxis().equals(railAxis) && !railShape.isAscending() && BaseRailBlock.canSupportRigidBlock(level, railPos.relative(ascensionDirection));
-    }
-
-    public static @Nullable RailShape tryToggleAscending(Level world, RailShape railShape, BlockPos railPos, Direction.AxisDirection ascensionDirection) {
-        Direction.Axis railAxis = railShapeToAxis(railShape);
-
-
-        if (railAxis == null) return null;
-        // check to see if block can support ascending rails before doing it - won't stop you from correcting a wrongly ascending one, though
-        if (railShape.isAscending() || BaseRailBlock.canSupportRigidBlock(world, railPos.relative(Direction.fromAxisAndDirection(railAxis, ascensionDirection)))) {
-            return toggleAscent(railShape, ascensionDirection);
-        }
-
-        return null;
-    }
-
-    public static Direction.Axis flipHorizontalAxis(Direction.Axis axis) {
-        switch (axis) {
-            case X -> {
-                return Direction.Axis.Z;
-            }
-            case Z -> {
-                return Direction.Axis.X;
-            }
-        }
-
-        return null;
     }
 
     public static RailShape getLowered(RailShape railShape) throws IllegalArgumentException {
@@ -86,25 +35,6 @@ public abstract class KlaxonRailHelper {
             };
             default -> throw new IllegalArgumentException("RailShape argument must not be curved or ascending - was [" + railShape + "]");
         };
-    }
-
-    private static @Nullable RailShape toggleAscent(RailShape railShape, Direction.AxisDirection direction) {
-        switch (railShape) {
-            case NORTH_SOUTH -> {
-                return direction.equals(Direction.AxisDirection.POSITIVE) ? RailShape.ASCENDING_SOUTH : RailShape.ASCENDING_NORTH;
-            }
-            case EAST_WEST -> {
-                return direction.equals(Direction.AxisDirection.POSITIVE) ? RailShape.ASCENDING_EAST : RailShape.ASCENDING_WEST;
-            }
-            case ASCENDING_EAST, ASCENDING_WEST -> {
-                return RailShape.EAST_WEST;
-            }
-            case ASCENDING_NORTH, ASCENDING_SOUTH -> {
-                return RailShape.NORTH_SOUTH;
-            }
-        }
-
-        return null;
     }
 
     public static @Nullable RailShape axisToRailShape(Direction.Axis axis) {
