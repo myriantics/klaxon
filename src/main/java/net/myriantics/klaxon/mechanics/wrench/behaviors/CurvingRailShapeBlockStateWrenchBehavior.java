@@ -2,7 +2,6 @@ package net.myriantics.klaxon.mechanics.wrench.behaviors;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -11,7 +10,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.RailShape;
-import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.mechanics.wrench.*;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
@@ -75,23 +73,24 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
         Level level = context.level();
         BlockPos pos = context.getTargetPos();
         BlockState state = context.getTargetState();
-        RailShape oldShape = state.getValue(this.getProperty());
-        @Nullable Direction.Axis axis = KlaxonRailHelper.railShapeToAxis(oldShape);
+        Property<RailShape> property = this.getProperty();
+        RailShape shape = state.getValue(property);
 
-        @Nullable RailShape newShape = KlaxonRailHelper.tryToggleAscending(
-                level,
-                oldShape,
-                pos,
-                switch (context) {
-                    case WrenchActionContext.Dispenser dispenser -> dispenser.getDispenserFacing().getAxisDirection().opposite();
-                    case WrenchActionContext.Manual manual -> manual.getPlayer().getMotionDirection().getAxisDirection();
-                });
-
-        if (axis == null || newShape == null) {
-            return Optional.of(InteractionResult.FAIL);
-        } else {
-            this.updateState(level, pos, state.setValue(this.getProperty(), newShape), context.getUser());
+        if (shape.isAscending()) {
+            level.setBlockAndUpdate(pos, state.setValue(property, KlaxonRailHelper.getLowered(shape)));
             return Optional.of(InteractionResult.SUCCESS);
+        }
+
+        Direction ascensionDirection = switch (context) {
+            case WrenchActionContext.Dispenser dispenser -> dispenser.getDispenserFacing().getOpposite();
+            case WrenchActionContext.Manual manual -> manual.getPlayer().getMotionDirection();
+        };
+
+        if (KlaxonRailHelper.canAscend(level, shape, pos, ascensionDirection)) {
+            level.setBlockAndUpdate(pos, state.setValue(property, KlaxonRailHelper.getRaised(shape, ascensionDirection.getAxisDirection())));
+            return Optional.of(InteractionResult.SUCCESS);
+        } else {
+            return Optional.of(InteractionResult.FAIL);
         }
     }
 
@@ -196,45 +195,5 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
                 }
             }
         };
-    }
-
-    @Override
-    protected Optional<RailShape> applyDispenser(RailShape original, DispenserWrenchInteractionContext context) {
-        Direction.Axis railAxis = KlaxonRailHelper.railShapeToAxis(original);
-        Direction.Axis dispenserAxis = context.dispenserFacing().getAxis();
-
-        switch (context.dispenserFacing()) {
-            case DOWN, UP -> {
-                // start off with making the rail flat if needed
-                if (original.isAscending()) {
-                    @Nullable RailShape toggled = KlaxonRailHelper.tryToggleAscending(context.serverWorld(), original, context.targetPos(), context.dispenserFacing().getOpposite().getAxisDirection());
-                    if (toggled != null && !toggled.equals(original)) {
-                        return Optional.of(toggled);
-                    }
-                }
-
-                @Nullable RailShape rotated = KlaxonRailHelper.rotateCurvingRail(original, context.dispenserFacing(), railAxis);
-                if (rotated != null) {
-                    return Optional.of(rotated);
-                }
-            }
-            case NORTH, SOUTH, WEST, EAST -> {
-                if (dispenserAxis.equals(railAxis)) {
-                    // start off with trying to make it ascending
-                    @Nullable RailShape toggled = KlaxonRailHelper.tryToggleAscending(context.serverWorld(), original, context.targetPos(), context.dispenserFacing().getOpposite().getAxisDirection());
-                    if (toggled != null && !toggled.equals(original)) {
-                        return Optional.of(toggled);
-                    }
-                } else {
-                    // then try to correct rail to dispenser direction
-                    @Nullable RailShape straightened = KlaxonRailHelper.axisToRailShape(dispenserAxis);
-                    if (straightened != null && !straightened.equals(original)) {
-                        return Optional.of(straightened);
-                    }
-                }
-            }
-        }
-
-        return Optional.empty();
     }
 }
