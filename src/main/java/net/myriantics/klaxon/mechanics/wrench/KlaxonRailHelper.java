@@ -137,6 +137,28 @@ public class KlaxonRailHelper {
         };
     }
 
+    public static RailShape rotateClockwise(RailShape railShape) {
+        return switch (railShape) {
+            case NORTH_SOUTH, ASCENDING_NORTH, ASCENDING_SOUTH -> RailShape.EAST_WEST;
+            case EAST_WEST, ASCENDING_EAST, ASCENDING_WEST -> RailShape.NORTH_SOUTH;
+            case SOUTH_EAST -> RailShape.SOUTH_WEST;
+            case SOUTH_WEST -> RailShape.NORTH_WEST;
+            case NORTH_WEST -> RailShape.NORTH_EAST;
+            case NORTH_EAST -> RailShape.SOUTH_EAST;
+        };
+    }
+
+    public static RailShape rotateCounterClockwise(RailShape railShape) {
+        return switch (railShape) {
+            case NORTH_SOUTH, ASCENDING_NORTH, ASCENDING_SOUTH -> RailShape.EAST_WEST;
+            case EAST_WEST, ASCENDING_EAST, ASCENDING_WEST -> RailShape.NORTH_SOUTH;
+            case SOUTH_EAST -> RailShape.NORTH_EAST;
+            case SOUTH_WEST -> RailShape.SOUTH_EAST;
+            case NORTH_WEST -> RailShape.SOUTH_WEST;
+            case NORTH_EAST -> RailShape.NORTH_WEST;
+        };
+    }
+
     public static @Nullable RailShape rotateCurvingRail(RailShape railShape, Direction dispenserFacing, Direction.Axis railAxis) {
         boolean inverted = dispenserFacing.equals(Direction.DOWN);
         RailShape rotated = null;

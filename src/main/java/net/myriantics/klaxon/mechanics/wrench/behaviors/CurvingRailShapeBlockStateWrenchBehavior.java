@@ -22,6 +22,7 @@ import net.myriantics.klaxon.util.RelativeDirection;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBehavior<RailShape> {
 
@@ -44,6 +45,14 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
     private final WrenchInteraction CURVE_RIGHT = WrenchInteraction.of(
             KlaxonWrenchActionTypes.CURVE_RIGHT,
             (context, rotation) -> this.curve(context, rotation, RelativeDirection.RIGHT)
+    );
+    private final WrenchInteraction ROTATE_CLOCKWISE = WrenchInteraction.of(
+            KlaxonWrenchActionTypes.ROTATE_CLOCKWISE,
+            (context, rotation) -> this.rotateSimple(context, KlaxonRailHelper::rotateClockwise)
+    );
+    private final WrenchInteraction ROTATE_COUNTERCLOCKWISE = WrenchInteraction.of(
+            KlaxonWrenchActionTypes.ROTATE_COUNTERCLOCKWISE,
+            (context, rotation) -> this.rotateSimple(context, KlaxonRailHelper::rotateCounterClockwise)
     );
 
     private final WrenchInteractionMap ALIGN_MAP = WrenchInteractionMap.fullBlock(ALIGN);
@@ -131,6 +140,12 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
         }
     }
 
+    private Optional<InteractionResult> rotateSimple(WrenchActionContext context, UnaryOperator<RailShape> operator) {
+        // giga one liner of doom
+        context.level().setBlockAndUpdate(context.getTargetPos(), context.getTargetState().setValue(this.getProperty(), operator.apply(context.getTargetState().getValue(this.getProperty()))));
+        return Optional.of(InteractionResult.SUCCESS);
+    }
+
     private void updateState(Level level, BlockPos pos, BlockState newState, @Nullable Entity user) {
         level.setBlockAndUpdate(pos, newState);
     }
@@ -160,57 +175,27 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
     }
 
     @Override
-    protected Optional<RailShape> applyManual(RailShape original, ManualWrenchInteractionContext context) {
-        Direction playerFacing = context.player().getDirection();
-        BlockPos railPos = context.hitResult().getBlockPos();
-        Position hitPos = context.hitResult().getLocation();
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        Direction dispenserFacing = context.getDispenserFacing();
+        BlockState state = context.getTargetState();
+        RailShape shape = state.getValue(this.getProperty());
 
-        Vec3 railCenterPos = railPos.getCenter();
-
-        @Nullable Direction.Axis railAxis = KlaxonRailHelper.railShapeToAxis(original);
-        Direction.Axis lookAxis = playerFacing.getAxis();
-
-        // try to toggle ascension / descension first
-        if (original.isAscending() || lookAxis.equals(railAxis)) {
-            @Nullable RailShape newShape = KlaxonRailHelper.tryToggleAscending(context.world(), original, railPos, playerFacing.getAxisDirection());
-            if (newShape != null && !newShape.equals(original)) {
-                return Optional.of(newShape);
-            }
+        if (shape.isAscending()) {
+            return LOWER;
         }
 
-        // if the rail is curved, try to straighten it out
-        @Nullable RailShape newShape = KlaxonRailHelper.axisToRailShape(lookAxis);
-        if (newShape != null && !newShape.equals(original)) {
-            return Optional.of(newShape);
-        }
-
-        // only try to rotate straight rails when no other operations have been performed
-        if (railAxis != null) {
-            // we're already going to rotate it, so broaden search to either side of the rail
-            Direction clickDirection =
-                    Direction.getNearest(railAxis.equals(Direction.Axis.X)
-                            ? new Vec3(0, 0, hitPos.z() - railCenterPos.z())
-                            : new Vec3(hitPos.x() - railCenterPos.x(), 0, 0)
-                    );
-
-            // if player clicks on the axis perpendicular to looking axis, rotate rail.
-            switch (clickDirection) {
-                case NORTH -> {
-                    return Optional.of(playerFacing.equals(Direction.WEST) ? RailShape.NORTH_EAST : RailShape.NORTH_WEST);
-                }
-                case SOUTH -> {
-                    return Optional.of(playerFacing.equals(Direction.WEST) ? RailShape.SOUTH_EAST : RailShape.SOUTH_WEST);
-                }
-                case WEST -> {
-                    return Optional.of(playerFacing.equals(Direction.NORTH) ? RailShape.SOUTH_WEST : RailShape.NORTH_WEST);
-                }
-                case EAST -> {
-                    return Optional.of(playerFacing.equals(Direction.NORTH) ? RailShape.SOUTH_EAST : RailShape.NORTH_EAST);
+        return switch (dispenserFacing) {
+            case DOWN -> ROTATE_CLOCKWISE;
+            case UP -> ROTATE_COUNTERCLOCKWISE;
+            case NORTH, SOUTH, EAST, WEST -> {
+                @Nullable Direction.Axis railAxis = KlaxonRailHelper.railShapeToAxis(shape);
+                if (railAxis == null || !railAxis.equals(dispenserFacing.getAxis())) {
+                    yield ALIGN;
+                } else {
+                    yield RAISE;
                 }
             }
-        }
-
-        return Optional.empty();
+        };
     }
 
     @Override

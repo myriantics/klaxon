@@ -103,28 +103,6 @@ public class FacingBlockStateWrenchBehavior extends BlockStateWrenchBehavior<Dir
                 : AXIS_MISMATCH;
     }
 
-    @Override
-    protected Optional<Direction> applyManual(Direction original, ManualWrenchInteractionContext context) {
-        Direction.Axis axis = context.hitResult().getDirection().getAxis();
-
-        if (original.getAxis().equals(axis)) {
-            return Optional.of(original.getOpposite());
-        } else {
-            return Optional.of(original.getClockWise(axis));
-        }
-    }
-
-    @Override
-    protected Optional<Direction> applyDispenser(Direction original, DispenserWrenchInteractionContext context) {
-        Direction.Axis dispenserAxis = context.dispenserFacing().getAxis();
-
-        if (original.getAxis().equals(dispenserAxis)) {
-            return Optional.of(original.getOpposite());
-        } else {
-            return Optional.of(original.getClockWise(dispenserAxis));
-        }
-    }
-
     private interface RotationDirFunction {
         Direction get(WrenchActionContext.Manual manual);
     }

@@ -53,7 +53,11 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
         return !state.is(this.getDenylistTag()) && state.is(this.getAllowlistTag()) && state.hasProperty(property);
     }
 
-    protected abstract Optional<T> applyManual(T original, ManualWrenchInteractionContext context);
+    protected Optional<T> applyManual(T original, ManualWrenchInteractionContext context) {
+        return Optional.empty();
+    }
 
-    protected abstract Optional<T> applyDispenser(T original, DispenserWrenchInteractionContext context);
+    protected Optional<T> applyDispenser(T original, DispenserWrenchInteractionContext context) {
+        return Optional.empty();
+    }
 }
