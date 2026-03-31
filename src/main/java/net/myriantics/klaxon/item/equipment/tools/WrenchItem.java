@@ -2,6 +2,7 @@ package net.myriantics.klaxon.item.equipment.tools;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -20,8 +21,11 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -33,6 +37,7 @@ import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,6 +79,12 @@ public class WrenchItem extends DiggerItem {
 
         // Wrench pickup ability requires both CAN_PLACE_ON and CAN_DESTROY components to work in Adventure Mode
         if (canPickup(targetState, targetPos, level, player, wrenchStack)) {
+            // offset target pos down for doors and the like
+            if (shouldOffsetPickupDownward(level, targetPos, targetState)) {
+                targetPos = targetPos.relative(Direction.DOWN);
+                targetState = level.getBlockState(targetPos);
+            }
+
             if (level instanceof ServerLevel serverWorld) {
                 List<ItemStack> outputStacks = Block.getDrops(targetState, serverWorld, targetPos, serverWorld.getBlockEntity(targetPos));
                 if (!outputStacks.isEmpty()) {
@@ -93,6 +104,7 @@ public class WrenchItem extends DiggerItem {
                 // drop is false here because we already handled the drops
                 // only break on server because sound plays twice on client otherwise
                 level.destroyBlock(targetPos, false, player);
+                wrenchStack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(context.getHand()));
                 KlaxonAdvancementTriggers.triggerWrenchUsage((ServerPlayer) player, UsageType.PICKUP, targetState);
             }
 
@@ -130,6 +142,15 @@ public class WrenchItem extends DiggerItem {
         }
 
         return InteractionResult.FAIL;
+    }
+
+    protected boolean shouldOffsetPickupDownward(Level level, BlockPos targetPos, BlockState targetState) {
+        if (!targetState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) || !targetState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).equals(DoubleBlockHalf.UPPER)) {
+            return false;
+        } else {
+            BlockState lowerState = level.getBlockState(targetPos.relative(Direction.DOWN));
+            return lowerState.is(targetState.getBlock()) && lowerState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).equals(DoubleBlockHalf.LOWER);
+        }
     }
 
     public static boolean canRotate(RegistryAccess manager, BlockState targetState) {
