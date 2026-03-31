@@ -64,14 +64,12 @@ public class SteelDoorBlock extends DoorBlock implements Wrenchable {
                 isOpening
         );
 
-        if (!level.isClientSide()) {
-            level.setBlockAndUpdate(pos, state.cycle(OPEN));
-            level.gameEvent(
-                    context instanceof WrenchActionContext.Manual manual ? manual.getPlayer() : null,
-                    isOpening ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE,
-                    pos
-            );
-        }
+        level.setBlock(pos, state.cycle(OPEN),10);
+        level.gameEvent(
+                context instanceof WrenchActionContext.Manual manual ? manual.getPlayer() : null,
+                isOpening ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE,
+                pos
+        );
 
         return InteractionResult.SUCCESS;
     }
