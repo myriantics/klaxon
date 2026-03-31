@@ -18,6 +18,7 @@ import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.mechanics.wrench.interaction.segments.InteractionMapSegment;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 import net.myriantics.klaxon.util.BlockFaceRegion;
+import net.myriantics.klaxon.util.RelativeDirection;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -38,20 +39,24 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
     );
     private final WrenchInteraction CURVE_LEFT = WrenchInteraction.of(
             KlaxonWrenchActionTypes.CURVE_LEFT,
-            (context, rotation) -> this.curve(context, rotation, true);
+            (context, rotation) -> this.curve(context, rotation, RelativeDirection.LEFT)
+    );
+    private final WrenchInteraction CURVE_RIGHT = WrenchInteraction.of(
+            KlaxonWrenchActionTypes.CURVE_RIGHT,
+            (context, rotation) -> this.curve(context, rotation, RelativeDirection.RIGHT)
+    );
 
-    )
     private final WrenchInteractionMap ALIGN_MAP = WrenchInteractionMap.fullBlock(ALIGN);
 
     private final WrenchInteractionMap LOWER_MAP = WrenchInteractionMap.fullBlock(LOWER);
     private final WrenchInteractionMap CURVE = WrenchInteractionMap.splitVertical(
-            WrenchInteraction.NO_OP,
-            WrenchInteraction.NO_OP
+            CURVE_LEFT,
+            CURVE_RIGHT
     ).state2Rotation(BlockFaceRegion.State2Rotation::topOnly);
     private final WrenchInteractionMap RAISE_OR_CURVE = WrenchInteractionMap.create()
             .add(InteractionMapSegment.of(RAISE, 0, 6f/16, 1, 1))
-            .add(InteractionMapSegment.of(WrenchInteraction.NO_OP, 0, 0, 0.5f, 6f/16))
-            .add(InteractionMapSegment.of(WrenchInteraction.NO_OP, 0.5f, 0, 1, 6f/16))
+            .add(InteractionMapSegment.of(CURVE_LEFT, 0, 0, 0.5f, 6f/16))
+            .add(InteractionMapSegment.of(CURVE_RIGHT, 0.5f, 0, 1, 6f/16))
             .state2Rotation(BlockFaceRegion.State2Rotation::topOnly);
     public CurvingRailShapeBlockStateWrenchBehavior(ResourceLocation id) {
         super(BlockStateProperties.RAIL_SHAPE, id);
@@ -81,8 +86,26 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
         }
     }
 
-    private Optional<InteractionResult> curve(WrenchActionContext context, BlockFaceRegion.Rotation rotation, boolean left) {
-        KlaxonRailHelper.rotateCurvingRail()
+    private Optional<InteractionResult> curve(WrenchActionContext context, BlockFaceRegion.Rotation rotation, RelativeDirection curveDir) {
+        Level level = context.level();
+        BlockPos pos = context.getTargetPos();
+        BlockState state = context.getTargetState();
+
+        Property<RailShape> property = this.getProperty();
+        RailShape original = state.getValue(property);
+
+        Direction.AxisDirection userFacingAxisDir = switch (context) {
+            case WrenchActionContext.Dispenser dispenser -> dispenser.getDispenserFacing().getAxisDirection();
+            case WrenchActionContext.Manual manual -> manual.getPlayer().getMotionDirection().getAxisDirection();
+        };
+
+        @Nullable RailShape newShape = KlaxonRailHelper.tryCurvingRail(original, userFacingAxisDir, curveDir);
+        if (newShape != null && !original.equals(newShape)) {
+            this.updateState(level, pos, state.setValue(property, newShape), context.getUser());
+            return Optional.of(InteractionResult.SUCCESS);
+        } else {
+            return Optional.of(InteractionResult.FAIL);
+        }
     }
 
     private Optional<InteractionResult> align(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
@@ -90,7 +113,6 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
         BlockPos pos = context.getTargetPos();
         BlockState state = context.getTargetState();
 
-        @Nullable Entity user = context instanceof WrenchActionContext.Manual manual ? manual.getPlayer() : null;
         Direction userFacing = switch (context) {
             case WrenchActionContext.Dispenser dispenser -> dispenser.getDispenserFacing();
             case WrenchActionContext.Manual manual -> manual.getPlayer().getMotionDirection();
@@ -104,7 +126,7 @@ public class CurvingRailShapeBlockStateWrenchBehavior extends BlockStateWrenchBe
             return Optional.of(InteractionResult.FAIL);
         } else {
             BlockState newState = state.setValue(property, newShape);
-            this.updateState(level, pos, newState, user);
+            this.updateState(level, pos, newState, context.getUser());
             return Optional.of(InteractionResult.SUCCESS);
         }
     }

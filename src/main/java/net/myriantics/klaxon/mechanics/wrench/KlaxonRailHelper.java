@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.state.properties.RailShape;
+import net.myriantics.klaxon.util.RelativeDirection;
 import org.jetbrains.annotations.Nullable;
 
 public class KlaxonRailHelper {
@@ -106,6 +107,34 @@ public class KlaxonRailHelper {
         }
 
         return null;
+    }
+
+    public static @Nullable RailShape tryCurvingRail(RailShape railShape, Direction.AxisDirection facingAxisDir, RelativeDirection relativeDirection) {
+        return switch (railShape) {
+            case NORTH_SOUTH -> switch (relativeDirection) {
+                case LEFT -> switch (facingAxisDir) {
+                    case POSITIVE -> RailShape.NORTH_WEST;
+                    case NEGATIVE -> RailShape.SOUTH_EAST;
+                };
+                case RIGHT -> switch (facingAxisDir) {
+                    case POSITIVE -> RailShape.NORTH_EAST;
+                    case NEGATIVE -> RailShape.SOUTH_WEST;
+                };
+                default -> null;
+            };
+            case EAST_WEST -> switch (relativeDirection) {
+                case LEFT -> switch (facingAxisDir) {
+                    case POSITIVE -> RailShape.NORTH_WEST;
+                    case NEGATIVE -> RailShape.SOUTH_EAST;
+                };
+                case RIGHT -> switch (facingAxisDir) {
+                    case POSITIVE -> RailShape.SOUTH_WEST;
+                    case NEGATIVE -> RailShape.NORTH_EAST;
+                };
+                default -> null;
+            };
+            default -> null;
+        };
     }
 
     public static @Nullable RailShape rotateCurvingRail(RailShape railShape, Direction dispenserFacing, Direction.Axis railAxis) {
