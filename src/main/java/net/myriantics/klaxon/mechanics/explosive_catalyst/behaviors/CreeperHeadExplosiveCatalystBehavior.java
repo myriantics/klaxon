@@ -1,7 +1,7 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
+import net.minecraft.world.damagesource.DamageSource;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.BlastProcessorExplosionBehavior;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ItemExplosiveCatalystBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -16,51 +16,24 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import org.jetbrains.annotations.Nullable;
 
-public class CreeperHeadExplosiveCatalystBehavior extends ItemExplosiveCatalystBehavior {
-    public CreeperHeadExplosiveCatalystBehavior(ResourceLocation id) {
-        super(id);
-    }
-
+public class CreeperHeadExplosiveCatalystBehavior extends DefaultExplosiveCatalystBehavior {
     @Override
-    public void onExplosion(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData powerData, boolean shouldModifyWorld) {
-        if (world instanceof ServerLevel serverWorld) {
-            BlockState activeBlockState = world.getBlockState(pos);
-            if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
-                if (powerData.explosionPower() > 0.0) {
-                    Direction direction = activeBlockState.getValue(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
-                    Position position = blastProcessor.getExplosionOutputLocation(direction);
+    public @Nullable DamageSource getDamageSource(ExplosiveCatalystContext context) {
+        if (context.level() instanceof ServerLevel level) {
+            Creeper creeper = new Creeper(EntityType.CREEPER, level);
 
-                    // mimic a charged creeper because it's really funny
-                    Creeper creeperEntity = new Creeper(EntityType.CREEPER, serverWorld);
-                    // we have to set the name here because otherwise it would say "blown up by creeper"
-                    creeperEntity.setCustomName(Component.translatable("klaxon.text.blast_processor_creeper_name"));
-                    creeperEntity.thunderHit(serverWorld, null);
+            creeper.setCustomName(Component.translatable("klaxon.text.blast_processor_creeper_name"));
+            creeper.thunderHit(level, null);
 
-                    blastProcessor.removeItemNoUpdate(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
-                    serverWorld.explode(creeperEntity, world.damageSources().explosion(creeperEntity, creeperEntity),
-                            // this is used to differentiate blast processor explosions from normal ones
-                            new BlastProcessorExplosionBehavior(shouldModifyWorld),
-                            position.x(), position.y(), position.z(),
-                            (float) powerData.explosionPower(),
-                            shouldModifyWorld && powerData.producesFire(),
-                            Level.ExplosionInteraction.BLOCK,
-                            ParticleTypes.EXPLOSION,
-                            ParticleTypes.EXPLOSION_EMITTER,
-                            SoundEvents.GENERIC_EXPLODE);
-                    serverWorld.blockUpdated(pos, activeBlockState.getBlock());
-
-                    // bonk the creeper entity
-                    creeperEntity.discard();
-                }
-            }
+            creeper.discard();
+            return level.damageSources().explosion(null, creeper);
+        } else {
+            return null;
         }
-    }
-
-    @Override
-    public boolean isVariable() {
-        return false;
     }
 }

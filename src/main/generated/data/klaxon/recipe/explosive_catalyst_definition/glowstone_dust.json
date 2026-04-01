@@ -1,7 +1,7 @@
 {
   "type": "klaxon:explosive_catalyst_definition",
   "explosive_catalyst_data": {
-    "behavior": "klaxon:glowstone",
+    "behavior": "klaxon:respawn_anchorlike",
     "explosion_power": 1.3,
     "produces_fire": true
   },

@@ -3,7 +3,7 @@ package net.myriantics.klaxon.registry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
@@ -12,7 +12,7 @@ import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 public abstract class KlaxonRegistryKeys {
 
     // static
-    public static final ResourceKey<Registry<ExplosiveCatalystBehavior>> EXPLOSIVE_CATALYST_BEHAVIOR = of("blast_processor_behavior");
+    public static final ResourceKey<Registry<AbstractExplosiveCatalystBehavior>> EXPLOSIVE_CATALYST_BEHAVIOR = of("blast_processor_behavior");
     public static final ResourceKey<Registry<BlockStateWrenchBehavior<? extends Comparable<?>>>> BLOCK_STATE_WRENCH_BEHAVIOR = of("block_state_wrench_behavior");
     // dynamic
     public static final ResourceKey<Registry<WrenchInteractionDenialPredicate>> WRENCH_INTERACTION_DENIAL_PREDICATE = of("wrench_interaction_denial_predicates");

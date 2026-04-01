@@ -23,7 +23,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
@@ -141,13 +141,9 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             // dont show hidden recipes
             if (recipeEntry.value() instanceof ExplosiveCatalystDefinitionRecipe explosiveCatalystDefinitionRecipe) {
                 if (!explosiveCatalystDefinitionRecipe.isHidden()) {
-                    Holder<ExplosiveCatalystBehavior> behavior = ((ExplosiveCatalystDefinitionRecipe) recipeEntry.value()).getData().behavior();
+                    Holder<AbstractExplosiveCatalystBehavior> behavior = ((ExplosiveCatalystDefinitionRecipe) recipeEntry.value()).getData().behavior();
                     String id = behavior.getRegisteredName();
-                    if (behavior.value().isVariable()) {
-                        registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), minFromBehaviorId(id), maxFromBehaviorId(id), descriptionFromBehaviorId(id)));
-                    } else {
-                        registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), descriptionFromBehaviorId(id)));
-                    }
+                    registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), descriptionFromBehaviorId(id)));
                 }
             }
         }

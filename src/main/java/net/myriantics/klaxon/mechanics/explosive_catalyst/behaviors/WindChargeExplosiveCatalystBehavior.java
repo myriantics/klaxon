@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ItemExplosiveCatalystBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,56 +11,42 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors.WindChargeInvoker;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
-public class WindChargeExplosiveCatalystBehavior extends ItemExplosiveCatalystBehavior {
-    public WindChargeExplosiveCatalystBehavior(ResourceLocation id) {
-        super(id);
-    }
+public class WindChargeExplosiveCatalystBehavior extends DefaultExplosiveCatalystBehavior {
 
     @Override
-    public void onExplosion(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData powerData, boolean shouldModifyWorld) {
-        Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).getValue(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
-        WindCharge windCharge = new WindCharge(world, outputPos.x(), outputPos.y(), outputPos.z(), Vec3.ZERO);
+    public void createExplosion(ExplosiveCatalystContext context, Position detonationPosition, ExplosiveCatalystData data, boolean modifyWorld) {
+        Level level = context.level();
+        WindCharge windCharge = new WindCharge(level, detonationPosition.x(), detonationPosition.y(), detonationPosition.z(), Vec3.ZERO);
         WindChargeInvoker windChargeInvoker = ((WindChargeInvoker) windCharge);
 
-        world.addFreshEntity(windCharge);
+        level.addFreshEntity(windCharge);
 
         // explode
-        if (shouldModifyWorld) {
-            windChargeInvoker.invokeExplode(new Vec3(outputPos.x(), outputPos.y(), outputPos.z()));
+        if (modifyWorld) {
+            windChargeInvoker.invokeExplode(new Vec3(detonationPosition.x(), detonationPosition.y(), detonationPosition.z()));
         } else {
-            world.explode(
-                            windCharge,
-                            null,
-                            AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR,
-                            outputPos.x(),
-                            outputPos.y(),
-                            outputPos.z(),
-                            1.2F,
-                            false,
-                            // replace ExplosionSourceType.TRIGGER to prevent world griefing
-                            Level.ExplosionInteraction.NONE,
-                            ParticleTypes.GUST_EMITTER_SMALL,
-                            ParticleTypes.GUST_EMITTER_LARGE,
-                            SoundEvents.WIND_CHARGE_BURST
-                    );
+            level.explode(
+                    windCharge,
+                    null,
+                    AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR,
+                    detonationPosition.x(),
+                    detonationPosition.y(),
+                    detonationPosition.z(),
+                    1.2F,
+                    false,
+                    // replace ExplosionSourceType.TRIGGER to prevent world griefing
+                    Level.ExplosionInteraction.NONE,
+                    ParticleTypes.GUST_EMITTER_SMALL,
+                    ParticleTypes.GUST_EMITTER_LARGE,
+                    SoundEvents.WIND_CHARGE_BURST
+            );
         }
 
-        // remove stack and discard
-        blastProcessor.removeItemNoUpdate(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+        // discard
         windCharge.discard();
-    }
-
-    @Override
-    public boolean shouldRunDispenserEffects(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        return false;
-    }
-
-    @Override
-    public boolean isVariable() {
-        return false;
     }
 }

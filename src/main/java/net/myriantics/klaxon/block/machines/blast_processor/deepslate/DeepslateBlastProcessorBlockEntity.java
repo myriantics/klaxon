@@ -12,11 +12,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
+import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
@@ -25,6 +26,7 @@ import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatal
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
+import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.HORIZONTAL_FACING;
 import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.isFrontObstructed;
 
-public class DeepslateBlastProcessorBlockEntity extends RandomizableContainerBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
+public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
     private NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
     public static final int INGREDIENT_INDEX = 0;
     public static final int CATALYST_INDEX = 1;
@@ -166,24 +168,24 @@ public class DeepslateBlastProcessorBlockEntity extends RandomizableContainerBlo
             boolean shouldRunDispenserEffects = true;
 
             if (!this.isEmpty()) {
-
-                ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(this);
+                BlockPos pos = this.getBlockPos();
+                ExplosiveCatalystContext.Block context = this.getContext();
 
                 // compute blast processor behavior
-                ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(level, worldPosition, this, recipeInventory);
+                ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
 
-                ExplosiveCatalystBehavior behavior = data.behavior().value();
+                AbstractExplosiveCatalystBehavior behavior = data.behavior().value();
 
                 // transform data if needed
-                BlastProcessingRecipeData processingData = behavior.getBlastProcessingRecipeData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), data));
+                BlastProcessingRecipeData processingData = this.getBlastProcessingRecipeData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), data));
 
                 // do explosion effect
-                behavior.onExplosion(level, worldPosition, this, data, level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
+                behavior.createExplosion(context, this.getExplosionOutputLocation(level.getBlockState(pos).getValue(HORIZONTAL_FACING)), data, this.level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
 
                 // eject recipe results
-                behavior.ejectItems(level, worldPosition, this, processingData, data);
+                this.ejectItems(level, worldPosition, this, processingData, data);
 
-                shouldRunDispenserEffects = behavior.shouldRunDispenserEffects(level, worldPosition, this, recipeInventory);
+                shouldRunDispenserEffects = !behavior.is(KlaxonExplosiveCatalystBehaviorTags.DOES_NOT_RUN_DISPENSER_EFFECTS);
             }
 
             // if this has been exploded, dont run these
@@ -197,6 +199,11 @@ public class DeepslateBlastProcessorBlockEntity extends RandomizableContainerBlo
                 }
             }
         }
+    }
+
+    @Override
+    public ItemStack getCatalystStack() {
+        return this.getItem(CATALYST_INDEX);
     }
 
     public void updateBlockState(@Nullable BlockState appendedState) {
@@ -250,9 +257,9 @@ public class DeepslateBlastProcessorBlockEntity extends RandomizableContainerBlo
 
         // if we have a world, actually yoink the proper values.
         if (level != null) {
-            explosiveCatalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(level, worldPosition, this, recipeInventory);
+            explosiveCatalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(this.getContext(), this.getCatalystStack());
 
-            blastProcessingRecipeData = explosiveCatalystData.behavior().value().getBlastProcessingPreviewData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), explosiveCatalystData));
+            blastProcessingRecipeData = this.getBlastProcessingPreviewData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), explosiveCatalystData));
         }
 
         return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
