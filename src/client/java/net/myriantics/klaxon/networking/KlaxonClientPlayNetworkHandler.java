@@ -22,6 +22,7 @@ import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLo
 import net.myriantics.klaxon.networking.s2c.*;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 public abstract class KlaxonClientPlayNetworkHandler {
     public static void send(CustomPacketPayload customPayload) {
@@ -32,9 +33,10 @@ public abstract class KlaxonClientPlayNetworkHandler {
         ClientLevel clientWorld = Minecraft.getInstance().level;
         if (clientWorld == null) return;
 
-        int eventId = packet.packet().getType();
-        int data = packet.packet().getData();
-        BlockPos pos = packet.packet().getPos();
+        int eventId = packet.eventId();
+        int data = packet.data();
+        Vector3f pos = packet.position();
+        BlockPos blockPos = BlockPos.containing(pos.x, pos.y, pos.z);
 
         LevelRenderer renderer = Minecraft.getInstance().levelRenderer;
 
@@ -42,26 +44,21 @@ public abstract class KlaxonClientPlayNetworkHandler {
 
         switch (eventId) {
             case KlaxonWorldEvents.DRAGONS_BREATH_EXPLOSIVE_CATALYST_CLOUD_SPAWNS -> {
-                BlockEntity entity = clientWorld.getBlockEntity(pos);
-                if (entity instanceof DeepslateBlastProcessorBlockEntity deepslateBlastProcessorBlockEntity) {
-                    Position outputPos = deepslateBlastProcessorBlockEntity.getExplosionOutputLocation(clientWorld.getBlockState(pos).getValue(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
+                for (int m = 0; m < 200; m++) {
+                    float ab = random.nextFloat() * 4.0F;
+                    float ag = random.nextFloat() * (float) (Math.PI * 2);
+                    double n = Mth.cos(ag) * ab;
+                    double o = 0.01 + random.nextDouble() * 0.5;
+                    double p = Mth.sin(ag) * ab;
+                    renderer.addParticle(ParticleTypes.DRAGON_BREATH, false, pos.x() + n * 0.1, pos.y() + 0.3, pos.z() + p * 0.1, n, o, p);
+                }
 
-                    for (int m = 0; m < 200; m++) {
-                        float ab = random.nextFloat() * 4.0F;
-                        float ag = random.nextFloat() * (float) (Math.PI * 2);
-                        double n = Mth.cos(ag) * ab;
-                        double o = 0.01 + random.nextDouble() * 0.5;
-                        double p = Mth.sin(ag) * ab;
-                        renderer.addParticle(ParticleTypes.DRAGON_BREATH, false, outputPos.x() + n * 0.1, outputPos.y() + 0.3, outputPos.z() + p * 0.1, n, o, p);
-                    }
-
-                    if (data == 1) {
-                        clientWorld.playLocalSound(pos, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.HOSTILE, 1.0F, random.nextFloat() * 0.1F + 0.9F, false);
-                    }
+                if (data == 1) {
+                    clientWorld.playLocalSound(blockPos, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.HOSTILE, 1.0F, random.nextFloat() * 0.1F + 0.9F, false);
                 }
             }
             case KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES -> {
-                clientWorld.addDestroyBlockEffect(pos, clientWorld.getBlockState(pos));
+                clientWorld.addDestroyBlockEffect(blockPos, clientWorld.getBlockState(blockPos));
             }
         }
     }

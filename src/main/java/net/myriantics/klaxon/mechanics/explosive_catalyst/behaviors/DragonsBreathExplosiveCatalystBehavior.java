@@ -13,6 +13,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystConte
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
+import org.joml.Vector3f;
 
 public class DragonsBreathExplosiveCatalystBehavior extends AbstractExplosiveCatalystBehavior {
 
@@ -31,7 +32,7 @@ public class DragonsBreathExplosiveCatalystBehavior extends AbstractExplosiveCat
             areaEffectCloudEntity.setRadiusPerTick((finalRadius - radius) / areaEffectCloudEntity.getDuration());
             areaEffectCloudEntity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
 
-            KlaxonServerPlayNetworkHandler.syncWorldEvent(serverWorld, BlockPos.containing(detonationPosition.x(), detonationPosition.y(), detonationPosition.z()), KlaxonWorldEvents.DRAGONS_BREATH_EXPLOSIVE_CATALYST_CLOUD_SPAWNS, 1);
+            KlaxonServerPlayNetworkHandler.syncWorldEvent(serverWorld, new Vector3f((float) detonationPosition.x(), (float) detonationPosition.y(), (float) detonationPosition.z()), KlaxonWorldEvents.DRAGONS_BREATH_EXPLOSIVE_CATALYST_CLOUD_SPAWNS, 1);
             context.level().addFreshEntity(areaEffectCloudEntity);
         }
     }

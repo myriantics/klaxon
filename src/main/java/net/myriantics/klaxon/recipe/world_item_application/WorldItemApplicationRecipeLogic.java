@@ -91,7 +91,6 @@ public abstract class WorldItemApplicationRecipeLogic {
         // decrement stack and set the block state
         serverWorld.setBlockAndUpdate(targetPos, newState);
         KlaxonServerPlayNetworkHandler.syncWorldEvent(serverWorld, targetPos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);
-
     }
 
     private static void clearCache() {

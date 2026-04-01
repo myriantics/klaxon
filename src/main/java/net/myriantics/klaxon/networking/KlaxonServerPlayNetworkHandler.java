@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import net.myriantics.klaxon.networking.s2c.KlaxonWorldEventPacket;
+import org.joml.Vector3f;
 
 public abstract class KlaxonServerPlayNetworkHandler {
 
@@ -38,11 +39,20 @@ public abstract class KlaxonServerPlayNetworkHandler {
         }
     }
 
-    public static void syncWorldEvent(ServerLevel serverWorld, BlockPos pos, int eventId) {
-        syncWorldEvent(serverWorld, pos, eventId, 0);
+    public static void sendToTracking(ServerLevel serverLevel, Vector3f vector3f, CustomPacketPayload payload) {
+        sendToTracking(serverLevel, BlockPos.containing(vector3f.x, vector3f.y, vector3f.z), payload);
     }
-    public static void syncWorldEvent(ServerLevel serverWorld, BlockPos pos, int eventId, int data) {
-        sendToTracking(serverWorld, pos, new KlaxonWorldEventPacket(eventId, pos, data, false));
+
+    public static void syncWorldEvent(ServerLevel serverLevel, BlockPos pos, int eventId) {
+        syncWorldEvent(serverLevel, pos.getCenter().toVector3f(), eventId);
+    }
+
+    public static void syncWorldEvent(ServerLevel serverWorld, Vector3f position, int eventId) {
+        syncWorldEvent(serverWorld, position, eventId, 0);
+    }
+
+    public static void syncWorldEvent(ServerLevel serverWorld, Vector3f position, int eventId, int data) {
+        sendToTracking(serverWorld, position, new KlaxonWorldEventPacket(eventId, position, data, false));
     }
 
     public static void syncGlobalEvent(ServerLevel serverWorld, BlockPos pos, int eventId) {
