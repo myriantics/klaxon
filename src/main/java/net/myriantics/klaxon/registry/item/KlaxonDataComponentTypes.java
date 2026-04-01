@@ -13,10 +13,7 @@ import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
-import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
-import net.myriantics.klaxon.component.configuration.RepairIngredientOverrideComponent;
-import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
+import net.myriantics.klaxon.component.configuration.*;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
 import java.util.function.UnaryOperator;
@@ -84,7 +81,7 @@ public abstract class KlaxonDataComponentTypes {
             .networkSynchronized(GrappleClawComponent.PACKET_CODEC)
     );
 
-    public static final Holder<DataComponentType<ExplosiveCatalystData>> EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT = register("explosive_catalyst_override", builder -> builder
+    public static final Holder<DataComponentType<ExplosiveCatalystData>> EXPLOSIVE_CATALYST_DATA = register("explosive_catalyst_data", builder -> builder
             .persistent(ExplosiveCatalystData.CODEC)
             .networkSynchronized(ExplosiveCatalystData.PACKET_CODEC)
     );
@@ -99,6 +96,12 @@ public abstract class KlaxonDataComponentTypes {
                 builder.networkSynchronized(ByteBufCodecs.STRING_UTF8);
                 return builder;
             });
+
+    public static final Holder<DataComponentType<ModularExplosiveBlockConfigComponent>> MODULAR_EXPLOSIVE_BLOCK_CONFIG = register("modular_explosive_block_config", builder -> {
+        builder.persistent(ModularExplosiveBlockConfigComponent.CODEC);
+        builder.networkSynchronized(ModularExplosiveBlockConfigComponent.PACKET_CODEC);
+        return builder;
+    });
 
     // Items with this component flip their held item model when held in the left hand
     public static final Holder<DataComponentType<Unit>> MIRRORED_LEFT_HAND_MODEL = registerUnit("mirrored_left_hand_model");

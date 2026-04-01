@@ -1,23 +1,29 @@
 package net.myriantics.klaxon.block.machines.modular_explosive;
 
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
+import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
+import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
+import org.jetbrains.annotations.Nullable;
 
 public class ModularExplosiveBlockEntity extends BlockEntity {
 
@@ -37,11 +43,22 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
+        components.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), this.explosiveCatalystData);
+        components.set(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(), new ModularExplosiveBlockConfigComponent(this.maxFuseTime, this.modifyWorld));
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
+        @Nullable ExplosiveCatalystData data = componentInput.get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value());
+        if (data != null) {
+            this.explosiveCatalystData = data;
+        }
+        @Nullable ModularExplosiveBlockConfigComponent config = componentInput.get(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value());
+        if (config != null) {
+            this.maxFuseTime = config.maxFuseTime();
+            this.modifyWorld = config.modifyWorld();
+        }
     }
 
     public void setData(ExplosiveCatalystData newData) {
@@ -106,14 +123,15 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
         Level level = this.level;
         BlockPos pos = this.worldPosition;
 
-        if (level != null) {
-            level.removeBlock(pos, false);
-            if (!this.explosiveCatalystData.equals(ExplosiveCatalystData.ZERO)) {
-                ExplosiveCatalystContext.Block context = this.createContext();
-                Holder<AbstractExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior();
-
-                behaviorHolder.value().createExplosion(context, pos.getCenter(), this.explosiveCatalystData, this.modifyWorld);
+        if (level instanceof ServerLevel serverLevel) {
+            Holder<AbstractExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior();
+            if (behaviorHolder.is(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)) {
+                BlockState state = level.getBlockState(pos);
+                KlaxonServerPlayNetworkHandler.syncWorldEvent(serverLevel, pos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);
             }
+            level.removeBlock(pos, false);
+            ExplosiveCatalystContext.Block context = this.createContext();
+            behaviorHolder.value().createExplosion(context, pos.getCenter(), this.explosiveCatalystData, this.modifyWorld);
         }
     }
 

@@ -2,6 +2,8 @@ package net.myriantics.klaxon.block.machines.modular_explosive;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,6 +31,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
 
     public static final EnumProperty<FuseState> FUSE = KlaxonBlockStateProperties.FUSE;
     private static final MapCodec<ModularExplosiveBlock> CODEC = simpleCodec(ModularExplosiveBlock::new);
+    private static final int IGNITION_DELAY_TICKS = 2;
 
     public ModularExplosiveBlock(Properties properties) {
         super(properties);
@@ -67,7 +70,9 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                     if (!level.isClientSide()) {
                         blockEntity.setData(data);
                         blockEntity.applyComponentsFromItemStack(stack);
-                        tryDetonateIfPowered(level, pos, state);
+                        if (level.hasNeighborSignal(pos)) {
+                            onRedstoneImpulse(level, pos, state);
+                        }
                     }
                     return ItemInteractionResult.SUCCESS;
                 }
@@ -80,7 +85,9 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        tryDetonateIfPowered(level, pos, state);
+        if (level.hasNeighborSignal(pos)) {
+            onRedstoneImpulse(level, pos, state);
+        }
     }
 
     public void updateFuseState(Level level, BlockPos pos, BlockState state, int newFuseTime, int maxFuseTime) {
@@ -95,12 +102,26 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
 
-        tryDetonateIfPowered(level, pos, state);
+        if (level.hasNeighborSignal(pos) && this.shouldResetFuse(level, pos, state)) {
+            level.scheduleTick(pos, this, IGNITION_DELAY_TICKS);
+        }
     }
 
-    private void tryDetonateIfPowered(Level level, BlockPos pos, BlockState state) {
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        super.tick(state, level, pos, random);
+        if (this.shouldResetFuse(level, pos, state)) {
+            onRedstoneImpulse(level, pos, state);
+        }
+    }
+
+    protected boolean shouldResetFuse(Level level, BlockPos pos, BlockState state) {
+        return !state.getValue(FUSE).isCountingDown();
+    }
+
+    private void onRedstoneImpulse(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
-            if (level.hasNeighborSignal(pos)) {
+            if (shouldResetFuse(level, pos, state)) {
                 blockEntity.onRedstoneImpulse();
             }
             this.updateFuseState(level, pos, state, blockEntity.getFuseTime(), blockEntity.getMaxFuseTime());

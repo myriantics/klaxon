@@ -28,7 +28,7 @@ public abstract class ExplosiveCatalystDefinitionRecipeLogic {
 
     public static ExplosiveCatalystData computeExplosiveCatalystData(ExplosiveCatalystContext context, ItemStack catalyst) {
         DataComponentMap components = catalyst.getComponents();
-        if (components.get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT.value()) instanceof ExplosiveCatalystData data) {
+        if (components.get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value()) instanceof ExplosiveCatalystData data) {
             return data.behavior().value().transformExplosiveCatalystData(context, data);
         } else {
             Optional<RecipeHolder<ExplosiveCatalystDefinitionRecipe>> match = context.level().getRecipeManager().getRecipeFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, new ExplosiveCatalystDefinitionRecipeInput(catalyst), context.level());

@@ -26,75 +26,75 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
 
     // tools
     public static final Holder<Item> STEEL_HAMMER = registerSimpleItem("steel_hammer",
-            new HammerItem(KlaxonToolMaterials.STEEL_INGOT, new KlaxonItemSettings()
+            new HammerItem(KlaxonToolMaterials.STEEL_INGOT, new KlaxonItemProperties()
                     .attributeModifiers(HammerItem.createAttributes(KlaxonToolMaterials.STEEL_INGOT, 5.0F, -3.1F))
                     .component(KlaxonDataComponentTypes.WALLJUMP_ABILITY, new WalljumpAbilityComponent(1.0f, true))
                     .damageTypeOverride(KlaxonDamageTypes.HAMMER_BONKING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(2.0f, KlaxonDamageTypes.HAMMER_WALLOPING))
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), ShieldBreachingComponent.Condition.KNOCKBACK))
                     .with3dHandModel()
-                    .getSettings()
+                    .getProperties()
             ));
     public static final Holder<Item> STEEL_CABLE_SHEARS = registerSimpleItem("steel_cable_shears",
-            new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
+            new CableShearsItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemProperties()
                     .attributeModifiers(CableShearsItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 1.0f, -2.8f))
-                    .getSettings()
+                    .getProperties()
             ));
     public static final Holder<Item> STEEL_CLEAVER = registerItem("steel_cleaver",
-            new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemSettings()
+            new CleaverItem(KlaxonToolMaterials.STEEL_PLATE, new KlaxonItemProperties()
                     .attributeModifiers(CleaverItem.createAttributes(KlaxonToolMaterials.STEEL_PLATE, 6.0f, -3.2f))
                     .damageTypeOverride(KlaxonDamageTypes.CLEAVING)
                     .component(KlaxonDataComponentTypes.SHIELD_BREACHING, new ShieldBreachingComponent(Optional.empty(), ShieldBreachingComponent.Condition.CRITICAL))
-                    .getSettings()
+                    .getProperties()
             ));
     public static final Holder<Item> STEEL_WRENCH = registerItem("steel_wrench",
-            new WrenchItem(KlaxonToolMaterials.STEEL_INGOT, new KlaxonItemSettings()
+            new WrenchItem(KlaxonToolMaterials.STEEL_INGOT, new KlaxonItemProperties()
                     .attributeModifiers(WrenchItem.createAttributes(KlaxonToolMaterials.STEEL_INGOT, 0f, -2.6f))
                     .damageTypeOverride(KlaxonDamageTypes.WRENCH_OVERTUNING)
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
-                    .getSettings()
+                    .getProperties()
             ));
     public static final Holder<Item> REINFORCED_FLINT_AND_STEEL = registerSimpleItem("reinforced_flint_and_steel",
-            new ReinforcedFlintAndSteelItem(new KlaxonItemSettings()
+            new ReinforcedFlintAndSteelItem(new KlaxonItemProperties()
                     .damageTypeOverride(KlaxonDamageTypes.FLINT_AND_STEEELING)
-                    .getSettings(),
+                    .getProperties(),
                     KlaxonToolMaterials.STEEL_NUGGET
             )
     );
     public static final Holder<Item> STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",
-            new GrappleClawItem(new KlaxonItemSettings()
+            new GrappleClawItem(new KlaxonItemProperties()
                     .maxCount(16)
                     .grappleClaw(4.0f, 6.0f, 67)
-                    .getSettings()
+                    .getProperties()
             ));
     public static final Holder<Item> GRAPPLE_WINCH = registerItem("grapple_winch",
-            new GrappleWinchItem(new KlaxonItemSettings()
+            new GrappleWinchItem(new KlaxonItemProperties()
                     .component(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY)
                     .maxCount(1)
                     .damageTypeOverride(KlaxonDamageTypes.BLUDGEONING)
                     .attributeModifiers(GrappleWinchItem.createAttributeModifiers(KlaxonToolMaterials.STEEL_PLATE, 0, -3.2f))
                     .with3dHandModel()
                     .withMirroredLeftHandModel()
-                    .getSettings()
+                    .getProperties()
             ));
 
     // armor
-    public static final Holder<Item> CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
+    public static final Holder<Item> CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemProperties()
             .helmetCrest()
             .rarity(Rarity.UNCOMMON)
-            .getSettings()
+            .getProperties()
     ));
-    public static final Holder<Item> STEEL_HELMET = registerItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemSettings()
-            .getSettings()
+    public static final Holder<Item> STEEL_HELMET = registerItem("steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemProperties()
+            .getProperties()
     ));
-    public static final Holder<Item> STEEL_CHESTPLATE = registerItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new KlaxonItemSettings()
-            .getSettings()
+    public static final Holder<Item> STEEL_CHESTPLATE = registerItem("steel_chestplate", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.CHESTPLATE, new KlaxonItemProperties()
+            .getProperties()
     ));
-    public static final Holder<Item> STEEL_LEGGINGS = registerItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new KlaxonItemSettings()
-            .getSettings()
+    public static final Holder<Item> STEEL_LEGGINGS = registerItem("steel_leggings", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.LEGGINGS, new KlaxonItemProperties()
+            .getProperties()
     ));
-    public static final Holder<Item> STEEL_BOOTS = registerItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new KlaxonItemSettings()
-            .getSettings()
+    public static final Holder<Item> STEEL_BOOTS = registerItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new KlaxonItemProperties()
+            .getProperties()
     ));
 
     // fractured materials

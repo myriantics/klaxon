@@ -12,39 +12,39 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
 
-public class KlaxonItemSettings {
+public class KlaxonItemProperties {
 
     private final Item.Properties settings;
 
-    public KlaxonItemSettings() {
+    public KlaxonItemProperties() {
         this.settings = new Item.Properties();
     }
 
-    public KlaxonItemSettings(Item.Properties settings) {
+    public KlaxonItemProperties(Item.Properties settings) {
         this.settings = new Item.Properties();
     }
 
 
-    public <T> KlaxonItemSettings component(Holder<DataComponentType<T>> typeHolder, T value) {
+    public <T> KlaxonItemProperties component(Holder<DataComponentType<T>> typeHolder, T value) {
         return this.component(typeHolder.value(), value);
     }
 
-    public <T> KlaxonItemSettings component(DataComponentType<T> type, T value) {
+    public <T> KlaxonItemProperties component(DataComponentType<T> type, T value) {
         this.settings.component(type, value);
         return this;
     }
 
-    public KlaxonItemSettings helmetCrest() {
+    public KlaxonItemProperties helmetCrest() {
         this.component(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT, Unit.INSTANCE);
         return this;
     }
 
-    public KlaxonItemSettings rarity(Rarity rarity) {
+    public KlaxonItemProperties rarity(Rarity rarity) {
         this.component(DataComponents.RARITY, rarity);
         return this;
     }
 
-    public KlaxonItemSettings maxCountMaxDamage(int maxCount, int maxDamage) {
+    public KlaxonItemProperties maxCountMaxDamage(int maxCount, int maxDamage) {
         this.component(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE, Unit.INSTANCE);
         this.settings.component(DataComponents.MAX_DAMAGE, maxDamage);
         this.settings.component(DataComponents.DAMAGE, 0);
@@ -52,42 +52,42 @@ public class KlaxonItemSettings {
         return this;
     }
 
-    public KlaxonItemSettings maxDamage(int maxDamage) {
+    public KlaxonItemProperties maxDamage(int maxDamage) {
         this.settings.durability(maxDamage);
         return this;
     }
 
-    public KlaxonItemSettings maxCount(int maxCount) {
+    public KlaxonItemProperties maxCount(int maxCount) {
         this.settings.stacksTo(maxCount);
         return this;
     }
 
-    public KlaxonItemSettings grappleClaw(float baseGrapplingDamage, float baseRendingDamage, int veinmineCap) {
+    public KlaxonItemProperties grappleClaw(float baseGrapplingDamage, float baseRendingDamage, int veinmineCap) {
         this.component(KlaxonDataComponentTypes.GRAPPLE_CLAW_COMPONENT, new GrappleClawComponent(baseGrapplingDamage, baseRendingDamage, veinmineCap));
         return this;
     }
 
-    public KlaxonItemSettings attributeModifiers(ItemAttributeModifiers attributeModifiers) {
+    public KlaxonItemProperties attributeModifiers(ItemAttributeModifiers attributeModifiers) {
         this.component(DataComponents.ATTRIBUTE_MODIFIERS, attributeModifiers);
         return this;
     }
 
-    public KlaxonItemSettings damageTypeOverride(ResourceKey<DamageType> damageTypeKey) {
+    public KlaxonItemProperties damageTypeOverride(ResourceKey<DamageType> damageTypeKey) {
         this.component(KlaxonDataComponentTypes.MELEE_DAMAGE_TYPE_OVERRIDE, new MeleeDamageTypeOverrideComponent(damageTypeKey));
         return this;
     }
 
-    public KlaxonItemSettings with3dHandModel() {
+    public KlaxonItemProperties with3dHandModel() {
         this.component(KlaxonDataComponentTypes.ALT_HAND_MODEL, "_3d");
         return this;
     }
 
-    public KlaxonItemSettings withMirroredLeftHandModel() {
+    public KlaxonItemProperties withMirroredLeftHandModel() {
         this.component(KlaxonDataComponentTypes.MIRRORED_LEFT_HAND_MODEL, Unit.INSTANCE);
         return this;
     }
 
-    public Item.Properties getSettings() {
+    public Item.Properties getProperties() {
         return settings;
     }
 }

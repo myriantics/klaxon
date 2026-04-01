@@ -21,5 +21,8 @@ public class KlaxonExplosiveCatalystBehaviorTagProvider extends FabricTagProvide
                 .add(KlaxonExplosiveCatalystBehaviors.WIND_CHARGE.value())
                 .add(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH.value())
                 .add(KlaxonExplosiveCatalystBehaviors.FIREWORK_ROCKET.value());
+        getOrCreateTagBuilder(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)
+                .add(KlaxonExplosiveCatalystBehaviors.NO_OP.value())
+                .add(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH.value());
     }
 }

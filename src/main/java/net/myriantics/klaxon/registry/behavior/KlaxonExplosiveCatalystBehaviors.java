@@ -11,6 +11,7 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonDimensionTypeTags;
 
 public abstract class KlaxonExplosiveCatalystBehaviors {
 
+    public static final Holder<AbstractExplosiveCatalystBehavior> NO_OP = register("no_op", new NoOpExplosiveCatalystBehavior());
     public static final Holder<AbstractExplosiveCatalystBehavior> DEFAULT = register("default", new DefaultExplosiveCatalystBehavior());
     public static final Holder<AbstractExplosiveCatalystBehavior> FIREWORK_ROCKET = register("firework_rocket", new FireworkRocketExplosiveCatalystBehavior());
     public static final Holder<AbstractExplosiveCatalystBehavior> FIREWORK_STAR = register("firework_star", new FireworkStarExplosiveCatalystBehavior());

@@ -23,7 +23,7 @@ public record ExplosiveCatalystData(Holder<AbstractExplosiveCatalystBehavior> be
         this(behavior.asHolder(), explosionPower, producesFire);
     }
 
-    public static final ExplosiveCatalystData ZERO = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.DEFAULT, 0.0, false);
+    public static final ExplosiveCatalystData ZERO = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.NO_OP, 0.0, false);
 
     public boolean matchesConditions(double explosionPowerMin, double explosionPowerMax) {
         return explosionPowerMin <= explosionPower && explosionPower <= explosionPowerMax;
