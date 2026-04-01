@@ -53,8 +53,8 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
-            if (stack.is(KlaxonItemTags.DEFUSERS)) {
-                if (!level.isClientSide() && blockEntity.isCountingDown()) {
+            if (stack.is(KlaxonItemTags.DEFUSERS) && state.getValue(FUSE).isCountingDown()) {
+                if (!level.isClientSide()) {
                     blockEntity.defuse();
                 }
 
@@ -67,7 +67,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                     if (!level.isClientSide()) {
                         blockEntity.setData(data);
                         blockEntity.applyComponentsFromItemStack(stack);
-                        tryDetonateIfPowered(level, pos);
+                        tryDetonateIfPowered(level, pos, state);
                     }
                     return ItemInteractionResult.SUCCESS;
                 }
@@ -80,26 +80,30 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        tryDetonateIfPowered(level, pos);
+        tryDetonateIfPowered(level, pos, state);
     }
 
-
-
-    @Override
-    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
-        super.onPlace(state, level, pos, oldState, movedByPiston);
+    public void updateFuseState(Level level, BlockPos pos, BlockState state, int newFuseTime, int maxFuseTime) {
+        FuseState original = state.getValue(FUSE);
+        FuseState newFuseState = FuseState.of(newFuseTime, maxFuseTime);
+        if (original != newFuseState) {
+            level.setBlockAndUpdate(pos, state.setValue(FUSE, newFuseState));
+        }
     }
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
 
-        tryDetonateIfPowered(level, pos);
+        tryDetonateIfPowered(level, pos, state);
     }
 
-    private void tryDetonateIfPowered(Level level, BlockPos pos) {
-        if (!level.isClientSide() && level.hasNeighborSignal(pos) && level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
-            blockEntity.onRedstoneImpulse();
+    private void tryDetonateIfPowered(Level level, BlockPos pos, BlockState state) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
+            if (level.hasNeighborSignal(pos)) {
+                blockEntity.onRedstoneImpulse();
+            }
+            this.updateFuseState(level, pos, state, blockEntity.getFuseTime(), blockEntity.getMaxFuseTime());
         }
     }
 

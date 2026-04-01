@@ -71,14 +71,35 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
 
     public static void serverTick(Level level, BlockPos pos, BlockState blockState, ModularExplosiveBlockEntity modularExplosiveBlockEntity) {
         if (modularExplosiveBlockEntity.fuseTime > 0) {
-            modularExplosiveBlockEntity.fuseTime--;
+            modularExplosiveBlockEntity.decrementFuseTime();
         } else if (modularExplosiveBlockEntity.fuseTime != -1 && modularExplosiveBlockEntity.maxFuseTime != 0) {
             modularExplosiveBlockEntity.detonate();
         }
     }
 
-    public boolean isCountingDown() {
-        return this.fuseTime != -1 && this.maxFuseTime != 0;
+    private void decrementFuseTime() {
+        this.updateFuseTime(this.fuseTime - 1);
+    }
+
+    private void updateFuseTime(int newTime) {
+        Level level = this.level;
+        if (level != null) {
+            BlockPos pos = this.worldPosition;
+            BlockState state = level.getBlockState(pos);
+
+            if (state.getBlock() instanceof ModularExplosiveBlock block) {
+                block.updateFuseState(level, pos, state, newTime, this.maxFuseTime);
+            }
+        }
+        this.fuseTime = newTime;
+    }
+
+    public int getFuseTime() {
+        return this.fuseTime;
+    }
+
+    public int getMaxFuseTime() {
+        return this.maxFuseTime;
     }
 
     public void detonate() {
@@ -97,7 +118,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
     }
 
     public void defuse() {
-        this.fuseTime = -1;
+        this.updateFuseTime(-1);
     }
 
     public ExplosiveCatalystContext.Block createContext() {

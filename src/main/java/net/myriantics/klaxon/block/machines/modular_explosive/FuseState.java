@@ -8,12 +8,24 @@ public enum FuseState implements StringRepresentable {
     CLOSE,
     IMMINENT;
 
-    public FuseState of(int fuseTime, int maxFuseTime) {
+    public boolean isCountingDown() {
+        return !this.equals(INERT);
+    }
+
+    public static FuseState of(int fuseTime, int maxFuseTime) {
         if (fuseTime == -1 || maxFuseTime == 0) {
             return INERT;
         }
 
-        return INERT;
+        if (fuseTime < 20 || fuseTime < maxFuseTime * 0.2) {
+            return IMMINENT;
+        }
+
+        if (fuseTime < 40 || fuseTime < maxFuseTime * 0.6) {
+            return CLOSE;
+        }
+
+        return FAR;
     }
 
     @Override
