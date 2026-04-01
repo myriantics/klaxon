@@ -3,7 +3,6 @@ package net.myriantics.klaxon.block.machines.modular_explosive;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -68,6 +67,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                     if (!level.isClientSide()) {
                         blockEntity.setData(data);
                         blockEntity.applyComponentsFromItemStack(stack);
+                        tryDetonateIfPowered(level, pos);
                     }
                     return ItemInteractionResult.SUCCESS;
                 }
@@ -80,9 +80,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (!level.isClientSide() && level.hasNeighborSignal(pos) && level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
-            blockEntity.onRedstoneImpulse();
-        }
+        tryDetonateIfPowered(level, pos);
     }
 
 
@@ -96,6 +94,10 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
 
+        tryDetonateIfPowered(level, pos);
+    }
+
+    private void tryDetonateIfPowered(Level level, BlockPos pos) {
         if (!level.isClientSide() && level.hasNeighborSignal(pos) && level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
             blockEntity.onRedstoneImpulse();
         }
