@@ -21,6 +21,7 @@ import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePip
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
+import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 
@@ -61,6 +62,8 @@ public abstract class KlaxonBlocks {
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.STEEL_CASING).lightLevel((state) -> 15).noOcclusion()));
     public static final Holder<Block> CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.CRUDE_STEEL_CASING).lightLevel((state) -> 12).noOcclusion()));
+    public static final Holder<Block> MODULAR_EXPLOSIVE_BLOCK = registerBlock("modular_explosive_block",
+            new ModularExplosiveBlock(copyProperties(STEEL_CASING)));
 
     // workstations
     public static final Holder<Block> STEEL_WORKBENCH = registerBlock(

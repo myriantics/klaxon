@@ -32,7 +32,7 @@ public class KlaxonCommon implements ModInitializer {
 	}
 
     public static String locateAlt(String name) {
-        return MOD_ID + "." + name;
+        return MOD_ID + ResourceLocation.NAMESPACE_SEPARATOR + name;
     }
 
     @Override
