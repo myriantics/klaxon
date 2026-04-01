@@ -179,7 +179,8 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 // transform data if needed
                 BlastProcessingRecipeData processingData = this.getBlastProcessingRecipeData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), data));
 
-                // do explosion effect
+                // clear catalyst and do explosion effect
+                this.removeItemNoUpdate(CATALYST_INDEX);
                 behavior.createExplosion(context, this.getExplosionOutputLocation(level.getBlockState(pos).getValue(HORIZONTAL_FACING)), data, this.level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
 
                 // eject recipe results
