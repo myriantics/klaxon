@@ -1,9 +1,11 @@
 package net.myriantics.klaxon.mechanics.grapple_winch.connection;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class GrappleWinchConnection {
     protected final int connectionId;
@@ -22,9 +24,10 @@ public abstract class GrappleWinchConnection {
         Vec3 hookPos = this.getHookPos();
         Vec3 playerEyePos = this.getPlayerEyePos();
 
-        Vec3 normalizedHook2WielderVec = playerEyePos.subtract(hookPos).normalize();
-        double wielderDistance = hookPos.distanceTo(playerEyePos);
-
+        @Nullable Player player = this.getPlayer();
+        Vec3 hook2WielderVec = playerEyePos.subtract(hookPos);
+        Vec3 normalizedHook2WielderVec = hook2WielderVec.normalize();
+        double wielderDistance = hook2WielderVec.length();
 
         if (!this.hookAnchored && this.getHook() != null && this.getHook().klaxon$asEntity().isControlledByLocalInstance()) {
 
@@ -36,9 +39,20 @@ public abstract class GrappleWinchConnection {
                     compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.scale(4f/20));
                 }
 
+                @Nullable Entity hookedEntity = this.getHook().klaxon$getHookedEntity();
+
                 double activeCableLength = this.retracting && this.getPlayer().isShiftKeyDown()
                         ? this.getMaxCableLength()
                         : this.getCableLength();
+
+                // make it so you're not stuck levitating with a vehicle
+                // i'm gonna leave the funny bug in but at least make it less jank
+                if (!this.retracting && player != null && hookedEntity != null && hookedEntity.equals(player.getVehicle())) {
+                    double player2Vehicle = playerEyePos.distanceTo(hookedEntity.position());
+                    if (player2Vehicle > wielderDistance) {
+                        activeCableLength += hookedEntity.getEyeHeight() + 1;
+                    }
+                }
 
                 // retract grapple claw if it hits limit
                 if (wielderDistance >= activeCableLength) {
