@@ -24,5 +24,7 @@ public class KlaxonExplosiveCatalystBehaviorTagProvider extends FabricTagProvide
         getOrCreateTagBuilder(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)
                 .add(KlaxonExplosiveCatalystBehaviors.NO_OP.value())
                 .add(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH.value());
+        getOrCreateTagBuilder(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING)
+                .add(KlaxonExplosiveCatalystBehaviors.WIND_CHARGE.value());
     }
 }

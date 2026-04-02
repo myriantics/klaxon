@@ -26,6 +26,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 
 import java.util.Comparator;
 import java.util.List;
@@ -96,7 +97,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends RandomizableCont
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ExplosiveCatalystData powerData = recipeInventory.getPowerData();
 
-        if (!recipeInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty()) {
+        if (!recipeInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty() && !powerData.behavior().is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING)) {
             blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
         }
         if (blastProcessingMatch.isPresent()) {

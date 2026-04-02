@@ -1,10 +1,13 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Position;
-import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.BlastProcessorExplosionBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
@@ -15,10 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class DefaultExplosiveCatalystBehavior extends AbstractExplosiveCatalystBehavior {
 
-    public @Nullable DamageSource getDamageSource(ExplosiveCatalystContext context) {
-        return null;
-    }
-
     @Override
     public void createExplosion(ExplosiveCatalystContext context, Position detonationPosition, ExplosiveCatalystData data, boolean modifyWorld) {
         if (data.explosionPower() > 0) {
@@ -27,23 +26,43 @@ public class DefaultExplosiveCatalystBehavior extends AbstractExplosiveCatalystB
                 level.explode(
                         context.getEntity(),
                         this.getDamageSource(context),
-                        new BlastProcessorExplosionBehavior(modifyWorld),
+                        this.explosionDamageCalculator(context, data, modifyWorld),
                         detonationPosition.x(),
                         detonationPosition.y(),
                         detonationPosition.z(),
                         (float) data.explosionPower(),
                         modifyWorld && data.producesFire(),
-                        Level.ExplosionInteraction.BLOCK,
-                        ParticleTypes.EXPLOSION,
-                        ParticleTypes.EXPLOSION_EMITTER,
-                        SoundEvents.GENERIC_EXPLODE
+                        this.explosionInteraction(context, data, modifyWorld),
+                        this.smallExplosionParticles(context, data),
+                        this.largeExplosionParticles(context, data),
+                        this.explosionSound(context, data)
                 );
             }
         }
     }
 
-    @Override
-    public ExplosiveCatalystData transformExplosiveCatalystData(ExplosiveCatalystContext context, ExplosiveCatalystData original) {
-        return original;
+    @Nullable
+    protected DamageSource getDamageSource(ExplosiveCatalystContext context) {
+        return null;
+    }
+
+    protected ExplosionDamageCalculator explosionDamageCalculator(ExplosiveCatalystContext context, ExplosiveCatalystData data, boolean modifyWorld) {
+        return new BlastProcessorExplosionBehavior(modifyWorld);
+    }
+
+    protected Level.ExplosionInteraction explosionInteraction(ExplosiveCatalystContext context, ExplosiveCatalystData data, boolean modifyWorld) {
+        return Level.ExplosionInteraction.BLOCK;
+    }
+
+    protected ParticleOptions smallExplosionParticles(ExplosiveCatalystContext context, ExplosiveCatalystData data) {
+        return ParticleTypes.EXPLOSION;
+    }
+
+    protected ParticleOptions largeExplosionParticles(ExplosiveCatalystContext context, ExplosiveCatalystData data) {
+        return ParticleTypes.EXPLOSION_EMITTER;
+    }
+
+    protected Holder<SoundEvent> explosionSound(ExplosiveCatalystContext context, ExplosiveCatalystData data) {
+        return SoundEvents.GENERIC_EXPLODE;
     }
 }
