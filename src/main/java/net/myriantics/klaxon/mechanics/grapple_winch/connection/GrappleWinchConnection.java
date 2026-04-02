@@ -29,13 +29,13 @@ public abstract class GrappleWinchConnection {
         Vec3 normalizedHook2WielderVec = hook2WielderVec.normalize();
         double wielderDistance = hook2WielderVec.length();
 
-        if (!this.hookAnchored && this.getHook() != null && this.getHook().klaxon$asEntity().isControlledByLocalInstance()) {
+        if (player != null && this.getHook() != null && this.getHook().klaxon$asEntity().isControlledByLocalInstance()) {
 
             // if we're not anchored, move the grappling hook
             if (!this.isHookAnchored()) {
 
                 // retract grapple claw if owner pulls back before landing
-                if (this.retracting && !this.getPlayer().isShiftKeyDown()) {
+                if (this.retracting && !player.isShiftKeyDown()) {
                     compiledHookVec = compiledHookVec.add(normalizedHook2WielderVec.scale(4f/20));
                 }
 
@@ -47,15 +47,15 @@ public abstract class GrappleWinchConnection {
 
                 // make it so you're not stuck levitating with a vehicle
                 // i'm gonna leave the funny bug in but at least make it less jank
-                if (!this.retracting && player != null && hookedEntity != null && hookedEntity.equals(player.getVehicle())) {
-                    double player2Vehicle = playerEyePos.distanceTo(hookedEntity.position());
+                if (!this.retracting && this.isGrappledOntoMount()) {
+                    double player2Vehicle = playerEyePos.distanceTo(hookedEntity.position()); // we know this is not null because mount grapple check tests for it (well we dont REALLY know but somethings really borked if it is)
                     if (player2Vehicle > wielderDistance) {
-                        activeCableLength += hookedEntity.getEyeHeight() + 1;
+                        activeCableLength = 67;
                     }
                 }
 
                 // retract grapple claw if it hits limit
-                if (wielderDistance >= activeCableLength) {
+                if (wielderDistance >= activeCableLength && !this.isGrappledOntoMount()) {
 
                     if (this.getHook().klaxon$asEntity().isControlledByLocalInstance() && wielderDistance >= maxCableLength * 1.2) {
                         this.getHook().klaxon$asEntity().push(this.getHook().klaxon$asEntity().getDeltaMovement().scale(-0.15));
@@ -113,6 +113,12 @@ public abstract class GrappleWinchConnection {
 
     public boolean isRetracting() {
         return this.retracting;
+    }
+
+    public boolean isGrappledOntoMount() {
+        @Nullable Player player = this.getPlayer();
+        @Nullable Entity entity = this.getHook().klaxon$getHookedEntity();
+        return player != null && entity != null && entity.equals(player.getVehicle());
     }
 
     @Override
