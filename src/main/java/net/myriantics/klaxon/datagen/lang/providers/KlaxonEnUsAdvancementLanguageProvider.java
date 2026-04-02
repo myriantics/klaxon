@@ -122,6 +122,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
                 "Dragonhearted",
                 "Grapple onto an Ender Dragon and take flight"
         );
+        addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.GRAPPLE_WINCH_MOUNT_LEVITATION_BUG,
+                "Through A Hole In The Smog",
+                "Lift yourself by the seat of your pants"
+        );
 
         // level 6
         addStageOneAdvancement(

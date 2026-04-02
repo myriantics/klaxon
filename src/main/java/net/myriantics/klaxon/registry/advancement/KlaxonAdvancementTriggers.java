@@ -40,4 +40,8 @@ public abstract class KlaxonAdvancementTriggers {
     public static void triggerEntityGrapple(ServerPlayer serverPlayer, Entity grappledEntity) {
         KlaxonAdvancementCriteria.ENTITY_GRAPPLE_CRITERION.value().trigger(serverPlayer, grappledEntity);
     }
+
+    public static void triggerGrappleWinchLevitationBug(ServerPlayer player) {
+        KlaxonAdvancementCriteria.GRAPPLE_WINCH_LEVITATION_BUG_CRITERION.value().trigger(player);
+    }
 }

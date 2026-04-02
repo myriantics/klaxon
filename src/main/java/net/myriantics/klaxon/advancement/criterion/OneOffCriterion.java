@@ -35,6 +35,12 @@ public class OneOffCriterion extends SimpleCriterionTrigger<OneOffCriterion.Cond
             ));
         }
 
+        public static Criterion<OneOffCriterion.Conditions> createGrappleWinchLevitationBug() {
+            return KlaxonAdvancementCriteria.GRAPPLE_WINCH_LEVITATION_BUG_CRITERION.value().createCriterion(new Conditions(
+                    Optional.empty()
+            ));
+        }
+
         @Override
         public Optional<ContextAwarePredicate> player() {
             return player;
