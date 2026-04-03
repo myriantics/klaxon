@@ -3,6 +3,7 @@
     "#c:boats",
     "#c:minecarts",
     "minecraft:item_frame",
-    "minecraft:glow_item_frame"
+    "minecraft:glow_item_frame",
+    "minecraft:armor_stand"
   ]
 }

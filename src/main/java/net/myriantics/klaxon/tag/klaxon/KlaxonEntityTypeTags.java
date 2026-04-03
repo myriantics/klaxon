@@ -21,8 +21,8 @@ public abstract class KlaxonEntityTypeTags {
             createTag("light_entities");
 
     // allowlist / denylist tags
-    public static final TagKey<EntityType<?>> GRAPPLE_CLAW_GRAPPLING_DAMAGE_DENYLIST =
-            createTag("grapple_claw_grappling_damage_denylist");
+    public static final TagKey<EntityType<?>> GRAPPLE_CLAW_GENTLY_HOOKED_ENTITIES =
+            createTag("grapple_claw_gently_hooked_entities");
     public static final TagKey<EntityType<?>> GRAPPLE_CLAW_HOOKING_DENYLIST =
             createTag("grapple_claw_hooking_denylist");
     public static final TagKey<EntityType<?>> GRAPPLE_CLAW_COLLISION_DENYLIST =
