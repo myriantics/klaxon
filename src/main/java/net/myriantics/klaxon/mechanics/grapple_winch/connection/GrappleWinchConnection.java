@@ -4,7 +4,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
-import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class GrappleWinchConnection {
@@ -32,7 +31,7 @@ public abstract class GrappleWinchConnection {
         if (player != null && this.getHook() != null && this.getHook().klaxon$asEntity().isControlledByLocalInstance()) {
 
             // if we're not anchored, move the grappling hook
-            if (!this.isHookAnchored()) {
+            if (this.shouldMoveHook()) {
 
                 // retract grapple claw if owner pulls back before landing
                 if (this.retracting && !player.isShiftKeyDown()) {
@@ -113,6 +112,29 @@ public abstract class GrappleWinchConnection {
 
     public boolean isRetracting() {
         return this.retracting;
+    }
+
+    public boolean shouldMoveHook() {
+        GrapplingHook hook = this.getHook();
+        Player player = this.getPlayer();
+        if (hook == null || player == null) {
+            return false;
+        }
+
+        @Nullable Entity hookedEntity = hook.klaxon$getHookedEntity();
+        @Nullable Entity directVehicle = player.getVehicle();
+        if (hookedEntity == directVehicle) { // if there's no hooked entity or direct vehicle we're chilling, or if they're both the same we're also chillin
+            return !this.isHookAnchored();
+        }
+
+        // we know this isn't null now because we already checked that the player has a direct vehicle
+        // you're allowed to pull your own vehicle because its funny but i draw the line at stacking camels in minecarts to go up 67 thousand blocks
+        Entity rootVehicle = player.getRootVehicle();
+        if (hookedEntity == rootVehicle) {
+            return false;
+        }
+
+        return !this.isHookAnchored();
     }
 
     public boolean isGrappledOntoMount() {
