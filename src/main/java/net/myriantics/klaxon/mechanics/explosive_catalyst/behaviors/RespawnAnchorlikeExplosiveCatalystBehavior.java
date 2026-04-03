@@ -10,7 +10,7 @@ public class RespawnAnchorlikeExplosiveCatalystBehavior extends DimensionTypeDep
     }
 
     @Override
-    protected boolean blocksExplosion(ExplosiveCatalystContext context) {
-        return context.level().dimensionType().respawnAnchorWorks() || super.blocksExplosion(context);
+    protected boolean fallbackCheck(ExplosiveCatalystContext context) {
+        return context.level().dimensionType().respawnAnchorWorks();
     }
 }

@@ -10,7 +10,7 @@ public class BedlikeExplosiveCatalystBehavior extends DimensionTypeDependentExpl
     }
 
     @Override
-    protected boolean blocksExplosion(ExplosiveCatalystContext context) {
-        return context.level().dimensionType().bedWorks() || super.blocksExplosion(context);
+    protected boolean fallbackCheck(ExplosiveCatalystContext context) {
+        return context.level().dimensionType().bedWorks();
     }
 }

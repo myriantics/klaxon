@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
@@ -17,9 +18,20 @@ public class DimensionTypeDependentExplosiveCatalystBehavior extends DefaultExpl
         this.tagKey = tagKey;
     }
 
-    protected boolean blocksExplosion(ExplosiveCatalystContext context) {
+    private boolean blocksExplosion(ExplosiveCatalystContext context) {
         Optional<Registry<DimensionType>> reg = context.level().registryAccess().registry(Registries.DIMENSION_TYPE);
-        return reg.isPresent() && reg.get().wrapAsHolder(context.level().dimensionType()).is(this.tagKey);
+        if (reg.isPresent()) {
+            Optional<HolderSet.Named<DimensionType>> tag = reg.get().getTag(this.tagKey);
+            if (tag.isPresent() && tag.get().size() > 0) {
+                return reg.get().wrapAsHolder(context.level().dimensionType()).is(this.tagKey);
+            }
+        }
+        // if registry is missing or tag is empty, fallback to original behavior
+        return this.fallbackCheck(context);
+    }
+
+    protected boolean fallbackCheck(ExplosiveCatalystContext context) {
+        return false;
     }
 
     @Override
