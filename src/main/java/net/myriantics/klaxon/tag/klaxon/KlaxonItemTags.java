@@ -55,6 +55,8 @@ public abstract class KlaxonItemTags {
             createRepairTag("tool_material/steel_nugget");
     public static final TagKey<Item> STEEL_PLATE_ARMOR_MATERIAL_REPAIR_MATERIALS =
             createRepairTag("armor_material/steel_plate");
+    public static final TagKey<Item> LIGHTER_REPAIR_MATERIALS =
+            createRepairTag("lighter");
 
     // behavior tags
     public static final TagKey<Item> WRENCHABLE_INTERFACE_TRIGGERING_TOOLS =

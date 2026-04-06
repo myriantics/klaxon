@@ -292,7 +292,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CLEAVER.value())
                 .add(KlaxonItems.STEEL_WRENCH.value())
                 .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
+                .add(KlaxonItems.STEEL_LIGHTER.value());
         getOrCreateTagBuilder(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value());
@@ -356,9 +356,9 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_WRENCH.value())
                 .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
                 .add(KlaxonItems.GRAPPLE_WINCH.value())
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
+                .add(KlaxonItems.STEEL_LIGHTER.value());
         getOrCreateTagBuilder(ItemTags.CREEPER_IGNITERS)
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
+                .add(KlaxonItems.STEEL_LIGHTER.value());
         getOrCreateTagBuilder(KlaxonItemTags.WRENCHABLE_INTERFACE_TRIGGERING_TOOLS)
                 .addOptionalTag(KlaxonConventionalItemTags.WRENCHES);
         getOrCreateTagBuilder(KlaxonItemTags.DEFUSERS)
@@ -374,6 +374,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addOptionalTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_PLATE_ARMOR_MATERIAL_REPAIR_MATERIALS)
                 .addOptionalTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES);
+        getOrCreateTagBuilder(KlaxonItemTags.LIGHTER_REPAIR_MATERIALS)
+                .add(Items.FIRE_CHARGE);
     }
 
     private void buildEnchantableTags() {
@@ -399,7 +401,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
                 .add(KlaxonItems.STEEL_CLEAVER.value())
                 .add(KlaxonItems.STEEL_WRENCH.value())
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value())
+                .add(KlaxonItems.STEEL_LIGHTER.value())
                 .add(KlaxonItems.GRAPPLE_WINCH.value())
                 .add(KlaxonItems.STEEL_GRAPPLE_CLAW.value());
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_ARMOR)
@@ -450,7 +452,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_BOOTS.value());
 
         getOrCreateTagBuilder(ConventionalItemTags.IGNITER_TOOLS)
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
+                .add(KlaxonItems.STEEL_LIGHTER.value());
     }
 
     private void buildBlastProcessorCatalystBehaviorTags() {

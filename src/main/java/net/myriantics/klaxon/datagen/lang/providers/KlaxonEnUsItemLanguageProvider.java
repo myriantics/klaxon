@@ -23,7 +23,7 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
         addItem(KlaxonItems.STEEL_CLEAVER, "Steel Cleaver");
         addItem(KlaxonItems.STEEL_WRENCH, "Steel Wrench");
         addItem(KlaxonItems.GRAPPLE_WINCH, "Grapple Winch");
-        addItem(KlaxonItems.REINFORCED_FLINT_AND_STEEL, "Reinforced Flint and Steel");
+        addItem(KlaxonItems.STEEL_LIGHTER, "Steel Lighter");
 
         // ammo
         addItem(KlaxonItems.STEEL_GRAPPLE_CLAW, "Steel Grapple Claw");

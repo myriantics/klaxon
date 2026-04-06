@@ -1,0 +1,30 @@
+{
+  "type": "klaxon:makeshift_shaped",
+  "category": "equipment",
+  "constant_ingredients": [
+    {
+      "item": "minecraft:fire_charge"
+    }
+  ],
+  "group": "steel_lighter",
+  "key": {
+    "F": {
+      "item": "minecraft:fire_charge"
+    },
+    "N": {
+      "tag": "klaxon:crude_inclusive_steel_nuggets"
+    },
+    "P": {
+      "tag": "klaxon:crude_inclusive_steel_plates"
+    }
+  },
+  "pattern": [
+    "PN",
+    "FP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:steel_lighter"
+  },
+  "show_notification": false
+}

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "klaxon:item/reinforced_flint_and_steel"
+    "layer0": "klaxon:item/steel_lighter"
   }
 }

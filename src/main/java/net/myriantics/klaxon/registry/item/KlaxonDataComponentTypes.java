@@ -113,7 +113,6 @@ public abstract class KlaxonDataComponentTypes {
         return builder;
     });
 
-
     public static final Holder<DataComponentType<Unit>> HELMET_CREST_COMPONENT = registerUnit("helmet_crest");
 
     @SuppressWarnings("unchecked")

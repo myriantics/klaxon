@@ -54,11 +54,10 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
                     .getProperties()
             ));
-    public static final Holder<Item> REINFORCED_FLINT_AND_STEEL = registerSimpleItem("reinforced_flint_and_steel",
-            new ReinforcedFlintAndSteelItem(new KlaxonItemProperties()
-                    .damageTypeOverride(KlaxonDamageTypes.FLINT_AND_STEEELING)
-                    .getProperties(),
-                    KlaxonToolMaterials.STEEL_NUGGET
+    public static final Holder<Item> STEEL_LIGHTER = registerSimpleItem("steel_lighter",
+            new LighterItem(new KlaxonItemProperties()
+                    .maxDamage(KlaxonToolMaterials.STEEL_NUGGET.getUses())
+                    .getProperties()
             )
     );
     public static final Holder<Item> STEEL_GRAPPLE_CLAW = registerSimpleItem("steel_grapple_claw",

@@ -20,6 +20,6 @@ public abstract class CandleCakeMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z", ordinal = 0)
     )
     private boolean klaxon$checkForReinforcedFlintAndSteel(ItemStack instance, Item item, Operation<Boolean> original) {
-        return instance.is(KlaxonItems.REINFORCED_FLINT_AND_STEEL) || original.call(instance, item);
+        return instance.is(KlaxonItems.STEEL_LIGHTER) || original.call(instance, item);
     }
 }

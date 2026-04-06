@@ -25,7 +25,7 @@ public abstract class KlaxonCreativeModeTabs {
                 entries.accept(KlaxonItems.STEEL_CABLE_SHEARS.value());
                 entries.accept(KlaxonItems.STEEL_WRENCH.value());
                 entries.accept(KlaxonItems.STEEL_CLEAVER.value());
-                entries.accept(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
+                entries.accept(KlaxonItems.STEEL_LIGHTER.value());
 
                 entries.accept(KlaxonItems.STEEL_HELMET.value());
                 entries.accept(KlaxonItems.STEEL_CHESTPLATE.value());

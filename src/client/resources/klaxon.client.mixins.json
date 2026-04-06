@@ -3,10 +3,10 @@
   "package": "net.myriantics.klaxon.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "minecraft.advanced_item_models.ItemRendererMixin",
     "minecraft.advanced_item_models.BlockModelAccessor",
-    "minecraft.advanced_item_models.ModelBakeryMixin",
     "minecraft.advanced_item_models.ItemOverrideAccessor",
+    "minecraft.advanced_item_models.ItemRendererMixin",
+    "minecraft.advanced_item_models.ModelBakeryMixin",
     "minecraft.grapple_winch.MultiPlayerGameModeMixin",
     "minecraft.grapple_winch.connection.ClientLevelMixin",
     "minecraft.grapple_winch.connection.LevelRendererMixin",
@@ -25,5 +25,8 @@
   },
   "mixinextras": {
     "minVersion": "0.5.0-beta.1"
-  }
+  },
+  "mixins": [
+    "self.lighter.LighterItemMixin"
+  ]
 }

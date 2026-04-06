@@ -144,15 +144,22 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
                 CraftingBookCategory.EQUIPMENT,
                 null
         );
+        addMakeshiftShapedCraftingRecipe(Map.of(
+                        'P', Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
+                        'N', Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS),
+                        'F', Ingredient.of(Items.FIRE_CHARGE)
+                ),
+                new String[] {
+                        "PN",
+                        "FP",
+                },
+                List.of(Ingredient.of(Items.FIRE_CHARGE)),
+                new ItemStack(KlaxonItems.STEEL_LIGHTER),
+                CraftingBookCategory.EQUIPMENT,
+                null
+        );
     }
 
     private void buildShapelessCraftingRecipes() {
-        addMakeshiftShapelessCraftingRecipe(
-                NonNullList.of(Ingredient.EMPTY,
-                        Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_INGOTS),
-                        Ingredient.of(Items.FLINT)),
-                new ItemStack(KlaxonItems.REINFORCED_FLINT_AND_STEEL),
-                List.of(Ingredient.of(Items.FLINT)),
-                null, null);
     }
 }

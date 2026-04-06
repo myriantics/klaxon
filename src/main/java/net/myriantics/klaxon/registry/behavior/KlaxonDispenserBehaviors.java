@@ -22,7 +22,7 @@ public abstract class KlaxonDispenserBehaviors {
         register(KlaxonItems.STEEL_CABLE_SHEARS, new ShearsDispenseItemBehavior());
         register(KlaxonItems.STEEL_WRENCH, new WrenchDispenserBehavior());
         register(KlaxonItems.STEEL_GRAPPLE_CLAW, new ProjectileDispenseBehavior(KlaxonItems.STEEL_GRAPPLE_CLAW.value()));
-        register(KlaxonItems.REINFORCED_FLINT_AND_STEEL, DispenserBlock.DISPENSER_REGISTRY.get(Items.FLINT_AND_STEEL));
+        register(KlaxonItems.STEEL_LIGHTER, DispenserBlock.DISPENSER_REGISTRY.get(Items.FLINT_AND_STEEL));
     }
 
     private static void register(Holder<Item> itemHolder, DispenseItemBehavior behavior) {

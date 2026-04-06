@@ -23,6 +23,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
+import net.myriantics.klaxon.item.equipment.tools.LighterItem;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
@@ -112,7 +113,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerMiscRecipes(EmiRegistry registry) {
-        addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value()), EmiIngredient.of(KlaxonItemTags.STEEL_NUGGET_TOOL_MATERIAL_REPAIR_MATERIALS), "reinforced_flint_and_steel");
+        addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_LIGHTER.value()), EmiIngredient.of(LighterItem.LIGHTER_REPAIR_MATERIALS), "steel_lighter");
         addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_CABLE_SHEARS.value()), EmiIngredient.of(KlaxonItemTags.STEEL_PLATE_TOOL_MATERIAL_REPAIR_MATERIALS), "steel_cable_shears");
     }
 
