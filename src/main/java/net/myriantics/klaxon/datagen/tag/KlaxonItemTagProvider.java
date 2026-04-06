@@ -271,6 +271,18 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.GEAR_GRIP_MATERIALS)
                 .add(Items.LEATHER)
                 .add(KlaxonItems.RUBBER_SHEET.value());
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_NUGGET_COOKING_RECYCLABLES)
+                .addOptionalTag(KlaxonItemTags.STEEL_EQUIPMENT)
+                .add(KlaxonItems.CRUDE_STEEL_CASING.value())
+                .add(KlaxonItems.CRUDE_NETHER_REACTOR_CORE.value())
+                .add(KlaxonItems.CRUDE_STEEL_DOOR.value())
+                .add(KlaxonItems.CRUDE_STEEL_TRAPDOOR.value());
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_INGOT_COOKING_RECYCLABLES)
+                .add(KlaxonItems.STEEL_CASING.value())
+                .add(KlaxonItems.NETHER_REACTOR_CORE.value())
+                .add(KlaxonItems.STEEL_WORKBENCH.value())
+                .add(KlaxonItems.STEEL_DOOR.value())
+                .add(KlaxonItems.STEEL_TRAPDOOR.value());
     }
 
     private void buildAdvancementRelatedTags() {
@@ -280,7 +292,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CLEAVER.value())
                 .add(KlaxonItems.STEEL_WRENCH.value())
                 .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
-                .add(Items.FLINT_AND_STEEL);
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
         getOrCreateTagBuilder(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)
                 .add(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value());

@@ -22,7 +22,8 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     private void buildRecyclingRecipes() {
-        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItemTags.STEEL_EQUIPMENT), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItemTags.STEEL_NUGGET_COOKING_RECYCLABLES), new ItemStack(KlaxonItems.STEEL_NUGGET), 3.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItemTags.STEEL_INGOT_COOKING_RECYCLABLES), new ItemStack(KlaxonItems.STEEL_INGOT), 3.0f, null, null);
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.IRON_WIRE.value()), new ItemStack(Items.IRON_NUGGET), 1.0f, null, null);
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.IRON_PLATE.value()), new ItemStack(Items.IRON_NUGGET), 1.0f, null, null);
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.GOLD_WIRE.value()), new ItemStack(Items.GOLD_NUGGET), 1.0f, null, null);
@@ -30,6 +31,7 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.COPPER_WIRE.value()), new ItemStack(KlaxonItems.COPPER_NUGGET), 1.0f, null, null);
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.COPPER_PLATE.value()), new ItemStack(KlaxonItems.COPPER_NUGGET), 1.0f, null, null);
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.STEEL_WIRE.value()), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
+        addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.STEEL_PLATE.value()), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_PLATE.value()), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_INGOT.value()), new ItemStack(KlaxonItems.STEEL_NUGGET), 1.0f, null, null);
     }

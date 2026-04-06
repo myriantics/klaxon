@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#klaxon:steel_equipment",
+      "required": false
+    },
+    "klaxon:crude_steel_casing",
+    "klaxon:crude_nether_reactor_core",
+    "klaxon:crude_steel_door",
+    "klaxon:crude_steel_trapdoor"
+  ]
+}
