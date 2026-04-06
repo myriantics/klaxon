@@ -350,11 +350,13 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
                 .add(KlaxonItems.STEEL_HAMMER.value());
         getOrCreateTagBuilder(KlaxonItemTags.PICK_BLOCK_SLOT_REPLACEMENT_DISCOURAGED)
+                .addOptionalTag(KlaxonItemTags.STEEL_ARMOR)
                 .add(KlaxonItems.STEEL_CLEAVER.value())
                 .add(KlaxonItems.STEEL_HAMMER.value())
                 .add(KlaxonItems.STEEL_WRENCH.value())
                 .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
-                .add(KlaxonItems.GRAPPLE_WINCH.value());
+                .add(KlaxonItems.GRAPPLE_WINCH.value())
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
         getOrCreateTagBuilder(ItemTags.CREEPER_IGNITERS)
                 .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
         getOrCreateTagBuilder(KlaxonItemTags.WRENCHABLE_INTERFACE_TRIGGERING_TOOLS)
