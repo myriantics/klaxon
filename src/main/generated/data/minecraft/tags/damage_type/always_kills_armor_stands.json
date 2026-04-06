@@ -7,6 +7,10 @@
     {
       "id": "klaxon:wrench_overtuning",
       "required": false
+    },
+    {
+      "id": "klaxon:grappling",
+      "required": false
     }
   ]
 }

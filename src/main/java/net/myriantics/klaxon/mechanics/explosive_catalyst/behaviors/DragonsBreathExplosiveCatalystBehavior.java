@@ -1,37 +1,30 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ItemExplosiveCatalystBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.level.Level;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
+import org.joml.Vector3f;
 
-public class DragonsBreathExplosiveCatalystBehavior extends ItemExplosiveCatalystBehavior {
-    public DragonsBreathExplosiveCatalystBehavior(ResourceLocation id) {
-        super(id);
-    }
+public class DragonsBreathExplosiveCatalystBehavior extends AbstractExplosiveCatalystBehavior {
 
     @Override
-    public void onExplosion(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData powerData, boolean shouldModifyWorld) {
-        Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).getValue(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
+    public void createExplosion(ExplosiveCatalystContext context, Position detonationPosition, ExplosiveCatalystData data, boolean modifyWorld) {
+        if (context.level() instanceof ServerLevel serverWorld) {
 
-        if (world instanceof ServerLevel serverWorld) {
+            AreaEffectCloud areaEffectCloudEntity = new AreaEffectCloud(serverWorld, detonationPosition.x(), detonationPosition.y() - 0.25, detonationPosition.z());
 
-            AreaEffectCloud areaEffectCloudEntity = new AreaEffectCloud(world, outputPos.x(), outputPos.y() - 0.25, outputPos.z());
-
-            float radius = (float) powerData.explosionPower() / 3;
-            float finalRadius = (float) powerData.explosionPower() / 2;
+            float radius = (float) data.explosionPower() / 3;
+            float finalRadius = (float) data.explosionPower() / 2;
 
             areaEffectCloudEntity.setParticle(ParticleTypes.DRAGON_BREATH);
             areaEffectCloudEntity.setRadius(radius);
@@ -39,20 +32,8 @@ public class DragonsBreathExplosiveCatalystBehavior extends ItemExplosiveCatalys
             areaEffectCloudEntity.setRadiusPerTick((finalRadius - radius) / areaEffectCloudEntity.getDuration());
             areaEffectCloudEntity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
 
-            KlaxonServerPlayNetworkHandler.syncWorldEvent(serverWorld, pos, KlaxonWorldEvents.DRAGONS_BREATH_EXPLOSIVE_CATALYST_CLOUD_SPAWNS, 1);
-            world.addFreshEntity(areaEffectCloudEntity);
-
-            blastProcessor.removeItemNoUpdate(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
+            KlaxonServerPlayNetworkHandler.syncWorldEvent(serverWorld, new Vector3f((float) detonationPosition.x(), (float) detonationPosition.y(), (float) detonationPosition.z()), KlaxonWorldEvents.DRAGONS_BREATH_EXPLOSIVE_CATALYST_CLOUD_SPAWNS, 1);
+            context.level().addFreshEntity(areaEffectCloudEntity);
         }
-    }
-
-    @Override
-    public boolean shouldRunDispenserEffects(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        return false;
-    }
-
-    @Override
-    public boolean isVariable() {
-        return false;
     }
 }

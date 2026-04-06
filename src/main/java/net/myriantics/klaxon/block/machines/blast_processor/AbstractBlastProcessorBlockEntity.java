@@ -1,78 +1,43 @@
-package net.myriantics.klaxon.mechanics.explosive_catalyst;
+package net.myriantics.klaxon.block.machines.blast_processor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
-import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
-import net.myriantics.klaxon.registry.block.KlaxonBlocks;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-
-public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior {
-    private final ResourceLocation id;
-
-    public ItemExplosiveCatalystBehavior(ResourceLocation id) {
-        this.id = id;
+public abstract class AbstractBlastProcessorBlockEntity extends RandomizableContainerBlockEntity {
+    protected AbstractBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
-    public void onExplosion(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData powerData, boolean shouldModifyWorld) {
-        if (world instanceof ServerLevel serverWorld) {
-            BlockState activeBlockState = world.getBlockState(pos);
-            if (activeBlockState.getBlock().equals(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR)) {
-                if (powerData.explosionPower() > 0.0) {
-                    Direction direction = activeBlockState.getValue(DeepslateBlastProcessorBlock.HORIZONTAL_FACING);
-                    Position position = blastProcessor.getExplosionOutputLocation(direction);
-
-                    blastProcessor.removeItemNoUpdate(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
-                    serverWorld.explode(null, null,
-                            // this is used to differentiate blast processor explosions from normal ones
-                            new BlastProcessorExplosionBehavior(shouldModifyWorld),
-                            position.x(), position.y(), position.z(),
-                            (float) powerData.explosionPower(),
-                            shouldModifyWorld && powerData.producesFire(),
-                            Level.ExplosionInteraction.BLOCK,
-                            ParticleTypes.EXPLOSION,
-                            ParticleTypes.EXPLOSION_EMITTER,
-                            SoundEvents.GENERIC_EXPLODE);
-                    serverWorld.blockUpdated(pos, activeBlockState.getBlock());
-                }
-            }
-        }
-    }
-
-    public void ejectItems(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData) {
+    protected void ejectItems(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData) {
         if (world == null || blastProcessor.isEmpty()) {
             return;
         }
@@ -105,10 +70,6 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
         blastProcessor.clearContent();
     }
 
-    public ExplosiveCatalystData transformExplosiveCatalystData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData data) {
-        return data;
-    }
-
     public BlastProcessingRecipeData getBlastProcessingPreviewData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory) {
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ExplosiveCatalystData powerData = recipeInventory.getPowerData();
@@ -136,7 +97,7 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ExplosiveCatalystData powerData = recipeInventory.getPowerData();
 
-        if (!recipeInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty()) {
+        if (!recipeInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty() && !powerData.behavior().is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING)) {
             blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
         }
         if (blastProcessingMatch.isPresent()) {
@@ -153,11 +114,6 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
         } else {
             return BlastProcessingRecipeData.ZERO;
         }
-    }
-
-    @Override
-    public boolean isVariable() {
-        return false;
     }
 
     // defaults to showing recipe with the lowest explosion power, but will switch to higher explosion power recipe if lowest is invalid
@@ -179,7 +135,7 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
 
         // if there's a catalyst, iterate through all matching recipes until you find the matching one with the least explosion power
         if (!recipeInventory.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
-           for (BlastProcessingRecipe activeRecipe : recipes) {
+            for (BlastProcessingRecipe activeRecipe : recipes) {
                 if (activeRecipe.isCompatibleWithCatalyst(powerData)) {
                     return Optional.of(activeRecipe);
                 }
@@ -187,11 +143,6 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
         }
 
         return Optional.of(recipes.getFirst());
-    }
-
-    @Override
-    public boolean shouldRunDispenserEffects(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        return true;
     }
 
     private void tryBlastingSmeltingRecipeOnAllStacks(ItemStack[] stacks, Level world) {
@@ -216,5 +167,11 @@ public class ItemExplosiveCatalystBehavior implements ExplosiveCatalystBehavior 
                 ).copyWithCount(stack.getCount());
             }
         }
+    }
+
+    public abstract ItemStack getCatalystStack();
+
+    public ExplosiveCatalystContext.Block getContext() {
+        return new ExplosiveCatalystContext.Block(this.level, this.getCatalystStack().getComponents(), this.getBlockPos());
     }
 }

@@ -9,12 +9,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
 
 public abstract class KlaxonBlockEntities {
     public static final Holder<BlockEntityType<DeepslateBlastProcessorBlockEntity>> DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY = register(
             "deepslate_blast_processor",
             KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR,
             DeepslateBlastProcessorBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<ModularExplosiveBlockEntity>> MODULAR_EXPLOSIVE = register(
+            "modular_explosive",
+            KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK,
+            ModularExplosiveBlockEntity::new
     );
 
     public static void init() {

@@ -1,7 +1,7 @@
 {
   "type": "klaxon:explosive_catalyst_definition",
   "explosive_catalyst_data": {
-    "behavior": "klaxon:bedlike_explodable",
+    "behavior": "klaxon:bedlike",
     "explosion_power": 5.0,
     "produces_fire": true
   },

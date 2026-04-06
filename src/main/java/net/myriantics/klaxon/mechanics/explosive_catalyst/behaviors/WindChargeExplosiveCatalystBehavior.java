@@ -1,67 +1,48 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ItemExplosiveCatalystBehavior;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Position;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.entity.projectile.windcharge.WindCharge;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors.WindChargeInvoker;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 
-public class WindChargeExplosiveCatalystBehavior extends ItemExplosiveCatalystBehavior {
-    public WindChargeExplosiveCatalystBehavior(ResourceLocation id) {
-        super(id);
+public class WindChargeExplosiveCatalystBehavior extends DefaultExplosiveCatalystBehavior {
+
+    @Override
+    protected ExplosionDamageCalculator explosionDamageCalculator(ExplosiveCatalystContext context, ExplosiveCatalystData data, boolean modifyWorld) {
+        return AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR;
     }
 
     @Override
-    public void onExplosion(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData powerData, boolean shouldModifyWorld) {
-        Position outputPos = blastProcessor.getExplosionOutputLocation(world.getBlockState(pos).getValue(DeepslateBlastProcessorBlock.HORIZONTAL_FACING));
-        WindCharge windCharge = new WindCharge(world, outputPos.x(), outputPos.y(), outputPos.z(), Vec3.ZERO);
-        WindChargeInvoker windChargeInvoker = ((WindChargeInvoker) windCharge);
-
-        world.addFreshEntity(windCharge);
-
-        // explode
-        if (shouldModifyWorld) {
-            windChargeInvoker.invokeExplode(new Vec3(outputPos.x(), outputPos.y(), outputPos.z()));
-        } else {
-            world.explode(
-                            windCharge,
-                            null,
-                            AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR,
-                            outputPos.x(),
-                            outputPos.y(),
-                            outputPos.z(),
-                            1.2F,
-                            false,
-                            // replace ExplosionSourceType.TRIGGER to prevent world griefing
-                            Level.ExplosionInteraction.NONE,
-                            ParticleTypes.GUST_EMITTER_SMALL,
-                            ParticleTypes.GUST_EMITTER_LARGE,
-                            SoundEvents.WIND_CHARGE_BURST
-                    );
-        }
-
-        // remove stack and discard
-        blastProcessor.removeItemNoUpdate(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX);
-        windCharge.discard();
+    protected Level.ExplosionInteraction explosionInteraction(ExplosiveCatalystContext context, ExplosiveCatalystData data, boolean modifyWorld) {
+        return modifyWorld ? Level.ExplosionInteraction.TRIGGER : Level.ExplosionInteraction.NONE;
     }
 
     @Override
-    public boolean shouldRunDispenserEffects(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessorBlock, ExplosiveCatalystDefinitionRecipeInput recipeInventory) {
-        return false;
+    protected ParticleOptions smallExplosionParticles(ExplosiveCatalystContext context, ExplosiveCatalystData data) {
+        return ParticleTypes.GUST_EMITTER_SMALL;
     }
 
     @Override
-    public boolean isVariable() {
-        return false;
+    protected ParticleOptions largeExplosionParticles(ExplosiveCatalystContext context, ExplosiveCatalystData data) {
+        return ParticleTypes.GUST_EMITTER_LARGE;
+    }
+
+    @Override
+    protected Holder<SoundEvent> explosionSound(ExplosiveCatalystContext context, ExplosiveCatalystData data) {
+        return SoundEvents.WIND_CHARGE_BURST;
     }
 }

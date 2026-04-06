@@ -44,10 +44,7 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
     @Override
     public @NotNull Double streamData(BlockAccessor blockAccessor) {
         if (blockAccessor.getBlockEntity() instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(blastProcessor.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
-
-
-            return ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blockAccessor.getLevel(), blockAccessor.getPosition(), blastProcessor, recipeInventory).explosionPower();
+            return ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(), blastProcessor.getCatalystStack()).explosionPower();
         }
         return 0.0;
     }

@@ -33,7 +33,7 @@ public class KlaxonExplosiveCatalystDefinitionRecipeProvider extends KlaxonRecip
         addExplosiveCatalystDefinitionRecipe(NamedIngredient.ofItems(Items.GLOWSTONE_DUST), KlaxonExplosiveCatalystBehaviors.GLOWSTONE, 1.3, true, false);
         addExplosiveCatalystDefinitionRecipe(NamedIngredient.ofItems(Items.GLOWSTONE), KlaxonExplosiveCatalystBehaviors.GLOWSTONE, 5.0, true, false);
         addExplosiveCatalystDefinitionRecipe(NamedIngredient.ofItems(Items.DRAGON_BREATH), KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH, 2.5, false, false);
-        addExplosiveCatalystDefinitionRecipe(NamedIngredient.ofItems(Items.WIND_CHARGE), KlaxonExplosiveCatalystBehaviors.WIND_CHARGE, 0.0, false, false);
+        addExplosiveCatalystDefinitionRecipe(NamedIngredient.ofItems(Items.WIND_CHARGE), KlaxonExplosiveCatalystBehaviors.WIND_CHARGE, 1.2, false, false);
         addExplosiveCatalystDefinitionRecipe(NamedIngredient.fromTag(KlaxonItemTags.BEDLIKE_EXPLODABLES), KlaxonExplosiveCatalystBehaviors.BEDLIKE_EXPLODABLE, 5.0, true, false);
         addExplosiveCatalystDefinitionRecipe(NamedIngredient.ofItems(Items.FIREWORK_ROCKET), KlaxonExplosiveCatalystBehaviors.FIREWORK_ROCKET, 0.0, false, false);
         addExplosiveCatalystDefinitionRecipe(NamedIngredient.ofItems(Items.FIREWORK_STAR), KlaxonExplosiveCatalystBehaviors.FIREWORK_STAR, 0.8, false, false);

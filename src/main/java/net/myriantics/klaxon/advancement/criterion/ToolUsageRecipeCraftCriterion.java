@@ -25,7 +25,7 @@ public class ToolUsageRecipeCraftCriterion extends SimpleCriterionTrigger<ToolUs
         this.trigger(player, conditions -> conditions.matches(toolStack, resultStack));
     }
 
-    public static record Conditions(Optional<ContextAwarePredicate> player, Ingredient requiredTool, Ingredient resultIngredient) implements SimpleCriterionTrigger.SimpleInstance {
+    public record Conditions(Optional<ContextAwarePredicate> player, Ingredient requiredTool, Ingredient resultIngredient) implements SimpleCriterionTrigger.SimpleInstance {
         public static final Codec<ToolUsageRecipeCraftCriterion.Conditions> CODEC = RecordCodecBuilder.create(instance -> {
             return instance.group(
                     EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(ToolUsageRecipeCraftCriterion.Conditions::player),

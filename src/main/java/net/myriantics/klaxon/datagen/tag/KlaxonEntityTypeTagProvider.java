@@ -54,11 +54,12 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
                 .add(EntityType.EYE_OF_ENDER);
 
         // allow / denylist tags
-        getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_GRAPPLING_DAMAGE_DENYLIST)
+        getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_GENTLY_HOOKED_ENTITIES)
                 .forceAddTag(ConventionalEntityTypeTags.BOATS)
                 .forceAddTag(ConventionalEntityTypeTags.MINECARTS)
                 .add(EntityType.ITEM_FRAME)
-                .add(EntityType.GLOW_ITEM_FRAME);
+                .add(EntityType.GLOW_ITEM_FRAME)
+                .add(EntityType.ARMOR_STAND);
         getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_HOOKING_DENYLIST)
                 .add(EntityType.ENDERMAN);
         getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_COLLISION_DENYLIST);

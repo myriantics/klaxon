@@ -293,6 +293,13 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
         // important to call this after the hooked entity container resets our velocity to 0 - it updates position in the super method
         super.tick();
 
+        if (this.hookedEntityContainer.isPresent()) {
+            Entity hookedEntity = this.hookedEntityContainer.get();
+            this.xOld = hookedEntity.xOld;
+            this.yOld = hookedEntity.yOld + this.hookedEntityContainer.getHookOffsetForEntity(hookedEntity);
+            this.zOld = hookedEntity.zOld;
+        }
+
         // boom look at me using &= how snazzy
         this.inGround &= !this.hookedEntityContainer.isPresent();
 
@@ -388,6 +395,11 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
         if (!this.hookedEntityContainer.isPresent()) {
             super.setXRot(pitch);
         }
+    }
+
+    public float getHookYOffset() {
+        @Nullable Entity hooked = this.hookedEntityContainer.get();
+        return hooked == null ? 0 : this.hookedEntityContainer.getHookOffsetForEntity(hooked);
     }
 
     @Override
@@ -595,11 +607,8 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                     GrappleClawEntity.this.setPortalCooldown();
                 }
                 this.release(false);
-                return;
             } else {
-                this.snapClawToHookPos();
                 this.hookedEntity.checkSlowFallDistance();
-                GrappleClawEntity.this.setDeltaMovement(Vec3.ZERO);
             }
         }
 
@@ -641,7 +650,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
             // this allows you to yoink it off the wall in a cool way instead of just dropping its item on initial hit
             // top 10 changes people will notice
             // this causes endermen to tp
-            if (!entity.getType().is(KlaxonEntityTypeTags.GRAPPLE_CLAW_GRAPPLING_DAMAGE_DENYLIST)) {
+            if (!entity.getType().is(KlaxonEntityTypeTags.GRAPPLE_CLAW_GENTLY_HOOKED_ENTITIES) || !this.canHookEntity(entity)) {
                 entity.hurt(
                         source,
                         claw.getPickupItemStackOrigin().getOrDefault(
@@ -716,9 +725,6 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
             }
 
             GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(GrappleClawEntity.this.level());
-            if (manager == null) {
-                throw new AssertionError();
-            }
             if (manager.fromHook(GrappleClawEntity.this) == null) {
                 return false;
             }
@@ -731,13 +737,20 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
         }
 
         public void snapClawToHookPos(Entity target) {
-            Vec3 targetPos = target instanceof EnderDragonPart
-                    ? target.position().add(0, target.getBbHeight() / 2, 0)
-                    : target.getEyePosition();
+            Vec3 targetPos = target.position().add(0, this.getHookOffsetForEntity(target), 0);
 
             GrappleClawEntity grappleClaw = GrappleClawEntity.this;
 
-            grappleClaw.setPos(targetPos.subtract(0, grappleClaw.getBbHeight() / 2, 0));
+            grappleClaw.setPos(targetPos);
+        }
+
+        public float getHookOffsetForEntity(Entity entity) {
+            float original = switch (entity) {
+                case EnderDragonPart part -> part.getBbHeight() / 2;
+                default -> entity.getEyeHeight();
+            };
+
+            return original - (GrappleClawEntity.this.getBbHeight() / 2);
         }
 
         public boolean matches(Entity entity) {

@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
@@ -63,13 +64,16 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
         blockEntityInventory.startOpen(playerInventory.player);
 
         if (!player.level().isClientSide) {
-            this.context.execute((world, pos) -> {
-                ExplosiveCatalystDefinitionRecipeInput catalystInput = new ExplosiveCatalystDefinitionRecipeInput(blockEntityInventory.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
+            this.context.execute((level, pos) -> {
 
-                this.powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), catalystInput);
+                if (level.getBlockEntity(pos) instanceof AbstractBlastProcessorBlockEntity blastProcessorBlockEntity) {
+                    this.powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessorBlockEntity.getContext(), blastProcessorBlockEntity.getCatalystStack());
 
-                BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
-                this.blastProcessingData = this.powerData.behavior().value().getBlastProcessingPreviewData(world, pos, (DeepslateBlastProcessorBlockEntity) world.getBlockEntity(pos), recipeInput);
+                    BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
+                    this.blastProcessingData = blastProcessorBlockEntity.getBlastProcessingPreviewData(level, pos, (DeepslateBlastProcessorBlockEntity) level.getBlockEntity(pos), recipeInput);
+                }
+
+
             });
         }
 
@@ -150,8 +154,8 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
 
         if (!world.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(world, pos, blastProcessor, catalystInput);
-                BlastProcessingRecipeData newBlastProcessingData = newPowerData.behavior().value().getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
+                ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(), blastProcessor.getCatalystStack());
+                BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
 
                 // Make sure we've changed something before sending an update packet
                 if (!newPowerData.equals(powerData) || !newBlastProcessingData.equals(this.blastProcessingData)) {

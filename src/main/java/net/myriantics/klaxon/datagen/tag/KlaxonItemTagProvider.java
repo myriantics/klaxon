@@ -347,6 +347,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
         getOrCreateTagBuilder(KlaxonItemTags.WRENCHABLE_INTERFACE_TRIGGERING_TOOLS)
                 .addOptionalTag(KlaxonConventionalItemTags.WRENCHES);
+        getOrCreateTagBuilder(KlaxonItemTags.DEFUSERS)
+                .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
     }
 
     private void buildRepairTags() {

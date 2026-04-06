@@ -1,33 +1,40 @@
 package net.myriantics.klaxon.recipe.explosive_catalyst_definition;
 
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.Level;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
 import java.util.Optional;
 
 public abstract class ExplosiveCatalystDefinitionRecipeLogic {
-    public static ExplosiveCatalystData computeExplosiveCatalystData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemLike item) {
-        return computeExplosiveCatalystData(world, pos, blastProcessor, new ItemStack(item));
+
+    public static ExplosiveCatalystData computeExplosiveCatalystData(ExplosiveCatalystContext context, Holder<Item> itemHolder) {
+        return computeExplosiveCatalystData(context, itemHolder.value());
     }
 
-    public static ExplosiveCatalystData computeExplosiveCatalystData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ItemStack stack) {
-        return computeExplosiveCatalystData(world, pos, blastProcessor, new ExplosiveCatalystDefinitionRecipeInput(stack));
+    public static ExplosiveCatalystData computeExplosiveCatalystData(ExplosiveCatalystContext context, ItemLike itemLike) {
+        return computeExplosiveCatalystData(context, itemLike.asItem());
     }
 
-    public static ExplosiveCatalystData computeExplosiveCatalystData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystDefinitionRecipeInput input) {
-        if (input.catalystStack().get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA_OVERRIDE_COMPONENT.value()) instanceof ExplosiveCatalystData data) {
-            return data.behavior().value().transformExplosiveCatalystData(world, pos, blastProcessor, data);
+    public static ExplosiveCatalystData computeExplosiveCatalystData(ExplosiveCatalystContext context, Item item) {
+        return computeExplosiveCatalystData(context, item.getDefaultInstance());
+    }
+
+    public static ExplosiveCatalystData computeExplosiveCatalystData(ExplosiveCatalystContext context, ItemStack catalyst) {
+        DataComponentMap components = catalyst.getComponents();
+        if (components.get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value()) instanceof ExplosiveCatalystData data) {
+            return data.behavior().value().transformExplosiveCatalystData(context, data);
         } else {
-            Optional<RecipeHolder<ExplosiveCatalystDefinitionRecipe>> match = world.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, input, world);
+            Optional<RecipeHolder<ExplosiveCatalystDefinitionRecipe>> match = context.level().getRecipeManager().getRecipeFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, new ExplosiveCatalystDefinitionRecipeInput(catalyst), context.level());
             if (match.isPresent()) {
                 ExplosiveCatalystData data = match.get().value().getData();
-                return data.behavior().value().transformExplosiveCatalystData(world, pos, blastProcessor, data);
+                return data.behavior().value().transformExplosiveCatalystData(context, data);
             }
         }
 

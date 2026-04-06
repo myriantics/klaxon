@@ -20,4 +20,10 @@ public abstract class KlaxonNBTIds {
     public static final String CABLE_LENGTH = KlaxonCommon.locateAlt("cable_length");
     public static final String MAX_CABLE_LENGTH = KlaxonCommon.locateAlt("max_cable_length");
     public static final String HOOK_ANCHORED = KlaxonCommon.locateAlt("hook_anchored");
+
+    // modular explosive
+    public static final String MAX_FUSE_TIME = KlaxonCommon.locateAlt("max_fuse_time");
+    public static final String FUSE_TIME = KlaxonCommon.locateAlt("fuse_time");
+    public static final String MODIFY_WORLD = KlaxonCommon.locateAlt("modify_world");
+    public static final String EXPLOSIVE_CATALYST_DATA = KlaxonCommon.locateAlt("explosive_catalyst_data");
 }

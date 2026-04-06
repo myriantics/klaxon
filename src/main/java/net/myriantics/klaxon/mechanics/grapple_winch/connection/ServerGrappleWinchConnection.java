@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
@@ -19,6 +20,7 @@ import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityAttributes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
@@ -133,6 +135,15 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
 
         this.retracting = this.player.isUsingItem() && this.player.getUseItem().is(KlaxonItems.GRAPPLE_WINCH);
         this.resetMaxCableLength();
+
+        // hacky but i dont care to do it better lol
+        if (this.retracting && this.hook instanceof GrappleClawEntity grappleClaw && grappleClaw.hasHookedEntity() && !this.player.onGround()) {
+            @Nullable Entity hookedEntity = grappleClaw.klaxon$getHookedEntity();
+            @Nullable Entity mount = this.player.getVehicle();
+            if (hookedEntity != null && hookedEntity == mount && !mount.onGround() && mount.getDeltaMovement().y() > 0) {
+                KlaxonAdvancementTriggers.triggerGrappleWinchLevitationBug(this.player);
+            }
+        }
 
         Vec3 hookPos = this.getHookPos();
         Vec3 playerEyePos = this.player.getEyePosition();

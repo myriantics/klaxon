@@ -54,6 +54,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     public static final String GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON = "grapple_ender_dragon";
     public static final String GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW = "grapple_winch_de_anchor_grapple_claw";
     public static final String GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE = "grapple_winch_intentionally_disconnect_cable";
+    public static final String GRAPPLE_WINCH_MOUNT_LEVITATION_BUG = "grapple_winch_mount_levitation_bug";
 
     public static final String GRAPPLE_WINCH_VEINMINE_GLOWSTONE = "grapple_winch_veinmine_glowstone";
 
@@ -95,6 +96,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         ItemStack enchantedGrappleClawStack = new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
         enchantedGrappleClawStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         AdvancementHolder grappleWinchGrappleEnderDragon = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON, enchantedGrappleClawStack, EntityGrappleCriterion.Conditions.create(EntityType.ENDER_DRAGON));
+        AdvancementHolder grappleWinchLevitationBug = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_MOUNT_LEVITATION_BUG, Items.ALLIUM, OneOffCriterion.Conditions.createGrappleWinchLevitationBug());
 
         AdvancementHolder grappleWinchVeinMine = addChallenge(grappleWinchDeAnchorGrappleClaw, GRAPPLE_WINCH_VEINMINE_GLOWSTONE, Items.GLOWSTONE, GrappleWinchVeinMineCriterion.Conditions.create(Blocks.GLOWSTONE));
     }

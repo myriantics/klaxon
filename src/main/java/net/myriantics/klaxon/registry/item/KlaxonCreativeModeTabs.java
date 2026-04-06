@@ -47,6 +47,7 @@ public abstract class KlaxonCreativeModeTabs {
                 entries.accept(KlaxonItems.STEEL_CASING.value());
                 entries.accept(KlaxonItems.CRUDE_STEEL_CASING.value());
                 entries.accept(KlaxonItems.STEEL_WORKBENCH.value());
+                entries.accept(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK.value());
                 // entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
             })).build();
 

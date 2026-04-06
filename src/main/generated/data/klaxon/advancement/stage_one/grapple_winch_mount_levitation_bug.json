@@ -1,0 +1,28 @@
+{
+  "parent": "klaxon:stage_one/obtain_grapple_winch",
+  "criteria": {
+    "grapple_winch_mount_levitation_bug": {
+      "trigger": "klaxon:grapple_winch_levitation_bug"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_mount_levitation_bug.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "minecraft:allium"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.grapple_winch_mount_levitation_bug.title"
+    }
+  },
+  "requirements": [
+    [
+      "grapple_winch_mount_levitation_bug"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
