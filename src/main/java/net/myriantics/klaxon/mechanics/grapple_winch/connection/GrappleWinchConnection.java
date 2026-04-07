@@ -4,6 +4,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
+import net.myriantics.klaxon.tag.klaxon.KlaxonEntityTypeTags;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class GrappleWinchConnection {
@@ -124,7 +125,7 @@ public abstract class GrappleWinchConnection {
         @Nullable Entity hookedEntity = hook.klaxon$getHookedEntity();
         @Nullable Entity directVehicle = player.getVehicle();
         if (hookedEntity == directVehicle) { // if there's no hooked entity or direct vehicle we're chilling, or if they're both the same we're also chillin
-            return !this.isHookAnchored();
+            return !this.isHookAnchored() && (hookedEntity == null || !hookedEntity.getType().is(KlaxonEntityTypeTags.GRAPPLE_WINCH_IMMOVABLE_DIRECT_MOUNTS));
         }
 
         // we know this isn't null now because we already checked that the player has a direct vehicle

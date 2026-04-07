@@ -54,6 +54,8 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
                 .add(EntityType.EYE_OF_ENDER);
 
         // allow / denylist tags
+        getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_WINCH_IMMOVABLE_DIRECT_MOUNTS)
+                .addOptionalTag(ConventionalEntityTypeTags.BOATS);
         getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_GENTLY_HOOKED_ENTITIES)
                 .forceAddTag(ConventionalEntityTypeTags.BOATS)
                 .forceAddTag(ConventionalEntityTypeTags.MINECARTS)

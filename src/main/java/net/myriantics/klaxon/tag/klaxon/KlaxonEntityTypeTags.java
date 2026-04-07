@@ -21,6 +21,12 @@ public abstract class KlaxonEntityTypeTags {
             createTag("light_entities");
 
     // allowlist / denylist tags
+    /**
+     * Entities that cannot be moved by the Grapple Winch of their direct passenger.
+     * Put in place to streamline interactions with Boats because they were already jank and this makes them less so.
+     */
+    public static final TagKey<EntityType<?>> GRAPPLE_WINCH_IMMOVABLE_DIRECT_MOUNTS =
+            createTag("grapple_winch_immovable_direct_mounts");
     public static final TagKey<EntityType<?>> GRAPPLE_CLAW_GENTLY_HOOKED_ENTITIES =
             createTag("grapple_claw_gently_hooked_entities");
     public static final TagKey<EntityType<?>> GRAPPLE_CLAW_HOOKING_DENYLIST =
