@@ -58,7 +58,7 @@ public abstract class AbstractArrowMixin extends Projectile {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;tryPickup(Lnet/minecraft/world/entity/player/Player;)Z")
     )
     private boolean klaxon$tryFastReload(AbstractArrow instance, Player player, Operation<Boolean> original) {
-        if (instance instanceof GrapplingHook hook) {
+        if (instance instanceof GrapplingHook hook && hook.klaxon$getHookedEntity() == null) {
             if (hook.klaxon$tryFastReload(player, player.getMainHandItem()) || hook.klaxon$tryFastReload(player, player.getOffhandItem())) {
                 return false;
             }

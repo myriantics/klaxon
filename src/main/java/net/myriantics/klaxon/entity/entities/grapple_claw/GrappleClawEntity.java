@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -255,6 +256,11 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
     }
 
     @Override
+    public boolean isNoPhysics() {
+        return super.isNoPhysics() || this.hasHookedEntity();
+    }
+
+    @Override
     protected SoundEvent getDefaultHitGroundSoundEvent() {
         return KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_ANCHOR;
     }
@@ -319,6 +325,10 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
         GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(this.level());
         @Nullable GrappleWinchConnection fromHook = manager.fromHook(this);
         @Nullable GrappleWinchConnection fromPlayer = manager.fromPlayer(pickupPlayer);
+
+        if (this.hasHookedEntity()) {
+            return false;
+        }
 
         boolean pickupTypeValid = true;
         switch (this.pickup) {
@@ -385,7 +395,10 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
 
     @Override
     public void setYRot(float yaw) {
-        if (!this.hookedEntityContainer.isPresent()) {
+        @Nullable Entity hooked = this.hookedEntityContainer.get();
+        if (hooked != null) {
+            super.setYRot(-((hooked.getYRot() + this.hookedEntityContainer.hookedYawDiff) % 360.0F));
+        } else {
             super.setYRot(yaw);
         }
     }
@@ -573,6 +586,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
 
     private class HookedEntityContainer {
         private Entity hookedEntity = null;
+        private float hookedYawDiff = 0;
 
         private HookedEntityContainer() {
         }
@@ -591,6 +605,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                     case null, default -> this.hookedEntity = entity;
                 }
             }
+            this.tryResetHookedYawDiff();
         }
 
         public void tick() {
@@ -612,7 +627,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
             }
         }
 
-        private void setHookedEntity(Entity entity) {
+        private void setHookedEntity(@Nullable Entity entity) {
 
             switch (entity) {
                 case EnderDragonPart part -> {
@@ -623,7 +638,15 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                 }
             }
 
+            this.tryResetHookedYawDiff();
+
             this.hookedEntity = entity;
+        }
+
+        private void tryResetHookedYawDiff() {
+            if (this.hookedEntity != null) {
+                this.hookedYawDiff = Mth.degreesDifference(GrappleClawEntity.this.getYRot(), this.hookedEntity.getYRot());
+            }
         }
 
         public boolean tryHook(Entity entity) {
