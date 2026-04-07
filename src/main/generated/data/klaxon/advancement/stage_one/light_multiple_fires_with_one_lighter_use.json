@@ -1,0 +1,27 @@
+{
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
+  "criteria": {
+    "light_multiple_fires_with_one_lighter_use": {
+      "trigger": "klaxon:ignite_multiple_fires_with_one_lighter_use"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.light_multiple_fires_with_one_lighter_use.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_lighter"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.light_multiple_fires_with_one_lighter_use.title"
+    }
+  },
+  "requirements": [
+    [
+      "light_multiple_fires_with_one_lighter_use"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

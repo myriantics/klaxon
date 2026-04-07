@@ -44,4 +44,8 @@ public abstract class KlaxonAdvancementTriggers {
     public static void triggerGrappleWinchLevitationBug(ServerPlayer player) {
         KlaxonAdvancementCriteria.GRAPPLE_WINCH_LEVITATION_BUG_CRITERION.value().trigger(player);
     }
+
+    public static void triggerErectFirewall(ServerPlayer player) {
+        KlaxonAdvancementCriteria.IGNITE_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE.value().trigger(player);
+    }
 }

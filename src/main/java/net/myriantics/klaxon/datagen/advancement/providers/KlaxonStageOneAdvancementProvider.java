@@ -43,6 +43,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
 
     public static final String HAMMER_WALLJUMP_BOOSTED = "hammer_walljump_boosted";
     public static final String HAMMER_WALLJUMP_MINECART = "hammer_walljump_minecart";
+    public static final String LIGHT_MUlTIPLE_FIRES_WITH_ONE_LIGHTER_USE = "light_multiple_fires_with_one_lighter_use";
     public static final String USE_CABLE_SHEARS_TO_MAKE_METAL_WIRE = "use_cable_shears_to_make_metal_wire";
     public static final String OBTAIN_STEEL_CLEAVER = "obtain_steel_cleaver";
     public static final String OBTAIN_STEEL_WRENCH = "obtain_steel_wrench";
@@ -81,6 +82,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
 
         AdvancementHolder boostedHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_BOOSTED, Items.BLAZE_POWDER,  WalljumpAbilityCriterion.Conditions.createStrengthWalljump());
         AdvancementHolder minecartHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_MINECART, Items.CAULDRON, WalljumpAbilityCriterion.Conditions.createMinecartWalljump());
+        AdvancementHolder erectFirewallWithLighter = addGoal(hammerCraftMetalPlate, LIGHT_MUlTIPLE_FIRES_WITH_ONE_LIGHTER_USE, KlaxonItems.STEEL_LIGHTER.value(), OneOffCriterion.Conditions.createErectFirewall());
         AdvancementHolder cableShearCraftMetalWire = addTask(hammerCraftMetalPlate, USE_CABLE_SHEARS_TO_MAKE_METAL_WIRE, KlaxonItems.STEEL_CABLE_SHEARS.value(), ToolUsageRecipeCraftCriterion.Conditions.createWirecutting(Ingredient.of(KlaxonConventionalItemTags.WIRES)));
         AdvancementHolder obtainSteelCleaver = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_CLEAVER, KlaxonItems.STEEL_CLEAVER.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.STEEL_CLEAVER.value()));
         AdvancementHolder obtainSteelWrench = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_WRENCH, KlaxonItems.STEEL_WRENCH.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.STEEL_WRENCH.value()));

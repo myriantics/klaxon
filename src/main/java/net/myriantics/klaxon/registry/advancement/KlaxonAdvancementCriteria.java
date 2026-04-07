@@ -23,6 +23,7 @@ public abstract class KlaxonAdvancementCriteria {
     public static final Holder<OneOffCriterion> GRAPPLE_WINCH_LEVITATION_BUG_CRITERION = register("grapple_winch_levitation_bug", new OneOffCriterion());
     public static final Holder<GrappleWinchCableDisconnectCriterion> GRAPPLE_WINCH_CABLE_DISCONNECT_CRITERION = register("grapple_winch_cable_disconnect_criterion", new GrappleWinchCableDisconnectCriterion());
     public static final Holder<OneOffCriterion> DE_ANCHOR_GRAPPLE_WINCH_CLAW_CRITERION = register("de_anchor_grapple_winch_claw", new OneOffCriterion());
+    public static final Holder<OneOffCriterion> IGNITE_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE = register("ignite_multiple_fires_with_one_lighter_use", new OneOffCriterion());
 
     @SuppressWarnings("unchecked")
     private static <T extends CriterionTrigger<?>> Holder<T> register(String name, T criterion) {

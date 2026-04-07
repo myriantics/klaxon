@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.myriantics.klaxon.item.equipment.tools.LighterItem;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,8 +25,12 @@ public abstract class LighterItemMixin {
         if (livingEntity instanceof LocalPlayer localPlayer) {
             MultiPlayerGameMode gameMode = Minecraft.getInstance().gameMode;
             HitResult hitResult = Minecraft.getInstance().hitResult;
-            if (gameMode != null && hitResult instanceof BlockHitResult blockHitResult) {
-                gameMode.useItemOn(localPlayer, localPlayer.getUsedItemHand(), blockHitResult);
+            if (gameMode != null && hitResult != null) {
+                switch (hitResult) {
+                    case BlockHitResult blockHitResult -> gameMode.useItemOn(localPlayer, localPlayer.getUsedItemHand(), blockHitResult);
+                    case EntityHitResult entityHitResult -> gameMode.interactAt(localPlayer, entityHitResult.getEntity(), entityHitResult, localPlayer.getUsedItemHand());
+                    default -> {}
+                }
             }
         }
     }

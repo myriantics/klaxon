@@ -41,6 +41,12 @@ public class OneOffCriterion extends SimpleCriterionTrigger<OneOffCriterion.Cond
             ));
         }
 
+        public static Criterion<OneOffCriterion.Conditions> createErectFirewall() {
+            return KlaxonAdvancementCriteria.IGNITE_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE.value().createCriterion(new Conditions(
+                    Optional.empty()
+            ));
+        }
+
         @Override
         public Optional<ContextAwarePredicate> player() {
             return player;

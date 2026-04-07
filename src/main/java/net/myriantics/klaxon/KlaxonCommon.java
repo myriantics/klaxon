@@ -72,6 +72,7 @@ public class KlaxonCommon implements ModInitializer {
         KlaxonBlockStateWrenchBehaviors.init();
 		KlaxonCauldronBehaviors.init();
 		KlaxonItemUsageTweaks.init();
+		KlaxonAttachmentTypes.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

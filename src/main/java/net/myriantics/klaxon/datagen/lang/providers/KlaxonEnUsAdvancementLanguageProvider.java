@@ -64,6 +64,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
 
         // level 3
         addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.LIGHT_MUlTIPLE_FIRES_WITH_ONE_LIGHTER_USE,
+                "Firewall!",
+                "Ignite multiple fires during one use of the Steel Lighter"
+        );
+        addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.USE_CABLE_SHEARS_TO_MAKE_METAL_WIRE,
                 "Wire So Shearious",
                 "Use Cable Shears to convert a Metal Plate into Wire"
