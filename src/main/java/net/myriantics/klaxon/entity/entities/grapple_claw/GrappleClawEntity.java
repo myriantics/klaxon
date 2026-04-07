@@ -645,7 +645,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
 
         private void tryResetHookedYawDiff() {
             if (this.hookedEntity != null) {
-                this.hookedYawDiff = Mth.degreesDifference(GrappleClawEntity.this.getYRot(), this.hookedEntity.getYRot());
+                this.hookedYawDiff = Mth.degreesDifference(this.hookedEntity.getYRot(), GrappleClawEntity.this.getYRot());
             }
         }
 
