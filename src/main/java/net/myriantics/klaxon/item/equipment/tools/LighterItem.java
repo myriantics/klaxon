@@ -29,7 +29,7 @@ public class LighterItem extends FlintAndSteelItem {
         super.releaseUsing(stack, level, livingEntity, timeCharged);
         livingEntity.stopUsingItem();
         Integer firePlacedCount = livingEntity.removeAttached(KlaxonAttachmentTypes.STEEL_LIGHTER_FIRE_PLACEMENT_TRACKER);
-        if (firePlacedCount != null && firePlacedCount > 7 && livingEntity instanceof ServerPlayer player) {
+        if (firePlacedCount != null && firePlacedCount >= 5 && livingEntity instanceof ServerPlayer player) {
             KlaxonAdvancementTriggers.triggerErectFirewall(player);
         }
     }

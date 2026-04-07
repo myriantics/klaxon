@@ -26,9 +26,9 @@ public abstract class LighterItemMixin {
             MultiPlayerGameMode gameMode = Minecraft.getInstance().gameMode;
             HitResult hitResult = Minecraft.getInstance().hitResult;
             if (gameMode != null && hitResult != null) {
-                switch (hitResult) {
-                    case BlockHitResult blockHitResult -> gameMode.useItemOn(localPlayer, localPlayer.getUsedItemHand(), blockHitResult);
-                    case EntityHitResult entityHitResult -> gameMode.interactAt(localPlayer, entityHitResult.getEntity(), entityHitResult, localPlayer.getUsedItemHand());
+                switch (hitResult.getType()) {
+                    case BLOCK -> gameMode.useItemOn(localPlayer, localPlayer.getUsedItemHand(), (BlockHitResult) hitResult);
+                    case ENTITY -> gameMode.interactAt(localPlayer, ((EntityHitResult) hitResult).getEntity(), (EntityHitResult) hitResult, localPlayer.getUsedItemHand());
                     default -> {}
                 }
             }
