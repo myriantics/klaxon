@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
+import net.minecraft.core.Position;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public class CreeperHeadExplosiveCatalystBehavior extends DefaultExplosiveCatalystBehavior {
     @Override
     @Nullable
-    protected DamageSource getDamageSource(ExplosiveCatalystContext context) {
+    protected DamageSource getDamageSource(ExplosiveCatalystContext context, Position position) {
         if (context.level() instanceof ServerLevel level) {
             Creeper creeper = new Creeper(EntityType.CREEPER, level);
 

@@ -25,7 +25,7 @@ public class DefaultExplosiveCatalystBehavior extends AbstractExplosiveCatalystB
             if (!level.isClientSide()) {
                 level.explode(
                         context.getEntity(),
-                        this.getDamageSource(context),
+                        this.getDamageSource(context, detonationPosition),
                         this.explosionDamageCalculator(context, data, modifyWorld),
                         detonationPosition.x(),
                         detonationPosition.y(),
@@ -42,7 +42,7 @@ public class DefaultExplosiveCatalystBehavior extends AbstractExplosiveCatalystB
     }
 
     @Nullable
-    protected DamageSource getDamageSource(ExplosiveCatalystContext context) {
+    protected DamageSource getDamageSource(ExplosiveCatalystContext context, Position position) {
         return null;
     }
 
