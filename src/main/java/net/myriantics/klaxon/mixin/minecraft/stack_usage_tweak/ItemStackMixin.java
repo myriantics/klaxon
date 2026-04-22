@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin.minecraft.stack_usage;
+package net.myriantics.klaxon.mixin.minecraft.stack_usage_tweak;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

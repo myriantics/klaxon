@@ -415,6 +415,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                         Items.ELYTRA,
                         Items.PHANTOM_MEMBRANE
                 );
+        getOrCreateTagBuilder(KlaxonItemTags.MUFFLER_REMOVERS)
+                .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
     }
 
     private void buildRepairTags() {

@@ -3,16 +3,14 @@ package net.myriantics.klaxon.util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 
+import java.util.Objects;
+
 public abstract class EquipmentSlotHelper {
-    // theres probably a more efficient way of doing this but idc
     public static EquipmentSlot convert(InteractionHand playerHand) {
-        switch (playerHand) {
-            case OFF_HAND -> {
-                return EquipmentSlot.OFFHAND;
-            }
-            default -> {
-                return EquipmentSlot.MAINHAND;
-            }
+        if (Objects.requireNonNull(playerHand) == InteractionHand.OFF_HAND) {
+            return EquipmentSlot.OFFHAND;
+        } else {
+            return EquipmentSlot.MAINHAND;
         }
     }
 

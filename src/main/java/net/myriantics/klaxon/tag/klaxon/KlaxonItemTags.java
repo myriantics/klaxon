@@ -83,6 +83,8 @@ public abstract class KlaxonItemTags {
             createTag("defusers");
     public static final TagKey<Item> MUFFLERS =
             createTag("mufflers");
+    public static final TagKey<Item> MUFFLER_REMOVERS =
+            createTag("muffler_removers");
 
     // enchantment tags
     public static final TagKey<Item> STREAMLINE_ENCHANTABLE =

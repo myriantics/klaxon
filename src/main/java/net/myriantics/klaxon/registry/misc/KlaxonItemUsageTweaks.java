@@ -88,6 +88,6 @@ public abstract class KlaxonItemUsageTweaks {
     }
 
     public static void init() {
-        KlaxonCommon.LOGGER.info("Initialized KLAXON's Item Usage Tweaks");
+        KlaxonCommon.LOGGER.info("Initialized KLAXON's Item Usage Tweaks!");
     }
 }

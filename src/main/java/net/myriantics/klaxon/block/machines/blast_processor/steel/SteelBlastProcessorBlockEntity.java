@@ -58,13 +58,8 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
-    public boolean isMuffled() {
-        return this.getMuffler().isEmpty();
-    }
-
-    @Override
-    public ItemStack removeMuffler() {
-        return null;
+    public boolean hasMuffler() {
+        return !this.getMuffler().isEmpty();
     }
 
     @Override
@@ -73,7 +68,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
-    public void addMuffler(ItemStack stack) {
+    public void setMuffler(ItemStack stack) {
         if (this.getMuffler().isEmpty()) {
             this.setItem(MUFFLER_INDEX, stack);
         }
