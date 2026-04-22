@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
-import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
+import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
@@ -136,6 +136,6 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : createTickerHelper(blockEntityType, KlaxonBlockEntities.MODULAR_EXPLOSIVE.value(), ModularExplosiveBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, KlaxonBlockEntityTypes.MODULAR_EXPLOSIVE.value(), ModularExplosiveBlockEntity::serverTick);
     }
 }

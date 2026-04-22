@@ -81,6 +81,8 @@ public abstract class KlaxonItemTags {
             createTag("pick_block_slot_replacement_discouraged");
     public static final TagKey<Item> DEFUSERS =
             createTag("defusers");
+    public static final TagKey<Item> MUFFLERS =
+            createTag("mufflers");
 
     // enchantment tags
     public static final TagKey<Item> STREAMLINE_ENCHANTABLE =

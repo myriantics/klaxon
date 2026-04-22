@@ -363,6 +363,58 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addOptionalTag(KlaxonConventionalItemTags.WRENCHES);
         getOrCreateTagBuilder(KlaxonItemTags.DEFUSERS)
                 .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
+        getOrCreateTagBuilder(KlaxonItemTags.MUFFLERS)
+                .add(
+                        Items.LEATHER_HELMET,
+                        Items.LEATHER_CHESTPLATE,
+                        Items.LEATHER_LEGGINGS,
+                        Items.LEATHER_BOOTS,
+                        Items.LEATHER_HORSE_ARMOR
+                )
+                .add(Items.LEATHER)
+                .addOptionalTag(ItemTags.WOOL)
+                .addOptionalTag(ItemTags.WOOL_CARPETS)
+                .add(
+                        Items.MOSS_CARPET,
+                        Items.MOSS_BLOCK
+                )
+                .add(Items.SPONGE)
+                .add(Items.COBWEB)
+                .add(
+                        Items.HAY_BLOCK,
+                        Items.TARGET,
+                        Items.DRIED_KELP_BLOCK
+                )
+                .addOptionalTag(ItemTags.BANNERS)
+                .add(Items.HONEYCOMB_BLOCK)
+                .add(Items.FEATHER)
+                .add(
+                        Items.WHITE_BED,
+                        Items.ORANGE_BED,
+                        Items.MAGENTA_BED,
+                        Items.LIGHT_BLUE_BED,
+                        Items.YELLOW_BED,
+                        Items.LIME_BED,
+                        Items.PINK_BED,
+                        Items.GRAY_BED,
+                        Items.LIGHT_GRAY_BED,
+                        Items.CYAN_BED,
+                        Items.PURPLE_BED,
+                        Items.BLUE_BED,
+                        Items.BROWN_BED,
+                        Items.GREEN_BED,
+                        Items.RED_BED,
+                        Items.BLACK_BED
+                )
+                .add(
+                        Items.ITEM_FRAME,
+                        Items.GLOW_ITEM_FRAME
+                )
+                .add(Items.SHIELD)
+                .add(
+                        Items.ELYTRA,
+                        Items.PHANTOM_MEMBRANE
+                );
     }
 
     private void buildRepairTags() {

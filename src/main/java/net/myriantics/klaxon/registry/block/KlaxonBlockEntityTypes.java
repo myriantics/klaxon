@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.registry.block;
 
-import net.minecraft.core.BlockBox;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,13 +8,19 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
 
-public abstract class KlaxonBlockEntities {
-    public static final Holder<BlockEntityType<DeepslateBlastProcessorBlockEntity>> DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY = register(
+public abstract class KlaxonBlockEntityTypes {
+    public static final Holder<BlockEntityType<DeepslateBlastProcessorBlockEntity>> DEEPSLATE_BLAST_PROCESSOR = register(
             "deepslate_blast_processor",
             KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR,
             DeepslateBlastProcessorBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<SteelBlastProcessorBlockEntity>> STEEL_BLAST_PROCESSOR = register(
+            "steel_blast_processor",
+            KlaxonBlocks.STEEL_BLAST_PROCESSOR,
+            SteelBlastProcessorBlockEntity::new
     );
     public static final Holder<BlockEntityType<ModularExplosiveBlockEntity>> MODULAR_EXPLOSIVE = register(
             "modular_explosive",

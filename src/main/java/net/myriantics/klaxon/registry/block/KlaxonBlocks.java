@@ -17,6 +17,7 @@ import net.myriantics.klaxon.block.functional.SteelWorkbenchBlock;
 import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
 import net.myriantics.klaxon.block.machines.CasingBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
@@ -58,6 +59,8 @@ public abstract class KlaxonBlocks {
     // machines
     public static final Holder<Block> DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",
             new DeepslateBlastProcessorBlock(copyProperties(Blocks.POLISHED_DEEPSLATE).lightLevel(Blocks.litBlockEmission(15))));
+    public static final Holder<Block> STEEL_BLAST_PROCESSOR = registerBlock("steel_blast_processor",
+            new SteelBlastProcessorBlock(copyProperties(STEEL_CASING)));
     public static final Holder<Block> NETHER_REACTOR_CORE = registerBlock("nether_reactor_core",
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.STEEL_CASING).lightLevel((state) -> 15).noOcclusion()));
     public static final Holder<Block> CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",

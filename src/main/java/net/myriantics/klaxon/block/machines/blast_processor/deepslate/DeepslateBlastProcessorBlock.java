@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
@@ -39,12 +40,12 @@ import org.jetbrains.annotations.Nullable;
 import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
 import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
 
-public class DeepslateBlastProcessorBlock extends BaseEntityBlock {
+public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final BooleanProperty FUELED = KlaxonBlockStateProperties.FUELED;
     public static final BooleanProperty HATCH_OPEN = KlaxonBlockStateProperties.HATCH_OPEN;
-    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty POWERED = AbstractBlastProcessorBlock.POWERED;
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public DeepslateBlastProcessorBlock(Properties settings) {
@@ -52,22 +53,9 @@ public class DeepslateBlastProcessorBlock extends BaseEntityBlock {
 
         registerDefaultState(getStateDefinition().any()
                 .setValue(HORIZONTAL_FACING, Direction.NORTH)
-                .setValue(POWERED, false)
                 .setValue(LIT, false)
                 .setValue(FUELED, false)
                 .setValue(HATCH_OPEN, true));
-    }
-
-    @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock()) && !world.isClientSide()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof DeepslateBlastProcessorBlockEntity) {
-                Containers.dropContents(world, pos, (Container) blockEntity);
-                world.updateNeighbourForOutputSignal(pos, this);
-            }
-        }
-        super.onRemove(state, world, pos, newState, moved);
     }
 
     @Override
@@ -95,7 +83,7 @@ public class DeepslateBlastProcessorBlock extends BaseEntityBlock {
 
         // make sure we've got a deepslate blast processor block entity
         if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            Storage<ItemVariant> storage = ItemStorage.SIDED.find(world, pos, state, blastProcessor, interactionSide);
+            Storage<ItemVariant> storage = blastProcessor.storageProvider(interactionSide.getOpposite());
 
             // if no storage is found or we're on the client, we succeed because no further processing is needed
             if (storage == null || world.isClientSide()) return ItemInteractionResult.SUCCESS;
@@ -122,11 +110,6 @@ public class DeepslateBlastProcessorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
-    }
-
-    @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
@@ -141,7 +124,8 @@ public class DeepslateBlastProcessorBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(POWERED, HORIZONTAL_FACING, LIT, FUELED, HATCH_OPEN);
+        super.createBlockStateDefinition(builder);
+        builder.add(HORIZONTAL_FACING, LIT, FUELED, HATCH_OPEN);
     }
 
     public void updateBlockState(Level world, BlockPos pos, @Nullable BlockState appendedState) {

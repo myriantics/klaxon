@@ -1,0 +1,52 @@
+{
+  "values": [
+    "minecraft:leather_helmet",
+    "minecraft:leather_chestplate",
+    "minecraft:leather_leggings",
+    "minecraft:leather_boots",
+    "minecraft:leather_horse_armor",
+    "minecraft:leather",
+    {
+      "id": "#minecraft:wool",
+      "required": false
+    },
+    {
+      "id": "#minecraft:wool_carpets",
+      "required": false
+    },
+    "minecraft:moss_carpet",
+    "minecraft:moss_block",
+    "minecraft:sponge",
+    "minecraft:cobweb",
+    "minecraft:hay_block",
+    "minecraft:target",
+    "minecraft:dried_kelp_block",
+    {
+      "id": "#minecraft:banners",
+      "required": false
+    },
+    "minecraft:honeycomb_block",
+    "minecraft:feather",
+    "minecraft:white_bed",
+    "minecraft:orange_bed",
+    "minecraft:magenta_bed",
+    "minecraft:light_blue_bed",
+    "minecraft:yellow_bed",
+    "minecraft:lime_bed",
+    "minecraft:pink_bed",
+    "minecraft:gray_bed",
+    "minecraft:light_gray_bed",
+    "minecraft:cyan_bed",
+    "minecraft:purple_bed",
+    "minecraft:blue_bed",
+    "minecraft:brown_bed",
+    "minecraft:green_bed",
+    "minecraft:red_bed",
+    "minecraft:black_bed",
+    "minecraft:item_frame",
+    "minecraft:glow_item_frame",
+    "minecraft:shield",
+    "minecraft:elytra",
+    "minecraft:phantom_membrane"
+  ]
+}

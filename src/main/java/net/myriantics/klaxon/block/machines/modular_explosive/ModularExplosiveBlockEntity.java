@@ -8,7 +8,6 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,7 +17,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatal
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
-import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
+import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
@@ -37,7 +36,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
     }
 
     public ModularExplosiveBlockEntity(BlockPos pos, BlockState blockState) {
-        this(KlaxonBlockEntities.MODULAR_EXPLOSIVE.value(), pos, blockState);
+        this(KlaxonBlockEntityTypes.MODULAR_EXPLOSIVE.value(), pos, blockState);
     }
 
     @Override

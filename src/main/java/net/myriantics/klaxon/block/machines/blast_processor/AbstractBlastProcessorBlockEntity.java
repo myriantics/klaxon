@@ -1,11 +1,12 @@
 package net.myriantics.klaxon.block.machines.blast_processor;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.Position;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -27,14 +28,53 @@ import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatal
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
+import net.myriantics.klaxon.util.SlotsWrapperContainer;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractBlastProcessorBlockEntity extends RandomizableContainerBlockEntity {
+
+    private static final int INGREDIENT_INDEX = 0;
+    private static final int CATALYST_INDEX = 1;
+
+    private NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+
+    protected final SlotsWrapperContainer ingredient = new SlotsWrapperContainer(this, INGREDIENT_INDEX) {
+        @Override
+        public int getMaxStackSize() {
+            return AbstractBlastProcessorBlockEntity.this.getMaxIngredientStackSize();
+        }
+    };
+    protected final SlotsWrapperContainer catalyst = new SlotsWrapperContainer(this, CATALYST_INDEX) {
+        @Override
+        public int getMaxStackSize(ItemStack stack) {
+            return AbstractBlastProcessorBlockEntity.this.getMaxCatalystStackSize();
+        }
+    };
+
+    public final InventoryStorage catalystStorage = InventoryStorage.of(this.catalyst, null);
+
+    public final InventoryStorage ingredientStorage = InventoryStorage.of(this.ingredient, null);
+
     protected AbstractBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+    }
+
+    @Override
+    public NonNullList<ItemStack> getItems() {
+        return this.inventory;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        this.inventory = items;
+    }
+
+    @Override
+    protected Component getDefaultName() {
+        return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
     protected void ejectItems(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData) {
@@ -169,7 +209,34 @@ public abstract class AbstractBlastProcessorBlockEntity extends RandomizableCont
         }
     }
 
-    public abstract ItemStack getCatalystStack();
+    @Override
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(nbt)) {
+            ContainerHelper.loadAllItems(nbt, this.inventory, registryLookup);
+        }
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
+        if (!this.trySaveLootTable(nbt)) {
+            ContainerHelper.saveAllItems(nbt, this.inventory, registryLookup);
+        }
+    }
+
+    protected abstract int getMaxCatalystStackSize();
+
+    protected abstract int getMaxIngredientStackSize();
+
+    public final ItemStack getIngredientStack() {
+        return this.getItem(INGREDIENT_INDEX);
+    }
+
+    public final ItemStack getCatalystStack() {
+        return this.getItem(CATALYST_INDEX);
+    }
 
     public ExplosiveCatalystContext.Block getContext() {
         return new ExplosiveCatalystContext.Block(this.level, this.getCatalystStack().getComponents(), this.getBlockPos());

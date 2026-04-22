@@ -1,6 +1,8 @@
 package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -12,6 +14,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
@@ -24,7 +27,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
-import net.myriantics.klaxon.registry.block.KlaxonBlockEntities;
+import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
@@ -36,7 +39,6 @@ import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.Dee
 import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.isFrontObstructed;
 
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
-    private NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
     public static final int INGREDIENT_INDEX = 0;
     public static final int CATALYST_INDEX = 1;
     private static final int[] INGREDIENT_ITEM_SLOTS = new int[]{INGREDIENT_INDEX};
@@ -45,9 +47,12 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
     private final ArrayList<DeepslateBlastProcessorScreenHandler> activeScreenHandlers = new ArrayList<>();
 
+    protected DeepslateBlastProcessorBlockEntity(BlockEntityType<DeepslateBlastProcessorBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
+
     public DeepslateBlastProcessorBlockEntity(BlockPos pos, BlockState state) {
-        super(KlaxonBlockEntities.DEEPSLATE_BLAST_PROCESSOR_BLOCK_ENTITY.value(), pos, state);
-        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        this(KlaxonBlockEntityTypes.DEEPSLATE_BLAST_PROCESSOR.value(), pos, state);
     }
 
     @Override
@@ -68,28 +73,9 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         }
     }
 
-    @Override
-    protected Component getDefaultName() {
-        return Component.translatable(getBlockState().getBlock().getDescriptionId());
-    }
-
-    @Override
-    public NonNullList<ItemStack> getItems() {
-        return inventory;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> inventory) {
-        this.inventory = inventory;
-    }
 
     public int getContainerSize() {
         return 2;
-    }
-
-    @Override
-    public int getMaxStackSize() {
-        return MAX_HELD_STACK_COUNT;
     }
 
     @Override
@@ -125,8 +111,6 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         }
         return false;
     }
-
-
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction dir) {
@@ -177,7 +161,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 Holder<AbstractExplosiveCatalystBehavior> behavior = data.behavior();
 
                 // transform data if needed
-                BlastProcessingRecipeData processingData = this.getBlastProcessingRecipeData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), data));
+                BlastProcessingRecipeData processingData = this.getBlastProcessingRecipeData(level, worldPosition, this, new BlastProcessingRecipeInput(this.getIngredientStack(), data));
 
                 // clear catalyst and do explosion effect if power is greater than 0
                 if (data.explosionPower() > 0) {
@@ -205,8 +189,13 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     }
 
     @Override
-    public ItemStack getCatalystStack() {
-        return this.getItem(CATALYST_INDEX);
+    protected int getMaxCatalystStackSize() {
+        return 1;
+    }
+
+    @Override
+    protected int getMaxIngredientStackSize() {
+        return 1;
     }
 
     public void updateBlockState(@Nullable BlockState appendedState) {
@@ -252,7 +241,6 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
     @Override
     public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayer player) {
-        ExplosiveCatalystDefinitionRecipeInput recipeInventory = new ExplosiveCatalystDefinitionRecipeInput(this);
 
         // default values if world is null
         ExplosiveCatalystData explosiveCatalystData = ExplosiveCatalystData.ZERO;
@@ -262,7 +250,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         if (level != null) {
             explosiveCatalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(this.getContext(), this.getCatalystStack());
 
-            blastProcessingRecipeData = this.getBlastProcessingPreviewData(level, worldPosition, this, new BlastProcessingRecipeInput(inventory.get(INGREDIENT_INDEX), explosiveCatalystData));
+            blastProcessingRecipeData = this.getBlastProcessingPreviewData(level, worldPosition, this, new BlastProcessingRecipeInput(this.getIngredientStack(), explosiveCatalystData));
         }
 
         return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
@@ -272,22 +260,14 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 explosiveCatalystData.producesFire());
     }
 
-
-
-    @Override
-    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        super.loadAdditional(nbt, registryLookup);
-        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(nbt)) {
-            ContainerHelper.loadAllItems(nbt, this.inventory, registryLookup);
-        }
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        super.saveAdditional(nbt, registryLookup);
-        if (!this.trySaveLootTable(nbt)) {
-            ContainerHelper.saveAllItems(nbt, this.inventory, registryLookup);
+    public Storage<ItemVariant> storageProvider(@Nullable Direction direction) {
+        Direction facing = this.getBlockState().getValue(HORIZONTAL_FACING);
+        if (direction == BlockDirectionHelper.getLeft(facing) || direction == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
+            return this.catalystStorage;
+        } else if (direction != facing) { // no front access - ingredient storage is default otherwise
+            return this.ingredientStorage;
+        } else {
+            return null;
         }
     }
 }

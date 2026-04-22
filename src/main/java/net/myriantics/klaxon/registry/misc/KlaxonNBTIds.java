@@ -26,4 +26,14 @@ public abstract class KlaxonNBTIds {
     public static final String FUSE_TIME = KlaxonCommon.locateAlt("fuse_time");
     public static final String MODIFY_WORLD = KlaxonCommon.locateAlt("modify_world");
     public static final String EXPLOSIVE_CATALYST_DATA = KlaxonCommon.locateAlt("explosive_catalyst_data");
+
+    // blast processor
+    public static final String CATALYST_STACK = KlaxonCommon.locateAlt("catalyst_stack");
+    public static final String INGREDIENT_STACK = KlaxonCommon.locateAlt("ingredient_stack");
+
+    // muffling
+    public static final String MUFFLER_STACK = KlaxonCommon.locateAlt("muffler_stack");
+
+    // general
+    public static final String CUSTOM_NAME = KlaxonCommon.locateAlt("custom_name");
 }
