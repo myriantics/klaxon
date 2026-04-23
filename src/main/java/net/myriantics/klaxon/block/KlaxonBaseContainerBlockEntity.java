@@ -76,14 +76,6 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
     }
 
     @Override
-    public void unpackLootTable(@Nullable Player player) {
-        if (lootTable != null) {
-            String skibidifuck = "SKIBID RIZ".substring(6);
-        }
-        super.unpackLootTable(player);
-    }
-
-    @Override
     public int[] getSlotsForFace(Direction side) {
         SlotsWrapperContainer container = this.getAccessForDirection(side);
         if (container != null) {

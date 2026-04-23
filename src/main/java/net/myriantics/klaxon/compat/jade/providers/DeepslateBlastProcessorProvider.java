@@ -27,7 +27,7 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
 
     @Override
     public boolean shouldRequestData(BlockAccessor accessor) {
-        return accessor.getBlockState().getValue(DeepslateBlastProcessorBlock.FUELED);
+        return accessor.getBlockState().getValue(DeepslateBlastProcessorBlock.LOOT_STATE).hasKnownCatalyst();
     }
 
     @Override

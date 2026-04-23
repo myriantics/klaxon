@@ -1,18 +1,14 @@
 package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -21,13 +17,13 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlock;
@@ -40,19 +36,18 @@ import org.jetbrains.annotations.Nullable;
 public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final BooleanProperty FUELED = KlaxonBlockStateProperties.FUELED;
-    public static final BooleanProperty HATCH_OPEN = KlaxonBlockStateProperties.HATCH_OPEN;
     public static final BooleanProperty POWERED = AbstractBlastProcessorBlock.POWERED;
+    public static final EnumProperty<DeepslateBlastProcessorLootState> LOOT_STATE = KlaxonBlockStateProperties.DEEPSLATE_BLAST_PROCESSOR_LOOT_STATE;
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public DeepslateBlastProcessorBlock(Properties settings) {
         super(settings);
 
         registerDefaultState(getStateDefinition().any()
+                .setValue(LOOT_STATE, DeepslateBlastProcessorLootState.EMPTY)
                 .setValue(HORIZONTAL_FACING, Direction.NORTH)
                 .setValue(LIT, false)
-                .setValue(FUELED, false)
-                .setValue(HATCH_OPEN, true));
+        );
     }
 
     @Override
@@ -109,31 +104,21 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HORIZONTAL_FACING, LIT, FUELED, HATCH_OPEN);
+        builder.add(LOOT_STATE, HORIZONTAL_FACING, LIT);
     }
 
-    public void updateBlockState(Level world, BlockPos pos, @Nullable BlockState appendedState) {
-        if (world.getBlockState(pos).getBlock() instanceof DeepslateBlastProcessorBlock) {
+    public void updateBlockState(Level level, BlockPos pos, @Nullable BlockState appendedState) {
+        if (level.getBlockState(pos).getBlock() instanceof DeepslateBlastProcessorBlock) {
             if (appendedState == null) {
-                appendedState = world.getBlockState(pos);
+                appendedState = level.getBlockState(pos);
             }
 
-            if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
+            if (level.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
 
-                boolean hatchOpen = appendedState.getValue(DeepslateBlastProcessorBlock.HATCH_OPEN);
-                boolean fueled = appendedState.getValue(DeepslateBlastProcessorBlock.FUELED);
+                appendedState = appendedState.setValue(LOOT_STATE, DeepslateBlastProcessorLootState.update(blastProcessor));
 
-                if (blastProcessor.getCatalystStack().isEmpty() == fueled) {
-
-                    appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.FUELED);
-                }
-                if (blastProcessor.getIngredientStack().isEmpty() != hatchOpen) {
-
-                    appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.HATCH_OPEN);
-                }
-
-                if (world.getBlockState(pos) != appendedState) {
-                    world.setBlock(pos, appendedState, Block.UPDATE_CLIENTS);
+                if (level.getBlockState(pos) != appendedState) {
+                    level.setBlock(pos, appendedState, Block.UPDATE_CLIENTS);
                 }
             }
         }
@@ -206,16 +191,20 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     }
 
     public static boolean canFastInput(Player player, BlockState state, Direction clickSide) {
+        if (!PermissionsHelper.canModifyWorld(player)) { // prevent adventure mode players from fastinputting to catalyst slot
+            return false;
+        }
+
         Direction blockDirection = state.getValue(HORIZONTAL_FACING);
+        DeepslateBlastProcessorLootState lootState = state.getValue(LOOT_STATE);
+
         // check if you can insert from the sides
-        if (!state.getValue(FUELED) &&
-                (clickSide.equals(BlockDirectionHelper.getLeft(blockDirection)) || clickSide.equals(BlockDirectionHelper.getRight(blockDirection))
-                        // prevent adventure mode players from fastinputting to catalyst slot
-                        && PermissionsHelper.canModifyWorld(player))) {
+        if (!lootState.hasKnownCatalyst() && (clickSide.equals(BlockDirectionHelper.getLeft(blockDirection)) || clickSide.equals(BlockDirectionHelper.getRight(blockDirection)))) {
             return true;
         }
+
         // check if you can insert from the top. if no, don't bother
-        return state.getValue(HATCH_OPEN) && clickSide.equals(BlockDirectionHelper.getUp(blockDirection));
+        return !lootState.hasKnownIngredient() && clickSide.equals(BlockDirectionHelper.getUp(blockDirection));
     }
 
     public static boolean isFrontObstructed(Level world, BlockPos pos) {

@@ -2,9 +2,13 @@ package net.myriantics.klaxon.registry.block;
 
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.block.machines.modular_explosive.FuseState;
 
 public abstract class KlaxonBlockStateProperties {
+
+    // Used to display internal slot status of the Deepslate Blast Processor
+    public static final EnumProperty<DeepslateBlastProcessorLootState> DEEPSLATE_BLAST_PROCESSOR_LOOT_STATE = EnumProperty.create("loot_state", DeepslateBlastProcessorLootState.class);
 
     // Tracks whether the fuel slot of the Deepslate Blast Processor contains an item.
     public static final BooleanProperty FUELED = BooleanProperty.create("fueled");

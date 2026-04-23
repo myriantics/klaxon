@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestHelper;
 
@@ -37,7 +38,7 @@ public class DeepslateBlastProcessorBlockTester {
         player.setItemInHand(InteractionHand.MAIN_HAND, coalStack);
         context.useBlock(pos, player, context.hitResult(pos, Direction.UP));
         context.assertContainerContains(pos, Items.COAL);
-        context.assertBlockProperty(pos, DeepslateBlastProcessorBlock.HATCH_OPEN, false);
+        context.assertBlockProperty(pos, DeepslateBlastProcessorBlock.LOOT_STATE, DeepslateBlastProcessorLootState.INGREDIENT_ONLY);
         context.expectInt(63, coalStack.getCount(), "Coal Stack");
 
         player.setGameMode(GameType.CREATIVE);
@@ -46,7 +47,7 @@ public class DeepslateBlastProcessorBlockTester {
         player.setItemInHand(InteractionHand.MAIN_HAND, gunpowderStack);
         context.useBlock(pos, player, context.hitResult(pos, Direction.EAST));
         context.assertContainerContains(pos, Items.GUNPOWDER);
-        context.assertBlockProperty(pos, DeepslateBlastProcessorBlock.FUELED, true);
+        context.assertBlockProperty(pos, DeepslateBlastProcessorBlock.LOOT_STATE, DeepslateBlastProcessorLootState.FULL);
         context.expectInt(64, gunpowderStack.getCount(), "Gunpowder Stack");
 
         context.succeed();
