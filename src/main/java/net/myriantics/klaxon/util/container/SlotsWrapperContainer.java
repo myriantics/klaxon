@@ -1,5 +1,6 @@
-package net.myriantics.klaxon.util;
+package net.myriantics.klaxon.util.container;
 
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -7,10 +8,20 @@ import net.minecraft.world.item.ItemStack;
 public class SlotsWrapperContainer implements Container {
     private final Container container;
     private final int[] slots;
+    private final InventoryStorage storage;
 
     public SlotsWrapperContainer(Container container, int... slots) {
         this.container = container;
         this.slots = slots;
+        this.storage = InventoryStorage.of(this, null);
+    }
+
+    public InventoryStorage getStorage() {
+        return this.storage;
+    }
+
+    public int[] getSlots() {
+        return this.slots;
     }
 
     @Override
@@ -30,37 +41,22 @@ public class SlotsWrapperContainer implements Container {
 
     @Override
     public ItemStack getItem(int slot) {
-        for (int availableSlot : this.slots) {
-            if (availableSlot == slot) {
-                return this.container.getItem(slot);
-            }
-        }
-        return ItemStack.EMPTY;
+        return this.container.getItem(this.slots[slot]);
     }
 
     @Override
     public ItemStack removeItem(int slot, int amount) {
-        if (this.slotValid(slot)) {
-            return this.container.removeItem(slot, amount);
-        } else {
-            return ItemStack.EMPTY;
-        }
+        return this.container.removeItem(this.slots[slot], amount);
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        if (this.slotValid(slot)) {
-            return this.container.removeItemNoUpdate(slot);
-        } else {
-            return ItemStack.EMPTY;
-        }
+        return this.container.removeItemNoUpdate(this.slots[slot]);
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        if (this.slotValid(slot)) {
-            this.container.setItem(slot, stack);
-        }
+        this.container.setItem(this.slots[slot], stack);
     }
 
     @Override
@@ -80,12 +76,13 @@ public class SlotsWrapperContainer implements Container {
         }
     }
 
-    private boolean slotValid(int otherSlot) {
-        for (int slot : this.slots) {
-            if (slot == otherSlot) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        return this.container.canPlaceItem(this.slots[slot], stack);
+    }
+
+    @Override
+    public boolean canTakeItem(Container target, int slot, ItemStack stack) {
+        return this.container.canTakeItem(target, this.slots[slot], stack);
     }
 }

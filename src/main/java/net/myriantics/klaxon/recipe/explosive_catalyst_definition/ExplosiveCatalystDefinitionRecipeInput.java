@@ -6,7 +6,7 @@ import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateB
 
 public record ExplosiveCatalystDefinitionRecipeInput(ItemStack catalystStack) implements RecipeInput {
     public ExplosiveCatalystDefinitionRecipeInput(DeepslateBlastProcessorBlockEntity blastProcessor) {
-        this(blastProcessor.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
+        this(blastProcessor.getCatalystStack());
     }
 
     @Override

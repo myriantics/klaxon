@@ -83,7 +83,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
 
         // make sure we've got a deepslate blast processor block entity
         if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            Storage<ItemVariant> storage = blastProcessor.storageProvider(interactionSide.getOpposite());
+            Storage<ItemVariant> storage = blastProcessor.getStorageForSide(interactionSide.getOpposite());
 
             // if no storage is found or we're on the client, we succeed because no further processing is needed
             if (storage == null || world.isClientSide()) return ItemInteractionResult.SUCCESS;
@@ -110,19 +110,6 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            return (blastProcessor.getItem(CATALYST_INDEX).isEmpty() ? 0 : 7) + (blastProcessor.getItem(INGREDIENT_INDEX).isEmpty() ? 0 : 8);
-        }
-        return 0;
-    }
-
-    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(HORIZONTAL_FACING, LIT, FUELED, HATCH_OPEN);
@@ -135,16 +122,15 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
             }
 
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                NonNullList<ItemStack> inventory = blastProcessor.getItems();
 
                 boolean hatchOpen = appendedState.getValue(DeepslateBlastProcessorBlock.HATCH_OPEN);
                 boolean fueled = appendedState.getValue(DeepslateBlastProcessorBlock.FUELED);
 
-                if (inventory.get(CATALYST_INDEX).isEmpty() == fueled) {
+                if (blastProcessor.getCatalystStack().isEmpty() == fueled) {
 
                     appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.FUELED);
                 }
-                if (inventory.get(INGREDIENT_INDEX).isEmpty() != hatchOpen) {
+                if (blastProcessor.getIngredientStack().isEmpty() != hatchOpen) {
 
                     appendedState = appendedState.cycle(DeepslateBlastProcessorBlock.HATCH_OPEN);
                 }

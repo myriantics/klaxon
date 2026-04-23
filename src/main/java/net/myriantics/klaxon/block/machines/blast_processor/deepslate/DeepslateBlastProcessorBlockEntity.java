@@ -1,13 +1,8 @@
 package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.*;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -25,12 +20,12 @@ import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
+import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -41,8 +36,6 @@ import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.Dee
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
     public static final int INGREDIENT_INDEX = 0;
     public static final int CATALYST_INDEX = 1;
-    private static final int[] INGREDIENT_ITEM_SLOTS = new int[]{INGREDIENT_INDEX};
-    private static final int[] CATALYST_ITEM_SLOTS = new int[]{CATALYST_INDEX};
     public static final int MAX_HELD_STACK_COUNT = 1;
 
     private final ArrayList<DeepslateBlastProcessorScreenHandler> activeScreenHandlers = new ArrayList<>();
@@ -63,6 +56,11 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         return screenHandler;
     }
 
+    @Override
+    protected int initStackLimitForSlot(int slot) {
+        return 1;
+    }
+
     public void removeScreenHandler(DeepslateBlastProcessorScreenHandler screenHandler) {
         activeScreenHandlers.remove(screenHandler);
     }
@@ -73,76 +71,13 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         }
     }
 
-
     public int getContainerSize() {
         return 2;
     }
 
     @Override
-    public int[] getSlotsForFace(Direction side) {
-        if (level != null) {
-            // if it's the sides, you can insert into fuel
-            Direction blockFacing = level.getBlockState(worldPosition).getValue(HORIZONTAL_FACING);
-            if (side == BlockDirectionHelper.getLeft(blockFacing) || side == BlockDirectionHelper.getRight(blockFacing)) {
-                return CATALYST_ITEM_SLOTS;
-            }
-            // if it's not the front, you can access input
-            if (side != BlockDirectionHelper.getFront(blockFacing)) {
-                return INGREDIENT_ITEM_SLOTS;
-            }
-        }
-        return new int[] {};
-    }
-
-    @Override
-    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction dir) {
-        // if the slot you want to access is available for the side you're accessing from, check if the item is valid
-        // for that stack
-        int[] availableSlots = getSlotsForFace(dir);
-
-        if (availableSlots == null || stack.isEmpty() || availableSlots[0] == -1) {
-            return false;
-        }
-
-        for (int availableSlot : availableSlots) {
-            if (slot == availableSlot) {
-                return this.canPlaceItem(slot, stack);
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction dir) {
-        if (level != null && !level.hasNeighborSignal(worldPosition)) {
-
-            // get the available slots for the side you're trying to pull from
-            int[] availableSlots = getSlotsForFace(dir);
-
-            // null protection go brrr
-            if (availableSlots == null || availableSlots[0] == -1) {
-                return false;
-            }
-
-            for (int checkedSlotIndex : availableSlots) {
-                // if the slot you're trying to pull from is in that array, yeah you can extract
-                if (slot == checkedSlotIndex) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean canPlaceItem(int slot, ItemStack stack) {
-        // look through the whole inventory and return true if selected slot is inbounds and empty
-        for (int i = 0; i < this.getContainerSize(); i++) {
-            if (slot == i) {
-                return getItem(slot).isEmpty();
-            }
-        }
-        return false;
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
+        return super.canTakeItemThroughFace(slot, stack, side) && !this.level.hasNeighborSignal(this.worldPosition);
     }
 
     public void onRedstoneImpulse() {
@@ -188,22 +123,11 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         }
     }
 
-    @Override
-    protected int getMaxCatalystStackSize() {
-        return 1;
-    }
-
-    @Override
-    protected int getMaxIngredientStackSize() {
-        return 1;
-    }
-
     public void updateBlockState(@Nullable BlockState appendedState) {
         if (level != null && level.getBlockState(worldPosition).getBlock() instanceof DeepslateBlastProcessorBlock blastProcessorBlock) {
             blastProcessorBlock.updateBlockState(level, worldPosition, appendedState);
         }
     }
-
 
     @Override
     public void setChanged() {
@@ -260,12 +184,13 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 explosiveCatalystData.producesFire());
     }
 
-    public Storage<ItemVariant> storageProvider(@Nullable Direction direction) {
+    @Override
+    protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
         Direction facing = this.getBlockState().getValue(HORIZONTAL_FACING);
-        if (direction == BlockDirectionHelper.getLeft(facing) || direction == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
-            return this.catalystStorage;
-        } else if (direction != facing) { // no front access - ingredient storage is default otherwise
-            return this.ingredientStorage;
+        if (side == BlockDirectionHelper.getLeft(facing) || side == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
+            return this.catalystContainer;
+        } else if (side != facing) { // no front access - ingredient storage is default otherwise
+            return this.ingredientContainer;
         } else {
             return null;
         }

@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.muffling.Mufflable;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 import org.jetbrains.annotations.Nullable;
 
 public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements Mufflable {
@@ -27,13 +28,12 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
-    protected int getMaxCatalystStackSize() {
-        return 1;
-    }
-
-    @Override
-    protected int getMaxIngredientStackSize() {
-        return 4;
+    protected int initStackLimitForSlot(int slot) {
+        return switch (slot) {
+            case INGREDIENT_INDEX -> 4;
+            case CATALYST_INDEX -> 1;
+            default -> -1;
+        };
     }
 
     @Override
@@ -41,12 +41,13 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
         return null;
     }
 
-    public Storage<ItemVariant> storageProvider(@Nullable Direction direction) {
+    @Override
+    protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
         Direction facing = this.getBlockState().getValue(SteelBlastProcessorBlock.HORIZONTAL_FACING);
-        if (direction == facing.getOpposite() || direction == Direction.DOWN) { // if back or down do catalyst
-            return this.catalystStorage;
-        } else if (direction != facing) {
-            return this.ingredientStorage;
+        if (side == facing.getOpposite() || side == Direction.DOWN) { // if back or down do catalyst
+            return this.catalystContainer;
+        } else if (side != facing) {
+            return this.catalystContainer;
         } else {
             return null;
         }
@@ -69,8 +70,6 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     @Override
     public void setMuffler(ItemStack stack) {
-        if (this.getMuffler().isEmpty()) {
-            this.setItem(MUFFLER_INDEX, stack);
-        }
+        this.setItem(MUFFLER_INDEX, stack);
     }
 }

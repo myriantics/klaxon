@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
@@ -47,5 +48,19 @@ public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(POWERED);
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof AbstractBlastProcessorBlockEntity blastProcessor) {
+            return (int) (7 * blastProcessor.computeCatalystSlotFill() + 8 * blastProcessor.computeIngredientSlotFill());
+        } else {
+            return 0;
+        }
     }
 }

@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.block.machines.blast_processor;
 
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +17,7 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.block.KlaxonBaseContainerBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
@@ -28,53 +28,35 @@ import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatal
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
-import net.myriantics.klaxon.util.SlotsWrapperContainer;
+import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractBlastProcessorBlockEntity extends RandomizableContainerBlockEntity {
+public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseContainerBlockEntity {
 
-    private static final int INGREDIENT_INDEX = 0;
-    private static final int CATALYST_INDEX = 1;
+    protected static final int INGREDIENT_INDEX = 0;
+    protected static final int CATALYST_INDEX = 1;
 
-    private NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-
-    protected final SlotsWrapperContainer ingredient = new SlotsWrapperContainer(this, INGREDIENT_INDEX) {
-        @Override
-        public int getMaxStackSize() {
-            return AbstractBlastProcessorBlockEntity.this.getMaxIngredientStackSize();
-        }
-    };
-    protected final SlotsWrapperContainer catalyst = new SlotsWrapperContainer(this, CATALYST_INDEX) {
-        @Override
-        public int getMaxStackSize(ItemStack stack) {
-            return AbstractBlastProcessorBlockEntity.this.getMaxCatalystStackSize();
-        }
-    };
-
-    public final InventoryStorage catalystStorage = InventoryStorage.of(this.catalyst, null);
-
-    public final InventoryStorage ingredientStorage = InventoryStorage.of(this.ingredient, null);
+    protected final SlotsWrapperContainer ingredientContainer = new SlotsWrapperContainer(this, INGREDIENT_INDEX);
+    protected final SlotsWrapperContainer catalystContainer = new SlotsWrapperContainer(this, CATALYST_INDEX);
 
     protected AbstractBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 
     @Override
-    public NonNullList<ItemStack> getItems() {
-        return this.inventory;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        this.inventory = items;
-    }
-
-    @Override
     protected Component getDefaultName() {
         return Component.translatable(getBlockState().getBlock().getDescriptionId());
+    }
+
+    public float computeIngredientSlotFill() {
+        return this.computeSlotFill(INGREDIENT_INDEX);
+    }
+
+    public float computeCatalystSlotFill() {
+        return this.computeSlotFill(CATALYST_INDEX);
     }
 
     protected void ejectItems(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData) {
@@ -174,7 +156,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends RandomizableCont
         recipes.sort(byLowestExplosionPower);
 
         // if there's a catalyst, iterate through all matching recipes until you find the matching one with the least explosion power
-        if (!recipeInventory.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX).isEmpty()) {
+        if (!this.getCatalystStack().isEmpty()) {
             for (BlastProcessingRecipe activeRecipe : recipes) {
                 if (activeRecipe.isCompatibleWithCatalyst(powerData)) {
                     return Optional.of(activeRecipe);
@@ -208,27 +190,6 @@ public abstract class AbstractBlastProcessorBlockEntity extends RandomizableCont
             }
         }
     }
-
-    @Override
-    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        super.loadAdditional(nbt, registryLookup);
-        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(nbt)) {
-            ContainerHelper.loadAllItems(nbt, this.inventory, registryLookup);
-        }
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        super.saveAdditional(nbt, registryLookup);
-        if (!this.trySaveLootTable(nbt)) {
-            ContainerHelper.saveAllItems(nbt, this.inventory, registryLookup);
-        }
-    }
-
-    protected abstract int getMaxCatalystStackSize();
-
-    protected abstract int getMaxIngredientStackSize();
 
     public final ItemStack getIngredientStack() {
         return this.getItem(INGREDIENT_INDEX);
