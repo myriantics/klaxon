@@ -13,6 +13,10 @@ public class BlastProcessingRecipeInput implements RecipeInput {
         this.powerData = powerData;
     }
 
+    public ItemStack getInputStack() {
+        return this.inputStack;
+    }
+
     public ExplosiveCatalystData getPowerData() {
         return powerData;
     }

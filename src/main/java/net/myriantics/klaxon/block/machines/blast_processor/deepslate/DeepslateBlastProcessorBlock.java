@@ -37,9 +37,6 @@ import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import org.jetbrains.annotations.Nullable;
 
-import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.CATALYST_INDEX;
-import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
-
 public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;

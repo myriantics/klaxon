@@ -69,7 +69,7 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
                 if (level.getBlockEntity(pos) instanceof AbstractBlastProcessorBlockEntity blastProcessorBlockEntity) {
                     this.powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessorBlockEntity.getContext(), blastProcessorBlockEntity.getCatalystStack());
 
-                    BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), powerData);
+                    BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(blastProcessorBlockEntity.getIngredientStack(), powerData);
                     this.blastProcessingData = blastProcessorBlockEntity.getBlastProcessingPreviewData(level, pos, (DeepslateBlastProcessorBlockEntity) level.getBlockEntity(pos), recipeInput);
                 }
 
@@ -149,13 +149,10 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
 
     public void updateResult(Level world, BlockPos pos, Player player, SimpleContainer resultInventory) {
 
-        ExplosiveCatalystDefinitionRecipeInput catalystInput = new ExplosiveCatalystDefinitionRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.CATALYST_INDEX));
-
-
         if (!world.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
                 ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(), blastProcessor.getCatalystStack());
-                BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(ingredientInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX), newPowerData));
+                BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(blastProcessor.getIngredientStack(), newPowerData));
 
                 // Make sure we've changed something before sending an update packet
                 if (!newPowerData.equals(powerData) || !newBlastProcessingData.equals(this.blastProcessingData)) {
@@ -204,11 +201,12 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
             } else {
                 // yonked stacking protection logic from EnchantmentScreenHandler - unexpected enchant table carry
                 for (int i = 0; i < this.ingredientInventory.getContainerSize(); i++) {
-                    if (this.slots.get(i).hasItem() || !this.slots.get(i).mayPlace(originalStack)) {
+                    Slot selected = this.slots.get(i);
+                    if (selected.hasItem() || !selected.mayPlace(originalStack)) {
                         continue;
                     }
-                    ItemStack filteredStack = originalStack.split(DeepslateBlastProcessorBlockEntity.MAX_HELD_STACK_COUNT);
-                    this.slots.get(i).setByPlayer(filteredStack);
+                    ItemStack filteredStack = originalStack.split(selected.getMaxStackSize());
+                    selected.setByPlayer(filteredStack);
                     break;
                 }
             }

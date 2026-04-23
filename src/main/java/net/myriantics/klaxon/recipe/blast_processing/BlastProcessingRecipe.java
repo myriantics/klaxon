@@ -14,8 +14,6 @@ import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
-import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX;
-
 public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput> {
     private final Ingredient ingredientItem;
     private final double explosionPowerMin;
@@ -31,7 +29,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
     @Override
     public boolean matches(BlastProcessingRecipeInput inventory, Level world) {
-        return ingredientItem.test(inventory.getItem(INGREDIENT_INDEX));
+        return ingredientItem.test(inventory.getInputStack());
     }
 
     @Override

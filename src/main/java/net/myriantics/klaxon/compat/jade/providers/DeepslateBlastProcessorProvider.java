@@ -43,7 +43,7 @@ public enum DeepslateBlastProcessorProvider implements IBlockComponentProvider, 
 
     @Override
     public @NotNull Double streamData(BlockAccessor blockAccessor) {
-        if (blockAccessor.getBlockEntity() instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
+        if (blockAccessor.getBlockEntity() instanceof DeepslateBlastProcessorBlockEntity blastProcessor && !blastProcessor.isUnlooted()) {
             return ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(), blastProcessor.getCatalystStack()).explosionPower();
         }
         return 0.0;

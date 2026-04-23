@@ -34,9 +34,6 @@ import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.Dee
 import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.isFrontObstructed;
 
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
-    public static final int INGREDIENT_INDEX = 0;
-    public static final int CATALYST_INDEX = 1;
-    public static final int MAX_HELD_STACK_COUNT = 1;
 
     private final ArrayList<DeepslateBlastProcessorScreenHandler> activeScreenHandlers = new ArrayList<>();
 
@@ -186,13 +183,17 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
     @Override
     protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
-        Direction facing = this.getBlockState().getValue(HORIZONTAL_FACING);
-        if (side == BlockDirectionHelper.getLeft(facing) || side == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
-            return this.catalystContainer;
-        } else if (side != facing) { // no front access - ingredient storage is default otherwise
-            return this.ingredientContainer;
+        if (side == null) {
+            return this.fullAccess;
         } else {
-            return null;
+            Direction facing = this.getBlockState().getValue(HORIZONTAL_FACING);
+            if (side == BlockDirectionHelper.getLeft(facing) || side == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
+                return this.catalystContainer;
+            } else if (side != facing) { // no front access - ingredient storage is default otherwise
+                return this.ingredientContainer;
+            } else {
+                return SlotsWrapperContainer.EMPTY;
+            }
         }
-    }
+    };
 }

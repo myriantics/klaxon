@@ -31,7 +31,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     protected int initStackLimitForSlot(int slot) {
         return switch (slot) {
             case INGREDIENT_INDEX -> 4;
-            case CATALYST_INDEX -> 1;
+            case CATALYST_INDEX, MUFFLER_INDEX -> 1;
             default -> -1;
         };
     }
@@ -43,13 +43,17 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     @Override
     protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
-        Direction facing = this.getBlockState().getValue(SteelBlastProcessorBlock.HORIZONTAL_FACING);
-        if (side == facing.getOpposite() || side == Direction.DOWN) { // if back or down do catalyst
-            return this.catalystContainer;
-        } else if (side != facing) {
-            return this.catalystContainer;
+        if (side == null) {
+            return this.fullAccess;
         } else {
-            return null;
+            Direction facing = this.getBlockState().getValue(SteelBlastProcessorBlock.HORIZONTAL_FACING);
+            if (side == facing.getOpposite() || side == Direction.UP) { // if back or down do catalyst
+                return this.catalystContainer;
+            } else if (side != facing) {
+                return this.ingredientContainer;
+            } else {
+                return SlotsWrapperContainer.EMPTY;
+            }
         }
     }
 

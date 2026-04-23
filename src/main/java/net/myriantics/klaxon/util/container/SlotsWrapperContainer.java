@@ -2,6 +2,7 @@ package net.myriantics.klaxon.util.container;
 
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -10,10 +11,20 @@ public class SlotsWrapperContainer implements Container {
     private final int[] slots;
     private final InventoryStorage storage;
 
+    public static final SlotsWrapperContainer EMPTY = new SlotsWrapperContainer(new SimpleContainer(0));
+
     public SlotsWrapperContainer(Container container, int... slots) {
         this.container = container;
         this.slots = slots;
         this.storage = InventoryStorage.of(this, null);
+    }
+
+    public static SlotsWrapperContainer fullAccess(Container container) {
+        int[] fullAccess = new int[container.getContainerSize()];
+        for (int i = 0; i < fullAccess.length; i++) {
+            fullAccess[i] = i;
+        }
+        return new SlotsWrapperContainer(container, fullAccess);
     }
 
     public InventoryStorage getStorage() {

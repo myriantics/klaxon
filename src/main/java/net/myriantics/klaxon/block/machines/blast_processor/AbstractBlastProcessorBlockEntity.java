@@ -96,7 +96,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseContai
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ExplosiveCatalystData powerData = recipeInventory.getPowerData();
 
-        if (!recipeInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty()) {
+        if (!this.getIngredientStack().isEmpty()) {
             blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
         }
         if (blastProcessingMatch.isPresent()) {
@@ -119,7 +119,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseContai
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ExplosiveCatalystData powerData = recipeInventory.getPowerData();
 
-        if (!recipeInventory.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX).isEmpty() && !powerData.behavior().is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING)) {
+        if (!this.getIngredientStack().isEmpty() && !powerData.behavior().is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING)) {
             blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
         }
         if (blastProcessingMatch.isPresent()) {

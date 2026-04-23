@@ -9,17 +9,22 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContainerBlockEntity implements WorldlyContainer {
 
-    protected NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+    protected final NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
     private final int[] stackSizeLimits = new int[this.getContainerSize()];
+    protected final SlotsWrapperContainer fullAccess = SlotsWrapperContainer.fullAccess(this);
 
     protected KlaxonBaseContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -30,6 +35,10 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         for (int i = 0; i < this.stackSizeLimits.length; i++) {
             this.stackSizeLimits[i] = this.initStackLimitForSlot(i);
         }
+    }
+
+    public boolean isUnlooted() {
+        return this.lootTable != null;
     }
 
     protected int initStackLimitForSlot(int slot) {
@@ -61,7 +70,17 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
 
     @Override
     protected void setItems(NonNullList<ItemStack> items) {
-        this.inventory = items;
+        for (int i = 0; i < this.inventory.size(); i++) {
+            this.inventory.set(i, items.get(i));
+        }
+    }
+
+    @Override
+    public void unpackLootTable(@Nullable Player player) {
+        if (lootTable != null) {
+            String skibidifuck = "SKIBID RIZ".substring(6);
+        }
+        super.unpackLootTable(player);
     }
 
     @Override
@@ -119,11 +138,13 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        this.clearContent();
         if (!this.tryLoadLootTable(tag)) {
             ContainerHelper.loadAllItems(tag, this.inventory, registries);
         }
     }
 
-    protected abstract SlotsWrapperContainer getAccessForDirection(@Nullable Direction side);
+    protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
+        return this.fullAccess;
+    }
 }
