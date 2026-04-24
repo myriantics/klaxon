@@ -11,14 +11,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon.registry.render.KlaxonModels;
+import net.myriantics.klaxon.registry.render.KlaxonModelTemplates;
 import net.myriantics.klaxon.registry.render.KlaxonTextureKeys;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
+import org.w3c.dom.Text;
 
 import java.util.Map;
 
@@ -99,28 +101,100 @@ public abstract class KlaxonBlockModelSubProvider {
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, modelId).with(VariantProperties.UV_LOCK, false)).with(createUpDefaultRotationStates()));
     }
 
-    protected void registerDeepslateBlastProcessor() {
-        Variant empty_closed_lit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_closed_lit"));
-        Variant empty_closed_unlit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_closed_unlit"));
-        Variant empty_open_lit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_open_lit"));
-        Variant empty_open_unlit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "empty_open_unlit"));
-        Variant fueled_closed_lit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_closed_lit"));
-        Variant fueled_closed_unlit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_closed_unlit"));
-        Variant fueled_open_lit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_open_lit"));
-        Variant fueled_open_unlit = Variant.variant().with(VariantProperties.MODEL, getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "fueled_open_unlit"));
+    protected void registerDeepslateBlastProcessor(Holder<Block> holder) {
+        this.registerDeepslateBlastProcessor(holder.value());
+    }
 
-        generator.delegateItemModel(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value(), getNestedBlockSubModelId(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value(), "empty_open_unlit"));
+    protected void registerDeepslateBlastProcessor(Block block) {
+
+        TextureMapping baseUnlooted = new TextureMapping()
+                .put(TextureSlot.BOTTOM, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_BOTTOM)
+                .put(TextureSlot.SIDE, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_SIDE_UNCERTAIN)
+                .put(TextureSlot.TOP, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_TOP_UNCERTAIN)
+                .put(TextureSlot.BACK, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_BACK)
+                .put(TextureSlot.PARTICLE, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_BOTTOM);
+        TextureMapping baseFull = baseUnlooted
+                .copyAndUpdate(TextureSlot.SIDE, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_SIDE_CLOSED)
+                .put(TextureSlot.TOP, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_TOP_CLOSED);
+        TextureMapping baseIngredientOnly = baseFull.copyAndUpdate(TextureSlot.SIDE, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_SIDE_OPEN);
+        TextureMapping baseCatalystOnly = baseFull.copyAndUpdate(TextureSlot.TOP, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_TOP_OPEN);
+        TextureMapping baseEmpty = baseCatalystOnly.copyAndUpdate(TextureSlot.SIDE, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_SIDE_OPEN);
+
+        ResourceLocation unlootedLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/unlooted_lit",
+                baseUnlooted.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
+                generator.modelOutput
+        );
+        ResourceLocation unlootedUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/unlooted_unlit",
+                baseUnlooted.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
+                generator.modelOutput
+        );
+        ResourceLocation fullLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/full_lit",
+                baseFull.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
+                generator.modelOutput
+        );
+        ResourceLocation fullUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/full_unlit",
+                baseFull.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
+                generator.modelOutput
+        );
+        ResourceLocation ingredientOnlyLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/ingredient_only_lit",
+                baseIngredientOnly.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
+                generator.modelOutput
+        );
+        ResourceLocation ingredientOnlyUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/ingredient_only_unlit",
+                baseIngredientOnly.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
+                generator.modelOutput
+        );
+        ResourceLocation catalystOnlyLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/catalyst_only_lit",
+                baseCatalystOnly.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
+                generator.modelOutput
+        );
+        ResourceLocation catalystOnlyUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/catalyst_only_unlit",
+                baseCatalystOnly.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
+                generator.modelOutput
+        );
+        ResourceLocation emptyLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/empty_lit",
+                baseEmpty.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
+                generator.modelOutput
+        );
+        ResourceLocation emptyUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+                block,
+                "/empty_unlit",
+                baseEmpty.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
+                generator.modelOutput
+        );
+
+        generator.delegateItemModel(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value(), emptyUnlit);
 
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value())
-                .with(PropertyDispatch.properties(KlaxonBlockStateProperties.FUELED, KlaxonBlockStateProperties.HATCH_OPEN, BlockStateProperties.LIT)
-                        .select(false, false, true, empty_closed_lit)
-                        .select(false, false, false, empty_closed_unlit)
-                        .select(false, true, true, empty_open_lit)
-                        .select(false, true, false, empty_open_unlit)
-                        .select(true, false, true, fueled_closed_lit)
-                        .select(true, false, false, fueled_closed_unlit)
-                        .select(true, true, true, fueled_open_lit)
-                        .select(true, true, false, fueled_open_unlit)
+                .with(PropertyDispatch.properties(KlaxonBlockStateProperties.DEEPSLATE_BLAST_PROCESSOR_LOOT_STATE, BlockStateProperties.LIT)
+                        .select(DeepslateBlastProcessorLootState.UNLOOTED, true, modelVariant(unlootedLit))
+                        .select(DeepslateBlastProcessorLootState.UNLOOTED, false, modelVariant(unlootedUnlit))
+                        .select(DeepslateBlastProcessorLootState.FULL, true, modelVariant(fullLit))
+                        .select(DeepslateBlastProcessorLootState.FULL, false, modelVariant(fullUnlit))
+                        .select(DeepslateBlastProcessorLootState.INGREDIENT_ONLY, true, modelVariant(ingredientOnlyLit))
+                        .select(DeepslateBlastProcessorLootState.INGREDIENT_ONLY, false, modelVariant(ingredientOnlyUnlit))
+                        .select(DeepslateBlastProcessorLootState.CATALYST_ONLY, true, modelVariant(catalystOnlyLit))
+                        .select(DeepslateBlastProcessorLootState.CATALYST_ONLY, false, modelVariant(catalystOnlyUnlit))
+                        .select(DeepslateBlastProcessorLootState.EMPTY, true, modelVariant(emptyLit))
+                        .select(DeepslateBlastProcessorLootState.EMPTY, false, modelVariant(emptyUnlit))
                 )
                 .with(BlockModelGenerators.createHorizontalFacingDispatch())
         );
@@ -234,19 +308,19 @@ public abstract class KlaxonBlockModelSubProvider {
         // create both x and z variants
         generator.modelOutput.accept(
                 xAxisPositiveModelIdentifier,
-                () -> KlaxonModels.PIPE_MATRIX_U_BEND_X_POSITIVE.createBaseTemplate(xAxisPositiveModelIdentifier, positiveTextureMap)
+                () -> KlaxonModelTemplates.PIPE_MATRIX_U_BEND_X_POSITIVE.createBaseTemplate(xAxisPositiveModelIdentifier, positiveTextureMap)
         );
         generator.modelOutput.accept(
                 zAxisPositiveModelIdentifier,
-                () -> KlaxonModels.PIPE_MATRIX_U_BEND_Z_POSITIVE.createBaseTemplate(zAxisPositiveModelIdentifier, positiveTextureMap)
+                () -> KlaxonModelTemplates.PIPE_MATRIX_U_BEND_Z_POSITIVE.createBaseTemplate(zAxisPositiveModelIdentifier, positiveTextureMap)
         );
         generator.modelOutput.accept(
                 xAxisNegativeModelIdentifier,
-                () -> KlaxonModels.PIPE_MATRIX_U_BEND_X_NEGATIVE.createBaseTemplate(xAxisNegativeModelIdentifier, negativeTextureMap)
+                () -> KlaxonModelTemplates.PIPE_MATRIX_U_BEND_X_NEGATIVE.createBaseTemplate(xAxisNegativeModelIdentifier, negativeTextureMap)
         );
         generator.modelOutput.accept(
                 zAxisNegativeModelIdentifier,
-                () -> KlaxonModels.PIPE_MATRIX_U_BEND_Z_NEGATIVE.createBaseTemplate(zAxisNegativeModelIdentifier, negativeTextureMap)
+                () -> KlaxonModelTemplates.PIPE_MATRIX_U_BEND_Z_NEGATIVE.createBaseTemplate(zAxisNegativeModelIdentifier, negativeTextureMap)
         );
 
         // make the map - helpful comment i know :)
@@ -382,14 +456,14 @@ public abstract class KlaxonBlockModelSubProvider {
 
         generator.modelOutput.accept(
                 normalModelIdentifier,
-                () -> KlaxonModels.NORMAL_NETHER_REACTOR_CORE.createBaseTemplate(
+                () -> KlaxonModelTemplates.NORMAL_NETHER_REACTOR_CORE.createBaseTemplate(
                         normalModelIdentifier,
                         textureMap
                 )
         );
         generator.modelOutput.accept(
                 rotatedModelIdentifier,
-                () -> KlaxonModels.ROTATED_NETHER_REACTOR_CORE.createBaseTemplate(
+                () -> KlaxonModelTemplates.ROTATED_NETHER_REACTOR_CORE.createBaseTemplate(
                         rotatedModelIdentifier,
                         textureMap
                 )
@@ -413,5 +487,17 @@ public abstract class KlaxonBlockModelSubProvider {
     private static ResourceLocation getNestedBlockSubModelId(Block block, String suffix) {
         ResourceLocation identifier = BuiltInRegistries.BLOCK.getKey(block);
         return identifier.withPath((path) -> "block/" + path + "/" + suffix);
+    }
+
+    private static Variant modelVariant(Holder<Block> holder, String suffix) {
+        return modelVariant(holder.value(), suffix);
+    }
+
+    private static Variant modelVariant(Block block, String suffix) {
+        return modelVariant(getNestedBlockSubModelId(block, suffix));
+    }
+
+    private static Variant modelVariant(ResourceLocation modelId) {
+        return Variant.variant().with(VariantProperties.MODEL, modelId);
     }
 }

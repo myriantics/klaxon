@@ -33,6 +33,17 @@ public abstract class KlaxonTextures {
     public static final ResourceLocation STEEL_CASING = ofBlock("steel_casing");
     public static final ResourceLocation CRUDE_STEEL_CASING = ofBlock("crude_steel_casing");
 
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_BACK = ofBlock("deepslate_blast_processor/back");
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_BOTTOM = copyDir("bottom", DEEPSLATE_BLAST_PROCESSOR_BACK);
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT = copyDir("front_lit", DEEPSLATE_BLAST_PROCESSOR_BACK);
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT = copyDir("front_unlit", DEEPSLATE_BLAST_PROCESSOR_BACK);
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_SIDE_CLOSED = copyDir("side_closed", DEEPSLATE_BLAST_PROCESSOR_BACK);
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_SIDE_UNCERTAIN = copyDir("side_uncertain", DEEPSLATE_BLAST_PROCESSOR_BACK);
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_SIDE_OPEN = copyDir("side_open", DEEPSLATE_BLAST_PROCESSOR_BACK);
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_TOP_CLOSED = copyDir("top_closed", DEEPSLATE_BLAST_PROCESSOR_BACK);
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_TOP_UNCERTAIN = copyDir("top_uncertain", DEEPSLATE_BLAST_PROCESSOR_BACK);
+    public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_TOP_OPEN = copyDir("top_open", DEEPSLATE_BLAST_PROCESSOR_BACK);
+
     // Nether Reaction EMI Background
     public static final ResourceLocation NETHER_REACTION_EMI_BACKGROUND = ofGui("emi/nether_reaction");
 

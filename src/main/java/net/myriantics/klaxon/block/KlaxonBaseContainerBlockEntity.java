@@ -24,6 +24,7 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
 
     protected final NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
     private final int[] stackSizeLimits = new int[this.getContainerSize()];
+    private int minStackSizeLimit = -1;
     protected final SlotsWrapperContainer fullAccess = SlotsWrapperContainer.fullAccess(this);
 
     protected KlaxonBaseContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -34,6 +35,17 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
     private void initStackSizeLimits() {
         for (int i = 0; i < this.stackSizeLimits.length; i++) {
             this.stackSizeLimits[i] = this.initStackLimitForSlot(i);
+            this.tryUpdateMinStackSizeLimit(this.stackSizeLimits[i]);
+        }
+    }
+
+    private void tryUpdateMinStackSizeLimit(int potentiallyLower) {
+        if (potentiallyLower != -1) {
+            if (this.minStackSizeLimit == -1) {
+                this.minStackSizeLimit = potentiallyLower;
+            } else {
+                this.minStackSizeLimit = Math.min(this.minStackSizeLimit, potentiallyLower);
+            }
         }
     }
 
@@ -47,6 +59,11 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
 
     protected int getStackLimitForSlot(int slot) {
         return this.stackSizeLimits[slot];
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return this.minStackSizeLimit == -1 ? super.getMaxStackSize() : this.minStackSizeLimit;
     }
 
     public float computeSlotFill(int slot) {

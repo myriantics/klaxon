@@ -35,8 +35,6 @@ import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.Dee
 
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
 
-    private final ArrayList<DeepslateBlastProcessorScreenHandler> activeScreenHandlers = new ArrayList<>();
-
     protected DeepslateBlastProcessorBlockEntity(BlockEntityType<DeepslateBlastProcessorBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -49,7 +47,6 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
         DeepslateBlastProcessorScreenHandler screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ContainerLevelAccess.create(level, worldPosition));
         screenHandler.slotsChanged(this);
-        activeScreenHandlers.add(screenHandler);
         return screenHandler;
     }
 
@@ -58,15 +55,6 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         return 1;
     }
 
-    public void removeScreenHandler(DeepslateBlastProcessorScreenHandler screenHandler) {
-        activeScreenHandlers.remove(screenHandler);
-    }
-
-    public void updateAllActiveScreenHandlers() {
-        for (DeepslateBlastProcessorScreenHandler screenHandler : activeScreenHandlers) {
-            screenHandler.slotsChanged(this);
-        }
-    }
 
     public int getContainerSize() {
         return 2;
@@ -128,7 +116,6 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
     @Override
     public void setChanged() {
-        updateAllActiveScreenHandlers();
         updateBlockState(null);
         super.setChanged();
     }

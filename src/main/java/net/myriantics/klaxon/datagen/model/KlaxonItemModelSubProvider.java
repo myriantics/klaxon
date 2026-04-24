@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.datagen.model;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureSlot;
@@ -12,7 +11,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.model.item.FancierItemModelBuilder;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonItemModelPredicateIds;
-import net.myriantics.klaxon.registry.render.KlaxonModels;
+import net.myriantics.klaxon.registry.render.KlaxonModelTemplates;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 
 import java.util.Map;
@@ -65,19 +64,19 @@ public abstract class KlaxonItemModelSubProvider {
         TextureSlot claw = TextureSlot.create("3");
         TextureSlot spool = TextureSlot.create("4");
 
-        FancierItemModelBuilder.of(KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_4, modelId, Map.of(
+        FancierItemModelBuilder.of(KlaxonModelTemplates.GRAPPLE_WINCH_3D_SPOOL_4, modelId, Map.of(
                         structure, KlaxonTextures.GRAPPLE_WINCH_3D_STRUCTURE,
                         claw, KlaxonTextures.EMPTY,
                         spool, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL_RETRACTING
                 ))
                 .modelOverride(winchCableLengthPredicate, 7)
-                .add(0f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_6)
-                .add(1f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_5)
-                .add(2f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_4)
-                .add(3f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_3)
-                .add(4f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_2)
-                .add(5f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_1)
-                .add(6f/6f, KlaxonModels.GRAPPLE_WINCH_3D_SPOOL_0)
+                .add(0f/6f, KlaxonModelTemplates.GRAPPLE_WINCH_3D_SPOOL_6)
+                .add(1f/6f, KlaxonModelTemplates.GRAPPLE_WINCH_3D_SPOOL_5)
+                .add(2f/6f, KlaxonModelTemplates.GRAPPLE_WINCH_3D_SPOOL_4)
+                .add(3f/6f, KlaxonModelTemplates.GRAPPLE_WINCH_3D_SPOOL_3)
+                .add(4f/6f, KlaxonModelTemplates.GRAPPLE_WINCH_3D_SPOOL_2)
+                .add(5f/6f, KlaxonModelTemplates.GRAPPLE_WINCH_3D_SPOOL_1)
+                .add(6f/6f, KlaxonModelTemplates.GRAPPLE_WINCH_3D_SPOOL_0)
                 .build()
                 .textureOverride(chargedPredicate, claw.getId(), 2)
                 .add(0, KlaxonTextures.EMPTY)

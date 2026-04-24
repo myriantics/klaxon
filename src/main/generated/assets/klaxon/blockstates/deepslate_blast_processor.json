@@ -1,123 +1,153 @@
 {
   "variants": {
-    "facing=east,fueled=false,hatch_open=false,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_closed_unlit",
+    "facing=east,lit=false,loot_state=catalyst": {
+      "model": "klaxon:block/deepslate_blast_processor/catalyst_only_unlit",
       "y": 90
     },
-    "facing=east,fueled=false,hatch_open=false,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_closed_lit",
+    "facing=east,lit=false,loot_state=empty": {
+      "model": "klaxon:block/deepslate_blast_processor/empty_unlit",
       "y": 90
     },
-    "facing=east,fueled=false,hatch_open=true,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_open_unlit",
+    "facing=east,lit=false,loot_state=full": {
+      "model": "klaxon:block/deepslate_blast_processor/full_unlit",
       "y": 90
     },
-    "facing=east,fueled=false,hatch_open=true,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_open_lit",
+    "facing=east,lit=false,loot_state=ingredient": {
+      "model": "klaxon:block/deepslate_blast_processor/ingredient_only_unlit",
       "y": 90
     },
-    "facing=east,fueled=true,hatch_open=false,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_closed_unlit",
+    "facing=east,lit=false,loot_state=unlooted": {
+      "model": "klaxon:block/deepslate_blast_processor/unlooted_unlit",
       "y": 90
     },
-    "facing=east,fueled=true,hatch_open=false,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_closed_lit",
+    "facing=east,lit=true,loot_state=catalyst": {
+      "model": "klaxon:block/deepslate_blast_processor/catalyst_only_lit",
       "y": 90
     },
-    "facing=east,fueled=true,hatch_open=true,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_open_unlit",
+    "facing=east,lit=true,loot_state=empty": {
+      "model": "klaxon:block/deepslate_blast_processor/empty_lit",
       "y": 90
     },
-    "facing=east,fueled=true,hatch_open=true,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_open_lit",
+    "facing=east,lit=true,loot_state=full": {
+      "model": "klaxon:block/deepslate_blast_processor/full_lit",
       "y": 90
     },
-    "facing=north,fueled=false,hatch_open=false,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_closed_unlit"
+    "facing=east,lit=true,loot_state=ingredient": {
+      "model": "klaxon:block/deepslate_blast_processor/ingredient_only_lit",
+      "y": 90
     },
-    "facing=north,fueled=false,hatch_open=false,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_closed_lit"
+    "facing=east,lit=true,loot_state=unlooted": {
+      "model": "klaxon:block/deepslate_blast_processor/unlooted_lit",
+      "y": 90
     },
-    "facing=north,fueled=false,hatch_open=true,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_open_unlit"
+    "facing=north,lit=false,loot_state=catalyst": {
+      "model": "klaxon:block/deepslate_blast_processor/catalyst_only_unlit"
     },
-    "facing=north,fueled=false,hatch_open=true,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_open_lit"
+    "facing=north,lit=false,loot_state=empty": {
+      "model": "klaxon:block/deepslate_blast_processor/empty_unlit"
     },
-    "facing=north,fueled=true,hatch_open=false,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_closed_unlit"
+    "facing=north,lit=false,loot_state=full": {
+      "model": "klaxon:block/deepslate_blast_processor/full_unlit"
     },
-    "facing=north,fueled=true,hatch_open=false,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_closed_lit"
+    "facing=north,lit=false,loot_state=ingredient": {
+      "model": "klaxon:block/deepslate_blast_processor/ingredient_only_unlit"
     },
-    "facing=north,fueled=true,hatch_open=true,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_open_unlit"
+    "facing=north,lit=false,loot_state=unlooted": {
+      "model": "klaxon:block/deepslate_blast_processor/unlooted_unlit"
     },
-    "facing=north,fueled=true,hatch_open=true,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_open_lit"
+    "facing=north,lit=true,loot_state=catalyst": {
+      "model": "klaxon:block/deepslate_blast_processor/catalyst_only_lit"
     },
-    "facing=south,fueled=false,hatch_open=false,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_closed_unlit",
+    "facing=north,lit=true,loot_state=empty": {
+      "model": "klaxon:block/deepslate_blast_processor/empty_lit"
+    },
+    "facing=north,lit=true,loot_state=full": {
+      "model": "klaxon:block/deepslate_blast_processor/full_lit"
+    },
+    "facing=north,lit=true,loot_state=ingredient": {
+      "model": "klaxon:block/deepslate_blast_processor/ingredient_only_lit"
+    },
+    "facing=north,lit=true,loot_state=unlooted": {
+      "model": "klaxon:block/deepslate_blast_processor/unlooted_lit"
+    },
+    "facing=south,lit=false,loot_state=catalyst": {
+      "model": "klaxon:block/deepslate_blast_processor/catalyst_only_unlit",
       "y": 180
     },
-    "facing=south,fueled=false,hatch_open=false,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_closed_lit",
+    "facing=south,lit=false,loot_state=empty": {
+      "model": "klaxon:block/deepslate_blast_processor/empty_unlit",
       "y": 180
     },
-    "facing=south,fueled=false,hatch_open=true,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_open_unlit",
+    "facing=south,lit=false,loot_state=full": {
+      "model": "klaxon:block/deepslate_blast_processor/full_unlit",
       "y": 180
     },
-    "facing=south,fueled=false,hatch_open=true,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_open_lit",
+    "facing=south,lit=false,loot_state=ingredient": {
+      "model": "klaxon:block/deepslate_blast_processor/ingredient_only_unlit",
       "y": 180
     },
-    "facing=south,fueled=true,hatch_open=false,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_closed_unlit",
+    "facing=south,lit=false,loot_state=unlooted": {
+      "model": "klaxon:block/deepslate_blast_processor/unlooted_unlit",
       "y": 180
     },
-    "facing=south,fueled=true,hatch_open=false,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_closed_lit",
+    "facing=south,lit=true,loot_state=catalyst": {
+      "model": "klaxon:block/deepslate_blast_processor/catalyst_only_lit",
       "y": 180
     },
-    "facing=south,fueled=true,hatch_open=true,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_open_unlit",
+    "facing=south,lit=true,loot_state=empty": {
+      "model": "klaxon:block/deepslate_blast_processor/empty_lit",
       "y": 180
     },
-    "facing=south,fueled=true,hatch_open=true,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_open_lit",
+    "facing=south,lit=true,loot_state=full": {
+      "model": "klaxon:block/deepslate_blast_processor/full_lit",
       "y": 180
     },
-    "facing=west,fueled=false,hatch_open=false,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_closed_unlit",
+    "facing=south,lit=true,loot_state=ingredient": {
+      "model": "klaxon:block/deepslate_blast_processor/ingredient_only_lit",
+      "y": 180
+    },
+    "facing=south,lit=true,loot_state=unlooted": {
+      "model": "klaxon:block/deepslate_blast_processor/unlooted_lit",
+      "y": 180
+    },
+    "facing=west,lit=false,loot_state=catalyst": {
+      "model": "klaxon:block/deepslate_blast_processor/catalyst_only_unlit",
       "y": 270
     },
-    "facing=west,fueled=false,hatch_open=false,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_closed_lit",
+    "facing=west,lit=false,loot_state=empty": {
+      "model": "klaxon:block/deepslate_blast_processor/empty_unlit",
       "y": 270
     },
-    "facing=west,fueled=false,hatch_open=true,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_open_unlit",
+    "facing=west,lit=false,loot_state=full": {
+      "model": "klaxon:block/deepslate_blast_processor/full_unlit",
       "y": 270
     },
-    "facing=west,fueled=false,hatch_open=true,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/empty_open_lit",
+    "facing=west,lit=false,loot_state=ingredient": {
+      "model": "klaxon:block/deepslate_blast_processor/ingredient_only_unlit",
       "y": 270
     },
-    "facing=west,fueled=true,hatch_open=false,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_closed_unlit",
+    "facing=west,lit=false,loot_state=unlooted": {
+      "model": "klaxon:block/deepslate_blast_processor/unlooted_unlit",
       "y": 270
     },
-    "facing=west,fueled=true,hatch_open=false,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_closed_lit",
+    "facing=west,lit=true,loot_state=catalyst": {
+      "model": "klaxon:block/deepslate_blast_processor/catalyst_only_lit",
       "y": 270
     },
-    "facing=west,fueled=true,hatch_open=true,lit=false": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_open_unlit",
+    "facing=west,lit=true,loot_state=empty": {
+      "model": "klaxon:block/deepslate_blast_processor/empty_lit",
       "y": 270
     },
-    "facing=west,fueled=true,hatch_open=true,lit=true": {
-      "model": "klaxon:block/deepslate_blast_processor/fueled_open_lit",
+    "facing=west,lit=true,loot_state=full": {
+      "model": "klaxon:block/deepslate_blast_processor/full_lit",
+      "y": 270
+    },
+    "facing=west,lit=true,loot_state=ingredient": {
+      "model": "klaxon:block/deepslate_blast_processor/ingredient_only_lit",
+      "y": 270
+    },
+    "facing=west,lit=true,loot_state=unlooted": {
+      "model": "klaxon:block/deepslate_blast_processor/unlooted_lit",
       "y": 270
     }
   }

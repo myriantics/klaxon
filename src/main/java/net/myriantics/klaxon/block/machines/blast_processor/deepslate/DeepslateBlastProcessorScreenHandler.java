@@ -230,12 +230,4 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
         this.explosionPowerMax = explosionPowerMax;
         this.producesFire = producesFire;
     }
-
-    @Override
-    public void removed(Player player) {
-        super.removed(player);
-        if (ingredientInventory instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-            blastProcessor.removeScreenHandler(this);
-        }
-    }
 }

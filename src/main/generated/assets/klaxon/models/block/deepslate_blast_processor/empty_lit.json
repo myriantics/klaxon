@@ -1,0 +1,11 @@
+{
+  "parent": "klaxon:block/template/deepslate_blast_processor",
+  "textures": {
+    "back": "klaxon:block/deepslate_blast_processor/back",
+    "bottom": "klaxon:block/deepslate_blast_processor/bottom",
+    "front": "klaxon:block/deepslate_blast_processor/front_lit",
+    "particle": "klaxon:block/deepslate_blast_processor/bottom",
+    "side": "klaxon:block/deepslate_blast_processor/side_open",
+    "top": "klaxon:block/deepslate_blast_processor/top_open"
+  }
+}

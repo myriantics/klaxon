@@ -173,11 +173,6 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
             }
 
             updateBlockState(world, pos, appendedState);
-
-            // update blast processor behaviors that may change on block update
-            if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                blastProcessor.updateAllActiveScreenHandlers();
-            }
         }
     }
 

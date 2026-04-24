@@ -8,7 +8,7 @@ import net.myriantics.klaxon.mixin.minecraft.datagen.ModelTemplateAccessor;
 
 import java.util.Optional;
 
-public abstract class KlaxonModels {
+public abstract class KlaxonModelTemplates {
 
     public static final ModelTemplate GRAPPLE_WINCH_3D_SPOOL_6 = item("grapple_winch_3d/spool_6",
             TextureSlot.create("structure"),
@@ -45,6 +45,15 @@ public abstract class KlaxonModels {
             TextureSlot.PARTICLE
     );
     public static final ModelTemplate ROTATED_NETHER_REACTOR_CORE = copyDir("rotated", NORMAL_NETHER_REACTOR_CORE);
+    public static final ModelTemplate DEEPSLATE_BLAST_PROCESSOR = block(
+            "template/deepslate_blast_processor",
+            TextureSlot.FRONT,
+            TextureSlot.SIDE,
+            TextureSlot.TOP,
+            TextureSlot.BOTTOM,
+            TextureSlot.BACK,
+            TextureSlot.PARTICLE
+    );
 
     public static Optional<ResourceLocation> id(ModelTemplate model) {
         return ((ModelTemplateAccessor) model).klaxon$getParent();
