@@ -21,6 +21,8 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implements MufflableBlock {
 
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -51,6 +53,11 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         builder.add(HORIZONTAL_FACING, MUFFLED);
     }
 
+    @Override
+    protected boolean isRecievingPower(Level level, BlockPos pos) {
+        return level.hasNeighborSignal(pos);
+    }
+
     public void handleExhaust(Level level, BlockPos pos) {
 
     }
@@ -67,11 +74,8 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         @Nullable BlockState original = super.getStateForPlacement(context);
-        if (original == null) {
-            return this.defaultBlockState().setValue(HORIZONTAL_FACING, context.getHorizontalDirection());
-        } else {
-            return original.setValue(HORIZONTAL_FACING, context.getHorizontalDirection());
-        }
+
+        return Objects.requireNonNullElseGet(original, this::defaultBlockState).setValue(HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override

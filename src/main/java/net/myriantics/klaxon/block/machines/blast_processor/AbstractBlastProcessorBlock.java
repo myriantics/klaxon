@@ -59,4 +59,24 @@ public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
             return 0;
         }
     }
+
+    protected abstract boolean isRecievingPower(Level level, BlockPos pos);
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+
+        if (!level.isClientSide()) {
+            boolean powered = this.isRecievingPower(level, pos);
+            boolean triggered = state.getValue(TRIGGERED);
+
+            if (powered != triggered) {
+                if (powered && level.getBlockEntity(pos) instanceof AbstractBlastProcessorBlockEntity blastProcessor) {
+                    blastProcessor.onRedstoneImpulse();
+                }
+
+                level.setBlock(pos, state.cycle(TRIGGERED), (Block.UPDATE_ALL_IMMEDIATE));
+            }
+        }
+    }
 }

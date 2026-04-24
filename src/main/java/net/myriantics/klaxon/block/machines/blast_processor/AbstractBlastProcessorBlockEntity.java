@@ -56,6 +56,10 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         return this.computeSlotFill(CATALYST_INDEX);
     }
 
+    public void onRedstoneImpulse() {
+
+    }
+
     protected void ejectItems(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData) {
         if (world == null || blastProcessor.isEmpty()) {
             return;

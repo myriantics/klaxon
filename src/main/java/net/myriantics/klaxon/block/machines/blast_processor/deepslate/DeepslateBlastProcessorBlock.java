@@ -118,7 +118,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
                 appendedState = appendedState.setValue(LOOT_STATE, DeepslateBlastProcessorLootState.update(blastProcessor));
 
                 if (level.getBlockState(pos) != appendedState) {
-                    level.setBlock(pos, appendedState, Block.UPDATE_CLIENTS);
+                    level.setBlock(pos, appendedState, Block.UPDATE_ALL_IMMEDIATE);
                 }
             }
         }
@@ -139,31 +139,25 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!world.isClientSide) {
-            // deepslate blast processor has quasiconnectivity because its really funny - imagine if someone reads this because theyre digging through source to figure out why their device isnt working lol
-            boolean isRecievingPower = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.above());
-            boolean frontObstructed = isFrontObstructed(world, pos);
-            boolean isLit = state.getValue(LIT);
-            boolean isPowered = state.getValue(TRIGGERED);
-            BlockState appendedState = state;
+    protected boolean isRecievingPower(Level level, BlockPos pos) {
+        // deepslate blast processor has quasiconnectivity because its really funny - imagine if someone reads this because theyre digging through source to figure out why their device isnt working lol
+        return level.hasNeighborSignal(pos) || level.hasNeighborSignal(pos.above());
+    }
 
-            if (isRecievingPower != isPowered) {
-                // only pulse blast processor internals on high signal
-                if (isRecievingPower) {
-                    if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                        blastProcessor.onRedstoneImpulse();
-                    }
-                }
-                appendedState = appendedState.cycle(TRIGGERED);
-            }
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        super.neighborChanged(state, level, pos, sourceBlock, sourcePos, notify);
+        if (!level.isClientSide) {
+            boolean frontObstructed = isFrontObstructed(level, pos);
+            boolean isLit = state.getValue(LIT);
+            BlockState appendedState = level.getBlockState(pos);
 
             if (isLit != appendedState.getValue(TRIGGERED)) {
                 // don't light up block if front is obstructed
                 if (!isLit && !frontObstructed) {
                     appendedState = appendedState.setValue(LIT, true);
                 } else {
-                    world.scheduleTick(pos, this, 4);
+                    level.scheduleTick(pos, this, 4);
                 }
             }
 
@@ -172,7 +166,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
                 appendedState = appendedState.setValue(LIT, false);
             }
 
-            updateBlockState(world, pos, appendedState);
+            updateBlockState(level, pos, appendedState);
         }
     }
 
