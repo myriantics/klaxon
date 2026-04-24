@@ -230,4 +230,18 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
         this.explosionPowerMax = explosionPowerMax;
         this.producesFire = producesFire;
     }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+    }
+
+    @Override
+    public void broadcastChanges() {
+        if (this.ingredientInventory instanceof DeepslateBlastProcessorBlockEntity blastProcessor && this.player instanceof ServerPlayer serverPlayer && blastProcessor.isUnlooted()) {
+            serverPlayer.closeContainer();
+        } else {
+            super.broadcastChanges();
+        }
+    }
 }
