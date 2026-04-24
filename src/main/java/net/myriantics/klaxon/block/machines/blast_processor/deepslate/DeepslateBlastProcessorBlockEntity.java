@@ -172,17 +172,13 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
     @Override
     protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
-        if (side == null) {
-            return this.fullAccess;
+        Direction facing = this.getBlockState().getValue(HORIZONTAL_FACING);
+        if (side == BlockDirectionHelper.getLeft(facing) || side == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
+            return this.catalystContainer;
+        } else if (side != facing) { // no front access - ingredient storage is default otherwise
+            return this.ingredientContainer;
         } else {
-            Direction facing = this.getBlockState().getValue(HORIZONTAL_FACING);
-            if (side == BlockDirectionHelper.getLeft(facing) || side == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
-                return this.catalystContainer;
-            } else if (side != facing) { // no front access - ingredient storage is default otherwise
-                return this.ingredientContainer;
-            } else {
-                return SlotsWrapperContainer.EMPTY;
-            }
+            return SlotsWrapperContainer.EMPTY;
         }
     };
 }

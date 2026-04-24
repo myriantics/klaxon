@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.KlaxonBaseContainerBlockEntity;
+import net.myriantics.klaxon.block.KlaxonBaseSidedContainerBlockEntity;
 
 public abstract class KlaxonItemStorages {
 
@@ -17,11 +18,11 @@ public abstract class KlaxonItemStorages {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Item Storages!");
     }
 
-    private static <T extends KlaxonBaseContainerBlockEntity> void register(Holder<BlockEntityType<T>> blockEntityTypeHolder) {
+    private static <T extends KlaxonBaseSidedContainerBlockEntity> void register(Holder<BlockEntityType<T>> blockEntityTypeHolder) {
         register(blockEntityTypeHolder.value());
     }
 
-    private static <T extends KlaxonBaseContainerBlockEntity> void register(BlockEntityType<T> blockEntityType) {
+    private static <T extends KlaxonBaseSidedContainerBlockEntity> void register(BlockEntityType<T> blockEntityType) {
         ItemStorage.SIDED.registerForBlockEntity(KlaxonBaseContainerBlockEntity::getStorageForSide, blockEntityType);
     }
 }

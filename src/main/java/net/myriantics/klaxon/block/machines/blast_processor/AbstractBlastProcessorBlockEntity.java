@@ -2,10 +2,8 @@ package net.myriantics.klaxon.block.machines.blast_processor;
 
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -13,11 +11,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.block.KlaxonBaseContainerBlockEntity;
+import net.myriantics.klaxon.block.KlaxonBaseSidedContainerBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
@@ -34,7 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseContainerBlockEntity {
+public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedContainerBlockEntity {
 
     protected static final int INGREDIENT_INDEX = 0;
     protected static final int CATALYST_INDEX = 1;

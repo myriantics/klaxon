@@ -43,17 +43,13 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     @Override
     protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
-        if (side == null) {
-            return this.fullAccess;
+        Direction facing = this.getBlockState().getValue(SteelBlastProcessorBlock.HORIZONTAL_FACING);
+        if (side == facing.getOpposite() || side == Direction.UP) { // if back or down do catalyst
+            return this.catalystContainer;
+        } else if (side != facing) {
+            return this.ingredientContainer;
         } else {
-            Direction facing = this.getBlockState().getValue(SteelBlastProcessorBlock.HORIZONTAL_FACING);
-            if (side == facing.getOpposite() || side == Direction.UP) { // if back or down do catalyst
-                return this.catalystContainer;
-            } else if (side != facing) {
-                return this.ingredientContainer;
-            } else {
-                return SlotsWrapperContainer.EMPTY;
-            }
+            return SlotsWrapperContainer.EMPTY;
         }
     }
 

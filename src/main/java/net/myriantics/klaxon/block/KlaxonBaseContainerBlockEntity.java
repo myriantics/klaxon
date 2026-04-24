@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block;
 
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
@@ -7,25 +8,24 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
-public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContainerBlockEntity implements WorldlyContainer {
+public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContainerBlockEntity {
 
     protected final NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
     private final int[] stackSizeLimits = new int[this.getContainerSize()];
     private int minStackSizeLimit = -1;
-    protected final SlotsWrapperContainer fullAccess = SlotsWrapperContainer.fullAccess(this);
+    protected final Storage<ItemVariant> fullAccess = InventoryStorage.of(this, null);
 
     protected KlaxonBaseContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -49,10 +49,6 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         }
     }
 
-    public boolean isUnlooted() {
-        return this.lootTable != null;
-    }
-
     protected int initStackLimitForSlot(int slot) {
         return -1;
     }
@@ -64,6 +60,18 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
     @Override
     public int getMaxStackSize() {
         return this.minStackSizeLimit == -1 ? super.getMaxStackSize() : this.minStackSizeLimit;
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return this.inventory;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        for (int i = 0; i < this.inventory.size(); i++) {
+            this.inventory.set(i, items.get(i));
+        }
     }
 
     public float computeSlotFill(int slot) {
@@ -80,60 +88,28 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         }
     }
 
-    @Override
-    protected NonNullList<ItemStack> getItems() {
-        return this.inventory;
+    public boolean isUnlooted() {
+        return this.lootTable != null;
     }
 
     @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        for (int i = 0; i < this.inventory.size(); i++) {
-            this.inventory.set(i, items.get(i));
-        }
+    public boolean canOpen(Player player) {
+        return this.canUnlock(player);
     }
 
-    @Override
-    public int[] getSlotsForFace(Direction side) {
-        SlotsWrapperContainer container = this.getAccessForDirection(side);
-        if (container != null) {
-            return container.getSlots();
+    protected boolean canUnlock(Player player) {
+        // had to make a whole access widener for the ability to configure the sound
+        if (!player.isSpectator() && !this.lockKey.unlocksWith(player.getMainHandItem())) {
+            player.displayClientMessage(Component.translatable("container.isLocked", this.getDisplayName()), true);
+            player.playNotifySound(this.getLockedSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+            return false;
         } else {
-            return new int[0];
+            return true;
         }
     }
 
-    @Override
-    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
-        for (int availableSlot : this.getSlotsForFace(side)) {
-            if (availableSlot == slot) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean canPlaceItem(int slot, ItemStack stack) {
-        return super.canPlaceItem(slot, stack) && stack.getCount() <= this.getStackLimitForSlot(slot);
-    }
-
-    @Override
-    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction side) {
-        for (int availableSlot : this.getSlotsForFace(side)) {
-            if (availableSlot == slot && this.canPlaceItem(slot, stack)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Storage<ItemVariant> getStorageForSide(@Nullable Direction side) {
-        SlotsWrapperContainer container = this.getAccessForDirection(side);
-        if (container != null) {
-            return container.getStorage();
-        } else {
-            return null;
-        }
+    protected SoundEvent getLockedSound() {
+        return SoundEvents.CHEST_LOCKED;
     }
 
     @Override
@@ -153,7 +129,7 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         }
     }
 
-    protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
+    public Storage<ItemVariant> getStorageForSide(@Nullable Direction direction) {
         return this.fullAccess;
     }
 }
