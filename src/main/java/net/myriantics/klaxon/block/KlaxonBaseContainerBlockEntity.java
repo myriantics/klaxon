@@ -54,7 +54,7 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
     }
 
     protected int getStackLimitForSlot(int slot) {
-        return this.stackSizeLimits[slot];
+        return this.stackSizeLimits[slot] == -1 ? super.getMaxStackSize() : this.stackSizeLimits[slot];
     }
 
     @Override
@@ -72,6 +72,12 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         for (int i = 0; i < this.inventory.size(); i++) {
             this.inventory.set(i, items.get(i));
         }
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        super.setItem(slot, stack);
+        stack.limitSize(this.getStackLimitForSlot(slot));
     }
 
     public float computeSlotFill(int slot) {
@@ -106,6 +112,11 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         } else {
             return true;
         }
+    }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        return super.canPlaceItem(slot, stack) && this.getItem(slot).getCount() < this.getStackLimitForSlot(slot);
     }
 
     protected SoundEvent getLockedSound() {

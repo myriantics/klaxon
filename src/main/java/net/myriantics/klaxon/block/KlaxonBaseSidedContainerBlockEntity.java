@@ -43,11 +43,6 @@ public abstract class KlaxonBaseSidedContainerBlockEntity extends KlaxonBaseCont
     }
 
     @Override
-    public boolean canPlaceItem(int slot, ItemStack stack) {
-        return super.canPlaceItem(slot, stack) && stack.getCount() <= this.getStackLimitForSlot(slot);
-    }
-
-    @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction side) {
         for (int availableSlot : this.getSlotsForFace(side)) {
             if (availableSlot == slot && this.canPlaceItem(slot, stack)) {
