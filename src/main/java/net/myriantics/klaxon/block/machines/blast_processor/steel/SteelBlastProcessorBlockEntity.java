@@ -40,6 +40,14 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
+    public void setChanged() {
+        super.setChanged();
+        if (this.level != null && this.getBlockState().getBlock() instanceof SteelBlastProcessorBlock steelBlastProcessorBlock) {
+            steelBlastProcessorBlock.updateState(this.level, this.worldPosition, this);
+        }
+    }
+
+    @Override
     protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
         Direction facing = this.getBlockState().getValue(SteelBlastProcessorBlock.HORIZONTAL_FACING);
         if (side == facing.getOpposite() || side == Direction.DOWN) { // if back or down do catalyst

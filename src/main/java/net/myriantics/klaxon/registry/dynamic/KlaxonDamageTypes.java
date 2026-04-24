@@ -39,6 +39,10 @@ public abstract class KlaxonDamageTypes {
     public static final ResourceKey<DamageType> HALLNOX_POD_DOMED =
             createDamageType("hallnox_pod_domed");
 
+    // machine
+    public static final ResourceKey<DamageType> FORCEFUL_EXHAUST =
+            createDamageType("forceful_exhaust");
+
     // to be added - will be used with Coring Drill
     public static final ResourceKey<DamageType> MINCING =
             createDamageType("mincing");

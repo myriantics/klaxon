@@ -81,6 +81,10 @@ public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<D
                 KlaxonDamageTypes.LOBOTOMY,
                 1.8f
         );
+        addEnvironmentalDamageType(
+                KlaxonDamageTypes.FORCEFUL_EXHAUST,
+                0.3f
+        );
     }
 
     private void addDamageType(ResourceKey<DamageType> key, float exhaustion) {

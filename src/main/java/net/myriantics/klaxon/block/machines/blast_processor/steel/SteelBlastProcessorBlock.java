@@ -3,7 +3,9 @@ package net.myriantics.klaxon.block.machines.blast_processor.steel;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -49,6 +51,29 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         builder.add(HORIZONTAL_FACING, MUFFLED);
     }
 
+    public void handleExhaust(Level level, BlockPos pos) {
+
+    }
+
+    public void updateState(Level level, BlockPos pos, SteelBlastProcessorBlockEntity blastProcessor) {
+        BlockState original = level.getBlockState(pos);
+        BlockState newState = original.setValue(MUFFLED, !blastProcessor.getMuffler().isEmpty());
+
+        if (!original.equals(newState)) {
+            level.setBlockAndUpdate(pos, newState);
+        }
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        @Nullable BlockState original = super.getStateForPlacement(context);
+        if (original == null) {
+            return this.defaultBlockState().setValue(HORIZONTAL_FACING, context.getHorizontalDirection());
+        } else {
+            return original.setValue(HORIZONTAL_FACING, context.getHorizontalDirection());
+        }
+    }
+
     @Override
     public boolean hasMuffler(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
@@ -69,6 +94,5 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         if (level.getBlockEntity(pos) instanceof SteelBlastProcessorBlockEntity blastProcessor) {
             blastProcessor.setMuffler(stack);
         }
-        level.setBlockAndUpdate(pos, level.getBlockState(pos).setValue(MUFFLED, !stack.isEmpty()));
     }
 }

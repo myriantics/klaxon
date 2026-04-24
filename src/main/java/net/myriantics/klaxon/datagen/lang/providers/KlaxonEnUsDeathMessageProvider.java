@@ -93,5 +93,10 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
                 "%1$s was minced by a Coring Drill",
                 null
         );
+        addDeathMessage(
+                KlaxonDamageTypes.FORCEFUL_EXHAUST,
+                "%1$s didn't read the manual",
+                null
+        );
     }
 }

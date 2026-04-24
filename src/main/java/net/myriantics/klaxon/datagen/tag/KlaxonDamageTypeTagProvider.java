@@ -52,7 +52,11 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
         getOrCreateTagBuilder(DamageTypeTags.ALWAYS_KILLS_ARMOR_STANDS)
                 .addOptional(KlaxonDamageTypes.BLUDGEONING)
                 .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING)
-                .addOptional(KlaxonDamageTypes.GRAPPLING);
+                .addOptional(KlaxonDamageTypes.GRAPPLING)
+                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
+
+        getOrCreateTagBuilder(DamageTypeTags.IS_FIRE)
+                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
 
         getOrCreateTagBuilder(DamageTypeTags.DAMAGES_HELMET)
                 .addOptional(KlaxonDamageTypes.HALLNOX_POD_DOMED);
