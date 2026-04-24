@@ -70,8 +70,8 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     public void redstoneTrigger() {
         if (level != null && !level.isClientSide) {
 
-            // default to true so that it shows the particles when dispensing nothing
-            boolean shouldRunDispenserEffects = true;
+            // default to false so that it shows no particles when dispensing nothing
+            boolean shouldRunDispenserEffects = false;
 
             if (!this.isEmpty()) {
                 BlockPos pos = this.getBlockPos();
