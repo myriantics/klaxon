@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.block.machines.blast_processor;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
@@ -13,17 +12,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
-import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
-    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 
     protected AbstractBlastProcessorBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(defaultBlockState()
-                .setValue(POWERED, false)
+                .setValue(TRIGGERED, false)
         );
     }
 
@@ -47,7 +43,7 @@ public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(POWERED);
+        builder.add(TRIGGERED);
     }
 
     @Override

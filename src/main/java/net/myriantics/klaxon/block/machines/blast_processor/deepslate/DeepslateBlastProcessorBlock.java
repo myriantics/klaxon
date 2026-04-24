@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final BooleanProperty POWERED = AbstractBlastProcessorBlock.POWERED;
+    public static final BooleanProperty TRIGGERED = AbstractBlastProcessorBlock.TRIGGERED;
     public static final EnumProperty<DeepslateBlastProcessorLootState> LOOT_STATE = KlaxonBlockStateProperties.DEEPSLATE_BLAST_PROCESSOR_LOOT_STATE;
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -145,7 +145,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
             boolean isRecievingPower = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.above());
             boolean frontObstructed = isFrontObstructed(world, pos);
             boolean isLit = state.getValue(LIT);
-            boolean isPowered = state.getValue(POWERED);
+            boolean isPowered = state.getValue(TRIGGERED);
             BlockState appendedState = state;
 
             if (isRecievingPower != isPowered) {
@@ -155,10 +155,10 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
                         blastProcessor.onRedstoneImpulse();
                     }
                 }
-                appendedState = appendedState.cycle(POWERED);
+                appendedState = appendedState.cycle(TRIGGERED);
             }
 
-            if (isLit != appendedState.getValue(POWERED)) {
+            if (isLit != appendedState.getValue(TRIGGERED)) {
                 // don't light up block if front is obstructed
                 if (!isLit && !frontObstructed) {
                     appendedState = appendedState.setValue(LIT, true);

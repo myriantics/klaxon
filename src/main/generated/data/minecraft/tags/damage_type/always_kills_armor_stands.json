@@ -11,6 +11,10 @@
     {
       "id": "klaxon:grappling",
       "required": false
+    },
+    {
+      "id": "klaxon:forceful_exhaust",
+      "required": false
     }
   ]
 }
