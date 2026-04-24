@@ -163,6 +163,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.NETHER_REACTOR_CORE.value(),
                         KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE.value()
                 )
+                .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(
                         Blocks.COPPER_BULB,
@@ -202,6 +203,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.STEEL_TRAPDOOR.value()
                 )
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
+                .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(
                         KlaxonBlocks.CRUDE_STEEL_BLOCK.value(),
                         KlaxonBlocks.CRUDE_STEEL_CASING.value(),
@@ -271,6 +273,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.OBSERVER);
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.value().getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.value().getAllowlistTag())
+                .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(Blocks.BLAST_FURNACE)
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR);
@@ -298,8 +301,6 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     private void buildBehaviorTags() {
         getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS)
                 .add(KlaxonBlocks.STEEL_BLOCK.value());
-        getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
-                .add(KlaxonBlocks.GOLD_PLATING_BLOCK.value());
         getOrCreateTagBuilder(KlaxonBlockTags.COLD_BLOCKS)
                 .forceAddTag(BlockTags.ICE)
                 .forceAddTag(BlockTags.SNOW)
@@ -893,6 +894,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_DOOR.value())
                 .add(KlaxonBlocks.STEEL_TRAPDOOR.value())
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
+                .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE.value());
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
                 .forceAddTag(KlaxonBlockTags.COPPER_PIPE_MATRIX_SEGMENTS)

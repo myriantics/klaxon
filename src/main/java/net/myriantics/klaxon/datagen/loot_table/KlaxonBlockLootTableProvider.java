@@ -20,6 +20,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         // machines
+        dropSelf(KlaxonBlocks.STEEL_BLAST_PROCESSOR);
         dropSelf(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
         dropSelf(KlaxonBlocks.NETHER_REACTOR_CORE);
         dropSelf(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);

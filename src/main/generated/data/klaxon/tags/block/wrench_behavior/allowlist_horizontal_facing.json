@@ -1,5 +1,6 @@
 {
   "values": [
+    "klaxon:steel_blast_processor",
     "minecraft:blast_furnace",
     "minecraft:repeater",
     "minecraft:comparator"

@@ -42,6 +42,7 @@ public abstract class KlaxonCreativeModeTabs {
             .title(Component.translatable("itemGroup.klaxon.machines"))
             .displayItems(((displayContext, entries) -> {
                 entries.accept(KlaxonItems.DEEPSLATE_BLAST_PROCESSOR.value());
+                entries.accept(KlaxonItems.STEEL_BLAST_PROCESSOR.value());
                 entries.accept(KlaxonItems.NETHER_REACTOR_CORE.value());
                 entries.accept(KlaxonItems.CRUDE_NETHER_REACTOR_CORE.value());
                 entries.accept(KlaxonItems.STEEL_CASING.value());
