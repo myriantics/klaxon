@@ -1,7 +1,5 @@
 package net.myriantics.klaxon.block.machines.blast_processor.steel;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,12 +8,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
-import net.myriantics.klaxon.mechanics.muffling.Mufflable;
+import net.myriantics.klaxon.mechanics.muffling.MufflableBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 import org.jetbrains.annotations.Nullable;
 
-public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements Mufflable {
+public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity {
 
     private static final int MUFFLER_INDEX = 2;
 
@@ -58,18 +56,11 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
         return 3;
     }
 
-    @Override
-    public boolean hasMuffler() {
-        return !this.getMuffler().isEmpty();
+    public void setMuffler(ItemStack newMufflerStack) {
+        this.setItem(MUFFLER_INDEX, newMufflerStack);
     }
 
-    @Override
     public ItemStack getMuffler() {
         return this.getItem(MUFFLER_INDEX);
-    }
-
-    @Override
-    public void setMuffler(ItemStack stack) {
-        this.setItem(MUFFLER_INDEX, stack);
     }
 }

@@ -34,8 +34,6 @@ public abstract class KlaxonSoundEvents {
     // muffler
     public static final SoundEvent MUFFLER_APPLY_SUCCESS = register("mechanics.muffler.apply.success", SoundEvents.SHROOMLIGHT_PLACE);
     public static final SoundEvent MUFFLER_REMOVE_SUCCESS = register("mechainics.muffler.remove.success", SoundEvents.SHEEP_SHEAR);
-    public static final SoundEvent MUFFLER_APPLY_FAIL = register("mechanics.muffler.apply.fail", SoundEvents.DECORATED_POT_INSERT_FAIL);
-    public static final SoundEvent MUFFLER_REMOVE_FAIL = register("mechanics.muffler.remove.fail", SoundEvents.ITEM_BREAK);
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");

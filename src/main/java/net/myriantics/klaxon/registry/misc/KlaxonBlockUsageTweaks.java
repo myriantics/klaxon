@@ -1,8 +1,6 @@
 package net.myriantics.klaxon.registry.misc;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.mechanics.muffling.Mufflable;
+import net.myriantics.klaxon.mechanics.muffling.MufflableBlock;
 import net.myriantics.klaxon.mechanics.muffling.MufflerActionType;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
@@ -35,29 +33,36 @@ public abstract class KlaxonBlockUsageTweaks {
                 return Optional.empty();
             }
 
-            if (!level.isClientSide() && level.getBlockEntity(pos) instanceof Mufflable mufflable) {
+            if (state.getBlock() instanceof MufflableBlock mufflableBlock) {
                 switch (type) {
                     case MUFFLER_APPLY -> {
-                        if (!mufflable.hasMuffler()) {
-                            mufflable.setMuffler(stack.split(1));
-                            type.playSuccess(level, pos, state, player);
+                        if (!mufflableBlock.hasMuffler(level, pos)) {
+                            mufflableBlock.setMuffler(level, pos, player.hasInfiniteMaterials() ? stack.copyWithCount(1) : stack.split(1));
+                            type.playSuccessSound(level, pos, state, player);
+                            return Optional.of(ItemInteractionResult.SUCCESS);
                         } else {
-                            type.playFail(level, pos, state);
+                            return Optional.empty();
                         }
                     }
                     case MUFFLER_REMOVE -> {
-                        ItemStack oldMuffler = mufflable.removeMuffler();
-                        if (!oldMuffler.isEmpty()) {
-                            stack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(hand));
-                            type.playSuccess(level, pos, state, player);
+                        if (mufflableBlock.hasMuffler(level, pos)) {
+                            if (!level.isClientSide()) {
+                                ItemStack oldMuffler = mufflableBlock.removeMuffler(level, pos);
+                                if (!player.hasInfiniteMaterials()) {
+                                    stack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(hand));
+                                    Block.popResource(level, pos, oldMuffler.copy()); // no cloggage in creative mode
+                                }
+                            }
+                            type.playSuccessSound(level, pos, state, player);
+                            return Optional.of(ItemInteractionResult.SUCCESS);
                         } else {
-                            type.playFail(level, pos, state);
+                            return Optional.empty();
                         }
                     }
                 }
             }
 
-            return Optional.of(ItemInteractionResult.SUCCESS);
+            return Optional.of(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
         });
     }
 

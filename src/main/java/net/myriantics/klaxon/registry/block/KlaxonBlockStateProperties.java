@@ -10,10 +10,8 @@ public abstract class KlaxonBlockStateProperties {
     // Used to display internal slot status of the Deepslate Blast Processor
     public static final EnumProperty<DeepslateBlastProcessorLootState> DEEPSLATE_BLAST_PROCESSOR_LOOT_STATE = EnumProperty.create("loot_state", DeepslateBlastProcessorLootState.class);
 
-    // Tracks whether the fuel slot of the Deepslate Blast Processor contains an item.
-    public static final BooleanProperty FUELED = BooleanProperty.create("fueled");
-    // Tracks whether the ingredient hatch of the Deepslate Blast Processor DOES NOT contain an item. Convoluted, I know.
-    public static final BooleanProperty HATCH_OPEN = BooleanProperty.create("hatch_open");
+    // Used to sync basic muffling status between client and server
+    public static final BooleanProperty MUFFLED = BooleanProperty.create("muffled");
 
     // Used by the Hallnox Pod to disable growth when interacted with using shears.
     public static final BooleanProperty GROWTH_DISABLED = BooleanProperty.create("growth_disabled");
