@@ -67,7 +67,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         return super.canTakeItemThroughFace(slot, stack, side) && !this.level.hasNeighborSignal(this.worldPosition);
     }
 
-    public void onRedstoneImpulse() {
+    public void redstoneTrigger() {
         if (level != null && !level.isClientSide) {
 
             // default to true so that it shows the particles when dispensing nothing

@@ -58,6 +58,11 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         return level.hasNeighborSignal(pos);
     }
 
+    @Override
+    protected int getTriggerDuration() {
+        return 4;
+    }
+
     public void handleExhaust(Level level, BlockPos pos) {
 
     }

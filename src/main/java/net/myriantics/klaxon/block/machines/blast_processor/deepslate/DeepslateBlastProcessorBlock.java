@@ -55,13 +55,6 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
         return simpleCodec(DeepslateBlastProcessorBlock::new);
     }
 
-    @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (state.getBlock() instanceof DeepslateBlastProcessorBlock && state.getValue(LIT) && !world.hasNeighborSignal(pos)) {
-            world.setBlock(pos, state.cycle(LIT), Block.UPDATE_CLIENTS);
-        }
-    }
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -145,28 +138,30 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     }
 
     @Override
+    protected int getTriggerDuration() {
+        return 4;
+    }
+
+    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         super.neighborChanged(state, level, pos, sourceBlock, sourcePos, notify);
         if (!level.isClientSide) {
+            BlockState original = level.getBlockState(pos);
+            BlockState appendedState = original;
+            boolean triggered = appendedState.getValue(TRIGGERED);
             boolean frontObstructed = isFrontObstructed(level, pos);
             boolean isLit = state.getValue(LIT);
-            BlockState appendedState = level.getBlockState(pos);
 
-            if (isLit != appendedState.getValue(TRIGGERED)) {
-                // don't light up block if front is obstructed
-                if (!isLit && !frontObstructed) {
-                    appendedState = appendedState.setValue(LIT, true);
-                } else {
-                    level.scheduleTick(pos, this, 4);
-                }
-            }
-
-            // if front is obstructed but it's lit, correct itself
-            if ((appendedState.getValue(LIT) || isLit) && frontObstructed) {
+            if (frontObstructed) {
                 appendedState = appendedState.setValue(LIT, false);
+            } else if (isLit != triggered) {
+                appendedState = appendedState.cycle(LIT);
             }
 
-            updateBlockState(level, pos, appendedState);
+            // do changes if its different
+            if (!original.equals(appendedState)) {
+                updateBlockState(level, pos, appendedState);
+            }
         }
     }
 

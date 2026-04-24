@@ -1,6 +1,8 @@
 package net.myriantics.klaxon.block.machines.blast_processor;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.level.Level;
@@ -60,6 +62,16 @@ public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
         }
     }
 
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        super.tick(state, level, pos, random);
+        if (level.getBlockEntity(pos) instanceof AbstractBlastProcessorBlockEntity blastProcessor) {
+            blastProcessor.redstoneTrigger();
+        }
+    }
+
+    protected abstract int getTriggerDuration();
+
     protected abstract boolean isRecievingPower(Level level, BlockPos pos);
 
     @Override
@@ -71,8 +83,8 @@ public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
             boolean triggered = state.getValue(TRIGGERED);
 
             if (powered != triggered) {
-                if (powered && level.getBlockEntity(pos) instanceof AbstractBlastProcessorBlockEntity blastProcessor) {
-                    blastProcessor.onRedstoneImpulse();
+                if (powered) {
+                    level.scheduleTick(pos, this, this.getTriggerDuration());
                 }
 
                 level.setBlock(pos, state.cycle(TRIGGERED), (Block.UPDATE_ALL_IMMEDIATE));

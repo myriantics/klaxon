@@ -56,6 +56,8 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         return this.computeSlotFill(CATALYST_INDEX);
     }
 
+    public abstract void redstoneTrigger();
+
     public void onRedstoneImpulse() {
 
     }
