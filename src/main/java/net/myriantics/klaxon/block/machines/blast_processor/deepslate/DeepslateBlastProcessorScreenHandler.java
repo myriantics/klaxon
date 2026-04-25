@@ -54,7 +54,7 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
 
     // server constructor
     public DeepslateBlastProcessorScreenHandler(int syncId, Inventory playerInventory, Container blockEntityInventory, ContainerLevelAccess context) {
-        super(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, syncId);
+        super(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER.value(), syncId);
         checkContainerSize(blockEntityInventory, 2);
         this.ingredientInventory = blockEntityInventory;
         this.context = context;

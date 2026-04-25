@@ -2,8 +2,8 @@ package net.myriantics.klaxon.block.machines.geothermal.pipe_matrix;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -16,14 +16,18 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
-import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
+import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
+import net.myriantics.klaxon.util.BlockFaceRegion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMatrix {
     // Tracks the axis the pipes run along.
@@ -32,6 +36,10 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
     public static final BooleanProperty FORMED = KlaxonBlockStateProperties.FORMED;
 
     public static final Map<PipeMatrixUBendBlock, PipeMatrixSegmentBlock> LOOP_TO_MATRIX = new HashMap<>();
+
+    protected static final WrenchInteraction CONNECT = WrenchInteraction.of(KlaxonWrenchActionTypes.CONNECT, PipeMatrixSegmentBlock::handleConnect);
+    protected static final WrenchInteractionMap SOLID_MAP = CONNECT.toSingletonMap();
+    protected static final WrenchInteractionMap SPLIT_MAP = WrenchInteractionMap.splitVertical(CONNECT, CONNECT);
 
     private final PipeMatrixUBendBlock uBendBlock;
 
@@ -84,103 +92,107 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
         return this.defaultBlockState().setValue(AXIS, clickedSide.getAxis());
     }
 
-    @Override
-    public InteractionResult onManualWrenchInteraction(ManualWrenchInteractionContext context) {
-        BlockPos pos = context.hitResult().getBlockPos();
-        Direction.Axis axis = context.targetState().getValue(AXIS);
+    private static Optional<InteractionResult> handleConnect(WrenchActionContext context, BlockFaceRegion.Rotation rotation) {
+        Level level = context.level();
+        BlockState state = context.getTargetState();
+        BlockPos pos = context.getTargetPos();
+        RandomSource random = level.getRandom();
 
-        Vec3 blockInteractionPos = context.hitResult().getLocation().subtract(Vec3.atLowerCornerOf(pos));
-
-        Direction.AxisDirection clickedAxisDir = blockInteractionPos.get(axis) < 0.5 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE;
-
-        BlockState newUBendState = this.uBendBlock.defaultBlockState().setValue(PipeMatrixUBendBlock.FACING, Direction.fromAxisAndDirection(context.targetState().getValue(AXIS), clickedAxisDir));
-
-        context.world().setBlockAndUpdate(
-                pos,
-                PipeMatrixUBendBlock.withAxisIfPossible(
-                        newUBendState,
-                        context.hitResult().getDirection().getAxis(),
-                        context.player().getDirection().getAxis()
-                ).orElse(newUBendState)
-        );
-
-        context.world().playSound(
-                context.player(),
-                pos,
-                soundType.getPlaceSound(),
-                context.player().getSoundSource(),
-                0.8f + (0.2f * context.world().getRandom().nextFloat()),
-                0.4f + (0.4f * context.world().getRandom().nextFloat())
-        );
-
-        // trip sculk sensors because it's funny
-        context.world().gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(context.player(), context.targetState()));
-
-        return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    public boolean onDispenserWrenchInteraction(DispenserWrenchInteractionContext context) {
-        Direction dispenserFacing = context.dispenserFacing();
-        Direction.Axis axis = context.targetState().getValue(AXIS);
-
-        // In the future, dispenser wrench behaviors will be randomly generated!
-
-        BlockState newUBendState = this.uBendBlock.defaultBlockState();
-        if (axis.equals(dispenserFacing.getAxis())) {
-            newUBendState = newUBendState.setValue(PipeMatrixUBendBlock.FACING, dispenserFacing);
-        } else {
-            Direction.AxisDirection axisDirection = context.serverWorld().getRandom().nextFloat() > 0.5 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE;
-
-            for (Direction.AxisDirection dir : new Direction.AxisDirection[] {axisDirection, axisDirection.opposite()}) {
-                Direction adjacentDirection = Direction.fromAxisAndDirection(axis, dir);
-                BlockPos adjacentPos = context.targetPos().relative(adjacentDirection);
-                BlockState adjacentState = context.serverWorld().getBlockState(adjacentPos);
-
-                if (adjacentState.getBlock() instanceof PipeMatrix pipeMatrix && pipeMatrix.sideHasExposedPipes(adjacentState, adjacentDirection)) {
-                    axisDirection = dir;
-                    break;
-                }
-            }
-
-            newUBendState = newUBendState.setValue(
-                    PipeMatrixUBendBlock.FACING,
-                    Direction.fromAxisAndDirection(axis, axisDirection)
-            );
-
+        if (!(state.getBlock() instanceof PipeMatrixSegmentBlock pipeMatrixSegmentBlock)) {
+            throw new AssertionError();
         }
 
-        // Randomly generated?!?
+        Direction.Axis axis = state.getValue(AXIS);
 
-        context.serverWorld().setBlockAndUpdate(
-                context.targetPos(),
-                PipeMatrixUBendBlock.withAxisIfPossible(
-                        newUBendState,
-                        axis.equals(dispenserFacing.getAxis())
-                                ? context.serverWorld().getRandom().nextFloat() > 0.5 ? Direction.Axis.X : Direction.Axis.Z
-                                : dispenserFacing.getAxis()
-                ).orElse(newUBendState)
-        );
+        // massive ugly code block go brrr
+        BlockState newUBendState = switch (context) {
+            case WrenchActionContext.Dispenser dispenser -> {
+                BlockState temp = pipeMatrixSegmentBlock.uBendBlock.defaultBlockState();
+                Direction dispenserFacing = dispenser.getDispenserFacing();
+                if (axis.equals(dispenserFacing.getAxis())) {
+                    yield temp.setValue(PipeMatrixUBendBlock.FACING, dispenserFacing);
+                } else {
+                    Direction.AxisDirection axisDirection = random.nextFloat() > 0.5 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE;
 
-        // Randomly generated!!!
+                    for (Direction.AxisDirection dir : new Direction.AxisDirection[] {axisDirection, axisDirection.opposite()}) {
+                        Direction adjacentDirection = Direction.fromAxisAndDirection(axis, dir);
+                        BlockPos adjacentPos = pos.relative(adjacentDirection);
+                        BlockState adjacentState = level.getBlockState(adjacentPos);
 
-        context.serverWorld().playSound(
-                null,
-                context.targetPos(),
-                soundType.getPlaceSound(),
+                        if (adjacentState.getBlock() instanceof PipeMatrix pipeMatrix && pipeMatrix.sideHasExposedPipes(adjacentState, adjacentDirection)) {
+                            axisDirection = dir;
+                            break;
+                        }
+                    }
+
+                    yield temp.setValue(
+                            PipeMatrixUBendBlock.FACING,
+                            Direction.fromAxisAndDirection(axis, axisDirection)
+                    );
+                }
+            }
+            case WrenchActionContext.Manual manual -> {
+                Vec3 blockInteractionPos = manual.getHitResult().getLocation().subtract(Vec3.atLowerCornerOf(pos));
+                Direction.AxisDirection clickedAxisDir = blockInteractionPos.get(axis) < 0.5 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE;
+                yield pipeMatrixSegmentBlock.uBendBlock.defaultBlockState().setValue(PipeMatrixUBendBlock.FACING, Direction.fromAxisAndDirection(axis, clickedAxisDir));
+            }
+        };
+
+        if (!level.isClientSide()) {
+            level.setBlockAndUpdate(
+                    pos,
+                    switch (context) {
+                        case WrenchActionContext.Dispenser dispenser -> {
+                            Direction.Axis dispenserAxis = dispenser.getDispenserFacing().getAxis();
+                            yield PipeMatrixUBendBlock.withAxisIfPossible(
+                                    newUBendState,
+                                    axis.equals(dispenserAxis)
+                                            ? context.level().getRandom().nextFloat() > 0.5 ? Direction.Axis.X : Direction.Axis.Z
+                                            : dispenserAxis
+                            ).orElse(newUBendState);
+                        }
+                        case WrenchActionContext.Manual manual -> {
+                            yield PipeMatrixUBendBlock.withAxisIfPossible(
+                                    newUBendState,
+                                    manual.getHitResult().getDirection().getAxis(),
+                                    manual.getPlayer().getDirection().getAxis()
+                            ).orElse(newUBendState);
+                        }
+                    }
+            );
+        }
+
+        level.playSound(
+                context instanceof WrenchActionContext.Manual manual ? manual.getPlayer() : null,
+                pos,
+                pipeMatrixSegmentBlock.soundType.getPlaceSound(),
                 SoundSource.BLOCKS,
-                0.8f + (0.2f * context.serverWorld().getRandom().nextFloat()),
-                0.4f + (0.4f * context.serverWorld().getRandom().nextFloat())
+                0.8f + (0.2f * level.getRandom().nextFloat()),
+                0.4f + (0.4f * level.getRandom().nextFloat())
         );
 
-        // trip sculk sensors because it's funny
-        context.serverWorld().gameEvent(GameEvent.BLOCK_CHANGE, context.targetPos(), GameEvent.Context.of(context.targetState()));
+        switch (context) {
+            case WrenchActionContext.Dispenser dispenser -> level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(state));
+            case WrenchActionContext.Manual manual -> level.gameEvent(manual.getPlayer(), GameEvent.BLOCK_CHANGE, pos);
+        }
 
-        return true;
+        return Optional.of(InteractionResult.SUCCESS);
     }
 
     @Override
     public boolean sideHasExposedPipes(BlockState state, Direction direction) {
         return direction.getAxis().equals(state.getValue(AXIS));
+    }
+
+    @Override
+    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
+        return context.getTargetState().getValue(AXIS).equals(context.getHitResult().getDirection().getAxis())
+                ? SOLID_MAP
+                : SPLIT_MAP;
+    }
+
+    @Override
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        return CONNECT;
     }
 }

@@ -89,6 +89,10 @@ public abstract class KlaxonItemModelSubProvider {
                 .build(generator);
     }
 
+    protected void registerCrestedSteelHelmet() {
+        generator.generateLayeredItem(getItemId(KlaxonItems.CRESTED_STEEL_HELMET.unwrapKey().get().location()), KlaxonTextures.CRESTED_STEEL_HELMET_2D_CREST, KlaxonTextures.CRESTED_STEEL_HELMET_2D_BASE);
+    }
+
     protected void registerArmor(Holder<Item> armor) {
         registerArmor(armor.value());
     }

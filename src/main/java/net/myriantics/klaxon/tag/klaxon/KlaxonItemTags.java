@@ -37,6 +37,8 @@ public abstract class KlaxonItemTags {
             createTag("steel_nugget_cooking_recyclables");
     public static final TagKey<Item> STEEL_INGOT_COOKING_RECYCLABLES =
             createTag("steel_ingot_cooking_recyclables");
+    public static final TagKey<Item> SUSPICIOUS_STEW_INGREDIENTS =
+            createTag("suspicious_stew_ingredients");
 
     // anvil related tags
     public static final TagKey<Item> INFINITELY_REPAIRABLE =

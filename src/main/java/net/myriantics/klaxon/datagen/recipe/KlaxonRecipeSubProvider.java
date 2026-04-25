@@ -16,6 +16,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehav
 import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
@@ -371,6 +372,24 @@ public abstract class KlaxonRecipeSubProvider {
                                          double explosionPowerMin, double explosionPowerMax,
                                          Function<RecipeOutputCompound.Builder, RecipeOutputCompound.Builder> function, final ResourceCondition... conditions) {
         addBlastProcessingRecipe(input.withName("recycling/" + input.getName()), explosionPowerMin, explosionPowerMax, function.apply(RecipeOutputCompound.builder()).build(), conditions);
+    }
+
+    public void addDecoratedPotCrackingBlastProcessingRecipe(NamedIngredient input,
+                                         double explosionPowerMin, double explosionPowerMax,
+                                         RecipeOutputCompound outputCompound, final ResourceCondition... conditions) {
+        String path = outputCompound.size() > 1
+                ? input.getName()
+                : getItemName(outputCompound.getDisplayStacks()[0].getItem()) + "_from_" + input.getName();
+
+        ResourceLocation recipeId = provider.computeRecipeIdentifier(
+                KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
+                path,
+                conditions
+        );
+
+        DecoratedPotCrackingBlastProcessingRecipe recipe = new DecoratedPotCrackingBlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax, outputCompound);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     public void addBlastProcessingRecipe(NamedIngredient input,

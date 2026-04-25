@@ -8,8 +8,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -36,9 +38,10 @@ import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
-public class HallnoxPodBlock extends SaplingBlock implements Fallable, SimpleWaterloggedBlock {
+public class HallnoxPodBlock extends SaplingBlock implements Fallable, SimpleWaterloggedBlock, SuspiciousEffectHolder {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -52,6 +55,9 @@ public class HallnoxPodBlock extends SaplingBlock implements Fallable, SimpleWat
     private static final VoxelShape WEST_SHAPE = Block.box(0.0, 2.0, 2.0, 14.0, 14.0, 14.0);
 
     private final int FALLING_DELAY = 2;
+
+    private static final int SUS_STEW_DURATION_SECONDS = 8;
+    private static final SuspiciousStewEffects SUS_STEW_EFFECTS = new SuspiciousStewEffects(List.of(new SuspiciousStewEffects.Entry(MobEffects.GLOWING, SUS_STEW_DURATION_SECONDS * 20)));
 
     private final DirectionalSaplingGenerator generator;
 
@@ -264,5 +270,10 @@ public class HallnoxPodBlock extends SaplingBlock implements Fallable, SimpleWat
 
             world.addParticle(KlaxonParticleTypes.HALLNOX_POD_DRIP.value(), particleX, particleY, particleZ, 0.0, 0.0, 0.0);
         }
+    }
+
+    @Override
+    public SuspiciousStewEffects getSuspiciousEffects() {
+        return SUS_STEW_EFFECTS;
     }
 }

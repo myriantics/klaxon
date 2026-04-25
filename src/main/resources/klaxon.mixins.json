@@ -23,7 +23,6 @@
     "minecraft.cable_shears.WolfMixin",
     "minecraft.damageable_and_stackable.ItemPropertiesMixin",
     "minecraft.damageable_and_stackable.ItemStackMixin",
-    "minecraft.datagen.ItemModelGeneratorsMixin",
     "minecraft.datagen.ModelTemplateAccessor",
     "minecraft.enchantments.gyro.LivingEntityMixin",
     "minecraft.entity_attributes.ArmorItemMixin",
@@ -49,7 +48,9 @@
     "minecraft.grapple_winch.hook.EntityMixin",
     "minecraft.grapple_winch.hook.ThrownTridentMixin",
     "minecraft.hallnox_pod.FallingBlockEntityMixin",
+    "minecraft.hallnox_pod.MushroomCowMixin",
     "minecraft.hallnox_pod.ShearsItemMixin",
+    "minecraft.hallnox_pod.SuspiciousStewRecipeMixin",
     "minecraft.instabreaking.BlockStateBaseMixin",
     "minecraft.item_components.DamageSourceMixin",
     "minecraft.item_components.MobMixin",
@@ -75,7 +76,8 @@
     "minecraft.tool_usage.ItemStackMixin",
     "minecraft.unenchantability.AnvilMenuMixin",
     "minecraft.unenchantability.EnchantmentMixin",
-    "minecraft.world_item_application.DispenserBlockMixin"
+    "minecraft.world_item_application.DispenserBlockMixin",
+    "minecraft.wrench.BlockStateBaseMixin"
   ],
   "client": [
   ],

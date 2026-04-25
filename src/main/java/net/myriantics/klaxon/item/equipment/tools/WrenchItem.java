@@ -2,13 +2,13 @@ package net.myriantics.klaxon.item.equipment.tools;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -21,24 +21,28 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
-import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
-import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
-import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
-import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.*;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
-import net.myriantics.klaxon.util.KlaxonItemStackHelper;
+import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class WrenchItem extends DiggerItem {
     public WrenchItem(Tier material, Properties settings) {
@@ -63,9 +67,9 @@ public class WrenchItem extends DiggerItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         BlockPos targetPos = context.getClickedPos();
-        BlockState targetState = world.getBlockState(targetPos);
+        BlockState targetState = level.getBlockState(targetPos);
         Player player = context.getPlayer();
         ItemStack wrenchStack = context.getItemInHand();
 
@@ -74,17 +78,21 @@ public class WrenchItem extends DiggerItem {
         }
 
         // Wrench pickup ability requires both CAN_PLACE_ON and CAN_DESTROY components to work in Adventure Mode
-        if (canPickup(targetState, targetPos, world, player, wrenchStack)) {
-            if (world instanceof ServerLevel serverWorld) {
+        if (canPickup(targetState, targetPos, level, player, wrenchStack)) {
+            // offset target pos down for doors and the like
+            if (shouldOffsetPickupDownward(level, targetPos, targetState)) {
+                targetPos = targetPos.relative(Direction.DOWN);
+                targetState = level.getBlockState(targetPos);
+            }
+
+            if (level instanceof ServerLevel serverWorld) {
                 List<ItemStack> outputStacks = Block.getDrops(targetState, serverWorld, targetPos, serverWorld.getBlockEntity(targetPos));
                 if (!outputStacks.isEmpty()) {
                     for (ItemStack stack : outputStacks) {
                         // don't insert the stack if player is already creative - unless it's valuable, then do
                         if (!stack.isEmpty() && (!player.isCreative() || stack.has(DataComponents.CONTAINER) || stack.has(DataComponents.CONTAINER_LOOT))) {
-                            // dump the rest of the stack into the world if it doesn't fit into player's inventory
-                            if (context.getHand().equals(InteractionHand.MAIN_HAND) && player.getInventory().getSlotWithRemainingSpace(stack) == -1 && (player.getOffhandItem().isEmpty() || KlaxonItemStackHelper.canStacksMerge(player.getOffhandItem(), stack))) {
-                                player.setItemInHand(InteractionHand.OFF_HAND, KlaxonItemStackHelper.combineStacksIfPossible(stack, player.getOffhandItem()));
-                            } else if (!player.getInventory().add(stack)) {
+                            // dump the rest of the stack into the level if it doesn't fit into player's inventory
+                            if (!player.getInventory().add(stack)) {
                                 if (!stack.isEmpty()) {
                                     Block.popResource(serverWorld, targetPos, stack);
                                 }
@@ -95,7 +103,8 @@ public class WrenchItem extends DiggerItem {
 
                 // drop is false here because we already handled the drops
                 // only break on server because sound plays twice on client otherwise
-                world.destroyBlock(targetPos, false, player);
+                level.destroyBlock(targetPos, false, player);
+                wrenchStack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(context.getHand()));
                 KlaxonAdvancementTriggers.triggerWrenchUsage((ServerPlayer) player, UsageType.PICKUP, targetState);
             }
 
@@ -104,31 +113,44 @@ public class WrenchItem extends DiggerItem {
 
         // Only requires CAN_PLACE_ON in adventure mode
         if (allowDefaultRotationBehavior(context.getLevel().registryAccess(), targetState)) {
-            ManualWrenchInteractionContext wrenchContext = new ManualWrenchInteractionContext(targetState, wrenchStack, world, player, context.getHand(), new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside()));
+            WrenchActionContext.Manual manual = new WrenchActionContext.Manual(level, targetState, targetPos, wrenchStack, player, new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside()), context.getHand());
 
-            BlockState newState = targetState;
 
-            // apply all valid behaviors to new state
+            Optional<InteractionResult> result = Optional.empty();
+
+            // apply the first valid behavior to target state
             for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
-                if (behavior.test(newState)) {
-                    newState = behavior.applyManual(newState, wrenchContext);
+                if (behavior.test(targetState)) {
+                    WrenchInteractionMap map = behavior.getManualInteractionMap(manual);
+                    float clickedX = manual.getGuiOrientation().getClickedX();
+                    float clickedY = manual.getGuiOrientation().getClickedY();
+                    result = map.select(clickedX, clickedY).handle(manual, map.getRotation(targetState, manual.getGuiOrientation()));
+                    if (result.isPresent()) {
+                        break;
+                    }
                 }
             }
 
-            if (newState != targetState) {
+            if (result.isPresent()) {
                 Vec3 cords = targetPos.getCenter();
-                world.playLocalSound(cords.x(), cords.y(), cords.z(), targetState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.7f + 0.3f * world.getRandom().nextFloat(), 1.0f, true);
+                level.playLocalSound(cords.x(), cords.y(), cords.z(), targetState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.7f + 0.3f * level.getRandom().nextFloat(), 1.0f, true);
                 if (player instanceof ServerPlayer serverPlayer) {
                     KlaxonAdvancementTriggers.triggerWrenchUsage(serverPlayer, UsageType.ROTATION, targetState);
-                    world.setBlockAndUpdate(targetPos, newState);
-                    world.neighborChanged(targetPos, newState.getBlock(), targetPos);
-                    world.updateNeighbourForOutputSignal(targetPos, newState.getBlock());
                 }
-                return InteractionResult.SUCCESS;
+                return result.get();
             }
         }
 
-        return super.useOn(context);
+        return InteractionResult.FAIL;
+    }
+
+    protected boolean shouldOffsetPickupDownward(Level level, BlockPos targetPos, BlockState targetState) {
+        if (!targetState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) || !targetState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).equals(DoubleBlockHalf.UPPER)) {
+            return false;
+        } else {
+            BlockState lowerState = level.getBlockState(targetPos.relative(Direction.DOWN));
+            return lowerState.is(targetState.getBlock()) && lowerState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).equals(DoubleBlockHalf.LOWER);
+        }
     }
 
     public static boolean canRotate(RegistryAccess manager, BlockState targetState) {
@@ -158,7 +180,7 @@ public class WrenchItem extends DiggerItem {
         return !(targetState.getBlock() instanceof Wrenchable) && canRotate(manager, targetState);
     }
 
-    public static boolean canPickup(BlockState targetState, BlockPos targetPos, Level world, @Nullable Player player, ItemStack wrenchStack) {
+    public boolean canPickup(BlockState targetState, BlockPos targetPos, Level world, @Nullable Player player, ItemStack wrenchStack) {
         // if the state is in the denylist, fail pickup
         if (targetState.is(KlaxonBlockTags.WRENCH_PICKUP_DENYLIST)) {
             return false;

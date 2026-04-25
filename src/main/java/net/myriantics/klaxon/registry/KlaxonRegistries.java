@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionType;
 
 import java.util.function.Consumer;
 
@@ -18,6 +19,10 @@ public abstract class KlaxonRegistries {
     );
     public static final Registry<BlockStateWrenchBehavior<? extends Comparable<?>>> BLOCK_STATE_WRENCH_BEHAVIORS = register(
             KlaxonRegistryKeys.BLOCK_STATE_WRENCH_BEHAVIOR,
+            (builder) -> builder.attribute(RegistryAttribute.SYNCED)
+    );
+    public static final Registry<WrenchActionType> WRENCH_ACTION_TYPE = register(
+            KlaxonRegistryKeys.WRENCH_ACTION_TYPE,
             (builder) -> builder.attribute(RegistryAttribute.SYNCED)
     );
 

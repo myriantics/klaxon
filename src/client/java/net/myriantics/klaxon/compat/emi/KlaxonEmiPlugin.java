@@ -10,7 +10,9 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -115,6 +117,12 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private void registerMiscRecipes(EmiRegistry registry) {
         addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_LIGHTER.value()), EmiIngredient.of(LighterItem.LIGHTER_REPAIR_MATERIALS), "steel_lighter");
         addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_CABLE_SHEARS.value()), EmiIngredient.of(KlaxonItemTags.STEEL_PLATE_TOOL_MATERIAL_REPAIR_MATERIALS), "steel_cable_shears");
+
+        Level level = Minecraft.getInstance().level;
+        if (level != null) {
+            Optional<HolderSet.Named<Item>> holders = level.registryAccess().registryOrThrow(Registries.ITEM).getTag(KlaxonItemTags.SUSPICIOUS_STEW_INGREDIENTS);
+            holders.ifPresent(itemNamed -> registry.addRecipe(new KlaxonSuspiciousStewRecipe(itemNamed)));
+        }
     }
 
     private void addSyntheticAnvilRecipe(EmiRegistry registry, EmiStack tool, EmiIngredient repairMaterial, String path) {

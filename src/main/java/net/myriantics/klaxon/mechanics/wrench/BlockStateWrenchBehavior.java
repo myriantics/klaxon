@@ -7,6 +7,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 
 public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
     private final Property<T> property;
@@ -15,6 +17,8 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
 
     private static final String ALLOWLIST_SUBDIRECTORY = "wrench_behavior/allowlist";
     private static final String DENYLIST_SUBDIRECTORY = "wrench_behavior/denylist";
+
+    private static final WrenchInteractionMap EMPTY = WrenchInteractionMap.create();
 
     public BlockStateWrenchBehavior(
             Property<T> property,
@@ -37,33 +41,23 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
         return denylistTag;
     }
 
+    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
+        return EMPTY;
+    }
+
+    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
+        return WrenchInteraction.NO_OP;
+    }
+
     public boolean test(BlockState state) {
         return !state.is(this.getDenylistTag()) && state.is(this.getAllowlistTag()) && state.hasProperty(property);
     }
 
-    public BlockState applyDispenser(BlockState state, DispenserWrenchInteractionContext context) {
-        if (this.test(state)) {
-            Optional<T> result = this.applyDispenser(state.getValue(this.property), context);
-            if (result.isPresent()) {
-                return state.setValue(this.property, result.get());
-            }
-        }
-
-        return state;
+    protected Optional<T> applyManual(T original, ManualWrenchInteractionContext context) {
+        return Optional.empty();
     }
 
-    public BlockState applyManual(BlockState state, ManualWrenchInteractionContext context) {
-        if (this.test(state)) {
-            Optional<T> result = this.applyManual(state.getValue(this.property), context);
-            if (result.isPresent()) {
-                return state.setValue(this.property, result.get());
-            }
-        }
-
-        return state;
+    protected Optional<T> applyDispenser(T original, DispenserWrenchInteractionContext context) {
+        return Optional.empty();
     }
-
-    protected abstract Optional<T> applyManual(T original, ManualWrenchInteractionContext context);
-
-    protected abstract Optional<T> applyDispenser(T original, DispenserWrenchInteractionContext context);
 }

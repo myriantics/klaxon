@@ -1,0 +1,17 @@
+{
+  "type": "klaxon:decorated_pot_cracking_blast_processing_serializer",
+  "explosion_power_max": 0.4,
+  "explosion_power_min": 0.1,
+  "input_ingredient": {
+    "item": "minecraft:decorated_pot"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:decorated_pot"
+      }
+    }
+  ]
+}

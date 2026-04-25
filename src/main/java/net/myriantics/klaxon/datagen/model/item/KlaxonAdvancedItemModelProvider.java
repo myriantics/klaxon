@@ -12,8 +12,8 @@ public class KlaxonAdvancedItemModelProvider extends KlaxonItemModelSubProvider 
 
     @Override
     public void generateModels() {
+        registerCrestedSteelHelmet();
         registerArmor(KlaxonItems.STEEL_HELMET);
-        registerArmor(KlaxonItems.CRESTED_STEEL_HELMET);
         registerArmor(KlaxonItems.STEEL_CHESTPLATE);
         registerArmor(KlaxonItems.STEEL_LEGGINGS);
         registerArmor(KlaxonItems.STEEL_BOOTS);

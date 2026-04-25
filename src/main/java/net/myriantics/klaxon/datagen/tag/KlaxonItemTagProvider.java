@@ -283,6 +283,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_WORKBENCH.value())
                 .add(KlaxonItems.STEEL_DOOR.value())
                 .add(KlaxonItems.STEEL_TRAPDOOR.value());
+        getOrCreateTagBuilder(KlaxonItemTags.SUSPICIOUS_STEW_INGREDIENTS)
+                .add(KlaxonItems.HALLNOX_POD.value());
     }
 
     private void buildAdvancementRelatedTags() {
@@ -292,6 +294,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CLEAVER.value())
                 .add(KlaxonItems.STEEL_WRENCH.value())
                 .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
+                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
                 .add(KlaxonItems.STEEL_LIGHTER.value());
         getOrCreateTagBuilder(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)

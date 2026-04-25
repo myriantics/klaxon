@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry.misc;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -11,9 +12,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
+import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeInput;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
@@ -72,7 +78,15 @@ public abstract class KlaxonItemUsageTweaks {
             BlockPos targetPos = context.getClickedPos();
             BlockState targetState = level.getBlockState(targetPos);
             if (targetState.getBlock() instanceof Wrenchable wrenchable) {
-                return Optional.ofNullable(wrenchable.onManualWrenchInteraction(new ManualWrenchInteractionContext(targetState, stack, level, context.getPlayer(), context.getHand(), new BlockHitResult(context.getClickLocation(), context.getClickedFace(), targetPos, false))));
+                Direction clickedFace = context.getClickedFace();
+                Player player = context.getPlayer();
+                BlockHitResult hitResult = new BlockHitResult(context.getClickLocation(), clickedFace, targetPos, false);
+
+                WrenchActionContext.Manual manual = new WrenchActionContext.Manual(level, targetState, targetPos, stack, player, hitResult, context.getHand());
+                WrenchInteractionMap interactionMap = wrenchable.getManualInteractionMap(manual);
+                float x = manual.getGuiOrientation().getClickedX();
+                float y = manual.getGuiOrientation().getClickedY();
+                return interactionMap.select(x, y).handle(manual, interactionMap.getRotation(targetState, manual.getGuiOrientation()));
             } else {
                 return Optional.empty();
             }

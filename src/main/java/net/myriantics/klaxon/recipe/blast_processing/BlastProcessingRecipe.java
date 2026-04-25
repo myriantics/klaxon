@@ -41,10 +41,14 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
         // check if explosion power exists and is within bounds
         if (explosionPower > 0 && explosionPower >= explosionPowerMin && explosionPower <= explosionPowerMax) {
-            return recipeOutputCompound.computeDrops(random);
+            return getDrops(input, lookup, random);
         }
 
         return new ItemStack[0];
+    }
+
+    protected ItemStack[] getDrops(BlastProcessingRecipeInput input, HolderLookup.Provider provider, RandomSource randomSource) {
+        return recipeOutputCompound.computeDrops(randomSource);
     }
 
     @Override

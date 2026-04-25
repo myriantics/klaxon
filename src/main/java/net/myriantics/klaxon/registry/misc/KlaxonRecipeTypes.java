@@ -8,6 +8,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeSerializer;
+import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
@@ -25,7 +26,9 @@ import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationR
 public abstract class KlaxonRecipeTypes {
     public static final String BLAST_PROCESSING_RECIPE_ID = "blast_processing";
     public static RecipeSerializer<BlastProcessingRecipe> BLAST_PROCESSING_RECIPE_SERIALIZER =
-            registerSerializer(BLAST_PROCESSING_RECIPE_ID, new BlastProcessingRecipeSerializer());
+            registerSerializer(BLAST_PROCESSING_RECIPE_ID, new BlastProcessingRecipeSerializer<>(BlastProcessingRecipe::new));
+    public static RecipeSerializer<DecoratedPotCrackingBlastProcessingRecipe> DECORATED_POT_CRACKING_BLAST_PROCESSING_SERIALIZER =
+            registerSerializer("decorated_pot_cracking_blast_processing_serializer", new BlastProcessingRecipeSerializer<>(DecoratedPotCrackingBlastProcessingRecipe::new));
     public static RecipeType<BlastProcessingRecipe> BLAST_PROCESSING =
             registerRecipeType(BLAST_PROCESSING_RECIPE_ID);
 

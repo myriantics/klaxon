@@ -5,57 +5,60 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.util.BlockFaceRegion;
+
+import java.util.Optional;
 
 public class WrenchDispenserBehavior extends OptionalDispenseItemBehavior {
     private boolean shouldPlayEffects = true;
 
     @Override
-    protected ItemStack execute(BlockSource pointer, ItemStack stack) {
-        ServerLevel serverWorld = pointer.level();
-        Direction facing = pointer.state().getValue(DispenserBlock.FACING);
-        BlockPos targetPos = pointer.pos().relative(facing);
-        BlockState targetState = serverWorld.getBlockState(targetPos);
+    protected ItemStack execute(BlockSource source, ItemStack stack) {
+        ServerLevel serverLevel = source.level();
+        Direction facing = source.state().getValue(DispenserBlock.FACING);
+        BlockPos targetPos = source.pos().relative(facing);
+        BlockState targetState = serverLevel.getBlockState(targetPos);
 
         setSuccess(false);
         shouldPlayEffects = true;
 
         // cancel wrench interaction if a predicate blocks it
-        if (WrenchInteractionDenialPredicate.wrenchInteractionBlocked(serverWorld.getServer().reloadableRegistries().get(), targetState)) {
+        if (WrenchInteractionDenialPredicate.wrenchInteractionBlocked(serverLevel.getServer().reloadableRegistries().get(), targetState)) {
             return stack;
         }
 
-        DispenserWrenchInteractionContext context = new DispenserWrenchInteractionContext(targetState, targetPos, stack, serverWorld, facing, pointer);
+        WrenchActionContext.Dispenser context = new WrenchActionContext.Dispenser(serverLevel, targetState, targetPos, stack, facing, source);
 
         // run custom behavior if present
         if (targetState.getBlock() instanceof Wrenchable wrenchable) {
-            boolean success = wrenchable.onDispenserWrenchInteraction(context);
+            WrenchInteraction type = wrenchable.getDispenserInteraction(context);
+            Optional<InteractionResult> result = type.handle(context, BlockFaceRegion.Rotation.R0);
 
             // we don't need to set blockstate here because it's done in the above method
-            if (success) {
-                serverWorld.updateNeighbourForOutputSignal(pointer.pos(), pointer.state().getBlock());
+            if (result.isPresent()) {
+                serverLevel.updateNeighbourForOutputSignal(source.pos(), source.state().getBlock());
                 setSuccess(true);
                 return stack;
             }
         }
 
-        BlockState newState = targetState;
-
         // apply all valid behaviors to the new state
         for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
-            newState = behavior.applyDispenser(newState, context);
-        }
-
-        // only commit changes to the world if we've changed the block state
-        if (!newState.equals(targetState)) {
-            serverWorld.setBlockAndUpdate(targetPos, newState);
-            serverWorld.neighborChanged(targetPos, pointer.state().getBlock(), pointer.pos());
-            serverWorld.updateNeighbourForOutputSignal(pointer.pos(), pointer.state().getBlock());
-            setSuccess(true);
-            shouldPlayEffects = false;
+            if (behavior.test(targetState)) {
+                WrenchInteraction interaction = behavior.getDispenserInteraction(context);
+                Optional<InteractionResult> result = interaction.handle(context, BlockFaceRegion.Rotation.R0);
+                if (result.isPresent()) {
+                    serverLevel.updateNeighbourForOutputSignal(source.pos(), source.state().getBlock());
+                    setSuccess(true);
+                    return stack;
+                }
+            }
         }
 
         return stack;
