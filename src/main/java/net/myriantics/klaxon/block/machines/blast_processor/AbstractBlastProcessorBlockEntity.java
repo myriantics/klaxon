@@ -4,6 +4,7 @@ import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -24,11 +25,10 @@ import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatal
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
+import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedContainerBlockEntity {
 
@@ -58,7 +58,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
     public abstract void redstoneTrigger();
 
     protected void ejectItems(Level world, BlockPos pos, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData) {
-        if (world == null || this.isEmpty()) {
+        if (world == null) {
             return;
         }
 
@@ -104,7 +104,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
             // if the catalyst produces fire, try to smelt output stacks as if they were in a blast furnace
             if (powerData.producesFire()) {
-                tryBlastingSmeltingRecipeOnAllStacks(outputStacks, world);
+                tryBlastingSmeltingRecipeOnAllStacks(Arrays.stream(outputStacks).toList(), world);
             }
 
             return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
@@ -113,24 +113,35 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         }
     }
 
-    public BlastProcessingRecipeData getBlastProcessingRecipeData(Level world, BlockPos pos, BlastProcessingRecipeInput recipeInventory) {
+    public BlastProcessingRecipeData getBlastProcessingRecipeData(Level level, BlockPos pos, BlastProcessingRecipeInput recipeInventory) {
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ExplosiveCatalystData powerData = recipeInventory.getPowerData();
 
         if (!this.getIngredientStack().isEmpty() && !powerData.behavior().is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING)) {
-            blastProcessingMatch = selectBlastProcessingRecipe(world, recipeInventory, powerData);
+            blastProcessingMatch = selectBlastProcessingRecipe(level, recipeInventory, powerData);
         }
         if (blastProcessingMatch.isPresent()) {
             BlastProcessingRecipe recipe = blastProcessingMatch.get();
 
-            ItemStack[] outputStacks = recipe.craft(recipeInventory, world.registryAccess(), world.getRandom());
+            ItemStack ingredientStack = this.getIngredientStack();
+            ArrayList<ItemStack> outputStacks = new ArrayList<>();
+            RandomSource random = level.getRandom();
+
+            while (!this.getIngredientStack().isEmpty()) {
+                for (ItemStack stack : recipe.craft(recipeInventory, level.registryAccess(), random)) {
+                    KlaxonItemStackHelper.insertAndMerge(outputStacks, stack);
+                }
+                ingredientStack.shrink(1);
+            }
+
+            this.setChanged();
 
             // if the catalyst produces fire, try to smelt output stacks as if they were in a blast furnace
             if (powerData.producesFire()) {
-                tryBlastingSmeltingRecipeOnAllStacks(outputStacks, world);
+                tryBlastingSmeltingRecipeOnAllStacks(outputStacks, level);
             }
 
-            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks);
+            return new BlastProcessingRecipeData(recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), outputStacks.toArray(new ItemStack[0]));
         } else {
             return BlastProcessingRecipeData.ZERO;
         }
@@ -165,9 +176,9 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         return Optional.of(recipes.getFirst());
     }
 
-    private void tryBlastingSmeltingRecipeOnAllStacks(ItemStack[] stacks, Level world) {
-        for (int i = 0; i < stacks.length; i++) {
-            ItemStack stack = stacks[i];
+    private void tryBlastingSmeltingRecipeOnAllStacks(List<ItemStack> stacks, Level world) {
+        for (int i = 0; i < stacks.size(); i++) {
+            ItemStack stack = stacks.get(i);
 
             // init recipe input
             SingleRecipeInput input = new SingleRecipeInput(stack);
@@ -181,10 +192,12 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
             // if recipe was successful, overwrite that index in output stacks with proper count
             if (blastingRecipe.isPresent()) {
-                stacks[i] = blastingRecipe.get().value().assemble(
-                        input,
-                        world.registryAccess()
-                ).copyWithCount(stack.getCount());
+                stacks.set(i,
+                        blastingRecipe.get().value().assemble(
+                                input,
+                                world.registryAccess()
+                        ).copyWithCount(stack.getCount())
+                );
             }
         }
     }
