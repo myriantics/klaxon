@@ -103,11 +103,11 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
             for (Entity entity : caughtInExhaustBlast) {
                 if (!entity.fireImmune() && !(entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE))) {
                     entity.hurt(this.createDamageSource(level), damage);
-                    if (entity instanceof ServerPlayer serverPlayer && ! entity.isControlledByLocalInstance()) {
-                        KlaxonServerPlayNetworkHandler.send(serverPlayer, new SteelBlastProcessorExhaustLaunchPacket(launchVelocity.toVector3f()));
-                    } else {
-                        entity.addDeltaMovement(launchVelocity);
-                    }
+                }
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    KlaxonServerPlayNetworkHandler.send(serverPlayer, new SteelBlastProcessorExhaustLaunchPacket(launchVelocity.toVector3f()));
+                } else {
+                    entity.addDeltaMovement(launchVelocity);
                 }
             }
 

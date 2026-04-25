@@ -13,5 +13,6 @@ public abstract class KlaxonClientPackets {
         ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionSyncPacket.ID, KlaxonClientPlayNetworkHandler::grappleWinchConnectionSync);
         ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionDiscardPacket.ID, KlaxonClientPlayNetworkHandler::grappleWinchConnectionDiscard);
         ClientPlayNetworking.registerGlobalReceiver(ItemUsageLockoutTrigger.ID, KlaxonClientPlayNetworkHandler::triggerItemUsageLockout);
+        ClientPlayNetworking.registerGlobalReceiver(SteelBlastProcessorExhaustLaunchPacket.ID, KlaxonClientPlayNetworkHandler::applyVelocity);
     }
 }

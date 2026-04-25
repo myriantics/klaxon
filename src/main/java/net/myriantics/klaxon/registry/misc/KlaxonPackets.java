@@ -11,6 +11,7 @@ import net.myriantics.klaxon.networking.s2c.*;
 
 public abstract class KlaxonPackets {
 
+    public static final ResourceLocation STEEL_BLAST_PROCESSOR_EXHAUST_LAUNCH_S2C_ID = locateS2C("steel_blast_processor_exhaust_launch");
     public static final ResourceLocation GRAPPLE_WINCH_CONNECTION_SYNC_S2C_ID = locateS2C("grapple_winch_connection_sync");
     public static final ResourceLocation GRAPPLE_WINCH_CONNECTION_DISCARD_S2C_ID = locateS2C("grapple_winch_connection_discard");
     public static final ResourceLocation GRAPPLE_WINCH_CABLE_FORCE_DISCONNECT_C2S_ID = locateC2S("grapple_winch_cable_force_disconnect");
@@ -24,6 +25,7 @@ public abstract class KlaxonPackets {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Packets!");
 
         // s2c
+        PayloadTypeRegistry.playS2C().register(SteelBlastProcessorExhaustLaunchPacket.ID, SteelBlastProcessorExhaustLaunchPacket.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket.PACKET_CODEC);

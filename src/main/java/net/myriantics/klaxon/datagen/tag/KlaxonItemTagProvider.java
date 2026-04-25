@@ -294,7 +294,6 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.STEEL_CLEAVER.value())
                 .add(KlaxonItems.STEEL_WRENCH.value())
                 .add(KlaxonItems.STEEL_CABLE_SHEARS.value())
-                .add(KlaxonItems.REINFORCED_FLINT_AND_STEEL.value());
                 .add(KlaxonItems.STEEL_LIGHTER.value());
         getOrCreateTagBuilder(KlaxonItemTags.KLAXON_ROOT_ADVANCEMENT_GRANTING_ITEMS)
                 .forceAddTag(KlaxonConventionalItemTags.STEEL_INGOTS)

@@ -37,7 +37,7 @@ public class DecoratedPotCrackingBlastProcessingRecipe extends BlastProcessingRe
 
     @Override
     protected ItemStack[] getDrops(BlastProcessingRecipeInput input, HolderLookup.Provider provider, RandomSource randomSource) {
-        ItemStack inputStack = input.getItem(DeepslateBlastProcessorBlockEntity.INGREDIENT_INDEX);
+        ItemStack inputStack = input.getInputStack();
         if (inputStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock().defaultBlockState().hasProperty(BlockStateProperties.CRACKED)) {
             ItemStack newStack = inputStack.copy();
             newStack.set(DataComponents.BLOCK_STATE, new BlockItemStateProperties(Map.of("cracked", "true")));

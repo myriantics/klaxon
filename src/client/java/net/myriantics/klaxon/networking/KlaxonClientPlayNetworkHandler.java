@@ -3,6 +3,7 @@ package net.myriantics.klaxon.networking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
@@ -13,6 +14,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
@@ -116,5 +118,12 @@ public abstract class KlaxonClientPlayNetworkHandler {
                 client.player.stopUsingItem();
             }
         });
+    }
+
+    public static void applyVelocity(SteelBlastProcessorExhaustLaunchPacket steelBlastProcessorExhaustLaunchPacket, ClientPlayNetworking.Context context) {
+        LocalPlayer localPlayer = context.player();
+        if (localPlayer != null) {
+            localPlayer.addDeltaMovement(new Vec3(steelBlastProcessorExhaustLaunchPacket.launchVelocity()));
+        }
     }
 }
