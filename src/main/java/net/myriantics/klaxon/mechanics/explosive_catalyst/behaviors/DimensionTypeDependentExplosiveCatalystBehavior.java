@@ -2,12 +2,11 @@ package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 
 import java.util.Optional;
 

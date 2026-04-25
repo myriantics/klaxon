@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.explosive_catalyst_definition;
+package net.myriantics.klaxon.recipe.explosive_catalyst;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;

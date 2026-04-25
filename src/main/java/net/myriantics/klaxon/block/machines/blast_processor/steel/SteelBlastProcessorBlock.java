@@ -28,7 +28,7 @@ import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcess
 import net.myriantics.klaxon.mechanics.muffling.MufflableBlock;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.SteelBlastProcessorExhaustLaunchPacket;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;

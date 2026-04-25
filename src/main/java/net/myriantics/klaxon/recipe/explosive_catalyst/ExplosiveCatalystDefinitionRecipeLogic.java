@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.explosive_catalyst_definition;
+package net.myriantics.klaxon.recipe.explosive_catalyst;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
@@ -31,13 +31,17 @@ public abstract class ExplosiveCatalystDefinitionRecipeLogic {
         if (components.get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value()) instanceof ExplosiveCatalystData data) {
             return data.behavior().value().transformExplosiveCatalystData(context, data);
         } else {
-            Optional<RecipeHolder<ExplosiveCatalystDefinitionRecipe>> match = context.level().getRecipeManager().getRecipeFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, new ExplosiveCatalystDefinitionRecipeInput(catalyst), context.level());
-            if (match.isPresent()) {
-                ExplosiveCatalystData data = match.get().value().getData();
-                return data.behavior().value().transformExplosiveCatalystData(context, data);
-            }
+            ExplosiveCatalystData raw = computeRawExplosiveCatalystData(context, catalyst);
+            return raw.behavior().value().transformExplosiveCatalystData(context, raw);
         }
+    }
 
-        return ExplosiveCatalystData.ZERO;
+    public static ExplosiveCatalystData computeRawExplosiveCatalystData(ExplosiveCatalystContext context, ItemStack catalyst) {
+        Optional<RecipeHolder<ExplosiveCatalystDefinitionRecipe>> match = context.level().getRecipeManager().getRecipeFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, new ExplosiveCatalystDefinitionRecipeInput(catalyst), context.level());
+        if (match.isPresent()) {
+            return match.get().value().getData();
+        } else {
+            return ExplosiveCatalystData.ZERO;
+        }
     }
 }

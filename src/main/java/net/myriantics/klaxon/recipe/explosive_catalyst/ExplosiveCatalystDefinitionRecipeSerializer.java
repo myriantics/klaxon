@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.recipe.explosive_catalyst_definition;
+package net.myriantics.klaxon.recipe.explosive_catalyst;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.PrimitiveCodec;

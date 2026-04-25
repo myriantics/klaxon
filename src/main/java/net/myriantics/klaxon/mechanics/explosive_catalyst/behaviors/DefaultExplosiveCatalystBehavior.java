@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.BlastProcessorExplosionBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import org.jetbrains.annotations.Nullable;
 
 

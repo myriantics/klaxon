@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipe;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
 
 import java.util.List;
 

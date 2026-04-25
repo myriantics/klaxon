@@ -1,11 +1,10 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 
 public class EndCrystalExplosiveCatalystBehavior extends DefaultExplosiveCatalystBehavior {
 
