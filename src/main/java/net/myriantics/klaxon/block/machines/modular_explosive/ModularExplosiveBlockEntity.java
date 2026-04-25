@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
@@ -123,7 +123,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
         BlockPos pos = this.worldPosition;
 
         if (level instanceof ServerLevel serverLevel) {
-            Holder<AbstractExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior();
+            Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior();
             if (behaviorHolder.is(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)) {
                 BlockState state = level.getBlockState(pos);
                 KlaxonServerPlayNetworkHandler.syncWorldEvent(serverLevel, pos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);

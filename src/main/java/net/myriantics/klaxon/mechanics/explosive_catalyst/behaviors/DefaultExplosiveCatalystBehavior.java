@@ -10,13 +10,13 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.BlastProcessorExplosionBehavior;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import org.jetbrains.annotations.Nullable;
 
 
-public class DefaultExplosiveCatalystBehavior extends AbstractExplosiveCatalystBehavior {
+public class DefaultExplosiveCatalystBehavior extends ExplosiveCatalystBehavior {
 
     @Override
     public void createExplosion(ExplosiveCatalystContext context, Position detonationPosition, ExplosiveCatalystData data, boolean modifyWorld) {

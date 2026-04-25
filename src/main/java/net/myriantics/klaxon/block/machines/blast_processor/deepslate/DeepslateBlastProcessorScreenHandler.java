@@ -19,7 +19,6 @@ import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
 import net.myriantics.klaxon.util.PermissionsHelper;
@@ -70,7 +69,7 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
                     this.powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessorBlockEntity.getContext(), blastProcessorBlockEntity.getCatalystStack());
 
                     BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(blastProcessorBlockEntity.getIngredientStack(), powerData);
-                    this.blastProcessingData = blastProcessorBlockEntity.getBlastProcessingPreviewData(level, pos, (DeepslateBlastProcessorBlockEntity) level.getBlockEntity(pos), recipeInput);
+                    this.blastProcessingData = blastProcessorBlockEntity.getBlastProcessingPreviewData(level, pos, recipeInput);
                 }
 
 
@@ -152,7 +151,7 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
         if (!world.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
                 ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(), blastProcessor.getCatalystStack());
-                BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getBlastProcessingPreviewData(world, pos, blastProcessor, new BlastProcessingRecipeInput(blastProcessor.getIngredientStack(), newPowerData));
+                BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getBlastProcessingPreviewData(world, pos, new BlastProcessingRecipeInput(blastProcessor.getIngredientStack(), newPowerData));
 
                 // Make sure we've changed something before sending an update packet
                 if (!newPowerData.equals(powerData) || !newBlastProcessingData.equals(this.blastProcessingData)) {

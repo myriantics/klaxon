@@ -3,24 +3,39 @@ package net.myriantics.klaxon.block.machines.blast_processor.steel;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlock;
 import net.myriantics.klaxon.mechanics.muffling.MufflableBlock;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
+import net.myriantics.klaxon.networking.s2c.SteelBlastProcessorExhaustLaunchPacket;
+import net.myriantics.klaxon.recipe.explosive_catalyst_definition.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
+import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implements MufflableBlock {
@@ -63,8 +78,51 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         return 4;
     }
 
-    public void handleExhaust(Level level, BlockPos pos) {
+    public boolean isExhaustIgnited(Level level, BlockPos pos) {
+        return level.getBlockState(pos.above()).is(BlockTags.FIRE);
+    }
 
+    public boolean handleOverload(Level level, BlockPos pos, SteelBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData catalystData) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+
+        if (this.isExhaustIgnited(level, pos) || !this.canExhaustReplaceState(level, pos, aboveState)) {
+            return false;
+        } else {
+            level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
+            List<Entity> caughtInExhaustBlast = level.getEntities(EntityTypeTest.forClass(Entity.class), new AABB(abovePos), entity -> !entity.isInvulnerable());
+
+            float damage = (float) (catalystData.explosionPower() * 2);
+            if (catalystData.producesFire()) {
+                damage++;
+            }
+
+            // launched up one block for each tick of damage
+            Vec3 launchVelocity = new Vec3(0, damage/20, 0);
+
+            for (Entity entity : caughtInExhaustBlast) {
+                if (!entity.fireImmune() && !(entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE))) {
+                    entity.hurt(this.createDamageSource(level), damage);
+                    if (entity instanceof ServerPlayer serverPlayer && ! entity.isControlledByLocalInstance()) {
+                        KlaxonServerPlayNetworkHandler.send(serverPlayer, new SteelBlastProcessorExhaustLaunchPacket(launchVelocity.toVector3f()));
+                    } else {
+                        entity.addDeltaMovement(launchVelocity);
+                    }
+                }
+            }
+
+            return true;
+        }
+    }
+
+
+
+    public DamageSource createDamageSource(Level level) {
+        return level.damageSources().source(
+                KlaxonDamageTypes.FORCEFUL_EXHAUST,
+                null,
+                null
+        );
     }
 
     public void updateState(Level level, BlockPos pos, SteelBlastProcessorBlockEntity blastProcessor) {
@@ -103,5 +161,19 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         if (level.getBlockEntity(pos) instanceof SteelBlastProcessorBlockEntity blastProcessor) {
             blastProcessor.setMuffler(stack);
         }
+    }
+
+    protected boolean canExhaustReplaceState(Level level, BlockPos pos, BlockState state) {
+        if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST)) {
+            return false;
+        } else if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST)) {
+            return true;
+        }
+
+        if (state.canBeReplaced() || state.getDestroySpeed(level, pos) == 0f) {
+            return true;
+        }
+
+        return false;
     }
 }

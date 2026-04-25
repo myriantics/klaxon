@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.datagen.NamedIngredient;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
@@ -292,7 +292,7 @@ public abstract class KlaxonRecipeSubProvider {
 
     public void addExplosiveCatalystDefinitionRecipe(
             NamedIngredient input,
-            Holder<AbstractExplosiveCatalystBehavior> behavior,
+            Holder<ExplosiveCatalystBehavior> behavior,
             double explosionPower, boolean producesFire,
             boolean isHidden,
             final ResourceCondition... conditions

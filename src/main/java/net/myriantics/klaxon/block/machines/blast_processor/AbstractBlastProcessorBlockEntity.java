@@ -16,7 +16,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.KlaxonBaseSidedContainerBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -58,12 +57,8 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
     public abstract void redstoneTrigger();
 
-    public void onRedstoneImpulse() {
-
-    }
-
-    protected void ejectItems(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData) {
-        if (world == null || blastProcessor.isEmpty()) {
+    protected void ejectItems(Level world, BlockPos pos, BlastProcessingRecipeData recipeData, ExplosiveCatalystData powerData) {
+        if (world == null || this.isEmpty()) {
             return;
         }
 
@@ -71,12 +66,12 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
         if (recipeData.outputStacks().length == 0) {
             if (powerData.explosionPower() <= 0 || powerData.explosionPower() < recipeData.explosionPowerMin()) {
-                for (ItemStack ejectedStack : blastProcessor.getItems()) {
-                    DefaultDispenseItemBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, blastProcessor.getItemOutputLocation(facing));
+                for (ItemStack ejectedStack : this.getItems()) {
+                    DefaultDispenseItemBehavior.spawnItem(world, ejectedStack.copy(), 8, facing, this.getItemOutputLocation(facing));
                 }
             }
         } else {
-            Position itemOutputPos = blastProcessor.getItemOutputLocation(facing);
+            Position itemOutputPos = this.getItemOutputLocation(facing);
             double advancementGrantRange = 17.0;
 
             for (ItemStack stack : recipeData.outputStacks()) {
@@ -92,10 +87,10 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         }
 
         // blast processor will always be empty after actions have been performed
-        blastProcessor.clearContent();
+        this.clearContent();
     }
 
-    public BlastProcessingRecipeData getBlastProcessingPreviewData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory) {
+    public BlastProcessingRecipeData getBlastProcessingPreviewData(Level world, BlockPos pos, BlastProcessingRecipeInput recipeInventory) {
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ExplosiveCatalystData powerData = recipeInventory.getPowerData();
 
@@ -118,7 +113,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         }
     }
 
-    public BlastProcessingRecipeData getBlastProcessingRecipeData(Level world, BlockPos pos, DeepslateBlastProcessorBlockEntity blastProcessor, BlastProcessingRecipeInput recipeInventory) {
+    public BlastProcessingRecipeData getBlastProcessingRecipeData(Level world, BlockPos pos, BlastProcessingRecipeInput recipeInventory) {
         Optional<BlastProcessingRecipe> blastProcessingMatch = Optional.empty();
         ExplosiveCatalystData powerData = recipeInventory.getPowerData();
 
@@ -193,6 +188,8 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
             }
         }
     }
+
+    public abstract Position getItemOutputLocation(Direction facing);
 
     public final ItemStack getIngredientStack() {
         return this.getItem(INGREDIENT_INDEX);

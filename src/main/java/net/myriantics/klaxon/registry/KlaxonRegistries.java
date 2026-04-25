@@ -6,13 +6,13 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.AbstractExplosiveCatalystBehavior;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 
 import java.util.function.Consumer;
 
 public abstract class KlaxonRegistries {
-    public static final Registry<AbstractExplosiveCatalystBehavior> EXPLOSIVE_CATALYST_BEHAVIORS = register(
+    public static final Registry<ExplosiveCatalystBehavior> EXPLOSIVE_CATALYST_BEHAVIORS = register(
             KlaxonRegistryKeys.EXPLOSIVE_CATALYST_BEHAVIOR,
             (builder) -> builder.attribute(RegistryAttribute.SYNCED)
     );
