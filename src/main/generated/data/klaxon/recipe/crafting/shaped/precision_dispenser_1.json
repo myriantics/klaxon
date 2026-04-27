@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "dispenser",
+  "key": {
+    "C": {
+      "item": "klaxon:steel_casing"
+    },
+    "H": {
+      "item": "klaxon:crested_steel_helmet"
+    },
+    "T": {
+      "item": "minecraft:clock"
+    },
+    "W": {
+      "tag": "c:wires/steel"
+    }
+  },
+  "pattern": [
+    "HW ",
+    "WCW",
+    " WT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:precision_dispenser"
+  }
+}

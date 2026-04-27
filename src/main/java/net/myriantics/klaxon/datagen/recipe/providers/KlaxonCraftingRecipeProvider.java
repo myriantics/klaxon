@@ -204,6 +204,9 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 "steel_casing"
         );
 
+        addPrecisionDispenserRecipe(KlaxonItems.STEEL_HELMET);
+        addPrecisionDispenserRecipe(KlaxonItems.CRESTED_STEEL_HELMET);
+
         /*
         addShapedCraftingRecipe(Map.of(
                 'R', Ingredient.ofItems(KlaxonItems.RUBBER_SHEET),
@@ -588,6 +591,24 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 result,
                 CraftingBookCategory.EQUIPMENT,
                 "grapple_winch"
+        );
+    }
+
+    private void addPrecisionDispenserRecipe(Holder<Item> helmet) {
+        addShapedCraftingRecipe(Map.of(
+                        'H', Ingredient.of(helmet.value()),
+                        'W', Ingredient.of(KlaxonConventionalItemTags.STEEL_WIRES),
+                        'C', Ingredient.of(KlaxonItems.STEEL_CASING.value()),
+                        'T', Ingredient.of(Items.CLOCK)
+                ),
+                new String[] {
+                        "HW ",
+                        "WCW",
+                        " WT"
+                },
+                new ItemStack(KlaxonItems.PRECISION_DISPENSER),
+                CraftingBookCategory.REDSTONE,
+                "dispenser"
         );
     }
 }

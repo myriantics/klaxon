@@ -34,6 +34,7 @@ public abstract class KlaxonBlockEntityTypes {
         addSupporting(BlockEntityType.SIGN , KlaxonBlocks.HALLNOX_WALL_SIGN);
         addSupporting(BlockEntityType.HANGING_SIGN, KlaxonBlocks.HALLNOX_HANGING_SIGN);
         addSupporting(BlockEntityType.HANGING_SIGN, KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
+        addSupporting(BlockEntityType.DISPENSER, KlaxonBlocks.PRECISION_DISPENSER);
     }
 
     private static void addSupporting(BlockEntityType<?> type, Holder<Block> holder) {

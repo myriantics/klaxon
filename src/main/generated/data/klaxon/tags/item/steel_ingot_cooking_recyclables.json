@@ -1,5 +1,7 @@
 {
   "values": [
+    "klaxon:steel_blast_processor",
+    "klaxon:precision_dispenser",
     "klaxon:steel_casing",
     "klaxon:nether_reactor_core",
     "klaxon:steel_workbench",

@@ -71,6 +71,7 @@ public abstract class KlaxonBlockItems {
     // machines
     public static final Holder<Item> DEEPSLATE_BLAST_PROCESSOR = registerBlockItem(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
     public static final Holder<Item> STEEL_BLAST_PROCESSOR = registerBlockItem(KlaxonBlocks.STEEL_BLAST_PROCESSOR);
+    public static final Holder<Item> PRECISION_DISPENSER = registerBlockItem(KlaxonBlocks.PRECISION_DISPENSER);
     public static final Holder<Item> NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.NETHER_REACTOR_CORE);
     public static final Holder<Item> CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
     public static final Holder<Item> MODULAR_EXPLOSIVE_BLOCK = registerBlockItem(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, new BlockItem(

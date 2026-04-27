@@ -164,6 +164,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE.value()
                 )
                 .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
+                .add(KlaxonBlocks.PRECISION_DISPENSER.value())
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(
                         Blocks.COPPER_BULB,
@@ -267,6 +268,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.value().getAllowlistTag())
                 .forceAddTag(BlockTags.SHULKER_BOXES)
+                .add(KlaxonBlocks.PRECISION_DISPENSER.value())
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(Blocks.PISTON)
                 .add(Blocks.STICKY_PISTON)

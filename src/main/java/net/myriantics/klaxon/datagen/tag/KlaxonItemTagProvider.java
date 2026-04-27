@@ -278,6 +278,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(KlaxonItems.CRUDE_STEEL_DOOR.value())
                 .add(KlaxonItems.CRUDE_STEEL_TRAPDOOR.value());
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_INGOT_COOKING_RECYCLABLES)
+                .add(KlaxonItems.STEEL_BLAST_PROCESSOR.value())
+                .add(KlaxonItems.PRECISION_DISPENSER.value())
                 .add(KlaxonItems.STEEL_CASING.value())
                 .add(KlaxonItems.NETHER_REACTOR_CORE.value())
                 .add(KlaxonItems.STEEL_WORKBENCH.value())

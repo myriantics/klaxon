@@ -69,6 +69,8 @@
     "minecraft.nether_reaction.BeehiveBlockEntityMixin",
     "minecraft.nether_reaction.ExplosionMixin",
     "minecraft.pick_stack_tweak.InventoryMixin",
+    "minecraft.precision_dispenser.DispenserBlockMixin",
+    "minecraft.precision_dispenser.ProjectileDispenseBehaviorMixin",
     "minecraft.reinforced_flint_and_steel.CandleCakeMixin",
     "minecraft.reinforced_flint_and_steel.TntBlockMixin",
     "minecraft.stack_usage_tweak.ItemStackMixin",

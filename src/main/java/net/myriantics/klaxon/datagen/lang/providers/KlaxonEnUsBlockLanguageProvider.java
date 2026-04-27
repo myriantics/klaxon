@@ -20,9 +20,11 @@ public final class KlaxonEnUsBlockLanguageProvider extends KlaxonEnUsLanguageSub
         // machines
         addBlock(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR, "Deepslate Blast Processor");
         addBlock(KlaxonBlocks.STEEL_BLAST_PROCESSOR, "Steel Blast Processor");
+        addBlock(KlaxonBlocks.PRECISION_DISPENSER, "Precision Dispenser");
         addBlock(KlaxonBlocks.NETHER_REACTOR_CORE, "Nether Reactor Core");
         addBlock(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, "Crude Nether Reactor Core");
         addBlock(KlaxonBlocks.STEEL_WORKBENCH, "Steel Workbench");
+        addBlock(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, "Modular Explosive Block");
 
         // casing
         addBlock(KlaxonBlocks.STEEL_CASING, "Steel Casing");

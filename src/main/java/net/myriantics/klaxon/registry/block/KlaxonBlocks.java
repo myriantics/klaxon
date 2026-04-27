@@ -24,6 +24,7 @@ import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSeg
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
+import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlock;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 
 public abstract class KlaxonBlocks {
@@ -61,6 +62,8 @@ public abstract class KlaxonBlocks {
             new DeepslateBlastProcessorBlock(copyProperties(Blocks.POLISHED_DEEPSLATE).lightLevel(Blocks.litBlockEmission(15))));
     public static final Holder<Block> STEEL_BLAST_PROCESSOR = registerBlock("steel_blast_processor",
             new SteelBlastProcessorBlock(copyProperties(STEEL_CASING)));
+    public static final Holder<Block> PRECISION_DISPENSER = registerBlock("precision_dispenser",
+            new PrecisionDispenserBlock(copyProperties(STEEL_CASING)));
     public static final Holder<Block> NETHER_REACTOR_CORE = registerBlock("nether_reactor_core",
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.STEEL_CASING).lightLevel((state) -> 15).noOcclusion()));
     public static final Holder<Block> CRUDE_NETHER_REACTOR_CORE = registerBlock("crude_nether_reactor_core",
