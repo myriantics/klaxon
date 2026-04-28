@@ -1,0 +1,42 @@
+{
+  "variants": {
+    "facing=down,triggered=false": {
+      "model": "klaxon:block/precision_dispenser/vertical/idle",
+      "x": 180
+    },
+    "facing=down,triggered=true": {
+      "model": "klaxon:block/precision_dispenser/vertical/triggered",
+      "x": 180
+    },
+    "facing=east,triggered=false": {
+      "model": "klaxon:block/precision_dispenser/horizontal"
+    },
+    "facing=east,triggered=true": {
+      "model": "klaxon:block/precision_dispenser/horizontal"
+    },
+    "facing=north,triggered=false": {
+      "model": "klaxon:block/precision_dispenser/horizontal"
+    },
+    "facing=north,triggered=true": {
+      "model": "klaxon:block/precision_dispenser/horizontal"
+    },
+    "facing=south,triggered=false": {
+      "model": "klaxon:block/precision_dispenser/horizontal"
+    },
+    "facing=south,triggered=true": {
+      "model": "klaxon:block/precision_dispenser/horizontal"
+    },
+    "facing=up,triggered=false": {
+      "model": "klaxon:block/precision_dispenser/vertical/idle"
+    },
+    "facing=up,triggered=true": {
+      "model": "klaxon:block/precision_dispenser/vertical/triggered"
+    },
+    "facing=west,triggered=false": {
+      "model": "klaxon:block/precision_dispenser/horizontal"
+    },
+    "facing=west,triggered=true": {
+      "model": "klaxon:block/precision_dispenser/horizontal"
+    }
+  }
+}

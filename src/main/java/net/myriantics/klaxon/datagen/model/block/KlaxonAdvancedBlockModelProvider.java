@@ -40,6 +40,7 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
     private void registerMachineBlockStateModels() {
         // blast processors
         registerDeepslateBlastProcessor(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+        registerPrecisionDispenser(KlaxonBlocks.PRECISION_DISPENSER.value());
 
         // nether reactors
         registerNetherReactorCore(KlaxonBlocks.NETHER_REACTOR_CORE);

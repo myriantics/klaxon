@@ -14,13 +14,13 @@ import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
+import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonModelTemplates;
 import net.myriantics.klaxon.registry.render.KlaxonTextureKeys;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
-import org.w3c.dom.Text;
 
 import java.util.Map;
 
@@ -103,6 +103,62 @@ public abstract class KlaxonBlockModelSubProvider {
 
     protected void registerDeepslateBlastProcessor(Holder<Block> holder) {
         this.registerDeepslateBlastProcessor(holder.value());
+    }
+
+    protected void registerPrecisionDispenser(Block block) {
+        ResourceLocation baseRl = ModelLocationUtils.getModelLocation(block);
+        ResourceLocation horizontalRl = baseRl.withSuffix("/horizontal");
+        ResourceLocation verticalRl = baseRl.withSuffix("/vertical");
+        ResourceLocation horizontalIdleRl = horizontalRl.withSuffix("/idle");
+        ResourceLocation horizontalTriggeredRl = horizontalRl.withSuffix("/triggered");
+        ResourceLocation verticalIdleRl = verticalRl.withSuffix("/idle");
+        ResourceLocation verticalTriggeredRl = verticalRl.withSuffix("/triggered");
+
+        TextureMapping horizontalIdleTexMap = new TextureMapping()
+                .put(TextureSlot.FRONT, horizontalRl.withSuffix("/front"))
+                .put(TextureSlot.BACK, horizontalRl.withSuffix("/back"))
+                .put(TextureSlot.SIDE, horizontalRl.withSuffix("/side"))
+                .put(TextureSlot.TOP, horizontalRl.withSuffix("/top"))
+                .put(TextureSlot.BOTTOM, horizontalRl.withSuffix("/bottom"))
+                .put(TextureSlot.PARTICLE, horizontalRl.withSuffix("/side"));
+        TextureMapping horizontalTriggeredTexMap = new TextureMapping()
+                .put(TextureSlot.FRONT, horizontalRl.withSuffix("front_triggered"))
+                .put(TextureSlot.BACK, baseRl.withSuffix("/back_triggered"))
+                .put(TextureSlot.SIDE, horizontalRl.withSuffix("/side_triggered"));
+        TextureMapping verticalIdleTexMap = new TextureMapping()
+                .put(TextureSlot.FRONT, verticalRl.withSuffix("/front_idle"))
+                .put(TextureSlot.SIDE, baseRl.withSuffix("/side_idle"))
+                .put(TextureSlot.BOTTOM, baseRl.withSuffix("/back_idle"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_idle"));
+        TextureMapping verticalTriggeredTexMap = new TextureMapping()
+                .put(TextureSlot.FRONT, verticalRl.withSuffix("/front_triggered"))
+                .put(TextureSlot.SIDE, baseRl.withSuffix("/side_triggered"))
+                .put(TextureSlot.BOTTOM, baseRl.withSuffix("/back_triggered"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_triggered"));
+
+        ResourceLocation verticalTriggered = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(verticalTriggeredRl, verticalTriggeredTexMap, generator.modelOutput);
+        ResourceLocation verticalIdle = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(verticalIdleRl, verticalIdleTexMap, generator.modelOutput);
+        // ResourceLocation horizontalTriggered = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(horizontalTriggeredRl, , generator.modelOutput);
+        // ResourceLocation horizontalIdle = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(horizontalIdleRl, horizontalIdleTexMap, generator.modelOutput);
+
+        generator.delegateItemModel(block, verticalIdle);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+                .with(PropertyDispatch.properties(PrecisionDispenserBlock.FACING, PrecisionDispenserBlock.TRIGGERED)
+                        .select(Direction.UP, true, modelVariant(verticalTriggered))
+                        .select(Direction.UP, false, modelVariant(verticalIdle))
+                        .select(Direction.DOWN, true, modelVariant(verticalTriggered).with(VariantProperties.X_ROT, VariantProperties.Rotation.R180))
+                        .select(Direction.DOWN, false, modelVariant(verticalIdle).with(VariantProperties.X_ROT, VariantProperties.Rotation.R180))
+                        .select(Direction.NORTH, true, modelVariant(horizontalRl))
+                        .select(Direction.NORTH, false, modelVariant(horizontalRl))
+                        .select(Direction.SOUTH, true, modelVariant(horizontalRl))
+                        .select(Direction.SOUTH, false, modelVariant(horizontalRl))
+                        .select(Direction.EAST, true, modelVariant(horizontalRl))
+                        .select(Direction.EAST, false, modelVariant(horizontalRl))
+                        .select(Direction.WEST, true, modelVariant(horizontalRl))
+                        .select(Direction.WEST, false, modelVariant(horizontalRl))
+                )
+        );
     }
 
     protected void registerDeepslateBlastProcessor(Block block) {

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/orientable_vertical",
+  "textures": {
+    "front": "klaxon:block/precision_dispenser/vertical/front_idle",
+    "side": "klaxon:block/precision_dispenser/side_idle"
+  }
+}
