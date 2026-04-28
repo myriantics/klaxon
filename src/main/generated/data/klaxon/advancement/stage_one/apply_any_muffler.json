@@ -1,0 +1,29 @@
+{
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
+  "criteria": {
+    "apply_any_muffler": {
+      "conditions": {
+        "muffler_action_type": "apply"
+      },
+      "trigger": "klaxon:muffler_interaction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.apply_any_muffler.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:leather"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.apply_any_muffler.title"
+    }
+  },
+  "requirements": [
+    [
+      "apply_any_muffler"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

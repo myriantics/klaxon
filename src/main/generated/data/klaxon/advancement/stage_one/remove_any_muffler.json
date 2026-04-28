@@ -1,0 +1,29 @@
+{
+  "parent": "klaxon:stage_one/apply_any_muffler",
+  "criteria": {
+    "remove_any_muffler": {
+      "conditions": {
+        "muffler_action_type": "remove"
+      },
+      "trigger": "klaxon:muffler_interaction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.remove_any_muffler.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:shears"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.remove_any_muffler.title"
+    }
+  },
+  "requirements": [
+    [
+      "remove_any_muffler"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

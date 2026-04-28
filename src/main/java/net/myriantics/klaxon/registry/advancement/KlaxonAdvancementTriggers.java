@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.registry.advancement;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -8,6 +9,7 @@ import net.myriantics.klaxon.item.equipment.tools.HammerItem;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
+import net.myriantics.klaxon.mechanics.muffling.MufflerActionType;
 
 public abstract class KlaxonAdvancementTriggers {
     public static void triggerItemRepair(ServerPlayer serverPlayer, ItemStack stack) {
@@ -47,5 +49,9 @@ public abstract class KlaxonAdvancementTriggers {
 
     public static void triggerErectFirewall(ServerPlayer player) {
         KlaxonAdvancementCriteria.IGNITE_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE.value().trigger(player);
+    }
+
+    public static void triggerMufflerInteraction(ServerPlayer serverPlayer, BlockPos muffledPos, MufflerActionType type, ItemStack appliedStack, ItemStack existingMufflerStack) {
+        KlaxonAdvancementCriteria.MUFFLER_INTERACTION.value().trigger(serverPlayer, muffledPos, type, appliedStack, existingMufflerStack);
     }
 }

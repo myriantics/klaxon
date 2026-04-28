@@ -1,4 +1,8 @@
 {
+  "advancements.klaxon.stage_one.apply_any_muffler.description": "Apply any Muffler to any Machine",
+  "advancements.klaxon.stage_one.apply_any_muffler.title": "Peace And Quiet",
+  "advancements.klaxon.stage_one.apply_elytra_muffler.description": "Apply an Elytra as a machine muffler",
+  "advancements.klaxon.stage_one.apply_elytra_muffler.title": "Call It: Misinput Or Flex",
   "advancements.klaxon.stage_one.grapple_ender_dragon.description": "Grapple onto an Ender Dragon and take flight",
   "advancements.klaxon.stage_one.grapple_ender_dragon.title": "Dragonhearted",
   "advancements.klaxon.stage_one.grapple_winch_de_anchor_grapple_claw.description": "De-anchor a Grapple Claw by retracting it while wearing Heavy Equipment",
@@ -31,6 +35,8 @@
   "advancements.klaxon.stage_one.obtain_steel_cleaver.title": "Now THIS is a Knife!",
   "advancements.klaxon.stage_one.obtain_steel_wrench.description": "Obtain a Steel Wrench",
   "advancements.klaxon.stage_one.obtain_steel_wrench.title": "Problem Solver",
+  "advancements.klaxon.stage_one.remove_any_muffler.description": "Remove a Muffler from any machine",
+  "advancements.klaxon.stage_one.remove_any_muffler.title": "Music Of The Cubes",
   "advancements.klaxon.stage_one.root.description": "An explosive introduction",
   "advancements.klaxon.stage_one.root.title": "KLAXON - Initialization",
   "advancements.klaxon.stage_one.rotate_rail_with_wrench.description": "Rotate any Rail with the Steel Wrench",

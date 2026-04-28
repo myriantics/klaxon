@@ -64,7 +64,7 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
 
         // level 3
         addStageOneAdvancement(
-                KlaxonStageOneAdvancementProvider.LIGHT_MUlTIPLE_FIRES_WITH_ONE_LIGHTER_USE,
+                KlaxonStageOneAdvancementProvider.LIGHT_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE,
                 "Firewall!",
                 "Ignite multiple fires during one use of the Steel Lighter"
         );
@@ -101,6 +101,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
 
         // level 4
         addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.APPLY_ANY_MUFFLER,
+                "Peace And Quiet",
+                "Apply any Muffler to any Machine"
+        );
+        addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.ROTATE_RAIL_WITH_WRENCH,
                 "All The Live Long Day",
                 "Rotate any Rail with the Steel Wrench"
@@ -112,6 +117,16 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
         );
 
         // level 5
+        addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.REMOVE_ANY_MUFFLER,
+                "Music Of The Cubes",
+                "Remove a Muffler from any machine"
+        );
+        addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.APPLY_ELYTRA_MUFFLER,
+                "Call It: Misinput Or Flex",
+                "Apply an Elytra as a machine muffler"
+        );
         addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW,
                 "Immovable Object",

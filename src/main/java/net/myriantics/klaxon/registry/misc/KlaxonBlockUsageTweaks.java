@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry.misc;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -12,6 +13,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.muffling.MufflableBlock;
 import net.myriantics.klaxon.mechanics.muffling.MufflerActionType;
+import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 
@@ -26,18 +28,19 @@ public abstract class KlaxonBlockUsageTweaks {
         register((block, stack, state, level, pos, player, hand, hitResult) -> {
             MufflerActionType type;
             if (stack.is(KlaxonItemTags.MUFFLERS)) {
-                type = MufflerActionType.MUFFLER_APPLY;
+                type = MufflerActionType.APPLY;
             } else if (stack.is(KlaxonItemTags.MUFFLER_REMOVERS)) {
-                type = MufflerActionType.MUFFLER_REMOVE;
+                type = MufflerActionType.REMOVE;
             } else {
                 return Optional.empty();
             }
 
             if (state.getBlock() instanceof MufflableBlock mufflableBlock) {
                 switch (type) {
-                    case MUFFLER_APPLY -> {
+                    case APPLY -> {
                         if (!mufflableBlock.hasMuffler(level, pos)) {
-                            if (!level.isClientSide()) {
+                            if (player instanceof ServerPlayer serverPlayer) {
+                                KlaxonAdvancementTriggers.triggerMufflerInteraction(serverPlayer, pos, type, stack, mufflableBlock.getMuffler(level, pos));
                                 mufflableBlock.setMuffler(level, pos, player.hasInfiniteMaterials() ? stack.copyWithCount(1) : stack.split(1));
                             }
                             type.playSuccessSound(level, pos, state, player);
@@ -46,10 +49,11 @@ public abstract class KlaxonBlockUsageTweaks {
                             return Optional.empty();
                         }
                     }
-                    case MUFFLER_REMOVE -> {
+                    case REMOVE -> {
                         if (mufflableBlock.hasMuffler(level, pos)) {
-                            if (!level.isClientSide()) {
+                            if (player instanceof ServerPlayer serverPlayer) {
                                 ItemStack oldMuffler = mufflableBlock.removeMuffler(level, pos);
+                                KlaxonAdvancementTriggers.triggerMufflerInteraction(serverPlayer, pos, type, stack, oldMuffler);
                                 if (!player.hasInfiniteMaterials()) {
                                     stack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(hand));
                                     Block.popResource(level, pos, oldMuffler.copy()); // no cloggage in creative mode

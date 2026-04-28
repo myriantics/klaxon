@@ -1,0 +1,34 @@
+{
+  "parent": "klaxon:stage_one/apply_any_muffler",
+  "criteria": {
+    "apply_elytra_muffler": {
+      "conditions": {
+        "applied_stack": {
+          "items": "minecraft:elytra"
+        },
+        "muffler_action_type": "apply"
+      },
+      "trigger": "klaxon:muffler_interaction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.apply_elytra_muffler.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "minecraft:elytra"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.apply_elytra_muffler.title"
+    }
+  },
+  "requirements": [
+    [
+      "apply_elytra_muffler"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

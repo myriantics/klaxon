@@ -17,7 +17,7 @@ import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchCab
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchVeinMineCriterion;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementSubProvider;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
-import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.mechanics.muffling.MufflerActionType;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -41,14 +41,17 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     public static final String HAMMER_WALLJUMP_NORMAL = "hammer_walljump_normal";
     public static final String MAKESHIFT_ITEM_FULL_REPAIR = "makeshift_item_full_repair";
 
+    public static final String APPLY_ANY_MUFFLER = "apply_any_muffler";
     public static final String HAMMER_WALLJUMP_BOOSTED = "hammer_walljump_boosted";
     public static final String HAMMER_WALLJUMP_MINECART = "hammer_walljump_minecart";
-    public static final String LIGHT_MUlTIPLE_FIRES_WITH_ONE_LIGHTER_USE = "light_multiple_fires_with_one_lighter_use";
+    public static final String LIGHT_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE = "light_multiple_fires_with_one_lighter_use";
     public static final String USE_CABLE_SHEARS_TO_MAKE_METAL_WIRE = "use_cable_shears_to_make_metal_wire";
     public static final String OBTAIN_STEEL_CLEAVER = "obtain_steel_cleaver";
     public static final String OBTAIN_STEEL_WRENCH = "obtain_steel_wrench";
     public static final String OBTAIN_ANY_STEEL_ARMOR = "obtain_any_steel_armor";
 
+    public static final String REMOVE_ANY_MUFFLER = "remove_any_muffler";
+    public static final String APPLY_ELYTRA_MUFFLER = "apply_elytra_muffler";
     public static final String ROTATE_RAIL_WITH_WRENCH = "rotate_rail_with_wrench";
     public static final String OBTAIN_GRAPPLE_WINCH = "obtain_grapple_winch";
 
@@ -71,28 +74,36 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     }
 
     private void generateAdvancements(AdvancementHolder root) {
+        // level 1
         AdvancementHolder watchBlastProcessorCraft = addTask(root, WATCH_BLAST_PROCESSOR_CRAFT, KlaxonItems.FRACTURED_RAW_IRON.value(), BlockActivationCriterion.Conditions.create(KlaxonBlockTags.BLAST_PROCESSORS));
         AdvancementHolder obtainHallnoxPod = addTask(root, OBTAIN_HALLNOX_POD, KlaxonItems.HALLNOX_POD.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.HALLNOX_POD.value()));
 
+        // level 2
         AdvancementHolder watchNetherReactorCoreActivate = addTask(obtainHallnoxPod, WATCH_NETHER_REACTOR_CORE_ACTIVATE, KlaxonItems.NETHER_REACTOR_CORE.value(), BlockActivationCriterion.Conditions.create(KlaxonBlockTags.NETHER_REACTOR_CORES));
         AdvancementHolder hammerCraftMetalPlate = addTask(watchBlastProcessorCraft, USE_HAMMER_TO_MAKE_METAL_PLATE, KlaxonItems.CRUDE_STEEL_PLATE.value(), ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.of(KlaxonConventionalItemTags.PLATES)));
         AdvancementHolder obtainAnyRubberGlob = addTask(watchBlastProcessorCraft, OBTAIN_ANY_RUBBER_GLOB, KlaxonItems.RUBBER_GLOB.value(), InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(KlaxonItems.RUBBER_GLOB.value())));
         AdvancementHolder normalHammerWalljump = addTask(watchBlastProcessorCraft, HAMMER_WALLJUMP_NORMAL, KlaxonItems.STEEL_HAMMER.value(), WalljumpAbilityCriterion.Conditions.createNormalWalljump());
         AdvancementHolder makeshiftItemFullRepair = addTask(watchBlastProcessorCraft, MAKESHIFT_ITEM_FULL_REPAIR, Items.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
 
+        // level 3
+        AdvancementHolder applyAnyMuffler = addTask(hammerCraftMetalPlate, APPLY_ANY_MUFFLER, Items.LEATHER, MufflerInteractionCriterion.Conditions.create(MufflerActionType.APPLY, null));
         AdvancementHolder boostedHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_BOOSTED, Items.BLAZE_POWDER,  WalljumpAbilityCriterion.Conditions.createStrengthWalljump());
         AdvancementHolder minecartHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_MINECART, Items.CAULDRON, WalljumpAbilityCriterion.Conditions.createMinecartWalljump());
-        AdvancementHolder erectFirewallWithLighter = addGoal(hammerCraftMetalPlate, LIGHT_MUlTIPLE_FIRES_WITH_ONE_LIGHTER_USE, KlaxonItems.STEEL_LIGHTER.value(), OneOffCriterion.Conditions.createErectFirewall());
+        AdvancementHolder erectFirewallWithLighter = addGoal(hammerCraftMetalPlate, LIGHT_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE, KlaxonItems.STEEL_LIGHTER.value(), OneOffCriterion.Conditions.createErectFirewall());
         AdvancementHolder cableShearCraftMetalWire = addTask(hammerCraftMetalPlate, USE_CABLE_SHEARS_TO_MAKE_METAL_WIRE, KlaxonItems.STEEL_CABLE_SHEARS.value(), ToolUsageRecipeCraftCriterion.Conditions.createWirecutting(Ingredient.of(KlaxonConventionalItemTags.WIRES)));
         AdvancementHolder obtainSteelCleaver = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_CLEAVER, KlaxonItems.STEEL_CLEAVER.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.STEEL_CLEAVER.value()));
         AdvancementHolder obtainSteelWrench = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_WRENCH, KlaxonItems.STEEL_WRENCH.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.STEEL_WRENCH.value()));
         AdvancementHolder obtainAnySteelArmor = addGoal(hammerCraftMetalPlate, OBTAIN_ANY_STEEL_ARMOR, KlaxonItems.STEEL_CHESTPLATE.value(), InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(KlaxonItemTags.STEEL_ARMOR)));
 
+        // level 4
+        AdvancementHolder removeAnyMuffler = addTask(applyAnyMuffler, REMOVE_ANY_MUFFLER, Items.SHEARS, MufflerInteractionCriterion.Conditions.create(MufflerActionType.REMOVE, null));
+        AdvancementHolder applyElytraMuffler = addHiddenChallenge(applyAnyMuffler, APPLY_ELYTRA_MUFFLER, Items.ELYTRA, MufflerInteractionCriterion.Conditions.create(MufflerActionType.APPLY, ItemPredicate.Builder.item().of(Items.ELYTRA).build()));
         AdvancementHolder editRailWithSteelWrench = addTask(obtainSteelWrench, ROTATE_RAIL_WITH_WRENCH, Items.RAIL, WrenchUsageCriterion.Conditions.createRotation(BlockTags.RAILS));
         ItemStack loadedGrappleWinch = new ItemStack(KlaxonItems.GRAPPLE_WINCH);
         loadedGrappleWinch.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW)));
         AdvancementHolder obtainGrappleWinch = addTask(cableShearCraftMetalWire, OBTAIN_GRAPPLE_WINCH, loadedGrappleWinch, InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.GRAPPLE_WINCH.value()));
 
+        // level 5
         AdvancementHolder grappleWinchDeAnchorGrappleClaw = addTask(obtainGrappleWinch, GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW, KlaxonItems.STEEL_GRAPPLE_CLAW.value(), OneOffCriterion.Conditions.createDeAnchorGrappleClaw());
         AdvancementHolder grappleWinchIntentionallyDisconnectCable = addTask(obtainGrappleWinch, GRAPPLE_WINCH_INTENTIONALLY_DISCONNECT_CABLE, KlaxonItems.STEEL_WIRE.value(), GrappleWinchCableDisconnectCriterion.Conditions.createPlayer(CableDetachmentReason.INVALID_HELD_ITEMS, EntityPredicate.Builder.entity().of(EntityType.PLAYER).moving(MovementPredicate.speed(MinMaxBounds.Doubles.atLeast(5f/20))).build()));
         ItemStack enchantedGrappleClawStack = new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW);
@@ -100,6 +111,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementHolder grappleWinchGrappleEnderDragon = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_GRAPPLE_ENDER_DRAGON, enchantedGrappleClawStack, EntityGrappleCriterion.Conditions.create(EntityType.ENDER_DRAGON));
         AdvancementHolder grappleWinchLevitationBug = addHiddenChallenge(obtainGrappleWinch, GRAPPLE_WINCH_MOUNT_LEVITATION_BUG, Items.ALLIUM, OneOffCriterion.Conditions.createGrappleWinchLevitationBug());
 
+        // level 6
         AdvancementHolder grappleWinchVeinMine = addChallenge(grappleWinchDeAnchorGrappleClaw, GRAPPLE_WINCH_VEINMINE_GLOWSTONE, Items.GLOWSTONE, GrappleWinchVeinMineCriterion.Conditions.create(Blocks.GLOWSTONE));
     }
 }
