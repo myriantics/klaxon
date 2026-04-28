@@ -6,10 +6,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.item.equipment.tools.HammerItem;
-import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.muffling.MufflerActionType;
+import net.myriantics.klaxon.mechanics.wrench.WrenchUsageType;
 
 public abstract class KlaxonAdvancementTriggers {
     public static void triggerItemRepair(ServerPlayer serverPlayer, ItemStack stack) {
@@ -24,8 +24,8 @@ public abstract class KlaxonAdvancementTriggers {
     public static void triggerToolUsageCraft(ServerPlayer serverPlayer, ItemStack toolStack, ItemStack craftedStack) {
         KlaxonAdvancementCriteria.TOOL_USAGE_RECIPE_CRITERION.value().trigger(serverPlayer, toolStack, craftedStack);
     }
-    public static void triggerWrenchUsage(ServerPlayer serverPlayer, WrenchItem.UsageType usageType, BlockState targetState) {
-        KlaxonAdvancementCriteria.WRENCH_USAGE_CRITERION.value().trigger(serverPlayer, usageType, targetState);
+    public static void triggerWrenchUsage(ServerPlayer serverPlayer, BlockPos pos, WrenchUsageType type) {
+        KlaxonAdvancementCriteria.WRENCH_USAGE.value().trigger(serverPlayer, pos, type);
     }
     public static void triggerInstabreakToolInstabreak(ServerPlayer serverPlayer, ItemStack instabreakingTool, BlockState instabrokenState) {
         KlaxonAdvancementCriteria.INSTABREAK_TOOL_INSTABREAK_CRITERION.value().trigger(serverPlayer, instabreakingTool, instabrokenState);

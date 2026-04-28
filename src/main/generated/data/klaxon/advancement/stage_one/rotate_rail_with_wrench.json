@@ -1,10 +1,15 @@
 {
-  "parent": "klaxon:stage_one/obtain_steel_wrench",
+  "parent": "klaxon:stage_one/perform_any_wrench_action",
   "criteria": {
     "rotate_rail_with_wrench": {
       "conditions": {
-        "usage_type": "rotation",
-        "valid_blocks": "#minecraft:rails"
+        "type": "rotation",
+        "interacted_block_predicate": {
+          "blocks": "#minecraft:rails"
+        },
+        "wrench_stack_predicate": {
+          "items": "klaxon:steel_wrench"
+        }
       },
       "trigger": "klaxon:wrench_usage"
     }

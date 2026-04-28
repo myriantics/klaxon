@@ -89,9 +89,9 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
                 "Obtain a Steel Cleaver"
         );
         addStageOneAdvancement(
-                KlaxonStageOneAdvancementProvider.OBTAIN_STEEL_WRENCH,
-                "Problem Solver",
-                "Obtain a Steel Wrench"
+                KlaxonStageOneAdvancementProvider.PERFORM_ANY_WRENCH_ACTION,
+                "Problemo Solved",
+                "Pick up or rotate anything with the Steel Wrench"
         );
         addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.OBTAIN_ANY_STEEL_ARMOR,

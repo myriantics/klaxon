@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -8,7 +7,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -21,17 +19,14 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.mechanics.wrench.*;
-import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
@@ -103,9 +98,9 @@ public class WrenchItem extends DiggerItem {
 
                 // drop is false here because we already handled the drops
                 // only break on server because sound plays twice on client otherwise
+                KlaxonAdvancementTriggers.triggerWrenchUsage((ServerPlayer) player, targetPos, WrenchUsageType.PICKUP);
                 level.destroyBlock(targetPos, false, player);
                 wrenchStack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(context.getHand()));
-                KlaxonAdvancementTriggers.triggerWrenchUsage((ServerPlayer) player, UsageType.PICKUP, targetState);
             }
 
             return InteractionResult.SUCCESS;
@@ -135,7 +130,7 @@ public class WrenchItem extends DiggerItem {
                 Vec3 cords = targetPos.getCenter();
                 level.playLocalSound(cords.x(), cords.y(), cords.z(), targetState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.7f + 0.3f * level.getRandom().nextFloat(), 1.0f, true);
                 if (player instanceof ServerPlayer serverPlayer) {
-                    KlaxonAdvancementTriggers.triggerWrenchUsage(serverPlayer, UsageType.ROTATION, targetState);
+                    KlaxonAdvancementTriggers.triggerWrenchUsage(serverPlayer, targetPos, WrenchUsageType.ROTATION);
                 }
                 return result.get();
             }
@@ -199,15 +194,4 @@ public class WrenchItem extends DiggerItem {
         return player == null || PermissionsHelper.canModifyWorld(player) || wrenchStack.canBreakBlockInAdventureMode(new BlockInWorld(world, targetPos, false));
     }
 
-    public enum UsageType implements StringRepresentable {
-        ROTATION,
-        PICKUP;
-
-        public static Codec<UsageType> CODEC = StringRepresentable.fromEnum(UsageType::values);
-
-        @Override
-        public String getSerializedName() {
-            return toString().toLowerCase();
-        }
-    }
 }

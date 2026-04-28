@@ -1,0 +1,31 @@
+{
+  "parent": "klaxon:stage_one/use_hammer_to_make_metal_plate",
+  "criteria": {
+    "perform_any_wrench_action": {
+      "conditions": {
+        "wrench_stack_predicate": {
+          "items": "klaxon:steel_wrench"
+        }
+      },
+      "trigger": "klaxon:wrench_usage"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.perform_any_wrench_action.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:steel_wrench"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.perform_any_wrench_action.title"
+    }
+  },
+  "requirements": [
+    [
+      "perform_any_wrench_action"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

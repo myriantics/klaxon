@@ -16,7 +16,7 @@ public abstract class KlaxonAdvancementCriteria {
     public static final Holder<ItemRepairCriterion> ANVIL_REPAIR_CRITERION = register("makeshift_equipment_repair", new ItemRepairCriterion());
     public static final Holder<WalljumpAbilityCriterion> WALLJUMP_ABILITY_CRITERION = register("walljump_ability", new WalljumpAbilityCriterion());
     public static final Holder<ToolUsageRecipeCraftCriterion> TOOL_USAGE_RECIPE_CRITERION = register("tool_usage_recipe", new ToolUsageRecipeCraftCriterion());
-    public static final Holder<WrenchUsageCriterion> WRENCH_USAGE_CRITERION = register("wrench_usage", new WrenchUsageCriterion());
+    public static final Holder<WrenchUsageCriterion> WRENCH_USAGE = register("wrench_usage", new WrenchUsageCriterion());
     public static final Holder<InstabreakToolInstabreakCriterion> INSTABREAK_TOOL_INSTABREAK_CRITERION = register("instabreak_tool_instabreak", new InstabreakToolInstabreakCriterion());
     public static final Holder<GrappleWinchVeinMineCriterion> GRAPPLE_WINCH_VEIN_MINE_CRITERION = register("grapple_winch_veinmine", new GrappleWinchVeinMineCriterion());
     public static final Holder<EntityGrappleCriterion> ENTITY_GRAPPLE_CRITERION = register("entity_grapple", new EntityGrappleCriterion());
