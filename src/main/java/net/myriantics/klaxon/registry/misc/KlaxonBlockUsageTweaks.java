@@ -37,7 +37,9 @@ public abstract class KlaxonBlockUsageTweaks {
                 switch (type) {
                     case MUFFLER_APPLY -> {
                         if (!mufflableBlock.hasMuffler(level, pos)) {
-                            mufflableBlock.setMuffler(level, pos, player.hasInfiniteMaterials() ? stack.copyWithCount(1) : stack.split(1));
+                            if (!level.isClientSide()) {
+                                mufflableBlock.setMuffler(level, pos, player.hasInfiniteMaterials() ? stack.copyWithCount(1) : stack.split(1));
+                            }
                             type.playSuccessSound(level, pos, state, player);
                             return Optional.of(ItemInteractionResult.SUCCESS);
                         } else {

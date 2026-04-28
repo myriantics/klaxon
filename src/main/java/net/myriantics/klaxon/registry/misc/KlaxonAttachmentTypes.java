@@ -3,6 +3,7 @@ package net.myriantics.klaxon.registry.misc;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
 
 import java.util.function.Consumer;
@@ -13,6 +14,12 @@ public abstract class KlaxonAttachmentTypes {
             "steel_lighter_fire_placement_tracker",
             builder -> builder
                     .initializer(() -> 0)
+    );
+    public static final AttachmentType<ItemStack> MUFFLER_STACK = register(
+            "muffler_stack",
+            builder -> builder
+                    .initializer(() -> ItemStack.EMPTY)
+                    .persistent(ItemStack.CODEC)
     );
 
     private static <T> AttachmentType<T> register(String name, Consumer<AttachmentRegistry.Builder<T>> consumer) {

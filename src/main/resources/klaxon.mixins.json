@@ -69,6 +69,7 @@
     "minecraft.nether_reaction.BeehiveBlockEntityMixin",
     "minecraft.nether_reaction.ExplosionMixin",
     "minecraft.pick_stack_tweak.InventoryMixin",
+    "minecraft.precision_dispenser.DefaultDispenseItemBehaviorMixin",
     "minecraft.precision_dispenser.DispenserBlockMixin",
     "minecraft.precision_dispenser.ProjectileDispenseBehaviorMixin",
     "minecraft.precision_dispenser.RedstoneWireBlockMixin",

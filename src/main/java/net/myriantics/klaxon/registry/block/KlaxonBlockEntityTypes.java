@@ -10,6 +10,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
+import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlockEntity;
 
 public abstract class KlaxonBlockEntityTypes {
     public static final Holder<BlockEntityType<DeepslateBlastProcessorBlockEntity>> DEEPSLATE_BLAST_PROCESSOR = register(
@@ -21,6 +22,11 @@ public abstract class KlaxonBlockEntityTypes {
             "steel_blast_processor",
             KlaxonBlocks.STEEL_BLAST_PROCESSOR,
             SteelBlastProcessorBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<PrecisionDispenserBlockEntity>> PRECISION_DISPENSER = register(
+            "precision_dispenser",
+            KlaxonBlocks.PRECISION_DISPENSER,
+            PrecisionDispenserBlockEntity::new
     );
     public static final Holder<BlockEntityType<ModularExplosiveBlockEntity>> MODULAR_EXPLOSIVE = register(
             "modular_explosive",
@@ -34,7 +40,6 @@ public abstract class KlaxonBlockEntityTypes {
         addSupporting(BlockEntityType.SIGN , KlaxonBlocks.HALLNOX_WALL_SIGN);
         addSupporting(BlockEntityType.HANGING_SIGN, KlaxonBlocks.HALLNOX_HANGING_SIGN);
         addSupporting(BlockEntityType.HANGING_SIGN, KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);
-        addSupporting(BlockEntityType.DISPENSER, KlaxonBlocks.PRECISION_DISPENSER);
     }
 
     private static void addSupporting(BlockEntityType<?> type, Holder<Block> holder) {
