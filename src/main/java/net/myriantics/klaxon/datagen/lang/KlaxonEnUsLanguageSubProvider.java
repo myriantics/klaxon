@@ -3,9 +3,9 @@ package net.myriantics.klaxon.datagen.lang;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.CreativeModeTab;
@@ -15,6 +15,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.compat.jade.KlaxonJadePlugin;
 import net.myriantics.klaxon.datagen.advancement.providers.KlaxonStageOneAdvancementProvider;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,16 +82,28 @@ public abstract class KlaxonEnUsLanguageSubProvider {
         builder.add(KlaxonCommon.MOD_ID + ".emi.text." + key, name);
     }
 
+    protected void addJadeTooltipText(ResourceLocation location, String suffix, String name) {
+        builder.add(KlaxonJadePlugin.textTranslationKey(location), name);
+    }
+
     protected void addJadeTooltipText(String key, String name) {
         builder.add(KlaxonCommon.MOD_ID + ".jade.text." + key, name);
+    }
+
+    protected void addJadeConfigText(ResourceLocation location, String suffix, String name) {
+        builder.add(KlaxonJadePlugin.configTranslationKey(location), name);
     }
 
     protected void addJadeConfigText(String key, String name) {
         builder.add("config.jade.plugin_" + KlaxonCommon.MOD_ID + "." + key, name);
     }
 
+    protected void addRawText(String key, String name) {
+        builder.add(key, name);
+    }
+
     protected void addText(String key, String name) {
-        builder.add(KlaxonCommon.MOD_ID + ".text." + key, name);
+        addRawText(KlaxonCommon.MOD_ID + ".text." + key, name);
     }
 
     protected void addTooltipText(String key, String name) {

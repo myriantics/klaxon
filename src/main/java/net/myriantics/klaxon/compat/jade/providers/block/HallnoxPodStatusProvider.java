@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.compat.jade.providers;
+package net.myriantics.klaxon.compat.jade.providers.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

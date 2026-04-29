@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.compat.jade.providers;
+package net.myriantics.klaxon.compat.jade.providers.entity;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
