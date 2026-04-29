@@ -1,14 +1,10 @@
 package net.myriantics.klaxon.mechanics.wrench.behaviors;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
-import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
-import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;

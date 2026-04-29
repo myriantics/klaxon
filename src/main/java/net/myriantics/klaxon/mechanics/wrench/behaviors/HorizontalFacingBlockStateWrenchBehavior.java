@@ -8,8 +8,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
-import net.myriantics.klaxon.mechanics.wrench.DispenserWrenchInteractionContext;
-import net.myriantics.klaxon.mechanics.wrench.ManualWrenchInteractionContext;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
@@ -79,33 +77,5 @@ public class HorizontalFacingBlockStateWrenchBehavior extends BlockStateWrenchBe
             case UP -> ROTATE_COUNTERCLOCKWISE;
             default -> FLIP;
         };
-    }
-
-    @Override
-    protected Optional<Direction> applyManual(Direction original, ManualWrenchInteractionContext context) {
-        Direction.Axis axis = original.getAxis();
-        Direction clickedDirection = context.hitResult().getDirection();
-        Direction.Axis clickedAxis = clickedDirection.getAxis();
-
-        if (clickedAxis.equals(Direction.Axis.Y)) {
-            return Optional.of(original.getClockWise(Direction.Axis.Y));
-        }
-
-        if (clickedAxis.equals(axis)) {
-            return Optional.of(original.getOpposite());
-        }
-
-        return Optional.of(clickedDirection.getOpposite());
-    }
-
-    @Override
-    protected Optional<Direction> applyDispenser(Direction original, DispenserWrenchInteractionContext context) {
-        Direction.Axis dispenserAxis = context.dispenserFacing().getAxis();
-
-        if (dispenserAxis.equals(Direction.Axis.Y)) {
-            return Optional.of(original.getClockWise(Direction.Axis.Y));
-        }
-
-        return Optional.of(original.getOpposite());
     }
 }

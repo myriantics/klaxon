@@ -15,9 +15,6 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
     private final TagKey<Block> allowlistTag;
     private final TagKey<Block> denylistTag;
 
-    private static final String ALLOWLIST_SUBDIRECTORY = "wrench_behavior/allowlist";
-    private static final String DENYLIST_SUBDIRECTORY = "wrench_behavior/denylist";
-
     private static final WrenchInteractionMap EMPTY = WrenchInteractionMap.create();
 
     public BlockStateWrenchBehavior(
@@ -25,39 +22,27 @@ public abstract class BlockStateWrenchBehavior<T extends Comparable<T>> {
             ResourceLocation id
     ) {
         this.property = property;
-        this.allowlistTag = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(id.getNamespace(), ALLOWLIST_SUBDIRECTORY + "_" + id.getPath()));
-        this.denylistTag = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(id.getNamespace(), DENYLIST_SUBDIRECTORY + "_" + id.getPath()));
+        this.allowlistTag = TagKey.create(Registries.BLOCK, id.withPath(path -> "blockstate_wrench_behavior/" + path + "/allowlist"));
+        this.denylistTag = TagKey.create(Registries.BLOCK, id.withPath(path -> "blockstate_wrench_behavior/" + path + "/denylist"));
     }
 
-    public Property<T> getProperty() {
+    public final Property<T> getProperty() {
         return property;
     }
 
-    public TagKey<Block> getAllowlistTag() {
+    public final TagKey<Block> getAllowlistTag() {
         return allowlistTag;
     }
 
-    public TagKey<Block> getDenylistTag() {
+    public final TagKey<Block> getDenylistTag() {
         return denylistTag;
     }
 
-    public WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context) {
-        return EMPTY;
-    }
+    public abstract WrenchInteractionMap getManualInteractionMap(WrenchActionContext.Manual context);
 
-    public WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context) {
-        return WrenchInteraction.NO_OP;
-    }
+    public abstract WrenchInteraction getDispenserInteraction(WrenchActionContext.Dispenser context);
 
     public boolean test(BlockState state) {
-        return !state.is(this.getDenylistTag()) && state.is(this.getAllowlistTag()) && state.hasProperty(property);
-    }
-
-    protected Optional<T> applyManual(T original, ManualWrenchInteractionContext context) {
-        return Optional.empty();
-    }
-
-    protected Optional<T> applyDispenser(T original, DispenserWrenchInteractionContext context) {
-        return Optional.empty();
+        return state.hasProperty(this.property) && !state.is(this.getDenylistTag()) && state.is(this.getAllowlistTag());
     }
 }

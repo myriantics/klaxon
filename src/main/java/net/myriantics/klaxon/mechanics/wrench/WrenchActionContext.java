@@ -2,6 +2,7 @@ package net.myriantics.klaxon.mechanics.wrench;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.FrontAndTop;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -126,10 +127,10 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
                 case DOWN, UP -> switch (guiUpDir) {
                     case DOWN -> 1 - fromCorner.y;
                     case UP -> fromCorner.y;
-                    case SOUTH -> fromCorner.z;
+                    case SOUTH -> 1 - fromCorner.z;
                     case WEST -> 1 - fromCorner.x;
                     case EAST -> fromCorner.x;
-                    case NORTH -> 1 - fromCorner.z;
+                    case NORTH -> fromCorner.z;
                 };
                 case NORTH, EAST, SOUTH, WEST -> fromCorner.y;
             };
@@ -139,6 +140,14 @@ public sealed abstract class WrenchActionContext permits WrenchActionContext.Man
             KlaxonCommon.LOGGER.info("Gui Top: [{}], Gui Facing; [{}]", guiUpDir, facing);
 
              */
+        }
+
+        public boolean matches(FrontAndTop frontAndTop) {
+            return this.matches(frontAndTop.front(), frontAndTop.top());
+        }
+
+        public boolean matches(Direction facing, Direction up) {
+            return this.facing.equals(facing) && this.guiUpDir.equals(up);
         }
 
         public float getClickedX(BlockFaceRegion.Rotation rotation) {

@@ -19,7 +19,7 @@ public abstract class KlaxonBlockStateWrenchBehaviors {
     public static final Holder<BlockStateWrenchBehavior<Direction>> HOPPER_FACING = register("hopper_facing", HopperFacingBlockStateWrenchBehavior::new);
     public static final Holder<BlockStateWrenchBehavior<Direction.Axis>> AXIS = register("axis", AxisBlockStateWrenchBehavior::new);
     public static final Holder<BlockStateWrenchBehavior<Direction.Axis>> HORIZONTAL_AXIS = register("horizontal_axis", HorizontalAxisBlockStateWrenchBehavior::new);
-    public static final Holder<BlockStateWrenchBehavior<FrontAndTop>> ORIENTATION = register("orientation", OrientationBlockStateWrenchBehavior::new);
+    public static final Holder<BlockStateWrenchBehavior<FrontAndTop>> ORIENTATION = register("orientation", FrontAndTopBlockStateWrenchBehavior::new);
     public static final Holder<BlockStateWrenchBehavior<RailShape>> CURVING_RAIL_SHAPE = register("curving_rail_shape", CurvingRailShapeBlockStateWrenchBehavior::new);
     public static final Holder<BlockStateWrenchBehavior<RailShape>> STRAIGHT_RAIL_SHAPE = register("straight_rail_shape", StraightRailShapeBlockStateWrenchBehavior::new);
 
