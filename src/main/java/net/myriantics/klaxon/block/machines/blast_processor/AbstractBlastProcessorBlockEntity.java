@@ -2,6 +2,7 @@ package net.myriantics.klaxon.block.machines.blast_processor;
 
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -18,11 +19,14 @@ import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.KlaxonBaseSidedContainerBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
+import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
@@ -30,13 +34,14 @@ import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 
 import java.util.*;
 
-public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedContainerBlockEntity {
+public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedContainerBlockEntity implements ExplosiveCatalystVessel {
 
     protected static final int INGREDIENT_INDEX = 0;
     protected static final int CATALYST_INDEX = 1;
 
     protected final SlotsWrapperContainer ingredientContainer = new SlotsWrapperContainer(this, INGREDIENT_INDEX);
     protected final SlotsWrapperContainer catalystContainer = new SlotsWrapperContainer(this, CATALYST_INDEX);
+
 
     protected AbstractBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -200,6 +205,21 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
                 );
             }
         }
+    }
+
+    @Override
+    public boolean shouldExposeExplosiveCatalystData() {
+        return true;
+    }
+
+    @Override
+    public ExplosiveCatalystData getEffectiveData() {
+        return ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(this.getContext(), this.getCatalystStack());
+    }
+
+    @Override
+    public ExplosiveCatalystData getRawData() {
+        return ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(this.getContext(), this.getCatalystStack());
     }
 
     public abstract Position getItemOutputLocation(Direction facing);

@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
@@ -24,12 +25,13 @@ import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import org.jetbrains.annotations.Nullable;
 
-public class ModularExplosiveBlockEntity extends BlockEntity {
+public class ModularExplosiveBlockEntity extends BlockEntity implements ExplosiveCatalystVessel {
 
     private ExplosiveCatalystData explosiveCatalystData = ExplosiveCatalystData.ZERO;
     private int fuseTime = -1;
     private int maxFuseTime = 0;
     private boolean modifyWorld = true;
+    private boolean exposeExplosiveCatalystData = true;
 
     protected ModularExplosiveBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -74,6 +76,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
         if (tag.contains(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA)) {
             this.explosiveCatalystData = ExplosiveCatalystData.CODEC.decode(NbtOps.INSTANCE, tag.get(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA)).mapOrElse(Pair::getFirst, (pair) -> ExplosiveCatalystData.ZERO);
         }
+        this.exposeExplosiveCatalystData = tag.getBoolean(KlaxonNBTIds.SHOULD_EXPOSE_CATALYST_DATA);
     }
 
     @Override
@@ -83,6 +86,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
         tag.putInt(KlaxonNBTIds.FUSE_TIME, this.fuseTime);
         tag.putBoolean(KlaxonNBTIds.MODIFY_WORLD, this.modifyWorld);
         ExplosiveCatalystData.CODEC.encode(this.explosiveCatalystData, NbtOps.INSTANCE, new CompoundTag()).ifSuccess(dataTag -> tag.put(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA, dataTag));
+        tag.putBoolean(KlaxonNBTIds.SHOULD_EXPOSE_CATALYST_DATA, this.exposeExplosiveCatalystData);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState blockState, ModularExplosiveBlockEntity modularExplosiveBlockEntity) {
@@ -155,5 +159,22 @@ public class ModularExplosiveBlockEntity extends BlockEntity {
 
     private int sanitizeMaxFuseTime(int maxFuseTime) {
         return Math.max(0, maxFuseTime);
+    }
+
+    @Override
+    public boolean shouldExposeExplosiveCatalystData() {
+        return this.exposeExplosiveCatalystData;
+    }
+
+    @Override
+    public ExplosiveCatalystData getRawData() {
+        return this.explosiveCatalystData;
+    }
+
+    @Override
+    public ExplosiveCatalystData getEffectiveData() {
+        ExplosiveCatalystContext.Block context = this.createContext();
+        Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior();
+        return behaviorHolder.value().transformExplosiveCatalystData(context, this.explosiveCatalystData);
     }
 }

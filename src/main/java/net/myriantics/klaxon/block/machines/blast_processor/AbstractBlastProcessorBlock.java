@@ -14,6 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 
 public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;

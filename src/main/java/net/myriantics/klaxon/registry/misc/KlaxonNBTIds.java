@@ -31,6 +31,9 @@ public abstract class KlaxonNBTIds {
     public static final String CATALYST_STACK = KlaxonCommon.locateAlt("catalyst_stack");
     public static final String INGREDIENT_STACK = KlaxonCommon.locateAlt("ingredient_stack");
 
+    // explosive catalyst vessel
+    public static final String SHOULD_EXPOSE_CATALYST_DATA = KlaxonCommon.locateAlt("should_expose_catalyst_data");
+
     // muffling
     public static final String MUFFLER_STACK = KlaxonCommon.locateAlt("muffler_stack");
 

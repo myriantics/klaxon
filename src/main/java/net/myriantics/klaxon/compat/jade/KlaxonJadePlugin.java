@@ -6,15 +6,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlock;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlock;
-import net.myriantics.klaxon.compat.jade.providers.block.DeepslateBlastProcessorProvider;
+import net.myriantics.klaxon.compat.jade.providers.block.ExplosiveCatalystVesselBlockProvider;
 import net.myriantics.klaxon.compat.jade.providers.block.MufflableBlockProvider;
 import net.myriantics.klaxon.compat.jade.providers.entity.GrappleClawEntityProvider;
 import net.myriantics.klaxon.compat.jade.providers.block.HallnoxPodStatusProvider;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
-import net.myriantics.klaxon.mechanics.muffling.MufflableBlock;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import snownee.jade.addon.harvest.HarvestToolProvider;
 import snownee.jade.addon.harvest.SimpleToolHandler;
@@ -28,10 +29,13 @@ import java.util.List;
 public class KlaxonJadePlugin implements IWailaPlugin {
 
     private static final ArrayList<Class<? extends Block>> MUFFLABLE_BLOCKS = new ArrayList<>();
+    private static final ArrayList<Class<? extends Block>> EXPLOSIVE_CATALYST_VESSELS = new ArrayList<>();
 
     static {
         registerMufflable(SteelBlastProcessorBlock.class);
         registerMufflable(PrecisionDispenserBlock.class);
+        registerExplosiveCatalystVessel(AbstractBlastProcessorBlock.class);
+        registerExplosiveCatalystVessel(ModularExplosiveBlock.class);
     }
 
     @Override
@@ -39,8 +43,10 @@ public class KlaxonJadePlugin implements IWailaPlugin {
         for (Class<? extends Block> clazz : MUFFLABLE_BLOCKS) {
             registration.registerBlockDataProvider(MufflableBlockProvider.INSTANCE, clazz);
         }
+        for (Class<? extends Block> clazz : EXPLOSIVE_CATALYST_VESSELS) {
+            registration.registerBlockDataProvider(ExplosiveCatalystVesselBlockProvider.INSTANCE, clazz);
+        }
 
-        registration.registerBlockDataProvider(DeepslateBlastProcessorProvider.INSTANCE, DeepslateBlastProcessorBlock.class);
         registration.registerEntityDataProvider(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
         IWailaPlugin.super.register(registration);
     }
@@ -60,12 +66,13 @@ public class KlaxonJadePlugin implements IWailaPlugin {
                 )
         ));
 
-        // can't be an interface apparently
         for (Class<? extends Block> clazz : MUFFLABLE_BLOCKS) {
             registration.registerBlockComponent(MufflableBlockProvider.INSTANCE, clazz);
         }
+        for (Class<? extends Block> clazz : EXPLOSIVE_CATALYST_VESSELS) {
+            registration.registerBlockComponent(ExplosiveCatalystVesselBlockProvider.INSTANCE, clazz);
+        }
 
-        registration.registerBlockComponent(DeepslateBlastProcessorProvider.INSTANCE, DeepslateBlastProcessorBlock.class);
         registration.registerBlockComponent(HallnoxPodStatusProvider.INSTANCE, HallnoxPodBlock.class);
         registration.registerEntityComponent(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
         registration.registerEntityIcon(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
@@ -105,5 +112,9 @@ public class KlaxonJadePlugin implements IWailaPlugin {
 
     private static void registerMufflable(Class<? extends Block> mufflableBlockClass) {
         MUFFLABLE_BLOCKS.add(mufflableBlockClass);
+    }
+
+    private static void registerExplosiveCatalystVessel(Class<? extends Block> catalystVesselClass) {
+        EXPLOSIVE_CATALYST_VESSELS.add(catalystVesselClass);
     }
 }
