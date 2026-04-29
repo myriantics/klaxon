@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "pressure_plate",
+  "key": {
+    "P": {
+      "item": "klaxon:steel_plate"
+    },
+    "W": {
+      "item": "klaxon:steel_wire"
+    }
+  },
+  "pattern": [
+    "PP",
+    "WW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:heavy_gated_pressure_plate"
+  }
+}

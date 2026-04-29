@@ -156,6 +156,12 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.LEVERS)
                 .forceAddTag(KlaxonBlockTags.PIPE_MATRICES)
                 .add(
+                        Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE,
+                        Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE,
+                        KlaxonBlocks.HEAVY_GATED_PRESSURE_PLATE.value(),
+                        KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value()
+                )
+                .add(
                         KlaxonBlocks.STEEL_CASING.value(),
                         KlaxonBlocks.CRUDE_STEEL_CASING.value()
                 )
@@ -201,7 +207,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.STEEL_BLOCK.value(),
                         KlaxonBlocks.STEEL_CASING.value(),
                         KlaxonBlocks.STEEL_DOOR.value(),
-                        KlaxonBlocks.STEEL_TRAPDOOR.value()
+                        KlaxonBlocks.STEEL_TRAPDOOR.value(),
+                        KlaxonBlocks.HEAVY_GATED_PRESSURE_PLATE.value()
                 )
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
@@ -209,7 +216,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.CRUDE_STEEL_BLOCK.value(),
                         KlaxonBlocks.CRUDE_STEEL_CASING.value(),
                         KlaxonBlocks.CRUDE_STEEL_DOOR.value(),
-                        KlaxonBlocks.CRUDE_STEEL_TRAPDOOR.value()
+                        KlaxonBlocks.CRUDE_STEEL_TRAPDOOR.value(),
+                        KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value()
                 )
                 .add(
                         KlaxonBlocks.NETHER_REACTOR_CORE.value(),
@@ -896,6 +904,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_DOOR.value())
                 .add(KlaxonBlocks.STEEL_TRAPDOOR.value())
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
+                .add(KlaxonBlocks.HEAVY_GATED_PRESSURE_PLATE.value())
                 .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE.value());
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
@@ -909,6 +918,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.CRUDE_STEEL_CASING.value())
                 .add(KlaxonBlocks.CRUDE_STEEL_DOOR.value())
                 .add(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR.value())
+                .add(KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value())
                 .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE.value());
 
         // steel tools mirror diamond tools

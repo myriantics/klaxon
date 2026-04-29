@@ -278,6 +278,9 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
     }
 
     private void buildRedstoneCraftingRecipes() {
+        addHeavyGatedPressurePlateRecipe(KlaxonItems.HEAVY_GATED_PRESSURE_PLATE.value(), Ingredient.of(KlaxonItems.STEEL_PLATE.value()), Ingredient.of(KlaxonItems.STEEL_WIRE.value()));
+        addHeavyGatedPressurePlateRecipe(KlaxonItems.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value(), Ingredient.of(KlaxonItems.CRUDE_STEEL_PLATE.value()), Ingredient.of(KlaxonItems.STEEL_WIRE.value()));
+
         // steel doors / trapdoors
         addShapedCraftingRecipe(Map.of(
                         'P', Ingredient.of(KlaxonConventionalItemTags.STEEL_PLATES),
@@ -552,15 +555,26 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         );
     }
 
+    private void addHeavyGatedPressurePlateRecipe(Item result, Ingredient plate, Ingredient wire) {
+        addShapedCraftingRecipe(
+                Map.of(
+                        'P', plate,
+                        'W', wire
+                ),
+                new String[] {
+                        "PP",
+                        "WW"
+                },
+                new ItemStack(result),
+                CraftingBookCategory.REDSTONE,
+                "pressure_plate"
+        );
+    }
+
     private void addGrappleClawRecipe(Ingredient plate, Ingredient ingot, ItemStack result, ResourceCondition... conditions) {
         Map<Character, Ingredient> map = Map.of(
                 'P', plate,
                 'I', ingot
-                // n
-                // g
-                // a
-                // s
-                // !
         );
 
         addShapedCraftingRecipe(

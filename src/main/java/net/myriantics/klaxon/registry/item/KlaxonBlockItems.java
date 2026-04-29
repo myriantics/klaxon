@@ -26,6 +26,7 @@ public abstract class KlaxonBlockItems {
     public static final Holder<Item> STEEL_WIRE_SPOOL_BLOCK = registerBlockItem(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
     public static final Holder<Item> STEEL_DOOR = registerBlockItem(KlaxonBlocks.STEEL_DOOR);
     public static final Holder<Item> STEEL_TRAPDOOR = registerBlockItem(KlaxonBlocks.STEEL_TRAPDOOR);
+    public static final Holder<Item> HEAVY_GATED_PRESSURE_PLATE = registerBlockItem(KlaxonBlocks.HEAVY_GATED_PRESSURE_PLATE);
 
     // crude steel
     public static final Holder<Item> CRUDE_STEEL_BLOCK = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_BLOCK);
@@ -33,6 +34,7 @@ public abstract class KlaxonBlockItems {
     public static final Holder<Item> CRUDE_STEEL_CASING = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_CASING);
     public static final Holder<Item> CRUDE_STEEL_DOOR = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_DOOR);
     public static final Holder<Item> CRUDE_STEEL_TRAPDOOR = registerBlockItem(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
+    public static final Holder<Item> FAULTY_HEAVY_GATED_PRESSURE_PLATE = registerBlockItem(KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE);
 
     // iron
     public static final Holder<Item> IRON_PLATING_BLOCK = registerBlockItem(KlaxonBlocks.IRON_PLATING_BLOCK);

@@ -35,6 +35,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.STEEL_WIRE_SPOOL_BLOCK);
         add(KlaxonBlocks.STEEL_DOOR, this::createDoorTable);
         dropSelf(KlaxonBlocks.STEEL_TRAPDOOR);
+        dropSelf(KlaxonBlocks.HEAVY_GATED_PRESSURE_PLATE);
 
         // crude steel
         dropSelf(KlaxonBlocks.CRUDE_STEEL_BLOCK);
@@ -42,6 +43,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
         add(KlaxonBlocks.CRUDE_STEEL_DOOR, this::createDoorTable);
         dropSelf(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
+        dropSelf(KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE);
 
         // iron
         dropSelf(KlaxonBlocks.IRON_PLATING_BLOCK);

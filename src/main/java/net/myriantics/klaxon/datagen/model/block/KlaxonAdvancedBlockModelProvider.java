@@ -24,10 +24,12 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         // steel
         registerDoor(KlaxonBlocks.CRUDE_STEEL_DOOR);
         registerDoor(KlaxonBlocks.STEEL_DOOR);
+        registerPressurePlate(KlaxonBlocks.HEAVY_GATED_PRESSURE_PLATE.value(), KlaxonBlocks.STEEL_BLOCK.value());
 
         // crude steel
         registerOrientableTrapdoor(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
         registerOrientableTrapdoor(KlaxonBlocks.STEEL_TRAPDOOR);
+        registerFaultyHeavyGatedPressurePlate(KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value(), KlaxonBlocks.CRUDE_STEEL_BLOCK.value());
 
         // hallnox
         registerHangingSign(KlaxonBlocks.STRIPPED_HALLNOX_STEM, KlaxonBlocks.HALLNOX_HANGING_SIGN, KlaxonBlocks.HALLNOX_WALL_HANGING_SIGN);

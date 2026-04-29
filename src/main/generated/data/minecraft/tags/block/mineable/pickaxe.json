@@ -8,12 +8,14 @@
     "klaxon:steel_casing",
     "klaxon:steel_door",
     "klaxon:steel_trapdoor",
+    "klaxon:heavy_gated_pressure_plate",
     "klaxon:steel_workbench",
     "klaxon:steel_blast_processor",
     "klaxon:crude_steel_block",
     "klaxon:crude_steel_casing",
     "klaxon:crude_steel_door",
     "klaxon:crude_steel_trapdoor",
+    "klaxon:faulty_heavy_gated_pressure_plate",
     "klaxon:nether_reactor_core",
     "klaxon:crude_nether_reactor_core"
   ]

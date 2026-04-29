@@ -15,6 +15,8 @@ import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.MoltenRubberBlock;
 import net.myriantics.klaxon.block.functional.SteelWorkbenchBlock;
 import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
+import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
+import net.myriantics.klaxon.block.functional.pressure_plate.HeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.CasingBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
@@ -30,8 +32,12 @@ import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 public abstract class KlaxonBlocks {
 
     // steel
-    public static final Holder<Block> STEEL_BLOCK = registerBlock("steel_block",
-            new Block(copyProperties(Blocks.IRON_BLOCK)));
+    public static final Holder<Block> STEEL_BLOCK = registerBlock(
+            "steel_block",
+            new Block(
+                    copyProperties(Blocks.IRON_BLOCK)
+            )
+    );
     public static final Holder<Block> STEEL_PLATING_BLOCK = registerBlock("steel_plating_block",
             new RotatedPillarBlock(copyProperties(STEEL_BLOCK)));
     public static final Holder<Block> STEEL_CASING = registerBlock("steel_casing",
@@ -42,11 +48,27 @@ public abstract class KlaxonBlocks {
             new SteelDoorBlock(KlaxonBlockSetTypes.STEEL, copyProperties(STEEL_BLOCK).noOcclusion()));
     public static final Holder<Block> STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
             new SteelTrapdoorBlock(KlaxonBlockSetTypes.STEEL, copyProperties(STEEL_DOOR)));
+    public static final Holder<Block> HEAVY_GATED_PRESSURE_PLATE = registerBlock(
+            "heavy_gated_pressure_plate",
+            new HeavyGatedPressurePlateBlock(
+                    copyProperties(STEEL_CASING)
+                            .noCollission()
+                            .forceSolidOn()
+                            .pushReaction(PushReaction.DESTROY)
+                            .requiresCorrectToolForDrops(),
+                    KlaxonBlockSetTypes.STEEL)
+    );
 
 
     // crude steel
-    public static final Holder<Block> CRUDE_STEEL_BLOCK = registerBlock("crude_steel_block",
-            new Block(copyProperties(Blocks.IRON_BLOCK).pushReaction(PushReaction.DESTROY).strength(2.5f, 3.0f)));
+    public static final Holder<Block> CRUDE_STEEL_BLOCK = registerBlock(
+            "crude_steel_block",
+            new Block(
+                    copyProperties(Blocks.IRON_BLOCK)
+                            .pushReaction(PushReaction.DESTROY)
+                            .strength(2.5f, 3.0f)
+            )
+    );
     public static final Holder<Block> CRUDE_STEEL_PLATING_BLOCK = registerBlock("crude_steel_plating_block",
             new RotatedPillarBlock(copyProperties(CRUDE_STEEL_BLOCK)));
     public static final Holder<Block> CRUDE_STEEL_CASING = registerBlock("crude_steel_casing",
@@ -55,7 +77,15 @@ public abstract class KlaxonBlocks {
             new SteelDoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, copyProperties(CRUDE_STEEL_BLOCK).noOcclusion()));
     public static final Holder<Block> CRUDE_STEEL_TRAPDOOR = registerBlock("crude_steel_trapdoor",
             new SteelTrapdoorBlock(KlaxonBlockSetTypes.CRUDE_STEEL, copyProperties(CRUDE_STEEL_DOOR)));
-
+    public static final Holder<Block> FAULTY_HEAVY_GATED_PRESSURE_PLATE = registerBlock(
+            "faulty_heavy_gated_pressure_plate",
+            new FaultyHeavyGatedPressurePlateBlock(
+                    copyProperties(CRUDE_STEEL_CASING)
+                            .forceSolidOn()
+                            .noCollission()
+                            .requiresCorrectToolForDrops(),
+                    KlaxonBlockSetTypes.CRUDE_STEEL)
+    );
 
     // machines
     public static final Holder<Block> DEEPSLATE_BLAST_PROCESSOR = registerBlock("deepslate_blast_processor",

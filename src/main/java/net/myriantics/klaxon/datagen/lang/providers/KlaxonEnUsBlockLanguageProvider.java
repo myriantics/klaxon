@@ -87,8 +87,10 @@ public final class KlaxonEnUsBlockLanguageProvider extends KlaxonEnUsLanguageSub
         // decor
         addBlock(KlaxonBlocks.STEEL_DOOR, "Steel Door");
         addBlock(KlaxonBlocks.STEEL_TRAPDOOR, "Steel Trapdoor");
+        addBlock(KlaxonBlocks.HEAVY_GATED_PRESSURE_PLATE, "Heavy Gated Pressure Plate");
         addBlock(KlaxonBlocks.CRUDE_STEEL_DOOR, "Crude Steel Door");
         addBlock(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR, "Crude Steel Trapdoor");
+        addBlock(KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE, "Faulty Heavy Gated Pressure Plate");
 
         // hallnox
         addBlock(KlaxonBlocks.HALLNOX_POD, "Hallnox Pod");

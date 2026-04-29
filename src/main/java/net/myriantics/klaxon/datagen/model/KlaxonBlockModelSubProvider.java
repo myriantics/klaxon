@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
+import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
@@ -526,6 +527,26 @@ public abstract class KlaxonBlockModelSubProvider {
         );
 
         generator.delegateItemModel(block, normalModelIdentifier);
+    }
+
+    protected void registerPressurePlate(Block pressurePlateBlock, Block materialBlock) {
+        TextureMapping mapping = TextureMapping.defaultTexture(materialBlock);
+        ResourceLocation upRl = ModelTemplates.PRESSURE_PLATE_UP.create(pressurePlateBlock, mapping, generator.modelOutput);
+        ResourceLocation downRl = ModelTemplates.PRESSURE_PLATE_DOWN.create(pressurePlateBlock, mapping, generator.modelOutput);
+        generator.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(pressurePlateBlock, upRl, downRl));
+    }
+
+    protected void registerFaultyHeavyGatedPressurePlate(Block pressurePlateBlock, Block materialBlock) {
+        TextureMapping mapping = TextureMapping.defaultTexture(materialBlock);
+        ResourceLocation upRl = ModelTemplates.PRESSURE_PLATE_UP.create(pressurePlateBlock, mapping, generator.modelOutput);
+        ResourceLocation downRl = ModelTemplates.PRESSURE_PLATE_DOWN.create(pressurePlateBlock, mapping, generator.modelOutput);
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(pressurePlateBlock)
+                .with(PropertyDispatch.property(FaultyHeavyGatedPressurePlateBlock.STATE)
+                        .select(FaultyHeavyGatedPressurePlateBlock.State.DEPRESSED, modelVariant(upRl))
+                        .select(FaultyHeavyGatedPressurePlateBlock.State.PRESSED, modelVariant(downRl))
+                        .select(FaultyHeavyGatedPressurePlateBlock.State.STRESSED, modelVariant(downRl))
+                )
+        );
     }
 
     protected void acceptSingletonBlockState(Holder<Block> holder, ResourceLocation id) {
