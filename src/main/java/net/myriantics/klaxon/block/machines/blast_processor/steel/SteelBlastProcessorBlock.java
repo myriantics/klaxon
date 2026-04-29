@@ -125,7 +125,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         );
     }
 
-    public void updateState(Level level, BlockPos pos, SteelBlastProcessorBlockEntity blastProcessor) {
+    public void updateMuffler(Level level, BlockPos pos, SteelBlastProcessorBlockEntity blastProcessor) {
         BlockState original = level.getBlockState(pos);
         BlockState newState = original.setValue(MUFFLED, !blastProcessor.getMuffler().isEmpty());
 

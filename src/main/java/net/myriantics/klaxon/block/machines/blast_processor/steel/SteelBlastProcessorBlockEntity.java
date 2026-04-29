@@ -1,9 +1,7 @@
 package net.myriantics.klaxon.block.machines.blast_processor.steel;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
-import net.minecraft.core.Vec3i;
+import net.minecraft.core.*;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
@@ -25,8 +24,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity {
 
-    private static final int MUFFLER_INDEX = 2;
     private static final float POWERFUL_EXPLOSIVE_THRESHOLD = 4.0f;
+
+    private final MufflerStorage mufflerStorage = new MufflerStorage();
 
     protected SteelBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -40,7 +40,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     protected int initStackLimitForSlot(int slot) {
         return switch (slot) {
             case INGREDIENT_INDEX -> 4;
-            case CATALYST_INDEX, MUFFLER_INDEX -> 1;
+            case CATALYST_INDEX -> 1;
             default -> -1;
         };
     }
@@ -54,7 +54,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     public void setChanged() {
         super.setChanged();
         if (this.level != null && this.getBlockState().getBlock() instanceof SteelBlastProcessorBlock steelBlastProcessorBlock) {
-            steelBlastProcessorBlock.updateState(this.level, this.worldPosition, this);
+            steelBlastProcessorBlock.updateMuffler(this.level, this.worldPosition, this);
         }
     }
 
@@ -121,15 +121,29 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.mufflerStorage.load(tag, registries);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        this.mufflerStorage.save(tag, registries);
+    }
+
+    @Override
     public int getContainerSize() {
-        return 3;
+        return 2;
     }
 
     public void setMuffler(ItemStack newMufflerStack) {
-        this.setItem(MUFFLER_INDEX, newMufflerStack);
+        this.mufflerStorage.set(newMufflerStack);
+        if (this.level != null && this.getBlockState().getBlock() instanceof SteelBlastProcessorBlock block) {
+            block.updateMuffler(this.level, this.getBlockPos(), this);
+        }
     }
-
     public ItemStack getMuffler() {
-        return this.getItem(MUFFLER_INDEX);
+        return this.mufflerStorage.get();
     }
 }
