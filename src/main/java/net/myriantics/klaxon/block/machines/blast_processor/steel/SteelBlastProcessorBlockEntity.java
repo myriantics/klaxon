@@ -124,6 +124,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.mufflerStorage.load(tag, registries);
+        this.updateMufflerState();
     }
 
     @Override
@@ -139,10 +140,15 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     public void setMuffler(ItemStack newMufflerStack) {
         this.mufflerStorage.set(newMufflerStack);
+        this.updateMufflerState();
+    }
+
+    protected void updateMufflerState() {
         if (this.level != null && this.getBlockState().getBlock() instanceof SteelBlastProcessorBlock block) {
             block.updateMuffler(this.level, this.getBlockPos(), this);
         }
     }
+
     public ItemStack getMuffler() {
         return this.mufflerStorage.get();
     }

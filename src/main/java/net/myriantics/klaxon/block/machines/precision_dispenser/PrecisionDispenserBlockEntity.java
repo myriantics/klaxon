@@ -52,6 +52,7 @@ public class PrecisionDispenserBlockEntity extends DispenserBlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.mufflerStorage.load(tag, registries);
+        this.updateMufflerState();
     }
 
     public void setMuffler(ItemStack stack) {
