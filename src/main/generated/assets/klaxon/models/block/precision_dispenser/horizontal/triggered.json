@@ -1,0 +1,9 @@
+{
+  "parent": "klaxon:block/template/cube_front_side_back",
+  "textures": {
+    "back": "klaxon:block/precision_dispenser/back_triggered",
+    "front": "klaxon:block/precision_dispenser/horizontal/front_triggered",
+    "particle": "klaxon:block/precision_dispenser/side_triggered",
+    "side": "klaxon:block/precision_dispenser/side_triggered"
+  }
+}

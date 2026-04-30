@@ -116,16 +116,15 @@ public abstract class KlaxonBlockModelSubProvider {
         ResourceLocation verticalTriggeredRl = verticalRl.withSuffix("/triggered");
 
         TextureMapping horizontalIdleTexMap = new TextureMapping()
-                .put(TextureSlot.FRONT, horizontalRl.withSuffix("/front"))
-                .put(TextureSlot.BACK, horizontalRl.withSuffix("/back"))
-                .put(TextureSlot.SIDE, horizontalRl.withSuffix("/side"))
-                .put(TextureSlot.TOP, horizontalRl.withSuffix("/top"))
-                .put(TextureSlot.BOTTOM, horizontalRl.withSuffix("/bottom"))
-                .put(TextureSlot.PARTICLE, horizontalRl.withSuffix("/side"));
+                .put(TextureSlot.FRONT, horizontalRl.withSuffix("/front_idle"))
+                .put(TextureSlot.BACK, baseRl.withSuffix("/back_idle"))
+                .put(TextureSlot.SIDE, baseRl.withSuffix("/side_idle"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_idle"));
         TextureMapping horizontalTriggeredTexMap = new TextureMapping()
-                .put(TextureSlot.FRONT, horizontalRl.withSuffix("front_triggered"))
+                .put(TextureSlot.FRONT, horizontalRl.withSuffix("/front_triggered"))
                 .put(TextureSlot.BACK, baseRl.withSuffix("/back_triggered"))
-                .put(TextureSlot.SIDE, horizontalRl.withSuffix("/side_triggered"));
+                .put(TextureSlot.SIDE, baseRl.withSuffix("/side_triggered"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_triggered"));
         TextureMapping verticalIdleTexMap = new TextureMapping()
                 .put(TextureSlot.TOP, verticalRl.withSuffix("/front_idle"))
                 .put(TextureSlot.SIDE, baseRl.withSuffix("/side_idle"))
@@ -139,10 +138,10 @@ public abstract class KlaxonBlockModelSubProvider {
 
         ResourceLocation verticalTriggered = ModelTemplates.CUBE_BOTTOM_TOP.create(verticalTriggeredRl, verticalTriggeredTexMap, generator.modelOutput);
         ResourceLocation verticalIdle = ModelTemplates.CUBE_BOTTOM_TOP.create(verticalIdleRl, verticalIdleTexMap, generator.modelOutput);
-        // ResourceLocation horizontalTriggered = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(horizontalTriggeredRl, , generator.modelOutput);
-        // ResourceLocation horizontalIdle = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(horizontalIdleRl, horizontalIdleTexMap, generator.modelOutput);
+        ResourceLocation horizontalTriggered = KlaxonModelTemplates.CUBE_FRONT_SIDE_BACK.create(horizontalTriggeredRl, horizontalTriggeredTexMap, generator.modelOutput);
+        ResourceLocation horizontalIdle = KlaxonModelTemplates.CUBE_FRONT_SIDE_BACK.create(horizontalIdleRl, horizontalIdleTexMap, generator.modelOutput);
 
-        generator.delegateItemModel(block, verticalIdle);
+        generator.delegateItemModel(block, horizontalIdle);
 
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
                 .with(PropertyDispatch.properties(PrecisionDispenserBlock.FACING, PrecisionDispenserBlock.TRIGGERED)
@@ -150,14 +149,14 @@ public abstract class KlaxonBlockModelSubProvider {
                         .select(Direction.UP, false, modelVariant(verticalIdle))
                         .select(Direction.DOWN, true, modelVariant(verticalTriggered).with(VariantProperties.X_ROT, VariantProperties.Rotation.R180))
                         .select(Direction.DOWN, false, modelVariant(verticalIdle).with(VariantProperties.X_ROT, VariantProperties.Rotation.R180))
-                        .select(Direction.NORTH, true, modelVariant(horizontalRl))
-                        .select(Direction.NORTH, false, modelVariant(horizontalRl))
-                        .select(Direction.SOUTH, true, modelVariant(horizontalRl))
-                        .select(Direction.SOUTH, false, modelVariant(horizontalRl))
-                        .select(Direction.EAST, true, modelVariant(horizontalRl))
-                        .select(Direction.EAST, false, modelVariant(horizontalRl))
-                        .select(Direction.WEST, true, modelVariant(horizontalRl))
-                        .select(Direction.WEST, false, modelVariant(horizontalRl))
+                        .select(Direction.NORTH, true, modelVariant(horizontalTriggered))
+                        .select(Direction.NORTH, false, modelVariant(horizontalIdle))
+                        .select(Direction.SOUTH, true, modelVariant(horizontalTriggered).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
+                        .select(Direction.SOUTH, false, modelVariant(horizontalIdle).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
+                        .select(Direction.EAST, true, modelVariant(horizontalTriggered).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                        .select(Direction.EAST, false, modelVariant(horizontalIdle).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                        .select(Direction.WEST, true, modelVariant(horizontalTriggered).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                        .select(Direction.WEST, false, modelVariant(horizontalIdle).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
                 )
         );
     }

@@ -9,22 +9,26 @@
       "x": 180
     },
     "facing=east,triggered=false": {
-      "model": "klaxon:block/precision_dispenser/horizontal"
+      "model": "klaxon:block/precision_dispenser/horizontal/idle",
+      "y": 90
     },
     "facing=east,triggered=true": {
-      "model": "klaxon:block/precision_dispenser/horizontal"
+      "model": "klaxon:block/precision_dispenser/horizontal/triggered",
+      "y": 90
     },
     "facing=north,triggered=false": {
-      "model": "klaxon:block/precision_dispenser/horizontal"
+      "model": "klaxon:block/precision_dispenser/horizontal/idle"
     },
     "facing=north,triggered=true": {
-      "model": "klaxon:block/precision_dispenser/horizontal"
+      "model": "klaxon:block/precision_dispenser/horizontal/triggered"
     },
     "facing=south,triggered=false": {
-      "model": "klaxon:block/precision_dispenser/horizontal"
+      "model": "klaxon:block/precision_dispenser/horizontal/idle",
+      "y": 180
     },
     "facing=south,triggered=true": {
-      "model": "klaxon:block/precision_dispenser/horizontal"
+      "model": "klaxon:block/precision_dispenser/horizontal/triggered",
+      "y": 180
     },
     "facing=up,triggered=false": {
       "model": "klaxon:block/precision_dispenser/vertical/idle"
@@ -33,10 +37,12 @@
       "model": "klaxon:block/precision_dispenser/vertical/triggered"
     },
     "facing=west,triggered=false": {
-      "model": "klaxon:block/precision_dispenser/horizontal"
+      "model": "klaxon:block/precision_dispenser/horizontal/idle",
+      "y": 270
     },
     "facing=west,triggered=true": {
-      "model": "klaxon:block/precision_dispenser/horizontal"
+      "model": "klaxon:block/precision_dispenser/horizontal/triggered",
+      "y": 270
     }
   }
 }

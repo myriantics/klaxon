@@ -54,6 +54,14 @@ public abstract class KlaxonModelTemplates {
             TextureSlot.BACK,
             TextureSlot.PARTICLE
     );
+    public static final ModelTemplate CUBE_FRONT_SIDE_BACK = copyDir(
+            "cube_front_side_back",
+            DEEPSLATE_BLAST_PROCESSOR,
+            TextureSlot.FRONT,
+            TextureSlot.SIDE,
+            TextureSlot.BACK,
+            TextureSlot.PARTICLE
+    );
 
     public static Optional<ResourceLocation> id(ModelTemplate model) {
         return ((ModelTemplateAccessor) model).klaxon$getParent();
