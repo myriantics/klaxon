@@ -34,7 +34,7 @@ public class FaultyHeavyGatedPressurePlateBlock extends GatedPressurePlateBlock 
     public FaultyHeavyGatedPressurePlateBlock(Properties properties, BlockSetType type) {
         super(properties, type);
         registerDefaultState(this.stateDefinition.any()
-                .setValue(STATE, State.DEPRESSED)
+                .setValue(STATE, State.UNPRESSED)
         );
     }
 
@@ -60,7 +60,7 @@ public class FaultyHeavyGatedPressurePlateBlock extends GatedPressurePlateBlock 
     @Override
     protected BlockState setSignalForState(BlockState state, int signal) {
         if (signal < 7) {
-            return state.setValue(STATE, State.DEPRESSED);
+            return state.setValue(STATE, State.UNPRESSED);
         } else if (signal < 15) {
             return state.setValue(STATE, State.PRESSED);
         } else {
@@ -89,21 +89,21 @@ public class FaultyHeavyGatedPressurePlateBlock extends GatedPressurePlateBlock 
     @Override
     protected int getSignalForState(BlockState state) {
         return switch (state.getValue(STATE)) {
-            case DEPRESSED -> 0;
+            case UNPRESSED -> 0;
             case PRESSED -> 7;
             case STRESSED -> 15;
         };
     }
 
     public enum State implements StringRepresentable {
-        DEPRESSED,
+        UNPRESSED,
         PRESSED,
         STRESSED;
 
         @Override
         public String getSerializedName() {
             return switch (this) {
-                case DEPRESSED -> "depressed";
+                case UNPRESSED -> "unpressed";
                 case PRESSED -> "pressed";
                 case STRESSED -> "stressed";
             };

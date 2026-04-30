@@ -542,7 +542,7 @@ public abstract class KlaxonBlockModelSubProvider {
         ResourceLocation downRl = ModelTemplates.PRESSURE_PLATE_DOWN.create(pressurePlateBlock, mapping, generator.modelOutput);
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(pressurePlateBlock)
                 .with(PropertyDispatch.property(FaultyHeavyGatedPressurePlateBlock.STATE)
-                        .select(FaultyHeavyGatedPressurePlateBlock.State.DEPRESSED, modelVariant(upRl))
+                        .select(FaultyHeavyGatedPressurePlateBlock.State.UNPRESSED, modelVariant(upRl))
                         .select(FaultyHeavyGatedPressurePlateBlock.State.PRESSED, modelVariant(downRl))
                         .select(FaultyHeavyGatedPressurePlateBlock.State.STRESSED, modelVariant(downRl))
                 )
