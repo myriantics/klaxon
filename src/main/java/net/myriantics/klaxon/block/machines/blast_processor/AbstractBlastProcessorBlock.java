@@ -14,8 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 
 public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -28,15 +26,15 @@ public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock()) && !world.isClientSide()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.is(newState.getBlock()) && !level.isClientSide()) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof AbstractBlastProcessorBlockEntity) {
-                Containers.dropContents(world, pos, (Container) blockEntity);
-                world.updateNeighbourForOutputSignal(pos, this);
+                Containers.dropContents(level, pos, (Container) blockEntity);
+                level.updateNeighbourForOutputSignal(pos, this);
             }
         }
-        super.onRemove(state, world, pos, newState, moved);
+        super.onRemove(state, level, pos, newState, moved);
     }
 
     @Override

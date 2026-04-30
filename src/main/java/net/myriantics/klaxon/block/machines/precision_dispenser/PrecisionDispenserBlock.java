@@ -1,19 +1,18 @@
 package net.myriantics.klaxon.block.machines.precision_dispenser;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.myriantics.klaxon.mechanics.muffling.MufflableBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
-import net.myriantics.klaxon.registry.misc.KlaxonAttachmentTypes;
 
 public class PrecisionDispenserBlock extends DispenserBlock implements MufflableBlock {
 
@@ -37,6 +36,22 @@ public class PrecisionDispenserBlock extends DispenserBlock implements Mufflable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PrecisionDispenserBlockEntity(pos, state);
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && !level.isClientSide()) {
+            if (level.getBlockEntity(pos) instanceof PrecisionDispenserBlockEntity precisionDispenser) {
+                Containers.dropItemStack(
+                        level,
+                        pos.getX(),
+                        pos.getY(),
+                        pos.getZ(),
+                        precisionDispenser.getMuffler()
+                );
+            }
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
