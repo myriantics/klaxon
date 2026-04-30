@@ -3,14 +3,28 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "klaxon:faulty_heavy_gated_pressure_plate",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "press_state": "stressed"
+                  }
+                }
+              ],
+              "count": 0.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "function": "minecraft:explosion_decay"
+            }
+          ],
           "name": "klaxon:faulty_heavy_gated_pressure_plate"
         }
       ],

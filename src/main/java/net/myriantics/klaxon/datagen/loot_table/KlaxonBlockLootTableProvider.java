@@ -2,10 +2,17 @@ package net.myriantics.klaxon.datagen.loot_table;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
 import java.util.concurrent.CompletableFuture;
@@ -43,7 +50,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.CRUDE_STEEL_PLATING_BLOCK);
         add(KlaxonBlocks.CRUDE_STEEL_DOOR, this::createDoorTable);
         dropSelf(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR);
-        dropSelf(KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE);
+        faultyHeavyGatedPressurePlate(KlaxonBlocks.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value());
 
         // iron
         dropSelf(KlaxonBlocks.IRON_PLATING_BLOCK);
@@ -124,7 +131,35 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         add(holder.value(), function);
     }
 
+    private void add(Holder<Block> holder, LootTable.Builder builder) {
+        add(holder.value(), builder);
+    }
+
     private void dropSelf(Holder<Block> holder) {
         dropSelf(holder.value());
+    }
+
+    private void faultyHeavyGatedPressurePlate(Block block) {
+        this.add(
+                block,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0f))
+                                        .add(
+                                                this.applyExplosionDecay(
+                                                        block,
+                                                        LootItem.lootTableItem(block)
+                                                                .apply(
+                                                                        SetItemCountFunction.setCount(ConstantValue.exactly(0.0f))
+                                                                                .when(
+                                                                                        LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                                                                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(FaultyHeavyGatedPressurePlateBlock.STATE, FaultyHeavyGatedPressurePlateBlock.State.STRESSED))
+                                                                                )
+                                                                )
+                                                )
+                                        )
+                        )
+        );
     }
 }
