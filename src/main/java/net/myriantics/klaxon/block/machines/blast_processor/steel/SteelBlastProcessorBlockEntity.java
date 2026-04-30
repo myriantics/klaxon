@@ -26,7 +26,12 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     private static final float POWERFUL_EXPLOSIVE_THRESHOLD = 4.0f;
 
-    private final MufflerStorage mufflerStorage = new MufflerStorage();
+    private final MufflerStorage mufflerStorage = new MufflerStorage() {
+        @Override
+        public void onChanged() {
+            SteelBlastProcessorBlockEntity.this.updateMufflerState();
+        }
+    };
 
     protected SteelBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -124,7 +129,6 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.mufflerStorage.load(tag, registries);
-        this.updateMufflerState();
     }
 
     @Override
@@ -140,7 +144,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     public void setMuffler(ItemStack newMufflerStack) {
         this.mufflerStorage.set(newMufflerStack);
-        this.updateMufflerState();
+        this.setChanged();
     }
 
     protected void updateMufflerState() {

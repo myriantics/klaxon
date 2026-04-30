@@ -14,7 +14,12 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 
 public class PrecisionDispenserBlockEntity extends DispenserBlockEntity {
 
-    private final MufflerStorage mufflerStorage = new MufflerStorage();
+    private final MufflerStorage mufflerStorage = new MufflerStorage() {
+        @Override
+        public void onChanged() {
+            PrecisionDispenserBlockEntity.this.updateMufflerState();
+        }
+    };
 
     protected PrecisionDispenserBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -52,12 +57,10 @@ public class PrecisionDispenserBlockEntity extends DispenserBlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.mufflerStorage.load(tag, registries);
-        this.updateMufflerState();
     }
 
     public void setMuffler(ItemStack stack) {
         this.mufflerStorage.set(stack);
-        this.updateMufflerState();
         this.setChanged();
     }
 

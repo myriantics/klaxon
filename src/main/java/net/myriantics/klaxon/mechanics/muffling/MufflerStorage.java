@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 
-public class MufflerStorage {
+public abstract class MufflerStorage {
     private ItemStack mufflerStack = ItemStack.EMPTY;
 
     public boolean isPresent() {
@@ -14,10 +14,14 @@ public class MufflerStorage {
 
     public void set(ItemStack newMufflerStack) {
         this.mufflerStack = newMufflerStack.copyWithCount(1);
+        this.onChanged();
     }
 
     public ItemStack get() {
         return this.mufflerStack;
+    }
+
+    public void onChanged() {
     }
 
     public void load(CompoundTag tag, HolderLookup.Provider registries) {
