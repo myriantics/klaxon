@@ -38,10 +38,12 @@ public record ExplosiveCatalystData(Holder<ExplosiveCatalystBehavior> behavior, 
             Codec.BOOL.fieldOf("produces_fire").forGetter(ExplosiveCatalystData::producesFire)
     ).apply(instance, ExplosiveCatalystData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ExplosiveCatalystData> PACKET_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ExplosiveCatalystData> STREAM_CODEC = StreamCodec.composite(
             ExplosiveCatalystBehavior.ENTRY_PACKET_CODEC, ExplosiveCatalystData::behavior,
             ByteBufCodecs.DOUBLE, ExplosiveCatalystData::explosionPower,
             ByteBufCodecs.BOOL, ExplosiveCatalystData::producesFire,
             ExplosiveCatalystData::new
     );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Optional<ExplosiveCatalystData>> OPTIONAL_STREAM_CODEC = ByteBufCodecs.optional(STREAM_CODEC);
 }

@@ -3,6 +3,7 @@ package net.myriantics.klaxon.compat.jade.providers.block;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -10,15 +11,15 @@ import net.myriantics.klaxon.compat.jade.KlaxonJadePlugin;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.misc.KlaxonColors;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.StreamServerDataProvider;
 import snownee.jade.api.config.IPluginConfig;
 
-public enum ExplosiveCatalystVesselBlockProvider implements IBlockComponentProvider, StreamServerDataProvider<BlockAccessor, ExplosiveCatalystData> {
+import java.util.Optional;
+
+public enum ExplosiveCatalystVesselBlockProvider implements IBlockComponentProvider, StreamServerDataProvider<BlockAccessor, Optional<ExplosiveCatalystData>> {
     INSTANCE;
 
     public static final ResourceLocation ID = KlaxonCommon.locate("explosive_catalyst_vessel");
@@ -26,16 +27,18 @@ public enum ExplosiveCatalystVesselBlockProvider implements IBlockComponentProvi
     public static final String EXPLOSION_POWER = KlaxonJadePlugin.textTranslationKey(ID, "explosion_power");
     public static final String CONFIG = KlaxonJadePlugin.configTranslationKey(ID);
 
+    private static final Style OBFUSCATED = Style.EMPTY.withObfuscated(true);
+
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
-        @Nullable ExplosiveCatalystData data = this.decodeFromData(blockAccessor).orElse(null);
+        Optional<ExplosiveCatalystData> data = this.decodeFromData(blockAccessor).orElse(Optional.empty());
 
         MutableComponent explosionPowerComponent;
-        if (data == null) {
-            explosionPowerComponent = Component.translatable(DATA_HIDDEN);
+        if (data.isEmpty()) {
+            explosionPowerComponent = Component.literal("67").setStyle(OBFUSCATED);
         } else {
-            explosionPowerComponent = Component.literal("" + data.explosionPower());
-            if (data.producesFire()) {
+            explosionPowerComponent = Component.literal("" + data.get().explosionPower());
+            if (data.get().producesFire()) {
                 explosionPowerComponent = explosionPowerComponent.withColor(KlaxonColors.ORANGE.getRGB());
             }
         }
@@ -48,16 +51,16 @@ public enum ExplosiveCatalystVesselBlockProvider implements IBlockComponentProvi
     }
 
     @Override
-    public @NotNull ExplosiveCatalystData streamData(BlockAccessor blockAccessor) {
-        if (blockAccessor.getBlockEntity() instanceof ExplosiveCatalystVessel vessel) {
-            return vessel.getEffectiveData();
+    public Optional<ExplosiveCatalystData> streamData(BlockAccessor blockAccessor) {
+        if (blockAccessor.getBlockEntity() instanceof ExplosiveCatalystVessel vessel && vessel.shouldExposeExplosiveCatalystData()) {
+            return Optional.of(vessel.getEffectiveData());
         } else {
-            return ExplosiveCatalystData.ZERO;
+            return Optional.empty();
         }
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, ExplosiveCatalystData> streamCodec() {
-        return ExplosiveCatalystData.PACKET_CODEC;
+    public StreamCodec<RegistryFriendlyByteBuf, Optional<ExplosiveCatalystData>> streamCodec() {
+        return ExplosiveCatalystData.OPTIONAL_STREAM_CODEC;
     }
 }

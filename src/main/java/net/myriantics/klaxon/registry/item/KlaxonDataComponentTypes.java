@@ -83,7 +83,7 @@ public abstract class KlaxonDataComponentTypes {
 
     public static final Holder<DataComponentType<ExplosiveCatalystData>> EXPLOSIVE_CATALYST_DATA = register("explosive_catalyst_data", builder -> builder
             .persistent(ExplosiveCatalystData.CODEC)
-            .networkSynchronized(ExplosiveCatalystData.PACKET_CODEC)
+            .networkSynchronized(ExplosiveCatalystData.STREAM_CODEC)
     );
 
     // Items with this component override the check that disallows both damage and stacking components coexisting.

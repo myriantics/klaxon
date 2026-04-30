@@ -23,13 +23,13 @@ public class ExplosiveCatalystDefinitionRecipeSerializer implements RecipeSerial
 
     private static void write(RegistryFriendlyByteBuf buf, ExplosiveCatalystDefinitionRecipe recipe) {
         Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.getIngredient());
-        ExplosiveCatalystData.PACKET_CODEC.encode(buf, recipe.getData());
+        ExplosiveCatalystData.STREAM_CODEC.encode(buf, recipe.getData());
         ByteBufCodecs.BOOL.encode(buf, recipe.isHidden());
     }
 
     private static ExplosiveCatalystDefinitionRecipe read(RegistryFriendlyByteBuf buf) {
         Ingredient item = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
-        ExplosiveCatalystData data = ExplosiveCatalystData.PACKET_CODEC.decode(buf);
+        ExplosiveCatalystData data = ExplosiveCatalystData.STREAM_CODEC.decode(buf);
         boolean isHidden = ByteBufCodecs.BOOL.decode(buf);
 
         return new ExplosiveCatalystDefinitionRecipe(item, data, isHidden);

@@ -45,7 +45,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         components.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), this.explosiveCatalystData);
-        components.set(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(), new ModularExplosiveBlockConfigComponent(this.maxFuseTime, this.modifyWorld));
+        components.set(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(), new ModularExplosiveBlockConfigComponent(this.maxFuseTime, this.modifyWorld, this.exposeExplosiveCatalystData));
     }
 
     @Override
