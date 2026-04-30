@@ -1,13 +1,13 @@
 {
   "variants": {
-    "press_state=depressed": {
-      "model": "klaxon:block/faulty_heavy_gated_pressure_plate"
-    },
     "press_state=pressed": {
       "model": "klaxon:block/faulty_heavy_gated_pressure_plate_down"
     },
     "press_state=stressed": {
       "model": "klaxon:block/faulty_heavy_gated_pressure_plate_down"
+    },
+    "press_state=unpressed": {
+      "model": "klaxon:block/faulty_heavy_gated_pressure_plate"
     }
   }
 }

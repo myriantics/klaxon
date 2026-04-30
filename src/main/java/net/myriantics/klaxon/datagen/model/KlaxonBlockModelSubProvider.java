@@ -127,18 +127,18 @@ public abstract class KlaxonBlockModelSubProvider {
                 .put(TextureSlot.BACK, baseRl.withSuffix("/back_triggered"))
                 .put(TextureSlot.SIDE, horizontalRl.withSuffix("/side_triggered"));
         TextureMapping verticalIdleTexMap = new TextureMapping()
-                .put(TextureSlot.FRONT, verticalRl.withSuffix("/front_idle"))
+                .put(TextureSlot.TOP, verticalRl.withSuffix("/front_idle"))
                 .put(TextureSlot.SIDE, baseRl.withSuffix("/side_idle"))
                 .put(TextureSlot.BOTTOM, baseRl.withSuffix("/back_idle"))
                 .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_idle"));
         TextureMapping verticalTriggeredTexMap = new TextureMapping()
-                .put(TextureSlot.FRONT, verticalRl.withSuffix("/front_triggered"))
+                .put(TextureSlot.TOP, verticalRl.withSuffix("/front_triggered"))
                 .put(TextureSlot.SIDE, baseRl.withSuffix("/side_triggered"))
                 .put(TextureSlot.BOTTOM, baseRl.withSuffix("/back_triggered"))
                 .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_triggered"));
 
-        ResourceLocation verticalTriggered = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(verticalTriggeredRl, verticalTriggeredTexMap, generator.modelOutput);
-        ResourceLocation verticalIdle = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(verticalIdleRl, verticalIdleTexMap, generator.modelOutput);
+        ResourceLocation verticalTriggered = ModelTemplates.CUBE_BOTTOM_TOP.create(verticalTriggeredRl, verticalTriggeredTexMap, generator.modelOutput);
+        ResourceLocation verticalIdle = ModelTemplates.CUBE_BOTTOM_TOP.create(verticalIdleRl, verticalIdleTexMap, generator.modelOutput);
         // ResourceLocation horizontalTriggered = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(horizontalTriggeredRl, , generator.modelOutput);
         // ResourceLocation horizontalIdle = ModelTemplates.CUBE_ORIENTABLE_VERTICAL.create(horizontalIdleRl, horizontalIdleTexMap, generator.modelOutput);
 
