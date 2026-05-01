@@ -25,7 +25,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
-import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
+import net.myriantics.klaxon.util.container.ContainerPartition;
 import org.jetbrains.annotations.Nullable;
 
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
@@ -46,13 +46,9 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     }
 
     @Override
-    protected int initStackLimitForSlot(int slot) {
-        return 1;
-    }
-
-
-    public int getContainerSize() {
-        return 2;
+    protected void initPartitions(PartitionBuilder partitions) {
+        this.ingredientPartition = partitions.partition(1, 1);
+        this.catalystPartition = partitions.partition(1, 1);
     }
 
     @Override
@@ -85,7 +81,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
                 // clear catalyst and do explosion effect if power is greater than 0
                 if (catalystData.explosionPower() > 0) {
-                    this.removeItemNoUpdate(CATALYST_INDEX);
+                    this.catalystPartition.clearContent();
                     behavior.value().createExplosion(context, this.getExplosionOutputLocation(), catalystData, this.level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
                 }
 
@@ -165,14 +161,14 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     }
 
     @Override
-    protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
+    protected ContainerPartition getAccessForDirection(@Nullable Direction side) {
         Direction facing = this.getFacing();
         if (side == BlockDirectionHelper.getLeft(facing) || side == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
-            return this.catalystContainer;
+            return this.catalystPartition;
         } else if (side != facing) { // no front access - ingredient storage is default otherwise
-            return this.ingredientContainer;
+            return this.ingredientPartition;
         } else {
-            return SlotsWrapperContainer.EMPTY;
+            return ContainerPartition.EMPTY;
         }
     };
 }

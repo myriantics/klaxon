@@ -56,7 +56,7 @@ public abstract class AbstractBlastProcessorBlock extends BaseEntityBlock {
     @Override
     protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof AbstractBlastProcessorBlockEntity blastProcessor) {
-            return (int) (7 * blastProcessor.computeCatalystSlotFill() + 8 * blastProcessor.computeIngredientSlotFill());
+            return (int) (7 * blastProcessor.getCatalystPartition().computeFill() + 8 * blastProcessor.getIngredientPartition().computeFill());
         } else {
             return 0;
         }

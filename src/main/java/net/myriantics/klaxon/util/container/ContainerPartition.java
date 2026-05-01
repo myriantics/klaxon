@@ -6,25 +6,36 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class SlotsWrapperContainer implements Container {
+public class ContainerPartition implements Container {
     private final Container container;
-    private final int[] slots;
+    final int[] slots;
+    private final int maxStackSize;
     private final InventoryStorage storage;
 
-    public static final SlotsWrapperContainer EMPTY = new SlotsWrapperContainer(new SimpleContainer(0));
+    public static final ContainerPartition EMPTY = new ContainerPartition(new SimpleContainer(0));
 
-    public SlotsWrapperContainer(Container container, int... slots) {
+    ContainerPartition(Container container, int... slots) {
+        this(container, container.getMaxStackSize(), slots);
+    }
+
+    ContainerPartition(Container container, int maxStackSize, int firstSlot, int nextOpenSlot) {
+        int size = nextOpenSlot - firstSlot;
+        int[] slots = new int[size];
+        for (int i = 0; i < slots.length; i++) {
+            slots[i] = firstSlot + i;
+        }
+
         this.container = container;
         this.slots = slots;
+        this.maxStackSize = maxStackSize;
         this.storage = InventoryStorage.of(this, null);
     }
 
-    public static SlotsWrapperContainer fullAccess(Container container) {
-        int[] fullAccess = new int[container.getContainerSize()];
-        for (int i = 0; i < fullAccess.length; i++) {
-            fullAccess[i] = i;
-        }
-        return new SlotsWrapperContainer(container, fullAccess);
+    ContainerPartition(Container container, int maxStackSize, int... slots) {
+        this.container = container;
+        this.slots = slots;
+        this.maxStackSize = maxStackSize;
+        this.storage = InventoryStorage.of(this, null);
     }
 
     public InventoryStorage getStorage() {
@@ -35,9 +46,41 @@ public class SlotsWrapperContainer implements Container {
         return this.slots;
     }
 
+    public float computeFill() {
+        float rawTotal = 0;
+        for (int slot = 0; slot < this.getContainerSize(); slot++) {
+            rawTotal += this.computeSlotFill(slot);
+        }
+        return rawTotal / this.getContainerSize();
+    }
+
+    public float computeSlotFill(int slot) {
+        if (slot >= this.getContainerSize()) {
+            return 0f;
+        } else {
+            ItemStack stack = this.container.getItem(this.slots[slot]);
+            if (stack.isEmpty()) {
+                return 0;
+            }
+            int stackLimit = stack.getMaxStackSize();
+            int slotLimit = this.getMaxStackSize();
+            return (float) stack.getCount() / Math.min(stackLimit, slotLimit);
+        }
+    }
+
     @Override
     public int getContainerSize() {
         return this.slots.length;
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return this.maxStackSize;
+    }
+
+    @Override
+    public int getMaxStackSize(ItemStack stack) {
+        return this.container.getMaxStackSize(stack);
     }
 
     @Override

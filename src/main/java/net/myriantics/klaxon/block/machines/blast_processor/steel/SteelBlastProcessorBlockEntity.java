@@ -23,7 +23,7 @@ import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
-import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
+import net.myriantics.klaxon.util.container.ContainerPartition;
 import org.jetbrains.annotations.Nullable;
 
 public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity {
@@ -48,12 +48,9 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
-    protected int initStackLimitForSlot(int slot) {
-        return switch (slot) {
-            case INGREDIENT_INDEX -> 4;
-            case CATALYST_INDEX -> 1;
-            default -> -1;
-        };
+    protected void initPartitions(PartitionBuilder partitions) {
+        this.ingredientPartition = partitions.partition(1, 4);
+        this.catalystPartition = partitions.partition(1, 1);
     }
 
     @Override
@@ -95,7 +92,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                     BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), powerData));
 
                     if (powerData.explosionPower() > 0) {
-                        this.removeItemNoUpdate(CATALYST_INDEX);
+                        this.catalystPartition.clearContent();
                     }
 
                     this.storageCache = ItemStorage.SIDED.find(level, pos.relative(facing), facing.getOpposite());
@@ -154,14 +151,14 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
-    protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
+    protected ContainerPartition getAccessForDirection(@Nullable Direction side) {
         Direction facing = this.getFacing();
         if (side == facing.getOpposite() || side == Direction.DOWN) { // if back or down do catalyst
-            return this.catalystContainer;
+            return this.catalystPartition;
         } else if (side != facing) {
-            return this.ingredientContainer;
+            return this.ingredientPartition;
         } else {
-            return SlotsWrapperContainer.EMPTY;
+            return ContainerPartition.EMPTY;
         }
     }
 
@@ -175,11 +172,6 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         this.mufflerStorage.save(tag, registries);
-    }
-
-    @Override
-    public int getContainerSize() {
-        return 2;
     }
 
     public void setMuffler(ItemStack newMufflerStack) {

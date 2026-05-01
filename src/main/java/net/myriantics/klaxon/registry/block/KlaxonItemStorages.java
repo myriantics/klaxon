@@ -4,8 +4,8 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.KlaxonBaseContainerBlockEntity;
-import net.myriantics.klaxon.block.KlaxonBaseSidedContainerBlockEntity;
+import net.myriantics.klaxon.util.container.KlaxonBaseContainerBlockEntity;
+import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
 
 public abstract class KlaxonItemStorages {
 

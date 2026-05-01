@@ -1,8 +1,10 @@
-package net.myriantics.klaxon.block;
+package net.myriantics.klaxon.util.container;
 
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedSlottedStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -20,46 +22,29 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContainerBlockEntity {
 
-    protected final NonNullList<ItemStack> inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-    private final int[] stackSizeLimits = new int[this.getContainerSize()];
-    private int minStackSizeLimit = -1;
-    protected final Storage<ItemVariant> fullAccess = InventoryStorage.of(this, null);
+    protected final NonNullList<ItemStack> inventory;
+    private final ContainerPartition[] partitionedSlots;
+    protected final CombinedSlottedStorage<ItemVariant, ?> fullAccess;
 
     protected KlaxonBaseContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
-        this.initStackSizeLimits();
+        PartitionBuilder builder = new PartitionBuilder();
+        this.initPartitions(builder);
+        this.partitionedSlots = builder.build();
+        this.inventory = NonNullList.withSize(this.partitionedSlots.length, ItemStack.EMPTY);
+        this.fullAccess = new CombinedSlottedStorage<>(builder.partitions.stream().map(ContainerPartition::getStorage).toList());
     }
 
-    private void initStackSizeLimits() {
-        for (int i = 0; i < this.stackSizeLimits.length; i++) {
-            this.stackSizeLimits[i] = this.initStackLimitForSlot(i);
-            this.tryUpdateMinStackSizeLimit(this.stackSizeLimits[i]);
-        }
-    }
-
-    private void tryUpdateMinStackSizeLimit(int potentiallyLower) {
-        if (potentiallyLower != -1) {
-            if (this.minStackSizeLimit == -1) {
-                this.minStackSizeLimit = potentiallyLower;
-            } else {
-                this.minStackSizeLimit = Math.min(this.minStackSizeLimit, potentiallyLower);
-            }
-        }
-    }
-
-    protected int initStackLimitForSlot(int slot) {
-        return -1;
-    }
-
-    protected int getStackLimitForSlot(int slot) {
-        return this.stackSizeLimits[slot] == -1 ? super.getMaxStackSize() : this.stackSizeLimits[slot];
-    }
+    protected abstract void initPartitions(PartitionBuilder partitions);
 
     @Override
-    public int getMaxStackSize() {
-        return this.minStackSizeLimit == -1 ? super.getMaxStackSize() : this.minStackSizeLimit;
+    public final int getContainerSize() {
+        return partitionedSlots.length;
     }
 
     @Override
@@ -77,21 +62,7 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
     @Override
     public void setItem(int slot, ItemStack stack) {
         super.setItem(slot, stack);
-        stack.limitSize(this.getStackLimitForSlot(slot));
-    }
-
-    public float computeSlotFill(int slot) {
-        if (slot >= this.getContainerSize()) {
-            return 0f;
-        } else {
-            ItemStack stack = this.getItem(slot);
-            if (stack.isEmpty()) {
-                return 0;
-            }
-            int stackLimit = stack.getMaxStackSize();
-            int slotLimit = this.getStackLimitForSlot(slot);
-            return (float) stack.getCount() / (slotLimit == -1 ? stackLimit : Math.min(stackLimit, slotLimit));
-        }
+        stack.limitSize(this.partitionedSlots[slot].getMaxStackSize());
     }
 
     public boolean isUnlooted() {
@@ -116,7 +87,7 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        return super.canPlaceItem(slot, stack) && this.getItem(slot).getCount() < this.getStackLimitForSlot(slot);
+        return super.canPlaceItem(slot, stack) && this.getItem(slot).getCount() < this.partitionedSlots[slot].getMaxStackSize();
     }
 
     protected SoundEvent getLockedSound() {
@@ -142,5 +113,41 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
 
     public Storage<ItemVariant> getStorageForSide(@Nullable Direction direction) {
         return this.fullAccess;
+    }
+
+    protected class PartitionBuilder {
+        private final ArrayList<ContainerPartition> partitions = new ArrayList<>();
+        int currentNextOpenSlot = 0;
+
+        private PartitionBuilder() {
+        }
+
+        public ContainerPartition partition(int slotCount) {
+            return this.partition(slotCount, 99);
+        }
+
+        public ContainerPartition partition(int slotCount, int maxStackSize) {
+            if (slotCount <= 0) {
+                throw new IllegalArgumentException("Inventory partition must have at least one slot!");
+            }
+            if (maxStackSize < 0) {
+                throw new IllegalArgumentException("Partition max stack size cannot be negative!");
+            }
+            int nextOpenSlot = this.currentNextOpenSlot + slotCount;
+            ContainerPartition partition = new ContainerPartition(KlaxonBaseContainerBlockEntity.this, maxStackSize, this.currentNextOpenSlot, nextOpenSlot);
+            this.partitions.add(partition);
+            this.currentNextOpenSlot = nextOpenSlot;
+            return partition;
+        }
+
+        public ContainerPartition[] build() {
+            ContainerPartition[] builtPartitions = new ContainerPartition[this.currentNextOpenSlot];
+            for (ContainerPartition partition : this.partitions) {
+                for (int i = 0; i < partition.slots.length; i++) {
+                    builtPartitions[partition.slots[i]] = partition;
+                }
+            }
+            return builtPartitions;
+        }
     }
 }

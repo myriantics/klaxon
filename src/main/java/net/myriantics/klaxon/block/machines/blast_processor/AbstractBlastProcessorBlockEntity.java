@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.block.machines.blast_processor;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
@@ -16,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.block.KlaxonBaseSidedContainerBlockEntity;
+import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
@@ -27,22 +26,23 @@ import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefiniti
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
-import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
+import net.myriantics.klaxon.util.container.ContainerPartition;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedContainerBlockEntity implements ExplosiveCatalystVessel {
 
-    protected static final int INGREDIENT_INDEX = 0;
-    protected static final int CATALYST_INDEX = 1;
-
-    protected final SlotsWrapperContainer ingredientContainer = new SlotsWrapperContainer(this, INGREDIENT_INDEX);
-    protected final SlotsWrapperContainer catalystContainer = new SlotsWrapperContainer(this, CATALYST_INDEX);
-
+    protected ContainerPartition ingredientPartition;
+    protected ContainerPartition catalystPartition;
 
     protected AbstractBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+        if (this.ingredientPartition == null) {
+            throw new IllegalStateException("Ingredient Partition may not be null after initialization!");
+        }
+        if (this.catalystPartition == null) {
+            throw new IllegalStateException("Catalyst Partition may not be null after initialization!");
+        }
     }
 
     @Override
@@ -50,12 +50,12 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
-    public float computeIngredientSlotFill() {
-        return this.computeSlotFill(INGREDIENT_INDEX);
+    public ContainerPartition getCatalystPartition() {
+        return this.catalystPartition;
     }
 
-    public float computeCatalystSlotFill() {
-        return this.computeSlotFill(CATALYST_INDEX);
+    public ContainerPartition getIngredientPartition() {
+        return this.ingredientPartition;
     }
 
     public abstract void redstoneTrigger();
@@ -238,11 +238,11 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
     public abstract Position getItemOutputLocation(Direction facing);
 
     public final ItemStack getIngredientStack() {
-        return this.getItem(INGREDIENT_INDEX);
+        return this.ingredientPartition.getItem(0);
     }
 
     public final ItemStack getCatalystStack() {
-        return this.getItem(CATALYST_INDEX);
+        return this.catalystPartition.getItem(0);
     }
 
     public ExplosiveCatalystContext.Block getContext() {

@@ -42,7 +42,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     public DeepslateBlastProcessorBlock(Properties settings) {
         super(settings);
 
-        registerDefaultState(getStateDefinition().any()
+        registerDefaultState(defaultBlockState()
                 .setValue(LOOT_STATE, DeepslateBlastProcessorLootState.EMPTY)
                 .setValue(FACING, Direction.NORTH)
                 .setValue(LIT, false)
@@ -78,7 +78,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
 
                 // if we've inserted any items, we've succeeded!
                 // check if inventory is locked before performing fastinput
-                if (blastProcessor.canOpen(player) && canFastInput(player, state, interactionSide) && storage.insert(ItemVariant.of(insertedStack.split(1)), 1, tx) > 0) {
+                if (!insertedStack.isEmpty() && blastProcessor.canOpen(player) && canFastInput(player, state, interactionSide) && storage.insert(ItemVariant.of(insertedStack.split(1)), 1, tx) > 0) {
                     playItemInputSound(world, pos, state);
                     blastProcessor.setChanged();
                     tx.commit();

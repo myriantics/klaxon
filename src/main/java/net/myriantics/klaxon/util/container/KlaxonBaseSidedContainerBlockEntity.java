@@ -1,19 +1,13 @@
-package net.myriantics.klaxon.block;
+package net.myriantics.klaxon.util.container;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class KlaxonBaseSidedContainerBlockEntity extends KlaxonBaseContainerBlockEntity implements WorldlyContainer {
@@ -24,7 +18,7 @@ public abstract class KlaxonBaseSidedContainerBlockEntity extends KlaxonBaseCont
 
     @Override
     public int[] getSlotsForFace(Direction side) {
-        SlotsWrapperContainer container = this.getAccessForDirection(side);
+        ContainerPartition container = this.getAccessForDirection(side);
         if (container != null) {
             return container.getSlots();
         } else {
@@ -56,7 +50,7 @@ public abstract class KlaxonBaseSidedContainerBlockEntity extends KlaxonBaseCont
         if (side == null) {
             return super.getStorageForSide(null);
         } else {
-            SlotsWrapperContainer container = this.getAccessForDirection(side);
+            ContainerPartition container = this.getAccessForDirection(side);
             if (container != null) {
                 return container.getStorage();
             } else {
@@ -65,5 +59,5 @@ public abstract class KlaxonBaseSidedContainerBlockEntity extends KlaxonBaseCont
         }
     }
 
-    protected abstract SlotsWrapperContainer getAccessForDirection(@Nullable Direction side);
+    protected abstract ContainerPartition getAccessForDirection(@Nullable Direction side);
 }
