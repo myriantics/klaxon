@@ -199,24 +199,6 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         return Optional.of(recipes.getFirst());
     }
 
-    private void tryBlastingSmeltingRecipeOnAllStacks(List<ItemStack> stacks, Level level) {
-        this.tryBlastingSmeltingRecipeOnAllStacks(
-                stacks.size(),
-                stacks::get,
-                stacks::set,
-                level
-        );
-    }
-
-    private void tryBlastingSmeltingRecipeOnAllStacks(ItemStack[] stacks, Level level) {
-        this.tryBlastingSmeltingRecipeOnAllStacks(
-                stacks.length,
-                integer -> stacks[integer],
-                (integer, stack) -> stacks[integer] = stack,
-                level
-        );
-    }
-
     private ItemStack tryPerformBlastingSmelting(Level level, ItemStack stack) {
         SingleRecipeInput input = new SingleRecipeInput(stack);
 
@@ -235,32 +217,6 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
             return result;
         } else {
             return stack;
-        }
-    }
-
-    private void tryBlastingSmeltingRecipeOnAllStacks(int size, Int2ObjectFunction<ItemStack> getter, BiConsumer<Integer, ItemStack> setter, Level world) {
-        for (int i = 0; i < size; i++) {
-            ItemStack stack = getter.get(i);
-
-            // init recipe input
-            SingleRecipeInput input = new SingleRecipeInput(stack);
-
-            // find blasting recipe
-            Optional<RecipeHolder<BlastingRecipe>> blastingRecipe = world.getRecipeManager().getRecipeFor(
-                    RecipeType.BLASTING,
-                    input,
-                    world
-            );
-
-            // if recipe was successful, overwrite that index in output stacks with proper count
-            if (blastingRecipe.isPresent()) {
-                setter.accept(i,
-                        blastingRecipe.get().value().assemble(
-                                input,
-                                world.registryAccess()
-                        ).copyWithCount(stack.getCount())
-                );
-            }
         }
     }
 

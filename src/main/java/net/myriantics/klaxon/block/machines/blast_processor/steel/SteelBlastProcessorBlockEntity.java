@@ -1,5 +1,9 @@
 package net.myriantics.klaxon.block.machines.blast_processor.steel;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,6 +36,8 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
             SteelBlastProcessorBlockEntity.this.updateMufflerState();
         }
     };
+
+    private Storage<ItemVariant> storageCache = null;
 
     protected SteelBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -76,6 +82,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
             if (!this.isEmpty() && state.getBlock() instanceof SteelBlastProcessorBlock block) {
                 BlockPos pos = this.getBlockPos();
+                Direction facing = this.getFacing();
                 ExplosiveCatalystContext.Block context = this.getContext();
 
                 ExplosiveCatalystData powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
@@ -91,7 +98,9 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                         this.removeItemNoUpdate(CATALYST_INDEX);
                     }
 
+                    this.storageCache = ItemStorage.SIDED.find(level, pos.relative(facing), facing.getOpposite());
                     this.ejectItems(processingData, powerData);
+                    this.storageCache = null;
 
                     // self destruct if overload handling failed
                     if (powerData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && !block.handleOverload(level, pos, this, powerData)) {
@@ -105,6 +114,32 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     private void selfDestruct(Level level, BlockPos pos, ExplosiveCatalystContext.Block context, ExplosiveCatalystData powerData) {
         level.removeBlock(pos, false);
         powerData.behavior().value().createExplosion(context, pos.getCenter(), powerData, level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
+    }
+
+    @Override
+    protected void ejectItem(ItemStack stack, Direction facing) {
+        if (this.storageCache != null) {
+            try (Transaction tx = Transaction.openOuter()) {
+                int count = stack.getCount();
+                int inserted = Math.toIntExact(this.storageCache.insert(ItemVariant.of(stack), count, tx));
+
+                if (inserted > 0) {
+                    tx.commit();
+                    stack.setCount(count - inserted);
+                } else {
+                    tx.abort();
+                }
+            }
+        }
+        super.ejectItem(stack, facing);
+    }
+
+    protected boolean insertIntoCachedStorage(ItemStack stack) {
+        if (this.storageCache != null) {
+
+        }
+
+        return false;
     }
 
     public boolean cushionsExplosionWithoutExhaust(float explosionPower) {
