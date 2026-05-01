@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -38,14 +37,14 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final BooleanProperty TRIGGERED = AbstractBlastProcessorBlock.TRIGGERED;
     public static final EnumProperty<DeepslateBlastProcessorLootState> LOOT_STATE = KlaxonBlockStateProperties.DEEPSLATE_BLAST_PROCESSOR_LOOT_STATE;
-    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public DeepslateBlastProcessorBlock(Properties settings) {
         super(settings);
 
         registerDefaultState(getStateDefinition().any()
                 .setValue(LOOT_STATE, DeepslateBlastProcessorLootState.EMPTY)
-                .setValue(HORIZONTAL_FACING, Direction.NORTH)
+                .setValue(FACING, Direction.NORTH)
                 .setValue(LIT, false)
         );
     }
@@ -97,7 +96,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(LOOT_STATE, HORIZONTAL_FACING, LIT);
+        builder.add(LOOT_STATE, FACING, LIT);
     }
 
     public void updateBlockState(Level level, BlockPos pos, @Nullable BlockState appendedState) {
@@ -123,9 +122,9 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
         Direction direction = context.getHorizontalDirection();
         if (player != null) {
             if (player.isShiftKeyDown()) {
-                return this.defaultBlockState().setValue(HORIZONTAL_FACING, direction.getOpposite());
+                return this.defaultBlockState().setValue(FACING, direction.getOpposite());
             } else {
-                return this.defaultBlockState().setValue(HORIZONTAL_FACING, direction);
+                return this.defaultBlockState().setValue(FACING, direction);
             }
         }
         return this.defaultBlockState();
@@ -179,7 +178,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
             return false;
         }
 
-        Direction blockDirection = state.getValue(HORIZONTAL_FACING);
+        Direction blockDirection = state.getValue(FACING);
         DeepslateBlastProcessorLootState lootState = state.getValue(LOOT_STATE);
 
         // check if you can insert from the sides
@@ -192,7 +191,7 @@ public class DeepslateBlastProcessorBlock extends AbstractBlastProcessorBlock {
     }
 
     public static boolean isFrontObstructed(Level world, BlockPos pos) {
-        Direction facingDirection = world.getBlockState(pos).getValue(HORIZONTAL_FACING);
+        Direction facingDirection = world.getBlockState(pos).getValue(FACING);
         return world.getBlockState(pos.relative(facingDirection, 1)).isRedstoneConductor(world, pos);
     }
 }

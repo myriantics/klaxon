@@ -23,11 +23,13 @@ import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefiniti
 import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
 import net.myriantics.klaxon.util.PermissionsHelper;
 
+import java.util.List;
+
 public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu {
     private final Container ingredientInventory;
     private final SimpleContainer outputInventory;
 
-    private ExplosiveCatalystData powerData;
+    private ExplosiveCatalystData catalystData;
 
     private BlastProcessingRecipeData blastProcessingData;
 
@@ -64,15 +66,10 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
 
         if (!player.level().isClientSide) {
             this.context.execute((level, pos) -> {
-
                 if (level.getBlockEntity(pos) instanceof AbstractBlastProcessorBlockEntity blastProcessorBlockEntity) {
-                    this.powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessorBlockEntity.getContext(), blastProcessorBlockEntity.getCatalystStack());
-
-                    BlastProcessingRecipeInput recipeInput = new BlastProcessingRecipeInput(blastProcessorBlockEntity.getIngredientStack(), powerData);
-                    this.blastProcessingData = blastProcessorBlockEntity.getBlastProcessingPreviewData(level, pos, recipeInput);
+                    this.catalystData = blastProcessorBlockEntity.getEffectiveCatalystData();
+                    this.blastProcessingData = blastProcessorBlockEntity.getDisplayStacks(new BlastProcessingRecipeInput(blastProcessorBlockEntity.getIngredientStack(), this.catalystData));
                 }
-
-
             });
         }
 
@@ -151,19 +148,19 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
         if (!world.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
                 ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(), blastProcessor.getCatalystStack());
-                BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getBlastProcessingPreviewData(world, pos, new BlastProcessingRecipeInput(blastProcessor.getIngredientStack(), newPowerData));
+                BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getDisplayStacks(new BlastProcessingRecipeInput(blastProcessor.getIngredientStack(), newPowerData));
 
                 // Make sure we've changed something before sending an update packet
-                if (!newPowerData.equals(powerData) || !newBlastProcessingData.equals(this.blastProcessingData)) {
-                    this.powerData = newPowerData;
+                if (!newPowerData.equals(catalystData) || !newBlastProcessingData.equals(this.blastProcessingData)) {
+                    this.catalystData = newPowerData;
                     this.blastProcessingData = newBlastProcessingData;
 
                     ServerPlayNetworking.send(serverPlayer, new BlastProcessorScreenSyncPacket(
                                     blastProcessingData.explosionPowerMin(),
                                     blastProcessingData.explosionPowerMax(),
                                     blastProcessingData.outputStacks(),
-                                    powerData.explosionPower(),
-                                    powerData.producesFire()
+                                    catalystData.explosionPower(),
+                                    catalystData.producesFire()
                             )
                     );
                 }
@@ -171,12 +168,12 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
         }
 
         // yonk the display stacks
-        ItemStack[] displayStacks = blastProcessingData.outputStacks();
+        List<ItemStack> displayStacks = blastProcessingData.outputStacks();
 
         // update display inventory
         for (int i = 0; i < resultInventory.getContainerSize(); i++) {
             // set slot to display stack if possible, otherwise clear it
-            resultInventory.setItem(i, i < displayStacks.length ? displayStacks[i] : ItemStack.EMPTY);
+            resultInventory.setItem(i, i < displayStacks.size() ? displayStacks.get(i) : ItemStack.EMPTY);
         }
     }
 

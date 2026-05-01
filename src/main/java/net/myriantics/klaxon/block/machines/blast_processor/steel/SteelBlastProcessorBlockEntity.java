@@ -64,6 +64,11 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
+    public Direction getFacing() {
+        return this.getBlockState().getValue(SteelBlastProcessorBlock.FACING);
+    }
+
+    @Override
     public void redstoneTrigger() {
         Level level = this.level;
         if (level != null && !level.isClientSide()) {
@@ -80,13 +85,13 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                 if (block.isExhaustIgnited(level, pos) && !behavior.isNoOp()) {
                     this.selfDestruct(level, pos, context, powerData);
                 } else {
-                    BlastProcessingRecipeData processingData = this.getBlastProcessingRecipeData(level, pos, new BlastProcessingRecipeInput(this.getIngredientStack(), powerData));
+                    BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), powerData));
 
                     if (powerData.explosionPower() > 0) {
                         this.removeItemNoUpdate(CATALYST_INDEX);
                     }
 
-                    this.ejectItems(level, pos, processingData, powerData);
+                    this.ejectItems(processingData, powerData);
 
                     // self destruct if overload handling failed
                     if (powerData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && !block.handleOverload(level, pos, this, powerData)) {
@@ -115,7 +120,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     @Override
     protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
-        Direction facing = this.getBlockState().getValue(SteelBlastProcessorBlock.HORIZONTAL_FACING);
+        Direction facing = this.getFacing();
         if (side == facing.getOpposite() || side == Direction.DOWN) { // if back or down do catalyst
             return this.catalystContainer;
         } else if (side != facing) {

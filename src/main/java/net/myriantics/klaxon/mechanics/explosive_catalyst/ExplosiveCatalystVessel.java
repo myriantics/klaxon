@@ -7,5 +7,5 @@ public interface ExplosiveCatalystVessel {
 
     ExplosiveCatalystData getRawData();
 
-    ExplosiveCatalystData getEffectiveData();
+    ExplosiveCatalystData getEffectiveCatalystData();
 }

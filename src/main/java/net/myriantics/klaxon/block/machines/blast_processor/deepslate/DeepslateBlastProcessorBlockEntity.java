@@ -28,9 +28,6 @@ import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.container.SlotsWrapperContainer;
 import org.jetbrains.annotations.Nullable;
 
-import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.HORIZONTAL_FACING;
-import static net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock.isFrontObstructed;
-
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
 
     protected DeepslateBlastProcessorBlockEntity(BlockEntityType<DeepslateBlastProcessorBlockEntity> type, BlockPos pos, BlockState state) {
@@ -63,6 +60,11 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         return super.canTakeItemThroughFace(slot, stack, side) && !this.level.hasNeighborSignal(this.worldPosition);
     }
 
+    @Override
+    public Direction getFacing() {
+        return this.getBlockState().getValue(DeepslateBlastProcessorBlock.FACING);
+    }
+
     public void redstoneTrigger() {
         if (level != null && !level.isClientSide) {
 
@@ -74,21 +76,21 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 ExplosiveCatalystContext.Block context = this.getContext();
 
                 // compute blast processor behavior
-                ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
+                ExplosiveCatalystData catalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
 
-                Holder<ExplosiveCatalystBehavior> behavior = data.behavior();
+                Holder<ExplosiveCatalystBehavior> behavior = catalystData.behavior();
 
-                // transform data if needed
-                BlastProcessingRecipeData processingData = this.getBlastProcessingRecipeData(level, worldPosition, new BlastProcessingRecipeInput(this.getIngredientStack(), data));
+                // transform catalystData if needed
+                BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData));
 
                 // clear catalyst and do explosion effect if power is greater than 0
-                if (data.explosionPower() > 0) {
+                if (catalystData.explosionPower() > 0) {
                     this.removeItemNoUpdate(CATALYST_INDEX);
-                    behavior.value().createExplosion(context, this.getExplosionOutputLocation(level.getBlockState(pos).getValue(HORIZONTAL_FACING)), data, this.level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
+                    behavior.value().createExplosion(context, this.getExplosionOutputLocation(), catalystData, this.level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
                 }
 
                 // eject recipe results
-                this.ejectItems(level, worldPosition, processingData, data);
+                this.ejectItems(processingData, catalystData);
 
                 shouldRunDispenserEffects = !behavior.is(KlaxonExplosiveCatalystBehaviorTags.DOES_NOT_RUN_DISPENSER_EFFECTS);
             }
@@ -99,8 +101,8 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 level.levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, worldPosition, 0);
 
                 // display particles if not front obstructed
-                if (!isFrontObstructed(level, worldPosition)) {
-                    level.levelEvent(LevelEvent.PARTICLES_SHOOT_SMOKE, worldPosition, level.getBlockState(worldPosition).getValue(HORIZONTAL_FACING).get3DDataValue());
+                if (!DeepslateBlastProcessorBlock.isFrontObstructed(level, worldPosition)) {
+                    level.levelEvent(LevelEvent.PARTICLES_SHOOT_SMOKE, worldPosition, this.getFacing().get3DDataValue());
                 }
             }
         }
@@ -118,23 +120,24 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         super.setChanged();
     }
 
-    public Position getExplosionOutputLocation(Direction facing) {
-        return getItemOutputLocation(facing, 0.6);
+    public Position getExplosionOutputLocation() {
+        return getItemOutputLocation(0.6);
     }
 
     @Override
     public Position getItemOutputLocation(Direction facing) {
-        return getItemOutputLocation(facing, 0.7);
+        return getItemOutputLocation(0.7);
     }
 
-    private Position getItemOutputLocation(@Nullable Direction direction, double offset) {
+    private Position getItemOutputLocation(double offset) {
+        Direction facing = this.getFacing();
         Position centerPos = worldPosition.getCenter();
         double x = centerPos.x();
         double y = centerPos.y() - 0.3125;
         double z = centerPos.z();
 
-        if (direction != null) {
-            switch (direction) {
+        if (facing != null) {
+            switch (facing) {
                 case NORTH -> z -= offset;
                 case SOUTH -> z += offset;
                 case EAST -> x += offset;
@@ -149,27 +152,21 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     @Override
     public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayer player) {
 
-        // default values if world is null
-        ExplosiveCatalystData explosiveCatalystData = ExplosiveCatalystData.ZERO;
-        BlastProcessingRecipeData blastProcessingRecipeData = BlastProcessingRecipeData.ZERO;
+        ExplosiveCatalystData explosiveCatalystData = this.getEffectiveCatalystData();
+        BlastProcessingRecipeData blastProcessingRecipeData = this.getDisplayStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), explosiveCatalystData));
 
-        // if we have a world, actually yoink the proper values.
-        if (level != null) {
-            explosiveCatalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(this.getContext(), this.getCatalystStack());
-
-            blastProcessingRecipeData = this.getBlastProcessingPreviewData(level, worldPosition, new BlastProcessingRecipeInput(this.getIngredientStack(), explosiveCatalystData));
-        }
-
-        return new BlastProcessorScreenSyncPacket(blastProcessingRecipeData.explosionPowerMin(),
+        return new BlastProcessorScreenSyncPacket(
+                blastProcessingRecipeData.explosionPowerMin(),
                 blastProcessingRecipeData.explosionPowerMax(),
                 blastProcessingRecipeData.outputStacks(),
                 explosiveCatalystData.explosionPower(),
-                explosiveCatalystData.producesFire());
+                explosiveCatalystData.producesFire()
+        );
     }
 
     @Override
     protected SlotsWrapperContainer getAccessForDirection(@Nullable Direction side) {
-        Direction facing = this.getBlockState().getValue(HORIZONTAL_FACING);
+        Direction facing = this.getFacing();
         if (side == BlockDirectionHelper.getLeft(facing) || side == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
             return this.catalystContainer;
         } else if (side != facing) { // no front access - ingredient storage is default otherwise

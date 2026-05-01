@@ -5,25 +5,25 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 
 public class BlastProcessingRecipeInput implements RecipeInput {
-    private final ExplosiveCatalystData powerData;
-    private final ItemStack inputStack;
+    private final ExplosiveCatalystData catalystData;
+    private final ItemStack ingredientStack;
 
-    public BlastProcessingRecipeInput(ItemStack inputStack, ExplosiveCatalystData powerData) {
-        this.inputStack = inputStack;
-        this.powerData = powerData;
+    public BlastProcessingRecipeInput(ItemStack ingredientStack, ExplosiveCatalystData catalystData) {
+        this.ingredientStack = ingredientStack;
+        this.catalystData = catalystData;
     }
 
-    public ItemStack getInputStack() {
-        return this.inputStack;
+    public ItemStack getIngredientStack() {
+        return this.ingredientStack;
     }
 
-    public ExplosiveCatalystData getPowerData() {
-        return powerData;
+    public ExplosiveCatalystData getCatalystData() {
+        return catalystData;
     }
 
     @Override
     public ItemStack getItem(int slot) {
-        return slot == 0 ? inputStack : ItemStack.EMPTY;
+        return slot == 0 ? ingredientStack : ItemStack.EMPTY;
     }
 
     @Override

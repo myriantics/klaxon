@@ -8,10 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.block.DecoratedPotBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
@@ -37,7 +34,7 @@ public class DecoratedPotCrackingBlastProcessingRecipe extends BlastProcessingRe
 
     @Override
     protected ItemStack[] getDrops(BlastProcessingRecipeInput input, HolderLookup.Provider provider, RandomSource randomSource) {
-        ItemStack inputStack = input.getInputStack();
+        ItemStack inputStack = input.getIngredientStack();
         if (inputStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock().defaultBlockState().hasProperty(BlockStateProperties.CRACKED)) {
             ItemStack newStack = inputStack.copy();
             newStack.set(DataComponents.BLOCK_STATE, new BlockItemStateProperties(Map.of("cracked", "true")));

@@ -41,14 +41,14 @@ import java.util.Objects;
 
 public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implements MufflableBlock {
 
-    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty MUFFLED = KlaxonBlockStateProperties.MUFFLED;
 
     public SteelBlastProcessorBlock(Properties properties) {
         super(properties);
 
         registerDefaultState(defaultBlockState()
-                .setValue(HORIZONTAL_FACING, Direction.NORTH)
+                .setValue(FACING, Direction.NORTH)
                 .setValue(MUFFLED, false)
         );
     }
@@ -82,7 +82,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HORIZONTAL_FACING, MUFFLED);
+        builder.add(FACING, MUFFLED);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         @Nullable BlockState original = super.getStateForPlacement(context);
 
-        return Objects.requireNonNullElseGet(original, this::defaultBlockState).setValue(HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
+        return Objects.requireNonNullElseGet(original, this::defaultBlockState).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override

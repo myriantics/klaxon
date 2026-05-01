@@ -9,8 +9,9 @@ import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateB
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 import java.util.Arrays;
+import java.util.List;
 
-public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double explosionPowerMax, ItemStack[] displayStacks, double explosionPower, boolean producesFire) implements CustomPacketPayload {
+public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double explosionPowerMax, List<ItemStack> displayStacks, double explosionPower, boolean producesFire) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<BlastProcessorScreenSyncPacket> ID = new CustomPacketPayload.Type<>(KlaxonPackets.BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID);
 
@@ -18,10 +19,7 @@ public record BlastProcessorScreenSyncPacket(double explosionPowerMin, double ex
     public static final StreamCodec<RegistryFriendlyByteBuf, BlastProcessorScreenSyncPacket> PACKET_CODEC = StreamCodec.composite(
             ByteBufCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMin,
             ByteBufCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPowerMax,
-            ItemStack.LIST_STREAM_CODEC.<ItemStack[]>map(
-                    (stacks -> stacks.toArray(new ItemStack[0])),
-                    (Arrays::asList)
-            ), BlastProcessorScreenSyncPacket::displayStacks,
+            ItemStack.LIST_STREAM_CODEC, BlastProcessorScreenSyncPacket::displayStacks,
             ByteBufCodecs.DOUBLE, BlastProcessorScreenSyncPacket::explosionPower,
             ByteBufCodecs.BOOL, BlastProcessorScreenSyncPacket::producesFire,
             BlastProcessorScreenSyncPacket::new

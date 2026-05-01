@@ -172,7 +172,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
     }
 
     @Override
-    public ExplosiveCatalystData getEffectiveData() {
+    public ExplosiveCatalystData getEffectiveCatalystData() {
         ExplosiveCatalystContext.Block context = this.createContext();
         Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior();
         return behaviorHolder.value().transformExplosiveCatalystData(context, this.explosiveCatalystData);

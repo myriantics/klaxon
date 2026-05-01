@@ -28,7 +28,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
     @Override
     public boolean matches(BlastProcessingRecipeInput inventory, Level world) {
-        return ingredientItem.test(inventory.getInputStack());
+        return ingredientItem.test(inventory.getIngredientStack());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
     }
 
     public ItemStack[] craft(BlastProcessingRecipeInput input, HolderLookup.Provider lookup, RandomSource random) {
-        double explosionPower = input.getPowerData().explosionPower();
+        double explosionPower = input.getCatalystData().explosionPower();
 
         // check if explosion power exists and is within bounds
         if (explosionPower > 0 && explosionPower >= explosionPowerMin && explosionPower <= explosionPowerMax) {
