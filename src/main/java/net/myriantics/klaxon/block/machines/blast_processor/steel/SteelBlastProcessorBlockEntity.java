@@ -6,23 +6,29 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
+import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
+import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import net.myriantics.klaxon.util.container.ContainerPartition;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,43 +79,74 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     @Override
     public void redstoneTrigger() {
-        Level level = this.level;
-        if (level != null && !level.isClientSide()) {
+        if (this.level instanceof ServerLevel level) {
             BlockState state = this.getBlockState();
+            BlockPos pos = this.getBlockPos();
 
             if (!this.isEmpty() && state.getBlock() instanceof SteelBlastProcessorBlock block) {
-                BlockPos pos = this.getBlockPos();
                 Direction facing = this.getFacing();
                 ExplosiveCatalystContext.Block context = this.getContext();
 
-                ExplosiveCatalystData powerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
-                ExplosiveCatalystBehavior behavior = powerData.behavior().value();
+                ExplosiveCatalystData catalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
+                ExplosiveCatalystBehavior behavior = catalystData.behavior().value();
 
                 // if its on cooldown just kaboom no matter what
                 if (block.isExhaustIgnited(level, pos) && !behavior.isNoOp()) {
-                    this.selfDestruct(level, pos, context, powerData);
+                    this.selfDestruct(level, pos, context, catalystData);
                 } else {
-                    BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), powerData));
+                    BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData));
 
-                    if (powerData.explosionPower() > 0) {
+                    if (catalystData.explosionPower() > 0) {
                         this.catalystPartition.clearContent();
                     }
 
                     this.storageCache = ItemStorage.SIDED.find(level, pos.relative(facing), facing.getOpposite());
-                    this.ejectItems(processingData, powerData);
+                    this.ejectItems(processingData, catalystData);
                     this.storageCache = null;
 
                     // self destruct if overload handling failed
-                    if (powerData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && !block.handleOverload(level, pos, this, powerData)) {
-                        this.selfDestruct(level, pos, context, powerData);
+                    if (catalystData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && !block.handleOverload(level, pos, this, catalystData)) {
+                        this.selfDestruct(level, pos, context, catalystData);
+                    } else if (!this.mufflerStorage.isPresent()) {
+                        RandomSource random = level.getRandom();
+                        if (catalystData.explosionPower() > 0) {
+                            level.playSound(
+                                    null,
+                                    pos,
+                                    KlaxonSoundEvents.BLOCK_STEEL_BLAST_PROCESSOR_ACTIVATE,
+                                    SoundSource.BLOCKS,
+                                    0.1f + (0.3f * random.nextFloat()),
+                                    0.1f + (0.2f * random.nextFloat())
+                            );
+                        } else {
+                            playFailSound(level, pos, random);
+                        }
+                        level.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(this.getBlockState()));
                     }
+                }
+            } else {
+                if (!this.mufflerStorage.isPresent()) {
+                    this.playFailSound(level, pos, level.getRandom());
+                    level.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(this.getBlockState()));
                 }
             }
         }
     }
 
-    private void selfDestruct(Level level, BlockPos pos, ExplosiveCatalystContext.Block context, ExplosiveCatalystData powerData) {
-        level.removeBlock(pos, false);
+    private void playFailSound(ServerLevel level, BlockPos pos, RandomSource random) {
+        level.playSound(
+                null,
+                pos,
+                KlaxonSoundEvents.BLOCK_STEEL_BLAST_PROCESSOR_FAIL,
+                SoundSource.BLOCKS,
+                0.4f + (0.33f * random.nextFloat()),
+                0.3f + (0.4f * random.nextFloat())
+        );
+    }
+
+    private void selfDestruct(ServerLevel level, BlockPos pos, ExplosiveCatalystContext.Block context, ExplosiveCatalystData powerData) {
+        level.destroyBlock(pos, false);
+        KlaxonServerPlayNetworkHandler.syncWorldEvent(level, pos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);
         powerData.behavior().value().createExplosion(context, pos.getCenter(), powerData, level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
     }
 
@@ -129,18 +166,6 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
             }
         }
         super.ejectItem(stack, facing);
-    }
-
-    protected boolean insertIntoCachedStorage(ItemStack stack) {
-        if (this.storageCache != null) {
-
-        }
-
-        return false;
-    }
-
-    public boolean cushionsExplosionWithoutExhaust(float explosionPower) {
-        return explosionPower <= POWERFUL_EXPLOSIVE_THRESHOLD;
     }
 
     @Override

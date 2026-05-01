@@ -8,6 +8,9 @@ import net.myriantics.klaxon.KlaxonCommon;
 public abstract class KlaxonSoundEvents {
 
     public static final SoundEvent BLOCK_DEEPSLATE_BLAST_PROCESSOR_INSERT = register("block.deepslate_blast_processor.insert", SoundEvents.DEEPSLATE_PLACE);
+    public static final SoundEvent BLOCK_STEEL_BLAST_PROCESSOR_ACTIVATE = register("block.steel_blast_processor.activate", SoundEvents.DRAGON_FIREBALL_EXPLODE);
+    public static final SoundEvent BLOCK_STEEL_BLAST_PROCESSOR_FAIL = register("block.steel_blast_processor.fail", SoundEvents.CRAFTER_FAIL);
+    public static final SoundEvent BLOCK_STEEL_BLAST_PROCESSOR_IGNITE = register("block.steel_blast_processor.ignite", SoundEvents.FIRECHARGE_USE);
     public static final SoundEvent ITEM_HAMMER_WALLJUMP_SUCCESS = register("item.hammer.walljump.success", SoundEvents.IRON_GOLEM_HURT);
     public static final SoundEvent ITEM_HAMMER_WALLJUMP_FAIL_HEAVY = register("item.hammer.walljump.fail.heavy", SoundEvents.ITEM_BREAK);
     public static final SoundEvent ITEM_HAMMER_USAGE = register("item.hammer.usage", SoundEvents.ANVIL_LAND);
@@ -42,11 +45,11 @@ public abstract class KlaxonSoundEvents {
     // this doesnt actually register anything in order to prevent a crash when our custom sound files are missing
     private static SoundEvent register(String name, SoundEvent soundEvent) {
         return soundEvent;
-        // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), soundEvent);
+        // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), holder);
     }
 
-    private static Holder<SoundEvent> register(String name, Holder<SoundEvent> soundEvent) {
-        return soundEvent;
-        // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), soundEvent);
+    private static Holder<SoundEvent> register(String name, Holder<SoundEvent> holder) {
+        return holder;
+        // return Registry.register(Registries.SOUND_EVENT, KlaxonCommon.locate(name), holder);
     }
 }

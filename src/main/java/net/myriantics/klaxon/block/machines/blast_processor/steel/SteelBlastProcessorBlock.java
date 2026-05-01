@@ -4,7 +4,9 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
@@ -33,6 +35,7 @@ import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,6 +109,18 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         if (this.isExhaustIgnited(level, pos) || !this.canExhaustReplaceState(level, pos, aboveState)) {
             return false;
         } else {
+            if (blastProcessor.getMuffler().isEmpty()) {
+                RandomSource random = level.getRandom();
+                level.playSound(
+                        null,
+                        pos,
+                        KlaxonSoundEvents.BLOCK_STEEL_BLAST_PROCESSOR_IGNITE,
+                        SoundSource.BLOCKS,
+                        0.3f + (0.5f * random.nextFloat()),
+                        0.3f + (0.4f * random.nextFloat())
+                );
+            }
+
             level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
             List<Entity> caughtInExhaustBlast = level.getEntities(EntityTypeTest.forClass(Entity.class), new AABB(abovePos), entity -> !entity.isInvulnerable());
 
