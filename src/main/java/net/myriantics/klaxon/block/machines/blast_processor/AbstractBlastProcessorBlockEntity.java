@@ -111,7 +111,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
     public BlastProcessingRecipeData getCraftedStacks(BlastProcessingRecipeInput input) {
         Level level = this.level;
         ExplosiveCatalystData catalystData = input.getCatalystData();
-        if (level == null || this.getIngredientStack().isEmpty()) {
+        if (level == null || input.getIngredientStack().isEmpty() || this.getCatalystStack().isEmpty()) {
             return BlastProcessingRecipeData.ZERO;
         }
 
