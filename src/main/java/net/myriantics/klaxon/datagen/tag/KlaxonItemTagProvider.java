@@ -418,7 +418,13 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(
                         Items.ELYTRA,
                         Items.PHANTOM_MEMBRANE
-                );
+                )
+                .add(
+                        KlaxonItems.RUBBER_BLOCK.value(),
+                        KlaxonItems.RUBBER_SHEET_BLOCK.value(),
+                        KlaxonItems.RUBBER_SHEET.value()
+                )
+                .add(Items.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE);
         getOrCreateTagBuilder(KlaxonItemTags.MUFFLER_REMOVERS)
                 .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
     }
