@@ -39,6 +39,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonFluidTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -213,6 +214,10 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
     }
 
     protected boolean canExhaustReplaceState(Level level, BlockPos pos, BlockState state) {
+        if (!state.getFluidState().is(KlaxonFluidTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST)) {
+            return false; // modded gasolines and such should be allowed because bigger boom is funne
+        }
+
         if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST)) {
             return false;
         } else if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST)) {
