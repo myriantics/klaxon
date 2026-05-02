@@ -67,6 +67,8 @@ public abstract class KlaxonBlockTags {
             createTag("steel_blast_processor_exhaust_overwritable_allowlist");
     public static final TagKey<Block> STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST =
             createTag("steel_blast_processor_exhaust_overwritable_denylist");
+    public static final TagKey<Block> STEEL_BLAST_PROCESSOR_FIRE_HOLDERS =
+            createTag("steel_blast_processor_fire_holders");
 
     // nether reaction tags
     public static final TagKey<Block> NETHER_REACTION_IMMUNE =

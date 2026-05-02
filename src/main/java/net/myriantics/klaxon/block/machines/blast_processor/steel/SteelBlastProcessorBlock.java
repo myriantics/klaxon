@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -98,15 +99,23 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         return 4;
     }
 
-    public boolean isExhaustIgnited(Level level, BlockPos pos) {
-        return level.getBlockState(pos.above()).is(BlockTags.FIRE);
+    public boolean isFieryExhaust(BlockState state) {
+        if (state.is(BlockTags.FIRE)) {
+            return true;
+        }
+
+        if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS) && state.hasProperty(CampfireBlock.LIT) && state.getValue(CampfireBlock.LIT)) {
+            return true;
+        }
+
+        return false;
     }
 
     public boolean handleOverload(Level level, BlockPos pos, SteelBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData catalystData) {
         BlockPos abovePos = pos.above();
         BlockState aboveState = level.getBlockState(abovePos);
 
-        if (this.isExhaustIgnited(level, pos) || !this.canExhaustReplaceState(level, pos, aboveState)) {
+        if (this.isFieryExhaust(aboveState) || !this.canExhaustReplaceState(level, abovePos, aboveState)) {
             return false;
         } else {
             if (blastProcessor.getMuffler().isEmpty()) {
@@ -121,25 +130,32 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
                 );
             }
 
-            level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
-            List<Entity> caughtInExhaustBlast = level.getEntities(EntityTypeTest.forClass(Entity.class), new AABB(abovePos), entity -> !entity.isInvulnerable());
-
-            float damage = (float) (catalystData.explosionPower() * 2);
-            if (catalystData.producesFire()) {
-                damage++;
+            if (aboveState.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS) && aboveState.hasProperty(BlockStateProperties.LIT)) {
+                level.setBlock(abovePos, aboveState.setValue(BlockStateProperties.LIT, true), 11);
+            } else {
+                level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
             }
 
-            // launched up one block for each tick of damage
-            Vec3 launchVelocity = new Vec3(0, damage/20, 0);
+            if (!aboveState.isCollisionShapeFullBlock(level, abovePos)) {
+                List<Entity> caughtInExhaustBlast = level.getEntities(EntityTypeTest.forClass(Entity.class), new AABB(abovePos), entity -> !entity.isInvulnerable());
 
-            for (Entity entity : caughtInExhaustBlast) {
-                if (!entity.fireImmune() && !(entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE))) {
-                    entity.hurt(this.createDamageSource(level), damage);
+                float damage = (float) (catalystData.explosionPower() * 2);
+                if (catalystData.producesFire()) {
+                    damage++;
                 }
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    KlaxonServerPlayNetworkHandler.send(serverPlayer, new SteelBlastProcessorExhaustLaunchPacket(launchVelocity.toVector3f()));
-                } else {
-                    entity.addDeltaMovement(launchVelocity);
+
+                // launched up one block for each tick of damage
+                Vec3 launchVelocity = new Vec3(0, damage/20, 0);
+
+                for (Entity entity : caughtInExhaustBlast) {
+                    if (!entity.fireImmune() && !(entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE))) {
+                        entity.hurt(this.createDamageSource(level), damage);
+                    }
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        KlaxonServerPlayNetworkHandler.send(serverPlayer, new SteelBlastProcessorExhaustLaunchPacket(launchVelocity.toVector3f()));
+                    } else {
+                        entity.addDeltaMovement(launchVelocity);
+                    }
                 }
             }
 
@@ -199,6 +215,14 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST)) {
             return false;
         } else if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST)) {
+            return true;
+        }
+
+        if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS) && state.hasProperty(BlockStateProperties.LIT)) {
+            return true;
+        }
+
+        if (state.getBlock() instanceof SteelBlastProcessorExhaustHandler handler && handler.klaxon$handleExhaust(level, pos, state)) {
             return true;
         }
 

@@ -350,6 +350,17 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS)
                 .add(KlaxonBlocks.GOLD_WIRE_SPOOL_BLOCK.value())
                 .add(KlaxonBlocks.GOLD_PLATING_BLOCK.value());
+
+        getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST)
+                .addOptionalTag(BlockTags.CANDLES)
+                .addOptionalTag(BlockTags.LEAVES)
+                .addOptionalTag(BlockTags.BANNERS)
+                .add(Blocks.COBWEB);
+        getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST)
+                .add(Blocks.REPEATER)
+                .add(Blocks.COMPARATOR);
+        getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS)
+                .addOptionalTag(BlockTags.CAMPFIRES);
     }
 
     private void buildVeinmineGroupTags() {

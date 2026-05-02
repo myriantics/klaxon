@@ -85,13 +85,14 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
             if (!this.isEmpty() && state.getBlock() instanceof SteelBlastProcessorBlock block) {
                 Direction facing = this.getFacing();
+                BlockState aboveState = level.getBlockState(pos.above());
                 ExplosiveCatalystContext.Block context = this.getContext();
 
                 ExplosiveCatalystData catalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
                 ExplosiveCatalystBehavior behavior = catalystData.behavior().value();
 
                 // if its on cooldown just kaboom no matter what
-                if (block.isExhaustIgnited(level, pos) && !behavior.isNoOp()) {
+                if (block.isFieryExhaust(aboveState) && !behavior.isNoOp() && catalystData.explosionPower() > 0) {
                     this.selfDestruct(level, pos, context, catalystData);
                 } else {
                     BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData));
