@@ -13,6 +13,12 @@ public abstract class TntBlockMixin implements SteelBlastProcessorExhaustHandler
 
     @Unique
     @Override
+    public boolean klaxon$allowCustomExhaustHandling(ServerLevel level, BlockPos pos, BlockState state) {
+        return true;
+    }
+
+    @Unique
+    @Override
     public boolean klaxon$handleExhaust(ServerLevel level, BlockPos pos, BlockState state) {
         TntBlock.explode(level, pos);
         return true;

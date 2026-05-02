@@ -20,6 +20,12 @@ public abstract class DragonEggBlockMixin implements SteelBlastProcessorExhaustH
 
     @Unique
     @Override
+    public boolean klaxon$allowCustomExhaustHandling(ServerLevel level, BlockPos pos, BlockState state) {
+        return true;
+    }
+
+    @Unique
+    @Override
     public boolean klaxon$handleExhaust(ServerLevel level, BlockPos pos, BlockState state) {
         this.teleport(state, level, pos);
         KlaxonServerPlayNetworkHandler.syncWorldEvent(level, pos, KlaxonWorldEvents.DRAGON_EGG_PARTICLES);

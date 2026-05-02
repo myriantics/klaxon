@@ -355,7 +355,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addOptionalTag(BlockTags.CANDLES)
                 .addOptionalTag(BlockTags.LEAVES)
                 .addOptionalTag(BlockTags.BANNERS)
-                .add(Blocks.COBWEB);
+                .add(Blocks.COBWEB)
+        ;
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST)
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR);

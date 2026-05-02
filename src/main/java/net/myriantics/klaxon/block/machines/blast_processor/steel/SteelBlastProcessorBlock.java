@@ -113,7 +113,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         return false;
     }
 
-    public boolean handleOverload(Level level, BlockPos pos, SteelBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData catalystData) {
+    public boolean handleOverload(ServerLevel level, BlockPos pos, SteelBlastProcessorBlockEntity blastProcessor, ExplosiveCatalystData catalystData) {
         BlockPos abovePos = pos.above();
         BlockState aboveState = level.getBlockState(abovePos);
 
@@ -132,7 +132,9 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
                 );
             }
 
-            if (aboveState.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS) && aboveState.hasProperty(BlockStateProperties.LIT)) {
+            if (aboveState.getBlock() instanceof SteelBlastProcessorExhaustHandler handler && handler.klaxon$handleExhaust(level, abovePos, aboveState)) {
+                // no-op here because exhaust handler handled it
+            } else if (aboveState.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS) && aboveState.hasProperty(BlockStateProperties.LIT)) {
                 level.setBlock(abovePos, aboveState.setValue(BlockStateProperties.LIT, true), 11);
             } else {
                 level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
@@ -213,7 +215,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
         }
     }
 
-    protected boolean canExhaustReplaceState(Level level, BlockPos pos, BlockState state) {
+    protected boolean canExhaustReplaceState(ServerLevel level, BlockPos pos, BlockState state) {
         if (!state.getFluidState().is(KlaxonFluidTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST)) {
             return false; // modded gasolines and such should be allowed because bigger boom is funne
         }
@@ -224,11 +226,11 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
             return true;
         }
 
-        if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS) && state.hasProperty(BlockStateProperties.LIT)) {
+        if (state.getBlock() instanceof SteelBlastProcessorExhaustHandler handler && handler.klaxon$allowCustomExhaustHandling(level, pos, state)) {
             return true;
         }
 
-        if (level instanceof ServerLevel serverLevel && state.getBlock() instanceof SteelBlastProcessorExhaustHandler handler && handler.klaxon$handleExhaust(serverLevel, pos, state)) {
+        if (state.is(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS) && state.hasProperty(BlockStateProperties.LIT)) {
             return true;
         }
 
