@@ -12,16 +12,22 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.myriantics.klaxon.mixin.minecraft.storage.HopperBlockEntityInvoker;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class KlaxonStorageUtil {
+
     public static @Nullable Storage<ItemVariant> findStorage(Level level, BlockPos targetPos, @Nullable Direction targetFace) {
+        return findStorage(level, targetPos, targetFace, targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5);
+    }
+
+    public static @Nullable Storage<ItemVariant> findStorage(Level level, BlockPos targetPos, @Nullable Direction targetFace, double x, double y, double z) {
         Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, targetPos, targetFace);
         if (storage == null) {
-            List<Entity> containerEntities = level.getEntities((Entity) null, new AABB(targetPos), EntitySelector.CONTAINER_ENTITY_SELECTOR);
-            return !containerEntities.isEmpty() ? InventoryStorage.of((Container)containerEntities.get(level.random.nextInt(containerEntities.size())), null) : null;
+            @Nullable Container container = HopperBlockEntityInvoker.klaxon$invokeGetEntityContainer(level, x, y, z);
+            return container == null ? null : InventoryStorage.of(container, null);
         }
         return storage;
     }

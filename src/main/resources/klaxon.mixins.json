@@ -80,6 +80,7 @@
     "minecraft.steel_blast_processor.DragonEggBlockMixin",
     "minecraft.steel_blast_processor.TntBlockMixin",
     "minecraft.steel_workbench.CraftingMenuMixin",
+    "minecraft.storage.HopperBlockEntityInvoker",
     "minecraft.tool_usage.ItemStackMixin",
     "minecraft.unenchantability.AnvilMenuMixin",
     "minecraft.unenchantability.EnchantmentMixin",
