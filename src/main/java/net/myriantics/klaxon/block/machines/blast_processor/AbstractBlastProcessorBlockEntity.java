@@ -238,11 +238,11 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
     public abstract Position getItemOutputLocation(Direction facing);
 
     public final ItemStack getIngredientStack() {
-        return this.ingredientPartition.getItem(0);
+        return this.ingredientPartition.getFirstNonEmptyStack();
     }
 
     public final ItemStack getCatalystStack() {
-        return this.catalystPartition.getItem(0);
+        return this.catalystPartition.getFirstNonEmptyStack();
     }
 
     public ExplosiveCatalystContext.Block getContext() {

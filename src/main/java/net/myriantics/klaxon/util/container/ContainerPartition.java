@@ -85,12 +85,17 @@ public class ContainerPartition implements Container {
 
     @Override
     public boolean isEmpty() {
+        return this.getFirstNonEmptyStack().isEmpty();
+    }
+
+    public ItemStack getFirstNonEmptyStack() {
         for (int slot : this.slots) {
-            if (!this.container.getItem(slot).isEmpty()) {
-                return false;
+            ItemStack stack = this.container.getItem(slot);
+            if (!stack.isEmpty()) {
+                return stack;
             }
         }
-        return true;
+        return ItemStack.EMPTY;
     }
 
     @Override
