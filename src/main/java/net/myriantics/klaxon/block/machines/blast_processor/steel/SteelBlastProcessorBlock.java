@@ -3,6 +3,7 @@ package net.myriantics.klaxon.block.machines.blast_processor.steel;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -222,7 +223,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
             return true;
         }
 
-        if (state.getBlock() instanceof SteelBlastProcessorExhaustHandler handler && handler.klaxon$handleExhaust(level, pos, state)) {
+        if (level instanceof ServerLevel serverLevel && state.getBlock() instanceof SteelBlastProcessorExhaustHandler handler && handler.klaxon$handleExhaust(serverLevel, pos, state)) {
             return true;
         }
 

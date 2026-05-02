@@ -6,21 +6,19 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
+import net.myriantics.klaxon.mixin.minecraft.steel_blast_processor.DragonEggBlockInvoker;
 import net.myriantics.klaxon.networking.s2c.*;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +30,8 @@ public abstract class KlaxonClientPlayNetworkHandler {
     }
 
     public static void processKlaxonWorldEvent(KlaxonWorldEventPacket packet, ClientPlayNetworking.Context context) {
-        ClientLevel clientWorld = Minecraft.getInstance().level;
-        if (clientWorld == null) return;
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) return;
 
         int eventId = packet.eventId();
         int data = packet.data();
@@ -42,7 +40,7 @@ public abstract class KlaxonClientPlayNetworkHandler {
 
         LevelRenderer renderer = Minecraft.getInstance().levelRenderer;
 
-        RandomSource random = clientWorld.getRandom();
+        RandomSource random = level.getRandom();
 
         switch (eventId) {
             case KlaxonWorldEvents.DRAGONS_BREATH_EXPLOSIVE_CATALYST_CLOUD_SPAWNS -> {
@@ -56,11 +54,14 @@ public abstract class KlaxonClientPlayNetworkHandler {
                 }
 
                 if (data == 1) {
-                    clientWorld.playLocalSound(blockPos, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.HOSTILE, 1.0F, random.nextFloat() * 0.1F + 0.9F, false);
+                    level.playLocalSound(blockPos, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.HOSTILE, 1.0F, random.nextFloat() * 0.1F + 0.9F, false);
                 }
             }
             case KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES -> {
-                clientWorld.addDestroyBlockEffect(blockPos, clientWorld.getBlockState(blockPos));
+                level.addDestroyBlockEffect(blockPos, level.getBlockState(blockPos));
+            }
+            case KlaxonWorldEvents.DRAGON_EGG_PARTICLES -> {
+                ((DragonEggBlockInvoker) Blocks.DRAGON_EGG).klaxon$invokeTeleport(level.getBlockState(blockPos), level, blockPos);
             }
         }
     }

@@ -9,4 +9,8 @@ public abstract class KlaxonWorldEvents {
      * Only displays the particles without playing the sound
      */
     public static final int SPAWN_BLOCK_BREAK_PARTICLES = 2;
+    /**
+     *
+     */
+    public static final int DRAGON_EGG_PARTICLES = 3;
 }
