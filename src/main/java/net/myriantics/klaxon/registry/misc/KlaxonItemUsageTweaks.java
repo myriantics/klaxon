@@ -16,9 +16,11 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionContext;
 import net.myriantics.klaxon.mechanics.wrench.Wrenchable;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeInput;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -57,18 +59,31 @@ public abstract class KlaxonItemUsageTweaks {
                         level.gameEvent(GameEvent.BLOCK_CHANGE, targetPos, GameEvent.Context.of(player));
                     }
 
-                    return Optional.of(InteractionResult.SUCCESS);
+                    return new InteractionResultWrapper(InteractionResult.SUCCESS);
                 }
             }
-            return Optional.empty();
+            return InteractionResultWrapper.EMPTY;
         });
+
+        register(((item, context) -> {
+            if (ToolUsageRecipeLogic.test(context.getLevel(), context.getItemInHand())) {
+                return switch (ToolUsageRecipeLogic.runRecipeLogic(context)) {
+                    case FAIL -> InteractionResultWrapper.EMPTY;
+                    case SUCCESS -> new InteractionResultWrapper(InteractionResult.SUCCESS);
+                    case COSMETIC_SUCCESS -> new InteractionResultWrapper(InteractionResult.SUCCESS, true);
+                };
+            }
+
+            // If the recipe process failed, call the original interaction
+            return InteractionResultWrapper.EMPTY;
+        }));
 
         // wrench handler
         register((item, context) -> {
             ItemStack stack = context.getItemInHand();
             boolean sneaking = context.getPlayer() != null && context.getPlayer().isShiftKeyDown();
             if (!stack.is(KlaxonItemTags.WRENCHABLE_INTERFACE_TRIGGERING_TOOLS) || sneaking) {
-                return Optional.empty();
+                return InteractionResultWrapper.EMPTY;
             }
             Level level = context.getLevel();
             BlockPos targetPos = context.getClickedPos();
@@ -82,9 +97,9 @@ public abstract class KlaxonItemUsageTweaks {
                 WrenchInteractionMap interactionMap = wrenchable.getManualInteractionMap(manual);
                 float x = manual.getGuiOrientation().getClickedX();
                 float y = manual.getGuiOrientation().getClickedY();
-                return interactionMap.select(x, y).handle(manual, interactionMap.getRotation(targetState, manual.getGuiOrientation()));
+                return new InteractionResultWrapper(interactionMap.select(x, y).handle(manual, interactionMap.getRotation(targetState, manual.getGuiOrientation())).orElse(null));
             } else {
-                return Optional.empty();
+                return InteractionResultWrapper.EMPTY;
             }
         });
     }
@@ -94,7 +109,36 @@ public abstract class KlaxonItemUsageTweaks {
     }
 
     public interface StackUseOnHandler {
-        Optional<InteractionResult> handle(Item item, UseOnContext context);
+        InteractionResultWrapper handle(Item item, UseOnContext context);
+    }
+
+    public static class InteractionResultWrapper {
+        private final @Nullable InteractionResult result;
+        private final boolean isCosmetic;
+
+        public static final InteractionResultWrapper EMPTY = new InteractionResultWrapper(null);
+
+        public InteractionResultWrapper(@Nullable InteractionResult result) {
+            this(result, false);
+        }
+
+        public InteractionResultWrapper(@Nullable InteractionResult result, boolean isCosmetic) {
+            this.result = result;
+            this.isCosmetic = isCosmetic;
+        }
+
+        public boolean isPresent() {
+            return this.result != null;
+        }
+
+        public @Nullable InteractionResult get() {
+            return this.result;
+        }
+
+        public boolean cosmeticOverride() {
+            return this.isCosmetic;
+        }
+
     }
 
     public static void init() {
