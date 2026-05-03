@@ -123,9 +123,9 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
                 "Remove a Muffler from any machine"
         );
         addStageOneAdvancement(
-                KlaxonStageOneAdvancementProvider.APPLY_ELYTRA_MUFFLER,
+                KlaxonStageOneAdvancementProvider.APPLY_EPIC_MUFFLER,
                 "Call It: Misinput Or Flex",
-                "Apply an Elytra as a machine muffler"
+                "Apply an epic item as a machine muffler"
         );
         addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.GRAPPLE_WINCH_DE_ANCHOR_GRAPPLE_CLAW,

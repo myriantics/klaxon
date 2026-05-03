@@ -1,11 +1,13 @@
 {
   "values": [
+    "#klaxon:epic_mufflers",
     "minecraft:leather_helmet",
     "minecraft:leather_chestplate",
     "minecraft:leather_leggings",
     "minecraft:leather_boots",
     "minecraft:leather_horse_armor",
     "minecraft:leather",
+    "minecraft:rabbit_hide",
     {
       "id": "#minecraft:wool",
       "required": false
@@ -46,11 +48,9 @@
     "minecraft:item_frame",
     "minecraft:glow_item_frame",
     "minecraft:shield",
-    "minecraft:elytra",
     "minecraft:phantom_membrane",
     "klaxon:rubber_block",
     "klaxon:rubber_sheet_block",
-    "klaxon:rubber_sheet",
-    "minecraft:silence_armor_trim_smithing_template"
+    "klaxon:rubber_sheet"
   ]
 }

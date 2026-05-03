@@ -3,11 +3,13 @@ package net.myriantics.klaxon.datagen.advancement.providers;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
@@ -51,7 +53,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     public static final String OBTAIN_ANY_STEEL_ARMOR = "obtain_any_steel_armor";
 
     public static final String REMOVE_ANY_MUFFLER = "remove_any_muffler";
-    public static final String APPLY_ELYTRA_MUFFLER = "apply_elytra_muffler";
+    public static final String APPLY_EPIC_MUFFLER = "apply_epic_muffler";
     public static final String ROTATE_RAIL_WITH_WRENCH = "rotate_rail_with_wrench";
     public static final String OBTAIN_GRAPPLE_WINCH = "obtain_grapple_winch";
 
@@ -97,7 +99,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
 
         // level 4
         AdvancementHolder removeAnyMuffler = addTask(applyAnyMuffler, REMOVE_ANY_MUFFLER, Items.SHEARS, MufflerInteractionCriterion.Conditions.create(MufflerActionType.REMOVE, null));
-        AdvancementHolder applyElytraMuffler = addHiddenChallenge(applyAnyMuffler, APPLY_ELYTRA_MUFFLER, Items.ELYTRA, MufflerInteractionCriterion.Conditions.create(MufflerActionType.APPLY, ItemPredicate.Builder.item().of(Items.ELYTRA).build()));
+        AdvancementHolder applyEpicMuffler = addHiddenChallenge(applyAnyMuffler, APPLY_EPIC_MUFFLER, Items.ELYTRA, MufflerInteractionCriterion.Conditions.create(MufflerActionType.APPLY, ItemPredicate.Builder.item().of(KlaxonItemTags.EPIC_MUFFLERS).build()));
         AdvancementHolder editRailWithSteelWrench = addTask(performAnyWrenchAction, ROTATE_RAIL_WITH_WRENCH, Items.RAIL, WrenchUsageCriterion.Conditions.createRotation(BlockTags.RAILS));
         ItemStack loadedGrappleWinch = new ItemStack(KlaxonItems.GRAPPLE_WINCH);
         loadedGrappleWinch.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(new ItemStack(KlaxonItems.STEEL_GRAPPLE_CLAW)));

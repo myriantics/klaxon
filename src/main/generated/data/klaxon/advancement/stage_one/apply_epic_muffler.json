@@ -1,10 +1,10 @@
 {
   "parent": "klaxon:stage_one/apply_any_muffler",
   "criteria": {
-    "apply_elytra_muffler": {
+    "apply_epic_muffler": {
       "conditions": {
         "applied_stack": {
-          "items": "minecraft:elytra"
+          "items": "#klaxon:epic_mufflers"
         },
         "muffler_action_type": "apply"
       },
@@ -13,7 +13,7 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.klaxon.stage_one.apply_elytra_muffler.description"
+      "translate": "advancements.klaxon.stage_one.apply_epic_muffler.description"
     },
     "frame": "challenge",
     "hidden": true,
@@ -22,12 +22,12 @@
       "id": "minecraft:elytra"
     },
     "title": {
-      "translate": "advancements.klaxon.stage_one.apply_elytra_muffler.title"
+      "translate": "advancements.klaxon.stage_one.apply_epic_muffler.title"
     }
   },
   "requirements": [
     [
-      "apply_elytra_muffler"
+      "apply_epic_muffler"
     ]
   ],
   "sends_telemetry_event": true

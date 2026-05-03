@@ -368,6 +368,7 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(KlaxonItemTags.DEFUSERS)
                 .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
         getOrCreateTagBuilder(KlaxonItemTags.MUFFLERS)
+                .addTag(KlaxonItemTags.EPIC_MUFFLERS)
                 .add(
                         Items.LEATHER_HELMET,
                         Items.LEATHER_CHESTPLATE,
@@ -375,7 +376,10 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                         Items.LEATHER_BOOTS,
                         Items.LEATHER_HORSE_ARMOR
                 )
-                .add(Items.LEATHER)
+                .add(
+                        Items.LEATHER,
+                        Items.RABBIT_HIDE
+                )
                 .addOptionalTag(ItemTags.WOOL)
                 .addOptionalTag(ItemTags.WOOL_CARPETS)
                 .add(
@@ -416,14 +420,15 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 )
                 .add(Items.SHIELD)
                 .add(
-                        Items.ELYTRA,
                         Items.PHANTOM_MEMBRANE
                 )
                 .add(
                         KlaxonItems.RUBBER_BLOCK.value(),
                         KlaxonItems.RUBBER_SHEET_BLOCK.value(),
                         KlaxonItems.RUBBER_SHEET.value()
-                )
+                );
+        getOrCreateTagBuilder(KlaxonItemTags.EPIC_MUFFLERS)
+                .add(Items.ELYTRA)
                 .add(Items.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE);
         getOrCreateTagBuilder(KlaxonItemTags.MUFFLER_REMOVERS)
                 .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
