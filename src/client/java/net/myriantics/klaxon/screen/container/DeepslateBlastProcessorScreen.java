@@ -1,8 +1,6 @@
-package net.myriantics.klaxon.screen;
+package net.myriantics.klaxon.screen.container;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -10,13 +8,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorMenu;
 
-@Environment(EnvType.CLIENT)
-public class DeepslateBlastProcessorScreen extends AbstractContainerScreen<DeepslateBlastProcessorScreenHandler> {
+public class DeepslateBlastProcessorScreen extends AbstractContainerScreen<DeepslateBlastProcessorMenu> {
     private static final ResourceLocation TEXTURE = KlaxonCommon.locate("textures/gui/container/deepslate_blast_processor.png");
 
-    public DeepslateBlastProcessorScreen(DeepslateBlastProcessorScreenHandler handler, Inventory inventory, Component title) {
+    public DeepslateBlastProcessorScreen(DeepslateBlastProcessorMenu handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }
 

@@ -4,6 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -14,9 +17,9 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 
 public class PrecisionDispenserBlockEntity extends DispenserBlockEntity {
 
-    private final MufflerStorage mufflerStorage = new MufflerStorage() {
+    final MufflerStorage mufflerStorage = new MufflerStorage() {
         @Override
-        public void onChanged() {
+        public void setChanged() {
             PrecisionDispenserBlockEntity.this.updateMufflerState();
         }
     };
@@ -41,6 +44,11 @@ public class PrecisionDispenserBlockEntity extends DispenserBlockEntity {
         }
 
         return -1;
+    }
+
+    @Override
+    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
+        return new PrecisionDispenserMenu(containerId, inventory, this, ContainerLevelAccess.create(this.level, this.getBlockPos()));
     }
 
     public float getInaccuracy(float original) {

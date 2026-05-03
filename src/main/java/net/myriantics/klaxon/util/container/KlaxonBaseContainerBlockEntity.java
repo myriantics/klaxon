@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -42,6 +43,10 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
 
     protected abstract void initPartitions(PartitionBuilder partitions);
 
+    public @Nullable ContainerData getContainerData() {
+        return null;
+    }
+
     @Override
     public final int getContainerSize() {
         return partitionedSlots.length;
@@ -63,6 +68,11 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
     public void setItem(int slot, ItemStack stack) {
         super.setItem(slot, stack);
         stack.limitSize(this.partitionedSlots[slot].getMaxStackSize());
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return super.stillValid(player) && !this.isUnlooted();
     }
 
     public boolean isUnlooted() {

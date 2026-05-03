@@ -39,7 +39,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     private final MufflerStorage mufflerStorage = new MufflerStorage() {
         @Override
-        public void onChanged() {
+        public void setChanged() {
             SteelBlastProcessorBlockEntity.this.updateMufflerState();
         }
     };

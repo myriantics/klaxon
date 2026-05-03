@@ -68,7 +68,7 @@ public abstract class KlaxonBlockUsageTweaks {
                 }
             }
 
-            return Optional.of(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
+            return Optional.empty();
         });
     }
 

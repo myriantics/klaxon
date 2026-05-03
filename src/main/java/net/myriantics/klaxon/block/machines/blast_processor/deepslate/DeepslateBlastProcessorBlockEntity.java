@@ -40,7 +40,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
     @Override
     protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
-        DeepslateBlastProcessorScreenHandler screenHandler = new DeepslateBlastProcessorScreenHandler(syncId, playerInventory, this, ContainerLevelAccess.create(level, worldPosition));
+        DeepslateBlastProcessorMenu screenHandler = new DeepslateBlastProcessorMenu(syncId, playerInventory, this, ContainerLevelAccess.create(level, worldPosition));
         screenHandler.slotsChanged(this);
         return screenHandler;
     }

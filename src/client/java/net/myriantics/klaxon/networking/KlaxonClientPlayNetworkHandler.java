@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorMenu;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
@@ -70,7 +70,7 @@ public abstract class KlaxonClientPlayNetworkHandler {
         context.client().execute(() -> {
             Minecraft client = context.client();
 
-            if (client.player != null && client.player.containerMenu instanceof DeepslateBlastProcessorScreenHandler screenHandler) {
+            if (client.player != null && client.player.containerMenu instanceof DeepslateBlastProcessorMenu screenHandler) {
                 screenHandler.setRecipeData(
                         packet.explosionPower(),
                         packet.explosionPowerMin(),

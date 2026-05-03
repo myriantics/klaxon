@@ -20,12 +20,12 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
-import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
+import net.myriantics.klaxon.registry.misc.KlaxonMenuTypes;
 import net.myriantics.klaxon.util.PermissionsHelper;
 
 import java.util.List;
 
-public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu {
+public class DeepslateBlastProcessorMenu extends AbstractContainerMenu {
     private final Container ingredientInventory;
     private final SimpleContainer outputInventory;
 
@@ -44,7 +44,7 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
     public boolean producesFire;
 
     // client constructor
-        public DeepslateBlastProcessorScreenHandler(int syncId, Inventory playerInventory, BlastProcessorScreenSyncPacket packetData) {
+    public DeepslateBlastProcessorMenu(int syncId, Inventory playerInventory, BlastProcessorScreenSyncPacket packetData) {
         this(syncId, playerInventory, new SimpleContainer(2), ContainerLevelAccess.NULL);
 
             setRecipeData(packetData.explosionPower(),
@@ -55,8 +55,8 @@ public class DeepslateBlastProcessorScreenHandler extends AbstractContainerMenu 
 
 
     // server constructor
-    public DeepslateBlastProcessorScreenHandler(int syncId, Inventory playerInventory, Container blockEntityInventory, ContainerLevelAccess context) {
-        super(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER.value(), syncId);
+    public DeepslateBlastProcessorMenu(int syncId, Inventory playerInventory, Container blockEntityInventory, ContainerLevelAccess context) {
+        super(KlaxonMenuTypes.DEEPSLATE_BLAST_PROCESSOR.value(), syncId);
         checkContainerSize(blockEntityInventory, 2);
         this.ingredientInventory = blockEntityInventory;
         this.context = context;

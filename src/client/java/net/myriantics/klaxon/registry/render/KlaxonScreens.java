@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.registry.render;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -8,15 +7,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorScreenHandler;
-import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
-import net.myriantics.klaxon.registry.misc.KlaxonScreenHandlers;
-import net.myriantics.klaxon.screen.DeepslateBlastProcessorScreen;
+import net.myriantics.klaxon.registry.misc.KlaxonMenuTypes;
+import net.myriantics.klaxon.screen.container.DeepslateBlastProcessorScreen;
+import net.myriantics.klaxon.screen.container.PrecisionDispenserScreen;
 
 public abstract class KlaxonScreens {
 
     static {
-        register(KlaxonScreenHandlers.BLAST_PROCESSOR_SCREEN_HANDLER, DeepslateBlastProcessorScreen::new);
+        register(KlaxonMenuTypes.DEEPSLATE_BLAST_PROCESSOR, DeepslateBlastProcessorScreen::new);
+        register(KlaxonMenuTypes.PRECISION_DISPENSER, PrecisionDispenserScreen::new);
     }
 
     public static void init() {
