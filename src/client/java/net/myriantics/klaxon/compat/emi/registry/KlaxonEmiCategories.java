@@ -22,11 +22,11 @@ public abstract class KlaxonEmiCategories {
 
     public static final EmiRecipeCategory BLAST_PROCESSING = register(
             KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
-            KlaxonItems.DEEPSLATE_BLAST_PROCESSOR
+            KlaxonItems.STEEL_BLAST_PROCESSOR
     );
     public static final EmiRecipeCategory EXPLOSIVE_CATALYST_DEFINITION = register(
             KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
-            Items.TNT
+            KlaxonItems.STEEL_BLAST_PROCESSOR
     );
     public static final EmiRecipeCategory NETHER_REACTION = register(
             KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
@@ -34,7 +34,7 @@ public abstract class KlaxonEmiCategories {
     );
     public static final EmiRecipeCategory WORLD_ITEM_APPLICATION = register(
             KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID,
-            Items.DISPENSER
+            KlaxonItems.PRECISION_DISPENSER
     );
 
     public static void init(EmiRegistry registry) {

@@ -873,6 +873,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE.value())
                 .add(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE.value());
         getOrCreateTagBuilder(KlaxonBlockTags.BLAST_PROCESSORS)
+                .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value());
 
         // plating blocks

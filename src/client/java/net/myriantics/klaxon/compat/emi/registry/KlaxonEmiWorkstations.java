@@ -26,8 +26,8 @@ public final class KlaxonEmiWorkstations {
 
     private void initInternal() {
         // klaxon workstations
-        register(KlaxonEmiCategories.BLAST_PROCESSING, KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
-        register(KlaxonEmiCategories.EXPLOSIVE_CATALYST_DEFINITION, KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
+        register(KlaxonEmiCategories.BLAST_PROCESSING, EmiIngredient.of(KlaxonBlockTags.BLAST_PROCESSORS));
+        register(KlaxonEmiCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiIngredient.of(KlaxonBlockTags.BLAST_PROCESSORS));
         register(KlaxonEmiCategories.WORLD_ITEM_APPLICATION, Items.DISPENSER);
         register(KlaxonEmiCategories.WORLD_ITEM_APPLICATION, KlaxonItems.PRECISION_DISPENSER);
         register(KlaxonEmiCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
@@ -39,7 +39,7 @@ public final class KlaxonEmiWorkstations {
         // Steel Workbench is crafting table but steel
         register(VanillaEmiRecipeCategories.CRAFTING, KlaxonItems.STEEL_WORKBENCH);
         // Blast Processors can mimic Blasting Smelting functionality when using a catalyst that produces Fire
-        register(VanillaEmiRecipeCategories.BLASTING, KlaxonItems.DEEPSLATE_BLAST_PROCESSOR);
+        register(VanillaEmiRecipeCategories.BLASTING, EmiIngredient.of(KlaxonBlockTags.BLAST_PROCESSORS));
 
         KlaxonCommon.LOGGER.info("Registered KLAXON's EMI Workstations!");
     }
