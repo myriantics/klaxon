@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.compat.emi.recipes;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
@@ -14,12 +15,14 @@ import java.util.List;
 
 public abstract class AbstractToolUsageEmiRecipe implements EmiRecipe {
     private final ResourceLocation id;
+    private final ResourceLocation toolUsageAnimationRl;
     private final List<EmiIngredient> requiredTool;
     private final List<EmiIngredient> input;
     private final List<EmiStack> output;
 
-    public AbstractToolUsageEmiRecipe(RecipeHolder<ToolUsageRecipe> recipe, EmiIngredient requiredTool) {
+    public AbstractToolUsageEmiRecipe(RecipeHolder<ToolUsageRecipe> recipe, ResourceLocation toolUsageAnimationRl, EmiIngredient requiredTool) {
         this.id = recipe.id();
+        this.toolUsageAnimationRl = toolUsageAnimationRl;
         this.requiredTool = List.of(requiredTool);
         this.input = List.of(EmiIngredient.of(recipe.value().getInputIngredient()));
         this.output = List.of(EmiStack.of(recipe.value().getResultItem(null)));
@@ -47,20 +50,40 @@ public abstract class AbstractToolUsageEmiRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayHeight() {
-        return 45;
+        return 32;
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addSlot(input.get(0), 0, 9).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.dropped_item"));
+        final int slotSideLength = 18;
+        final int displayHeight = this.getDisplayHeight();
+        final int displayWidth = this.getDisplayWidth();
+        final int elementDistance = 2;
+        int animationWidth = 24;
+        int animationHeight = 24;
 
-        widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.tool")).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.use"));
+        int slotY = (displayHeight - slotSideLength) / 2;
+        int inputSlotX = elementDistance;
+        int outputSlotX = (displayWidth - (slotSideLength + elementDistance));
+        int animationX = findAnchorForCenter(displayWidth, animationWidth);
+        int animationY = findAnchorForCenter(displayHeight, animationHeight);
 
-        widgets.addSlot(output.get(0), 58, 9).recipeContext(this);
+
+        widgets.addSlot(input.getFirst(), inputSlotX, slotY).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.dropped_item"));
+
+        widgets.addTexture(new EmiTexture(this.toolUsageAnimationRl, 0, 0, animationWidth, animationHeight, animationWidth, animationHeight, 32, 32), animationX, animationY);
+
+        // widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.tool")).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.use"));
+
+        widgets.addSlot(output.getFirst(), outputSlotX, slotY).recipeContext(this);
 
         // todo: add dropped item animation here (maybe an accompanying hammer swinging one as well)
 
-        widgets.addText(Component.translatable("klaxon.emi.text.tool_usage.use_compact"), 0, 38, 4210752, false);
+        // widgets.addText(Component.translatable("klaxon.emi.text.tool_usage.use_compact"), 0, 38, 4210752, false);
+    }
+
+    private static int findAnchorForCenter(int largeLength, int toAlignLength) {
+        return (largeLength / 2) - (toAlignLength / 2);
     }
 
     @Override

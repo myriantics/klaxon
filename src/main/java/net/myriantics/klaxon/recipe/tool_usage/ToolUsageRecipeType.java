@@ -3,18 +3,23 @@ package net.myriantics.klaxon.recipe.tool_usage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public record ToolUsageRecipeType(Ingredient validTools, Optional<ResourceKey<Item>> display) {
+    public static final ResourceLocation PLACEHOLDER_ANIMATION_LOCATION = animationRl(KlaxonCommon.locate("placeholder"));
+
     public ToolUsageRecipeType(Ingredient validTools) {
         this(validTools, Optional.empty());
     }
@@ -32,4 +37,17 @@ public record ToolUsageRecipeType(Ingredient validTools, Optional<ResourceKey<It
             Ingredient.CODEC_NONEMPTY.fieldOf("valid_tools").forGetter(ToolUsageRecipeType::validTools),
             ResourceKey.codec(Registries.ITEM).optionalFieldOf("display_item").forGetter(ToolUsageRecipeType::display)
     ).apply(instance, ToolUsageRecipeType::new)));
+
+    public static ResourceLocation animationRlFromHolder(Holder<ToolUsageRecipeType> holder) {
+        Optional<ResourceKey<ToolUsageRecipeType>> key = holder.unwrapKey();
+        if (key.isPresent()) {
+            return animationRl(key.get().location());
+        } else {
+            return PLACEHOLDER_ANIMATION_LOCATION;
+        }
+    }
+
+    public static ResourceLocation animationRl(ResourceLocation typeRl) {
+        return typeRl.withPath(path -> "textures/gui/emi/tool_usage/animation/" + path + ".png");
+    }
 }

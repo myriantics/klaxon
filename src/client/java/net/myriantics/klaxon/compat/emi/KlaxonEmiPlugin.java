@@ -56,11 +56,11 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
         Level world = Minecraft.getInstance().level;
         if (world != null) {
-            for (Holder<ToolUsageRecipeType> entry : world.registryAccess().registryOrThrow(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
-                Optional<ResourceKey<ToolUsageRecipeType>> optionalKey = entry.unwrapKey();
+            for (Holder<ToolUsageRecipeType> typeHolder : world.registryAccess().registryOrThrow(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
+                Optional<ResourceKey<ToolUsageRecipeType>> optionalKey = typeHolder.unwrapKey();
 
                 if (optionalKey.isPresent()) {
-                    ToolUsageRecipeType type = entry.value();
+                    ToolUsageRecipeType type = typeHolder.value();
                     EmiIngredient validTools = EmiIngredient.of(type.validTools());
 
                     // attempt to pull from the specified item, but if that fails, use the tag
@@ -80,7 +80,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
                     for (RecipeHolder<ToolUsageRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.TOOL_USAGE)) {
                         if (recipe.value().getTypeKey().equals(optionalKey.get())) {
-                            registry.addRecipe(new AbstractToolUsageEmiRecipe(recipe, validTools) {
+                            registry.addRecipe(new AbstractToolUsageEmiRecipe(recipe, ToolUsageRecipeType.animationRlFromHolder(typeHolder), validTools) {
                                 @Override
                                 public EmiRecipeCategory getCategory() {
                                     return category;
