@@ -69,7 +69,7 @@ public abstract class AbstractToolUsageEmiRecipe implements EmiRecipe {
         int animationY = findAnchorForCenter(displayHeight, animationHeight);
 
 
-        widgets.addSlot(input.getFirst(), inputSlotX, slotY).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.dropped_item"));
+        widgets.addSlot(input.getFirst(), inputSlotX, slotY).recipeContext(this);
 
         widgets.addTexture(new EmiTexture(this.toolUsageAnimationRl, 0, 0, animationWidth, animationHeight, animationWidth, animationHeight, 32, 32), animationX, animationY);
 

@@ -152,7 +152,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
                 if (!explosiveCatalystDefinitionRecipe.isHidden()) {
                     Holder<ExplosiveCatalystBehavior> behavior = ((ExplosiveCatalystDefinitionRecipe) recipeEntry.value()).getData().behavior();
                     String id = behavior.getRegisteredName();
-                    registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe), descriptionFromBehaviorId(id)));
+                    registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe)));
                 }
             }
         }

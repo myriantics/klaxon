@@ -12,7 +12,7 @@ public final class KlaxonEnUsEmiTextLanguageProvider extends KlaxonEnUsLanguageS
     @Override
     public void generate() {
         generateNetherReactionTranslations();
-        generateExplosionPowerInfoTranslations();
+        generateExplosiveCatalystDefinitionTranslations();
         generateToolUsageTranslations();
     }
 
@@ -20,7 +20,11 @@ public final class KlaxonEnUsEmiTextLanguageProvider extends KlaxonEnUsLanguageS
         addEmiText("nether_reaction.hover", "Detonate any Explosive inside a Nether Reactor Core to activate it.");
     }
 
-    private void generateExplosionPowerInfoTranslations() {
+    private void generateExplosiveCatalystDefinitionTranslations() {
+        addEmiExplosionPowerInfo("tooltip.data.base_explosion_power", "Base Explosion Power: %s");
+        addEmiExplosionPowerInfo("tooltip.data.base_fiery", "Fiery");
+
+
         addEmiExplosionPowerInfo("explosion_power.constant", "Explosion power: %1$s");
         addEmiExplosionPowerInfo("explosion_power.min", "Exp. Power Min: %1$s");
         addEmiExplosionPowerInfo("explosion_power.max", "Exp. Power Max: %1$s");

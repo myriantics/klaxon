@@ -111,7 +111,7 @@ public abstract class KlaxonEnUsLanguageSubProvider {
     }
 
     protected void addEmiExplosionPowerInfo(String key, String name) {
-        addEmiText("explosion_power_info." + key, name);
+        addEmiText("explosive_catalyst_definition." + key, name);
     }
 
     private void addAdvancement(String advancementName, String stage, String title, String description) {
