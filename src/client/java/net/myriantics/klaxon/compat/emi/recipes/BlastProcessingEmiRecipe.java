@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlastProcessingEmiRecipe implements EmiRecipe {
-    private static final ResourceLocation BACKGROUND_TEXTURE = KlaxonCommon.locate("textures/gui/emi/deepslate_blast_processor_emi.png");
+    private static final ResourceLocation BACKGROUND_TEXTURE = KlaxonCommon.locate("textures/gui/sprites/emi/deepslate_blast_processor_emi.png");
 
     private final ResourceLocation id;
     private final List<EmiIngredient> input;

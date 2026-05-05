@@ -8,6 +8,7 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.myriantics.klaxon.compat.emi.infra.SpriteWidget;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,8 +60,8 @@ public abstract class AbstractToolUsageEmiRecipe implements EmiRecipe {
         final int displayHeight = this.getDisplayHeight();
         final int displayWidth = this.getDisplayWidth();
         final int elementDistance = 2;
-        int animationWidth = 24;
-        int animationHeight = 24;
+        int animationWidth = 32;
+        int animationHeight = 32;
 
         int slotY = (displayHeight - slotSideLength) / 2;
         int inputSlotX = elementDistance;
@@ -71,13 +72,20 @@ public abstract class AbstractToolUsageEmiRecipe implements EmiRecipe {
 
         widgets.addSlot(input.getFirst(), inputSlotX, slotY).recipeContext(this);
 
-        widgets.addTexture(new EmiTexture(this.toolUsageAnimationRl, 0, 0, animationWidth, animationHeight, animationWidth, animationHeight, 32, 32), animationX, animationY);
+        widgets.add(
+                new SpriteWidget(
+                        this.toolUsageAnimationRl,
+                        animationX, animationY,
+                        animationWidth, animationHeight,
+                        0, 0,
+                        32, 32,
+                        32, 32
+                )
+        );
 
         // widgets.addSlot(getCatalysts().get(0), 29, 0).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.tool")).appendTooltip(Component.translatable("klaxon.emi.text.tool_usage.use"));
 
         widgets.addSlot(output.getFirst(), outputSlotX, slotY).recipeContext(this);
-
-        // todo: add dropped item animation here (maybe an accompanying hammer swinging one as well)
 
         // widgets.addText(Component.translatable("klaxon.emi.text.tool_usage.use_compact"), 0, 38, 4210752, false);
     }

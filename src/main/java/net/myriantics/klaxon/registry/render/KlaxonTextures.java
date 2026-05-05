@@ -49,7 +49,7 @@ public abstract class KlaxonTextures {
     public static final ResourceLocation DEEPSLATE_BLAST_PROCESSOR_TOP_OPEN = copyDir("top_open", DEEPSLATE_BLAST_PROCESSOR_BACK);
 
     // Nether Reaction EMI Background
-    public static final ResourceLocation NETHER_REACTION_EMI_BACKGROUND = ofGui("emi/nether_reaction");
+    public static final ResourceLocation NETHER_REACTION_EMI_BACKGROUND = ofGui("sprites/emi/nether_reaction");
 
     // Wrench
     public static final ResourceLocation WRENCH_OVERLAY_9SLICE = ofEntity("wrench_overlay_9slice");

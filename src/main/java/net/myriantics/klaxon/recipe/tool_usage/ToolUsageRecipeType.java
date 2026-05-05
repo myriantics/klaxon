@@ -48,6 +48,6 @@ public record ToolUsageRecipeType(Ingredient validTools, Optional<ResourceKey<It
     }
 
     public static ResourceLocation animationRl(ResourceLocation typeRl) {
-        return typeRl.withPath(path -> "textures/gui/emi/tool_usage/animation/" + path + ".png");
+        return typeRl.withPrefix("emi/tool_usage/animation/");
     }
 }
