@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.block.machines.blast_processor.steel;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -18,7 +17,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -26,6 +25,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
@@ -87,14 +87,14 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
             if (!this.isEmpty() && state.getBlock() instanceof SteelBlastProcessorBlock block) {
                 Direction facing = this.getFacing();
                 BlockState aboveState = level.getBlockState(pos.above());
-                ExplosiveCatalystContext.Block context = this.getContext();
+                ExplosiveCatalystContext context = this.getContext(level);
 
                 ExplosiveCatalystData catalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
-                ExplosiveCatalystBehavior behavior = catalystData.behavior().value();
+                Holder<ExplosiveCatalystBehavior> behavior = catalystData.get(level);
 
                 // if its on cooldown just kaboom no matter what
-                if (block.isFieryExhaust(aboveState) && !behavior.isNoOp() && catalystData.explosionPower() > 0) {
-                    this.selfDestruct(level, pos, context, catalystData);
+                if (block.isFieryExhaust(aboveState) && behavior.value().isNoOp() && catalystData.explosionPower() > 0) {
+                    this.selfDestruct(level, pos, context, catalystData, behavior.value());
                 } else {
                     BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData));
 
@@ -108,7 +108,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
                     // self destruct if overload handling failed
                     if (catalystData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && !block.handleOverload(level, pos, this, catalystData)) {
-                        this.selfDestruct(level, pos, context, catalystData);
+                        this.selfDestruct(level, pos, context, catalystData, behavior.value());
                     } else if (!this.mufflerStorage.isPresent()) {
                         RandomSource random = level.getRandom();
                         if (catalystData.explosionPower() > 0) {
@@ -146,10 +146,10 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
         );
     }
 
-    private void selfDestruct(ServerLevel level, BlockPos pos, ExplosiveCatalystContext.Block context, ExplosiveCatalystData powerData) {
+    private void selfDestruct(ServerLevel level, BlockPos pos, ExplosiveCatalystContext context, ExplosiveCatalystData powerData, ExplosiveCatalystBehavior behavior) {
         level.destroyBlock(pos, false);
         KlaxonServerPlayNetworkHandler.syncWorldEvent(level, pos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);
-        powerData.behavior().value().createExplosion(context, pos.getCenter(), powerData, level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
+        behavior.createExplosion(context, pos.getCenter(), powerData, level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
     }
 
     @Override

@@ -147,7 +147,7 @@ public class DeepslateBlastProcessorMenu extends AbstractContainerMenu {
 
         if (!world.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(), blastProcessor.getCatalystStack());
+                ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(serverPlayer.serverLevel()), blastProcessor.getCatalystStack());
                 BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getDisplayStacks(new BlastProcessingRecipeInput(blastProcessor.getIngredientStack(), newPowerData));
 
                 // Make sure we've changed something before sending an update packet

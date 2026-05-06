@@ -150,8 +150,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             // dont show hidden recipes
             if (recipeEntry.value() instanceof ExplosiveCatalystDefinitionRecipe explosiveCatalystDefinitionRecipe) {
                 if (!explosiveCatalystDefinitionRecipe.isHidden()) {
-                    Holder<ExplosiveCatalystBehavior> behavior = ((ExplosiveCatalystDefinitionRecipe) recipeEntry.value()).getData().behavior();
-                    String id = behavior.getRegisteredName();
                     registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe)));
                 }
             }

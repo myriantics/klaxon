@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.ItemLike;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 
@@ -29,10 +29,10 @@ public abstract class ExplosiveCatalystDefinitionRecipeLogic {
     public static ExplosiveCatalystData computeExplosiveCatalystData(ExplosiveCatalystContext context, ItemStack catalyst) {
         DataComponentMap components = catalyst.getComponents();
         if (components.get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value()) instanceof ExplosiveCatalystData data) {
-            return data.behavior().value().transformExplosiveCatalystData(context, data);
+            return data.get(context.level()).value().transformExplosiveCatalystData(context, data);
         } else {
             ExplosiveCatalystData raw = computeRawExplosiveCatalystData(context, catalyst);
-            return raw.behavior().value().transformExplosiveCatalystData(context, raw);
+            return raw.get(context.level()).value().transformExplosiveCatalystData(context, raw);
         }
     }
 

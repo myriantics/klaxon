@@ -65,17 +65,21 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
             }
 
             if (player.isCreative()) {
-                ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(blockEntity.createContext(), stack);
-                if (!data.equals(ExplosiveCatalystData.ZERO)) {
-                    if (!level.isClientSide()) {
-                        blockEntity.setData(data);
-                        blockEntity.applyComponentsFromItemStack(stack);
-                        if (level.hasNeighborSignal(pos)) {
-                            onRedstoneImpulse(level, pos, state);
+                if (level instanceof ServerLevel serverLevel) {
+                    ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(blockEntity.createContext(serverLevel), stack);
+                    if (!data.equals(ExplosiveCatalystData.ZERO)) {
+                        if (!level.isClientSide()) {
+                            blockEntity.setData(data);
+                            blockEntity.applyComponentsFromItemStack(stack);
+                            if (level.hasNeighborSignal(pos)) {
+                                onRedstoneImpulse(level, pos, state);
+                            }
                         }
+
                     }
-                    return ItemInteractionResult.SUCCESS;
                 }
+
+                return ItemInteractionResult.SUCCESS;
             }
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);

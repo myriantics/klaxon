@@ -1,0 +1,8 @@
+{
+  "handler": "klaxon:default",
+  "transformers": [
+    {
+      "transformer": "klaxon:redstone_signal_strength"
+    }
+  ]
+}

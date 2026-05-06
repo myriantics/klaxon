@@ -2,6 +2,7 @@ package net.myriantics.klaxon.datagen.lang;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.jade.KlaxonJadePlugin;
 import net.myriantics.klaxon.datagen.advancement.providers.KlaxonStageOneAdvancementProvider;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class KlaxonEnUsLanguageSubProvider {
@@ -44,6 +46,10 @@ public abstract class KlaxonEnUsLanguageSubProvider {
 
     protected void addTrimMaterial(ResourceKey<TrimMaterial> material, String name) {
         builder.add("trim_material." + material.location().getNamespace() + "." + material.location().getPath(), name);
+    }
+
+    protected void addExplosiveCatalystBehavior(ResourceKey<ExplosiveCatalystBehavior> key, String name) {
+        builder.add(key.location().toLanguageKey(), name);
     }
 
     protected void addBlock(Holder<Block> holder, String name) {

@@ -1,0 +1,11 @@
+{
+  "handler": "klaxon:default",
+  "transformers": [
+    {
+      "dimension_type_predicate": {
+        "respawn_anchor_works": false
+      },
+      "transformer": "klaxon:dimension_type_dependent"
+    }
+  ]
+}

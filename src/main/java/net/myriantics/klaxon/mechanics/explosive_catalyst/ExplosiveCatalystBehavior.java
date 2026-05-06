@@ -1,30 +1,54 @@
 package net.myriantics.klaxon.mechanics.explosive_catalyst;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Position;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystHandlers;
 
-public abstract class ExplosiveCatalystBehavior {
+import java.util.Arrays;
+import java.util.List;
 
-    public abstract void createExplosion(ExplosiveCatalystContext context, Position detonationPosition, ExplosiveCatalystData data, boolean modifyWorld);
+public class ExplosiveCatalystBehavior {
 
-    public ExplosiveCatalystData transformExplosiveCatalystData(ExplosiveCatalystContext context, ExplosiveCatalystData original) {
-        return original;
+    private final Holder<ExplosiveCatalystHandler> handlerHolder;
+    private final List<ExplosiveCatalystTransformer> transformers;
+
+    public static final Codec<ExplosiveCatalystBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            KlaxonRegistries.EXPLOSIVE_CATALYST_HANDLERS.holderByNameCodec().fieldOf("handler").forGetter(i -> i.handlerHolder),
+            ExplosiveCatalystTransformer.LIST_CODEC.fieldOf("transformers").forGetter(i -> i.transformers)
+    ).apply(instance, ExplosiveCatalystBehavior::new));
+
+    public ExplosiveCatalystBehavior(Holder<ExplosiveCatalystHandler> handlerHolder, ExplosiveCatalystTransformer... transformers) {
+        this(handlerHolder, Arrays.stream(transformers).toList());
+    }
+
+    public ExplosiveCatalystBehavior(Holder<ExplosiveCatalystHandler> handlerHolder, List<ExplosiveCatalystTransformer> transformers) {
+        this.handlerHolder = handlerHolder;
+        this.transformers = transformers;
+    }
+
+    public void createExplosion(ExplosiveCatalystContext context, Position detonationPosition, ExplosiveCatalystData data, boolean modifyWorld) {
+        this.handlerHolder.value().createExplosion(context, detonationPosition, data, modifyWorld);
+    }
+
+    public ExplosiveCatalystData transformExplosiveCatalystData(ExplosiveCatalystContext context, ExplosiveCatalystData data) {
+        for (ExplosiveCatalystTransformer transformer : this.transformers) {
+            data = transformer.transformExplosiveCatalystData(context, data);
+        }
+        return data;
     }
 
     public boolean isNoOp() {
-        return false;
-    }
-
-    public final boolean is(TagKey<ExplosiveCatalystBehavior> tagKey) {
-        return this.asHolder().is(tagKey);
+        return this.handlerHolder.equals(KlaxonExplosiveCatalystHandlers.NO_OP);
     }
 
     public final boolean is(ExplosiveCatalystBehavior behavior) {
@@ -33,13 +57,5 @@ public abstract class ExplosiveCatalystBehavior {
 
     public final boolean is(Holder<ExplosiveCatalystBehavior> behaviorHolder) {
         return this.is(behaviorHolder.value());
-    }
-
-    public static final Codec<Holder<ExplosiveCatalystBehavior>> ENTRY_CODEC = KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIORS.holderByNameCodec();
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<ExplosiveCatalystBehavior>> ENTRY_PACKET_CODEC = ByteBufCodecs.holderRegistry(KlaxonRegistryKeys.EXPLOSIVE_CATALYST_BEHAVIOR);
-
-    public final Holder<ExplosiveCatalystBehavior> asHolder() {
-        return KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIORS.wrapAsHolder(this);
     }
 }

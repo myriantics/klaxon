@@ -1,15 +1,15 @@
-package net.myriantics.klaxon.mechanics.explosive_catalyst.behaviors;
+package net.myriantics.klaxon.mechanics.explosive_catalyst.handler;
 
 import net.minecraft.core.Position;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import org.jetbrains.annotations.Nullable;
 
-public class CreeperHeadExplosiveCatalystBehavior extends DefaultExplosiveCatalystBehavior {
+public class ChargedCreeperExplosiveCatalystHandler extends DefaultExplosiveCatalystHandler {
     @Override
     @Nullable
     protected DamageSource getDamageSource(ExplosiveCatalystContext context, Position position) {

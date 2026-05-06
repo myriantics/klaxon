@@ -8,6 +8,7 @@ import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
 import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistryProvider;
 import net.myriantics.klaxon.datagen.custom.providers.KlaxonDamageTypeProvider;
+import net.myriantics.klaxon.datagen.custom.providers.KlaxonExplosiveCatalystBehaviorProvider;
 import net.myriantics.klaxon.datagen.custom.providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.datagen.custom.providers.KlaxonVeinmineGroupProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;

@@ -7,7 +7,6 @@ import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BlastProcessorExplosionBehavior extends ExplosionDamageCalculator {
-
     boolean canModifyWorld;
 
     public BlastProcessorExplosionBehavior(boolean canModifyWorld) {

@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
 import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
@@ -15,6 +16,7 @@ public abstract class KlaxonDynamicRegistries {
         registerSynced(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE, ToolUsageRecipeType.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
         registerSynced(KlaxonRegistryKeys.VEINMINE_GROUP, VeinmineGroup.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
         registerSynced(KlaxonRegistryKeys.WRENCH_INTERACTION_DENIAL_PREDICATE, WrenchInteractionDenialPredicate.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
+        registerSynced(KlaxonRegistryKeys.EXPLOSIVE_CATALYST_BEHAVIOR, ExplosiveCatalystBehavior.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
     }
 
     private static <T> void registerSynced(ResourceKey<? extends Registry<T>> key, Codec<T> codec, DynamicRegistries.SyncOption... options) {

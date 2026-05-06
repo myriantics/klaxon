@@ -4,10 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonDamageTypeProvider;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonToolUsageRecipeTypeProvider;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonVeinmineGroupProvider;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonWrenchInteractionPredicateProvider;
+import net.myriantics.klaxon.datagen.custom.providers.*;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,6 +21,7 @@ public final class KlaxonDynamicRegistryProvider extends FabricDynamicRegistryPr
         new KlaxonToolUsageRecipeTypeProvider(registries, entries);
         new KlaxonVeinmineGroupProvider(registries, entries);
         new KlaxonWrenchInteractionPredicateProvider(registries, entries);
+        new KlaxonExplosiveCatalystBehaviorProvider(registries, entries);
     }
 
     @Override

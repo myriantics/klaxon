@@ -1,0 +1,9 @@
+{
+  "handler": "klaxon:default",
+  "transformers": [
+    {
+      "blocks": "minecraft:bedrock",
+      "transformer": "klaxon:supporting_block_state"
+    }
+  ]
+}

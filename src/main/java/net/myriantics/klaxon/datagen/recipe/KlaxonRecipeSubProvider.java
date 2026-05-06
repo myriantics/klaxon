@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,7 @@ import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapel
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
-import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
 import org.jetbrains.annotations.Nullable;
@@ -293,7 +294,7 @@ public abstract class KlaxonRecipeSubProvider {
 
     public void addExplosiveCatalystDefinitionRecipe(
             NamedIngredient input,
-            Holder<ExplosiveCatalystBehavior> behavior,
+            ResourceKey<ExplosiveCatalystBehavior> behavior,
             double explosionPower, boolean producesFire,
             boolean isHidden,
             final ResourceCondition... conditions

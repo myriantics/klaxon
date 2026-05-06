@@ -1,7 +1,16 @@
 {
   "values": [
-    "klaxon:wind_charge",
-    "klaxon:dragons_breath",
-    "klaxon:firework_rocket"
+    {
+      "id": "klaxon:wind_charge",
+      "required": false
+    },
+    {
+      "id": "klaxon:dragons_breath",
+      "required": false
+    },
+    {
+      "id": "klaxon:firework_rocket",
+      "required": false
+    }
   ]
 }

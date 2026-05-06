@@ -3,6 +3,7 @@ package net.myriantics.klaxon.block.machines.blast_processor;
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -15,8 +16,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
 import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -227,12 +229,16 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
     @Override
     public ExplosiveCatalystData getEffectiveCatalystData() {
-        return ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(this.getContext(), this.getCatalystStack());
+        return this.level instanceof ServerLevel serverLevel
+                ? ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(this.getContext(serverLevel), this.getCatalystStack())
+                : ExplosiveCatalystData.ZERO;
     }
 
     @Override
     public ExplosiveCatalystData getRawData() {
-        return ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(this.getContext(), this.getCatalystStack());
+        return this.level instanceof ServerLevel serverLevel
+                ? ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(this.getContext(serverLevel), this.getCatalystStack())
+                : ExplosiveCatalystData.ZERO;
     }
 
     public abstract Position getItemOutputLocation(Direction facing);
@@ -245,7 +251,9 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         return this.catalystPartition.getFirstNonEmptyStack();
     }
 
-    public ExplosiveCatalystContext.Block getContext() {
-        return new ExplosiveCatalystContext.Block(this.level, this.getCatalystStack().getComponents(), this.getBlockPos());
+    public ExplosiveCatalystContext getContext(ServerLevel serverLevel) {
+        return new ExplosiveCatalystContext(serverLevel, this.getCatalystStack().getComponents())
+                .add(KlaxonExplosiveCatalystContextParams.SUPPORT_STATE, serverLevel.getBlockState(this.getBlockPos().below()))
+                .add(KlaxonExplosiveCatalystContextParams.BLOCK_POS, this.getBlockPos());
     }
 }

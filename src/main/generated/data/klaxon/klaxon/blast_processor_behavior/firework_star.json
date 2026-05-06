@@ -1,0 +1,30 @@
+{
+  "handler": "klaxon:default",
+  "transformers": [
+    {
+      "shapes_to_data": {
+        "creeper": {
+          "behavior": "klaxon:creeper_head",
+          "explosion_power": 6.0,
+          "produces_fire": false
+        },
+        "large_ball": {
+          "behavior": "klaxon:default",
+          "explosion_power": 1.3,
+          "produces_fire": true
+        }
+      },
+      "trail_data": {
+        "behavior": "klaxon:no_op",
+        "explosion_power": 0.0,
+        "produces_fire": false
+      },
+      "transformer": "klaxon:firework_explosion",
+      "twinkle_data": {
+        "behavior": "klaxon:respawn_anchorlike",
+        "explosion_power": 1.3,
+        "produces_fire": true
+      }
+    }
+  ]
+}

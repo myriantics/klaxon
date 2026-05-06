@@ -14,11 +14,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
@@ -127,12 +128,12 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         BlockPos pos = this.worldPosition;
 
         if (level instanceof ServerLevel serverLevel) {
-            Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior();
+            Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.get(serverLevel);
             if (behaviorHolder.is(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)) {
                 KlaxonServerPlayNetworkHandler.syncWorldEvent(serverLevel, pos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);
             }
             level.removeBlock(pos, false);
-            ExplosiveCatalystContext.Block context = this.createContext();
+            ExplosiveCatalystContext context = this.createContext(serverLevel);
             behaviorHolder.value().createExplosion(context, pos.getCenter(), behaviorHolder.value().transformExplosiveCatalystData(context, this.explosiveCatalystData), this.modifyWorld);
         }
     }
@@ -141,8 +142,10 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         this.updateFuseTime(-1);
     }
 
-    public ExplosiveCatalystContext.Block createContext() {
-        return new ExplosiveCatalystContext.Block(this.level, this.components(), this.worldPosition);
+    public ExplosiveCatalystContext createContext(ServerLevel serverLevel) {
+        return new ExplosiveCatalystContext(serverLevel, this.components())
+                .add(KlaxonExplosiveCatalystContextParams.SUPPORT_STATE, serverLevel.getBlockState(this.getBlockPos().below()))
+                .add(KlaxonExplosiveCatalystContextParams.BLOCK_POS, this.getBlockPos());
     }
 
     public void onRedstoneImpulse() {
@@ -173,8 +176,12 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
 
     @Override
     public ExplosiveCatalystData getEffectiveCatalystData() {
-        ExplosiveCatalystContext.Block context = this.createContext();
-        Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior();
-        return behaviorHolder.value().transformExplosiveCatalystData(context, this.explosiveCatalystData);
+        if (this.level instanceof ServerLevel serverLevel) {
+            ExplosiveCatalystContext context = this.createContext(serverLevel);
+            Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.get(serverLevel);
+            return behaviorHolder.value().transformExplosiveCatalystData(context, this.explosiveCatalystData);
+        } else {
+            return ExplosiveCatalystData.ZERO;
+        }
     }
 }

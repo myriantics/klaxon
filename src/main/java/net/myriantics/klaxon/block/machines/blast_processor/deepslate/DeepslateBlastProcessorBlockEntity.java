@@ -2,6 +2,7 @@ package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.*;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,7 +16,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
@@ -62,19 +63,19 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     }
 
     public void redstoneTrigger() {
-        if (level != null && !level.isClientSide) {
+        if (level != null && level instanceof ServerLevel serverLevel) {
 
             // default to false so that it shows no particles when dispensing nothing
             boolean shouldRunDispenserEffects = false;
 
             if (!this.isEmpty()) {
                 BlockPos pos = this.getBlockPos();
-                ExplosiveCatalystContext.Block context = this.getContext();
+                ExplosiveCatalystContext context = this.getContext(serverLevel);
 
                 // compute blast processor behavior
                 ExplosiveCatalystData catalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
 
-                Holder<ExplosiveCatalystBehavior> behavior = catalystData.behavior();
+                Holder<ExplosiveCatalystBehavior> behavior = catalystData.get(serverLevel);
 
                 // transform catalystData if needed
                 BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData));

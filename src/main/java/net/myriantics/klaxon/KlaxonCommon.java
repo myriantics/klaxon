@@ -8,11 +8,13 @@ import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.behavior.KlaxonBlockStateWrenchBehaviors;
 import net.myriantics.klaxon.registry.behavior.KlaxonCauldronBehaviors;
-import net.myriantics.klaxon.registry.behavior.KlaxonExplosiveCatalystBehaviors;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.behavior.KlaxonDispenserBehaviors;
 import net.myriantics.klaxon.registry.block.*;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.*;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystHandlers;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystTransformerTypes;
 import net.myriantics.klaxon.registry.item.*;
 import net.myriantics.klaxon.registry.misc.*;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
@@ -71,6 +73,8 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonCauldronBehaviors.init();
 		KlaxonItemUsageTweaks.init();
 		KlaxonAttachmentTypes.init();
+		KlaxonExplosiveCatalystHandlers.init();
+		KlaxonExplosiveCatalystTransformerTypes.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}
