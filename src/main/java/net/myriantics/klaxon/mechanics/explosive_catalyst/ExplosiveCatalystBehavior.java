@@ -19,8 +19,8 @@ import java.util.List;
 
 public class ExplosiveCatalystBehavior {
 
-    private final Holder<ExplosiveCatalystHandler> handlerHolder;
-    private final List<ExplosiveCatalystTransformer> transformers;
+    public final Holder<ExplosiveCatalystHandler> handlerHolder;
+    public final List<ExplosiveCatalystTransformer> transformers;
 
     public static final Codec<ExplosiveCatalystBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             KlaxonRegistries.EXPLOSIVE_CATALYST_HANDLERS.holderByNameCodec().fieldOf("handler").forGetter(i -> i.handlerHolder),

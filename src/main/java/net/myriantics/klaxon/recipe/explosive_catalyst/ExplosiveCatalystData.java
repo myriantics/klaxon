@@ -13,6 +13,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehav
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.util.KlaxonMathHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public record ExplosiveCatalystData(ResourceKey<ExplosiveCatalystBehavior> behav
         return new ExplosiveCatalystData(this.behavior, this.explosionPower, true);
     }
 
-    public Holder<ExplosiveCatalystBehavior> get(Level level) {
+    public @NotNull Holder<ExplosiveCatalystBehavior> get(Level level) {
         Registry<ExplosiveCatalystBehavior> reg = level.registryAccess().registryOrThrow(KlaxonRegistryKeys.EXPLOSIVE_CATALYST_BEHAVIOR);
         Optional<Holder.Reference<ExplosiveCatalystBehavior>> selected = reg.getHolder(this.behavior);
         return selected.orElse(reg.getHolderOrThrow(KlaxonExplosiveCatalystBehaviors.NO_OP));
