@@ -116,6 +116,14 @@ public abstract class KlaxonEnUsLanguageSubProvider {
         addText("tooltip." + key, name);
     }
 
+    protected void addChatText(String key, String name) {
+        addText("chat." + key, name);
+    }
+
+    protected void addActionBarText(String key, String name) {
+        addText("actionbar." + key, name);
+    }
+
     protected void addEmiExplosionPowerInfo(String key, String name) {
         addEmiText("explosive_catalyst_definition." + key, name);
     }

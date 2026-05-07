@@ -2,10 +2,12 @@ package net.myriantics.klaxon.block.machines.modular_explosive;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -74,6 +76,8 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                             if (level.hasNeighborSignal(pos)) {
                                 onRedstoneImpulse(level, pos, state);
                             }
+                            Component blockName = blockEntity instanceof Nameable nameable ? nameable.getDisplayName() : state.getBlock().getName();
+                            player.displayClientMessage(Component.translatable("klaxon.text.actionbar.catalyst_copy_from_to", stack.getDisplayName(), blockName), true);
                         }
 
                     }
