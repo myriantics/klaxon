@@ -130,6 +130,9 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         }
 
         if (!this.validate()) {
+            if (this.retracting) {
+                KlaxonServerPlayNetworkHandler.triggerItemLockout(this.player);
+            }
             return;
         }
 

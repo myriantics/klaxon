@@ -65,7 +65,7 @@ public interface GrapplingHook {
 
             // if we're on the server, update the grapple winch's components to include this one
             if (!world.isClientSide()) {
-                winchStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(this.klaxon$getItemStack()));
+                GrappleWinchItem.loadIfPossible(winchStack, this.klaxon$getItemStack(), player);
             }
 
             // play sounds and emit game event

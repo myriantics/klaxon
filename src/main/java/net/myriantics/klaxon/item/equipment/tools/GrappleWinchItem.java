@@ -175,8 +175,8 @@ public class GrappleWinchItem extends ProjectileWeaponItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
+    public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+        GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(level);
         @Nullable GrappleWinchConnection connection = manager.fromPlayer(user);
         ItemStack winchStack = user.getItemInHand(hand);
         ItemStack offhandStack = user.getItemInHand(hand.equals(InteractionHand.OFF_HAND) ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
@@ -198,18 +198,20 @@ public class GrappleWinchItem extends ProjectileWeaponItem {
             user.startUsingItem(hand);
             return InteractionResultHolder.consume(winchStack);
         } else if (!isLoaded && !ammoStack.isEmpty()) {
-            loadIfPossible(winchStack, ammoStack, user);
-            world.playSound(
+            if (!level.isClientSide()) {
+                loadIfPossible(winchStack, ammoStack, user);
+            }
+            level.playSound(
                     user,
                     user.getX(),
                     user.getEyeY(),
                     user.getZ(),
                     KlaxonSoundEvents.ITEM_GRAPPLE_WINCH_LOAD,
                     SoundSource.PLAYERS,
-                    0.7f + world.getRandom().nextFloat() * 0.3f,
-                    0.7f + world.getRandom().nextFloat() * 0.3f
+                    0.7f + level.getRandom().nextFloat() * 0.3f,
+                    0.7f + level.getRandom().nextFloat() * 0.3f
             );
-            world.gameEvent(
+            level.gameEvent(
                     GameEvent.ENTITY_ACTION,
                     user.getEyePosition(),
                     GameEvent.Context.of(user)
@@ -260,9 +262,8 @@ public class GrappleWinchItem extends ProjectileWeaponItem {
                     }
                 }
 
-                // replace projectiles component with a new one that has everything but the first element
-                List<ItemStack> newProjectiles = projectiles.subList(1, projectiles.size());
-                stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(newProjectiles));
+                // clear projectiles on take
+                stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
 
                 world.playSound(
                         player,
@@ -282,7 +283,8 @@ public class GrappleWinchItem extends ProjectileWeaponItem {
 
                 return true;
             } else if (PROJECTILES.test(otherStack)) {
-                stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(otherStack.split(1)));
+
+                stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(draw(stack, otherStack, player)));
 
                 world.playSound(
                         player,
