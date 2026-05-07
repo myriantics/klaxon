@@ -1,10 +1,6 @@
 {
   "values": [
     {
-      "id": "klaxon:hallnox_pod_domed",
-      "required": false
-    },
-    {
       "id": "klaxon:forceful_exhaust",
       "required": false
     }

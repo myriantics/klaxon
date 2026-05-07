@@ -21,7 +21,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
     @Override
     protected void addTags(HolderLookup.Provider arg) {
         getOrCreateTagBuilder(DamageTypeTags.BYPASSES_SHIELD)
-                .addOptional(KlaxonDamageTypes.HALLNOX_POD_DOMED);
+                .addOptional(KlaxonDamageTypes.HALLNOX_POD_DOMED)
+                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
 
         // you have to use addOptional here because shit is fucky
 
@@ -56,6 +57,9 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
 
         getOrCreateTagBuilder(DamageTypeTags.IS_FIRE)
+                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
+
+        getOrCreateTagBuilder(DamageTypeTags.IS_EXPLOSION)
                 .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
 
         getOrCreateTagBuilder(DamageTypeTags.DAMAGES_HELMET)
