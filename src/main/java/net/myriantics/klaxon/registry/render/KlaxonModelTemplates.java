@@ -24,24 +24,24 @@ public abstract class KlaxonModelTemplates {
 
     public static final ModelTemplate PIPE_MATRIX_U_BEND_X_POSITIVE = block("pipe_matrix_u_bend/x_positive",
             TextureSlot.TOP,
-            KlaxonTextureKeys.U_BEND_CURVE,
-            KlaxonTextureKeys.U_BEND_BOTTOM,
-            KlaxonTextureKeys.U_BEND_SIDE,
+            KlaxonTextureSlots.U_BEND_CURVE,
+            KlaxonTextureSlots.U_BEND_BOTTOM,
+            KlaxonTextureSlots.U_BEND_SIDE,
             TextureSlot.PARTICLE
     );
     public static final ModelTemplate PIPE_MATRIX_U_BEND_X_NEGATIVE = copyDir("x_negative", PIPE_MATRIX_U_BEND_X_POSITIVE,
             TextureSlot.BOTTOM,
-            KlaxonTextureKeys.U_BEND_CURVE,
-            KlaxonTextureKeys.U_BEND_SIDE,
-            KlaxonTextureKeys.U_BEND_SIDE,
+            KlaxonTextureSlots.U_BEND_CURVE,
+            KlaxonTextureSlots.U_BEND_SIDE,
+            KlaxonTextureSlots.U_BEND_SIDE,
             TextureSlot.PARTICLE
     );
     public static final ModelTemplate PIPE_MATRIX_U_BEND_Z_POSITIVE = copyDir("z_positive", PIPE_MATRIX_U_BEND_X_POSITIVE);
     public static final ModelTemplate PIPE_MATRIX_U_BEND_Z_NEGATIVE = copyDir("z_negative", PIPE_MATRIX_U_BEND_X_NEGATIVE);
 
     public static final ModelTemplate NORMAL_NETHER_REACTOR_CORE = block("nether_reactor_core/normal",
-            KlaxonTextureKeys.CASING,
-            KlaxonTextureKeys.CORE,
+            KlaxonTextureSlots.CASING,
+            KlaxonTextureSlots.CORE,
             TextureSlot.PARTICLE
     );
     public static final ModelTemplate ROTATED_NETHER_REACTOR_CORE = copyDir("rotated", NORMAL_NETHER_REACTOR_CORE);
@@ -60,6 +60,17 @@ public abstract class KlaxonModelTemplates {
             TextureSlot.FRONT,
             TextureSlot.SIDE,
             TextureSlot.BACK,
+            TextureSlot.PARTICLE
+    );
+    public static final ModelTemplate CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS = copyDir(
+            "cube_top_side_bottom_two_layers",
+            DEEPSLATE_BLAST_PROCESSOR,
+            KlaxonTextureSlots.TOP_LAYER_0,
+            KlaxonTextureSlots.SIDE_LAYER_0,
+            KlaxonTextureSlots.BOTTOM_LAYER_0,
+            KlaxonTextureSlots.TOP_LAYER_1,
+            KlaxonTextureSlots.SIDE_LAYER_1,
+            KlaxonTextureSlots.BOTTOM_LAYER_1,
             TextureSlot.PARTICLE
     );
 

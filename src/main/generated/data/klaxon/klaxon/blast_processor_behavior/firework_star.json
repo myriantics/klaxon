@@ -1,4 +1,5 @@
 {
+  "color": -8355712,
   "handler": "klaxon:default",
   "transformers": [
     {

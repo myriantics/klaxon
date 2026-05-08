@@ -21,19 +21,22 @@ public class ExplosiveCatalystBehavior {
 
     public final Holder<ExplosiveCatalystHandler> handlerHolder;
     public final List<ExplosiveCatalystTransformer> transformers;
+    public final int color;
 
     public static final Codec<ExplosiveCatalystBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             KlaxonRegistries.EXPLOSIVE_CATALYST_HANDLERS.holderByNameCodec().fieldOf("handler").forGetter(i -> i.handlerHolder),
-            ExplosiveCatalystTransformer.LIST_CODEC.fieldOf("transformers").forGetter(i -> i.transformers)
+            ExplosiveCatalystTransformer.LIST_CODEC.fieldOf("transformers").forGetter(i -> i.transformers),
+            Codec.INT.fieldOf("color").forGetter(i -> i.color)
     ).apply(instance, ExplosiveCatalystBehavior::new));
 
-    public ExplosiveCatalystBehavior(Holder<ExplosiveCatalystHandler> handlerHolder, ExplosiveCatalystTransformer... transformers) {
-        this(handlerHolder, Arrays.stream(transformers).toList());
+    public ExplosiveCatalystBehavior(Holder<ExplosiveCatalystHandler> handlerHolder, int color, ExplosiveCatalystTransformer... transformers) {
+        this(handlerHolder, Arrays.stream(transformers).toList(), color);
     }
 
-    public ExplosiveCatalystBehavior(Holder<ExplosiveCatalystHandler> handlerHolder, List<ExplosiveCatalystTransformer> transformers) {
+    public ExplosiveCatalystBehavior(Holder<ExplosiveCatalystHandler> handlerHolder, List<ExplosiveCatalystTransformer> transformers, int color) {
         this.handlerHolder = handlerHolder;
         this.transformers = transformers;
+        this.color = color;
     }
 
     public void createExplosion(ExplosiveCatalystContext context, Position detonationPosition, ExplosiveCatalystData data, boolean modifyWorld) {

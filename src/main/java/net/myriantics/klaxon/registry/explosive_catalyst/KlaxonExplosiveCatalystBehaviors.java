@@ -8,6 +8,7 @@ import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 public abstract class KlaxonExplosiveCatalystBehaviors {
 
     public static final ResourceKey<ExplosiveCatalystBehavior> NO_OP = create("no_op");
+    public static final ResourceKey<ExplosiveCatalystBehavior> OBFUSCATED = create("obfuscated");
     public static final ResourceKey<ExplosiveCatalystBehavior> DEFAULT = create("default");
     public static final ResourceKey<ExplosiveCatalystBehavior> TNT = create("tnt");
     public static final ResourceKey<ExplosiveCatalystBehavior> FIREWORK_ROCKET = create("firework_rocket");

@@ -7,6 +7,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.level.block.Blocks;
 import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistrySubProvider;
@@ -17,6 +18,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.transformer.*;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystHandlers;
+import net.myriantics.klaxon.registry.misc.KlaxonColors;
 import net.myriantics.klaxon.util.DimensionTypePredicate;
 
 import java.util.Map;
@@ -31,17 +33,25 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
     protected void build() {
         this.add(
                 KlaxonExplosiveCatalystBehaviors.NO_OP,
-                KlaxonExplosiveCatalystHandlers.NO_OP
+                KlaxonExplosiveCatalystHandlers.NO_OP,
+                CommonColors.WHITE
+        );
+        this.add(
+                KlaxonExplosiveCatalystBehaviors.OBFUSCATED,
+                KlaxonExplosiveCatalystHandlers.NO_OP,
+                CommonColors.BLACK
         );
         this.add(
                 KlaxonExplosiveCatalystBehaviors.DEFAULT,
-                KlaxonExplosiveCatalystHandlers.DEFAULT
+                KlaxonExplosiveCatalystHandlers.DEFAULT,
+                KlaxonColors.ORANGE.getRGB()
         );
 
         // tnt
         this.add(
                 KlaxonExplosiveCatalystBehaviors.TNT,
-                KlaxonExplosiveCatalystHandlers.TNT
+                KlaxonExplosiveCatalystHandlers.TNT,
+                CommonColors.RED
         );
 
         // fireworks
@@ -56,11 +66,13 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.FIREWORK_STAR,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
+                CommonColors.GRAY,
                 fireworkExplosionTransformer
         );
         this.add(
                 KlaxonExplosiveCatalystBehaviors.FIREWORK_ROCKET,
                 KlaxonExplosiveCatalystHandlers.FIREWORK,
+                CommonColors.RED,
                 new FireworksExplosiveCatalystTransformer(
                         fireworkExplosionTransformer,
                         new ExplosiveCatalystData(0.8, false)
@@ -71,6 +83,7 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.BEDLIKE,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
+                CommonColors.RED,
                 new DimensionTypeDependentExplosiveCatalystTransformer(
                         new DimensionTypePredicate(
                                 Optional.empty(),
@@ -83,6 +96,7 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.RESPAWN_ANCHORLIKE,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
+                KlaxonColors.PURPLE.getRGB(),
                 new DimensionTypeDependentExplosiveCatalystTransformer(
                         new DimensionTypePredicate(
                                 Optional.empty(),
@@ -96,19 +110,22 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         // wind burst
         this.add(
                 KlaxonExplosiveCatalystBehaviors.WIND_BURST,
-                KlaxonExplosiveCatalystHandlers.WIND_BURST
+                KlaxonExplosiveCatalystHandlers.WIND_BURST,
+                CommonColors.BLUE
         );
 
         // dragons breath
         this.add(
                 KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH,
-                KlaxonExplosiveCatalystHandlers.DRAGONS_BREATH
+                KlaxonExplosiveCatalystHandlers.DRAGONS_BREATH,
+                KlaxonColors.PURPLE.getRGB()
         );
 
         // tnt minecart
         this.add(
                 KlaxonExplosiveCatalystBehaviors.TNT_MINECART,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
+                CommonColors.RED,
                 new RedstoneSignalStrengthExplosiveCatalystTransformer(
                         1.0f, false
                 )
@@ -118,6 +135,7 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.END_CRYSTAL,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
+                KlaxonColors.PURPLE.getRGB(),
                 new BaseBlockStateExplosiveCatalystTransformer(
                         Optional.of(HolderSet.direct(BuiltInRegistries.BLOCK.wrapAsHolder(Blocks.BEDROCK))),
                         Optional.empty()
@@ -127,11 +145,12 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         // charged creeper mimic
         this.add(
                 KlaxonExplosiveCatalystBehaviors.CHARGED_CREEPER_MIMIC,
-                KlaxonExplosiveCatalystHandlers.CHARGED_CREEPER_MIMIC
+                KlaxonExplosiveCatalystHandlers.CHARGED_CREEPER_MIMIC,
+                CommonColors.GREEN
         );
     }
 
-    protected ExplosiveCatalystBehavior add(ResourceKey<ExplosiveCatalystBehavior> behaviorKey, Holder<ExplosiveCatalystHandler> handlerHolder, ExplosiveCatalystTransformer... transformers) {
-        return this.add(behaviorKey, new ExplosiveCatalystBehavior(handlerHolder, transformers));
+    protected ExplosiveCatalystBehavior add(ResourceKey<ExplosiveCatalystBehavior> behaviorKey, Holder<ExplosiveCatalystHandler> handlerHolder, int color, ExplosiveCatalystTransformer... transformers) {
+        return this.add(behaviorKey, new ExplosiveCatalystBehavior(handlerHolder, color, transformers));
     }
 }

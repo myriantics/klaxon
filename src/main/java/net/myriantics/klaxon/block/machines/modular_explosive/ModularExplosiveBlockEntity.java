@@ -7,8 +7,12 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,6 +69,9 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
 
     public void setData(ExplosiveCatalystData newData) {
         this.explosiveCatalystData = newData;
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), (Block.UPDATE_ALL_IMMEDIATE));
+        }
         this.setChanged();
     }
 
@@ -78,6 +85,9 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
             this.explosiveCatalystData = ExplosiveCatalystData.CODEC.decode(NbtOps.INSTANCE, tag.get(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA)).mapOrElse(Pair::getFirst, (pair) -> ExplosiveCatalystData.ZERO);
         }
         this.exposeExplosiveCatalystData = tag.getBoolean(KlaxonNBTIds.SHOULD_EXPOSE_CATALYST_DATA);
+        if (this.level != null && this.level.isClientSide()) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 4);
+        }
     }
 
     @Override
@@ -88,6 +98,24 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         tag.putBoolean(KlaxonNBTIds.MODIFY_WORLD, this.modifyWorld);
         ExplosiveCatalystData.CODEC.encode(this.explosiveCatalystData, NbtOps.INSTANCE, new CompoundTag()).ifSuccess(dataTag -> tag.put(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA, dataTag));
         tag.putBoolean(KlaxonNBTIds.SHOULD_EXPOSE_CATALYST_DATA, this.exposeExplosiveCatalystData);
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = this.saveCustomOnly(registries);
+        tag.remove(KlaxonNBTIds.MAX_FUSE_TIME);
+        tag.remove(KlaxonNBTIds.FUSE_TIME);
+        tag.remove(KlaxonNBTIds.MODIFY_WORLD);
+        tag.remove(KlaxonNBTIds.SHOULD_EXPOSE_CATALYST_DATA);
+        if (!this.exposeExplosiveCatalystData) {
+            ExplosiveCatalystData.CODEC.encode(ExplosiveCatalystData.OBFUSCATED, NbtOps.INSTANCE, new CompoundTag()).ifSuccess(dataTag -> tag.put(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA, dataTag));
+        }
+        return tag;
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState blockState, ModularExplosiveBlockEntity modularExplosiveBlockEntity) {

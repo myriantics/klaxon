@@ -14,13 +14,15 @@ import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
+import net.myriantics.klaxon.block.machines.modular_explosive.FuseState;
+import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.render.KlaxonModelTemplates;
-import net.myriantics.klaxon.registry.render.KlaxonTextureKeys;
+import net.myriantics.klaxon.registry.render.KlaxonTextureSlots;
 import net.myriantics.klaxon.registry.render.KlaxonTextures;
 
 import java.util.Map;
@@ -157,6 +159,51 @@ public abstract class KlaxonBlockModelSubProvider {
                         .select(Direction.EAST, false, modelVariant(horizontalIdle).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
                         .select(Direction.WEST, true, modelVariant(horizontalTriggered).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
                         .select(Direction.WEST, false, modelVariant(horizontalIdle).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                )
+        );
+    }
+
+    protected void registerModularExplosive(Block block) {
+        ResourceLocation baseRl = ModelLocationUtils.getModelLocation(block);
+        ResourceLocation inertRl = baseRl.withSuffix("/inert");
+        ResourceLocation farRl = baseRl.withSuffix("/far");
+        ResourceLocation closeRl = baseRl.withSuffix("/close");
+        ResourceLocation imminentRl = baseRl.withSuffix("/imminent");
+
+        TextureMapping inertTexMap = new TextureMapping()
+                .put(KlaxonTextureSlots.TOP_LAYER_0, inertRl.withSuffix("/top_layer_0"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, inertRl.withSuffix("/side_layer_0"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, inertRl.withSuffix("/bottom_layer_0"))
+                .put(KlaxonTextureSlots.TOP_LAYER_1, baseRl.withSuffix("/top_layer_1"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_1, baseRl.withSuffix("/side_layer_1"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_1, baseRl.withSuffix("/bottom_layer_1"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("particle"));
+        TextureMapping farTexMap = inertTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, farRl.withSuffix("/top_layer_0"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, farRl.withSuffix("/side_layer_0"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, farRl.withSuffix("/bottom_layer_0"));
+        TextureMapping closeTexMap = inertTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, closeRl.withSuffix("/top_layer_0"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, closeRl.withSuffix("/side_layer_0"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, closeRl.withSuffix("/bottom_layer_0"));
+        TextureMapping imminentTexMap = inertTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, imminentRl.withSuffix("/top_layer_0"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, imminentRl.withSuffix("/side_layer_0"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, imminentRl.withSuffix("/bottom_layer_0"));
+
+        ResourceLocation inertModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block, "/inert", inertTexMap, this.generator.modelOutput);
+        ResourceLocation farModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block, "/far", farTexMap, this.generator.modelOutput);
+        ResourceLocation closeModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block,"/close", closeTexMap, this.generator.modelOutput);
+        ResourceLocation imminentModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block,"/imminent", imminentTexMap, this.generator.modelOutput);
+
+        generator.delegateItemModel(block, inertModelRl);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+                .with(PropertyDispatch.property(ModularExplosiveBlock.FUSE)
+                        .select(FuseState.INERT, modelVariant(inertModelRl))
+                        .select(FuseState.FAR, modelVariant(farModelRl))
+                        .select(FuseState.CLOSE, modelVariant(closeModelRl))
+                        .select(FuseState.IMMINENT, modelVariant(imminentModelRl))
                 )
         );
     }
@@ -348,16 +395,16 @@ public abstract class KlaxonBlockModelSubProvider {
 
         Map<TextureSlot, ResourceLocation> positiveTextureMap = Map.of(
                 TextureSlot.TOP, topId,
-                KlaxonTextureKeys.U_BEND_CURVE, positiveUBendId,
-                KlaxonTextureKeys.U_BEND_BOTTOM, bottomId,
-                KlaxonTextureKeys.U_BEND_SIDE, positiveSideId,
+                KlaxonTextureSlots.U_BEND_CURVE, positiveUBendId,
+                KlaxonTextureSlots.U_BEND_BOTTOM, bottomId,
+                KlaxonTextureSlots.U_BEND_SIDE, positiveSideId,
                 TextureSlot.PARTICLE, positiveSideId
         );
         Map<TextureSlot, ResourceLocation> negativeTextureMap = Map.of(
                 TextureSlot.BOTTOM, topId,
-                KlaxonTextureKeys.U_BEND_CURVE, negativeUBendId,
-                KlaxonTextureKeys.U_BEND_BOTTOM, bottomId,
-                KlaxonTextureKeys.U_BEND_SIDE, negativeSideId,
+                KlaxonTextureSlots.U_BEND_CURVE, negativeUBendId,
+                KlaxonTextureSlots.U_BEND_BOTTOM, bottomId,
+                KlaxonTextureSlots.U_BEND_SIDE, negativeSideId,
                 TextureSlot.PARTICLE, negativeSideId
         );
 
@@ -505,8 +552,8 @@ public abstract class KlaxonBlockModelSubProvider {
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(map));
 
         Map<TextureSlot, ResourceLocation> textureMap = Map.of(
-                KlaxonTextureKeys.CASING, blockId.withPath((path) -> "block/" + path + "/casing"),
-                KlaxonTextureKeys.CORE, blockId.withPath((path) -> "block/" + path + "/core"),
+                KlaxonTextureSlots.CASING, blockId.withPath((path) -> "block/" + path + "/casing"),
+                KlaxonTextureSlots.CORE, blockId.withPath((path) -> "block/" + path + "/core"),
                 TextureSlot.PARTICLE, blockId.withPath((path) -> "block/" + path + "/casing")
         );
 

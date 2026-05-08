@@ -28,6 +28,7 @@ public record ExplosiveCatalystData(ResourceKey<ExplosiveCatalystBehavior> behav
         this(KlaxonExplosiveCatalystBehaviors.DEFAULT, explosionPower, producesFire);
     }
 
+    public static final ExplosiveCatalystData OBFUSCATED = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.OBFUSCATED, 0.0, false);
     public static final ExplosiveCatalystData ZERO = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.NO_OP, 0.0, false);
 
     public boolean matchesConditions(double explosionPowerMin, double explosionPowerMax) {

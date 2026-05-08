@@ -40,6 +40,7 @@ public class KlaxonClient implements ClientModInitializer {
 
         // item tinting
         KlaxonItemColors.init();
+        KlaxonBlockColors.init();
 
         // splashes
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new KlaxonSplashTextResourceSupplier());

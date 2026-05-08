@@ -19,6 +19,7 @@ public abstract class KlaxonBlockRenderTypes {
         register(KlaxonBlocks.CRUDE_STEEL_TRAPDOOR, RenderType.cutout());
         register(KlaxonBlocks.NETHER_REACTOR_CORE, RenderType.cutout());
         register(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, RenderType.cutout());
+        register(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, RenderType.cutout());
     }
 
 

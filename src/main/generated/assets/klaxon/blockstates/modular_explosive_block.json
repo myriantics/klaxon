@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "fuse=close": {
+      "model": "klaxon:block/modular_explosive_block/close"
+    },
+    "fuse=far": {
+      "model": "klaxon:block/modular_explosive_block/far"
+    },
+    "fuse=imminent": {
+      "model": "klaxon:block/modular_explosive_block/imminent"
+    },
+    "fuse=inert": {
+      "model": "klaxon:block/modular_explosive_block/inert"
+    }
+  }
+}

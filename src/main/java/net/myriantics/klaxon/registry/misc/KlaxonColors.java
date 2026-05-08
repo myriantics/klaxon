@@ -8,6 +8,7 @@ public abstract class KlaxonColors {
     public static Color STEEL_MEDIUM = registerHex("#9d98a4");
     public static Color STEEL_DARK = registerHex("#625964");
     public static final Color ORANGE = new Color(0xFF5C00);
+    public static final Color PURPLE = new Color(0x800080);
 
     private static Color registerHex(String hexCode) {
         Color color = Color.decode(hexCode);
