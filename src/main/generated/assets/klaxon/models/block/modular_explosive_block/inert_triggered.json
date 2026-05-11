@@ -1,0 +1,12 @@
+{
+  "parent": "klaxon:block/template/cube_top_side_bottom_two_layers",
+  "textures": {
+    "bottom_layer_0": "klaxon:block/modular_explosive_block/inert/bottom_tinted_light",
+    "bottom_layer_1": "klaxon:block/modular_explosive_block/bottom_layer_1",
+    "particle": "klaxon:block/modular_explosive_block/side_tinted_light",
+    "side_layer_0": "klaxon:block/modular_explosive_block/inert/side_tinted_light",
+    "side_layer_1": "klaxon:block/modular_explosive_block/side_static_triggered",
+    "top_layer_0": "klaxon:block/modular_explosive_block/inert/top_tinted_light",
+    "top_layer_1": "klaxon:block/modular_explosive_block/top_static_triggered"
+  }
+}

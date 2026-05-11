@@ -170,40 +170,68 @@ public abstract class KlaxonBlockModelSubProvider {
         ResourceLocation closeRl = baseRl.withSuffix("/close");
         ResourceLocation imminentRl = baseRl.withSuffix("/imminent");
 
-        TextureMapping inertTexMap = new TextureMapping()
-                .put(KlaxonTextureSlots.TOP_LAYER_0, inertRl.withSuffix("/top_layer_0"))
-                .put(KlaxonTextureSlots.SIDE_LAYER_0, inertRl.withSuffix("/side_layer_0"))
-                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, inertRl.withSuffix("/bottom_layer_0"))
-                .put(KlaxonTextureSlots.TOP_LAYER_1, baseRl.withSuffix("/top_layer_1"))
-                .put(KlaxonTextureSlots.SIDE_LAYER_1, baseRl.withSuffix("/side_layer_1"))
+        TextureMapping inertTriggeredTexMap = new TextureMapping()
+                .put(KlaxonTextureSlots.TOP_LAYER_0, inertRl.withSuffix("/top_tinted_light"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, inertRl.withSuffix("/side_tinted_light"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, inertRl.withSuffix("/bottom_tinted_light"))
+                .put(KlaxonTextureSlots.TOP_LAYER_1, baseRl.withSuffix("/top_static_triggered"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_1, baseRl.withSuffix("/side_static_triggered"))
                 .put(KlaxonTextureSlots.BOTTOM_LAYER_1, baseRl.withSuffix("/bottom_layer_1"))
-                .put(TextureSlot.PARTICLE, baseRl.withSuffix("particle"));
-        TextureMapping farTexMap = inertTexMap
-                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, farRl.withSuffix("/top_layer_0"))
-                .put(KlaxonTextureSlots.SIDE_LAYER_0, farRl.withSuffix("/side_layer_0"))
-                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, farRl.withSuffix("/bottom_layer_0"));
-        TextureMapping closeTexMap = inertTexMap
-                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, closeRl.withSuffix("/top_layer_0"))
-                .put(KlaxonTextureSlots.SIDE_LAYER_0, closeRl.withSuffix("/side_layer_0"))
-                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, closeRl.withSuffix("/bottom_layer_0"));
-        TextureMapping imminentTexMap = inertTexMap
-                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, imminentRl.withSuffix("/top_layer_0"))
-                .put(KlaxonTextureSlots.SIDE_LAYER_0, imminentRl.withSuffix("/side_layer_0"))
-                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, imminentRl.withSuffix("/bottom_layer_0"));
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_tinted_light"));
+        TextureMapping inertIdleTexMap = new TextureMapping()
+                .put(KlaxonTextureSlots.TOP_LAYER_0, inertRl.withSuffix("/top_tinted_dark"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, inertRl.withSuffix("/side_tinted_dark"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, inertRl.withSuffix("/bottom_tinted_dark"))
+                .put(KlaxonTextureSlots.TOP_LAYER_1, baseRl.withSuffix("/top_static_idle"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_1, baseRl.withSuffix("/side_static_idle"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_1, baseRl.withSuffix("/bottom_static_idle"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_tinted_dark"));
+        TextureMapping farTriggeredTexMap = inertTriggeredTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, farRl.withSuffix("/top_tinted"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, farRl.withSuffix("/side_tinted"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, farRl.withSuffix("/bottom_tinted"));
+        TextureMapping farIdleTexMap = inertIdleTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, farRl.withSuffix("/top_tinted"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, farRl.withSuffix("/side_tinted"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, farRl.withSuffix("/bottom_tinted"));
+        TextureMapping closeTriggeredTexMap = inertTriggeredTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, closeRl.withSuffix("/top_tinted"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, closeRl.withSuffix("/side_tinted"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, closeRl.withSuffix("/bottom_tinted"));
+        TextureMapping closeIdleTexMap = inertIdleTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, closeRl.withSuffix("/top_tinted"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, closeRl.withSuffix("/side_tinted"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, closeRl.withSuffix("/bottom_tinted"));
+        TextureMapping imminentTriggeredTexMap = inertTriggeredTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, imminentRl.withSuffix("/top_tinted"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, imminentRl.withSuffix("/side_tinted"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, imminentRl.withSuffix("/bottom_tinted"));
+        TextureMapping imminentIdleTexMap = inertIdleTexMap
+                .copyAndUpdate(KlaxonTextureSlots.TOP_LAYER_0, imminentRl.withSuffix("/top_tinted"))
+                .put(KlaxonTextureSlots.SIDE_LAYER_0, imminentRl.withSuffix("/side_tinted"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_0, imminentRl.withSuffix("/bottom_tinted"));
 
-        ResourceLocation inertModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block, "/inert", inertTexMap, this.generator.modelOutput);
-        ResourceLocation farModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block, "/far", farTexMap, this.generator.modelOutput);
-        ResourceLocation closeModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block,"/close", closeTexMap, this.generator.modelOutput);
-        ResourceLocation imminentModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block,"/imminent", imminentTexMap, this.generator.modelOutput);
+        ResourceLocation inertTriggeredModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block, "/inert_triggered", inertTriggeredTexMap, this.generator.modelOutput);
+        ResourceLocation inertIdleModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block, "/inert_idle", inertIdleTexMap, this.generator.modelOutput);
+        ResourceLocation farTriggeredModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block, "/far_triggered", farTriggeredTexMap, this.generator.modelOutput);
+        ResourceLocation farIdleModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block, "/far_idle", farIdleTexMap, this.generator.modelOutput);
+        ResourceLocation closeTriggeredModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block,"/close_triggered", closeTriggeredTexMap, this.generator.modelOutput);
+        ResourceLocation closeIdleModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block,"/close_idle", closeIdleTexMap, this.generator.modelOutput);
+        ResourceLocation imminentTriggeredModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block,"/imminent_triggered", imminentTriggeredTexMap, this.generator.modelOutput);
+        ResourceLocation imminentIdleModelRl = KlaxonModelTemplates.CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS.createWithSuffix(block,"/imminent_idle", imminentIdleTexMap, this.generator.modelOutput);
 
-        generator.delegateItemModel(block, inertModelRl);
+        generator.delegateItemModel(block, inertIdleModelRl);
 
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
-                .with(PropertyDispatch.property(ModularExplosiveBlock.FUSE)
-                        .select(FuseState.INERT, modelVariant(inertModelRl))
-                        .select(FuseState.FAR, modelVariant(farModelRl))
-                        .select(FuseState.CLOSE, modelVariant(closeModelRl))
-                        .select(FuseState.IMMINENT, modelVariant(imminentModelRl))
+                .with(PropertyDispatch.properties(ModularExplosiveBlock.FUSE, ModularExplosiveBlock.TRIGGERED)
+                        .select(FuseState.INERT, true, modelVariant(inertTriggeredModelRl))
+                        .select(FuseState.INERT, false, modelVariant(inertIdleModelRl))
+                        .select(FuseState.FAR, true, modelVariant(farTriggeredModelRl))
+                        .select(FuseState.FAR, false, modelVariant(farIdleModelRl))
+                        .select(FuseState.CLOSE, true, modelVariant(closeTriggeredModelRl))
+                        .select(FuseState.CLOSE, false, modelVariant(closeIdleModelRl))
+                        .select(FuseState.IMMINENT, true, modelVariant(imminentTriggeredModelRl))
+                        .select(FuseState.IMMINENT, false, modelVariant(imminentIdleModelRl))
                 )
         );
     }

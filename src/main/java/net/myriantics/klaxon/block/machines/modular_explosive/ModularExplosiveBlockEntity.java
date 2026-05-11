@@ -35,6 +35,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
     private ExplosiveCatalystData explosiveCatalystData = ExplosiveCatalystData.ZERO;
     private int fuseTime = -1;
     private int maxFuseTime = 0;
+    private int ignitionTicks = ModularExplosiveBlock.DEFAULT_IGNITION_TICKS;
     private boolean modifyWorld = true;
     private boolean exposeExplosiveCatalystData = true;
 
@@ -50,7 +51,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         components.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), this.explosiveCatalystData);
-        components.set(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(), new ModularExplosiveBlockConfigComponent(this.maxFuseTime, this.modifyWorld, this.exposeExplosiveCatalystData));
+        components.set(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(), new ModularExplosiveBlockConfigComponent(this.maxFuseTime, this.ignitionTicks, this.modifyWorld, this.exposeExplosiveCatalystData));
     }
 
     @Override
@@ -64,6 +65,8 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         if (config != null) {
             this.maxFuseTime = config.maxFuseTime();
             this.modifyWorld = config.modifyWorld();
+            this.ignitionTicks = config.ignitionTicks();
+            this.exposeExplosiveCatalystData = config.exposeCatalystData();
         }
     }
 
@@ -81,6 +84,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         this.modifyWorld = tag.getBoolean(KlaxonNBTIds.MODIFY_WORLD);
         this.maxFuseTime = this.sanitizeMaxFuseTime(tag.getInt(KlaxonNBTIds.MAX_FUSE_TIME));
         this.fuseTime = this.sanitizeFuseTime(tag.getInt(KlaxonNBTIds.FUSE_TIME));
+        this.setIgnitionTicks(tag.contains(KlaxonNBTIds.IGNITION_TICKS) ? tag.getInt(KlaxonNBTIds.IGNITION_TICKS) : ModularExplosiveBlock.DEFAULT_IGNITION_TICKS);
         if (tag.contains(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA)) {
             this.explosiveCatalystData = ExplosiveCatalystData.CODEC.decode(NbtOps.INSTANCE, tag.get(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA)).mapOrElse(Pair::getFirst, (pair) -> ExplosiveCatalystData.ZERO);
         }
@@ -95,6 +99,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         super.saveAdditional(tag, registries);
         tag.putInt(KlaxonNBTIds.MAX_FUSE_TIME, this.maxFuseTime);
         tag.putInt(KlaxonNBTIds.FUSE_TIME, this.fuseTime);
+        tag.putInt(KlaxonNBTIds.IGNITION_TICKS, this.ignitionTicks);
         tag.putBoolean(KlaxonNBTIds.MODIFY_WORLD, this.modifyWorld);
         ExplosiveCatalystData.CODEC.encode(this.explosiveCatalystData, NbtOps.INSTANCE, new CompoundTag()).ifSuccess(dataTag -> tag.put(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA, dataTag));
         tag.putBoolean(KlaxonNBTIds.SHOULD_EXPOSE_CATALYST_DATA, this.exposeExplosiveCatalystData);
@@ -111,6 +116,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         tag.remove(KlaxonNBTIds.MAX_FUSE_TIME);
         tag.remove(KlaxonNBTIds.FUSE_TIME);
         tag.remove(KlaxonNBTIds.MODIFY_WORLD);
+        tag.remove(KlaxonNBTIds.IGNITION_TICKS);
         tag.remove(KlaxonNBTIds.SHOULD_EXPOSE_CATALYST_DATA);
         if (!this.exposeExplosiveCatalystData) {
             ExplosiveCatalystData.CODEC.encode(ExplosiveCatalystData.OBFUSCATED, NbtOps.INSTANCE, new CompoundTag()).ifSuccess(dataTag -> tag.put(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA, dataTag));
@@ -124,6 +130,14 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         } else if (modularExplosiveBlockEntity.fuseTime != -1 && modularExplosiveBlockEntity.maxFuseTime != 0) {
             modularExplosiveBlockEntity.detonate();
         }
+    }
+
+    private void setIgnitionTicks(int ignitionTicks) {
+        this.ignitionTicks = Math.clamp(ignitionTicks, -1, 255);
+    }
+
+    public int getIgnitionTicks() {
+        return this.ignitionTicks;
     }
 
     private void decrementFuseTime() {
@@ -141,6 +155,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
             }
         }
         this.fuseTime = newTime;
+        this.setChanged();
     }
 
     public int getFuseTime() {
@@ -155,7 +170,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         Level level = this.level;
         BlockPos pos = this.worldPosition;
 
-        if (level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel && this.ignitionTicks != -1) {
             Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.get(serverLevel);
             if (behaviorHolder.is(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)) {
                 KlaxonServerPlayNetworkHandler.syncWorldEvent(serverLevel, pos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);

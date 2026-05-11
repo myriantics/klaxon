@@ -1,16 +1,28 @@
 {
   "variants": {
-    "fuse=close": {
-      "model": "klaxon:block/modular_explosive_block/close"
+    "fuse=close,triggered=false": {
+      "model": "klaxon:block/modular_explosive_block/close_idle"
     },
-    "fuse=far": {
-      "model": "klaxon:block/modular_explosive_block/far"
+    "fuse=close,triggered=true": {
+      "model": "klaxon:block/modular_explosive_block/close_triggered"
     },
-    "fuse=imminent": {
-      "model": "klaxon:block/modular_explosive_block/imminent"
+    "fuse=far,triggered=false": {
+      "model": "klaxon:block/modular_explosive_block/far_idle"
     },
-    "fuse=inert": {
-      "model": "klaxon:block/modular_explosive_block/inert"
+    "fuse=far,triggered=true": {
+      "model": "klaxon:block/modular_explosive_block/far_triggered"
+    },
+    "fuse=imminent,triggered=false": {
+      "model": "klaxon:block/modular_explosive_block/imminent_idle"
+    },
+    "fuse=imminent,triggered=true": {
+      "model": "klaxon:block/modular_explosive_block/imminent_triggered"
+    },
+    "fuse=inert,triggered=false": {
+      "model": "klaxon:block/modular_explosive_block/inert_idle"
+    },
+    "fuse=inert,triggered=true": {
+      "model": "klaxon:block/modular_explosive_block/inert_triggered"
     }
   }
 }

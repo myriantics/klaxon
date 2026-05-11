@@ -20,6 +20,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
@@ -32,12 +34,16 @@ import org.jetbrains.annotations.Nullable;
 public class ModularExplosiveBlock extends BaseEntityBlock {
 
     public static final EnumProperty<FuseState> FUSE = KlaxonBlockStateProperties.FUSE;
+    public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
     private static final MapCodec<ModularExplosiveBlock> CODEC = simpleCodec(ModularExplosiveBlock::new);
-    private static final int IGNITION_DELAY_TICKS = 2;
+    public static final int DEFAULT_IGNITION_TICKS = 2;
 
     public ModularExplosiveBlock(Properties properties) {
         super(properties);
-        registerDefaultState(this.stateDefinition.any().setValue(FUSE, FuseState.INERT));
+        registerDefaultState(this.stateDefinition.any()
+                .setValue(FUSE, FuseState.INERT)
+                .setValue(TRIGGERED, false)
+        );
     }
 
     @Override
@@ -110,8 +116,23 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
 
-        if (level.hasNeighborSignal(pos) && this.shouldResetFuse(level, pos, state)) {
-            level.scheduleTick(pos, this, IGNITION_DELAY_TICKS);
+        if (level instanceof ServerLevel serverLevel) {
+            boolean powered = level.hasNeighborSignal(pos);
+            boolean triggered = state.getValue(TRIGGERED);
+
+            if (powered != triggered) {
+                int ignitionTicks = level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity be ? be.getIgnitionTicks() : DEFAULT_IGNITION_TICKS;
+
+                if (powered && ignitionTicks != -1) { // -1 ignition ticks disables ignition
+                    if (ignitionTicks == 0) { // 0 ignition ticks pops immediately
+                        this.tick(state, serverLevel, pos, level.getRandom());
+                    } else {
+                        level.scheduleTick(pos, this, level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity be ? be.getIgnitionTicks() : DEFAULT_IGNITION_TICKS);
+                    }
+                }
+
+                level.setBlock(pos, state.setValue(TRIGGERED, powered), Block.UPDATE_ALL_IMMEDIATE);
+            }
         }
     }
 
@@ -119,7 +140,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         super.tick(state, level, pos, random);
         if (this.shouldResetFuse(level, pos, state)) {
-            onRedstoneImpulse(level, pos, state);
+            this.onRedstoneImpulse(level, pos, state);
         }
     }
 
@@ -139,7 +160,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FUSE);
+        builder.add(FUSE, TRIGGERED);
     }
 
     @Override
