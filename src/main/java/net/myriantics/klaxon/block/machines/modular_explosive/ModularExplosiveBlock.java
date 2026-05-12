@@ -75,7 +75,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
             if (player.isCreative()) {
                 if (level instanceof ServerLevel serverLevel) {
                     ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(blockEntity.createContext(serverLevel), stack);
-                    if (!data.equals(ExplosiveCatalystData.ZERO)) {
+                    if (data != null) {
                         if (!level.isClientSide()) {
                             blockEntity.setData(data);
                             blockEntity.applyComponentsFromItemStack(stack);

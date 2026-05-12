@@ -29,6 +29,7 @@ import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import net.myriantics.klaxon.util.container.ContainerPartition;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -236,9 +237,14 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
     @Override
     public ExplosiveCatalystData getRawData() {
-        return this.level instanceof ServerLevel serverLevel
-                ? ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(this.getContext(serverLevel), this.getCatalystStack())
-                : ExplosiveCatalystData.ZERO;
+        if (this.level instanceof ServerLevel serverLevel) {
+            @Nullable ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(this.getContext(serverLevel), this.getCatalystStack());
+            if (data != null) {
+                return data;
+            }
+        }
+
+        return ExplosiveCatalystData.ZERO;
     }
 
     public abstract Position getItemOutputLocation(Direction facing);

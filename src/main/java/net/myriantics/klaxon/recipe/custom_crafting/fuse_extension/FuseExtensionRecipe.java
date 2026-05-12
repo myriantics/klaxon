@@ -29,7 +29,7 @@ public class FuseExtensionRecipe extends CustomRecipe {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FuseExtensionRecipe> STREAM_CODEC = StreamCodec.composite(
             CraftingBookCategory.STREAM_CODEC, CustomRecipe::category,
-            ByteBufCodecs.holderRegistry(Registries.ITEM).map(Holder::value, Item::builtInRegistryHolder), i -> i.itemToBeExtended,
+            ByteBufCodecs.holderRegistry(Registries.ITEM).map(Holder::value, BuiltInRegistries.ITEM::wrapAsHolder), i -> i.itemToBeExtended,
             Ingredient.CONTENTS_STREAM_CODEC, i -> i.fuseExtenderIngredient,
             ByteBufCodecs.INT, i -> i.fuseTimeTicksPerExtender,
             FuseExtensionRecipe::new
