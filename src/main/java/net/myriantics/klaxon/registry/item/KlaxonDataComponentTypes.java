@@ -86,9 +86,6 @@ public abstract class KlaxonDataComponentTypes {
             .networkSynchronized(ExplosiveCatalystData.STREAM_CODEC)
     );
 
-    // Items with this component override the check that disallows both damage and stacking components coexisting.
-    public static final Holder<DataComponentType<Unit>> DAMAGEABLE_AND_STACKABLE = registerUnit("damageable_and_stackable");
-
     // Items with this component replace their held item model "x:example_model" with "x:example_model_[YOUR_STRING_HERE]" under certain conditions
     public static final Holder<DataComponentType<String>> ALT_HAND_MODEL = register("alt_hand_model",
             builder ->  {

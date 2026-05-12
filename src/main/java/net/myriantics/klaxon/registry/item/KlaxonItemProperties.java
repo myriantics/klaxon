@@ -44,14 +44,6 @@ public class KlaxonItemProperties {
         return this;
     }
 
-    public KlaxonItemProperties maxCountMaxDamage(int maxCount, int maxDamage) {
-        this.component(KlaxonDataComponentTypes.DAMAGEABLE_AND_STACKABLE, Unit.INSTANCE);
-        this.settings.component(DataComponents.MAX_DAMAGE, maxDamage);
-        this.settings.component(DataComponents.DAMAGE, 0);
-        this.settings.component(DataComponents.MAX_STACK_SIZE, maxCount);
-        return this;
-    }
-
     public KlaxonItemProperties maxDamage(int maxDamage) {
         this.settings.durability(maxDamage);
         return this;

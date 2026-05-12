@@ -28,6 +28,18 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
         addTooltipText("grapple_winch.projectile", "Projectile:");
         addTooltipText("grapple_winch.cable_length.prefix", "Cable Length: ");
         addTooltipText("grapple_winch.cable_length.display", "%1$s/%2$s");
+
+        // modular explosive
+        addTooltipText("modular_explosive_block_config.fuse_ticks", "Fuse Ticks: %s");
+        addTooltipText("modular_explosive_block_config.ignition_ticks", "Ignition Ticks: %s");
+        addTooltipText("modular_explosive_block_config.modify_world.true", "Modifies World");
+        addTooltipText("modular_explosive_block_config.modify_world.false", "Does Not Modify World");
+
+        // explosive catalyst
+        addTooltipText("explosive_catalyst_data", "Explosive Catalyst:");
+        addTooltipText("explosive_catalyst_data.catalyst_behavior", "- Behavior: %s");
+        addTooltipText("explosive_catalyst_data.explosion_power", "- Explosion Power: %s");
+        addTooltipText("explosive_catalyst_data.produces_fire", "- Produces Fire");
     }
 
     private void generateMiscText() {

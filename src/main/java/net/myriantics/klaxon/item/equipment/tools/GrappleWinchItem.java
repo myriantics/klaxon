@@ -338,27 +338,6 @@ public class GrappleWinchItem extends ProjectileWeaponItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        ChargedProjectiles chargedProjectilesComponent = stack.get(DataComponents.CHARGED_PROJECTILES);
-        if (chargedProjectilesComponent != null && !chargedProjectilesComponent.isEmpty()) {
-            ItemStack itemStack = chargedProjectilesComponent.getItems().get(0);
-            tooltip.add(Component.translatable("klaxon.text.tooltip.grapple_winch.projectile").append(CommonComponents.SPACE).append(itemStack.getDisplayName()));
-        } else {
-            // add the tooltip
-            // additional advanced logic is defined in client self-mixin
-            tooltip.add(
-                    Component.translatable("klaxon.text.tooltip.grapple_winch.cable_length.prefix")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(createCableLengthDisplayText())
-            );
-        }
-    }
-
-    private static MutableComponent createCableLengthDisplayText() {
-        return ComponentUtils.wrapInSquareBrackets(Component.translatable("klaxon.text.tooltip.grapple_winch.cable_length.display", "--", "--"));
-    }
-
-    @Override
     public boolean useOnRelease(ItemStack stack) {
         return stack.is(this) && !stack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).isEmpty();
     }
