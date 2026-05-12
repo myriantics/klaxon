@@ -12,6 +12,7 @@ import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
 import java.util.List;
@@ -77,7 +78,11 @@ public abstract class KlaxonBlockItems {
     public static final Holder<Item> NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.NETHER_REACTOR_CORE);
     public static final Holder<Item> CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
     public static final Holder<Item> MODULAR_EXPLOSIVE_BLOCK = registerBlockItem(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, new BlockItem(
-            KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value(), new KlaxonItemProperties().component(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG, ModularExplosiveBlockConfigComponent.DEFAULT).getProperties()
+            KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value(),
+            new KlaxonItemProperties()
+                    .component(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG, ModularExplosiveBlockConfigComponent.DEFAULT)
+                    .component(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA, ExplosiveCatalystData.ZERO)
+                    .getProperties()
     ));
 
     // workstations
