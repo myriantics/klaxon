@@ -8,6 +8,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
@@ -18,6 +19,7 @@ import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
@@ -27,7 +29,7 @@ import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -281,6 +283,20 @@ public abstract class KlaxonRecipeSubProvider {
         ShapedRecipe recipe = new MakeshiftShapedCraftingRecipe(group, category, ShapedRecipePattern.of(key, Arrays.stream(pattern).toList()), constantIngredients,  output, false);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addFuseExtensionRecipe(CraftingBookCategory category, Holder<Item> itemToBeExtended, Ingredient fuseExtenderIngredient, int fuseTimeTicksPerExtender) {
+        String outputPath = itemToBeExtended.unwrapKey().get().location().getPath();
+
+        ResourceLocation recipeId = provider.computeRecipeIdentifier("crafting/fuse_extension/", outputPath);
+
+        if (category == null) {
+            category = CraftingBookCategory.REDSTONE;
+        }
+
+        FuseExtensionRecipe recipe = new FuseExtensionRecipe(category, itemToBeExtended.value(), fuseExtenderIngredient, fuseTimeTicksPerExtender);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe);
     }
 
     public void addExplosiveCatalystDefinitionRecipe(

@@ -4,7 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.List;
@@ -60,6 +60,6 @@ public class MakeshiftShapelessCraftingRecipe extends ShapelessRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.MAKESHIFT_SHAPELESS_CRAFTING_RECIPE_SERIALIZER;
+        return KlaxonRecipeSerializers.MAKESHIFT_SHAPELESS_CRAFTING_RECIPE_SERIALIZER.value();
     }
 }

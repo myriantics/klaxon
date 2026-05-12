@@ -10,7 +10,8 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,7 +59,7 @@ public class ToolUsageRecipe implements Recipe<ToolUsageRecipeInput> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.TOOL_USAGE_RECIPE_SERIALIZER;
+        return KlaxonRecipeSerializers.TOOL_USAGE_RECIPE_SERIALIZER.value();
     }
 
     @Override

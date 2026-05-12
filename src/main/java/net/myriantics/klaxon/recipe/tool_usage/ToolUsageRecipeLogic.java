@@ -34,7 +34,7 @@ import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponen
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.Nullable;
 

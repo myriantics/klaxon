@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import org.jetbrains.annotations.Nullable;
 

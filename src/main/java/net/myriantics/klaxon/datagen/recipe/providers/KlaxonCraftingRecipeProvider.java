@@ -11,6 +11,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.myriantics.klaxon.datagen.NamedIngredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -34,6 +35,16 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         buildRedstoneCraftingRecipes();
         buildWoodCraftingRecipes();
         buildEquipmentCraftingRecipes();
+        buildSpecialCraftingRecipes();
+    }
+
+    private void buildSpecialCraftingRecipes() {
+        this.addFuseExtensionRecipe(
+                CraftingBookCategory.REDSTONE,
+                KlaxonItems.MODULAR_EXPLOSIVE_BLOCK,
+                Ingredient.of(Items.STRING),
+                40
+        );
     }
 
     private void buildEquipmentCraftingRecipes() {

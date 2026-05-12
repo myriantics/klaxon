@@ -26,7 +26,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import net.myriantics.klaxon.util.container.ContainerPartition;
 

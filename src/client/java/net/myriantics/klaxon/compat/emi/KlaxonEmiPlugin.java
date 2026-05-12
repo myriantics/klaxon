@@ -18,23 +18,21 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.compat.emi.recipes.special.FuseExtensionEmiRecipe;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
 import net.myriantics.klaxon.item.equipment.tools.LighterItem;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.compat.emi.recipes.*;
+import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
@@ -53,6 +51,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         KlaxonEmiCategories.init(registry);
         KlaxonEmiWorkstations.init(registry);
         registerRecipes(registry);
+        initCustomCraftingRecipes(registry);
 
         Level world = Minecraft.getInstance().level;
         if (world != null) {
@@ -112,6 +111,14 @@ public class KlaxonEmiPlugin implements EmiPlugin {
                 }
             };
         });
+    }
+
+    private void initCustomCraftingRecipes(EmiRegistry registry) {
+        for (RecipeHolder<CraftingRecipe> holder : registry.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
+            if (holder.value() instanceof FuseExtensionRecipe fuseExtensionRecipe) {
+                registry.addRecipe(new FuseExtensionEmiRecipe(fuseExtensionRecipe, holder.id()));
+            }
+        }
     }
 
     private void registerMiscRecipes(EmiRegistry registry) {

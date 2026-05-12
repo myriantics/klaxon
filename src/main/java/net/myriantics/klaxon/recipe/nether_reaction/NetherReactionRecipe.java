@@ -8,7 +8,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.recipe.BlockIngredient;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 
 public class NetherReactionRecipe implements Recipe<NetherReactionRecipeInput> {
     private final BlockIngredient blockIngredient;
@@ -42,7 +43,7 @@ public class NetherReactionRecipe implements Recipe<NetherReactionRecipeInput> {
 
     @Override
     public RecipeSerializer<NetherReactionRecipe> getSerializer() {
-        return KlaxonRecipeTypes.NETHER_REACTION_RECIPE_SERIALIZER;
+        return KlaxonRecipeSerializers.NETHER_REACTION_RECIPE_SERIALIZER.value();
     }
 
     @Override

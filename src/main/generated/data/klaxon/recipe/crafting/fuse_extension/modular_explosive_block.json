@@ -1,0 +1,9 @@
+{
+  "type": "klaxon:fuse_extension",
+  "category": "redstone",
+  "fuse_extender_ingredient": {
+    "item": "minecraft:string"
+  },
+  "fuse_time_ticks_per_extender": 40,
+  "item_to_be_extended": "klaxon:modular_explosive_block"
+}

@@ -17,6 +17,8 @@ import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalyst
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystTransformerTypes;
 import net.myriantics.klaxon.registry.item.*;
 import net.myriantics.klaxon.registry.misc.*;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.registry.worldgen.KlaxonWorldgenFeatures;
 import org.slf4j.Logger;
@@ -48,6 +50,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonRegistryKeys.init();
 		KlaxonRegistries.init();
 		KlaxonRecipeTypes.init();
+		KlaxonRecipeSerializers.init();
 		KlaxonDamageTypes.init();
 		KlaxonPackets.init();
 		KlaxonPackets.initC2SRecievers();

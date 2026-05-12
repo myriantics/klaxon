@@ -11,7 +11,8 @@ import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 
 public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput> {
     private final Ingredient ingredientItem;
@@ -89,7 +90,7 @@ public class BlastProcessingRecipe implements Recipe<BlastProcessingRecipeInput>
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_SERIALIZER;
+        return KlaxonRecipeSerializers.BLAST_PROCESSING_RECIPE_SERIALIZER.value();
     }
 
     @Override

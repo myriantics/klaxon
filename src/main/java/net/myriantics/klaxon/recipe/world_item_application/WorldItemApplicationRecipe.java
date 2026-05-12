@@ -9,7 +9,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 
 public class WorldItemApplicationRecipe implements Recipe<WorldItemApplicationRecipeInput> {
     private final Ingredient inputIngredient;
@@ -44,7 +45,7 @@ public class WorldItemApplicationRecipe implements Recipe<WorldItemApplicationRe
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_SERIALIZER;
+        return KlaxonRecipeSerializers.WORLD_ITEM_APPLICATION_RECIPE_SERIALIZER.value();
     }
 
     @Override

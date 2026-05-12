@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public class DecoratedPotCrackingBlastProcessingRecipe extends BlastProcessingRe
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.DECORATED_POT_CRACKING_BLAST_PROCESSING_SERIALIZER;
+        return KlaxonRecipeSerializers.DECORATED_POT_CRACKING_BLAST_PROCESSING_SERIALIZER.value();
     }
 
     @Override

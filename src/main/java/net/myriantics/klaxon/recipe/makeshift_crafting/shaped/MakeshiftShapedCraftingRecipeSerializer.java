@@ -44,7 +44,7 @@ public class MakeshiftShapedCraftingRecipeSerializer implements RecipeSerializer
         CraftingBookCategory category = CraftingBookCategory.STREAM_CODEC.decode(buf);
         ShapedRecipePattern raw = ShapedRecipePattern.STREAM_CODEC.decode(buf);
         List<Ingredient> constantIngredients = KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC.decode(buf);
-        ItemStack result =  ItemStack.STREAM_CODEC.decode(buf);
+        ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
         boolean showNotification = ByteBufCodecs.BOOL.decode(buf);
 
         return new MakeshiftShapedCraftingRecipe(group, category, raw, constantIngredients, result, showNotification);

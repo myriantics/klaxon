@@ -8,7 +8,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 
 public class ExplosiveCatalystDefinitionRecipe implements Recipe<ExplosiveCatalystDefinitionRecipeInput> {
     private final Ingredient ingredient;
@@ -62,7 +63,7 @@ public class ExplosiveCatalystDefinitionRecipe implements Recipe<ExplosiveCataly
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_RECIPE_SERIALIZER;
+        return KlaxonRecipeSerializers.EXPLOSIVE_CATALYST_DEFINITION_RECIPE_SERIALIZER.value();
     }
 
     @Override

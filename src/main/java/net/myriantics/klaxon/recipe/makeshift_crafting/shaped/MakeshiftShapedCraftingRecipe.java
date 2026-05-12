@@ -3,7 +3,7 @@ package net.myriantics.klaxon.recipe.makeshift_crafting.shaped;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.myriantics.klaxon.registry.misc.KlaxonRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class MakeshiftShapedCraftingRecipe extends ShapedRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeTypes.MAKESHIFT_SHAPED_CRAFTING_RECIPE_SERIALIZER;
+        return KlaxonRecipeSerializers.MAKESHIFT_SHAPED_CRAFTING_RECIPE_SERIALIZER.value();
     }
 
     public ItemStack getRawResult() {
