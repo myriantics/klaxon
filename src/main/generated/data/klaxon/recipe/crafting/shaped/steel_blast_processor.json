@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "steel_blast_processor",
+  "key": {
+    "C": {
+      "item": "klaxon:steel_casing"
+    },
+    "G": {
+      "tag": "klaxon:steel_blast_processor_grates"
+    },
+    "P": {
+      "item": "klaxon:steel_plate"
+    },
+    "R": {
+      "item": "minecraft:crafter"
+    }
+  },
+  "pattern": [
+    " G ",
+    "PCP",
+    " R "
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:steel_blast_processor"
+  }
+}

@@ -11,7 +11,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.myriantics.klaxon.datagen.NamedIngredient;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeSubProvider;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -245,6 +244,38 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
 
         addPrecisionDispenserRecipe(KlaxonItems.STEEL_HELMET);
         addPrecisionDispenserRecipe(KlaxonItems.CRESTED_STEEL_HELMET);
+
+        addShapedCraftingRecipe(Map.of(
+                'G', Ingredient.of(KlaxonItemTags.STEEL_BLAST_PROCESSOR_GRATES),
+                'P', Ingredient.of(KlaxonItems.STEEL_PLATE.value()),
+                'R', Ingredient.of(Items.CRAFTER),
+                'C', Ingredient.of(KlaxonItems.STEEL_CASING.value())
+                ),
+                new String[] {
+                        " G ",
+                        "PCP",
+                        " R "
+                },
+                new ItemStack(KlaxonItems.STEEL_BLAST_PROCESSOR),
+                CraftingBookCategory.REDSTONE,
+                "steel_blast_processor"
+        );
+        addShapedCraftingRecipe(Map.of(
+                'G', Ingredient.of(KlaxonItemTags.STEEL_BLAST_PROCESSOR_GRATES),
+                'P', Ingredient.of(KlaxonItems.CRUDE_STEEL_PLATE.value()),
+                'I', Ingredient.of(KlaxonItems.CRUDE_STEEL_INGOT.value()),
+                'R', Ingredient.of(Items.CRAFTER),
+                'C', Ingredient.of(KlaxonItems.CRUDE_STEEL_CASING.value())
+                ),
+                new String[] {
+                        "IGI",
+                        "PCP",
+                        "IRI"
+                },
+                new ItemStack(KlaxonItems.STEEL_BLAST_PROCESSOR),
+                CraftingBookCategory.REDSTONE,
+                "steel_blast_processor"
+        );
 
         /*
         addShapedCraftingRecipe(Map.of(

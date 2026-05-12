@@ -260,6 +260,15 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildCraftingTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.STEEL_BLAST_PROCESSOR_GRATES)
+                .add(Items.COPPER_GRATE)
+                .add(Items.EXPOSED_COPPER_GRATE)
+                .add(Items.WEATHERED_COPPER_GRATE)
+                .add(Items.OXIDIZED_COPPER_GRATE)
+                .add(Items.WAXED_COPPER_GRATE)
+                .add(Items.WAXED_EXPOSED_COPPER_GRATE)
+                .add(Items.WAXED_WEATHERED_COPPER_GRATE)
+                .add(Items.WAXED_OXIDIZED_COPPER_GRATE);
         getOrCreateTagBuilder(KlaxonItemTags.HIGH_YIELD_RUBBER_EXTRACTABLE_LOGS)
                 .forceAddTag(ItemTags.CRIMSON_STEMS)
                 .forceAddTag(ItemTags.WARPED_STEMS)
