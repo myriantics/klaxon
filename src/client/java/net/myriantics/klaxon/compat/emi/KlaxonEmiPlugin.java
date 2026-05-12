@@ -17,15 +17,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.compat.emi.recipes.special.ExplosiveCatalystTransmutationEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.special.FuseExtensionEmiRecipe;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
 import net.myriantics.klaxon.item.equipment.tools.LighterItem;
 import net.myriantics.klaxon.compat.emi.recipes.*;
+import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
+import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
@@ -36,6 +40,8 @@ import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
@@ -51,7 +57,8 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         KlaxonEmiCategories.init(registry);
         KlaxonEmiWorkstations.init(registry);
         registerRecipes(registry);
-        initCustomCraftingRecipes(registry);
+        Map<Item, ExplosiveCatalystData> item2CatalystDataMap = this.initExplosiveCatalystDefinition(registry);
+        initCustomCraftingRecipes(registry, item2CatalystDataMap);
 
         Level world = Minecraft.getInstance().level;
         if (world != null) {
@@ -92,8 +99,25 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         }
     }
 
+    private Map<Item, ExplosiveCatalystData> initExplosiveCatalystDefinition(EmiRegistry registry) {
+        HashMap<Item, ExplosiveCatalystData> map = new HashMap<>();
+
+        for (RecipeHolder<ExplosiveCatalystDefinitionRecipe> recipeEntry : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION)) {
+            // dont show hidden recipes
+            if (recipeEntry.value() instanceof ExplosiveCatalystDefinitionRecipe explosiveCatalystDefinitionRecipe) {
+                if (!explosiveCatalystDefinitionRecipe.isHidden()) {
+                    registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe)));
+                    for (ItemStack stack : explosiveCatalystDefinitionRecipe.getIngredient().getItems()) {
+                        map.putIfAbsent(stack.getItem(), explosiveCatalystDefinitionRecipe.getData());
+                    }
+                }
+            }
+        }
+
+        return map;
+    }
+
     private void registerRecipes(EmiRegistry registry) {
-        addAllExplosiveCatalystDefinition(registry, KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION, ExplosiveCatalystDefinitionEmiRecipe::new);
         addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
         addAllConditional(registry, KlaxonRecipeTypes.NETHER_REACTION, NetherReactionEmiRecipe::new, (recipeEntry -> !recipeEntry.id().getPath().contains("_wall_") && !KlaxonBlockItems.getBlockDisplayStack(recipeEntry.value().getOutputBlock()).getItem().equals(Items.BARRIER)));
@@ -113,10 +137,14 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         });
     }
 
-    private void initCustomCraftingRecipes(EmiRegistry registry) {
+    private void initCustomCraftingRecipes(EmiRegistry registry, Map<Item, ExplosiveCatalystData> item2CatalystDataMap) {
+        Item[] possibleCatalysts = item2CatalystDataMap.keySet().toArray(new Item[0]);
+
         for (RecipeHolder<CraftingRecipe> holder : registry.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
             if (holder.value() instanceof FuseExtensionRecipe fuseExtensionRecipe) {
                 registry.addRecipe(new FuseExtensionEmiRecipe(fuseExtensionRecipe, holder.id()));
+            } else if (holder.value() instanceof ExplosiveCatalystTransmutationRecipe recipe) {
+                registry.addRecipe(new ExplosiveCatalystTransmutationEmiRecipe(recipe, holder.id(), possibleCatalysts, item2CatalystDataMap));
             }
         }
     }
@@ -146,19 +174,6 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         for (RecipeHolder<C> recipeEntry : registry.getRecipeManager().getAllRecipesFor(type)) {
             if (predicate.test(recipeEntry)) {
                 registry.addRecipe(constructor.apply(recipeEntry));
-            }
-        }
-    }
-
-
-    public <C extends Recipe<V>, T extends RecipeHolder<C>, V extends RecipeInput> void addAllExplosiveCatalystDefinition(EmiRegistry registry, RecipeType<C> type, Function<RecipeHolder<C>, EmiRecipe> constructor) {
-        for (RecipeHolder<C> recipeEntry : registry.getRecipeManager().getAllRecipesFor(type)) {
-
-            // dont show hidden recipes
-            if (recipeEntry.value() instanceof ExplosiveCatalystDefinitionRecipe explosiveCatalystDefinitionRecipe) {
-                if (!explosiveCatalystDefinitionRecipe.isHidden()) {
-                    registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe)));
-                }
             }
         }
     }

@@ -19,6 +19,7 @@ import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
@@ -295,6 +296,22 @@ public abstract class KlaxonRecipeSubProvider {
         }
 
         FuseExtensionRecipe recipe = new FuseExtensionRecipe(category, itemToBeExtended.value(), fuseExtenderIngredient, fuseTimeTicksPerExtender);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe);
+    }
+
+    public void addExplosiveCatalystTransmutationRecipe(Map<Character, Ingredient> key, String[] stringPattern, ItemStack result, CraftingBookCategory category) {
+        ShapedRecipePattern pattern = ShapedRecipePattern.of(key, stringPattern);
+
+        String outputPath = getItemName(result.getItem());
+
+        ResourceLocation recipeId = provider.computeRecipeIdentifier("crafting/explosive_catalyst_transmutation", outputPath);
+
+        if (category == null) {
+            category = CraftingBookCategory.REDSTONE;
+        }
+
+        ExplosiveCatalystTransmutationRecipe recipe = new ExplosiveCatalystTransmutationRecipe(category, pattern, result);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe);
     }

@@ -28,7 +28,8 @@ public class FuseExtensionEmiRecipe extends EmiPatternCraftingRecipe {
                         EmiIngredient.of(fuseExtensionRecipe.fuseExtenderIngredient)
                 ),
                 EmiStack.of(fuseExtensionRecipe.itemToBeExtended),
-                id
+                id,
+                true
         );
         this.itemToBeExtended = fuseExtensionRecipe.itemToBeExtended;
         this.ingredientToBeExtended = EmiStack.of(this.itemToBeExtended);

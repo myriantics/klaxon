@@ -1,0 +1,26 @@
+{
+  "type": "klaxon:explosive_catalyst_transmutation",
+  "category": "redstone",
+  "pattern": {
+    "key": {
+      "C": {
+        "item": "klaxon:crude_steel_casing"
+      },
+      "P": {
+        "item": "klaxon:crude_steel_plate"
+      },
+      "R": {
+        "item": "minecraft:redstone"
+      }
+    },
+    "pattern": [
+      "PCP",
+      "P P",
+      "PRP"
+    ]
+  },
+  "result": {
+    "count": 1,
+    "id": "klaxon:modular_explosive_block"
+  }
+}

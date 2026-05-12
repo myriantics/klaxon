@@ -238,7 +238,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
     @Override
     public ExplosiveCatalystData getRawData() {
         if (this.level instanceof ServerLevel serverLevel) {
-            @Nullable ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(this.getContext(serverLevel), this.getCatalystStack());
+            @Nullable ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(serverLevel, this.getCatalystStack());
             if (data != null) {
                 return data;
             }

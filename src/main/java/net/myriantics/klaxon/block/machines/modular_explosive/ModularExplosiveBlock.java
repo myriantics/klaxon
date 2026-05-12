@@ -62,6 +62,11 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected boolean isSignalSource(BlockState state) {
+        return true;
+    }
+
+    @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
             if (stack.is(KlaxonItemTags.DEFUSERS) && state.getValue(FUSE).isCountingDown()) {
@@ -74,7 +79,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
 
             if (player.isCreative()) {
                 if (level instanceof ServerLevel serverLevel) {
-                    ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(blockEntity.createContext(serverLevel), stack);
+                    ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(serverLevel, stack);
                     if (data != null) {
                         if (!level.isClientSide()) {
                             blockEntity.setData(data);

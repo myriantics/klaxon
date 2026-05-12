@@ -45,6 +45,34 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 Ingredient.of(Items.STRING),
                 40
         );
+        this.addExplosiveCatalystTransmutationRecipe(
+                Map.of(
+                        'C', Ingredient.of(KlaxonItems.STEEL_CASING.value()),
+                        'P', Ingredient.of(KlaxonItems.STEEL_PLATE.value()),
+                        'R', Ingredient.of(Items.REDSTONE)
+                ),
+                new String[] {
+                        " C ",
+                        "P P",
+                        " R "
+                },
+                new ItemStack(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK),
+                CraftingBookCategory.REDSTONE
+        );
+        this.addExplosiveCatalystTransmutationRecipe(
+                Map.of(
+                        'C', Ingredient.of(KlaxonItems.CRUDE_STEEL_CASING.value()),
+                        'P', Ingredient.of(KlaxonItems.CRUDE_STEEL_PLATE.value()),
+                        'R', Ingredient.of(Items.REDSTONE)
+                ),
+                new String[] {
+                        "PCP",
+                        "P P",
+                        "PRP"
+                },
+                new ItemStack(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK),
+                CraftingBookCategory.REDSTONE
+        );
     }
 
     private void buildEquipmentCraftingRecipes() {

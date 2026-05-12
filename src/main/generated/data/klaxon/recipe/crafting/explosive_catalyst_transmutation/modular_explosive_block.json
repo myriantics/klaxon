@@ -1,0 +1,26 @@
+{
+  "type": "klaxon:explosive_catalyst_transmutation",
+  "category": "redstone",
+  "pattern": {
+    "key": {
+      "C": {
+        "item": "klaxon:steel_casing"
+      },
+      "P": {
+        "item": "klaxon:steel_plate"
+      },
+      "R": {
+        "item": "minecraft:redstone"
+      }
+    },
+    "pattern": [
+      " C ",
+      "P P",
+      " R "
+    ]
+  },
+  "result": {
+    "count": 1,
+    "id": "klaxon:modular_explosive_block"
+  }
+}
