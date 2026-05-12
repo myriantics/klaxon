@@ -6,8 +6,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +31,7 @@ import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefiniti
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
+import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class ModularExplosiveBlock extends BaseEntityBlock {
@@ -69,18 +72,46 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
-            if (stack.is(KlaxonItemTags.DEFUSERS) && state.getValue(FUSE).isCountingDown()) {
-                if (!level.isClientSide()) {
-                    blockEntity.defuse();
+            if (stack.is(KlaxonItemTags.DEFUSERS)) {
+                if (state.getValue(FUSE).isCountingDown()) {
+                    if (!level.isClientSide()) {
+                        blockEntity.defuse();
+                        blockEntity.unseal();
+                    }
+                    return ItemInteractionResult.SUCCESS;
+                } else if (blockEntity.isSealed()) {
+                    if (!level.isClientSide()) {
+                        blockEntity.unseal();
+                    }
+                    return ItemInteractionResult.SUCCESS;
                 }
+            }
 
+            if (stack.is(KlaxonItemTags.SEALANTS) && !blockEntity.isSealed()) {
+                if (!level.isClientSide()) {
+                    blockEntity.seal();
+                    if (!player.isCreative()) {
+                        if (stack.isDamageableItem()) {
+                            stack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(hand));
+                        } else {
+                            ItemStack remainder = stack.getRecipeRemainder().copy();
+                            if (!remainder.isEmpty()) {
+                                if (!player.addItem(remainder)) {
+                                    player.drop(remainder, false);
+                                }
+                            }
+                            stack.shrink(1);
+                        }
+                    }
+                }
                 return ItemInteractionResult.SUCCESS;
             }
 
-            if (player.isCreative()) {
-                if (level instanceof ServerLevel serverLevel) {
-                    ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(serverLevel, stack);
-                    if (data != null) {
+            if (!blockEntity.isSealed()) {
+                ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(level, stack);
+                if (data != null) {
+                    ExplosiveCatalystData existing = blockEntity.getRawData();
+                    if (!existing.equals(data)) {
                         if (!level.isClientSide()) {
                             blockEntity.setData(data);
                             blockEntity.applyComponentsFromItemStack(stack);
@@ -88,14 +119,18 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                                 onRedstoneImpulse(level, pos, state);
                             }
                             Component blockName = blockEntity instanceof Nameable nameable ? nameable.getDisplayName() : state.getBlock().getName();
-                            player.displayClientMessage(Component.translatable("klaxon.text.actionbar.catalyst_copy_from_to", stack.getDisplayName(), blockName), true);
+                            if (player.isCreative()) {
+                                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.catalyst_copy_from_to", stack.getDisplayName(), blockName), true);
+                            } else {
+                                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.catalyst_apply_from_to", stack.getDisplayName(), blockName), true);
+                                stack.shrink(1);
+                            }
                         }
-
+                        return ItemInteractionResult.SUCCESS;
                     }
                 }
-
-                return ItemInteractionResult.SUCCESS;
             }
+
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }

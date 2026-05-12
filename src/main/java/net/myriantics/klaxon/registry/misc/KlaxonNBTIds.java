@@ -27,6 +27,7 @@ public abstract class KlaxonNBTIds {
     public static final String MODIFY_WORLD = KlaxonCommon.locateAlt("modify_world");
     public static final String IGNITION_TICKS = KlaxonCommon.locateAlt("ignition_ticks");
     public static final String EXPLOSIVE_CATALYST_DATA = KlaxonCommon.locateAlt("explosive_catalyst_data");
+    public static final String SEALED = KlaxonCommon.locateAlt("sealed");
 
     // blast processor
     public static final String CATALYST_STACK = KlaxonCommon.locateAlt("catalyst_stack");

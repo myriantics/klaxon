@@ -376,6 +376,10 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addOptionalTag(KlaxonConventionalItemTags.WRENCHES);
         getOrCreateTagBuilder(KlaxonItemTags.DEFUSERS)
                 .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
+        getOrCreateTagBuilder(KlaxonItemTags.SEALANTS)
+                .add(Items.HONEYCOMB)
+                .add(Items.SLIME_BALL)
+                .add(Items.HONEY_BOTTLE);
         getOrCreateTagBuilder(KlaxonItemTags.MUFFLERS)
                 .addTag(KlaxonItemTags.EPIC_MUFFLERS)
                 .add(

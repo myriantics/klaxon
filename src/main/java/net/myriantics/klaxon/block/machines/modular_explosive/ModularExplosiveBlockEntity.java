@@ -38,6 +38,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
     private int ignitionTicks = ModularExplosiveBlock.DEFAULT_IGNITION_TICKS;
     private boolean modifyWorld = true;
     private boolean exposeExplosiveCatalystData = true;
+    private boolean sealed;
 
     protected ModularExplosiveBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -81,6 +82,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        this.sealed = tag.getBoolean(KlaxonNBTIds.SEALED);
         this.modifyWorld = tag.getBoolean(KlaxonNBTIds.MODIFY_WORLD);
         this.maxFuseTime = this.sanitizeMaxFuseTime(tag.getInt(KlaxonNBTIds.MAX_FUSE_TIME));
         this.fuseTime = this.sanitizeFuseTime(tag.getInt(KlaxonNBTIds.FUSE_TIME));
@@ -97,6 +99,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        tag.putBoolean(KlaxonNBTIds.SEALED, this.sealed);
         tag.putInt(KlaxonNBTIds.MAX_FUSE_TIME, this.maxFuseTime);
         tag.putInt(KlaxonNBTIds.FUSE_TIME, this.fuseTime);
         tag.putInt(KlaxonNBTIds.IGNITION_TICKS, this.ignitionTicks);
@@ -164,6 +167,20 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
 
     public int getMaxFuseTime() {
         return this.maxFuseTime;
+    }
+
+    public void seal() {
+        this.sealed = true;
+        this.setChanged();
+    }
+
+    public void unseal() {
+        this.sealed = false;
+        this.setChanged();
+    }
+
+    public boolean isSealed() {
+        return this.sealed;
     }
 
     public void detonate() {

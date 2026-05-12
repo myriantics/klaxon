@@ -19,6 +19,7 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
 
     private void generateActionBartext() {
         addActionBarText("catalyst_copy_from_to", "Cloned Explosive Catalyst Data from %1$s to %2$s");
+        addActionBarText("catalyst_apply_from_to", "Applied Explosive Catalyst %1$s to %2$s");
     }
 
     private void generateTooltipText() {
