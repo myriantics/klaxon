@@ -45,12 +45,12 @@ public record ModularExplosiveBlockConfigComponent(
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
         tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.fuse_ticks", this.maxFuseTime).withStyle(GREY));
-        if (tooltipFlag.isCreative()) {
+        if (tooltipFlag.isAdvanced()) {
             tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.ignition_ticks", this.ignitionTicks).withStyle(GREY));
             if (this.modifyWorld) {
-                tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.modify_world.true"));
+                tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.modify_world.true").withStyle(GREY));
             } else {
-                tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.modify_world.false"));
+                tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.modify_world.false").withStyle(GREY));
             }
         }
     }
