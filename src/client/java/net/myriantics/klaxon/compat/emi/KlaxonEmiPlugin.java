@@ -11,11 +11,10 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -27,23 +26,20 @@ import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
 import net.myriantics.klaxon.item.equipment.tools.LighterItem;
 import net.myriantics.klaxon.compat.emi.recipes.*;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -60,9 +56,9 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         Map<Item, ExplosiveCatalystData> item2CatalystDataMap = this.initExplosiveCatalystDefinition(registry);
         initCustomCraftingRecipes(registry, item2CatalystDataMap);
 
-        Level world = Minecraft.getInstance().level;
-        if (world != null) {
-            for (Holder<ToolUsageRecipeType> typeHolder : world.registryAccess().registryOrThrow(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
+        Level level = Minecraft.getInstance().level;
+        if (level != null) {
+            for (Holder<ToolUsageRecipeType> typeHolder : level.registryAccess().registryOrThrow(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
                 Optional<ResourceKey<ToolUsageRecipeType>> optionalKey = typeHolder.unwrapKey();
 
                 if (optionalKey.isPresent()) {
@@ -84,7 +80,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
                     registry.addCategory(category);
                     registry.addWorkstation(category, validTools);
 
-                    for (RecipeHolder<ToolUsageRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.TOOL_USAGE)) {
+                    for (RecipeHolder<ToolUsageRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.TOOL_USAGE.value())) {
                         if (recipe.value().getTypeKey().equals(optionalKey.get())) {
                             registry.addRecipe(new AbstractToolUsageEmiRecipe(recipe, ToolUsageRecipeType.animationRlFromHolder(typeHolder), validTools) {
                                 @Override
@@ -102,14 +98,19 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     private Map<Item, ExplosiveCatalystData> initExplosiveCatalystDefinition(EmiRegistry registry) {
         HashMap<Item, ExplosiveCatalystData> map = new HashMap<>();
 
-        for (RecipeHolder<ExplosiveCatalystDefinitionRecipe> recipeEntry : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION)) {
-            // dont show hidden recipes
-            if (recipeEntry.value() instanceof ExplosiveCatalystDefinitionRecipe explosiveCatalystDefinitionRecipe) {
-                if (!explosiveCatalystDefinitionRecipe.isHidden()) {
-                    registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(new RecipeHolder<>(recipeEntry.id(), explosiveCatalystDefinitionRecipe)));
-                    for (ItemStack stack : explosiveCatalystDefinitionRecipe.getIngredient().getItems()) {
-                        map.putIfAbsent(stack.getItem(), explosiveCatalystDefinitionRecipe.getData());
-                    }
+        Level level = Minecraft.getInstance().level;
+        if (level == null) {
+            return Map.of();
+        }
+
+        Optional<Registry<ExplosiveCatalystDefinition>> reg = level.registryAccess().registry(KlaxonRegistries.EXPLOSIVE_CATALYST_DEFINITION);
+        if (reg.isPresent()) {
+            Iterator<Holder.Reference<ExplosiveCatalystDefinition>> iterator = reg.get().holders().iterator();
+            while (iterator.hasNext()) {
+                Holder.Reference<ExplosiveCatalystDefinition> holder = iterator.next();
+                registry.addRecipe(new ExplosiveCatalystDefinitionEmiRecipe(holder));
+                for (ItemStack stack : holder.value().ingredient().getItems()) {
+                    map.putIfAbsent(stack.getItem(), holder.value().data());
                 }
             }
         }
@@ -164,10 +165,18 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registry.addRecipe(new KlaxonEMIAnvilRecipe(tool, repairMaterial, path));
     }
 
+    public <C extends Recipe<V>, T extends RecipeHolder<C>, V extends RecipeInput> void addAll(EmiRegistry registry, Holder<RecipeType<C>> type, Function<RecipeHolder<C>, EmiRecipe> constructor) {
+        this.addAll(registry, type.value(), constructor);
+    }
+
     public <C extends Recipe<V>, T extends RecipeHolder<C>, V extends RecipeInput> void addAll(EmiRegistry registry, RecipeType<C> type, Function<RecipeHolder<C>, EmiRecipe> constructor) {
         for (RecipeHolder<C> recipeEntry : registry.getRecipeManager().getAllRecipesFor(type)) {
             registry.addRecipe(constructor.apply(recipeEntry));
         }
+    }
+
+    public <C extends Recipe<V>, T extends RecipeHolder<C>, V extends RecipeInput> void addAllConditional(EmiRegistry registry, Holder<RecipeType<C>> type, Function<RecipeHolder<C>, EmiRecipe> constructor, Predicate<RecipeHolder<C>> predicate) {
+        this.addAllConditional(registry, type.value(), constructor, predicate);
     }
 
     public <C extends Recipe<V>, T extends RecipeHolder<C>, V extends RecipeInput> void addAllConditional(EmiRegistry registry, RecipeType<C> type, Function<RecipeHolder<C>, EmiRecipe> constructor, Predicate<RecipeHolder<C>> predicate) {
@@ -177,20 +186,4 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             }
         }
     }
-
-    private static Component maxFromBehaviorId(String behaviorId) {
-        int dividerIndex = behaviorId.lastIndexOf(ResourceLocation.NAMESPACE_SEPARATOR);
-        return Component.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.substring(0, dividerIndex) + "." + behaviorId.substring(dividerIndex + 1) + ".max");
-    }
-
-    private static Component minFromBehaviorId(String behaviorId) {
-        int dividerIndex = behaviorId.lastIndexOf(ResourceLocation.NAMESPACE_SEPARATOR);
-        return Component.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.substring(0, dividerIndex) + "." + behaviorId.substring(dividerIndex + 1) + ".min");
-    }
-
-    private static Component descriptionFromBehaviorId(String behaviorId) {
-        int dividerIndex = behaviorId.lastIndexOf(ResourceLocation.NAMESPACE_SEPARATOR);
-        return Component.translatable("klaxon.emi.text.explosion_power_info.behavior." + behaviorId.substring(0, dividerIndex) + "." + behaviorId.substring(dividerIndex + 1) + ".description");
-    }
-
 }

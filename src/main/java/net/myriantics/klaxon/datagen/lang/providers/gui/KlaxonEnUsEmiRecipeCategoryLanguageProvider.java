@@ -13,10 +13,10 @@ public final class KlaxonEnUsEmiRecipeCategoryLanguageProvider extends KlaxonEnU
 
     @Override
     public void generate() {
-        addEmiRecipeCategory(KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID, "Nether Reaction");
-        addEmiRecipeCategory(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID, "Explosive Catalysts");
-        addEmiRecipeCategory(KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID, "Blast Processing");
-        addEmiRecipeCategory(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID, "World Item Application");
+        addEmiRecipeCategory(KlaxonRecipeTypes.NETHER_REACTION, "Nether Reaction");
+        addEmiRecipeCategory("explosive_catalyst_definition", "Explosive Catalysts");
+        addEmiRecipeCategory(KlaxonRecipeTypes.BLAST_PROCESSING, "Blast Processing");
+        addEmiRecipeCategory(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION, "World Item Application");
         addEmiRecipeCategory(KlaxonToolUsageRecipeTypes.HAMMERING.location().getPath(), "Hammering");
         addEmiRecipeCategory(KlaxonToolUsageRecipeTypes.WIRECUTTING.location().getPath(), "Wirecutting");
     }

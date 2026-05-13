@@ -8,12 +8,9 @@ import net.minecraft.world.item.component.Fireworks;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformer;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystTransformerTypes;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class FireworksExplosiveCatalystTransformer extends ExplosiveCatalystTransformer {
 
@@ -41,7 +38,7 @@ public class FireworksExplosiveCatalystTransformer extends ExplosiveCatalystTran
             double explosionPower = original.explosionPower();
             boolean fiery = original.producesFire();
 
-            ExplosiveCatalystData flightDurationData = this.flightDurationData.get(context.level()).value().transformExplosiveCatalystData(context, this.flightDurationData);
+            ExplosiveCatalystData flightDurationData = this.flightDurationData.behavior(context.level()).value().transformExplosiveCatalystData(context, this.flightDurationData);
             explosionPower += fireworks.flightDuration() * flightDurationData.explosionPower();
             fiery |= flightDurationData.producesFire();
 

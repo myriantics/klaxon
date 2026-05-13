@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistrySubProvider;
 import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 
 public class KlaxonWrenchInteractionPredicateProvider extends KlaxonDynamicRegistrySubProvider<WrenchInteractionDenialPredicate> {
 
@@ -31,7 +31,7 @@ public class KlaxonWrenchInteractionPredicateProvider extends KlaxonDynamicRegis
 
     private void add(Block block, WrenchInteractionDenialPredicate predicate) {
         this.add(
-                ResourceKey.create(KlaxonRegistryKeys.WRENCH_INTERACTION_DENIAL_PREDICATE, BuiltInRegistries.BLOCK.getKey(block)),
+                ResourceKey.create(KlaxonRegistries.WRENCH_INTERACTION_DENIAL_PREDICATE, BuiltInRegistries.BLOCK.getKey(block)),
                 predicate
         );
     }

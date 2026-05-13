@@ -20,7 +20,7 @@ import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -84,7 +84,7 @@ public abstract class GrappleClawBlockDestructionHelper {
         Predicate<BlockState> veinminePredicate = (state) -> state.is(originState.getBlock());
 
         // check for any matching veinmine groups
-        for (VeinmineGroup group : ((ServerLevel) world).getServer().reloadableRegistries().get().registryOrThrow(KlaxonRegistryKeys.VEINMINE_GROUP)) {
+        for (VeinmineGroup group : ((ServerLevel) world).getServer().reloadableRegistries().get().registryOrThrow(KlaxonRegistries.VEINMINE_GROUP)) {
             if (group.ingredient().test(originState)) {
                 veinminePredicate = group.ingredient();
                 break;

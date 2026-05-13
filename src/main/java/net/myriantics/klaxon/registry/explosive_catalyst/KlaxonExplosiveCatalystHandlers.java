@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.handler.*;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 
 public abstract class KlaxonExplosiveCatalystHandlers {
     public static final Holder<ExplosiveCatalystHandler> NO_OP = register(
@@ -48,7 +48,7 @@ public abstract class KlaxonExplosiveCatalystHandlers {
     );
 
     private static Holder<ExplosiveCatalystHandler> register(String name, ExplosiveCatalystHandler handler) {
-        return Registry.registerForHolder(KlaxonRegistries.EXPLOSIVE_CATALYST_HANDLERS, KlaxonCommon.locate(name), handler);
+        return Registry.registerForHolder(KlaxonBuiltInRegistries.EXPLOSIVE_CATALYST_HANDLERS, KlaxonCommon.locate(name), handler);
     }
 
     public static void init() {

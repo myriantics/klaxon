@@ -1,44 +1,37 @@
 package net.myriantics.klaxon.registry;
 
-import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
-import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
+import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionType;
-
-import java.util.function.Consumer;
+import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
+import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 
 public abstract class KlaxonRegistries {
-    public static final Registry<ExplosiveCatalystHandler> EXPLOSIVE_CATALYST_HANDLERS = register(
-            KlaxonRegistryKeys.EXPLOSIVE_CATALYST_HANDLER,
-            builder -> builder.attribute(RegistryAttribute.SYNCED)
-    );
-    public static final Registry<ExplosiveCatalystTransformerType<?>> EXPLOSIVE_CATALYST_TRANSFORMER_TYPES = register(
-            KlaxonRegistryKeys.EXPLOSIVE_CATALYST_TRANSFORMER_TYPE,
-            builder -> builder.attribute(RegistryAttribute.SYNCED)
-    );
-    public static final Registry<BlockStateWrenchBehavior<? extends Comparable<?>>> BLOCK_STATE_WRENCH_BEHAVIORS = register(
-            KlaxonRegistryKeys.BLOCK_STATE_WRENCH_BEHAVIOR,
-            (builder) -> builder.attribute(RegistryAttribute.SYNCED)
-    );
-    public static final Registry<WrenchActionType> WRENCH_ACTION_TYPE = register(
-            KlaxonRegistryKeys.WRENCH_ACTION_TYPE,
-            (builder) -> builder.attribute(RegistryAttribute.SYNCED)
-    );
 
-    public static void init() {
-        KlaxonCommon.LOGGER.info("Registered KLAXON's Registries!");
+    // static
+    public static final ResourceKey<Registry<BlockStateWrenchBehavior<? extends Comparable<?>>>> BLOCK_STATE_WRENCH_BEHAVIOR = of("block_state_wrench_behavior");
+    public static final ResourceKey<Registry<WrenchActionType>> WRENCH_ACTION_TYPE = of("wrench_action_type");
+    public static final ResourceKey<Registry<ExplosiveCatalystHandler>> EXPLOSIVE_CATALYST_HANDLER = of("explosive_catalyst_handler");
+    public static final ResourceKey<Registry<ExplosiveCatalystTransformerType<?>>> EXPLOSIVE_CATALYST_TRANSFORMER_TYPE = of("explosive_catalyst_transformer_type");
+    // dynamic
+    public static final ResourceKey<Registry<ExplosiveCatalystBehavior>> EXPLOSIVE_CATALYST_BEHAVIOR = of("blast_processor_behavior");
+    public static final ResourceKey<Registry<WrenchInteractionDenialPredicate>> WRENCH_INTERACTION_DENIAL_PREDICATE = of("wrench_interaction_denial_predicates");
+    public static final ResourceKey<Registry<ToolUsageRecipeType>> TOOL_USAGE_RECIPE_TYPE = of("tool_usage_recipe_type");
+    public static final ResourceKey<Registry<VeinmineGroup>> VEINMINE_GROUP = of("veinmine_group");
+    public static final ResourceKey<Registry<ExplosiveCatalystDefinition>> EXPLOSIVE_CATALYST_DEFINITION = of("explosive_catalyst_definition");
+
+    private static <T> ResourceKey<Registry<T>> of(String id) {
+        return ResourceKey.createRegistryKey(KlaxonCommon.locate(id));
     }
 
-    private static <T> Registry<T> register(ResourceKey<Registry<T>> key, Consumer<FabricRegistryBuilder<T, MappedRegistry<T>>> builderConsumer) {
-        FabricRegistryBuilder<T, MappedRegistry<T>> builder = FabricRegistryBuilder.createSimple(key);
-        builderConsumer.accept(builder);
-        return builder.buildAndRegister();
+    public static void init() {
+        KlaxonCommon.LOGGER.info("Registered KLAXON's Registry Keys!");
     }
 }

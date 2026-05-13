@@ -1,24 +1,20 @@
 package net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 
 public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
 
@@ -38,9 +34,6 @@ public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
     public final ShapedRecipePattern pattern;
     public final ItemStack result;
 
-    private @Nullable ItemStack catalystCache = null;
-    private @Nullable ExplosiveCatalystData dataCache = null;
-
     public ExplosiveCatalystTransmutationRecipe(CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack result) {
         super(category);
         this.pattern = pattern;
@@ -51,12 +44,8 @@ public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
     public boolean matches(CraftingInput input, Level level) {
         if (this.pattern.matches(this.withoutCenter(input))) {
             ItemStack center = input.getItem(4);
-            @Nullable ExplosiveCatalystData data = getDataForStack(center, stack -> ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(level, center));
-            if (data != null) {
-                this.catalystCache = center.copy();
-                this.dataCache = data;
-                return true;
-            }
+            @Nullable ExplosiveCatalystData data = getDataForStack(center, stack -> ExplosiveCatalystData.findRaw(level, center));
+            return data != null;
         }
         return false;
     }
@@ -65,13 +54,7 @@ public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         ItemStack result = this.getResultItem(registries).copy();
         ItemStack center = input.getItem(4);
-        @Nullable ExplosiveCatalystData data = getDataForStack(center, stack -> {
-            if (this.catalystCache != null && ItemStack.isSameItemSameComponents(this.catalystCache, center)) {
-                return this.dataCache;
-            } else {
-                return null;
-            }
-        });
+        @Nullable ExplosiveCatalystData data = getDataForStack(center, stack -> ExplosiveCatalystData.findRaw(registries, center));
         if (data == null) {
             return ItemStack.EMPTY;
         } else {

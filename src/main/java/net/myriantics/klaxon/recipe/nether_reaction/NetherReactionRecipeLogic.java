@@ -42,7 +42,7 @@ public abstract class NetherReactionRecipeLogic {
             ServerLevel serverWorld,
             Explosion explosion
     ) {
-        List<RecipeHolder<NetherReactionRecipe>> matches = serverWorld.getRecipeManager().getRecipesFor(KlaxonRecipeTypes.NETHER_REACTION, new NetherReactionRecipeInput(targetState), serverWorld);
+        List<RecipeHolder<NetherReactionRecipe>> matches = serverWorld.getRecipeManager().getRecipesFor(KlaxonRecipeTypes.NETHER_REACTION.value(), new NetherReactionRecipeInput(targetState), serverWorld);
 
         Vec3 center = Vec3.atCenterOf(targetPos);
         BlockHitResult hitResult = new BlockHitResult(center, Direction.getNearest(explosion.center().subtract(center)), targetPos, false);

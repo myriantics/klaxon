@@ -20,8 +20,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatal
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
@@ -73,9 +72,9 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 ExplosiveCatalystContext context = this.getContext(serverLevel);
 
                 // compute blast processor behavior
-                ExplosiveCatalystData catalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
+                ExplosiveCatalystData catalystData = ExplosiveCatalystData.findEffective(context, this.getCatalystStack());
 
-                Holder<ExplosiveCatalystBehavior> behavior = catalystData.get(serverLevel);
+                Holder<ExplosiveCatalystBehavior> behavior = catalystData.behavior(serverLevel);
 
                 // transform catalystData if needed
                 BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData));

@@ -50,7 +50,7 @@ public class WorldItemApplicationRecipe implements Recipe<WorldItemApplicationRe
 
     @Override
     public RecipeType<?> getType() {
-        return KlaxonRecipeTypes.WORLD_ITEM_APPLICATION;
+        return KlaxonRecipeTypes.WORLD_ITEM_APPLICATION.value();
     }
 
     public Ingredient getInputIngredient() {

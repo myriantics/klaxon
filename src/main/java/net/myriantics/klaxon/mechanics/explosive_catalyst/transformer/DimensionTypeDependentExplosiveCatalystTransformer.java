@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformer;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystTransformerTypes;
 import net.myriantics.klaxon.util.DimensionTypePredicate;
 

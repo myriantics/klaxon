@@ -23,8 +23,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVesse
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
@@ -175,7 +174,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
     // defaults to showing recipe with the lowest explosion power, but will switch to higher explosion power recipe if lowest is invalid
     private Optional<BlastProcessingRecipe> selectBlastProcessingRecipe(Level world, BlastProcessingRecipeInput recipeInventory, ExplosiveCatalystData powerData) {
-        List<RecipeHolder<BlastProcessingRecipe>> initialRecipes = world.getRecipeManager().getRecipesFor(KlaxonRecipeTypes.BLAST_PROCESSING, recipeInventory, world);
+        List<RecipeHolder<BlastProcessingRecipe>> initialRecipes = world.getRecipeManager().getRecipesFor(KlaxonRecipeTypes.BLAST_PROCESSING.value(), recipeInventory, world);
         if (initialRecipes.isEmpty()) {
             return Optional.empty();
         }
@@ -231,14 +230,14 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
     @Override
     public ExplosiveCatalystData getEffectiveCatalystData() {
         return this.level instanceof ServerLevel serverLevel
-                ? ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(this.getContext(serverLevel), this.getCatalystStack())
+                ? ExplosiveCatalystData.findEffective(this.getContext(serverLevel), this.getCatalystStack())
                 : ExplosiveCatalystData.ZERO;
     }
 
     @Override
     public ExplosiveCatalystData getRawData() {
         if (this.level instanceof ServerLevel serverLevel) {
-            @Nullable ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(serverLevel, this.getCatalystStack());
+            @Nullable ExplosiveCatalystData data = ExplosiveCatalystData.findRaw(serverLevel, this.getCatalystStack());
             if (data != null) {
                 return data;
             }

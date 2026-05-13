@@ -3,7 +3,7 @@ package net.myriantics.klaxon.registry.explosive_catalyst;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 
 public abstract class KlaxonExplosiveCatalystBehaviors {
 
@@ -22,7 +22,7 @@ public abstract class KlaxonExplosiveCatalystBehaviors {
     public static final ResourceKey<ExplosiveCatalystBehavior> CHARGED_CREEPER_MIMIC = create("creeper_head");
 
     private static ResourceKey<ExplosiveCatalystBehavior> create(String name) {
-        return ResourceKey.create(KlaxonRegistryKeys.EXPLOSIVE_CATALYST_BEHAVIOR, KlaxonCommon.locate(name));
+        return ResourceKey.create(KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIOR, KlaxonCommon.locate(name));
     }
 
     public static void init() {

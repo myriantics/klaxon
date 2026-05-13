@@ -6,7 +6,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformer;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.transformer.*;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 
 public abstract class KlaxonExplosiveCatalystTransformerTypes {
 
@@ -17,7 +17,7 @@ public abstract class KlaxonExplosiveCatalystTransformerTypes {
     public static final ExplosiveCatalystTransformerType<FireworksExplosiveCatalystTransformer> FIREWORKS = register("fireworks", FireworksExplosiveCatalystTransformer.CODEC);
 
     private static <T extends ExplosiveCatalystTransformer> ExplosiveCatalystTransformerType<T> register(String name, MapCodec<T> codec) {
-        return Registry.register(KlaxonRegistries.EXPLOSIVE_CATALYST_TRANSFORMER_TYPES, KlaxonCommon.locate(name), new ExplosiveCatalystTransformerType<>(codec));
+        return Registry.register(KlaxonBuiltInRegistries.EXPLOSIVE_CATALYST_TRANSFORMER_TYPES, KlaxonCommon.locate(name), new ExplosiveCatalystTransformerType<>(codec));
     }
 
     public static void init() {

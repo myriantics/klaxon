@@ -5,7 +5,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.component.FireworkExplosion;
@@ -15,7 +14,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehav
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformer;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.transformer.*;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystHandlers;
 import net.myriantics.klaxon.registry.misc.KlaxonColors;

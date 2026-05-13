@@ -10,7 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 

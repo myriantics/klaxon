@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.AllModsLoadedResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.NotResourceCondition;
 import net.fabricmc.fabric.impl.resource.conditions.conditions.TrueResourceCondition;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.recipe.providers.*;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
@@ -36,12 +38,15 @@ public class KlaxonRecipeProvider extends FabricRecipeProvider {
         new KlaxonBlastProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonCraftingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonMakeshiftCraftingRecipeProvider(this, exporter).generateRecipes();
-        new KlaxonExplosiveCatalystDefinitionRecipeProvider(this, exporter).generateRecipes();
         new KlaxonSmeltingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonOreProcessingRecipeProvider(this, exporter).generateRecipes();
         new KlaxonRecipeOverrideProvider(this, exporter).generateRecipes();
         new KlaxonNetherReactionRecipeProvider(this, exporter).generateRecipes();
         new KlaxonWorldItemApplicationRecipeProvider(this, exporter).generateRecipes();
+    }
+
+    public <T extends Recipe<?>> ResourceLocation computeRecipeIdentifier(Holder<RecipeType<T>> typeHolder, String path, final ResourceCondition... conditions) {
+        return this.computeRecipeIdentifier(typeHolder.unwrapKey().get().location().getPath(), path, conditions);
     }
 
     public ResourceLocation computeRecipeIdentifier(String typeId, String path, final ResourceCondition... conditions) {

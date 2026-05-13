@@ -29,14 +29,14 @@ public abstract class WorldItemApplicationRecipeLogic {
     private static Set<Item> APPLICABLE_ITEMS_CACHE = new HashSet<>();
 
     public static boolean test(Level world, ItemStack stack) {
-        return getCoolableBlocks(world).contains(stack.getItem());
+        return getApplicableItems(world).contains(stack.getItem());
     }
 
-    private static Set<Item> getCoolableBlocks(Level world) {
+    private static Set<Item> getApplicableItems(Level world) {
         if (APPLICABLE_ITEMS_CACHE.isEmpty()) {
 
             Set<Item> newCache = new HashSet<>();
-            for (RecipeHolder<WorldItemApplicationRecipe> entry : world.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION)) {
+            for (RecipeHolder<WorldItemApplicationRecipe> entry : world.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION.value())) {
                 // add all the compatible items to the new cache
                 for (ItemStack stack : entry.value().getInputIngredient().getItems()) {
                     newCache.add(stack.getItem());
@@ -55,7 +55,7 @@ public abstract class WorldItemApplicationRecipeLogic {
         Optional<BlockState> output = Optional.empty();
 
         Optional<RecipeHolder<WorldItemApplicationRecipe>> match =
-                world.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION, recipeInput, world);
+                world.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION.value(), recipeInput, world);
 
         if (match.isPresent()) {
             // compatible properties are saved from input state

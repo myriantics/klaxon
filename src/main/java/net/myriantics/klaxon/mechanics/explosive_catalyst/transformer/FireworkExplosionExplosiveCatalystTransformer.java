@@ -6,11 +6,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.component.FireworkExplosion;
-import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformer;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystTransformerTypes;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,19 +56,19 @@ public class FireworkExplosionExplosiveCatalystTransformer extends ExplosiveCata
 
         @Nullable ExplosiveCatalystData shapeData = this.shape2CatalystData.get(explosion.shape());
         if (shapeData != null) {
-            shapeData = shapeData.get(context.level()).value().transformExplosiveCatalystData(context, shapeData);
+            shapeData = shapeData.behavior(context.level()).value().transformExplosiveCatalystData(context, shapeData);
             explosionPower += shapeData.explosionPower();
             fiery |= shapeData.producesFire();
         }
 
         if (explosion.hasTrail()) {
-            ExplosiveCatalystData trailData = this.trailData.get(context.level()).value().transformExplosiveCatalystData(context, this.trailData);
+            ExplosiveCatalystData trailData = this.trailData.behavior(context.level()).value().transformExplosiveCatalystData(context, this.trailData);
             explosionPower += trailData.explosionPower();
             fiery |= trailData.producesFire();
         }
 
         if (explosion.hasTwinkle()) {
-            ExplosiveCatalystData twinkleData = this.twinkleData.get(context.level()).value().transformExplosiveCatalystData(context, this.twinkleData);
+            ExplosiveCatalystData twinkleData = this.twinkleData.behavior(context.level()).value().transformExplosiveCatalystData(context, this.twinkleData);
             explosionPower += twinkleData.explosionPower();
             fiery |= twinkleData.producesFire();
         }

@@ -20,7 +20,7 @@ public abstract class KlaxonBlockColors {
                 return -1;
             }
             if (level != null && level.getBlockEntity(blockPos) instanceof ModularExplosiveBlockEntity modularExplosiveBlockEntity) {
-                return modularExplosiveBlockEntity.getRawData().get(level).value().color;
+                return modularExplosiveBlockEntity.getRawData().behavior(level).value().color;
             }
             return CommonColors.WHITE;
         }, KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK);

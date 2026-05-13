@@ -6,10 +6,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.Nameable;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +24,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
@@ -108,7 +105,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
             }
 
             if (!blockEntity.isSealed()) {
-                ExplosiveCatalystData data = ExplosiveCatalystDefinitionRecipeLogic.computeRawExplosiveCatalystData(level, stack);
+                ExplosiveCatalystData data = ExplosiveCatalystData.findRaw(level, stack);
                 if (data != null) {
                     ExplosiveCatalystData existing = blockEntity.getRawData();
                     if (!existing.equals(data)) {

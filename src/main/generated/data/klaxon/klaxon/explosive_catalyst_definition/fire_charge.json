@@ -1,12 +1,10 @@
 {
-  "type": "klaxon:explosive_catalyst_definition",
-  "explosive_catalyst_data": {
+  "data": {
     "behavior": "klaxon:default",
     "explosion_power": 1.3,
     "produces_fire": true
   },
   "ingredient": {
     "item": "minecraft:fire_charge"
-  },
-  "is_hidden_from_emi": false
+  }
 }

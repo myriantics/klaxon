@@ -2,7 +2,7 @@ package net.myriantics.klaxon.recipe.blast_processing;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 
 public class BlastProcessingRecipeInput implements RecipeInput {
     private final ExplosiveCatalystData catalystData;

@@ -10,7 +10,7 @@ import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchActionHandler;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.BlockFaceRegion;
@@ -35,7 +35,7 @@ public abstract class WrenchUtil {
             return PICKUP;
         }
 
-        for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
+        for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonBuiltInRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
             if (behavior.test(state)) {
                 return behavior.getManualInteractionMap(manual);
             }

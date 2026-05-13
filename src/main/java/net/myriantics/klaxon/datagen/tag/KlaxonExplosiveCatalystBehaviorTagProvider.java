@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class KlaxonExplosiveCatalystBehaviorTagProvider extends FabricTagProvider<ExplosiveCatalystBehavior> {
     public KlaxonExplosiveCatalystBehaviorTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, KlaxonRegistryKeys.EXPLOSIVE_CATALYST_BEHAVIOR, registriesFuture);
+        super(output, KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIOR, registriesFuture);
     }
 
     @Override

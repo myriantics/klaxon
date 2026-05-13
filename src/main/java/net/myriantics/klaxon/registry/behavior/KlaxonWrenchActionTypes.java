@@ -5,7 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionType;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 
 import java.util.function.Supplier;
 
@@ -48,6 +48,6 @@ public abstract class KlaxonWrenchActionTypes {
 
     private static Holder<WrenchActionType> register(String name, WrenchActionType type) {
         ResourceLocation id = KlaxonCommon.locate(name);
-        return Registry.registerForHolder(KlaxonRegistries.WRENCH_ACTION_TYPE, id, type);
+        return Registry.registerForHolder(KlaxonBuiltInRegistries.WRENCH_ACTION_TYPE, id, type);
     }
 }

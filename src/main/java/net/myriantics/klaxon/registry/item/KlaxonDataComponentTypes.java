@@ -14,7 +14,7 @@ import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.component.configuration.*;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 
 import java.util.function.UnaryOperator;
 

@@ -6,7 +6,7 @@ import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.state.BlockState;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public record WrenchInteractionDenialPredicate(StatePropertiesPredicate predicat
     }
 
     public static boolean wrenchInteractionBlocked(RegistryAccess registryManager, BlockState state) {
-        Optional<WrenchInteractionDenialPredicate> predicate = registryManager.registryOrThrow(KlaxonRegistryKeys.WRENCH_INTERACTION_DENIAL_PREDICATE).getOptional(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
+        Optional<WrenchInteractionDenialPredicate> predicate = registryManager.registryOrThrow(KlaxonRegistries.WRENCH_INTERACTION_DENIAL_PREDICATE).getOptional(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
 
         // cancel behavior if the predicate passes
         return predicate.isPresent() && predicate.get().anyMatch(state);

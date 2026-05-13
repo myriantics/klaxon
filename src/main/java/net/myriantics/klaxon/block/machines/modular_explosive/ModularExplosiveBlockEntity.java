@@ -21,7 +21,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehav
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
@@ -188,7 +188,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         BlockPos pos = this.worldPosition;
 
         if (level instanceof ServerLevel serverLevel && this.ignitionTicks != -1) {
-            Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.get(serverLevel);
+            Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior(serverLevel);
             if (behaviorHolder.is(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)) {
                 KlaxonServerPlayNetworkHandler.syncWorldEvent(serverLevel, pos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);
             }
@@ -238,7 +238,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
     public ExplosiveCatalystData getEffectiveCatalystData() {
         if (this.level instanceof ServerLevel serverLevel) {
             ExplosiveCatalystContext context = this.createContext(serverLevel);
-            Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.get(serverLevel);
+            Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior(serverLevel);
             return behaviorHolder.value().transformExplosiveCatalystData(context, this.explosiveCatalystData);
         } else {
             return ExplosiveCatalystData.ZERO;

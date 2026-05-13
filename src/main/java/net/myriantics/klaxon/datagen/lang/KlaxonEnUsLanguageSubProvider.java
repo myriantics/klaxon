@@ -80,6 +80,10 @@ public abstract class KlaxonEnUsLanguageSubProvider {
         builder.add(attribute, name);
     }
 
+    protected void addEmiRecipeCategory(Holder<?> holder, String name) {
+        this.addEmiRecipeCategory(holder.unwrapKey().get().location().getPath(), name);
+    }
+
     protected void addEmiRecipeCategory(String id, String name) {
         builder.add("container." + KlaxonCommon.MOD_ID + '.' + id + ".title", name);
     }

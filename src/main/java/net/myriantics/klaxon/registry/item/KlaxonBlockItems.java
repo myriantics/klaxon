@@ -12,7 +12,7 @@ import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
 import java.util.List;

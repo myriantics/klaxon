@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.compat.emi.recipes;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -12,15 +11,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.CommonColors;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformer;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
+import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 import net.myriantics.klaxon.registry.misc.KlaxonColors;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,10 +40,10 @@ public class ExplosiveCatalystDefinitionEmiRecipe implements EmiRecipe {
 
     private final List<Component> simpleExplosiveCatalystBehaviorLines;
 
-    public ExplosiveCatalystDefinitionEmiRecipe(RecipeHolder<ExplosiveCatalystDefinitionRecipe> recipeEntry) {
-        this.id = recipeEntry.id();
-        this.ingredient = List.of(EmiIngredient.of(recipeEntry.value().getIngredient()));
-        this.baseCatalystData = recipeEntry.value().getData();
+    public ExplosiveCatalystDefinitionEmiRecipe(Holder<ExplosiveCatalystDefinition> definition) {
+        this.id = definition.unwrapKey().get().location().withPrefix("/");
+        this.ingredient = List.of(EmiIngredient.of(definition.value().ingredient()));
+        this.baseCatalystData = definition.value().data();
         this.simpleExplosiveCatalystBehaviorLines = this.getSimpleExplosiveCatalystBehaviorTooltipText();
     }
 
@@ -132,11 +130,11 @@ public class ExplosiveCatalystDefinitionEmiRecipe implements EmiRecipe {
         if (level != null) {
             List<Component> lines = new ArrayList<>();
             lines.add(Component.translatable(this.baseCatalystData.behavior().location().toLanguageKey()));
-            ExplosiveCatalystBehavior behavior = this.baseCatalystData.get(level).value();
+            ExplosiveCatalystBehavior behavior = this.baseCatalystData.behavior(level).value();
             lines.add(behavior.handlerHolder.unwrapKey().map(key -> Component.translatable(key.location().toLanguageKey())).orElse(Component.literal("Invalid Handler!")));
             Component dash = Component.literal("- ").setStyle(GREY);
             for (ExplosiveCatalystTransformer transformer : behavior.transformers) {
-                Holder<ExplosiveCatalystTransformerType<?>> typeHolder = KlaxonRegistries.EXPLOSIVE_CATALYST_TRANSFORMER_TYPES.wrapAsHolder(transformer.getType());
+                Holder<ExplosiveCatalystTransformerType<?>> typeHolder = KlaxonBuiltInRegistries.EXPLOSIVE_CATALYST_TRANSFORMER_TYPES.wrapAsHolder(transformer.getType());
                 lines.add(dash.copy().append(typeHolder.unwrapKey().map(key -> Component.translatable(key.location().toLanguageKey())).orElse(Component.literal("Invalid Transformer!"))));
             }
             return lines;

@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -30,8 +30,8 @@ public record ToolUsageRecipeType(Ingredient validTools, Optional<ResourceKey<It
         this(validTools, Optional.ofNullable(display));
     }
 
-    public static final Codec<ResourceKey<ToolUsageRecipeType>> KEY_CODEC = ResourceKey.codec(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE);
-    public static final StreamCodec<ByteBuf, ResourceKey<ToolUsageRecipeType>> KEY_PACKET_CODEC = ResourceKey.streamCodec(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE);
+    public static final Codec<ResourceKey<ToolUsageRecipeType>> KEY_CODEC = ResourceKey.codec(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE);
+    public static final StreamCodec<ByteBuf, ResourceKey<ToolUsageRecipeType>> KEY_PACKET_CODEC = ResourceKey.streamCodec(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE);
 
     public static final Codec<ToolUsageRecipeType> CODEC = RecordCodecBuilder.create((instance -> instance.group(
             Ingredient.CODEC_NONEMPTY.fieldOf("valid_tools").forGetter(ToolUsageRecipeType::validTools),

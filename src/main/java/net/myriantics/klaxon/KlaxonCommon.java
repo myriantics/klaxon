@@ -47,8 +47,8 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonItemStorages.init();
 		KlaxonArmorMaterials.init();
 		KlaxonItems.init();
-		KlaxonRegistryKeys.init();
 		KlaxonRegistries.init();
+		KlaxonBuiltInRegistries.init();
 		KlaxonRecipeTypes.init();
 		KlaxonRecipeSerializers.init();
 		KlaxonDamageTypes.init();

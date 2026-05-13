@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.jade.KlaxonJadePlugin;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.misc.KlaxonColors;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;

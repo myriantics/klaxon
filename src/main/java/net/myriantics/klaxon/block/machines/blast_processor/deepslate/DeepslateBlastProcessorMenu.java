@@ -18,8 +18,7 @@ import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcess
 import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.misc.KlaxonMenuTypes;
 import net.myriantics.klaxon.util.PermissionsHelper;
 
@@ -147,7 +146,7 @@ public class DeepslateBlastProcessorMenu extends AbstractContainerMenu {
 
         if (!world.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (world.getBlockEntity(pos) instanceof DeepslateBlastProcessorBlockEntity blastProcessor) {
-                ExplosiveCatalystData newPowerData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(blastProcessor.getContext(serverPlayer.serverLevel()), blastProcessor.getCatalystStack());
+                ExplosiveCatalystData newPowerData = ExplosiveCatalystData.findEffective(blastProcessor.getContext(serverPlayer.serverLevel()), blastProcessor.getCatalystStack());
                 BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getDisplayStacks(new BlastProcessingRecipeInput(blastProcessor.getIngredientStack(), newPowerData));
 
                 // Make sure we've changed something before sending an update packet

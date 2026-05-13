@@ -6,9 +6,13 @@ import dev.emi.emi.api.recipe.EmiRecipeSorting;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -20,19 +24,19 @@ public abstract class KlaxonEmiCategories {
     private static final ArrayList<EmiRecipeCategory> CATEGORIES = new ArrayList<>();
 
     public static final EmiRecipeCategory BLAST_PROCESSING = register(
-            KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
+            KlaxonRecipeTypes.BLAST_PROCESSING,
             KlaxonItems.STEEL_BLAST_PROCESSOR
     );
     public static final EmiRecipeCategory EXPLOSIVE_CATALYST_DEFINITION = register(
-            KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
+            "explosive_catalyst_definition",
             KlaxonItems.STEEL_BLAST_PROCESSOR
     );
     public static final EmiRecipeCategory NETHER_REACTION = register(
-            KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
+            KlaxonRecipeTypes.NETHER_REACTION,
             KlaxonItems.NETHER_REACTOR_CORE
     );
     public static final EmiRecipeCategory WORLD_ITEM_APPLICATION = register(
-            KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID,
+            KlaxonRecipeTypes.WORLD_ITEM_APPLICATION,
             KlaxonItems.PRECISION_DISPENSER
     );
 
@@ -45,8 +49,23 @@ public abstract class KlaxonEmiCategories {
         return register(name, iconHolder.value());
     }
 
+    private static <T extends Recipe<?>> EmiRecipeCategory register(Holder<RecipeType<T>> type, Holder<Item> iconHolder) {
+        return register(type, iconHolder.value());
+    }
+
     private static EmiRecipeCategory register(String name, ItemLike icon) {
         return register(name, EmiStack.of(icon));
+    }
+
+    private static <T extends Recipe<?>> EmiRecipeCategory register(Holder<RecipeType<T>> type, ItemLike icon) {
+        return register(type, EmiStack.of(icon));
+    }
+
+    private static <T extends Recipe<?>> EmiRecipeCategory register(Holder<RecipeType<T>> type, EmiRenderable icon) {
+        return register(
+                type.unwrapKey().get().location().getPath(),
+                icon
+        );
     }
 
     private static EmiRecipeCategory register(String name, EmiRenderable icon) {

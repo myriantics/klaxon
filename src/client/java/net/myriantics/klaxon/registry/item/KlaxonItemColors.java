@@ -9,8 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class KlaxonItemColors {
@@ -34,7 +33,7 @@ public abstract class KlaxonItemColors {
                         if (level != null) {
                             @Nullable ExplosiveCatalystData data = stack.get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value());
                             if (data != null) {
-                                return data.get(level).value().color;
+                                return data.behavior(level).value().color;
                             }
                         }
                         return defaultColor;

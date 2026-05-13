@@ -1,12 +1,10 @@
 {
-  "type": "klaxon:explosive_catalyst_definition",
-  "explosive_catalyst_data": {
+  "data": {
     "behavior": "klaxon:dragons_breath",
     "explosion_power": 2.5,
     "produces_fire": false
   },
   "ingredient": {
     "item": "minecraft:dragon_breath"
-  },
-  "is_hidden_from_emi": false
+  }
 }

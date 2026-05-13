@@ -9,7 +9,7 @@ import net.minecraft.world.entity.AreaEffectCloud;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import org.joml.Vector3f;
 

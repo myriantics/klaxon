@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors.FireworkRocketEntityInvoker;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 
 public class FireworkExplosiveCatalystHandler extends ExplosiveCatalystHandler {
     @Override

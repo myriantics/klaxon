@@ -22,10 +22,8 @@ import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipeLogic;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
-import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
@@ -89,8 +87,8 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                 BlockState aboveState = level.getBlockState(pos.above());
                 ExplosiveCatalystContext context = this.getContext(level);
 
-                ExplosiveCatalystData catalystData = ExplosiveCatalystDefinitionRecipeLogic.computeExplosiveCatalystData(context, this.getCatalystStack());
-                Holder<ExplosiveCatalystBehavior> behavior = catalystData.get(level);
+                ExplosiveCatalystData catalystData = ExplosiveCatalystData.findEffective(context, this.getCatalystStack());
+                Holder<ExplosiveCatalystBehavior> behavior = catalystData.behavior(level);
 
                 // if its on cooldown just kaboom no matter what
                 if (block.isFieryExhaust(aboveState) && behavior.value().isNoOp() && catalystData.explosionPower() > 0) {

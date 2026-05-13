@@ -21,8 +21,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystDefinitionRecipe;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
@@ -316,32 +315,6 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe);
     }
 
-    public void addExplosiveCatalystDefinitionRecipe(
-            NamedIngredient input,
-            double explosionPower, boolean producesFire,
-            boolean isHidden,
-            final ResourceCondition... conditions
-    ) {
-        this.addExplosiveCatalystDefinitionRecipe(input, KlaxonExplosiveCatalystBehaviors.DEFAULT, explosionPower, producesFire, isHidden, conditions);
-    }
-
-    public void addExplosiveCatalystDefinitionRecipe(
-            NamedIngredient input,
-            ResourceKey<ExplosiveCatalystBehavior> behavior,
-            double explosionPower, boolean producesFire,
-            boolean isHidden,
-            final ResourceCondition... conditions
-    ) {
-
-        ResourceLocation recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.EXPLOSIVE_CATALYST_DEFINITION_ID,
-                input.getName(),
-                conditions);
-
-        ExplosiveCatalystDefinitionRecipe recipe = new ExplosiveCatalystDefinitionRecipe(input.toIngredient(), new ExplosiveCatalystData(behavior, explosionPower, producesFire), isHidden);
-
-        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
-    }
-
     public void addHammeringRecipe(Ingredient input, ItemStack output, final ResourceCondition... conditions) {
         ResourceLocation recipeId = provider.computeRecipeIdentifier(KlaxonToolUsageRecipeTypes.HAMMERING.location().getPath(),
                 getItemName(output.getItem()),
@@ -367,7 +340,7 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addWorldItemApplicationRecipe(TagKey<Block> validBlockInputs, Ingredient ingredient, Block outputBlock, ResourceCondition... conditions) {
-        ResourceLocation recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION_RECIPE_ID,
+        ResourceLocation recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.WORLD_ITEM_APPLICATION,
                 BuiltInRegistries.BLOCK.getKey(outputBlock).getPath(),
                 conditions);
 
@@ -381,7 +354,7 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addNetherReactionRecipe(BlockIngredient blockIngredient, Block outputBlock, ResourceCondition... conditions) {
-        ResourceLocation recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.NETHER_REACTION_RECIPE_ID,
+        ResourceLocation recipeId = provider.computeRecipeIdentifier(KlaxonRecipeTypes.NETHER_REACTION,
                 BuiltInRegistries.BLOCK.getKey(outputBlock).getPath(),
                 conditions);
 
@@ -416,7 +389,7 @@ public abstract class KlaxonRecipeSubProvider {
                 : getItemName(outputCompound.getDisplayStacks()[0].getItem()) + "_from_" + input.getName();
 
         ResourceLocation recipeId = provider.computeRecipeIdentifier(
-                KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
+                KlaxonRecipeTypes.BLAST_PROCESSING,
                 path,
                 conditions
         );
@@ -434,7 +407,7 @@ public abstract class KlaxonRecipeSubProvider {
                 : getItemName(outputCompound.getDisplayStacks()[0].getItem()) + "_from_" + input.getName();
 
         ResourceLocation recipeId = provider.computeRecipeIdentifier(
-                KlaxonRecipeTypes.BLAST_PROCESSING_RECIPE_ID,
+                KlaxonRecipeTypes.BLAST_PROCESSING,
                 path,
                 conditions
         );

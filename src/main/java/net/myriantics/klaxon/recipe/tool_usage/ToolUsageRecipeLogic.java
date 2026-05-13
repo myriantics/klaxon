@@ -31,7 +31,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
@@ -57,7 +57,7 @@ public abstract class ToolUsageRecipeLogic {
     private static Set<Item> getValidToolsCache(Level world) {
         if (VALID_TOOLS_CACHE.isEmpty()) {
             Set<Item> newCache = new HashSet<>();
-            for (Holder<ToolUsageRecipeType> type : world.registryAccess().registryOrThrow(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
+            for (Holder<ToolUsageRecipeType> type : world.registryAccess().registryOrThrow(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
                 for (ItemStack stack : type.value().validTools().getItems()) {
                     newCache.add(stack.getItem());
                 }
@@ -105,7 +105,7 @@ public abstract class ToolUsageRecipeLogic {
         }
 
         ResourceKey<ToolUsageRecipeType> type = null;
-        for (Holder<ToolUsageRecipeType> entry : world.registryAccess().registryOrThrow(KlaxonRegistryKeys.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
+        for (Holder<ToolUsageRecipeType> entry : world.registryAccess().registryOrThrow(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
             if (entry.value().validTools().test(toolStack) && entry.unwrapKey().isPresent()) {
                 type = entry.unwrapKey().get();
                 break;
@@ -127,7 +127,7 @@ public abstract class ToolUsageRecipeLogic {
             boolean targetRecipeSuccess = false;
 
             ToolUsageRecipeInput dummyInventory = new ToolUsageRecipeInput(toolStack, targetStack, type);
-            Optional<RecipeHolder<ToolUsageRecipe>> match = world.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.TOOL_USAGE, dummyInventory, world);
+            Optional<RecipeHolder<ToolUsageRecipe>> match = world.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.TOOL_USAGE.value(), dummyInventory, world);
 
             // change recipe success indicator and recipe sound override
             if (match.isPresent()) {

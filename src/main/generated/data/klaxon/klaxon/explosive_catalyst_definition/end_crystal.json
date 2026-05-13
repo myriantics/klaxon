@@ -1,12 +1,10 @@
 {
-  "type": "klaxon:explosive_catalyst_definition",
-  "explosive_catalyst_data": {
+  "data": {
     "behavior": "klaxon:end_crystal",
     "explosion_power": 6.0,
     "produces_fire": false
   },
   "ingredient": {
     "item": "minecraft:end_crystal"
-  },
-  "is_hidden_from_emi": false
+  }
 }

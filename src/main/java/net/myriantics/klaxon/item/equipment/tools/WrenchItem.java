@@ -28,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.mechanics.wrench.*;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -114,7 +114,7 @@ public class WrenchItem extends DiggerItem {
             Optional<InteractionResult> result = Optional.empty();
 
             // apply the first valid behavior to target state
-            for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
+            for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonBuiltInRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
                 if (behavior.test(targetState)) {
                     WrenchInteractionMap map = behavior.getManualInteractionMap(manual);
                     float clickedX = manual.getGuiOrientation().getClickedX();
@@ -162,7 +162,7 @@ public class WrenchItem extends DiggerItem {
             return true;
         }
 
-        for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
+        for (BlockStateWrenchBehavior<? extends Comparable<?>> behavior : KlaxonBuiltInRegistries.BLOCK_STATE_WRENCH_BEHAVIORS) {
             if (behavior.test(targetState)) {
                 return true;
             }

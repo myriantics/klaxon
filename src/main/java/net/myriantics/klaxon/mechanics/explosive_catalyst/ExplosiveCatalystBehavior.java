@@ -4,14 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Position;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.tags.TagKey;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
-import net.myriantics.klaxon.recipe.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystHandlers;
 
 import java.util.Arrays;
@@ -24,7 +18,7 @@ public class ExplosiveCatalystBehavior {
     public final int color;
 
     public static final Codec<ExplosiveCatalystBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            KlaxonRegistries.EXPLOSIVE_CATALYST_HANDLERS.holderByNameCodec().fieldOf("handler").forGetter(i -> i.handlerHolder),
+            KlaxonBuiltInRegistries.EXPLOSIVE_CATALYST_HANDLERS.holderByNameCodec().fieldOf("handler").forGetter(i -> i.handlerHolder),
             ExplosiveCatalystTransformer.LIST_CODEC.fieldOf("transformers").forGetter(i -> i.transformers),
             Codec.INT.fieldOf("color").forGetter(i -> i.color)
     ).apply(instance, ExplosiveCatalystBehavior::new));

@@ -64,7 +64,7 @@ public class ToolUsageRecipe implements Recipe<ToolUsageRecipeInput> {
 
     @Override
     public RecipeType<?> getType() {
-        return KlaxonRecipeTypes.TOOL_USAGE;
+        return KlaxonRecipeTypes.TOOL_USAGE.value();
     }
 
     public Ingredient getInputIngredient() {

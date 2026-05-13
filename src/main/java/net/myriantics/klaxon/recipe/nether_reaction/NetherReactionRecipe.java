@@ -48,7 +48,7 @@ public class NetherReactionRecipe implements Recipe<NetherReactionRecipeInput> {
 
     @Override
     public RecipeType<?> getType() {
-        return KlaxonRecipeTypes.NETHER_REACTION;
+        return KlaxonRecipeTypes.NETHER_REACTION.value();
     }
 
     public BlockIngredient getBlockIngredient() {

@@ -22,6 +22,7 @@ public final class KlaxonDynamicRegistryProvider extends FabricDynamicRegistryPr
         new KlaxonVeinmineGroupProvider(registries, entries);
         new KlaxonWrenchInteractionPredicateProvider(registries, entries);
         new KlaxonExplosiveCatalystBehaviorProvider(registries, entries);
+        new KlaxonExplosiveCatalystDefinitionProvider(registries, entries);
     }
 
     @Override

@@ -3,7 +3,7 @@ package net.myriantics.klaxon.tag.klaxon;
 import net.minecraft.tags.TagKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
-import net.myriantics.klaxon.registry.KlaxonRegistryKeys;
+import net.myriantics.klaxon.registry.KlaxonRegistries;
 
 public abstract class KlaxonExplosiveCatalystBehaviorTags {
 
@@ -12,6 +12,6 @@ public abstract class KlaxonExplosiveCatalystBehaviorTags {
     public static final TagKey<ExplosiveCatalystBehavior> UNUSABLE_FOR_CRAFTING = create("unusable_for_crafting");
 
     private static TagKey<ExplosiveCatalystBehavior> create(String name) {
-        return TagKey.create(KlaxonRegistryKeys.EXPLOSIVE_CATALYST_BEHAVIOR, KlaxonCommon.locate(name));
+        return TagKey.create(KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIOR, KlaxonCommon.locate(name));
     }
 }

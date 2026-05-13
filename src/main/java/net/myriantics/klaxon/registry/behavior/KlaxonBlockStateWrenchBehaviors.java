@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.behaviors.*;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 
 import java.util.function.Function;
 
@@ -30,6 +30,6 @@ public abstract class KlaxonBlockStateWrenchBehaviors {
     @SuppressWarnings("unchecked")
     private static <T extends Comparable<T>> Holder<BlockStateWrenchBehavior<T>> register(String name, Function<ResourceLocation, BlockStateWrenchBehavior<T>> constructor) {
         ResourceLocation id = KlaxonCommon.locate(name);
-        return (Holder<BlockStateWrenchBehavior<T>>) (Object) Registry.registerForHolder(KlaxonRegistries.BLOCK_STATE_WRENCH_BEHAVIORS, KlaxonCommon.locate(name), constructor.apply(id));
+        return (Holder<BlockStateWrenchBehavior<T>>) (Object) Registry.registerForHolder(KlaxonBuiltInRegistries.BLOCK_STATE_WRENCH_BEHAVIORS, KlaxonCommon.locate(name), constructor.apply(id));
     }
 }
