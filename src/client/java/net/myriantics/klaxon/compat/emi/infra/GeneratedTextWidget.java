@@ -21,13 +21,14 @@ public class GeneratedTextWidget extends TextWidget {
     private long lastGenerate;
 
     public GeneratedTextWidget(Function<Random, FormattedCharSequence> function, int unique, int x, int y, int color, boolean shadow) {
-        super(null, x, y, color, shadow);
+        super(function.apply(getRandom(0, unique)), x, y, color, shadow);
         this.unique = unique;
         this.function = function;
     }
 
     @Override
     public void render(GuiGraphics draw, int mouseX, int mouseY, float delta) {
+        this.getText();
         draw.pose().pushPose();
         int xOff = this.horizontalAlignment.offset(minecraft.font.width(this.text));
         Alignment var10000 = this.verticalAlignment;
@@ -35,9 +36,9 @@ public class GeneratedTextWidget extends TextWidget {
         int yOff = var10000.offset(9);
         draw.pose().translate((float)xOff, (float)yOff, 300.0F);
         if (this.shadow) {
-            draw.drawString(minecraft.font, this.getText(), this.x, this.y, this.color, true);
+            draw.drawString(minecraft.font, this.text, this.x, this.y, this.color, true);
         } else {
-            draw.drawString(minecraft.font, this.getText(), this.x, this.y, this.color, false);
+            draw.drawString(minecraft.font, this.text, this.x, this.y, this.color, false);
         }
 
         draw.pose().popPose();
@@ -47,12 +48,12 @@ public class GeneratedTextWidget extends TextWidget {
         long time = System.currentTimeMillis() / 1000L;
         if (this.text == null || time > this.lastGenerate) {
             this.lastGenerate = time;
-            this.text = this.function.apply(this.getRandom(time));
+            this.text = this.function.apply(this.getRandom(time, this.unique));
         }
         return this.text;
     }
 
-    private Random getRandom(long time) {
-        return new Random((new Random(time ^ (long)this.unique)).nextInt());
+    private static Random getRandom(long time, int unique) {
+        return new Random((new Random(time ^ (long)unique)).nextInt());
     }
 }

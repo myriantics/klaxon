@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.compat.emi.recipes;
+package net.myriantics.klaxon.compat.emi.recipes.special;
 
 import dev.emi.emi.api.recipe.EmiPatternCraftingRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -8,11 +8,9 @@ import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.SuspiciousEffectHolder;
 import net.myriantics.klaxon.KlaxonCommon;
 

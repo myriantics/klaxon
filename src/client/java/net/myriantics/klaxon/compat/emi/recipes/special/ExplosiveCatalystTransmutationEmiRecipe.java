@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
@@ -21,11 +22,10 @@ import java.util.Random;
 public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingRecipe {
 
     private final ShapedRecipePattern pattern;
-    private final Item[] possibleCatalysts;
-    private final Map<Item, ExplosiveCatalystData> item2DataMap;
+    private final ExplosiveCatalystDefinition[] definitions;
     private final ItemStack result;
 
-    public ExplosiveCatalystTransmutationEmiRecipe(ExplosiveCatalystTransmutationRecipe recipe, ResourceLocation id, Item[] possibleCatalysts, Map<Item, ExplosiveCatalystData> item2DataMap) {
+    public ExplosiveCatalystTransmutationEmiRecipe(ExplosiveCatalystTransmutationRecipe recipe, ResourceLocation id, ExplosiveCatalystDefinition[] definitions) {
         super(
                 List.of(
                         EmiIngredient.of(recipe.pattern.ingredients().stream().map(EmiIngredient::of).toList())
@@ -34,8 +34,7 @@ public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingR
                 id,
                 false
         );
-        this.possibleCatalysts = possibleCatalysts;
-        this.item2DataMap = item2DataMap;
+        this.definitions = definitions;
         this.result = recipe.result;
         this.pattern = recipe.pattern;
     }
@@ -62,7 +61,7 @@ public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingR
                 random -> {
                     ItemStack resultStack = this.result.copy();
                     ItemStack catalystStack = this.getCatalystStack(random);
-                    @Nullable ExplosiveCatalystData data = ExplosiveCatalystTransmutationRecipe.getDataForStack(catalystStack, stack -> this.item2DataMap.get(stack.getItem()));
+                    @Nullable ExplosiveCatalystData data = ExplosiveCatalystTransmutationRecipe.getDataForStack(catalystStack, this::getDataForStack);
                     if (data != null) {
                         resultStack.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), data);
                     }
@@ -73,12 +72,24 @@ public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingR
         );
     }
 
+    private ExplosiveCatalystData getDataForStack(ItemStack stack) {
+        for (ExplosiveCatalystDefinition definition : this.definitions) {
+            if (definition.ingredient().test(stack)) {
+                return definition.data();
+            }
+        }
+        return ExplosiveCatalystData.ZERO;
+    }
+
     private ItemStack getCatalystStack(Random random) {
-        int selected = random.nextInt(this.possibleCatalysts.length + 1);
+        int selected = random.nextInt(this.definitions.length + 1);
         if (selected == 0) {
             return ItemStack.EMPTY;
         } else {
-            return new ItemStack(this.possibleCatalysts[selected - 1]);
+            // balance it so you're not spammed with beds
+            ExplosiveCatalystDefinition definition = this.definitions[selected - 1];
+            ItemStack[] stacks = definition.ingredient().getItems();
+            return stacks[random.nextInt(stacks.length)];
         }
     }
 }
