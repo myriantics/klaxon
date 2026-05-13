@@ -20,6 +20,7 @@ import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalyst
 import net.myriantics.klaxon.registry.misc.KlaxonColors;
 import net.myriantics.klaxon.util.DimensionTypePredicate;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,14 +44,14 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.DEFAULT,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
-                KlaxonColors.ORANGE.getRGB()
+                KlaxonColors.FIERY_ORANGE.getRGB()
         );
 
         // tnt
         this.add(
                 KlaxonExplosiveCatalystBehaviors.TNT,
                 KlaxonExplosiveCatalystHandlers.TNT,
-                CommonColors.RED
+                KlaxonColors.TNT_RED
         );
 
         // fireworks
@@ -65,13 +66,13 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.FIREWORK_STAR,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
-                CommonColors.GRAY,
+                KlaxonColors.FIREWORK_STAR_GREY,
                 fireworkExplosionTransformer
         );
         this.add(
                 KlaxonExplosiveCatalystBehaviors.FIREWORK_ROCKET,
                 KlaxonExplosiveCatalystHandlers.FIREWORK,
-                CommonColors.RED,
+                KlaxonColors.FIREWORK_ROCKET_RED,
                 new FireworksExplosiveCatalystTransformer(
                         fireworkExplosionTransformer,
                         new ExplosiveCatalystData(0.8, false)
@@ -82,7 +83,7 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.BEDLIKE,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
-                CommonColors.RED,
+                KlaxonColors.BED_OAK,
                 new DimensionTypeDependentExplosiveCatalystTransformer(
                         new DimensionTypePredicate(
                                 Optional.empty(),
@@ -95,7 +96,7 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.RESPAWN_ANCHORLIKE,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
-                KlaxonColors.PURPLE.getRGB(),
+                KlaxonColors.GLOWSTONE_YELLOW,
                 new DimensionTypeDependentExplosiveCatalystTransformer(
                         new DimensionTypePredicate(
                                 Optional.empty(),
@@ -110,21 +111,21 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.WIND_BURST,
                 KlaxonExplosiveCatalystHandlers.WIND_BURST,
-                CommonColors.BLUE
+                KlaxonColors.WIND_CHARGE_BLUE
         );
 
         // dragons breath
         this.add(
                 KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH,
                 KlaxonExplosiveCatalystHandlers.DRAGONS_BREATH,
-                KlaxonColors.PURPLE.getRGB()
+                KlaxonColors.DRAGONS_BREATH_PURPLE
         );
 
         // tnt minecart
         this.add(
                 KlaxonExplosiveCatalystBehaviors.TNT_MINECART,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
-                CommonColors.RED,
+                KlaxonColors.TNT_MINECART_RED,
                 new RedstoneSignalStrengthExplosiveCatalystTransformer(
                         1.0f, false
                 )
@@ -134,7 +135,7 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.END_CRYSTAL,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
-                KlaxonColors.PURPLE.getRGB(),
+                KlaxonColors.END_CRYSTAL_PURPLE,
                 new BaseBlockStateExplosiveCatalystTransformer(
                         Optional.of(HolderSet.direct(BuiltInRegistries.BLOCK.wrapAsHolder(Blocks.BEDROCK))),
                         Optional.empty()
@@ -145,8 +146,12 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
         this.add(
                 KlaxonExplosiveCatalystBehaviors.CHARGED_CREEPER_MIMIC,
                 KlaxonExplosiveCatalystHandlers.CHARGED_CREEPER_MIMIC,
-                CommonColors.GREEN
+                KlaxonColors.CREEPER_GREEN
         );
+    }
+
+    protected ExplosiveCatalystBehavior add(ResourceKey<ExplosiveCatalystBehavior> behaviorKey, Holder<ExplosiveCatalystHandler> handler, Color color, ExplosiveCatalystTransformer... transformers) {
+        return this.add(behaviorKey, handler, color.getRGB(), transformers);
     }
 
     protected ExplosiveCatalystBehavior add(ResourceKey<ExplosiveCatalystBehavior> behaviorKey, Holder<ExplosiveCatalystHandler> handlerHolder, int color, ExplosiveCatalystTransformer... transformers) {
