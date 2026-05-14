@@ -189,12 +189,13 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
 
         if (level instanceof ServerLevel serverLevel && this.ignitionTicks != -1) {
             Holder<ExplosiveCatalystBehavior> behaviorHolder = this.explosiveCatalystData.behavior(serverLevel);
-            if (behaviorHolder.is(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)) {
+            ExplosiveCatalystContext context = this.createContext(serverLevel);
+            ExplosiveCatalystData transformedData = behaviorHolder.value().transformExplosiveCatalystData(context, this.explosiveCatalystData);
+            if (transformedData.behavior(level).is(KlaxonExplosiveCatalystBehaviorTags.RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK)) {
                 KlaxonServerPlayNetworkHandler.syncWorldEvent(serverLevel, pos, KlaxonWorldEvents.SPAWN_BLOCK_BREAK_PARTICLES);
             }
             level.removeBlock(pos, false);
-            ExplosiveCatalystContext context = this.createContext(serverLevel);
-            behaviorHolder.value().createExplosion(context, pos.getCenter(), behaviorHolder.value().transformExplosiveCatalystData(context, this.explosiveCatalystData), this.modifyWorld);
+            behaviorHolder.value().createExplosion(context, pos.getCenter(), transformedData, this.modifyWorld);
         }
     }
 

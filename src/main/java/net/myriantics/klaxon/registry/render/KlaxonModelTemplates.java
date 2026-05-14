@@ -67,7 +67,6 @@ public abstract class KlaxonModelTemplates {
             DEEPSLATE_BLAST_PROCESSOR,
             KlaxonTextureSlots.TOP_LAYER_0,
             KlaxonTextureSlots.SIDE_LAYER_0,
-            KlaxonTextureSlots.BOTTOM_LAYER_0,
             KlaxonTextureSlots.TOP_LAYER_1,
             KlaxonTextureSlots.SIDE_LAYER_1,
             KlaxonTextureSlots.BOTTOM_LAYER_1,
