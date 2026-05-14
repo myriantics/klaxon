@@ -149,6 +149,9 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayer player) {
 
         ExplosiveCatalystData explosiveCatalystData = this.getEffectiveCatalystData();
+        if (explosiveCatalystData == null) {
+            explosiveCatalystData = ExplosiveCatalystData.ZERO;
+        }
         BlastProcessingRecipeData blastProcessingRecipeData = this.getDisplayStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), explosiveCatalystData));
 
         return new BlastProcessorScreenSyncPacket(

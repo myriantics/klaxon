@@ -9,10 +9,7 @@ import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.mixin.minecraft.datagen.ModelTemplateAccessor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -132,7 +129,7 @@ public final class FancierItemModelBuilder {
                     if (pathBuilder.toString().charAt(pathBuilder.length() - 1) != '/') {
                         pathBuilder.append('_');
                     }
-                    pathBuilder.append(predicateId).append('_').append(selectedValue);
+                    pathBuilder.append(predicateId).append('_').append(stripBadCharacters(selectedValue.toString()));
                 }
                 // add the property to the predicate list
                 predicates.addProperty(override.predicateId, selectedValue);
@@ -287,5 +284,15 @@ public final class FancierItemModelBuilder {
         public ResourceLocation getTexture(int index) {
             return textureIds[index];
         }
+    }
+
+    private static String stripBadCharacters(String input) {
+        StringBuilder builder = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (ResourceLocation.isAllowedInResourceLocation(c)) {
+                builder.append(c);
+            }
+        }
+        return builder.toString();
     }
 }

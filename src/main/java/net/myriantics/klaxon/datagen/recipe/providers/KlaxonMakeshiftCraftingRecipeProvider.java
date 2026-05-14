@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.datagen.recipe.providers;
 
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.ItemStack;
@@ -146,14 +147,14 @@ public class KlaxonMakeshiftCraftingRecipeProvider extends KlaxonRecipeSubProvid
         );
         addMakeshiftShapedCraftingRecipe(Map.of(
                         'P', Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES),
-                        'N', Ingredient.of(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS),
+                        'N', Ingredient.of(ConventionalItemTags.NUGGETS),
                         'F', Ingredient.of(Items.FIRE_CHARGE)
                 ),
                 new String[] {
                         "PN",
                         "FP",
                 },
-                List.of(Ingredient.of(Items.FIRE_CHARGE)),
+                List.of(Ingredient.of(Items.FIRE_CHARGE), Ingredient.of(ConventionalItemTags.NUGGETS)),
                 new ItemStack(KlaxonItems.STEEL_LIGHTER),
                 CraftingBookCategory.EQUIPMENT,
                 null

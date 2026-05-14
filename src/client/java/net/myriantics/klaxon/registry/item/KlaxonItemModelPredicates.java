@@ -50,6 +50,15 @@ public abstract class KlaxonItemModelPredicates {
         }*/
             return 0;
         })));
+        register(KlaxonItems.STEEL_LIGHTER, KlaxonItemModelPredicateIds.USE_RATIO, (itemStack, clientLevel, livingEntity, i) ->  {
+            if (itemStack.get(KlaxonDataComponentTypes.USE_ACTION_MODEL_PREDICATE_OVERRIDE.value()) instanceof Float f) {
+                return f;
+            } else if (livingEntity != null && itemStack == livingEntity.getUseItem()) {
+                int maxUseTime = itemStack.getUseDuration(livingEntity);
+                return (float) (maxUseTime - livingEntity.getUseItemRemainingTicks()) / maxUseTime;
+            }
+            return 0f;
+        });
     }
 
     private static void register(Holder<Item> itemHolder, ResourceLocation id, ClampedItemPropertyFunction function) {

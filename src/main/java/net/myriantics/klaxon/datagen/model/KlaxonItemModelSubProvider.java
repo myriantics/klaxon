@@ -1,12 +1,15 @@
 package net.myriantics.klaxon.datagen.model;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureSlot;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.model.item.FancierItemModelBuilder;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -85,6 +88,35 @@ public abstract class KlaxonItemModelSubProvider {
                 .textureOverride(retractingPredicate, spool.getId(), 2)
                 .add(0, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL)
                 .add(1, KlaxonTextures.GRAPPLE_WINCH_3D_SPOOL_RETRACTING)
+                .build()
+                .build(generator);
+    }
+
+    protected void registerLighterItem(Holder<Item> holder) {
+        this.registerLighterItem(holder.value());
+    }
+
+    protected void registerLighterItem(ItemLike item) {
+        Holder<Item> holder = BuiltInRegistries.ITEM.wrapAsHolder(item.asItem());
+        ResourceKey<Item> key = holder.unwrapKey().get();
+
+        ResourceLocation baseModelId = getItemId(key.location());
+
+        ResourceLocation closedId = baseModelId.withSuffix("/closed");
+        ResourceLocation openId = baseModelId.withSuffix("/open");
+
+        ResourceLocation usageRatioPredicate = KlaxonItemModelPredicateIds.USE_RATIO;
+
+        TextureSlot layer0 = TextureSlot.LAYER0;
+
+        FancierItemModelBuilder.of(
+                ModelTemplates.FLAT_ITEM,
+                baseModelId,
+                Map.of(
+                        layer0, closedId
+                ))
+                .textureOverride(usageRatioPredicate, layer0.getId(), 1)
+                .add(Float.MIN_NORMAL, openId)
                 .build()
                 .build(generator);
     }

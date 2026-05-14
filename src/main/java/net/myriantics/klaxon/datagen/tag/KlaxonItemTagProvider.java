@@ -456,8 +456,6 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addOptionalTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_NUGGETS);
         getOrCreateTagBuilder(KlaxonItemTags.STEEL_PLATE_ARMOR_MATERIAL_REPAIR_MATERIALS)
                 .addOptionalTag(KlaxonItemTags.CRUDE_INCLUSIVE_STEEL_PLATES);
-        getOrCreateTagBuilder(KlaxonItemTags.LIGHTER_REPAIR_MATERIALS)
-                .add(Items.FIRE_CHARGE);
     }
 
     private void buildEnchantableTags() {

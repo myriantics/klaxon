@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.mixin.minecraft.reinforced_flint_and_steel;
+package net.myriantics.klaxon.mixin.minecraft.steel_lighter;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

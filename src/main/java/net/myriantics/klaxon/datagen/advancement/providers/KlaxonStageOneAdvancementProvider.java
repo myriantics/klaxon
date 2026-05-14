@@ -20,6 +20,7 @@ import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchVei
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementSubProvider;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.muffling.MufflerActionType;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
@@ -91,7 +92,9 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementHolder applyAnyMuffler = addTask(hammerCraftMetalPlate, APPLY_ANY_MUFFLER, Items.LEATHER, MufflerInteractionCriterion.Conditions.create(MufflerActionType.APPLY, null));
         AdvancementHolder boostedHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_BOOSTED, Items.BLAZE_POWDER,  WalljumpAbilityCriterion.Conditions.createStrengthWalljump());
         AdvancementHolder minecartHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_MINECART, Items.CAULDRON, WalljumpAbilityCriterion.Conditions.createMinecartWalljump());
-        AdvancementHolder erectFirewallWithLighter = addGoal(hammerCraftMetalPlate, LIGHT_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE, KlaxonItems.STEEL_LIGHTER.value(), OneOffCriterion.Conditions.createErectFirewall());
+        ItemStack openLighterStack = new ItemStack(KlaxonItems.STEEL_LIGHTER);
+        openLighterStack.set(KlaxonDataComponentTypes.USE_ACTION_MODEL_PREDICATE_OVERRIDE.value(), 0.67f);
+        AdvancementHolder erectFirewallWithLighter = addGoal(hammerCraftMetalPlate, LIGHT_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE, openLighterStack, OneOffCriterion.Conditions.createErectFirewall());
         AdvancementHolder cableShearCraftMetalWire = addTask(hammerCraftMetalPlate, USE_CABLE_SHEARS_TO_MAKE_METAL_WIRE, KlaxonItems.STEEL_CABLE_SHEARS.value(), ToolUsageRecipeCraftCriterion.Conditions.createWirecutting(Ingredient.of(KlaxonConventionalItemTags.WIRES)));
         AdvancementHolder obtainSteelCleaver = addTask(hammerCraftMetalPlate, OBTAIN_STEEL_CLEAVER, KlaxonItems.STEEL_CLEAVER.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.STEEL_CLEAVER.value()));
         AdvancementHolder performAnyWrenchAction = addTask(hammerCraftMetalPlate, PERFORM_ANY_WRENCH_ACTION, KlaxonItems.STEEL_WRENCH.value(), WrenchUsageCriterion.Conditions.createWildcard(null));

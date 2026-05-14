@@ -1,0 +1,6 @@
+{
+  "parent": "klaxon:item/steel_lighter",
+  "textures": {
+    "layer0": "klaxon:item/steel_lighter/open"
+  }
+}

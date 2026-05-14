@@ -15,6 +15,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
@@ -39,6 +40,7 @@ import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -147,13 +149,25 @@ public class KlaxonEmiPlugin implements EmiPlugin {
     }
 
     private void registerMiscRecipes(EmiRegistry registry) {
-        addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_LIGHTER.value()), EmiIngredient.of(LighterItem.LIGHTER_REPAIR_MATERIALS), "steel_lighter");
-        addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_CABLE_SHEARS.value()), EmiIngredient.of(KlaxonItemTags.STEEL_PLATE_TOOL_MATERIAL_REPAIR_MATERIALS), "steel_cable_shears");
+        ifPopulated(KlaxonItemTags.LIGHTER_REPAIR_MATERIALS, tagKey -> addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_LIGHTER.value()), EmiIngredient.of(tagKey), "steel_lighter"));
+        ifPopulated(KlaxonItemTags.STEEL_PLATE_TOOL_MATERIAL_REPAIR_MATERIALS, tagKey -> addSyntheticAnvilRecipe(registry, EmiStack.of(KlaxonItems.STEEL_CABLE_SHEARS.value()), EmiIngredient.of(tagKey), "steel_cable_shears"));
 
         Level level = Minecraft.getInstance().level;
         if (level != null) {
             Optional<HolderSet.Named<Item>> holders = level.registryAccess().registryOrThrow(Registries.ITEM).getTag(KlaxonItemTags.SUSPICIOUS_STEW_INGREDIENTS);
             holders.ifPresent(itemNamed -> registry.addRecipe(new KlaxonSuspiciousStewRecipe(itemNamed)));
+        }
+    }
+
+    private void ifPopulated(TagKey<Item> tagKey, Consumer<TagKey<Item>> consumer) {
+        Level level = Minecraft.getInstance().level;
+        if (level != null) {
+            Optional<HolderSet.Named<Item>> holders = level.registryAccess().registryOrThrow(Registries.ITEM).getTag(tagKey);
+            holders.ifPresent(h -> h.unwrap().ifRight(list -> {
+                if (!list.isEmpty()) {
+                    consumer.accept(tagKey);
+                }
+            }));
         }
     }
 

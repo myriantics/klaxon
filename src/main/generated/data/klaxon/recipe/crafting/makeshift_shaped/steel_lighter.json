@@ -4,6 +4,9 @@
   "constant_ingredients": [
     {
       "item": "minecraft:fire_charge"
+    },
+    {
+      "tag": "c:nuggets"
     }
   ],
   "group": "steel_lighter",
@@ -12,7 +15,7 @@
       "item": "minecraft:fire_charge"
     },
     "N": {
-      "tag": "klaxon:crude_inclusive_steel_nuggets"
+      "tag": "c:nuggets"
     },
     "P": {
       "tag": "klaxon:crude_inclusive_steel_plates"

@@ -1,6 +1,14 @@
 {
   "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "klaxon:item/steel_lighter/use_ratio_1.1754944-38",
+      "predicate": {
+        "klaxon:use_ratio": 1.1754944E-38
+      }
+    }
+  ],
   "textures": {
-    "layer0": "klaxon:item/steel_lighter"
+    "layer0": "klaxon:item/steel_lighter/closed"
   }
 }

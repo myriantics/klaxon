@@ -100,6 +100,12 @@ public abstract class KlaxonDataComponentTypes {
         return builder;
     });
 
+    public static final Holder<DataComponentType<Float>> USE_ACTION_MODEL_PREDICATE_OVERRIDE = register("use_action_model_predicate_override", builder -> {
+        builder.persistent(Codec.FLOAT);
+        builder.networkSynchronized(ByteBufCodecs.FLOAT);
+        return builder;
+    });
+
     // Items with this component flip their held item model when held in the left hand
     public static final Holder<DataComponentType<Unit>> MIRRORED_LEFT_HAND_MODEL = registerUnit("mirrored_left_hand_model");
 

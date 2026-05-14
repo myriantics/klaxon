@@ -10,6 +10,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.myriantics.klaxon.item.equipment.tools.LighterItem;
+import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,6 +24,9 @@ public abstract class LighterItemMixin {
     )
     private void klaxon$sendPacketForUsage(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration, CallbackInfo ci) {
         if (livingEntity instanceof LocalPlayer localPlayer) {
+            if (Minecraft.getInstance().screen != null) {
+                localPlayer.stopUsingItem();
+            }
             MultiPlayerGameMode gameMode = Minecraft.getInstance().gameMode;
             HitResult hitResult = Minecraft.getInstance().hitResult;
             if (gameMode != null && hitResult != null) {

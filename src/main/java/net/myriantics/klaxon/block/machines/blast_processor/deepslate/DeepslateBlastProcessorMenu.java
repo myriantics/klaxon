@@ -150,7 +150,7 @@ public class DeepslateBlastProcessorMenu extends AbstractContainerMenu {
                 BlastProcessingRecipeData newBlastProcessingData = blastProcessor.getDisplayStacks(new BlastProcessingRecipeInput(blastProcessor.getIngredientStack(), newPowerData));
 
                 // Make sure we've changed something before sending an update packet
-                if (!newPowerData.equals(catalystData) || !newBlastProcessingData.equals(this.blastProcessingData)) {
+                if (newPowerData != null && !newPowerData.equals(catalystData) || !newBlastProcessingData.equals(this.blastProcessingData)) {
                     this.catalystData = newPowerData;
                     this.blastProcessingData = newBlastProcessingData;
 

@@ -54,7 +54,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .component(KlaxonDataComponentTypes.KNOCKBACK_HIT_MODIFIER, new KnockbackHitModifierComponent(0.0f))
                     .getProperties()
             ));
-    public static final Holder<Item> STEEL_LIGHTER = registerSimpleItem("steel_lighter",
+    public static final Holder<Item> STEEL_LIGHTER = registerItem("steel_lighter",
             new LighterItem(new KlaxonItemProperties()
                     .maxDamage(KlaxonToolMaterials.STEEL_NUGGET.getUses())
                     .getProperties()

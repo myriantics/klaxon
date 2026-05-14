@@ -37,6 +37,10 @@ public abstract class KlaxonSoundEvents {
     // muffler
     public static final SoundEvent MUFFLER_APPLY_SUCCESS = register("mechanics.muffler.apply.success", SoundEvents.SHROOMLIGHT_PLACE);
     public static final SoundEvent MUFFLER_REMOVE_SUCCESS = register("mechainics.muffler.remove.success", SoundEvents.SHEEP_SHEAR);
+    // steel lighter
+    public static final SoundEvent LIGHTER_OPEN = register("item.steel_lighter.open", SoundEvents.IRON_TRAPDOOR_OPEN);
+    public static final SoundEvent LIGHTER_CLOSE = register("item.steel_lighter.open", SoundEvents.IRON_TRAPDOOR_CLOSE);
+    public static final SoundEvent LIGHTER_IGNITE_FIRE = register("item.steel_lighter.ignite_fire", SoundEvents.FLINTANDSTEEL_USE);
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");

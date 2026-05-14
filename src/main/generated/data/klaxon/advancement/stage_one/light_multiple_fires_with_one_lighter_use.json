@@ -11,6 +11,9 @@
     },
     "frame": "goal",
     "icon": {
+      "components": {
+        "klaxon:use_action_model_predicate_override": 0.67
+      },
       "count": 1,
       "id": "klaxon:steel_lighter"
     },
