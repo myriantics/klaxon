@@ -35,6 +35,8 @@ import java.util.Random;
 public class BlastProcessingEmiRecipe implements EmiRecipe {
     private static final ResourceLocation BACKGROUND_TEXTURE = KlaxonCommon.locate("textures/gui/sprites/emi/deepslate_blast_processor_emi.png");
 
+    private static final Random RANDOM = new Random();
+
     private final int unique;
     private final ResourceLocation id;
     private final List<EmiIngredient> input;
@@ -54,7 +56,7 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
         this.explosionPowerMin = recipe.value().getExplosionPowerMin();
         this.explosionPowerMax = recipe.value().getExplosionPowerMax();
         this.definitions = getValidCatalysts(Minecraft.getInstance().level.registryAccess());
-        this.unique = Minecraft.getInstance().level.random.nextInt();
+        this.unique = RANDOM.nextInt();
 
         this.input = List.of(EmiIngredient.of(recipe.value().getIngredientItem()));
     }
