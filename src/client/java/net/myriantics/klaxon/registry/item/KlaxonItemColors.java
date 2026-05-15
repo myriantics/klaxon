@@ -26,7 +26,7 @@ public abstract class KlaxonItemColors {
     private static void registerExplosiveCatalystDataComponent(int defaultColor, Holder<Item> itemHolder) {
         register(
                 (stack, tintIndex) -> {
-                    if (tintIndex > 0) {
+                    if (tintIndex == 0) {
                         return CommonColors.WHITE;
                     } else {
                         @Nullable Level level = Minecraft.getInstance().level;

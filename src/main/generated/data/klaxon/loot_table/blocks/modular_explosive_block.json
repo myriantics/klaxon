@@ -3,14 +3,19 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "klaxon:modular_explosive_block_config",
+                "klaxon:explosive_catalyst_data"
+              ],
+              "source": "block_entity"
+            }
+          ],
           "name": "klaxon:modular_explosive_block"
         }
       ],

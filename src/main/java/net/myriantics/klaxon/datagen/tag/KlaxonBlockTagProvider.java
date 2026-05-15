@@ -172,6 +172,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(KlaxonBlocks.PRECISION_DISPENSER.value())
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
+                .add(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value())
                 .add(
                         Blocks.COPPER_BULB,
                         Blocks.EXPOSED_COPPER_BULB,
@@ -212,6 +213,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 )
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
+                .add(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value())
                 .add(
                         KlaxonBlocks.CRUDE_STEEL_BLOCK.value(),
                         KlaxonBlocks.CRUDE_STEEL_CASING.value(),
@@ -917,6 +919,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_DOOR.value())
                 .add(KlaxonBlocks.STEEL_TRAPDOOR.value())
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
+                .add(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value())
                 .add(KlaxonBlocks.HEAVY_GATED_PRESSURE_PLATE.value())
                 .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(KlaxonBlocks.NETHER_REACTOR_CORE.value());

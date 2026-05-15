@@ -9,11 +9,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
+import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -33,7 +35,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.NETHER_REACTOR_CORE);
         dropSelf(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
         dropSelf(KlaxonBlocks.STEEL_WORKBENCH);
-        dropSelf(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK);
+        add(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, this::createModularExplosiveBlock);
 
         // steel
         dropSelf(KlaxonBlocks.STEEL_BLOCK);
@@ -161,5 +163,21 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
                                         )
                         )
         );
+    }
+
+    private LootTable.Builder createModularExplosiveBlock(Block block) {
+        return LootTable.lootTable()
+                .withPool(
+                        LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0f))
+                                .add(
+                                        LootItem.lootTableItem(block)
+                                                .apply(
+                                                        CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                                                                .include(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value())
+                                                                .include(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value())
+                                                )
+                                ).unwrap()
+                );
     }
 }
