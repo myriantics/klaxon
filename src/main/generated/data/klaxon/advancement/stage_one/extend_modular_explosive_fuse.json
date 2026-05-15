@@ -1,0 +1,29 @@
+{
+  "parent": "klaxon:stage_one/craft_modular_explosive",
+  "criteria": {
+    "extend_modular_explosive_fuse": {
+      "conditions": {
+        "recipe_id": "klaxon:crafting/fuse_extension/modular_explosive_block"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.extend_modular_explosive_fuse.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:string"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.extend_modular_explosive_fuse.title"
+    }
+  },
+  "requirements": [
+    [
+      "extend_modular_explosive_fuse"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

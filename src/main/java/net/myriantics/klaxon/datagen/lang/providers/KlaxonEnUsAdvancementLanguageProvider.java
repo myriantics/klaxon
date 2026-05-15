@@ -64,6 +64,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
 
         // level 3
         addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.OBTAIN_MODULAR_EXPLOSIVE,
+                "Yes Rico, Ka-boom.",
+                "Obtain a Modular Explosive Block"
+        );
+        addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.LIGHT_MULTIPLE_FIRES_WITH_ONE_LIGHTER_USE,
                 "Firewall!",
                 "Ignite multiple fires during one use of the Steel Lighter"
@@ -100,6 +105,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
         );
 
         // level 4
+        addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.EXTEND_MODULAR_EXPLOSIVE_FUSE,
+                "Right On Time",
+                "Extend the fuse of a Modular Explosive Block with String"
+        );
         addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.APPLY_ANY_MUFFLER,
                 "Peace And Quiet",

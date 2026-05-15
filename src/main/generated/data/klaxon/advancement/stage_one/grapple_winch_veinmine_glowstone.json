@@ -14,7 +14,7 @@
     "description": {
       "translate": "advancements.klaxon.stage_one.grapple_winch_veinmine_glowstone.description"
     },
-    "frame": "challenge",
+    "frame": "goal",
     "icon": {
       "count": 1,
       "id": "minecraft:glowstone"

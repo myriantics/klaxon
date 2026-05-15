@@ -71,7 +71,7 @@ public class FuseExtensionRecipe extends CustomRecipe {
             if (this.fuseExtenderIngredient.test(stack)) {
               fuseExtenderCount++;
             } else if (stack.is(this.itemToBeExtended)) {
-                stackToBeExtended = stack.copy();
+                stackToBeExtended = stack.copyWithCount(1);
             }
         }
 
