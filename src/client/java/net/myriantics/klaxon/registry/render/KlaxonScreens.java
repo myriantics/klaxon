@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.misc.KlaxonMenuTypes;
-import net.myriantics.klaxon.screen.container.DeepslateBlastProcessorScreen;
+import net.myriantics.klaxon.screen.container.blast_processor.DeepslateBlastProcessorScreen;
 import net.myriantics.klaxon.screen.container.PrecisionDispenserScreen;
 
 public abstract class KlaxonScreens {

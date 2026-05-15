@@ -48,7 +48,7 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
         super.initSlots(inventory, container);
 
         // ingredient slot
-        this.ingredientSlot = this.addSlot(new Slot(container instanceof AbstractBlastProcessorBlockEntity blastProcessor ? blastProcessor.ingredientPartition : new SimpleContainer(1), 0, 35, 53 - 36) {
+        this.ingredientSlot = this.addSlot(new Slot(container instanceof AbstractBlastProcessorBlockEntity blastProcessor ? blastProcessor.ingredientPartition : new SimpleContainer(1), 0, 17, 17) {
             @Override
             public int getMaxStackSize() {
                 return 1;
@@ -63,7 +63,7 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
         });
 
         // catalyst slot
-        this.catalystSlot = this.addSlot(new Slot(container instanceof AbstractBlastProcessorBlockEntity blastProcessor ? blastProcessor.catalystPartition : new SimpleContainer(1), 0, 35, 53) {
+        this.catalystSlot = this.addSlot(new Slot(container instanceof AbstractBlastProcessorBlockEntity blastProcessor ? blastProcessor.catalystPartition : new SimpleContainer(1), 0, 17, 53) {
             @Override
             public int getMaxStackSize() {
                 return 1;
@@ -224,5 +224,13 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
 
     public boolean producesFire() {
         return this.producesFire;
+    }
+
+    public boolean hasCatalyst() {
+        return this.catalystSlot.hasItem();
+    }
+
+    public boolean hasIngredient() {
+        return this.ingredientSlot.hasItem();
     }
 }

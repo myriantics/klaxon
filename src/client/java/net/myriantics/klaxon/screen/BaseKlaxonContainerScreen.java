@@ -10,4 +10,12 @@ public abstract class BaseKlaxonContainerScreen<T extends KlaxonBaseContainerMen
     public BaseKlaxonContainerScreen(T menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
+
+    public int getOffsetX(int x) {
+        return this.leftPos + x;
+    }
+
+    public int getOffsetY(int y) {
+        return this.topPos + y;
+    }
 }
