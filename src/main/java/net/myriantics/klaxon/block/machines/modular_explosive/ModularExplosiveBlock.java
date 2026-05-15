@@ -11,6 +11,7 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -28,7 +29,6 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
-import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class ModularExplosiveBlock extends BaseEntityBlock {
@@ -90,7 +90,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                             blockEntity.setData(data);
                             blockEntity.applyComponentsFromItemStack(stack);
                             if (level.hasNeighborSignal(pos)) {
-                                onRedstoneImpulse(level, pos, state);
+                                redstoneTrigger(level, pos, state);
                             }
                             if (player.isCreative()) {
                                 player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", stack.getDisplayName(), blockName), true);
@@ -113,7 +113,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
         super.setPlacedBy(level, pos, state, placer, stack);
 
         if (level.hasNeighborSignal(pos)) {
-            onRedstoneImpulse(level, pos, state);
+            redstoneTrigger(level, pos, state);
         }
     }
 
@@ -147,7 +147,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         super.tick(state, level, pos, random);
         if (this.shouldResetFuse(level, pos, state)) {
-            this.onRedstoneImpulse(level, pos, state);
+            this.redstoneTrigger(level, pos, state);
         }
     }
 
@@ -155,10 +155,10 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
         return !state.getValue(FUSE).isCountingDown();
     }
 
-    private void onRedstoneImpulse(Level level, BlockPos pos, BlockState state) {
+    private void redstoneTrigger(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
             if (shouldResetFuse(level, pos, state)) {
-                blockEntity.onRedstoneImpulse();
+                blockEntity.redstoneTrigger();
             }
             this.updateFuseState(level, pos, state, blockEntity.getFuseTime(), blockEntity.getMaxFuseTime());
         }
@@ -168,6 +168,17 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(FUSE, TRIGGERED);
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState original = super.getStateForPlacement(context);
+
+        if (context.getLevel().hasNeighborSignal(context.getClickedPos())) {
+            return original == null ? null : original.setValue(TRIGGERED, true);
+        } else {
+            return original;
+        }
     }
 
     @Override

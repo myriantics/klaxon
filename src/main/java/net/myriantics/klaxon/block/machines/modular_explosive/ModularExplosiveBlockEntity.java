@@ -172,7 +172,7 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
                 .add(KlaxonExplosiveCatalystContextParams.BLOCK_POS, this.getBlockPos());
     }
 
-    public void onRedstoneImpulse() {
+    public void redstoneTrigger() {
         if (this.fuseTime == 0 || this.maxFuseTime == 0) {
             this.detonate();
         } else {
