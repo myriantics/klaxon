@@ -1,7 +1,7 @@
 {
   "parent": "klaxon:block/template/cube_top_side_bottom_two_layers",
   "textures": {
-    "bottom_layer_1": "klaxon:block/modular_explosive_block/bottom_layer_1",
+    "bottom_layer_1": "klaxon:block/modular_explosive_block/bottom_static_triggered",
     "particle": "klaxon:block/modular_explosive_block/side_static_triggered",
     "side_layer_0": "klaxon:block/modular_explosive_block/far/side_tinted",
     "side_layer_1": "klaxon:block/modular_explosive_block/side_static_triggered",

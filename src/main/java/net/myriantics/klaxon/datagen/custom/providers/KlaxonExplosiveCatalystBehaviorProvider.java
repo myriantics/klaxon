@@ -37,11 +37,6 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
                 CommonColors.WHITE
         );
         this.add(
-                KlaxonExplosiveCatalystBehaviors.OBFUSCATED,
-                KlaxonExplosiveCatalystHandlers.NO_OP,
-                CommonColors.BLACK
-        );
-        this.add(
                 KlaxonExplosiveCatalystBehaviors.DEFAULT,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
                 KlaxonColors.FIERY_ORANGE.getRGB()

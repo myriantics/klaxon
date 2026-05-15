@@ -175,7 +175,7 @@ public abstract class KlaxonBlockModelSubProvider {
                 .put(KlaxonTextureSlots.SIDE_LAYER_0, inertRl.withSuffix("/side_tinted_light"))
                 .put(KlaxonTextureSlots.TOP_LAYER_1, baseRl.withSuffix("/top_static_triggered"))
                 .put(KlaxonTextureSlots.SIDE_LAYER_1, baseRl.withSuffix("/side_static_triggered"))
-                .put(KlaxonTextureSlots.BOTTOM_LAYER_1, baseRl.withSuffix("/bottom_layer_1"))
+                .put(KlaxonTextureSlots.BOTTOM_LAYER_1, baseRl.withSuffix("/bottom_static_triggered"))
                 .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_static_triggered"));
         TextureMapping inertIdleTexMap = new TextureMapping()
                 .put(KlaxonTextureSlots.TOP_LAYER_0, inertRl.withSuffix("/top_tinted_dark"))

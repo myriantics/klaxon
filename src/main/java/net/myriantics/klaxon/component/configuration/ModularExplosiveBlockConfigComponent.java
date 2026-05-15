@@ -18,39 +18,36 @@ import java.util.function.Consumer;
 
 public record ModularExplosiveBlockConfigComponent(
         int maxFuseTime,
-        int ignitionTicks,
-        boolean modifyWorld,
-        boolean exposeCatalystData
+        boolean modifyWorld
 ) implements TooltipProvider {
 
     private static final Style GREY = Style.EMPTY.withColor(CommonColors.LIGHT_GRAY);
 
-    public static final ModularExplosiveBlockConfigComponent DEFAULT = new ModularExplosiveBlockConfigComponent(0, ModularExplosiveBlock.DEFAULT_IGNITION_TICKS, true, true);
+    public static final ModularExplosiveBlockConfigComponent DEFAULT = new ModularExplosiveBlockConfigComponent(0, true);
 
     public static final Codec<ModularExplosiveBlockConfigComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             PrimitiveCodec.INT.fieldOf("max_fuse_time").forGetter(ModularExplosiveBlockConfigComponent::maxFuseTime),
-            Codec.intRange(-1, 255).lenientOptionalFieldOf("ignition_ticks", ModularExplosiveBlock.DEFAULT_IGNITION_TICKS).forGetter(ModularExplosiveBlockConfigComponent::ignitionTicks),
-            PrimitiveCodec.BOOL.fieldOf("modify_world").forGetter(ModularExplosiveBlockConfigComponent::modifyWorld),
-            PrimitiveCodec.BOOL.fieldOf("expose_catalyst_data").forGetter(ModularExplosiveBlockConfigComponent::exposeCatalystData)
+            PrimitiveCodec.BOOL.fieldOf("modify_world").forGetter(ModularExplosiveBlockConfigComponent::modifyWorld)
     ).apply(instance, ModularExplosiveBlockConfigComponent::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ModularExplosiveBlockConfigComponent> PACKET_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, ModularExplosiveBlockConfigComponent::maxFuseTime,
-            ByteBufCodecs.INT, ModularExplosiveBlockConfigComponent::ignitionTicks,
             ByteBufCodecs.BOOL, ModularExplosiveBlockConfigComponent::modifyWorld,
-            ByteBufCodecs.BOOL, ModularExplosiveBlockConfigComponent::exposeCatalystData,
             ModularExplosiveBlockConfigComponent::new
     );
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
-        tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.fuse_ticks", this.maxFuseTime).withStyle(GREY));
-        if (tooltipFlag.isAdvanced()) {
-            tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.ignition_ticks", this.ignitionTicks).withStyle(GREY));
-            if (this.modifyWorld) {
-                tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.modify_world.true").withStyle(GREY));
-            } else {
-                tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.modify_world.false").withStyle(GREY));
+        if (this.maxFuseTime == -1) {
+            tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.detonation_disabled").withStyle(GREY));
+        } else {
+            tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.fuse_ticks", this.maxFuseTime).withStyle(GREY));
+            if (tooltipFlag.isAdvanced()) {
+                if (this.modifyWorld) {
+                    tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.modify_world.true").withStyle(GREY));
+                } else {
+                    tooltipAdder.accept(Component.translatable("klaxon.text.tooltip.modular_explosive_block_config.modify_world.false").withStyle(GREY));
+                }
             }
         }
     }

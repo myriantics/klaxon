@@ -223,11 +223,6 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
     }
 
     @Override
-    public boolean shouldExposeExplosiveCatalystData() {
-        return true;
-    }
-
-    @Override
     public ExplosiveCatalystData getEffectiveCatalystData() {
         return this.level instanceof ServerLevel serverLevel
                 ? ExplosiveCatalystData.findEffective(this.getContext(serverLevel), this.getCatalystStack())

@@ -31,16 +31,12 @@ public enum ExplosiveCatalystVesselBlockProvider implements IBlockComponentProvi
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
-        Optional<ExplosiveCatalystData> data = this.decodeFromData(blockAccessor).orElse(Optional.empty());
+        ExplosiveCatalystData data = this.decodeFromData(blockAccessor).get().orElse(ExplosiveCatalystData.ZERO);
 
         MutableComponent explosionPowerComponent;
-        if (data.isEmpty()) {
-            explosionPowerComponent = Component.literal("67").setStyle(OBFUSCATED);
-        } else {
-            explosionPowerComponent = Component.literal("" + data.get().explosionPower());
-            if (data.get().producesFire()) {
-                explosionPowerComponent = explosionPowerComponent.withColor(KlaxonColors.ORANGE.getRGB());
-            }
+        explosionPowerComponent = Component.literal("" + data.explosionPower());
+        if (data.producesFire()) {
+            explosionPowerComponent = explosionPowerComponent.withColor(KlaxonColors.ORANGE.getRGB());
         }
         iTooltip.add(Component.translatable(EXPLOSION_POWER, explosionPowerComponent));
     }
@@ -52,7 +48,7 @@ public enum ExplosiveCatalystVesselBlockProvider implements IBlockComponentProvi
 
     @Override
     public Optional<ExplosiveCatalystData> streamData(BlockAccessor blockAccessor) {
-        if (blockAccessor.getBlockEntity() instanceof ExplosiveCatalystVessel vessel && (vessel.shouldExposeExplosiveCatalystData() || blockAccessor.getPlayer().hasInfiniteMaterials())) {
+        if (blockAccessor.getBlockEntity() instanceof ExplosiveCatalystVessel vessel) {
             return Optional.ofNullable(vessel.getEffectiveCatalystData());
         } else {
             return Optional.empty();

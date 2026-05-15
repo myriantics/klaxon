@@ -18,8 +18,9 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
     }
 
     private void generateActionBartext() {
-        addActionBarText("catalyst_copy_from_to", "Cloned Explosive Catalyst Data from %1$s to %2$s");
-        addActionBarText("catalyst_apply_from_to", "Applied Explosive Catalyst %1$s to %2$s");
+        addActionBarText("explosive_catalyst_data.copy_from_to", "Cloned Explosive Catalyst Data from %1$s to %2$s");
+        addActionBarText("explosive_catalyst_data.apply_from_to", "Applied Explosive Catalyst %1$s to %2$s");
+        addActionBarText("explosive_catalyst_data.matches", "Explosive Catalyst Data of %1$s already matches %2$s");
     }
 
     private void generateTooltipText() {
@@ -32,7 +33,7 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
 
         // modular explosive
         addTooltipText("modular_explosive_block_config.fuse_ticks", "Fuse Ticks: %s");
-        addTooltipText("modular_explosive_block_config.ignition_ticks", "Ignition Ticks: %s");
+        addTooltipText("modular_explosive_block_config.detonation_disabled", "Detonation Disabled");
         addTooltipText("modular_explosive_block_config.modify_world.true", "Modifies World");
         addTooltipText("modular_explosive_block_config.modify_world.false", "Does Not Modify World");
 

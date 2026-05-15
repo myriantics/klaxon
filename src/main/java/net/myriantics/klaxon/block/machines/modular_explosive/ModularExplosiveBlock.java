@@ -73,58 +73,34 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                 if (state.getValue(FUSE).isCountingDown()) {
                     if (!level.isClientSide()) {
                         blockEntity.defuse();
-                        blockEntity.unseal();
                     }
                     return ItemInteractionResult.SUCCESS;
-                } else if (blockEntity.isSealed()) {
+                }
+            }
+
+            ExplosiveCatalystData data = ExplosiveCatalystData.findRaw(level, stack);
+            if (data != null) {
+                ExplosiveCatalystData existing = blockEntity.getRawData();
+                if (!existing.equals(data)) {
                     if (!level.isClientSide()) {
-                        blockEntity.unseal();
-                    }
-                    return ItemInteractionResult.SUCCESS;
-                }
-            }
-
-            if (stack.is(KlaxonItemTags.SEALANTS) && !blockEntity.isSealed()) {
-                if (!level.isClientSide()) {
-                    blockEntity.seal();
-                    if (!player.isCreative()) {
-                        if (stack.isDamageableItem()) {
-                            stack.hurtAndBreak(1, player, EquipmentSlotHelper.convert(hand));
+                        Component blockName = blockEntity instanceof Nameable nameable ? nameable.getDisplayName() : state.getBlock().getName();
+                        if (blockEntity.getRawData().equals(data)) {
+                            player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.matches", stack.getDisplayName(), blockName), true);
                         } else {
-                            ItemStack remainder = stack.getRecipeRemainder().copy();
-                            if (!remainder.isEmpty()) {
-                                if (!player.addItem(remainder)) {
-                                    player.drop(remainder, false);
-                                }
-                            }
-                            stack.shrink(1);
-                        }
-                    }
-                }
-                return ItemInteractionResult.SUCCESS;
-            }
-
-            if (!blockEntity.isSealed()) {
-                ExplosiveCatalystData data = ExplosiveCatalystData.findRaw(level, stack);
-                if (data != null) {
-                    ExplosiveCatalystData existing = blockEntity.getRawData();
-                    if (!existing.equals(data)) {
-                        if (!level.isClientSide()) {
                             blockEntity.setData(data);
                             blockEntity.applyComponentsFromItemStack(stack);
                             if (level.hasNeighborSignal(pos)) {
                                 onRedstoneImpulse(level, pos, state);
                             }
-                            Component blockName = blockEntity instanceof Nameable nameable ? nameable.getDisplayName() : state.getBlock().getName();
                             if (player.isCreative()) {
-                                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.catalyst_copy_from_to", stack.getDisplayName(), blockName), true);
+                                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", stack.getDisplayName(), blockName), true);
                             } else {
-                                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.catalyst_apply_from_to", stack.getDisplayName(), blockName), true);
+                                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.apply_from_to", stack.getDisplayName(), blockName), true);
                                 stack.shrink(1);
                             }
                         }
-                        return ItemInteractionResult.SUCCESS;
                     }
+                    return ItemInteractionResult.SUCCESS;
                 }
             }
 
@@ -158,14 +134,8 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
             boolean triggered = state.getValue(TRIGGERED);
 
             if (powered != triggered) {
-                int ignitionTicks = level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity be ? be.getIgnitionTicks() : DEFAULT_IGNITION_TICKS;
-
-                if (powered && ignitionTicks != -1) { // -1 ignition ticks disables ignition
-                    if (ignitionTicks == 0) { // 0 ignition ticks pops immediately
-                        this.tick(state, serverLevel, pos, level.getRandom());
-                    } else {
-                        level.scheduleTick(pos, this, level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity be ? be.getIgnitionTicks() : DEFAULT_IGNITION_TICKS);
-                    }
+                if (powered) {
+                    level.scheduleTick(pos, this, DEFAULT_IGNITION_TICKS);
                 }
 
                 level.setBlock(pos, state.setValue(TRIGGERED, powered), Block.UPDATE_ALL_IMMEDIATE);

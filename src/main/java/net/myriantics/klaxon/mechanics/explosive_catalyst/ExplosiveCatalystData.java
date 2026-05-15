@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -49,7 +48,6 @@ public record ExplosiveCatalystData(ResourceKey<ExplosiveCatalystBehavior> behav
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, Optional<ExplosiveCatalystData>> OPTIONAL_STREAM_CODEC = ByteBufCodecs.optional(STREAM_CODEC);
 
-    public static final ExplosiveCatalystData OBFUSCATED = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.OBFUSCATED, 0.0, false);
     public static final ExplosiveCatalystData ZERO = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.NO_OP, 0.0, false);
 
 

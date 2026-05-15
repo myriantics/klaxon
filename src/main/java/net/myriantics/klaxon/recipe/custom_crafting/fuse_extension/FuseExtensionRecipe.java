@@ -98,15 +98,14 @@ public class FuseExtensionRecipe extends CustomRecipe {
     }
 
     public static boolean addFuseTicks(ItemStack stack, int addedFuseTicks) {
-        if (stack.get(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value()) instanceof ModularExplosiveBlockConfigComponent component) {
-            int existingFuseTicks = component.maxFuseTime();
+        if (stack.get(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value()) instanceof ModularExplosiveBlockConfigComponent(
+                int existingFuseTicks, boolean modifyWorld
+        ) && existingFuseTicks != -1) {
             stack.set(
                     KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(),
                     new ModularExplosiveBlockConfigComponent(
                             existingFuseTicks + addedFuseTicks,
-                            component.ignitionTicks(),
-                            component.modifyWorld(),
-                            component.exposeCatalystData()
+                            modifyWorld
                     )
             );
             return true;

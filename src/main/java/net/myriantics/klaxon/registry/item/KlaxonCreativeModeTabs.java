@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
 public abstract class KlaxonCreativeModeTabs {
@@ -50,7 +51,12 @@ public abstract class KlaxonCreativeModeTabs {
                 entries.accept(KlaxonItems.STEEL_CASING.value());
                 entries.accept(KlaxonItems.CRUDE_STEEL_CASING.value());
                 entries.accept(KlaxonItems.STEEL_WORKBENCH.value());
+
                 entries.accept(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK.value());
+                ItemStack cosmeticModularExplosive = new ItemStack(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK);
+                cosmeticModularExplosive.set(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(), new ModularExplosiveBlockConfigComponent(-1, false));
+                entries.accept(cosmeticModularExplosive);
+
                 entries.accept(KlaxonItems.HEAVY_GATED_PRESSURE_PLATE.value());
                 entries.accept(KlaxonItems.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value());
                 // entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);
