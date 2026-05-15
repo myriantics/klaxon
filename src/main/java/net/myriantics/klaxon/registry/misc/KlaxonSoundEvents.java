@@ -41,6 +41,10 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent LIGHTER_OPEN = register("item.steel_lighter.open", SoundEvents.IRON_TRAPDOOR_OPEN);
     public static final SoundEvent LIGHTER_CLOSE = register("item.steel_lighter.open", SoundEvents.IRON_TRAPDOOR_CLOSE);
     public static final SoundEvent LIGHTER_IGNITE_FIRE = register("item.steel_lighter.ignite_fire", SoundEvents.FLINTANDSTEEL_USE);
+    // modular explosive
+    public static final SoundEvent MODULAR_EXPLOSIVE_CLONE_CATALYST = register("block.modular_explosive.clone_catalyst", SoundEvents.RESPAWN_ANCHOR_CHARGE);
+    public static final SoundEvent MODULAR_EXPLOSIVE_INSERT_CATALYST = register("block.modular_explosive.insert_catalyst", SoundEvents.PISTON_CONTRACT);
+    public static final SoundEvent MODULAR_EXPLOSIVE_CATALYST_MATCH = register("block.modular_explosive.catalyst_match", SoundEvents.NOTE_BLOCK_COW_BELL.value());
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");

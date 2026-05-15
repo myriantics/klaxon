@@ -2,8 +2,11 @@ package net.myriantics.klaxon.block.machines.modular_explosive;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -24,10 +27,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,32 +83,43 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                 }
             }
 
-            ExplosiveCatalystData data = ExplosiveCatalystData.findRaw(level, stack);
-            if (data != null) {
-                ExplosiveCatalystData existing = blockEntity.getRawData();
-                if (!existing.equals(data)) {
-                    if (!level.isClientSide()) {
-                        Component blockName = blockEntity instanceof Nameable nameable ? nameable.getDisplayName() : state.getBlock().getName();
-                        if (blockEntity.getRawData().equals(data)) {
-                            player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.matches", stack.getDisplayName(), blockName), true);
-                        } else {
-                            blockEntity.setData(data);
-                            blockEntity.applyComponentsFromItemStack(stack);
-                            if (level.hasNeighborSignal(pos)) {
-                                redstoneTrigger(level, pos, state);
-                            }
-                            if (player.isCreative()) {
-                                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", stack.getDisplayName(), blockName), true);
-                            } else {
-                                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.apply_from_to", stack.getDisplayName(), blockName), true);
-                                stack.shrink(1);
-                            }
+            @Nullable ExplosiveCatalystData appliedData = ExplosiveCatalystData.findRaw(level, stack);
+            if (appliedData != null) {
+
+                if (!level.isClientSide()) {
+                    Component blockName = blockEntity instanceof Nameable nameable ? nameable.getDisplayName() : state.getBlock().getName();
+                    final SoundEvent soundEvent;
+                    final Holder.Reference<GameEvent> gameEvent;
+                    if (blockEntity.getRawData().equals(appliedData)) {
+                        gameEvent = null;
+                        soundEvent = KlaxonSoundEvents.MODULAR_EXPLOSIVE_CATALYST_MATCH;
+                        player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.matches", stack.getDisplayName(), blockName), true);
+                    } else {
+                        blockEntity.setData(appliedData);
+                        blockEntity.applyComponentsFromItemStack(stack);
+                        if (level.hasNeighborSignal(pos)) {
+                            redstoneTrigger(level, pos, state);
                         }
+                        if (player.isCreative()) {
+                            player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", stack.getDisplayName(), blockName), true);
+                            soundEvent = KlaxonSoundEvents.MODULAR_EXPLOSIVE_CLONE_CATALYST;
+                        } else {
+                            player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.apply_from_to", stack.getDisplayName(), blockName), true);
+                            stack.shrink(1);
+                            soundEvent = KlaxonSoundEvents.MODULAR_EXPLOSIVE_INSERT_CATALYST;
+                        }
+                        gameEvent = GameEvent.BLOCK_CHANGE;
                     }
-                    return ItemInteractionResult.SUCCESS;
+
+                    RandomSource random = level.getRandom();
+                    level.playSound(null, pos, soundEvent, SoundSource.BLOCKS, random.nextFloat() * 0.2f + 0.5f, random.nextFloat() * 0.3f + 0.3f);
+                    if (gameEvent != null) {
+                        level.gameEvent(player, gameEvent, pos);
+                    }
                 }
             }
 
+            return ItemInteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
