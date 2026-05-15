@@ -16,7 +16,7 @@ public abstract class KlaxonBlockColors {
     static {
         register((blockState, blockAndTintGetter, blockPos, tintIndex) -> {
             Level level = Minecraft.getInstance().level;
-            if (tintIndex > 0) {
+            if (tintIndex == 0) {
                 return -1;
             }
             if (level != null && level.getBlockEntity(blockPos) instanceof ModularExplosiveBlockEntity modularExplosiveBlockEntity) {

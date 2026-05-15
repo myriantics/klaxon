@@ -9,12 +9,12 @@
 			"to": [16, 16, 16],
 			"color": 3,
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "side_layer_0", "tintindex": 0},
-				"east": {"uv": [0, 0, 16, 16], "texture": "side_layer_0", "tintindex": 0},
-				"south": {"uv": [0, 0, 16, 16], "texture": "side_layer_0", "tintindex": 0},
-				"west": {"uv": [0, 0, 16, 16], "texture": "side_layer_0", "tintindex": 0},
-				"up": {"uv": [0, 0, 16, 16], "texture": "top_layer_0", "tintindex": 0},
-				"down": {"uv": [0, 0, 16, 16], "texture": "bottom_layer_0", "tintindex": 0}
+				"north": {"uv": [0, 0, 16, 16], "texture": "side_layer_0", "tintindex": 1},
+				"east": {"uv": [0, 0, 16, 16], "texture": "side_layer_0", "tintindex": 1},
+				"south": {"uv": [0, 0, 16, 16], "texture": "side_layer_0", "tintindex": 1},
+				"west": {"uv": [0, 0, 16, 16], "texture": "side_layer_0", "tintindex": 1},
+				"up": {"uv": [0, 0, 16, 16], "texture": "top_layer_0", "tintindex": 1},
+				"down": {"uv": [0, 0, 16, 16], "texture": "bottom_layer_0", "tintindex": 1}
 			}
 		},
 		{
@@ -23,12 +23,12 @@
 			"to": [16, 16, 16],
 			"color": 9,
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "side_layer_1", "tintindex": 1},
-				"east": {"uv": [0, 0, 16, 16], "texture": "side_layer_1", "tintindex": 1},
-				"south": {"uv": [0, 0, 16, 16], "texture": "side_layer_1", "tintindex": 1},
-				"west": {"uv": [0, 0, 16, 16], "texture": "side_layer_1", "tintindex": 1},
-				"up": {"uv": [0, 0, 16, 16], "texture": "top_layer_1", "tintindex": 1},
-				"down": {"uv": [0, 0, 16, 16], "texture": "bottom_layer_1", "tintindex": 1}
+				"north": {"uv": [0, 0, 16, 16], "texture": "side_layer_1", "tintindex": 0},
+				"east": {"uv": [0, 0, 16, 16], "texture": "side_layer_1", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "side_layer_1", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "side_layer_1", "tintindex": 0},
+				"up": {"uv": [0, 0, 16, 16], "texture": "top_layer_1", "tintindex": 0},
+				"down": {"uv": [0, 0, 16, 16], "texture": "bottom_layer_1", "tintindex": 0}
 			}
 		}
 	],
