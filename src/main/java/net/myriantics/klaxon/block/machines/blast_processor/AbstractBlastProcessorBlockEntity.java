@@ -141,15 +141,15 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
             return new BlastProcessingRecipeData(outputStacks, recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax());
         } else {
-            return BlastProcessingRecipeData.ZERO;
+            return null;
         }
     }
 
-    public BlastProcessingRecipeData getDisplayStacks(BlastProcessingRecipeInput input) {
+    public @Nullable BlastProcessingRecipeData getDisplayStacks(BlastProcessingRecipeInput input) {
         Level level = this.level;
         ExplosiveCatalystData catalystData = input.getCatalystData();
         if (level == null || this.getIngredientStack().isEmpty()) {
-            return BlastProcessingRecipeData.ZERO;
+            return null;
         }
 
         Optional<BlastProcessingRecipe> match = selectBlastProcessingRecipe(level, input, input.getCatalystData());
@@ -159,16 +159,16 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
             ItemStack[] rawOutput = recipe.getRecipeOutputCompound().getDisplayStacks();
             List<ItemStack> outputStacks = new ArrayList<>(rawOutput.length);
 
-            for (int i = 0; i < rawOutput.length; i++) {
-                outputStacks.set(i, catalystData.producesFire()
-                        ? this.tryPerformBlastingSmelting(level, rawOutput[i])
-                        : rawOutput[i]
+            for (ItemStack stack : rawOutput) {
+                outputStacks.add(catalystData.producesFire()
+                        ? this.tryPerformBlastingSmelting(level, stack)
+                        : stack
                 );
             }
 
             return new BlastProcessingRecipeData(outputStacks, recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax());
         } else {
-            return BlastProcessingRecipeData.ZERO;
+            return null;
         }
     }
 

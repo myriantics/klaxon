@@ -7,7 +7,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -17,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
-import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
+import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
@@ -28,7 +30,9 @@ import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.container.ContainerPartition;
 import org.jetbrains.annotations.Nullable;
 
-public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorScreenSyncPacket>, WorldlyContainer {
+public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket>, WorldlyContainer {
+
+    private static final ContainerData EMPTY = new SimpleContainerData(0);
 
     protected DeepslateBlastProcessorBlockEntity(BlockEntityType<DeepslateBlastProcessorBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -40,7 +44,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
     @Override
     protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
-        DeepslateBlastProcessorMenu screenHandler = new DeepslateBlastProcessorMenu(syncId, playerInventory, this, ContainerLevelAccess.create(level, worldPosition));
+        DeepslateBlastProcessorMenu screenHandler = new DeepslateBlastProcessorMenu(syncId, playerInventory, this, EMPTY, ContainerLevelAccess.create(level, worldPosition));
         screenHandler.slotsChanged(this);
         return screenHandler;
     }
@@ -146,18 +150,20 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     }
 
     @Override
-    public BlastProcessorScreenSyncPacket getScreenOpeningData(ServerPlayer player) {
+    public BlastProcessorMenuPowerSyncPacket getScreenOpeningData(ServerPlayer player) {
 
         ExplosiveCatalystData explosiveCatalystData = this.getEffectiveCatalystData();
         if (explosiveCatalystData == null) {
             explosiveCatalystData = ExplosiveCatalystData.ZERO;
         }
         BlastProcessingRecipeData blastProcessingRecipeData = this.getDisplayStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), explosiveCatalystData));
+        if (blastProcessingRecipeData == null) {
+            blastProcessingRecipeData = BlastProcessingRecipeData.ZERO;
+        }
 
-        return new BlastProcessorScreenSyncPacket(
+        return new BlastProcessorMenuPowerSyncPacket(
                 blastProcessingRecipeData.explosionPowerMin(),
                 blastProcessingRecipeData.explosionPowerMax(),
-                blastProcessingRecipeData.outputStacks(),
                 explosiveCatalystData.explosionPower(),
                 explosiveCatalystData.producesFire()
         );

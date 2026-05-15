@@ -41,9 +41,9 @@ public class DeepslateBlastProcessorScreen extends AbstractContainerScreen<Deeps
     }
 
     private void updateRecipeDataDisplay(GuiGraphics context) {
-        String explosionPowerMin = Double.valueOf(menu.explosionPowerMin).toString();
-        String explosionPower = Double.valueOf(menu.explosionPower).toString();
-        String explosionPowerMax = Double.valueOf(menu.explosionPowerMax).toString();
+        String explosionPowerMin = Double.valueOf(menu.getExplosionPowerMin()).toString();
+        String explosionPower = Double.valueOf(menu.getExplosionPower()).toString();
+        String explosionPowerMax = Double.valueOf(menu.getExplosionPowerMax()).toString();
 
         context.drawString(font, explosionPowerMax.substring(0, explosionPowerMax.indexOf('.') + 2), getOffsetX(63), getOffsetY(22), 16777215, false);
         context.drawString(font, explosionPower.substring(0, explosionPower.indexOf('.') + 2), getOffsetX(63), getOffsetY(40), 16777215, false);

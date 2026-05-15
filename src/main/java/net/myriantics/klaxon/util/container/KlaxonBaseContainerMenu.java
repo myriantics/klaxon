@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class KlaxonBaseContainerMenu extends AbstractContainerMenu {
 
     protected final ContainerLevelAccess access;
+    protected final Inventory playerInventory;
     protected final Container container;
 
     // client ctor
@@ -27,6 +28,7 @@ public abstract class KlaxonBaseContainerMenu extends AbstractContainerMenu {
     protected KlaxonBaseContainerMenu(MenuType<?> menuType, int containerId, Inventory playerInventory, Container container, ContainerLevelAccess access) {
         super(menuType, containerId);
         this.access = access;
+        this.playerInventory = playerInventory;
         this.container = container;
         this.initSlots(playerInventory, container);
     }

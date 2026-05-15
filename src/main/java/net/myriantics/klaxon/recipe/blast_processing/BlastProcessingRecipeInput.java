@@ -18,7 +18,7 @@ public class BlastProcessingRecipeInput implements RecipeInput {
     }
 
     public ExplosiveCatalystData getCatalystData() {
-        return catalystData;
+        return this.catalystData == null ? ExplosiveCatalystData.ZERO : this.catalystData;
     }
 
     @Override

@@ -2,17 +2,19 @@ package net.myriantics.klaxon.util.container;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class KlaxonAdvancedContainerMenu extends KlaxonBaseContainerMenu {
 
     protected final ContainerData data;
 
     // client ctor
-    protected KlaxonAdvancedContainerMenu(MenuType<?> menuType, int containerId, Inventory playerInventory, KlaxonClientMenuInitializer<KlaxonBaseContainerMenu> initializer) {
+    protected <T extends KlaxonAdvancedContainerMenu> KlaxonAdvancedContainerMenu(MenuType<?> menuType, int containerId, Inventory playerInventory, KlaxonClientMenuInitializer<T> initializer) {
         this(
                 menuType,
                 containerId,
@@ -21,7 +23,9 @@ public abstract class KlaxonAdvancedContainerMenu extends KlaxonBaseContainerMen
                 initializer.createClientContainerData(),
                 ContainerLevelAccess.NULL
         );
-        initializer.initialize(this);
+
+        //noinspection unchecked
+        initializer.initialize((T) this);
     }
 
     // server ctor

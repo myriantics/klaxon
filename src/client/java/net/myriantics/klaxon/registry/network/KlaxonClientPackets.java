@@ -8,7 +8,7 @@ public abstract class KlaxonClientPackets {
 
     // client only
     public static void registerS2CPacketRecievers() {
-        ClientPlayNetworking.registerGlobalReceiver(BlastProcessorScreenSyncPacket.ID, KlaxonClientPlayNetworkHandler::blastProcessorScreenSync);
+        ClientPlayNetworking.registerGlobalReceiver(BlastProcessorMenuPowerSyncPacket.ID, KlaxonClientPlayNetworkHandler::blastProcessorScreenSync);
         ClientPlayNetworking.registerGlobalReceiver(KlaxonWorldEventPacket.ID, KlaxonClientPlayNetworkHandler::processKlaxonWorldEvent);
         ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionSyncPacket.ID, KlaxonClientPlayNetworkHandler::grappleWinchConnectionSync);
         ClientPlayNetworking.registerGlobalReceiver(GrappleWinchConnectionDiscardPacket.ID, KlaxonClientPlayNetworkHandler::grappleWinchConnectionDiscard);

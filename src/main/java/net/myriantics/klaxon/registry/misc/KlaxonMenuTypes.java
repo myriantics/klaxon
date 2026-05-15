@@ -10,12 +10,12 @@ import net.minecraft.world.inventory.MenuType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorMenu;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserMenu;
-import net.myriantics.klaxon.networking.s2c.BlastProcessorScreenSyncPacket;
+import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
 
 public abstract class KlaxonMenuTypes {
-    public static final Holder<ExtendedScreenHandlerType<DeepslateBlastProcessorMenu, BlastProcessorScreenSyncPacket>> DEEPSLATE_BLAST_PROCESSOR = register(
+    public static final Holder<ExtendedScreenHandlerType<DeepslateBlastProcessorMenu, BlastProcessorMenuPowerSyncPacket>> DEEPSLATE_BLAST_PROCESSOR = register(
             "deepslate_blast_processor",
-            new ExtendedScreenHandlerType<>(DeepslateBlastProcessorMenu::new, BlastProcessorScreenSyncPacket.PACKET_CODEC)
+            new ExtendedScreenHandlerType<>(DeepslateBlastProcessorMenu::new, BlastProcessorMenuPowerSyncPacket.PACKET_CODEC)
     );
     public static final Holder<MenuType<PrecisionDispenserMenu>> PRECISION_DISPENSER = registerSimple(
             "precision_dispenser",

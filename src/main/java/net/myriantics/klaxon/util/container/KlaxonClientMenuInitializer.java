@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import org.jetbrains.annotations.Nullable;
 
-public interface KlaxonClientMenuInitializer<T extends KlaxonBaseContainerMenu> {
+public interface KlaxonClientMenuInitializer<T extends KlaxonAdvancedContainerMenu> {
     int getContainerSize();
 
     default int getContainerDataSize() {

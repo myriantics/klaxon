@@ -26,7 +26,7 @@ public abstract class KlaxonPackets {
 
         // s2c
         PayloadTypeRegistry.playS2C().register(SteelBlastProcessorExhaustLaunchPacket.ID, SteelBlastProcessorExhaustLaunchPacket.STREAM_CODEC);
-        PayloadTypeRegistry.playS2C().register(BlastProcessorScreenSyncPacket.ID, BlastProcessorScreenSyncPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(BlastProcessorMenuPowerSyncPacket.ID, BlastProcessorMenuPowerSyncPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(KlaxonWorldEventPacket.ID, KlaxonWorldEventPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionSyncPacket.ID, GrappleWinchConnectionSyncPacket.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(GrappleWinchConnectionDiscardPacket.ID, GrappleWinchConnectionDiscardPacket.PACKET_CODEC);
