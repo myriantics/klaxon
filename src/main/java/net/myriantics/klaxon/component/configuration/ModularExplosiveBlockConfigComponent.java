@@ -26,7 +26,7 @@ public record ModularExplosiveBlockConfigComponent(
     public static final ModularExplosiveBlockConfigComponent DEFAULT = new ModularExplosiveBlockConfigComponent(0, true);
 
     public static final Codec<ModularExplosiveBlockConfigComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            PrimitiveCodec.INT.fieldOf("max_fuse_time").forGetter(ModularExplosiveBlockConfigComponent::maxFuseTime),
+            Codec.intRange(-1, Integer.MAX_VALUE).fieldOf("max_fuse_time").forGetter(ModularExplosiveBlockConfigComponent::maxFuseTime),
             PrimitiveCodec.BOOL.fieldOf("modify_world").forGetter(ModularExplosiveBlockConfigComponent::modifyWorld)
     ).apply(instance, ModularExplosiveBlockConfigComponent::new));
 
@@ -35,6 +35,10 @@ public record ModularExplosiveBlockConfigComponent(
             ByteBufCodecs.BOOL, ModularExplosiveBlockConfigComponent::modifyWorld,
             ModularExplosiveBlockConfigComponent::new
     );
+
+    public boolean isDetonationDisabled() {
+        return this.maxFuseTime == -1;
+    }
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {

@@ -9,6 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockDispenserBehavior;
 import net.myriantics.klaxon.mechanics.wrench.WrenchDispenserBehavior;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationDispenserBehavior;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -23,6 +24,7 @@ public abstract class KlaxonDispenserBehaviors {
         register(KlaxonItems.STEEL_WRENCH, new WrenchDispenserBehavior());
         register(KlaxonItems.STEEL_GRAPPLE_CLAW, new ProjectileDispenseBehavior(KlaxonItems.STEEL_GRAPPLE_CLAW.value()));
         register(KlaxonItems.STEEL_LIGHTER, DispenserBlock.DISPENSER_REGISTRY.get(Items.FLINT_AND_STEEL));
+        register(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK, new ModularExplosiveBlockDispenserBehavior());
     }
 
     private static void register(Holder<Item> itemHolder, DispenseItemBehavior behavior) {

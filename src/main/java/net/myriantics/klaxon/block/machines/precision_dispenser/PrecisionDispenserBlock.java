@@ -56,7 +56,8 @@ public class PrecisionDispenserBlock extends DispenserBlock implements Mufflable
 
     @Override
     public boolean hasMuffler(Level level, BlockPos pos) {
-        return level.getBlockState(pos).getValue(MUFFLED);
+        BlockState state = level.getBlockState(pos);
+        return state.hasProperty(MUFFLED) && state.getValue(MUFFLED);
     }
 
     @Override

@@ -196,7 +196,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
     @Override
     public boolean hasMuffler(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
-        return state.getValue(MUFFLED);
+        return state.hasProperty(MUFFLED) && state.getValue(MUFFLED);
     }
 
     @Override
