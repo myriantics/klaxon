@@ -7,6 +7,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;

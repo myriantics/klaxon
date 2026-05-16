@@ -1,8 +1,10 @@
 {
   "type": "klaxon:blast_processing",
-  "explosion_power_max": 4.0,
-  "explosion_power_min": 1.5,
-  "input_ingredient": {
+  "bounds": {
+    "explosion_power_max": 4.0,
+    "explosion_power_min": 1.5
+  },
+  "ingredient": {
     "item": "klaxon:steel_casing"
   },
   "recipe_output_compound": [

@@ -94,7 +94,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                 if (block.isFieryExhaust(aboveState) && behavior.value().isNoOp() && catalystData.explosionPower() > 0) {
                     this.selfDestruct(level, pos, context, catalystData, behavior.value());
                 } else {
-                    BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData));
+                    BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData, level.getRandom()));
 
                     if (catalystData.explosionPower() > 0) {
                         this.catalystPartition.clearContent();

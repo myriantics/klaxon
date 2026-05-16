@@ -5,7 +5,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -14,21 +13,19 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.datagen.NamedIngredient;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
-import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
-import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import org.jetbrains.annotations.Nullable;
 
@@ -364,43 +361,40 @@ public abstract class KlaxonRecipeSubProvider {
     }
 
     public void addBlastProcessingRecipe(NamedIngredient input,
-                                         double explosionPowerMin, double explosionPowerMax,
+                                         float explosionPowerMin, float explosionPowerMax,
                                          ItemStack output, final ResourceCondition... conditions) {
         addBlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, RecipeOutputCompound.of(output), conditions);
     }
 
     public void addBlastProcessingRecipe(NamedIngredient input,
-                                         double explosionPowerMin, double explosionPowerMax,
+                                         float explosionPowerMin, float explosionPowerMax,
                                          Function<RecipeOutputCompound.Builder, RecipeOutputCompound.Builder> function, final ResourceCondition... conditions) {
         addBlastProcessingRecipe(input, explosionPowerMin, explosionPowerMax, function.apply(RecipeOutputCompound.builder()).build(), conditions);
     }
 
     public void addExplosiveDisassemblyRecipe(NamedIngredient input,
-                                         double explosionPowerMin, double explosionPowerMax,
+                                         float explosionPowerMin, float explosionPowerMax,
                                          Function<RecipeOutputCompound.Builder, RecipeOutputCompound.Builder> function, final ResourceCondition... conditions) {
         addBlastProcessingRecipe(input.withName("recycling/" + input.getName()), explosionPowerMin, explosionPowerMax, function.apply(RecipeOutputCompound.builder()).build(), conditions);
     }
 
     public void addDecoratedPotCrackingBlastProcessingRecipe(NamedIngredient input,
-                                         double explosionPowerMin, double explosionPowerMax,
-                                         RecipeOutputCompound outputCompound, final ResourceCondition... conditions) {
-        String path = outputCompound.size() > 1
-                ? input.getName()
-                : getItemName(outputCompound.getDisplayStacks()[0].getItem()) + "_from_" + input.getName();
-
+                                                             float explosionPowerMin, float explosionPowerMax,
+                                                             final ResourceCondition... conditions) {
+        String path = input.getName();
         ResourceLocation recipeId = provider.computeRecipeIdentifier(
                 KlaxonRecipeTypes.BLAST_PROCESSING,
                 path,
                 conditions
         );
 
-        DecoratedPotCrackingBlastProcessingRecipe recipe = new DecoratedPotCrackingBlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax, outputCompound);
+        DecoratedPotCrackingBlastProcessingRecipe recipe = new DecoratedPotCrackingBlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
 
     public void addBlastProcessingRecipe(NamedIngredient input,
-                                         double explosionPowerMin, double explosionPowerMax,
+                                         float explosionPowerMin, float explosionPowerMax,
                                          RecipeOutputCompound outputCompound, final ResourceCondition... conditions) {
         String path = outputCompound.size() > 1
                 ? input.getName()
@@ -412,7 +406,7 @@ public abstract class KlaxonRecipeSubProvider {
                 conditions
         );
 
-        BlastProcessingRecipe recipe = new BlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax, outputCompound);
+        StandardBlastProcessingRecipe recipe = new StandardBlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax, outputCompound);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

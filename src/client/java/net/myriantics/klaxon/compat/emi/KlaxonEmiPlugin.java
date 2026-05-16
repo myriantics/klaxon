@@ -25,9 +25,10 @@ import net.myriantics.klaxon.compat.emi.recipes.special.FuseExtensionEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.special.KlaxonSuspiciousStewRecipe;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
-import net.myriantics.klaxon.item.equipment.tools.LighterItem;
 import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
@@ -56,6 +57,7 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registerRecipes(registry);
         ExplosiveCatalystDefinition[] explosiveCatalystDefinitions = this.initExplosiveCatalystDefinition(registry);
         initCustomCraftingRecipes(registry, explosiveCatalystDefinitions);
+        initBlastProcessingRecipes(registry);
 
         Level level = Minecraft.getInstance().level;
         if (level != null) {
@@ -118,8 +120,15 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         return new ExplosiveCatalystDefinition[0];
     }
 
+    private void initBlastProcessingRecipes(EmiRegistry registry) {
+        for (RecipeHolder<BlastProcessingRecipe> holder : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.BLAST_PROCESSING.value())) {
+            if (holder.value() instanceof StandardBlastProcessingRecipe standardBlastProcessingRecipe) {
+                registry.addRecipe(new StandardBlastProcessingEmiRecipe(standardBlastProcessingRecipe, holder.id()));
+            }
+        }
+    }
+
     private void registerRecipes(EmiRegistry registry) {
-        addAll(registry, KlaxonRecipeTypes.BLAST_PROCESSING, (recipe) -> new BlastProcessingEmiRecipe(recipe, registry, recipe.id()));
         registerMiscRecipes(registry);
         addAllConditional(registry, KlaxonRecipeTypes.NETHER_REACTION, NetherReactionEmiRecipe::new, (recipeEntry -> !recipeEntry.id().getPath().contains("_wall_") && !KlaxonBlockItems.getBlockDisplayStack(recipeEntry.value().getOutputBlock()).getItem().equals(Items.BARRIER)));
         addAll(registry, KlaxonRecipeTypes.WORLD_ITEM_APPLICATION, (entry) -> {

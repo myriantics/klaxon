@@ -1,0 +1,10 @@
+{
+  "type": "klaxon:blast_processing/decorated_pot_cracking",
+  "bounds": {
+    "explosion_power_max": 0.4,
+    "explosion_power_min": 0.1
+  },
+  "ingredient": {
+    "item": "minecraft:decorated_pot"
+  }
+}

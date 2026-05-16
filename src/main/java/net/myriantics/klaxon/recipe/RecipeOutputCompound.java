@@ -141,7 +141,7 @@ public final class RecipeOutputCompound {
         );
     }
 
-    public static StreamCodec<RegistryFriendlyByteBuf, RecipeOutputCompound> PACKET_CODEC = StreamCodec.of(
+    public static StreamCodec<RegistryFriendlyByteBuf, RecipeOutputCompound> STREAM_CODEC = StreamCodec.of(
             RecipeOutputCompound::write, RecipeOutputCompound::read
     );
 

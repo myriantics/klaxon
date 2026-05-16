@@ -120,7 +120,7 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
             this.explosionPower = newPowerData.explosionPower();
             this.producesFire = newPowerData.producesFire();
 
-            BlastProcessingRecipeData recipeData = blastProcessor.getDisplayStacks(new BlastProcessingRecipeInput(this.ingredientSlot.getItem(), newPowerData));
+            BlastProcessingRecipeData recipeData = blastProcessor.getDisplayStacks(new BlastProcessingRecipeInput(this.ingredientSlot.getItem(), newPowerData, serverLevel.getRandom()));
             if (recipeData == null) {
                 recipeData = BlastProcessingRecipeData.ZERO;
             }

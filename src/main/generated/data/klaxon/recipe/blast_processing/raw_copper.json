@@ -1,8 +1,10 @@
 {
   "type": "klaxon:blast_processing",
-  "explosion_power_max": 1.4,
-  "explosion_power_min": 0.4,
-  "input_ingredient": {
+  "bounds": {
+    "explosion_power_max": 1.4,
+    "explosion_power_min": 0.4
+  },
+  "ingredient": {
     "item": "minecraft:raw_copper"
   },
   "recipe_output_compound": [

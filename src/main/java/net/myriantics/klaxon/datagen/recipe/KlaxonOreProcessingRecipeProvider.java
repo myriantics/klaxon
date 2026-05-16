@@ -29,13 +29,13 @@ public class KlaxonOreProcessingRecipeProvider extends KlaxonRecipeSubProvider{
     public void addFracturedOreProcessingRecipes(Item fracturedRawOreItem, Item rawOreItem, Item fracturedOreFragmentsItem, Item oreIngotItem,
                                                  final ResourceCondition... conditions) {
         // blast processing
-        addBlastProcessingRecipe(NamedIngredient.ofItems(rawOreItem), 0.4, 1.4,
+        addBlastProcessingRecipe(NamedIngredient.ofItems(rawOreItem), 0.4f, 1.4f,
                 builder -> builder
                         .guaranteed(new ItemStack(fracturedRawOreItem))
                         .chance(new ItemStack(fracturedRawOreItem), 1d/3),
                 conditions
         );
-        addBlastProcessingRecipe(NamedIngredient.ofItems(oreIngotItem), 0.5, 1.7,
+        addBlastProcessingRecipe(NamedIngredient.ofItems(oreIngotItem), 0.5f, 1.7f,
                 builder -> builder
                         .guaranteed(new ItemStack(fracturedOreFragmentsItem))
                         .chance(new ItemStack(fracturedOreFragmentsItem), 1d/3),

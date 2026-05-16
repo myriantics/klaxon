@@ -1,8 +1,10 @@
 {
   "type": "klaxon:blast_processing",
-  "explosion_power_max": 1.7,
-  "explosion_power_min": 0.5,
-  "input_ingredient": {
+  "bounds": {
+    "explosion_power_max": 1.7,
+    "explosion_power_min": 0.5
+  },
+  "ingredient": {
     "item": "minecraft:gold_ingot"
   },
   "recipe_output_compound": [

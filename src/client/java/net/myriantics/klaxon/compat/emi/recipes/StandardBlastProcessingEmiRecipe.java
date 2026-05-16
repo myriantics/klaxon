@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.compat.emi.recipes;
 
-import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -9,22 +8,18 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.emi.infra.GeneratedTextWidget;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
-import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
+import net.myriantics.klaxon.util.KlaxonMathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -32,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public class BlastProcessingEmiRecipe implements EmiRecipe {
+public class StandardBlastProcessingEmiRecipe implements EmiRecipe {
     private static final ResourceLocation BACKGROUND_TEXTURE = KlaxonCommon.locate("textures/gui/sprites/emi/deepslate_blast_processor_emi.png");
 
     private static final Random RANDOM = new Random();
@@ -47,18 +42,18 @@ public class BlastProcessingEmiRecipe implements EmiRecipe {
     private final double explosionPowerMin;
     private final double explosionPowerMax;
 
-    public BlastProcessingEmiRecipe(RecipeHolder<BlastProcessingRecipe> recipe, EmiRegistry registry, ResourceLocation id) {
+    public StandardBlastProcessingEmiRecipe(StandardBlastProcessingRecipe recipe, ResourceLocation id) {
         this.id = id;
         this.outputStacks = new ArrayList<>();
-        for (ItemStack stack : recipe.value().getRecipeOutputCompound().getDisplayStacks()) {
+        for (ItemStack stack : recipe.getRecipeOutputCompound().getDisplayStacks()) {
             outputStacks.add(EmiStack.of(stack));
         }
-        this.explosionPowerMin = recipe.value().getExplosionPowerMin();
-        this.explosionPowerMax = recipe.value().getExplosionPowerMax();
+        this.explosionPowerMin = KlaxonMathHelper.roundToDecimalPlace(recipe.getExplosionPowerMin(), 2);
+        this.explosionPowerMax = KlaxonMathHelper.roundToDecimalPlace(recipe.getExplosionPowerMax(), 2);
         this.definitions = getValidCatalysts(Minecraft.getInstance().level.registryAccess());
         this.unique = RANDOM.nextInt();
 
-        this.input = List.of(EmiIngredient.of(recipe.value().getIngredientItem()));
+        this.input = List.of(EmiIngredient.of(recipe.getIngredientItem()));
     }
 
     @Override

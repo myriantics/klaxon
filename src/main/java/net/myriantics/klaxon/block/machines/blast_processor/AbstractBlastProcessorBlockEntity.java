@@ -16,11 +16,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
 import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
@@ -127,7 +128,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
             ItemStack ingredient = this.getIngredientStack();
 
             for (int i = 0; i < ingredient.getCount(); i++) {
-                for (ItemStack stack : recipe.craft(input, level.registryAccess(), random)) {
+                for (ItemStack stack : recipe.properlyAssemble(input, level.registryAccess())) {
                     KlaxonItemStackHelper.insertAndMerge(outputStacks, stack);
                 }
             }
@@ -156,7 +157,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         if (match.isPresent()) {
             BlastProcessingRecipe recipe = match.get();
 
-            ItemStack[] rawOutput = recipe.getRecipeOutputCompound().getDisplayStacks();
+            ItemStack[] rawOutput = recipe.getDisplayStacks();
             List<ItemStack> outputStacks = new ArrayList<>(rawOutput.length);
 
             for (ItemStack stack : rawOutput) {
@@ -192,7 +193,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         // if there's a catalyst, iterate through all matching recipes until you find the matching one with the least explosion power
         if (!this.getCatalystStack().isEmpty()) {
             for (BlastProcessingRecipe activeRecipe : recipes) {
-                if (activeRecipe.isCompatibleWithCatalyst(powerData)) {
+                if (activeRecipe.getBounds().matches(powerData.explosionPower())) {
                     return Optional.of(activeRecipe);
                 }
             }

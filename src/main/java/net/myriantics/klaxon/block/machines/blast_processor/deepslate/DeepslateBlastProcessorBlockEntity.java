@@ -81,7 +81,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 Holder<ExplosiveCatalystBehavior> behavior = catalystData.behavior(serverLevel);
 
                 // transform catalystData if needed
-                BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData));
+                BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData, serverLevel.getRandom()));
 
                 // clear catalyst and do explosion effect if power is greater than 0
                 if (catalystData.explosionPower() > 0) {
@@ -156,7 +156,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
         if (explosiveCatalystData == null) {
             explosiveCatalystData = ExplosiveCatalystData.ZERO;
         }
-        BlastProcessingRecipeData blastProcessingRecipeData = this.getDisplayStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), explosiveCatalystData));
+        BlastProcessingRecipeData blastProcessingRecipeData = this.getDisplayStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), explosiveCatalystData, player.getRandom()));
         if (blastProcessingRecipeData == null) {
             blastProcessingRecipeData = BlastProcessingRecipeData.ZERO;
         }

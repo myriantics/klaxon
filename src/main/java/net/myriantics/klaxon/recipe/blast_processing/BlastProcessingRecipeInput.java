@@ -1,16 +1,21 @@
 package net.myriantics.klaxon.recipe.blast_processing;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 
+import java.util.Random;
+
 public class BlastProcessingRecipeInput implements RecipeInput {
     private final ExplosiveCatalystData catalystData;
     private final ItemStack ingredientStack;
+    private final RandomSource random;
 
-    public BlastProcessingRecipeInput(ItemStack ingredientStack, ExplosiveCatalystData catalystData) {
+    public BlastProcessingRecipeInput(ItemStack ingredientStack, ExplosiveCatalystData catalystData, RandomSource random) {
         this.ingredientStack = ingredientStack;
         this.catalystData = catalystData;
+        this.random = random;
     }
 
     public ItemStack getIngredientStack() {
@@ -29,5 +34,9 @@ public class BlastProcessingRecipeInput implements RecipeInput {
     @Override
     public int size() {
         return 1;
+    }
+
+    public RandomSource getRandom() {
+        return this.random;
     }
 }

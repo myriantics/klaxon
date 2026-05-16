@@ -1,8 +1,10 @@
 {
   "type": "klaxon:blast_processing",
-  "explosion_power_max": 1.2,
-  "explosion_power_min": 0.2,
-  "input_ingredient": {
+  "bounds": {
+    "explosion_power_max": 1.2,
+    "explosion_power_min": 0.2
+  },
+  "ingredient": {
     "item": "minecraft:charcoal"
   },
   "recipe_output_compound": [
