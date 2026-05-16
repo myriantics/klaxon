@@ -8,13 +8,16 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.misc.KlaxonMenuTypes;
+import net.myriantics.klaxon.screen.container.blast_processor.Amogus;
 import net.myriantics.klaxon.screen.container.blast_processor.DeepslateBlastProcessorScreen;
 import net.myriantics.klaxon.screen.container.PrecisionDispenserScreen;
+import net.myriantics.klaxon.screen.container.blast_processor.Rizz;
 
 public abstract class KlaxonScreens {
 
     static {
-        register(KlaxonMenuTypes.DEEPSLATE_BLAST_PROCESSOR, DeepslateBlastProcessorScreen::new);
+        register(KlaxonMenuTypes.STEEL_BLAST_PROCESSOR, Rizz::new);
+        register(KlaxonMenuTypes.DEEPSLATE_BLAST_PROCESSOR, Amogus::new);
         register(KlaxonMenuTypes.PRECISION_DISPENSER, PrecisionDispenserScreen::new);
     }
 

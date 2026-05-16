@@ -8,17 +8,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorMenu;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorMenu;
 import net.myriantics.klaxon.screen.container.Region;
 
-public class DeepslateBlastProcessorScreen extends AbstractBlastProcessorScreen<DeepslateBlastProcessorMenu> {
+public class DeepslateBlastProcessorScreen<T extends AbstractBlastProcessorMenu> extends AbstractBlastProcessorScreen<T> {
     private static final ResourceLocation TEXTURE = KlaxonCommon.locate("textures/gui/container/deepslate_blast_processor.png");
 
     private Region explosionPowerRegion;
     private Region explosionPowerMinRegion;
     private Region explosionPowerMaxRegion;
 
-    public DeepslateBlastProcessorScreen(DeepslateBlastProcessorMenu handler, Inventory inventory, Component title) {
+    public DeepslateBlastProcessorScreen(T handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }
 

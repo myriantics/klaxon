@@ -43,6 +43,10 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
         this.addSlotListener(this);
     }
 
+    protected int getIngredientStackSize() {
+        return 1;
+    }
+
     @Override
     protected void initSlots(Inventory inventory, Container container) {
         super.initSlots(inventory, container);
@@ -51,7 +55,7 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
         this.ingredientSlot = this.addSlot(new Slot(container instanceof AbstractBlastProcessorBlockEntity blastProcessor ? blastProcessor.ingredientPartition : new SimpleContainer(1), 0, 17, 17) {
             @Override
             public int getMaxStackSize() {
-                return 1;
+                return AbstractBlastProcessorMenu.this.getIngredientStackSize();
             }
 
             @Override

@@ -1,25 +1,32 @@
 package net.myriantics.klaxon.block.machines.blast_processor.steel;
 
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorMenu;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
+import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
@@ -31,9 +38,10 @@ import net.myriantics.klaxon.util.container.ContainerPartition;
 import net.myriantics.klaxon.util.container.KlaxonStorageUtil;
 import org.jetbrains.annotations.Nullable;
 
-public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity {
+public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket> {
 
     private static final float POWERFUL_EXPLOSIVE_THRESHOLD = 4.0f;
+    private static final ContainerData EMPTY = new SimpleContainerData(0);
 
     private final MufflerStorage mufflerStorage = new MufflerStorage() {
         @Override
@@ -60,7 +68,9 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     @Override
     protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
-        return null;
+        SteelBlastProcessorMenu screenHandler = new SteelBlastProcessorMenu(containerId, inventory, this, EMPTY, ContainerLevelAccess.create(level, worldPosition));
+        screenHandler.slotsChanged(this);
+        return screenHandler;
     }
 
     @Override
@@ -212,5 +222,25 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     public ItemStack getMuffler() {
         return this.mufflerStorage.get();
+    }
+
+    @Override
+    public BlastProcessorMenuPowerSyncPacket getScreenOpeningData(ServerPlayer serverPlayer) {
+
+        ExplosiveCatalystData explosiveCatalystData = this.getEffectiveCatalystData();
+        if (explosiveCatalystData == null) {
+            explosiveCatalystData = ExplosiveCatalystData.ZERO;
+        }
+        BlastProcessingRecipeData blastProcessingRecipeData = this.getDisplayStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), explosiveCatalystData, serverPlayer.getRandom()));
+        if (blastProcessingRecipeData == null) {
+            blastProcessingRecipeData = BlastProcessingRecipeData.ZERO;
+        }
+
+        return new BlastProcessorMenuPowerSyncPacket(
+                blastProcessingRecipeData.explosionPowerMin(),
+                blastProcessingRecipeData.explosionPowerMax(),
+                explosiveCatalystData.explosionPower(),
+                explosiveCatalystData.producesFire()
+        );
     }
 }
