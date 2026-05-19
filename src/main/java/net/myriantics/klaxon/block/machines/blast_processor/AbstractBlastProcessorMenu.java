@@ -1,7 +1,9 @@
 package net.myriantics.klaxon.block.machines.blast_processor;
 
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -11,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -18,6 +21,7 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.util.PermissionsHelper;
 import net.myriantics.klaxon.util.container.KlaxonAdvancedContainerMenu;
 import net.myriantics.klaxon.util.container.KlaxonClientMenuInitializer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 
@@ -116,10 +120,8 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
 
     private void recomputeOutput(Level level, BlockPos pos) {
         if (level instanceof ServerLevel serverLevel && this.container instanceof AbstractBlastProcessorBlockEntity blastProcessor) {
-            ExplosiveCatalystData newPowerData = ExplosiveCatalystData.findEffective(blastProcessor.getContext(serverLevel), this.catalystSlot.getItem());
-            if (newPowerData == null) {
-                newPowerData = ExplosiveCatalystData.ZERO;
-            }
+            @NotNull Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> dataHolderPair = blastProcessor.getDataForCrafting(serverLevel, null);
+            ExplosiveCatalystData newPowerData = dataHolderPair.getFirst();
 
             this.explosionPower = newPowerData.explosionPower();
             this.producesFire = newPowerData.producesFire();
