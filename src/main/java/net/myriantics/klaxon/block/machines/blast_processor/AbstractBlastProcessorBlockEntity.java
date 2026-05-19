@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block.machines.blast_processor;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
@@ -16,12 +17,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
+import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
-import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
@@ -29,6 +31,7 @@ import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import net.myriantics.klaxon.util.container.ContainerPartition;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -109,6 +112,23 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         if (this.level != null) {
             DefaultDispenseItemBehavior.spawnItem(this.level, stack, 8, facing, this.getItemOutputLocation(facing));
         }
+    }
+
+    public @NotNull Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> getDataForCrafting(ServerLevel serverLevel, @Nullable ExplosiveCatalystContext context) {
+        @Nullable ExplosiveCatalystData effective = ExplosiveCatalystData.findEffective(
+                context == null ? this.getContext(serverLevel) : context,
+                this.getCatalystStack()
+        );
+
+        if (effective == null) {
+            return new Pair<>(ExplosiveCatalystData.ZERO, ExplosiveCatalystData.ZERO.behavior(serverLevel));
+        }
+
+        @NotNull Holder<ExplosiveCatalystBehavior> behavior = effective.behavior(serverLevel);
+        return new Pair<>(
+                behavior.is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING) ? ExplosiveCatalystData.ZERO : effective,
+                behavior
+        );
     }
 
     public BlastProcessingRecipeData getCraftedStacks(BlastProcessingRecipeInput input) {

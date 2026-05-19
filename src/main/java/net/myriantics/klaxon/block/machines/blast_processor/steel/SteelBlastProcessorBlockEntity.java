@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block.machines.blast_processor.steel;
 
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -97,8 +98,10 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                 BlockState aboveState = level.getBlockState(pos.above());
                 ExplosiveCatalystContext context = this.getContext(level);
 
-                ExplosiveCatalystData catalystData = ExplosiveCatalystData.findEffective(context, this.getCatalystStack());
-                Holder<ExplosiveCatalystBehavior> behavior = catalystData.behavior(level);
+                Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> dataHolderPair = this.getDataForCrafting(level, context);
+
+                ExplosiveCatalystData catalystData = dataHolderPair.getFirst();
+                Holder<ExplosiveCatalystBehavior> behavior = dataHolderPair.getSecond();
 
                 // if its on cooldown just kaboom no matter what
                 if (block.isFieryExhaust(aboveState) && behavior.value().isNoOp() && catalystData.explosionPower() > 0) {

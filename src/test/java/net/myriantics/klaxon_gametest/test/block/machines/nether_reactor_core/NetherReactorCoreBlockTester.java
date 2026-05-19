@@ -10,7 +10,7 @@ import net.myriantics.klaxon_gametest.util.KlaxonGameTestTemplates;
 
 public class NetherReactorCoreBlockTester {
 
-    private static final BlockPos CORE_POS = BlockPos.ZERO.above();
+    private static final BlockPos CORE_POS = BlockPos.ZERO.above(2);
     private static final BlockPos LEVER_POS = CORE_POS.above();
     private static final BlockPos BLACKSTONE_EXPECT_POS = LEVER_POS.relative(Direction.EAST);
 

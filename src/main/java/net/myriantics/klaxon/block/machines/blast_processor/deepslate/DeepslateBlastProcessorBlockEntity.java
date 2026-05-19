@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
@@ -72,13 +73,11 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
             boolean shouldRunDispenserEffects = false;
 
             if (!this.isEmpty()) {
-                BlockPos pos = this.getBlockPos();
                 ExplosiveCatalystContext context = this.getContext(serverLevel);
 
-                // compute blast processor behavior
-                ExplosiveCatalystData catalystData = ExplosiveCatalystData.findEffective(context, this.getCatalystStack());
-
-                Holder<ExplosiveCatalystBehavior> behavior = catalystData.behavior(serverLevel);
+                Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> dataHolderPair = this.getDataForCrafting(serverLevel, context);
+                ExplosiveCatalystData catalystData = dataHolderPair.getFirst();
+                Holder<ExplosiveCatalystBehavior> behaviorHolder = dataHolderPair.getSecond();
 
                 // transform catalystData if needed
                 BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData, serverLevel.getRandom()));
@@ -86,13 +85,13 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                 // clear catalyst and do explosion effect if power is greater than 0
                 if (catalystData.explosionPower() > 0) {
                     this.catalystPartition.clearContent();
-                    behavior.value().createExplosion(context, this.getExplosionOutputLocation(), catalystData, this.level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
+                    behaviorHolder.value().createExplosion(context, this.getExplosionOutputLocation(), catalystData, this.level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
                 }
 
                 // eject recipe results
                 this.ejectItems(processingData, catalystData);
 
-                shouldRunDispenserEffects = !behavior.is(KlaxonExplosiveCatalystBehaviorTags.DOES_NOT_RUN_DISPENSER_EFFECTS);
+                shouldRunDispenserEffects = !behaviorHolder.is(KlaxonExplosiveCatalystBehaviorTags.DOES_NOT_RUN_DISPENSER_EFFECTS);
             }
 
             // if this has been exploded, dont run these
