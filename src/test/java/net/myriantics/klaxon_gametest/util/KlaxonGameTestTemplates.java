@@ -1,9 +1,7 @@
 package net.myriantics.klaxon_gametest.util;
 
-import net.minecraft.resources.ResourceLocation;
-import net.myriantics.klaxon.KlaxonCommon;
-
-public class KlaxonTestStructures {
+public class KlaxonGameTestTemplates {
 
     public static final String NETHER_REACTION = "klaxon_gametest:test/nether_reaction";
+    public static final String EMPTY_1X1 = "klaxon_gametest:test/empty_1x1";
 }
