@@ -109,7 +109,7 @@ public record ExplosiveCatalystData(ResourceKey<ExplosiveCatalystBehavior> behav
     public static @Nullable ExplosiveCatalystData findEffective(ExplosiveCatalystContext context, ItemStack catalyst) {
         @Nullable ExplosiveCatalystData raw = findRaw(context.level(), catalyst);
         if (raw == null) {
-            return null;
+            return ExplosiveCatalystData.ZERO;
         } else {
             return raw.behavior(context.level()).value().transformExplosiveCatalystData(context, raw);
         }
