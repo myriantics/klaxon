@@ -1,4 +1,4 @@
-package net.myriantics.klaxon_gametest.test.block.machines.blast_processor.deepslate;
+package net.myriantics.klaxon_gametest.test.block.machines.blast_processor;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
