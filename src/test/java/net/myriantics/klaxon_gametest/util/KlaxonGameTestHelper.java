@@ -2,11 +2,13 @@ package net.myriantics.klaxon_gametest.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
@@ -31,6 +33,18 @@ public class KlaxonGameTestHelper extends GameTestHelper {
         testPlayer.setPos(this.absoluteVec(BlockPos.ZERO.getCenter()));
         this.players.add(testPlayer);
         return testPlayer;
+    }
+
+    public void setBlock(BlockPos pos, Holder<Block> holder) {
+        this.setBlock(pos, holder.value());
+    }
+
+    public void assertBlockPresent(Holder<Block> block, BlockPos pos) {
+        this.assertBlockPresent(block.value(), pos);
+    }
+
+    public void assertBlockNotPresent(Holder<Block> holder, BlockPos pos) {
+        this.assertBlockNotPresent(holder.value(), pos);
     }
 
     public BlockHitResult hitResult(BlockPos pos) {
