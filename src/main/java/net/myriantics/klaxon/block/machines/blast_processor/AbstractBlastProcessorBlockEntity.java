@@ -142,7 +142,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
             return new BlastProcessingRecipeData(outputStacks, recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax());
         } else {
-            return null;
+            return BlastProcessingRecipeData.ZERO;
         }
     }
 
