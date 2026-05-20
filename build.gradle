@@ -89,7 +89,7 @@ processResources {
 }
 
 tasks.register("runGameTests", ServerProductionRunTask) {
-	jvmArgs.add("-fabric-api.gametest")
+	jvmArgs.add("-Dfabric-api.gametest")
 }
 
 tasks.withType(JavaCompile).configureEach {
