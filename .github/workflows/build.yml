@@ -8,7 +8,7 @@ on: [pull_request, push]
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  fabric-api:gametest: true
+  fabric-api.gametest: true
 jobs:
   build:
     strategy:
