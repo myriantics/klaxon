@@ -47,6 +47,14 @@ loom {
 
 fabricApi {
 	configureDataGeneration()
+
+	configureTests {
+		createSourceSet = true
+		modId = "klaxon_gametest"
+		enableGameTests = true
+		enableClientGameTests = false
+		eula = true
+	}
 }
 
 dependencies {
