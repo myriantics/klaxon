@@ -1,13 +1,8 @@
 package net.myriantics.klaxon_gametest.test.item.equipment.tools;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTest;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +19,6 @@ import net.myriantics.klaxon_gametest.util.KlaxonGameTestHelper;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestTemplates;
 
 import java.util.Iterator;
-import java.util.List;
 
 public class WrenchItemTester {
 

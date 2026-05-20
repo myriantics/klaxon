@@ -1,5 +1,6 @@
 package net.myriantics.klaxon_gametest.test.block.machines.blast_processor;
 
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.network.chat.Component;
@@ -9,12 +10,10 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.DropperBlockEntity;
-import net.minecraft.world.phys.AABB;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -22,7 +21,7 @@ import net.myriantics.klaxon.util.container.ContainerPartition;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestHelper;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestTemplates;
 
-public class SteelBlastProcessorBlockTester {
+public class SteelBlastProcessorBlockTester implements FabricGameTest {
 
     private static final BlockPos ORIGIN = BlockPos.ZERO.above();
     private static final BlockPos STEEL_BLAST_PROCESSOR_POS = ORIGIN.above().east().south();

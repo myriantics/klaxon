@@ -1,6 +1,7 @@
 package net.myriantics.klaxon_gametest.test.block.machines.blast_processor;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -18,7 +19,7 @@ import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestHelper;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestTemplates;
 
-public class DeepslateBlastProcessorBlockTester {
+public class DeepslateBlastProcessorBlockTester implements FabricGameTest {
 
     private static final BlockPos ORIGIN_POS = BlockPos.ZERO.above();
 

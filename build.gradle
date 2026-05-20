@@ -43,17 +43,22 @@ repositories {
 loom {
     accessWidenerPath = file("src/main/resources/klaxon.accesswidener")
     splitEnvironmentSourceSets()
+
+	mods {
+		"klaxon" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
 }
 
 fabricApi {
 	configureDataGeneration()
 
 	configureTests {
-		createSourceSet = true
 		modId = "klaxon_gametest"
-		enableGameTests = true
+		createSourceSet = true
 		enableClientGameTests = false
-		eula = true
 	}
 }
 

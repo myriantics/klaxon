@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "klaxon_gametest",
-	"version": "${version}",
+	"version": "1.0.0",
 	"name": "KLAXON Tester",
 	"description": "For science ... you monster.",
 	"authors": [
@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "net.myriantics.klaxon_gametest.KlaxonGameTester"
+			"net.myriantics.klaxon_gametest.KlaxonGameTester"
 		]
 	},
 	"mixins": [

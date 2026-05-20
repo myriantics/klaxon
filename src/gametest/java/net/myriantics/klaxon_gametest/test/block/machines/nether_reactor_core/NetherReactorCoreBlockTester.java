@@ -1,5 +1,6 @@
 package net.myriantics.klaxon_gametest.test.block.machines.nether_reactor_core;
 
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -8,7 +9,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestHelper;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestTemplates;
 
-public class NetherReactorCoreBlockTester {
+public class NetherReactorCoreBlockTester implements FabricGameTest {
 
     private static final BlockPos CORE_POS = BlockPos.ZERO.above(2);
     private static final BlockPos LEVER_POS = CORE_POS.above();
