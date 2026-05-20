@@ -3,6 +3,7 @@ package net.myriantics.klaxon_gametest;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.mixin.gametest.TestFunctionsMixin;
 import net.minecraft.gametest.framework.GameTestRegistry;
+import net.myriantics.klaxon_gametest.test.AlwaysFailingTest;
 import net.myriantics.klaxon_gametest.test.KlaxonBlockTesters;
 import net.myriantics.klaxon_gametest.test.KlaxonEntityTesters;
 import net.myriantics.klaxon_gametest.test.KlaxonItemTesters;
@@ -21,6 +22,7 @@ public class KlaxonGameTester implements ModInitializer {
         KlaxonBlockTesters.init();
         KlaxonEntityTesters.init();
         KlaxonItemTesters.init();
+        register(AlwaysFailingTest.class);
 
         for (Class<?> clazz : TEST_CLASSES) {
             GameTestRegistry.register(clazz);
