@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.prod.ServerProductionRunTask
+
 plugins {
 	id 'fabric-loom' version "1.13-SNAPSHOT"
 	id("org.moddedmc.wiki.toolkit") version "0.3.2"
@@ -69,6 +71,9 @@ dependencies {
     // scalding hot
     modLocalRuntime "maven.modrinth:scaldinghot:${project.scaldinghot_version}"
 
+	// testing
+	productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
 
@@ -81,6 +86,14 @@ processResources {
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
+}
+
+tasks.register("runGameTests", ServerProductionRunTask) {
+	jvmArgs.add("-Dfabric-api.gametest")
+	// Whether to use XVFB to run the game, using a virtual framebuffer. This is useful for headless CI environments.
+	// Defaults to true only on Linux and when the "CI" environment variable is set.
+	// XVFB must be installed, on Debian-based systems you can install it with: `apt install xvfb`
+	useXVFB = true
 }
 
 tasks.withType(JavaCompile).configureEach {
