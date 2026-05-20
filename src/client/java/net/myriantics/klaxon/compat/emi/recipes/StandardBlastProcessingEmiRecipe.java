@@ -143,6 +143,6 @@ public class StandardBlastProcessingEmiRecipe implements EmiRecipe {
     }
 
     private boolean isCatalystDefinitionValid(ExplosiveCatalystDefinition definition, RegistryAccess access) {
-        return definition.data().matchesConditions(this.explosionPowerMin, this.explosionPowerMax) && !definition.data().behavior(access).is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING);
+        return definition.data().matchesConditions(this.explosionPowerMin, this.explosionPowerMax) && !definition.data().behavior(access).is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_BLAST_PROCESSING);
     }
 }

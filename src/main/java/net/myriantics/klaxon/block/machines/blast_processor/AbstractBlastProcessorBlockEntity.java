@@ -102,6 +102,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
         // blast processor will always be empty after actions have been performed
         this.clearContent();
+        this.setChanged();
     }
 
     /**
@@ -114,21 +115,27 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         }
     }
 
-    public @NotNull Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> getDataForCrafting(ServerLevel serverLevel, @Nullable ExplosiveCatalystContext context) {
+    public ExplosiveCatalystData adaptEffectiveDataForCrafting(ServerLevel serverLevel, ExplosiveCatalystData data, @Nullable Holder<ExplosiveCatalystBehavior> behavior, @Nullable ExplosiveCatalystContext context) {
+        if (behavior == null) {
+            behavior = data.behavior(serverLevel);
+        }
+        if (behavior.is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_BLAST_PROCESSING)) {
+            return ExplosiveCatalystData.ZERO;
+        } else {
+            return behavior.value().transformExplosiveCatalystData(context == null ? this.getContext(serverLevel) : context, data);
+        }
+    }
+
+    public @NotNull Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> findEffectiveCatalystData(ServerLevel serverLevel, @Nullable ExplosiveCatalystContext context) {
         @Nullable ExplosiveCatalystData effective = ExplosiveCatalystData.findEffective(
                 context == null ? this.getContext(serverLevel) : context,
                 this.getCatalystStack()
         );
-
         if (effective == null) {
             return new Pair<>(ExplosiveCatalystData.ZERO, ExplosiveCatalystData.ZERO.behavior(serverLevel));
+        } else {
+            return new Pair<>(effective, effective.behavior(serverLevel));
         }
-
-        @NotNull Holder<ExplosiveCatalystBehavior> behavior = effective.behavior(serverLevel);
-        return new Pair<>(
-                behavior.is(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_CRAFTING) ? ExplosiveCatalystData.ZERO : effective,
-                behavior
-        );
     }
 
     public BlastProcessingRecipeData getCraftedStacks(BlastProcessingRecipeInput input) {

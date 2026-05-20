@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorMenu;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
@@ -89,41 +88,45 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     @Override
     public void redstoneTrigger() {
-        if (this.level instanceof ServerLevel level) {
+        if (this.level instanceof ServerLevel serverLevel) {
             BlockState state = this.getBlockState();
             BlockPos pos = this.getBlockPos();
 
             if (!this.isEmpty() && state.getBlock() instanceof SteelBlastProcessorBlock block) {
                 Direction facing = this.getFacing();
-                BlockState aboveState = level.getBlockState(pos.above());
-                ExplosiveCatalystContext context = this.getContext(level);
+                BlockState aboveState = serverLevel.getBlockState(pos.above());
+                ExplosiveCatalystContext context = this.getContext(serverLevel);
 
-                Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> dataHolderPair = this.getDataForCrafting(level, context);
+                Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> dataHolderPair = this.findEffectiveCatalystData(serverLevel, context);
 
                 ExplosiveCatalystData catalystData = dataHolderPair.getFirst();
                 Holder<ExplosiveCatalystBehavior> behavior = dataHolderPair.getSecond();
 
                 // if its on cooldown just kaboom no matter what
                 if (block.isFieryExhaust(aboveState) && behavior.value().isNoOp() && catalystData.explosionPower() > 0) {
-                    this.selfDestruct(level, pos, context, catalystData, behavior.value());
+                    this.selfDestruct(serverLevel, pos, context, catalystData, behavior.value());
                 } else {
-                    BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(this.getIngredientStack(), catalystData, level.getRandom()));
+                    BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(
+                            this.getIngredientStack(),
+                            this.adaptEffectiveDataForCrafting(serverLevel, catalystData, behavior, context),
+                            serverLevel.getRandom())
+                    );
 
                     if (catalystData.explosionPower() > 0) {
                         this.catalystPartition.clearContent();
                     }
 
-                    this.storageCache = KlaxonStorageUtil.findStorage(level, pos.relative(facing), facing.getOpposite());
+                    this.storageCache = KlaxonStorageUtil.findStorage(serverLevel, pos.relative(facing), facing.getOpposite());
                     this.ejectItems(processingData, catalystData);
                     this.storageCache = null;
 
                     // self destruct if overload handling failed
-                    if (catalystData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && !block.handleOverload(level, pos, this, catalystData)) {
-                        this.selfDestruct(level, pos, context, catalystData, behavior.value());
+                    if (catalystData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && !block.handleOverload(serverLevel, pos, this, catalystData)) {
+                        this.selfDestruct(serverLevel, pos, context, catalystData, behavior.value());
                     } else if (!this.mufflerStorage.isPresent()) {
-                        RandomSource random = level.getRandom();
+                        RandomSource random = serverLevel.getRandom();
                         if (catalystData.explosionPower() > 0) {
-                            level.playSound(
+                            serverLevel.playSound(
                                     null,
                                     pos,
                                     KlaxonSoundEvents.BLOCK_STEEL_BLAST_PROCESSOR_ACTIVATE,
@@ -132,15 +135,15 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                                     0.1f + (0.2f * random.nextFloat())
                             );
                         } else {
-                            playFailSound(level, pos, random);
+                            playFailSound(serverLevel, pos, random);
                         }
-                        level.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(this.getBlockState()));
+                        serverLevel.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(this.getBlockState()));
                     }
                 }
             } else {
                 if (!this.mufflerStorage.isPresent()) {
-                    this.playFailSound(level, pos, level.getRandom());
-                    level.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(this.getBlockState()));
+                    this.playFailSound(serverLevel, pos, serverLevel.getRandom());
+                    serverLevel.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(this.getBlockState()));
                 }
             }
         }

@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
@@ -120,8 +121,9 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
 
     private void recomputeOutput(Level level, BlockPos pos) {
         if (level instanceof ServerLevel serverLevel && this.container instanceof AbstractBlastProcessorBlockEntity blastProcessor) {
-            @NotNull Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> dataHolderPair = blastProcessor.getDataForCrafting(serverLevel, null);
-            ExplosiveCatalystData newPowerData = dataHolderPair.getFirst();
+            ExplosiveCatalystContext context = blastProcessor.getContext(serverLevel);
+            @NotNull Pair<ExplosiveCatalystData, Holder<ExplosiveCatalystBehavior>> dataHolderPair = blastProcessor.findEffectiveCatalystData(serverLevel, context);
+            ExplosiveCatalystData newPowerData = blastProcessor.adaptEffectiveDataForCrafting(serverLevel, dataHolderPair.getFirst(), dataHolderPair.getSecond(), context);
 
             this.explosionPower = newPowerData.explosionPower();
             this.producesFire = newPowerData.producesFire();
