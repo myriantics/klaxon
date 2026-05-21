@@ -294,6 +294,15 @@ public class HallnoxBulbBlock extends PipeBlock implements SimpleWaterloggedBloc
                 : EXTRUDE.forDirection(selectedFace);
     }
 
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state
+                .setValue(PROPERTY_BY_DIRECTION.get(rotation.rotate(Direction.NORTH)), state.getValue(NORTH))
+                .setValue(PROPERTY_BY_DIRECTION.get(rotation.rotate(Direction.EAST)), state.getValue(EAST))
+                .setValue(PROPERTY_BY_DIRECTION.get(rotation.rotate(Direction.SOUTH)), state.getValue(SOUTH))
+                .setValue(PROPERTY_BY_DIRECTION.get(rotation.rotate(Direction.WEST)), state.getValue(WEST));
+    }
+
     protected static class DirectionalWrenchInteraction {
         private final Map<Direction, WrenchInteraction> direction2Interaction;
 

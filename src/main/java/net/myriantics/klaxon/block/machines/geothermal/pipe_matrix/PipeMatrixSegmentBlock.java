@@ -9,6 +9,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -27,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMatrix {
@@ -76,6 +79,11 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
     }
 
     @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return RotatedPillarBlock.rotatePillar(state, rotation);
+    }
+
+    @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
         Level world = ctx.getLevel();
         Direction clickedSide = ctx.getClickedFace();
@@ -105,12 +113,12 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
         Direction.Axis axis = state.getValue(AXIS);
 
         // massive ugly code block go brrr
-        BlockState newUBendState = switch (context) {
+        Direction exposedPipesDirection = switch (context) {
             case WrenchActionContext.Dispenser dispenser -> {
                 BlockState temp = pipeMatrixSegmentBlock.uBendBlock.defaultBlockState();
                 Direction dispenserFacing = dispenser.getDispenserFacing();
                 if (axis.equals(dispenserFacing.getAxis())) {
-                    yield temp.setValue(PipeMatrixUBendBlock.FACING, dispenserFacing);
+                    yield dispenserFacing;
                 } else {
                     Direction.AxisDirection axisDirection = random.nextFloat() > 0.5 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE;
 
@@ -125,16 +133,13 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
                         }
                     }
 
-                    yield temp.setValue(
-                            PipeMatrixUBendBlock.FACING,
-                            Direction.fromAxisAndDirection(axis, axisDirection)
-                    );
+                    yield Direction.fromAxisAndDirection(axis, axisDirection);
                 }
             }
             case WrenchActionContext.Manual manual -> {
                 Vec3 blockInteractionPos = manual.getHitResult().getLocation().subtract(Vec3.atLowerCornerOf(pos));
                 Direction.AxisDirection clickedAxisDir = blockInteractionPos.get(axis) < 0.5 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE;
-                yield pipeMatrixSegmentBlock.uBendBlock.defaultBlockState().setValue(PipeMatrixUBendBlock.FACING, Direction.fromAxisAndDirection(axis, clickedAxisDir));
+                yield Direction.fromAxisAndDirection(axis, clickedAxisDir);
             }
         };
 
@@ -144,19 +149,26 @@ public class PipeMatrixSegmentBlock extends Block implements Wrenchable, PipeMat
                     switch (context) {
                         case WrenchActionContext.Dispenser dispenser -> {
                             Direction.Axis dispenserAxis = dispenser.getDispenserFacing().getAxis();
-                            yield PipeMatrixUBendBlock.withAxisIfPossible(
-                                    newUBendState,
-                                    axis.equals(dispenserAxis)
-                                            ? context.level().getRandom().nextFloat() > 0.5 ? Direction.Axis.X : Direction.Axis.Z
-                                            : dispenserAxis
-                            ).orElse(newUBendState);
+                            yield pipeMatrixSegmentBlock.uBendBlock.defaultBlockState().setValue(
+                                    PipeMatrixUBendBlock.ROTATION,
+                                    Objects.requireNonNullElseGet(
+                                            UBendRotation.from(exposedPipesDirection, axis.equals(dispenserAxis)
+                                                    ? context.level().getRandom().nextFloat() > 0.5 ? Direction.Axis.X : Direction.Axis.Z
+                                                    : dispenserAxis),
+                                            () -> UBendRotation.firstMatchingDirection(exposedPipesDirection)
+                                    ));
                         }
                         case WrenchActionContext.Manual manual -> {
-                            yield PipeMatrixUBendBlock.withAxisIfPossible(
-                                    newUBendState,
-                                    manual.getHitResult().getDirection().getAxis(),
-                                    manual.getPlayer().getDirection().getAxis()
-                            ).orElse(newUBendState);
+                            yield pipeMatrixSegmentBlock.uBendBlock.defaultBlockState().setValue(
+                                    PipeMatrixUBendBlock.ROTATION,
+                                    Objects.requireNonNullElseGet(
+                                            UBendRotation.from(exposedPipesDirection, manual.getHitResult().getDirection().getAxis()),
+                                            () -> Objects.requireNonNullElseGet(
+                                                    UBendRotation.from(exposedPipesDirection, manual.getPlayer().getDirection().getAxis()),
+                                                    () -> UBendRotation.firstMatchingDirection(exposedPipesDirection)
+                                            )
+                                    )
+                            );
                         }
                     }
             );

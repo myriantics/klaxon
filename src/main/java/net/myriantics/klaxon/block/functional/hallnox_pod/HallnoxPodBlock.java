@@ -242,6 +242,11 @@ public class HallnoxPodBlock extends SaplingBlock implements Fallable, SimpleWat
         }
     }
 
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
     private void spawnParticle(Level world, BlockPos pos, RandomSource random, Direction facing) {
 
         // make sure we're not emitting particles upwards

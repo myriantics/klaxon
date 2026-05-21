@@ -9,6 +9,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -23,16 +24,14 @@ import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteraction;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
 import net.myriantics.klaxon.registry.behavior.KlaxonWrenchActionTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatrix, NeighborPlacementListener {
-    // Tracks the axis the pipes turns around.
-    // This refers to the axis as if the facing direction was the Y axis.
-    public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
-    // Tracks the direction the pipe interface point is in.
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+
+    public static final EnumProperty<UBendRotation> ROTATION = KlaxonBlockStateProperties.U_BEND_ROTATION;
     // Tracks whether this pipe matrix loop is part of a valid structure or not.
     public static final BooleanProperty FORMED = KlaxonBlockStateProperties.FORMED;
 
@@ -44,8 +43,7 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
         super(settings);
 
         this.registerDefaultState(this.defaultBlockState()
-                .setValue(HORIZONTAL_AXIS, Direction.Axis.X)
-                .setValue(FACING, Direction.UP)
+                .setValue(ROTATION, UBendRotation.UP_BENT_AROUND_Z)
                 .setValue(FORMED, false)
         );
     }
@@ -53,7 +51,7 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HORIZONTAL_AXIS, FACING, FORMED);
+        builder.add(ROTATION, FORMED);
     }
 
     @Override
@@ -61,39 +59,9 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
         return neighborState instanceof PipeMatrix && neighborState.getValue(FORMED) ? state : state.setValue(FORMED, false);
     }
 
-    public static Optional<BlockState> withAxisIfPossible(BlockState state, Direction.Axis clickedAxis, Direction.Axis facingAxis) {
-        Optional<BlockState> result = withAxisIfPossible(state, clickedAxis);
-        if (result.isEmpty()) {
-            result = withAxisIfPossible(state, facingAxis);
-        }
-        return result;
-    }
-
-    public static Optional<BlockState> withAxisIfPossible(BlockState state, Direction.Axis axis) {
-        Optional<BlockState> result = Optional.empty();
-
-        switch (state.getValue(FACING).getAxis()) {
-            case X -> {
-                switch (axis) {
-                    case Y -> result = Optional.of(state.setValue(HORIZONTAL_AXIS, Direction.Axis.X));
-                    case Z -> result = Optional.of(state.setValue(HORIZONTAL_AXIS, Direction.Axis.Z));
-                }
-            }
-            case Y -> {
-                switch (axis) {
-                    case X -> result = Optional.of(state.setValue(HORIZONTAL_AXIS, Direction.Axis.X));
-                    case Z -> result = Optional.of(state.setValue(HORIZONTAL_AXIS, Direction.Axis.Z));
-                }
-            }
-            case Z -> {
-                switch (axis) {
-                    case X -> result = Optional.of(state.setValue(HORIZONTAL_AXIS, Direction.Axis.X));
-                    case Y -> result = Optional.of(state.setValue(HORIZONTAL_AXIS, Direction.Axis.Z));
-                }
-            }
-        }
-
-        return result;
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(ROTATION, state.getValue(ROTATION).rotate(rotation));
     }
 
     @Override
@@ -101,19 +69,19 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
         Direction clickedDirection = ctx.getClickedFace();
         Direction facingDirection = ctx.getNearestLookingDirection();
 
-        // this method is only called from the pipe matrix block, and we verify that the clicked block is safe there.
-        BlockState newState = this.defaultBlockState().setValue(FACING, clickedDirection);
-
-        return withAxisIfPossible(
-                newState,
-                clickedDirection.getAxis(),
-                facingDirection.getAxis()
-        ).orElse(newState);
+        // try facing direction first
+        @Nullable UBendRotation rotation = UBendRotation.from(clickedDirection, facingDirection.getAxis());
+        if (rotation == null) {
+            // try horizontal facing direction next
+            rotation = UBendRotation.from(clickedDirection, ctx.getHorizontalDirection().getAxis());
+        }
+        // if all else fails, just grab the first valid rotation for the given direction
+        return this.defaultBlockState().setValue(ROTATION, rotation == null ? UBendRotation.firstMatchingDirection(facingDirection) : rotation);
     }
 
     @Override
     public boolean sideHasExposedPipes(BlockState state, Direction direction) {
-        return direction.equals(state.getValue(FACING));
+        return direction.equals(state.getValue(ROTATION).getExposedFace());
     }
 
     @Override
@@ -132,7 +100,7 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
     @Override
     public void onAdjacentPlaceOnSide(Level world, BlockPos pos, BlockState state, BlockPos placedPos, BlockState placedState, BlockPlaceContext context) {
         // if the adjacent placed block would extend this one, replace this block with a pipe matrix
-        if (placedState.getBlock() instanceof PipeMatrixUBendBlock && placedState.getValue(FACING).equals(context.getClickedFace())) {
+        if (placedState.getBlock() instanceof PipeMatrixUBendBlock && placedState.getValue(ROTATION).getExposedFace().equals(context.getClickedFace())) {
             world.setBlockAndUpdate(pos, getSegmentBlock().defaultBlockState().setValue(PipeMatrixSegmentBlock.AXIS, context.getClickedFace().getAxis()));
         }
     }
@@ -150,7 +118,7 @@ public class PipeMatrixUBendBlock extends Block implements Wrenchable, PipeMatri
 
         if (segmentBlock != null) {
             if (!level.isClientSide()) {
-                level.setBlockAndUpdate(pos, segmentBlock.defaultBlockState().setValue(PipeMatrixSegmentBlock.AXIS, state.getValue(FACING).getAxis()));
+                level.setBlockAndUpdate(pos, segmentBlock.defaultBlockState().setValue(PipeMatrixSegmentBlock.AXIS, state.getValue(ROTATION).getExposedFace().getAxis()));
             }
             level.playSound(
                     context instanceof WrenchActionContext.Manual manual ? manual.getPlayer() : null,

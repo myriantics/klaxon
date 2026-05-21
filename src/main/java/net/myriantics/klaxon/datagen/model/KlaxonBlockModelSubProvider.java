@@ -14,6 +14,7 @@ import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
+import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.UBendRotation;
 import net.myriantics.klaxon.block.machines.modular_explosive.FuseState;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlock;
 import net.myriantics.klaxon.block.machines.nether_reactor_core.NetherReactorCoreBlock;
@@ -447,76 +448,76 @@ public abstract class KlaxonBlockModelSubProvider {
         );
 
         // make the map - helpful comment i know :)
-        PropertyDispatch map = PropertyDispatch.properties(PipeMatrixUBendBlock.FACING, PipeMatrixUBendBlock.HORIZONTAL_AXIS)
+        PropertyDispatch map = PropertyDispatch.property(PipeMatrixUBendBlock.ROTATION)
                 .select(
-                        Direction.UP, Direction.Axis.X,
+                        UBendRotation.UP_BENT_AROUND_X,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, xAxisPositiveModelIdentifier)
                 )
                 .select(
-                        Direction.UP, Direction.Axis.Z,
+                        UBendRotation.UP_BENT_AROUND_Z,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, zAxisPositiveModelIdentifier)
                 )
                 .select(
-                        Direction.DOWN, Direction.Axis.X,
+                        UBendRotation.DOWN_BENT_AROUND_X,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, xAxisNegativeModelIdentifier)
                 )
                 .select(
-                        Direction.DOWN, Direction.Axis.Z,
+                        UBendRotation.DOWN_BENT_AROUND_Z,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, zAxisNegativeModelIdentifier)
                 )
                 .select(
-                        Direction.NORTH, Direction.Axis.X,
+                        UBendRotation.NORTH_BENT_AROUND_X,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, xAxisPositiveModelIdentifier)
                                 .with(VariantProperties.X_ROT, VariantProperties.Rotation.R270)
                                 .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
                 )
                 .select(
-                        Direction.NORTH, Direction.Axis.Z,
+                        UBendRotation.NORTH_BENT_AROUND_Y,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, zAxisPositiveModelIdentifier)
                                 .with(VariantProperties.X_ROT, VariantProperties.Rotation.R270)
                                 .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
                 )
                 .select(
-                        Direction.EAST, Direction.Axis.X,
+                        UBendRotation.EAST_BENT_AROUND_Y,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, zAxisPositiveModelIdentifier)
                                 .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
                                 .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
                 )
                 .select(
-                        Direction.EAST, Direction.Axis.Z,
+                        UBendRotation.EAST_BENT_AROUND_Z,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, xAxisPositiveModelIdentifier)
                                 .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
                                 .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
                 )
                 .select(
-                        Direction.SOUTH, Direction.Axis.X,
+                        UBendRotation.SOUTH_BENT_AROUND_X,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, xAxisNegativeModelIdentifier)
                                 .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
                 )
                 .select(
-                        Direction.SOUTH, Direction.Axis.Z,
+                        UBendRotation.SOUTH_BENT_AROUND_Y,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, zAxisNegativeModelIdentifier)
                                 .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
                 )
                 .select(
-                        Direction.WEST, Direction.Axis.X,
+                        UBendRotation.WEST_BENT_AROUND_Y,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, zAxisNegativeModelIdentifier)
                                 .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
                                 .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
                 )
                 .select(
-                        Direction.WEST, Direction.Axis.Z,
+                        UBendRotation.WEST_BENT_AROUND_Z,
                         Variant.variant()
                                 .with(VariantProperties.MODEL, xAxisNegativeModelIdentifier)
                                 .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)

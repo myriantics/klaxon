@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -68,6 +69,24 @@ public class NetherReactorCoreBlock extends Block implements SimpleWaterloggedBl
     @Override
     protected FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        switch (rotation) {
+            case COUNTERCLOCKWISE_90:
+            case CLOCKWISE_90:
+                switch (state.getValue(HORIZONTAL_AXIS)) {
+                    case Z:
+                        return state.setValue(HORIZONTAL_AXIS, Direction.Axis.X);
+                    case X:
+                        return state.setValue(HORIZONTAL_AXIS, Direction.Axis.Z);
+                    default:
+                        return state;
+                }
+            default:
+                return state;
+        }
     }
 
     @Override

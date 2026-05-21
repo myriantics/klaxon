@@ -7,6 +7,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CraftingTableBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -41,5 +42,10 @@ public class SteelWorkbenchBlock extends CraftingTableBlock implements WorldItem
     @Override
     public Optional<BlockState> getResultState(Level world, BlockState state, BlockPos pos, Direction clickDirection, @Nullable Player lookDirection) {
         return Optional.of(state.setValue(FACING, clickDirection));
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 }
