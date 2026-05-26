@@ -17,9 +17,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
-import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
-import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionDiscardPacket;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
@@ -28,11 +26,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public final class ServerGrappleWinchConnectionManager extends GrappleWinchConnectionManager {
 
-    private final Map<Integer, ServerGrappleWinchConnection> connectionId2Connection = new HashMap<>();
+    final Map<Integer, ServerGrappleWinchConnection> connectionId2Connection = new HashMap<>();
 
     private int currentConnectionId = 0;
 
@@ -41,8 +38,8 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
     }
 
     @Override
-    public ServerLevel getWorld() {
-        return (ServerLevel) super.getWorld();
+    public ServerLevel getLevel() {
+        return (ServerLevel) super.getLevel();
     }
 
     @Override

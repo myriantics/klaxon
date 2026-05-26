@@ -149,8 +149,8 @@ public class ClientGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     private void updateEntities() {
-        this.player = (AbstractClientPlayer) this.manager.getWorld().getEntity(this.playerId);
-        this.hook = (GrapplingHook) this.manager.getWorld().getEntity(this.hookId);
+        this.player = (AbstractClientPlayer) this.manager.getLevel().getEntity(this.playerId);
+        this.hook = (GrapplingHook) this.manager.getLevel().getEntity(this.hookId);
     }
 
     @Override

@@ -26,7 +26,7 @@ public abstract class GrappleWinchConnectionManager extends SavedData {
         }
     }
 
-    public Level getWorld() {
+    public Level getLevel() {
         return this.world;
     }
 

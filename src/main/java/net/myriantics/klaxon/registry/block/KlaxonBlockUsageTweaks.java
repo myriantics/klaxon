@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry.misc;
+package net.myriantics.klaxon.registry.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

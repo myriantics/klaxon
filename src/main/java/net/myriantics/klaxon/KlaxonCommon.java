@@ -78,11 +78,8 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonAttachmentTypes.init();
 		KlaxonExplosiveCatalystHandlers.init();
 		KlaxonExplosiveCatalystTransformerTypes.init();
+		KlaxonCommands.init();
 
 		LOGGER.info("KLAXON has loaded!");
-	}
-
-	public boolean isDatagenEnabled() {
-		return FabricDataGenHelper.ENABLED;
 	}
 }

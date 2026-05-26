@@ -18,7 +18,8 @@ public enum CableDetachmentReason implements StringRepresentable {
     FAST_RELOADED(8, false),
     PICKUP_RELOADED(9, false),
     PICKUP(10, false),
-    GENERIC_DISCONNECT(11, false);
+    GENERIC_DISCONNECT(11, false),
+    HOOK_LOAD_FAILURE(12, false);
 
     public static final Codec<CableDetachmentReason> CODEC = StringRepresentable.fromEnum(CableDetachmentReason::values);
     public static final StreamCodec<ByteBuf, CableDetachmentReason> PACKET_CODEC = ByteBufCodecs.idMapper(

@@ -47,7 +47,7 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
         // compute the daytime multiplier here instead of every render tick
         // kinda funky, look at daylight on the minecraft wiki for more info haha
         // basically keeps the value at 1.0f unless it's night, in which case it gets progressively smaller until midnight, when it starts climbing back up again.
-        long timeOfDay = this.getWorld().getDayTime() % 24000L;
+        long timeOfDay = this.getLevel().getDayTime() % 24000L;
         this.daylightMultiplier = timeOfDay < 12040 || timeOfDay > 22331 ? 1.0f : Math.min(Math.abs((18000f - timeOfDay) / 10000), 1.0f);
 
         // update night vision status so we're not doing it every render tick
@@ -83,7 +83,7 @@ public class ClientGrappleWinchConnectionManager extends GrappleWinchConnectionM
     }
 
     @Override
-    public ClientLevel getWorld() {
+    public ClientLevel getLevel() {
         return (ClientLevel) this.world;
     }
 

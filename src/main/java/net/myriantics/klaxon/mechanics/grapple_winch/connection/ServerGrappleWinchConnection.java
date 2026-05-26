@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.mechanics.grapple_winch.connection;
 
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
@@ -110,10 +112,10 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
         if (this.canPlayReboundSound) {
             this.playSoundAtBothCableEnds(
                     KlaxonSoundEvents.ENTITY_GRAPPLE_CLAW_REBOUND_AT_LIMIT,
-                    1f + this.manager.getWorld().getRandom().nextFloat() * 0.3f,
-                    0.8f + this.manager.getWorld().getRandom().nextFloat() * 0.2f
+                    1f + this.manager.getLevel().getRandom().nextFloat() * 0.3f,
+                    0.8f + this.manager.getLevel().getRandom().nextFloat() * 0.2f
             );
-            this.manager.getWorld().gameEvent(
+            this.manager.getLevel().gameEvent(
                     GameEvent.ENTITY_ACTION,
                     this.hook.klaxon$asEntity().position(),
                     GameEvent.Context.of(player)
@@ -217,20 +219,26 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
             return false;
         }
 
-        Entity maybePlayer = this.manager.getWorld().getServer().getPlayerList().getPlayer(this.playerUUID);
+        Entity maybePlayer = this.manager.getLevel().getServer().getPlayerList().getPlayer(this.playerUUID);
         Entity maybeHook;
 
         // we have to delay activation until the player's winch cable length attribute loads
         // otherwise the connection gets ganked as soon as it's created due to a max cable length of 0.
         if (maybePlayer instanceof ServerPlayer serverPlayer && serverPlayer.getAttributeValue(KlaxonEntityAttributes.WINCH_CABLE_LENGTH) > 0) {
             if (this.dormantHookNbt != null) {
-                maybeHook = EntityType.loadEntityRecursive(
-                        this.dormantHookNbt,
-                        this.manager.getWorld(),
-                        grapplingHook -> this.manager.getWorld().addWithUUID(grapplingHook) ? grapplingHook : null
-                );
+                maybeHook = Util.ifElse(
+                        EntityType.by(this.dormantHookNbt).map(t -> t.create(this.manager.getLevel())),
+                        entity ->  {
+                            entity.load(this.dormantHookNbt);
+                            this.manager.getLevel().addFreshEntity(entity);
+                        },
+                        () -> {
+                            this.manager.disconnect(this.connectionId, CableDetachmentReason.HOOK_LOAD_FAILURE);
+                            KlaxonCommon.LOGGER.warn("Failed to load Grappling Hook from Grapple Winch Connection for player [" + serverPlayer.getDisplayName() + "], discarding.");
+                        }
+                ).orElse(null);
             } else if (this.hookUUID != null) {
-                maybeHook = this.manager.getWorld().getEntity(this.hookUUID);
+                maybeHook = this.manager.getLevel().getEntity(this.hookUUID);
             } else {
                 throw new AssertionError();
             }
@@ -248,8 +256,9 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
     }
 
     public void makeDormant() {
+        // save before removal so id is recorded
+        ((Entity) this.hook).saveAsPassenger(this.dormantHookNbt = new CompoundTag());
         ((Entity) this.hook).remove(Entity.RemovalReason.UNLOADED_WITH_PLAYER);
-        this.dormantHookNbt = ((Entity) this.hook).saveWithoutId(new CompoundTag());
         this.state = State.DORMANT;
     }
 
@@ -281,7 +290,7 @@ public final class ServerGrappleWinchConnection extends GrappleWinchConnection {
             return CableDetachmentReason.PLAYER_SPECTATOR;
         }
 
-        if (!this.player.level().equals(this.manager.getWorld()) || !this.hook.klaxon$asEntity().level().equals(this.manager.getWorld())) {
+        if (!this.player.level().equals(this.manager.getLevel()) || !this.hook.klaxon$asEntity().level().equals(this.manager.getLevel())) {
             return CableDetachmentReason.WORLD_MISMATCH;
         }
 
