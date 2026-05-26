@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
+import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.UBendRotation;
 import net.myriantics.klaxon.block.machines.modular_explosive.FuseState;
@@ -244,61 +245,61 @@ public abstract class KlaxonBlockModelSubProvider {
         TextureMapping baseCatalystOnly = baseFull.copyAndUpdate(TextureSlot.TOP, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_TOP_OPEN);
         TextureMapping baseEmpty = baseCatalystOnly.copyAndUpdate(TextureSlot.SIDE, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_SIDE_OPEN);
 
-        ResourceLocation unlootedLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation unlootedLit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/unlooted_lit",
                 baseUnlooted.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
                 generator.modelOutput
         );
-        ResourceLocation unlootedUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation unlootedUnlit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/unlooted_unlit",
                 baseUnlooted.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
                 generator.modelOutput
         );
-        ResourceLocation fullLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation fullLit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/full_lit",
                 baseFull.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
                 generator.modelOutput
         );
-        ResourceLocation fullUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation fullUnlit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/full_unlit",
                 baseFull.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
                 generator.modelOutput
         );
-        ResourceLocation ingredientOnlyLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation ingredientOnlyLit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/ingredient_only_lit",
                 baseIngredientOnly.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
                 generator.modelOutput
         );
-        ResourceLocation ingredientOnlyUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation ingredientOnlyUnlit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/ingredient_only_unlit",
                 baseIngredientOnly.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
                 generator.modelOutput
         );
-        ResourceLocation catalystOnlyLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation catalystOnlyLit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/catalyst_only_lit",
                 baseCatalystOnly.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
                 generator.modelOutput
         );
-        ResourceLocation catalystOnlyUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation catalystOnlyUnlit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/catalyst_only_unlit",
                 baseCatalystOnly.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
                 generator.modelOutput
         );
-        ResourceLocation emptyLit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation emptyLit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/empty_lit",
                 baseEmpty.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_LIT),
                 generator.modelOutput
         );
-        ResourceLocation emptyUnlit = KlaxonModelTemplates.DEEPSLATE_BLAST_PROCESSOR.createWithSuffix(
+        ResourceLocation emptyUnlit = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(
                 block,
                 "/empty_unlit",
                 baseEmpty.copyAndUpdate(TextureSlot.FRONT, KlaxonTextures.DEEPSLATE_BLAST_PROCESSOR_FRONT_UNLIT),
@@ -321,6 +322,37 @@ public abstract class KlaxonBlockModelSubProvider {
                         .select(DeepslateBlastProcessorLootState.EMPTY, false, modelVariant(emptyUnlit))
                 )
                 .with(BlockModelGenerators.createHorizontalFacingDispatch())
+        );
+    }
+
+    protected void registerSteelBlastProcessor(Block block) {
+        ResourceLocation baseRl = ModelLocationUtils.getModelLocation(block);
+        ResourceLocation idleRl = baseRl.withSuffix("/idle");
+        ResourceLocation triggeredRl = baseRl.withSuffix("/triggered");
+
+        TextureMapping idleMapping = new TextureMapping()
+                .put(TextureSlot.FRONT, idleRl.withSuffix("/front"))
+                .put(TextureSlot.SIDE, idleRl.withSuffix("/side"))
+                .put(TextureSlot.TOP, baseRl.withSuffix("/grate"))
+                .put(TextureSlot.BOTTOM, baseRl.withSuffix("/bottom"))
+                .put(TextureSlot.BACK, idleRl.withSuffix("/back"))
+                .put(TextureSlot.PARTICLE, idleRl.withSuffix("/front"));
+        TextureMapping triggeredMapping = idleMapping
+                .copyAndUpdate(TextureSlot.FRONT, triggeredRl.withSuffix("/front"))
+                .put(TextureSlot.SIDE, triggeredRl.withSuffix("/side"))
+                .put(TextureSlot.BACK, triggeredRl.withSuffix("/back"))
+                .put(TextureSlot.PARTICLE, triggeredRl.withSuffix("/front"));
+
+        KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.create(idleRl, idleMapping, generator.modelOutput);
+        KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.create(triggeredRl, triggeredMapping, generator.modelOutput);
+
+        generator.delegateItemModel(block, idleRl);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+                .with(PropertyDispatch.property(SteelBlastProcessorBlock.TRIGGERED)
+                        .select(true, modelVariant(triggeredRl))
+                        .select(false, modelVariant(idleRl))
+                ).with(BlockModelGenerators.createHorizontalFacingDispatch())
         );
     }
 

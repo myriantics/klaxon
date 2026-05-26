@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,triggered=false": {
+      "model": "klaxon:block/steel_blast_processor/idle",
+      "y": 90
+    },
+    "facing=east,triggered=true": {
+      "model": "klaxon:block/steel_blast_processor/triggered",
+      "y": 90
+    },
+    "facing=north,triggered=false": {
+      "model": "klaxon:block/steel_blast_processor/idle"
+    },
+    "facing=north,triggered=true": {
+      "model": "klaxon:block/steel_blast_processor/triggered"
+    },
+    "facing=south,triggered=false": {
+      "model": "klaxon:block/steel_blast_processor/idle",
+      "y": 180
+    },
+    "facing=south,triggered=true": {
+      "model": "klaxon:block/steel_blast_processor/triggered",
+      "y": 180
+    },
+    "facing=west,triggered=false": {
+      "model": "klaxon:block/steel_blast_processor/idle",
+      "y": 270
+    },
+    "facing=west,triggered=true": {
+      "model": "klaxon:block/steel_blast_processor/triggered",
+      "y": 270
+    }
+  }
+}

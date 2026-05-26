@@ -42,6 +42,7 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
     private void registerMachineBlockStateModels() {
         // blast processors
         registerDeepslateBlastProcessor(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+        registerSteelBlastProcessor(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value());
         registerPrecisionDispenser(KlaxonBlocks.PRECISION_DISPENSER.value());
         registerModularExplosive(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value());
 

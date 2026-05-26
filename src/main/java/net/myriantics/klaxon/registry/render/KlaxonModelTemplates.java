@@ -45,8 +45,8 @@ public abstract class KlaxonModelTemplates {
             TextureSlot.PARTICLE
     );
     public static final ModelTemplate ROTATED_NETHER_REACTOR_CORE = copyDir("rotated", NORMAL_NETHER_REACTOR_CORE);
-    public static final ModelTemplate DEEPSLATE_BLAST_PROCESSOR = block(
-            "template/deepslate_blast_processor",
+    public static final ModelTemplate CUBE_FRONT_SIDE_TOP_BOTTOM_BACK = block(
+            "template/front_side_top_bottom_back",
             TextureSlot.FRONT,
             TextureSlot.SIDE,
             TextureSlot.TOP,
@@ -56,7 +56,7 @@ public abstract class KlaxonModelTemplates {
     );
     public static final ModelTemplate CUBE_FRONT_SIDE_BACK = copyDir(
             "cube_front_side_back",
-            DEEPSLATE_BLAST_PROCESSOR,
+            CUBE_FRONT_SIDE_TOP_BOTTOM_BACK,
             TextureSlot.FRONT,
             TextureSlot.SIDE,
             TextureSlot.BACK,
@@ -64,7 +64,7 @@ public abstract class KlaxonModelTemplates {
     );
     public static final ModelTemplate CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS = copyDir(
             "cube_top_side_bottom_two_layers",
-            DEEPSLATE_BLAST_PROCESSOR,
+            CUBE_FRONT_SIDE_TOP_BOTTOM_BACK,
             KlaxonTextureSlots.TOP_LAYER_0,
             KlaxonTextureSlots.SIDE_LAYER_0,
             KlaxonTextureSlots.TOP_LAYER_1,

@@ -1,5 +1,5 @@
 {
-  "parent": "klaxon:block/template/deepslate_blast_processor",
+  "parent": "klaxon:block/template/front_side_top_bottom_back",
   "textures": {
     "back": "klaxon:block/deepslate_blast_processor/back",
     "bottom": "klaxon:block/deepslate_blast_processor/bottom",

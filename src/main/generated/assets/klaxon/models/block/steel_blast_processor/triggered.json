@@ -1,0 +1,11 @@
+{
+  "parent": "klaxon:block/template/front_side_top_bottom_back",
+  "textures": {
+    "back": "klaxon:block/steel_blast_processor/triggered/back",
+    "bottom": "klaxon:block/steel_blast_processor/bottom",
+    "front": "klaxon:block/steel_blast_processor/triggered/front",
+    "particle": "klaxon:block/steel_blast_processor/triggered/front",
+    "side": "klaxon:block/steel_blast_processor/triggered/side",
+    "top": "klaxon:block/steel_blast_processor/grate"
+  }
+}
