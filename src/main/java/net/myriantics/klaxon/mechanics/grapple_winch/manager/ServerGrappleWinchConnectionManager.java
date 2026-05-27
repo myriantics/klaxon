@@ -4,14 +4,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
@@ -147,9 +144,8 @@ public final class ServerGrappleWinchConnectionManager extends GrappleWinchConne
         );
     }
 
-    public static String nameFor(ResourceKey<Level> worldKey) {
-        ResourceLocation id = worldKey.location();
-        return id.getNamespace() + "_" + id.getPath() + "_grapple_winch_connection_manager";
+    public static String nameFor() {
+        return "klaxon_grapple_winch_connection_manager";
     }
 
     @Override

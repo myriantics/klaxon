@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -45,9 +46,9 @@ public abstract class KlaxonItemModelPredicates {
         }));
         register(KlaxonItems.GRAPPLE_WINCH, KlaxonItemModelPredicateIds.RETRACTING, (((stack, world, entity, seed) -> {
             ClientGrappleWinchConnectionManager manager = ClientGrappleWinchConnectionManager.get(world);
-        /*if (entity instanceof PlayerEntity player && manager.fromPlayer(player) instanceof ClientGrappleWinchConnection connection && connection.isRetracting()) {
+        if (entity instanceof Player player && manager.fromPlayer(player) instanceof ClientGrappleWinchConnection connection && connection.isRetracting()) {
             return 1.0f;
-        }*/
+        }
             return 0;
         })));
         register(KlaxonItems.STEEL_LIGHTER, KlaxonItemModelPredicateIds.USE_RATIO, (itemStack, clientLevel, livingEntity, i) ->  {

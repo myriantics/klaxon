@@ -49,7 +49,7 @@ public abstract class ServerLevelMixin extends Level implements ServerGrappleWin
     private void klaxon$initGrappleWinchConnectionManager(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<CustomSpawner> spawners, boolean shouldTickTime, RandomSequences randomSequencesState, CallbackInfo ci) {
         this.klaxon$connectionManager = this.getDataStorage().computeIfAbsent(
                 ServerGrappleWinchConnectionManager.getPersistentStateType((ServerLevel) (Object) this),
-                ServerGrappleWinchConnectionManager.nameFor(worldKey)
+                ServerGrappleWinchConnectionManager.nameFor()
         );
     }
 
@@ -58,7 +58,7 @@ public abstract class ServerLevelMixin extends Level implements ServerGrappleWin
             at = @At(value = "TAIL")
     )
     private void klaxon$tickGrappleWinchConnectionManager(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-        this.getProfiler().push("server_grapple_winch_connection_manager");
+        this.getProfiler().push("klaxon:manager/grapple_winch_connection/server");
         this.klaxon$connectionManager.tick();
         this.getProfiler().pop();
     }
