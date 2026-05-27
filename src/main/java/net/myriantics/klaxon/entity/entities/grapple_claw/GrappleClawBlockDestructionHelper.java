@@ -138,7 +138,7 @@ public abstract class GrappleClawBlockDestructionHelper {
 
         // drop all of the output stacks at the grapple claw's location, ready to be dragged
         for (ItemStack stack : outputStacks) {
-            grappleClaw.draggedItemsContainer.add(grappleClaw.spawnAtLocation(stack));
+            grappleClaw.draggedEntitiesContainer.add(grappleClaw.spawnAtLocation(stack));
         }
 
         // pop advancement trigger and increase mined stat

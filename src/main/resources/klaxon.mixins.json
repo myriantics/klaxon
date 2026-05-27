@@ -40,6 +40,7 @@
     "minecraft.grapple_winch.grapple_claw.AbstractArrowMixin",
     "minecraft.grapple_winch.grapple_claw.EnderDragonAccessor",
     "minecraft.grapple_winch.grapple_claw.EntityMixin",
+    "minecraft.grapple_winch.grapple_claw.ProjectileInvoker",
     "minecraft.grapple_winch.grapple_winch.PlayerListMixin",
     "minecraft.grapple_winch.hook.AbstractArrowMixin",
     "minecraft.grapple_winch.hook.EntityMixin",

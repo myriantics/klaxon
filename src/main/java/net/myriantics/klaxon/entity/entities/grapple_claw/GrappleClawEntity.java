@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -16,17 +17,15 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.boss.EnderDragonPart;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.EyeOfEnder;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.*;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
@@ -38,6 +37,7 @@ import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWin
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.GrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchConnectionManager;
 import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.EnderDragonAccessor;
+import net.myriantics.klaxon.mixin.minecraft.grapple_winch.grapple_claw.ProjectileInvoker;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
@@ -56,10 +56,12 @@ import java.util.function.Consumer;
 public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
 
     protected static final EntityDataAccessor<Integer> HOOKED_ENTITY_ID = SynchedEntityData.defineId(GrappleClawEntity.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<List<Integer>> DRAGGED_ITEM_IDS = SynchedEntityData.defineId(GrappleClawEntity.class, KlaxonTrackedDataHandlerRegistry.INT_LIST);
+    protected static final EntityDataAccessor<List<Integer>> DRAGGED_ENTITY_IDS = SynchedEntityData.defineId(GrappleClawEntity.class, KlaxonTrackedDataHandlerRegistry.INT_LIST);
+
+    private static final int MAX_DRAGGED_ENTITIES = 16;
 
     private final HookedEntityContainer hookedEntityContainer = new HookedEntityContainer();
-    public final DraggedItemsContainer draggedItemsContainer = new DraggedItemsContainer();
+    public final DraggedEntitiesContainer draggedEntitiesContainer = new DraggedEntitiesContainer();
 
     public GrappleClawEntity(EntityType<? extends GrappleClawEntity> entityType, Level world) {
         super(entityType, world);
@@ -77,7 +79,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(HOOKED_ENTITY_ID, 0);
-        builder.define(DRAGGED_ITEM_IDS, List.of());
+        builder.define(DRAGGED_ENTITY_IDS, List.of());
     }
 
     @Override
@@ -86,8 +88,8 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
         if (data.equals(HOOKED_ENTITY_ID)) {
             this.hookedEntityContainer.onTrackedDataSet(this.getEntityData().get(HOOKED_ENTITY_ID));
         }
-        if (data.equals(DRAGGED_ITEM_IDS)) {
-            this.draggedItemsContainer.onTrackedDataUpdate(this.getEntityData().get(DRAGGED_ITEM_IDS));
+        if (data.equals(DRAGGED_ENTITY_IDS)) {
+            this.draggedEntitiesContainer.onTrackedDataUpdate(this.getEntityData().get(DRAGGED_ENTITY_IDS));
         }
     }
 
@@ -228,17 +230,37 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
 
         // if we hit the attached player, attempt to fast reload
         if (connection != null && hitEntity.equals(connection.getPlayer())) {
-            // attempt to pickup items into attached player when hitting
-            this.draggedItemsContainer.forEach((itemEntity -> {
-                if (!itemEntity.isRemoved()) {
-                    itemEntity.playerTouch(connection.getPlayer());
+            Player player = connection.getPlayer();
+            EntityHitResult hitResult = new EntityHitResult(connection.getPlayer(), connection.getPlayer().getEyePosition());
+
+            // run dragged entity logic
+            for (Entity entity : this.draggedEntitiesContainer.draggedEntities) {
+                if (!entity.isRemoved()) {
+                    if (entity instanceof Projectile projectile) {
+                        ((ProjectileInvoker) projectile).klaxon$invokeOnHit(hitResult);
+                    } else if (entity instanceof EyeOfEnder eyeOfEnder) {
+                        if (!level().isClientSide()) {
+                            eyeOfEnder.playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
+                            eyeOfEnder.discard();
+                            player.addItem(eyeOfEnder.getItem());
+                        }
+                    } else {
+                        entity.playerTouch(connection.getPlayer());
+
+                        // yoink that tasty xp
+                        if (entity instanceof ExperienceOrb) {
+                            player.takeXpDelay = 0;
+                        }
+                    }
                 }
-            }));
+            }
 
             if (!(this.klaxon$tryFastReload(connection.getPlayer(), connection.getPlayer().getMainHandItem()) || this.klaxon$tryFastReload(connection.getPlayer(), connection.getPlayer().getOffhandItem()))) {
                 // if we can't be picked up, bonk all velocity
                 setDeltaMovement(Vec3.ZERO);
             }
+        } else if (hitEntity instanceof ThrownEnderpearl pearl) {
+            this.draggedEntitiesContainer.add(pearl);
         } else if (!this.hookedEntityContainer.tryHook(hitEntity)) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01, -0.1, -0.01));
         }
@@ -252,7 +274,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
     @Override
     protected void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        this.getEntityData().set(DRAGGED_ITEM_IDS, List.of());
+        this.getEntityData().set(DRAGGED_ENTITY_IDS, List.of());
     }
 
     @Override
@@ -289,7 +311,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
         GrappleWinchConnectionManager manager = GrappleWinchConnectionManager.get(world);
         @Nullable GrappleWinchConnection connection = manager.fromHook(this);
         if (connection != null && connection.isRetracting()) {
-            this.draggedItemsContainer.tick(connection);
+            this.draggedEntitiesContainer.tick(connection);
         }
 
         if (this.hookedEntityContainer.isPresent()) {
@@ -478,7 +500,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
     @Override
     public void klaxon$onDisconnect(CableDetachmentReason reason) {
         this.hookedEntityContainer.release(false);
-        this.draggedItemsContainer.clear();
+        this.draggedEntitiesContainer.clear();
     }
 
     @Override
@@ -517,70 +539,72 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
 
     }
 
-    public class DraggedItemsContainer {
-        private final HashSet<ItemEntity> draggedItems = new HashSet<>();
+    public class DraggedEntitiesContainer {
+        private final HashSet<Entity> draggedEntities = new HashSet<>();
 
         private void tick(GrappleWinchConnection connection) {
             if (connection instanceof ServerGrappleWinchConnection) {
-                this.gatherNearbyItemEntities(GrappleClawEntity.this.getBoundingBox().inflate(GrappleClawEntity.this.getBbHeight()));
+                this.gatherNearbyEntities(GrappleClawEntity.this.getBoundingBox().inflate(GrappleClawEntity.this.getBbHeight()));
             }
             if (!connection.isHookAnchored()) {
                 this.moveItems();
             }
+            if (GrappleClawEntity.this.hasHookedEntity()) {
+                this.clear();
+            }
         }
 
-        private void onTrackedDataUpdate(List<Integer> newItemIds) {
-            if (newItemIds.isEmpty()) {
+        private void onTrackedDataUpdate(List<Integer> newEntityIds) {
+            if (newEntityIds.isEmpty()) {
                 this.clear();
             } else {
                 // purge stale items
-                this.draggedItems.removeIf((itemEntity -> !newItemIds.contains(itemEntity.getId())));
+                this.draggedEntities.removeIf((itemEntity -> !newEntityIds.contains(itemEntity.getId())));
 
                 // add the new entities
-                for (int id : newItemIds) {
+                for (int id : newEntityIds) {
                     Entity entity = GrappleClawEntity.this.level().getEntity(id);
-                    if (entity != null && !entity.isRemoved() && entity instanceof ItemEntity itemEntity) {
-                        this.draggedItems.add(itemEntity);
+                    if (entity != null && !entity.isRemoved() && entity.getType().is(KlaxonEntityTypeTags.GRAPPLE_CLAW_DRAGGABLE)) {
+                        this.draggedEntities.add(entity);
                     }
                 }
             }
         }
 
-        public void add(ItemEntity entity) {
-            this.draggedItems.add(entity);
+        public void add(Entity entity) {
+            this.draggedEntities.add(entity);
             this.sync();
         }
 
-        private void gatherNearbyItemEntities(AABB box) {
+        private void gatherNearbyEntities(AABB box) {
             // yonk nearby entities and add to list
-            this.draggedItems.addAll(GrappleClawEntity.this.level().getEntities(
-                    EntityTypeTest.forClass(ItemEntity.class),
+            List<Entity> yoinkableEntities = GrappleClawEntity.this.level().getEntities(
+                    GrappleClawEntity.this,
                     box,
-                    (entity) -> !entity.isRemoved()
-            ));
+                    entity -> entity.getType().is(KlaxonEntityTypeTags.GRAPPLE_CLAW_DRAGGABLE)
+            );
+            this.draggedEntities.addAll(yoinkableEntities.subList(0, Math.min(yoinkableEntities.size(), MAX_DRAGGED_ENTITIES)));
             this.sync();
         }
 
         private void moveItems() {
-            for (ItemEntity itemEntity : this.draggedItems) {
-                itemEntity.setDeltaMovement(GrappleClawEntity.this.getDeltaMovement());
-                itemEntity.setPos(GrappleClawEntity.this.position());
-            }
-        }
-
-        private void forEach(Consumer<ItemEntity> consumer) {
-            for (ItemEntity entity : this.draggedItems) {
-                consumer.accept(entity);
+            for (Entity entity : this.draggedEntities) {
+                entity.setDeltaMovement(GrappleClawEntity.this.getDeltaMovement());
+                entity.moveTo(GrappleClawEntity.this.position());
             }
         }
 
         private void clear() {
-            this.draggedItems.clear();
+            for (Entity entity : this.draggedEntities) {
+                entity.setDeltaMovement(Vec3.ZERO);
+                entity.moveTo(GrappleClawEntity.this.position());
+            }
+            this.draggedEntities.clear();
             this.sync();
         }
 
         public void sync() {
-            GrappleClawEntity.this.getEntityData().set(DRAGGED_ITEM_IDS, this.draggedItems.stream().map(Entity::getId).toList());
+            GrappleClawEntity.this.getEntityData().set(DRAGGED_ENTITY_IDS, this.draggedEntities.stream().map(Entity::getId).toList());
         }
     }
 
@@ -698,7 +722,7 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                 KlaxonAdvancementTriggers.triggerEntityGrapple(serverPlayer, entity);
             }
 
-            GrappleClawEntity.this.draggedItemsContainer.clear();
+            GrappleClawEntity.this.draggedEntitiesContainer.clear();
 
             // play sound
             claw.playSoundAtBothCableEndsIfPossible(

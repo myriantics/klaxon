@@ -31,6 +31,14 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
         getOrCreateTagBuilder(KlaxonEntityTypeTags.WALLJUMP_MOVABLE_ENTITIES)
                 .forceAddTag(ConventionalEntityTypeTags.MINECARTS);
 
+        getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_DRAGGABLE)
+                .add(EntityType.ITEM)
+                .add(EntityType.EXPERIENCE_ORB)
+                .add(EntityType.EXPERIENCE_BOTTLE)
+                .add(EntityType.SMALL_FIREBALL)
+                .add(EntityType.ENDER_PEARL)
+                .add(EntityType.EYE_OF_ENDER);
+
         // weight tags
         getOrCreateTagBuilder(KlaxonEntityTypeTags.HEAVY_ENTITIES)
                 .forceAddTag(ConventionalEntityTypeTags.BOSSES)
@@ -64,7 +72,8 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
                 .add(EntityType.ARMOR_STAND);
         getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_HOOKING_DENYLIST)
                 .add(EntityType.ENDERMAN);
-        getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_COLLISION_DENYLIST);
+        getOrCreateTagBuilder(KlaxonEntityTypeTags.GRAPPLE_CLAW_COLLISION_DENYLIST)
+                .forceAddTag(KlaxonEntityTypeTags.GRAPPLE_CLAW_DRAGGABLE);
 
         getOrCreateTagBuilder(EntityTypeTags.IMPACT_PROJECTILES)
                 .add(KlaxonEntityTypes.GRAPPLE_CLAW.value());

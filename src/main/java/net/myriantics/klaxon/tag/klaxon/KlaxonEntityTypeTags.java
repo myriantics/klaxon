@@ -13,6 +13,8 @@ public abstract class KlaxonEntityTypeTags {
             createTag("ferromagnetic_entities");
     public static final TagKey<EntityType<?>> WALLJUMP_MOVABLE_ENTITIES =
             createTag("walljump_movable_entities");
+    public static final TagKey<EntityType<?>> GRAPPLE_CLAW_DRAGGABLE =
+            createTag("grapple_claw_draggable");
 
     // entity weight logistics tags
     public static final TagKey<EntityType<?>> HEAVY_ENTITIES =
