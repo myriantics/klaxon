@@ -19,6 +19,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.boss.EnderDragonPart;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
@@ -248,12 +249,14 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                             }
                         }
                     } else {
-                        entity.playerTouch(connection.getPlayer());
-
-                        // yoink that tasty xp
-                        if (entity instanceof ExperienceOrb) {
+                        // no delay for you.
+                        if (entity instanceof ItemEntity itemEntity) {
+                            itemEntity.setNoPickUpDelay();
+                        } else if (entity instanceof ExperienceOrb) {
                             player.takeXpDelay = 0;
                         }
+
+                        entity.playerTouch(connection.getPlayer());
                     }
                 }
             }
