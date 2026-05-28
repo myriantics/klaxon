@@ -242,7 +242,10 @@ public class GrappleClawEntity extends AbstractArrow implements GrapplingHook {
                         if (!level().isClientSide()) {
                             eyeOfEnder.playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
                             eyeOfEnder.discard();
-                            player.addItem(eyeOfEnder.getItem());
+                            ItemStack stack = eyeOfEnder.getItem().copy();
+                            if (!player.addItem(stack)) {
+                                player.drop(stack, false);
+                            }
                         }
                     } else {
                         entity.playerTouch(connection.getPlayer());
