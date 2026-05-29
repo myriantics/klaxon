@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry.block;
 
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
@@ -28,4 +29,6 @@ public abstract class KlaxonBlockStateProperties {
 
     public static final EnumProperty<FaultyHeavyGatedPressurePlateBlock.State> FAULTY_HEAVY_GATED_PRESSURE_PLATE_STATE = EnumProperty.create("press_state", FaultyHeavyGatedPressurePlateBlock.State.class);
 
+    // AIO duct driver
+    public static final DirectionProperty POWER_SOCKET_FACING = DirectionProperty.create("power_socket_facing");
 }

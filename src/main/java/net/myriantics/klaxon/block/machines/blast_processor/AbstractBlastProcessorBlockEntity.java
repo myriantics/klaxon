@@ -93,7 +93,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         } else if (catalystData.explosionPower() <= 0 || catalystData.explosionPower() < recipeData.explosionPowerMin()) {
             List<ItemStack> ejectedContents = new ArrayList<>(this.getContainerSize());
             for (ItemStack contained : this.getItems()) {
-                KlaxonItemStackHelper.insertAndMerge(ejectedContents, contained.copy());
+                KlaxonItemStackHelper.insertAndMergeAndAdd(ejectedContents, contained.copy());
             }
             for (ItemStack ejected : ejectedContents) {
                 this.ejectItem(ejected, facing);
@@ -156,7 +156,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
             for (int i = 0; i < ingredient.getCount(); i++) {
                 for (ItemStack stack : recipe.properlyAssemble(input, level.registryAccess())) {
-                    KlaxonItemStackHelper.insertAndMerge(outputStacks, stack);
+                    KlaxonItemStackHelper.insertAndMergeAndAdd(outputStacks, stack);
                 }
             }
 

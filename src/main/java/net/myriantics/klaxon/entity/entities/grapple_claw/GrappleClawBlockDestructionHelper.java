@@ -115,7 +115,7 @@ public abstract class GrappleClawBlockDestructionHelper {
                 if (veinminePredicate.test(targetState)) {
                     // condense dropped stacks so we don't get 5 billion item entities
                     for (ItemStack droppedStack : world.getBlockState(targetPos).getDrops(lootContextBuilder)) {
-                        KlaxonItemStackHelper.insertAndMerge(outputStacks, droppedStack);
+                        KlaxonItemStackHelper.insertAndMergeAndAdd(outputStacks, droppedStack);
                     }
 
                     world.destroyBlock(targetPos, false, owner);

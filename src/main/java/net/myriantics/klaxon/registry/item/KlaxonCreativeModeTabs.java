@@ -57,6 +57,10 @@ public abstract class KlaxonCreativeModeTabs {
                 cosmeticModularExplosive.set(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(), new ModularExplosiveBlockConfigComponent(-1, false));
                 entries.accept(cosmeticModularExplosive);
 
+                // ducts
+                entries.accept(KlaxonItems.AIO_DUCT_DRIVER.value());
+
+                // bs
                 entries.accept(KlaxonItems.HEAVY_GATED_PRESSURE_PLATE.value());
                 entries.accept(KlaxonItems.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value());
                 // entries.add(KlaxonItems.WAXED_COPPER_PIPE_MATRIX);

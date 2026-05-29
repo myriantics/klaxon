@@ -1,11 +1,14 @@
 package net.myriantics.klaxon.registry.block;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.Holder;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.util.container.KlaxonBaseContainerBlockEntity;
 import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
+import net.myriantics.klaxon.util.container.KlaxonStorageProvider;
 
 public abstract class KlaxonItemStorages {
 
@@ -18,11 +21,11 @@ public abstract class KlaxonItemStorages {
         KlaxonCommon.LOGGER.info("Registered KLAXON's Item Storages!");
     }
 
-    private static <T extends KlaxonBaseSidedContainerBlockEntity> void register(Holder<BlockEntityType<T>> blockEntityTypeHolder) {
+    private static <T extends BlockEntity & KlaxonStorageProvider<ItemVariant>> void register(Holder<BlockEntityType<T>> blockEntityTypeHolder) {
         register(blockEntityTypeHolder.value());
     }
 
-    private static <T extends KlaxonBaseSidedContainerBlockEntity> void register(BlockEntityType<T> blockEntityType) {
-        ItemStorage.SIDED.registerForBlockEntity(KlaxonBaseContainerBlockEntity::getStorageForSide, blockEntityType);
+    private static <T extends BlockEntity & KlaxonStorageProvider<ItemVariant>> void register(BlockEntityType<T> blockEntityType) {
+        ItemStorage.SIDED.registerForBlockEntity(KlaxonStorageProvider::getStorageForSide, blockEntityType);
     }
 }

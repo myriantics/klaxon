@@ -1,13 +1,22 @@
 package net.myriantics.klaxon.util;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 public abstract class KlaxonItemStackHelper {
+    public static void insertAndMergeAndAdd(List<ItemStack> list, ItemStack insertedStack) {
+        insertAndMerge(list, insertedStack);
+
+        // insert whatever's left into the list
+        if (!insertedStack.isEmpty()) {
+            list.add(insertedStack);
+        }
+    }
+
     public static void insertAndMerge(List<ItemStack> list, ItemStack insertedStack) {
-        for (int i = 0; i < list.size(); i++) {
-            ItemStack listStack = list.get(i);
+        for (ItemStack listStack : list) {
             if (listStack.isStackable() && ItemStack.isSameItemSameComponents(listStack, insertedStack)) {
                 int listStackSpace = listStack.getMaxStackSize() - listStack.getCount();
                 int transferredCount = Math.min(listStackSpace, insertedStack.getCount());
@@ -19,11 +28,6 @@ public abstract class KlaxonItemStackHelper {
             if (insertedStack.isEmpty()) {
                 break;
             }
-        }
-
-        // insert whatever's left into the list
-        if (!insertedStack.isEmpty()) {
-            list.add(insertedStack);
         }
     }
 
@@ -48,5 +52,11 @@ public abstract class KlaxonItemStackHelper {
 
     public static boolean hasStackedToMax(ItemStack stack) {
         return stack.getMaxStackSize() == stack.getCount();
+    }
+
+    public static int remainingStackCapacity(ItemStack stack) {
+        int maxStackSize = stack.getMaxStackSize();
+        int count = stack.getCount();
+        return count < maxStackSize ? maxStackSize - count : 0;
     }
 }

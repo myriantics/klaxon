@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
+import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlockEntity;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlockEntity;
 
@@ -32,6 +33,11 @@ public abstract class KlaxonBlockEntityTypes {
             "modular_explosive",
             KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK,
             ModularExplosiveBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<AIODuctDriverBlockEntity>> AIO_DUCT_DRIVER = register(
+            "all_in_one_duct_driver",
+            KlaxonBlocks.AIO_DUCT_DRIVER,
+            AIODuctDriverBlockEntity::new
     );
 
     public static void init() {

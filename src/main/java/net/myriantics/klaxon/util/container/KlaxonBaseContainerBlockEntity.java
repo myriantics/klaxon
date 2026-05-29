@@ -1,10 +1,8 @@
 package net.myriantics.klaxon.util.container;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedSlottedStorage;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -24,9 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContainerBlockEntity {
+public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContainerBlockEntity implements KlaxonStorageProvider<ItemVariant> {
 
     protected final NonNullList<ItemStack> inventory;
     private final ContainerPartition[] partitionedSlots;
@@ -121,7 +118,8 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         }
     }
 
-    public Storage<ItemVariant> getStorageForSide(@Nullable Direction direction) {
+    @Override
+    public @Nullable Storage<ItemVariant> getStorageForSide(@Nullable Direction direction) {
         return this.fullAccess;
     }
 

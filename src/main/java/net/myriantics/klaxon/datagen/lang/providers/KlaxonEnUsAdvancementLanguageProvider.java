@@ -112,7 +112,7 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
         );
         addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.APPLY_ANY_MUFFLER,
-                "Peace And Quiet",
+                "Whisper Quiet",
                 "Apply any Muffler to any Machine"
         );
         addStageOneAdvancement(

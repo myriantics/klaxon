@@ -20,6 +20,7 @@ import net.myriantics.klaxon.block.functional.pressure_plate.HeavyGatedPressureP
 import net.myriantics.klaxon.block.machines.CasingBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
@@ -100,6 +101,10 @@ public abstract class KlaxonBlocks {
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.CRUDE_STEEL_CASING).lightLevel((state) -> 12).noOcclusion()));
     public static final Holder<Block> MODULAR_EXPLOSIVE_BLOCK = registerBlock("modular_explosive_block",
             new ModularExplosiveBlock(copyProperties(STEEL_CASING)));
+
+    // item ducts
+    public static final Holder<Block> AIO_DUCT_DRIVER = registerBlock("all_in_one_duct_driver",
+            new AIODuctDriverBlock(copyProperties(Blocks.IRON_BLOCK)));
 
     // workstations
     public static final Holder<Block> STEEL_WORKBENCH = registerBlock(

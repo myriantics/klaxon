@@ -46,7 +46,7 @@ public abstract class KlaxonBaseSidedContainerBlockEntity extends KlaxonBaseCont
         return false;
     }
 
-    public Storage<ItemVariant> getStorageForSide(@Nullable Direction side) {
+    public @Nullable Storage<ItemVariant> getStorageForSide(@Nullable Direction side) {
         if (side == null) {
             return super.getStorageForSide(null);
         } else {
