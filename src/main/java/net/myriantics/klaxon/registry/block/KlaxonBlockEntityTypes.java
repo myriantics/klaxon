@@ -10,6 +10,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlockEntity;
+import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlockEntity;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlockEntity;
 
@@ -38,6 +39,11 @@ public abstract class KlaxonBlockEntityTypes {
             "all_in_one_duct_driver",
             KlaxonBlocks.AIO_DUCT_DRIVER,
             AIODuctDriverBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<DuctSegmentBlockEntity>> DUCT_SEGMENT = register(
+            "duct_segment",
+            KlaxonBlocks.DUCT_SEGMENT,
+            DuctSegmentBlockEntity::new
     );
 
     public static void init() {

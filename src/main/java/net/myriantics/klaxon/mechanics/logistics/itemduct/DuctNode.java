@@ -4,9 +4,9 @@ import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 
 public interface DuctNode {
-    boolean advance(Direction advancingDirection);
+    @Nullable Direction findNextDirection(Direction movementDirection);
 
-    @Nullable DuctNode last();
+    boolean push(Direction inputDirection, int depth);
 
-    @Nullable DuctNode next();
+    void setPayload(@Nullable DuctPayload payload);
 }

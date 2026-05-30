@@ -87,6 +87,7 @@ public abstract class KlaxonBlockItems {
 
     // ducts
     public static final Holder<Item> AIO_DUCT_DRIVER = registerBlockItem(KlaxonBlocks.AIO_DUCT_DRIVER);
+    public static final Holder<Item> DUCT_SEGMENT = registerBlockItem(KlaxonBlocks.DUCT_SEGMENT);
 
     // workstations
     public static final Holder<Item> STEEL_WORKBENCH = registerBlockItem(KlaxonBlocks.STEEL_WORKBENCH);

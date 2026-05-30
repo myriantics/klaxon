@@ -58,6 +58,7 @@ public abstract class KlaxonCreativeModeTabs {
                 entries.accept(cosmeticModularExplosive);
 
                 // ducts
+                entries.accept(KlaxonItems.DUCT_SEGMENT.value());
                 entries.accept(KlaxonItems.AIO_DUCT_DRIVER.value());
 
                 // bs

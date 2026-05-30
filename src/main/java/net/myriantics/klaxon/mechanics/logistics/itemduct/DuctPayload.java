@@ -65,4 +65,30 @@ public final class DuctPayload {
         }
     }
 
+    /**
+     *
+     * @param storage The storage to insert into
+     * @return Only returns true if payload is fully empty
+     */
+    public boolean insert(Storage<ItemVariant> storage) {
+        boolean fullyEmpty = true;
+        for (ItemStack stack : this.stacks) {
+            if (!stack.isEmpty()) {
+                try (Transaction tx = Transaction.openOuter()) {
+                    int count = stack.getCount();
+                    int inserted = Math.toIntExact(storage.insert(ItemVariant.of(stack), count, tx));
+
+                    if (inserted > 0) {
+                        tx.commit();
+                        stack.setCount(count - inserted);
+                        fullyEmpty &= stack.isEmpty();
+                    } else {
+                        tx.abort();
+                    }
+                }
+            }
+        }
+        return fullyEmpty;
+    }
+
 }
