@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.redstone.NeighborUpdater;
+import net.myriantics.klaxon.mechanics.logistics.itemduct.DuctNode;
+import net.myriantics.klaxon.mechanics.logistics.itemduct.DuctPayload;
 import net.myriantics.klaxon.mechanics.logistics.itemduct.IDuctNodeBlock;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +64,7 @@ public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNod
                     } else {
                         break;
                     }
-                    blockEntity.updateDirections(direction, null, newDirectionValue);
+                    blockEntity.updateDirections(direction, newDirectionValue);
                 }
             }
         } else {
@@ -70,7 +73,7 @@ public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNod
                     BlockPos neighborPos = pos.relative(direction);
                     BlockState neighborState = level.getBlockState(neighborPos);
                     boolean isDirectionExtended = state.getValue(PROPERTY_BY_DIRECTION.get(direction));
-                    blockEntity.updateDirections(direction, null, isDirectionExtended);
+                    blockEntity.updateDirections(direction, isDirectionExtended);
                     if (isDirectionExtended) {
                         Direction opposite = direction.getOpposite();
                         // update state
@@ -79,6 +82,17 @@ public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNod
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        super.onRemove(state, level, pos, newState, movedByPiston);
+        if (level.getBlockEntity(pos) instanceof DuctSegmentBlockEntity blockEntity) {
+            @Nullable DuctPayload payload = blockEntity.getPayload();
+            if (payload != null) {
+                Containers.dropContents(level, pos, payload.stacks);
             }
         }
     }
@@ -101,7 +115,7 @@ public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNod
                     extended = true;
                 }
                 if (level.getBlockEntity(pos) instanceof DuctSegmentBlockEntity blockEntity) {
-                    blockEntity.updateDirections(updatedDirection, storage, extended);
+                    blockEntity.updateDirections(updatedDirection, extended);
                 }
             }
         }
@@ -141,11 +155,7 @@ public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNod
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        DuctSegmentBlockEntity blockEntity = new DuctSegmentBlockEntity(pos, state);
-        for (Direction direction : NeighborUpdater.UPDATE_ORDER) {
-            blockEntity.updateDirections(direction, null, state.getValue(PROPERTY_BY_DIRECTION.get(direction)));
-        }
-        return blockEntity;
+        return new DuctSegmentBlockEntity(pos, state);
     }
 
     @Override
@@ -166,5 +176,10 @@ public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNod
     @Override
     public BlockState setConnectionForFace(BlockState original, Direction face, boolean connected) {
         return original.setValue(PROPERTY_BY_DIRECTION.get(face), connected);
+    }
+
+    @Override
+    public DuctNode getNode(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity blockEntity) {
+        return level.getBlockEntity(pos) instanceof DuctSegmentBlockEntity segmentBlockEntity ? segmentBlockEntity : null;
     }
 }

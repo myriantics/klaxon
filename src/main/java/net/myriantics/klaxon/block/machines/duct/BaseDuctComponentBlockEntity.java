@@ -1,25 +1,19 @@
 package net.myriantics.klaxon.block.machines.duct;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.mechanics.logistics.itemduct.DuctNode;
 import net.myriantics.klaxon.mechanics.logistics.itemduct.DuctPayload;
+import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+public abstract class BaseDuctComponentBlockEntity extends BlockEntity implements DuctNode {
 
-public abstract class BaseDuctComponentBlockEntity extends BlockEntity {
 
-    private static final float ITEM_DROPPING_HORIZ_OFFSET = 0.5f + (EntityType.ITEM.getWidth() / 2);
-    private static final float ITEM_DROPPING_VERTICAL_OFFSET = 0.5f + (EntityType.ITEM.getHeight() / 2);
-    private static final float DEFAULT_EJECTED_ITEM_OUTPUT_VELOCITY = 3f/20;
 
     private @Nullable DuctPayload payload;
 
@@ -28,45 +22,38 @@ public abstract class BaseDuctComponentBlockEntity extends BlockEntity {
     }
 
     protected void clearPayload() {
-        this.payload = null;
+        this.setPayload(null);
     }
 
-    protected void setPayload(@Nullable DuctPayload payload) {
+    public void setPayload(@Nullable DuctPayload payload) {
         this.payload = payload;
+        this.setChanged();
     }
 
     protected boolean hasPayload() {
         return this.payload != null;
     }
 
-    protected @Nullable DuctPayload getPayload() {
+    @Override
+    public @Nullable DuctPayload getPayload() {
         return this.payload;
     }
 
-    protected float getEjectedItemOutputVelocity() {
-        return DEFAULT_EJECTED_ITEM_OUTPUT_VELOCITY;
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains(KlaxonNBTIds.DUCT_PAYLOAD)) {
+            this.payload = DuctPayload.load(tag.getCompound(KlaxonNBTIds.DUCT_PAYLOAD), registries);
+        }
     }
 
-    protected void dumpPayloadOnSide(Direction direction) {
-        Vec3 centerPos = this.worldPosition.getCenter();
-        float ejectedItemOutputVelocity = this.getEjectedItemOutputVelocity();
-        if (this.level instanceof ServerLevel serverLevel && this.payload != null) {
-            for (ItemStack stack : this.payload.stacks) {
-                if (!stack.isEmpty()) {
-                    ItemEntity droppedItem = new ItemEntity(
-                            serverLevel,
-                            centerPos.x + (direction.getStepX() * ITEM_DROPPING_HORIZ_OFFSET),
-                            centerPos.y + (direction.getStepY() * ITEM_DROPPING_VERTICAL_OFFSET),
-                            centerPos.z + (direction.getStepZ() * ITEM_DROPPING_HORIZ_OFFSET),
-                            stack,
-                            direction.getStepX() * ejectedItemOutputVelocity,
-                            direction.getStepY() * ejectedItemOutputVelocity,
-                            direction.getStepZ() * ejectedItemOutputVelocity
-                    );
-                    serverLevel.addFreshEntity(droppedItem);
-                }
-            }
-            this.clearPayload();
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        if (this.payload != null) {
+            CompoundTag payloadTag = new CompoundTag();
+            this.payload.save(payloadTag, registries);
+            tag.put(KlaxonNBTIds.DUCT_PAYLOAD, payloadTag);
         }
     }
 }

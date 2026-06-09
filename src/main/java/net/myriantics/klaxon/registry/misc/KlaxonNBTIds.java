@@ -36,4 +36,9 @@ public abstract class KlaxonNBTIds {
 
     // general
     public static final String CUSTOM_NAME = KlaxonCommon.locateAlt("custom_name");
+
+    // duct payload
+    public static final String DUCT_PAYLOAD = KlaxonCommon.locateAlt("duct_payload");
+    public static final String DUCT_PAYLOAD_SIZE = KlaxonCommon.locateAlt("size");
+    public static final String DUCT_PAYLOAD_STACKS = KlaxonCommon.locateAlt("stacks");
 }

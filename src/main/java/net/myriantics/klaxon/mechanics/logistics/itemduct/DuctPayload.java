@@ -4,9 +4,13 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 
 public final class DuctPayload {
@@ -14,7 +18,11 @@ public final class DuctPayload {
     public final NonNullList<ItemStack> stacks;
 
     public DuctPayload(int size) {
-        this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+        this(NonNullList.withSize(size, ItemStack.EMPTY));
+    }
+
+    private DuctPayload(NonNullList<ItemStack> stacks) {
+        this.stacks = stacks;
     }
 
     public static DuctPayload extract(Storage<ItemVariant> storage, int size) {
@@ -91,4 +99,14 @@ public final class DuctPayload {
         return fullyEmpty;
     }
 
+    public void save(CompoundTag tag, HolderLookup.Provider registries) {
+        tag.putInt(KlaxonNBTIds.DUCT_PAYLOAD_SIZE, this.stacks.size());
+        tag.put(KlaxonNBTIds.DUCT_PAYLOAD_STACKS, ContainerHelper.saveAllItems(new CompoundTag(), this.stacks, registries));
+    }
+
+    public static DuctPayload load(CompoundTag tag, HolderLookup.Provider registries) {
+        DuctPayload payload = new DuctPayload(tag.getInt(KlaxonNBTIds.DUCT_PAYLOAD_SIZE));
+        ContainerHelper.loadAllItems(tag.getCompound(KlaxonNBTIds.DUCT_PAYLOAD_STACKS), payload.stacks, registries);
+        return payload;
+    }
 }

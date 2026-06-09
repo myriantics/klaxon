@@ -3,6 +3,7 @@ package net.myriantics.klaxon.block.machines.duct.driver.aio;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -16,6 +17,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlockEntity;
+import net.myriantics.klaxon.mechanics.logistics.itemduct.DuctNode;
+import net.myriantics.klaxon.mechanics.logistics.itemduct.DuctPayload;
 import net.myriantics.klaxon.mechanics.logistics.itemduct.IDuctNodeBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
@@ -98,7 +102,27 @@ public class AIODuctDriverBlock extends BaseEntityBlock implements IDuctNodeBloc
     }
 
     @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        super.onRemove(state, level, pos, newState, movedByPiston);
+        if (level.getBlockEntity(pos) instanceof AIODuctDriverBlockEntity blockEntity) {
+            @Nullable DuctPayload payload = blockEntity.getPayload();
+            if (payload != null) {
+                Containers.dropContents(level, pos, payload.stacks);
+            }
+        }
+    }
+
+    @Override
     public BlockState setConnectionForFace(BlockState original, Direction face, boolean connected) {
         return original;
+    }
+
+    @Override
+    public DuctNode getNode(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity blockEntity) {
+        if (level.getBlockEntity(pos) instanceof AIODuctDriverBlockEntity node) {
+            return node;
+        } else {
+            return null;
+        }
     }
 }
