@@ -10,6 +10,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 
@@ -29,6 +30,15 @@ public final class DuctPayload {
         DuctPayload payload = new DuctPayload(size);
         payload.extract(storage);
         return payload;
+    }
+
+    public boolean isEmpty() {
+        for (ItemStack stack : this.stacks) {
+            if (!stack.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void extract(Storage<ItemVariant> storage) {
@@ -84,7 +94,7 @@ public final class DuctPayload {
             if (!stack.isEmpty()) {
                 try (Transaction tx = Transaction.openOuter()) {
                     int count = stack.getCount();
-                    int inserted = Math.toIntExact(storage.insert(ItemVariant.of(stack), count, tx));
+                    int inserted = Math.toIntExact(storage.insert(ItemVariant.of(stack.copy()), count, tx));
 
                     if (inserted > 0) {
                         tx.commit();
@@ -92,6 +102,7 @@ public final class DuctPayload {
                         fullyEmpty &= stack.isEmpty();
                     } else {
                         tx.abort();
+                        fullyEmpty = false;
                     }
                 }
             }

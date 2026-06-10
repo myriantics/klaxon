@@ -37,6 +37,8 @@ public abstract class KlaxonCreativeModeTabs {
 
                 entries.accept(KlaxonItems.GRAPPLE_WINCH.value());
                 entries.accept(KlaxonItems.STEEL_GRAPPLE_CLAW.value());
+
+                entries.accept(KlaxonItems.DUCT_INSPECTOR.value());
             })).build();
 
     public static final CreativeModeTab KLAXON_MACHINES = FabricItemGroup.builder()
@@ -59,6 +61,7 @@ public abstract class KlaxonCreativeModeTabs {
 
                 // ducts
                 entries.accept(KlaxonItems.DUCT_SEGMENT.value());
+                entries.accept(KlaxonItems.DETECTOR_DUCT_SEGMENT.value());
                 entries.accept(KlaxonItems.AIO_DUCT_DRIVER.value());
 
                 // bs

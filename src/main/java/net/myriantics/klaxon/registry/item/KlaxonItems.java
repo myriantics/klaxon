@@ -96,6 +96,9 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             .getProperties()
     ));
 
+    // creative / debug
+    public static final Holder<Item> DUCT_INSPECTOR = registerItem("duct_inspector", new DuctInspectorItem(new Item.Properties().rarity(Rarity.EPIC)));
+
     // fractured materials
     public static final Holder<Item> FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");
     public static final Holder<Item> FRACTURED_RAW_COPPER = registerReallySimpleItem("fractured_raw_copper");

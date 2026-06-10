@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,12 +25,12 @@ import net.myriantics.klaxon.mechanics.logistics.itemduct.DuctPayload;
 import net.myriantics.klaxon.mechanics.logistics.itemduct.IDuctNodeBlock;
 import org.jetbrains.annotations.Nullable;
 
-public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNodeBlock {
+public class OmnidirectionalDuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNodeBlock {
 
     private static final float APOTHEM = 6f/16;
     private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public DuctSegmentBlock(Properties properties) {
+    public OmnidirectionalDuctSegmentBlock(Properties properties) {
         super(APOTHEM, properties);
 
         registerDefaultState(stateDefinition.any()
@@ -47,7 +46,7 @@ public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNod
 
     @Override
     protected MapCodec<? extends PipeBlock> codec() {
-        return simpleCodec(DuctSegmentBlock::new);
+        return simpleCodec(OmnidirectionalDuctSegmentBlock::new);
     }
 
     @Override
@@ -180,6 +179,6 @@ public class DuctSegmentBlock extends PipeBlock implements EntityBlock, IDuctNod
 
     @Override
     public DuctNode getNode(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity blockEntity) {
-        return level.getBlockEntity(pos) instanceof DuctSegmentBlockEntity segmentBlockEntity ? segmentBlockEntity : null;
+        return blockEntity instanceof DuctSegmentBlockEntity segmentBlockEntity ? segmentBlockEntity : null;
     }
 }

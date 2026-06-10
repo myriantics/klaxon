@@ -53,6 +53,9 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         // workstations
         registerSteelWorkbench(KlaxonBlocks.STEEL_WORKBENCH);
 
+        // ducts
+        registerOmnidirectionalDuctSegment(KlaxonBlocks.DUCT_SEGMENT.value());
+
         // pipe matrices
         registerPipeMatrixUBend(KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.COPPER_PIPE_MATRIX);
         registerPipeMatrixUBend(KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);

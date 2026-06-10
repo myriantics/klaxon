@@ -39,13 +39,16 @@ public class DuctSegmentBlockEntity extends BaseDuctComponentBlockEntity {
 
     @Override
     public boolean push(DuctPayload payload, Direction inputFace, int remainingDepth) {
-        if (remainingDepth == 0) {
-            return false;
-        } else if (this.getOrInitHandler().push(payload, inputFace, remainingDepth - 1)) {
-            this.setPayload(payload);
+        // if we can fully push our contents into output and there's recursion left to do, return true
+        if (remainingDepth != 0 && this.getOrInitHandler().push(this.getPayload(), inputFace.getOpposite(), remainingDepth - 1)) {
             return true;
         }
-
+        // if we were unable to fully push our contents out, return false to signify that a new payload should not replace content
         return false;
+    }
+
+    @Override
+    public String getStatusForDirection(Direction direction) {
+        return this.getOrInitHandler().getStatusForDirection(direction);
     }
 }

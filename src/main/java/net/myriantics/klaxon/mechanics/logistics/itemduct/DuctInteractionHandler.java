@@ -97,6 +97,12 @@ public class DuctInteractionHandler {
     }
 
     public boolean push(DuctPayload payload, Direction inputFace, int remainingDepth) {
+        boolean fullyEmptySuccess = this.pushInternal(payload, inputFace, remainingDepth);
+        this.owner.setChanged();
+        return fullyEmptySuccess;
+    }
+
+    public boolean pushInternal(DuctPayload payload, Direction inputFace, int remainingDepth) {
         Direction priorityMovementDirection = inputFace.getOpposite();
 
         // try moving in the same direction
@@ -145,17 +151,27 @@ public class DuctInteractionHandler {
 
         // check for nodes next
         @Nullable DuctNode node = this.nodes[outputFace.ordinal()];
-        if (node != null && node.push(payload, outputFace.getOpposite(), remainingDepth)) {
-            node.setPayload(payload);
+        if (node != null) {
+            if (node.push(payload, outputFace, remainingDepth)) {
+                node.setPayload(payload);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // we can skip the next ops if payload is null or empty
+        if (payload == null || payload.isEmpty()) {
+            return true;
         }
 
         // check for storages
         @Nullable Storage<ItemVariant> storage = this.storages[outputFace.ordinal()];
-        if (storage != null && payload.insert(storage)) {
-            return true;
+        if (storage != null) {
+            return payload.insert(storage);
         }
 
-        return this.tryDumpPayloadFromFace(this.owner.getLevel(), this.owner.getBlockPos(), payload, outputFace);
+        return this.tryDumpPayloadFromFace(Objects.requireNonNull(this.owner.getLevel()), this.owner.getBlockPos(), payload, outputFace);
     }
 
     private boolean tryDumpPayloadFromFace(Level level, BlockPos ownerPos, DuctPayload payload, Direction outputFace) {
@@ -175,7 +191,7 @@ public class DuctInteractionHandler {
                             centerPos.x + (outputFace.getStepX() * ITEM_DROPPING_HORIZ_OFFSET),
                             centerPos.y + (outputFace.getStepY() * ITEM_DROPPING_VERTICAL_OFFSET),
                             centerPos.z + (outputFace.getStepZ() * ITEM_DROPPING_HORIZ_OFFSET),
-                            stack,
+                            stack.copy(),
                             outputFace.getStepX() * ejectedItemOutputVelocity,
                             outputFace.getStepY() * ejectedItemOutputVelocity,
                             outputFace.getStepZ() * ejectedItemOutputVelocity
@@ -190,5 +206,21 @@ public class DuctInteractionHandler {
 
     private boolean canDumpItemEntitiesInto(Level level, BlockPos pos, Direction face, BlockState state) {
         return !state.isFaceSturdy(level, pos, face, SupportType.RIGID);
+    }
+
+    public String getStatusForDirection(Direction direction) {
+        if (!this.isDirectionOpen(direction)) {
+            return "CLOSED";
+        }
+
+        if (this.storages[direction.ordinal()] != null) {
+            return "STORAGE";
+        }
+
+        if (this.nodes[direction.ordinal()] != null) {
+            return "NODE";
+        }
+
+        return "OPEN / DUMP";
     }
 }

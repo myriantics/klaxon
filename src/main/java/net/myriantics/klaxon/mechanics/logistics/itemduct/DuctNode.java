@@ -10,4 +10,6 @@ public interface DuctNode {
     void setPayload(@Nullable DuctPayload payload);
 
     @Nullable DuctPayload getPayload();
+
+    String getStatusForDirection(Direction direction);
 }

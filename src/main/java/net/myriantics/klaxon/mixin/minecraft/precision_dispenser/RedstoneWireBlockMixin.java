@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlock;
+import net.myriantics.klaxon.mechanics.wire_redirector.KlaxonRedstoneWireRedirector;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,8 +28,8 @@ public abstract class RedstoneWireBlockMixin {
             return true;
         }
 
-        if (targetState.is(KlaxonBlocks.PRECISION_DISPENSER)) {
-            return targetState.getValue(PrecisionDispenserBlock.FACING).equals(connectionDirection);
+        if (targetState.getBlock() instanceof KlaxonRedstoneWireRedirector redirector) {
+            return redirector.shouldRedirect(targetState, connectionDirection);
         }
 
         return false;

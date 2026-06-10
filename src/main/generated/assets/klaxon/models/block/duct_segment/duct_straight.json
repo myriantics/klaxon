@@ -1,0 +1,7 @@
+{
+  "parent": "klaxon:block/template/duct/straight",
+  "textures": {
+    "particle": "klaxon:block/duct/duct",
+    "texture": "klaxon:block/duct/duct"
+  }
+}

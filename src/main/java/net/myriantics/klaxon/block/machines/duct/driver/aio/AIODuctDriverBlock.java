@@ -69,7 +69,10 @@ public class AIODuctDriverBlock extends BaseEntityBlock implements IDuctNodeBloc
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
         if (!level.isClientSide()) {
-            if (neighborPos.equals(pos.relative(state.getValue(FACING))) && level.getBlockEntity(pos) instanceof AIODuctDriverBlockEntity be) {
+            Direction facing = state.getValue(FACING);
+            int neighborComponent = neighborPos.get(facing.getAxis());
+            int selfComponent = pos.get(facing.getAxis());
+            if ((neighborComponent == selfComponent + 1 || neighborComponent == selfComponent - 1) && level.getBlockEntity(pos) instanceof AIODuctDriverBlockEntity be) {
                 be.updateCaches();
             }
             level.setBlockAndUpdate(pos, state.setValue(POWERED, level.hasNeighborSignal(pos)));
@@ -119,10 +122,6 @@ public class AIODuctDriverBlock extends BaseEntityBlock implements IDuctNodeBloc
 
     @Override
     public DuctNode getNode(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity blockEntity) {
-        if (level.getBlockEntity(pos) instanceof AIODuctDriverBlockEntity node) {
-            return node;
-        } else {
-            return null;
-        }
+        return blockEntity instanceof AIODuctDriverBlockEntity aioDuctDriverBlockEntity ? aioDuctDriverBlockEntity : null;
     }
 }

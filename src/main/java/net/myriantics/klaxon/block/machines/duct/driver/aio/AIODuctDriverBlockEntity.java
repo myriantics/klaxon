@@ -37,9 +37,9 @@ public class AIODuctDriverBlockEntity extends BaseDuctComponentBlockEntity {
 
     public void tick(Level level, BlockPos blockPos, BlockState blockState) {
         if (this.isOnCooldown()) {
-            this.tickCounter--;
+            this.transferCooldown--;
         } else if (this.isPowered()) {
-            this.tickCounter = this.ticksPerTransfer;
+            this.transferCooldown = this.ticksPerTransfer;
             this.performShift();
         }
     }
@@ -63,7 +63,7 @@ public class AIODuctDriverBlockEntity extends BaseDuctComponentBlockEntity {
     protected void performShift() {
         @Nullable DuctPayload payload = this.getPayload();
         Direction facing = this.getFacing();
-        if (payload != null && this.getOrInitHandler().push(payload, facing, this.range)) {
+        if (this.hasPayload() && this.getOrInitHandler().push(payload, facing, this.range)) {
             this.clearPayload();
         }
         this.extractIntoPayload();
@@ -92,5 +92,10 @@ public class AIODuctDriverBlockEntity extends BaseDuctComponentBlockEntity {
     @Override
     public boolean push(DuctPayload payload, Direction inputFace, int remainingDepth) {
         return false; // this thing cant be a push target
+    }
+
+    @Override
+    public String getStatusForDirection(Direction direction) {
+        return this.getOrInitHandler().getStatusForDirection(direction);
     }
 }

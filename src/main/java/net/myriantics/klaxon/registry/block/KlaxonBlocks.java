@@ -21,7 +21,8 @@ import net.myriantics.klaxon.block.machines.CasingBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlock;
-import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlock;
+import net.myriantics.klaxon.block.machines.duct.segment.OmnidirectionalDuctSegmentBlock;
+import net.myriantics.klaxon.block.machines.duct.segment.special.DetectorDuctSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
@@ -105,10 +106,13 @@ public abstract class KlaxonBlocks {
 
     // item ducts
     public static final Holder<Block> DUCT_SEGMENT = registerBlock("duct_segment",
-            new DuctSegmentBlock(copyProperties(Blocks.IRON_BLOCK).pushReaction(PushReaction.DESTROY))
+            new OmnidirectionalDuctSegmentBlock(copyProperties(Blocks.IRON_BLOCK).pushReaction(PushReaction.DESTROY))
+    );
+    public static final Holder<Block> DETECTOR_DUCT_SEGMENT = registerBlock("detector_duct_segment",
+            new DetectorDuctSegmentBlock(copyProperties(DUCT_SEGMENT))
     );
     public static final Holder<Block> AIO_DUCT_DRIVER = registerBlock("all_in_one_duct_driver",
-            new AIODuctDriverBlock(copyProperties(Blocks.IRON_BLOCK).pushReaction(PushReaction.DESTROY))
+            new AIODuctDriverBlock(copyProperties(DUCT_SEGMENT))
     );
 
     // workstations

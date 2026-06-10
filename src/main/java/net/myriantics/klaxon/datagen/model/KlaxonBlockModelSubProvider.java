@@ -14,6 +14,7 @@ import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.duct.segment.OmnidirectionalDuctSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.UBendRotation;
 import net.myriantics.klaxon.block.machines.modular_explosive.FuseState;
@@ -400,6 +401,59 @@ public abstract class KlaxonBlockModelSubProvider {
                                         .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
                         )
         );
+    }
+
+    protected void registerOmnidirectionalDuctSegment(Block block) {
+        ResourceLocation blockRl = ModelLocationUtils.getModelLocation(block);
+
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.TEXTURE, KlaxonTextures.DUCT_TEXTURES).put(TextureSlot.PARTICLE, KlaxonTextures.DUCT_TEXTURES);
+
+        ResourceLocation curvedRl = KlaxonModelTemplates.DUCT_CURVED.createWithSuffix(block, "/curved", mapping, generator.modelOutput);
+        ResourceLocation centerRl = KlaxonModelTemplates.DUCT_CENTER.createWithSuffix(block, "/center", mapping, generator.modelOutput);
+        ResourceLocation connectorRl = KlaxonModelTemplates.DUCT_CONNECTOR.createWithSuffix(block, "/connector", mapping, generator.modelOutput);
+        ResourceLocation straightRl = KlaxonModelTemplates.DUCT_STRAIGHT.createWithSuffix(block, "/duct_straight", mapping, generator.modelOutput);
+
+        generator.delegateItemModel(block, straightRl);
+
+        generator.blockStateOutput.accept(
+                MultiPartGenerator.multiPart(block)
+                        .with(modelVariant(centerRl))
+                        .with(
+                                Condition.condition().term(OmnidirectionalDuctSegmentBlock.UP, true),
+                                Variant.variant()
+                                        .with(VariantProperties.MODEL, connectorRl)
+                                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R270)
+                        )                        .with(
+                                Condition.condition().term(OmnidirectionalDuctSegmentBlock.DOWN, true),
+                                Variant.variant()
+                                        .with(VariantProperties.MODEL, connectorRl)
+                                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
+                        )
+                        .with(
+                                Condition.condition().term(OmnidirectionalDuctSegmentBlock.NORTH, true),
+                                Variant.variant()
+                                        .with(VariantProperties.MODEL, connectorRl)
+                        )
+                        .with(
+                                Condition.condition().term(OmnidirectionalDuctSegmentBlock.EAST, true),
+                                Variant.variant()
+                                        .with(VariantProperties.MODEL, connectorRl)
+                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                        )
+                        .with(
+                                Condition.condition().term(OmnidirectionalDuctSegmentBlock.SOUTH, true),
+                                Variant.variant()
+                                        .with(VariantProperties.MODEL, connectorRl)
+                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+                        )
+                        .with(
+                                Condition.condition().term(OmnidirectionalDuctSegmentBlock.WEST, true),
+                                Variant.variant()
+                                        .with(VariantProperties.MODEL, connectorRl)
+                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+                        )
+        );
+
     }
 
     protected void registerPipeMatrixSegment(Holder<Block> holder, Item pipeMatrixItem) {

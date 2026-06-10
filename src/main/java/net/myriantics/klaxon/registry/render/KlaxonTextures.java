@@ -54,6 +54,8 @@ public abstract class KlaxonTextures {
     // Wrench
     public static final ResourceLocation WRENCH_OVERLAY_9SLICE = ofEntity("wrench_overlay_9slice");
 
+    public static final ResourceLocation DUCT_TEXTURES = ofBlock("duct/duct");
+
     public static ResourceLocation copyDir(String path, ResourceLocation parent) {
         return copyDir(path, parent.getPath());
     }

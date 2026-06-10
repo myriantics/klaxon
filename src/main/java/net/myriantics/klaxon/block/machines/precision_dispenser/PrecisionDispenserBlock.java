@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.block.machines.precision_dispenser;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -12,9 +13,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.myriantics.klaxon.mechanics.muffling.MufflableBlock;
+import net.myriantics.klaxon.mechanics.wire_redirector.KlaxonRedstoneWireRedirector;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 
-public class PrecisionDispenserBlock extends DispenserBlock implements MufflableBlock {
+public class PrecisionDispenserBlock extends DispenserBlock implements MufflableBlock, KlaxonRedstoneWireRedirector {
 
     public static final DirectionProperty FACING = DispenserBlock.FACING;
     public static final BooleanProperty TRIGGERED = DispenserBlock.TRIGGERED;
@@ -74,5 +76,10 @@ public class PrecisionDispenserBlock extends DispenserBlock implements Mufflable
         if (level.getBlockEntity(pos) instanceof PrecisionDispenserBlockEntity precisionDispenser) {
             precisionDispenser.setMuffler(stack);
         }
+    }
+
+    @Override
+    public boolean shouldRedirect(BlockState state, Direction wireOutboundConnectionDirection) {
+        return wireOutboundConnectionDirection == state.getValue(FACING);
     }
 }

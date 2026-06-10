@@ -72,6 +72,30 @@ public abstract class KlaxonModelTemplates {
             KlaxonTextureSlots.BOTTOM_LAYER_1,
             TextureSlot.PARTICLE
     );
+    public static final ModelTemplate DUCT_CENTER = copyDir(
+            "duct/center",
+            CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS,
+            TextureSlot.TEXTURE,
+            TextureSlot.PARTICLE
+    );
+    public static final ModelTemplate DUCT_CONNECTOR = copyDir(
+            "connector",
+            DUCT_CENTER,
+            TextureSlot.TEXTURE,
+            TextureSlot.PARTICLE
+    );
+    public static final ModelTemplate DUCT_CURVED = copyDir(
+            "curved",
+            DUCT_CENTER,
+            TextureSlot.TEXTURE,
+            TextureSlot.PARTICLE
+    );
+    public static final ModelTemplate DUCT_STRAIGHT = copyDir(
+            "straight",
+            DUCT_CENTER,
+            TextureSlot.TEXTURE,
+            TextureSlot.PARTICLE
+    );
 
     public static Optional<ResourceLocation> id(ModelTemplate model) {
         return ((ModelTemplateAccessor) model).klaxon$getParent();
