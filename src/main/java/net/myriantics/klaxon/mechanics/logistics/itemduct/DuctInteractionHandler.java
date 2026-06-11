@@ -188,14 +188,22 @@ public class DuctInteractionHandler {
                 if (!stack.isEmpty()) {
                     ItemEntity droppedItem = new ItemEntity(
                             serverLevel,
-                            centerPos.x + (outputFace.getStepX() * ITEM_DROPPING_HORIZ_OFFSET),
-                            centerPos.y + (outputFace.getStepY() * ITEM_DROPPING_VERTICAL_OFFSET),
-                            centerPos.z + (outputFace.getStepZ() * ITEM_DROPPING_HORIZ_OFFSET),
+                            centerPos.x,
+                            centerPos.y,
+                            centerPos.z,
                             stack.copy(),
                             outputFace.getStepX() * ejectedItemOutputVelocity,
                             outputFace.getStepY() * ejectedItemOutputVelocity,
                             outputFace.getStepZ() * ejectedItemOutputVelocity
                     );
+                    float width = droppedItem.getBbWidth();
+                    float height = droppedItem.getBbHeight();
+                    droppedItem.setPos(
+                            droppedItem.getX() + (outputFace.getStepX() * (0.5 + width / 2)),
+                            droppedItem.getY() + (outputFace.getStepY() * (0.5 + (outputFace == Direction.UP ? 0 : height))),
+                            droppedItem.getZ() + (outputFace.getStepZ() * (0.5 + width / 2))
+                    );
+
                     serverLevel.addFreshEntity(droppedItem);
                 }
             }
