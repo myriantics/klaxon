@@ -44,6 +44,9 @@ public class DuctSegmentBlockEntity extends BaseDuctComponentBlockEntity {
         if (remainingDepth != 0 && this.getOrInitHandler().push(this.getPayload(), inputFace.getOpposite(), remainingDepth - 1)) {
             return true;
         }
+        if (payload != null && remainingDepth <= 0) {
+            KlaxonCommon.LOGGER.info("has payload with dept " + remainingDepth);
+        }
         // if we can't move forwards, check if we're fully empty and replace payload if so
         if (!this.hasNonEmptyPayload()) {
             return true;

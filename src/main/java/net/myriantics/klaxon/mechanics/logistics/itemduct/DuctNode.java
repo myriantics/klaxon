@@ -11,5 +11,11 @@ public interface DuctNode {
 
     @Nullable DuctPayload getPayload();
 
+    byte getOpenDirections();
+
+    default boolean isDirectionOpen(Direction direction) {
+        return (this.getOpenDirections() & (0x01 << direction.ordinal())) != 0;
+    }
+
     String getStatusForDirection(Direction direction);
 }
