@@ -1,0 +1,40 @@
+{
+  "type": "klaxon:blast_processing",
+  "bounds": {
+    "explosion_power_max": 2.4,
+    "explosion_power_min": 1.5
+  },
+  "ingredient": {
+    "item": "klaxon:precision_dispenser"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 0.75,
+      "stack": {
+        "count": 2,
+        "id": "klaxon:steel_plate"
+      }
+    },
+    {
+      "chance": 0.75,
+      "stack": {
+        "count": 2,
+        "id": "klaxon:steel_ingot"
+      }
+    },
+    {
+      "chance": 0.35,
+      "stack": {
+        "count": 5,
+        "id": "klaxon:steel_nugget"
+      }
+    },
+    {
+      "chance": 0.2,
+      "stack": {
+        "count": 3,
+        "id": "minecraft:gold_nugget"
+      }
+    }
+  ]
+}

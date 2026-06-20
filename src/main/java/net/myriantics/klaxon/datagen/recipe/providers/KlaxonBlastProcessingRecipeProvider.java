@@ -85,5 +85,77 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
                         .chance(KlaxonItems.HALLNOX_POD, 0.4)
                         .chance(KlaxonItems.CRUDE_STEEL_NUGGET, 4, 0.3)
         );
+        // machines
+        addExplosiveDisassemblyRecipe(
+                NamedIngredient.ofItems(KlaxonItems.PRECISION_DISPENSER.value()),
+                1.5f,
+                2.4f,
+                builder -> builder
+                        .chance(KlaxonItems.STEEL_PLATE, 2, 0.75)
+                        .chance(KlaxonItems.STEEL_INGOT, 2, 0.75)
+                        .chance(KlaxonItems.STEEL_NUGGET, 5, 0.35)
+                        .chance(Items.GOLD_NUGGET, 3, 0.2)
+        );
+
+
+        // minecart disassembly
+        addExplosiveDisassemblyRecipe(
+                NamedIngredient.ofItems(Items.MINECART),
+                1.5f,
+                3.0f,
+                this::baseMinecartDisassemblyDrops
+        );
+        addExplosiveDisassemblyRecipe(
+                NamedIngredient.ofItems(Items.CHEST_MINECART),
+                1.6f,
+                3.0f,
+                builder -> this.baseMinecartDisassemblyDrops(builder)
+                        .chance(Items.STICK, 8, 0.8)
+                        .chance(Items.IRON_NUGGET, 0.2)
+        );
+        addExplosiveDisassemblyRecipe(
+                NamedIngredient.ofItems(Items.HOPPER_MINECART),
+                1.8f,
+                3.0f,
+                builder -> builder
+                        .guaranteed(new ItemStack(Items.IRON_INGOT, 2))
+                        .chance(Items.IRON_INGOT, 3, 0.4)
+                        .chance(Items.STICK, 8, 0.8)
+                        .chance(Items.IRON_NUGGET, 0.3)
+        );
+        addExplosiveDisassemblyRecipe(
+                NamedIngredient.ofItems(Items.FURNACE_MINECART),
+                1.7f,
+                3.0f,
+                builder -> this.baseMinecartDisassemblyDrops(builder)
+                        .chance(Items.COBBLESTONE, 4, 0.5)
+                        .chance(Items.GRAVEL, 2, 0.2)
+        );
+
+        // minecart decoupling
+        addExplosiveDisassemblyRecipe(
+                NamedIngredient.ofItems(Items.CHEST_MINECART),
+                0.5f,
+                1.6f,
+                builder -> builder.guaranteed(Items.MINECART, Items.CHEST)
+        );
+        addExplosiveDisassemblyRecipe(
+                NamedIngredient.ofItems(Items.HOPPER_MINECART),
+                0.5f,
+                1.8f,
+                builder -> builder.guaranteed(Items.MINECART, Items.HOPPER)
+        );
+        addExplosiveDisassemblyRecipe(
+                NamedIngredient.ofItems(Items.FURNACE_MINECART),
+                0.5f,
+                1.7f,
+                builder -> builder.guaranteed(Items.MINECART, Items.FURNACE)
+        );
+    }
+
+    protected RecipeOutputCompound.Builder baseMinecartDisassemblyDrops(RecipeOutputCompound.Builder builder) {
+        return builder
+                .guaranteed(Items.IRON_INGOT)
+                .chance(Items.IRON_INGOT, 0.5);
     }
 }

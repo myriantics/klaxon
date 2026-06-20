@@ -1,0 +1,40 @@
+{
+  "type": "klaxon:blast_processing",
+  "bounds": {
+    "explosion_power_max": 3.0,
+    "explosion_power_min": 1.6
+  },
+  "ingredient": {
+    "item": "minecraft:chest_minecart"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "chance": 0.5,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "chance": 0.8,
+      "stack": {
+        "count": 8,
+        "id": "minecraft:stick"
+      }
+    },
+    {
+      "chance": 0.2,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:iron_nugget"
+      }
+    }
+  ]
+}

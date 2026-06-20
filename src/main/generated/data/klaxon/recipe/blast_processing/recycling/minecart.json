@@ -1,0 +1,26 @@
+{
+  "type": "klaxon:blast_processing",
+  "bounds": {
+    "explosion_power_max": 3.0,
+    "explosion_power_min": 1.5
+  },
+  "ingredient": {
+    "item": "minecraft:minecart"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "chance": 0.5,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:iron_ingot"
+      }
+    }
+  ]
+}

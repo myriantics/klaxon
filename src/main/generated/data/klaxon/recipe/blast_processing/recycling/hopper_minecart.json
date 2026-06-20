@@ -1,0 +1,40 @@
+{
+  "type": "klaxon:blast_processing",
+  "bounds": {
+    "explosion_power_max": 3.0,
+    "explosion_power_min": 1.8
+  },
+  "ingredient": {
+    "item": "minecraft:hopper_minecart"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 2,
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "chance": 0.4,
+      "stack": {
+        "count": 3,
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "chance": 0.8,
+      "stack": {
+        "count": 8,
+        "id": "minecraft:stick"
+      }
+    },
+    {
+      "chance": 0.3,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:iron_nugget"
+      }
+    }
+  ]
+}
