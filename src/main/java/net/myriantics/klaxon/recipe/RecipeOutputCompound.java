@@ -110,7 +110,7 @@ public final class RecipeOutputCompound {
 
                 if (chance > 0) {
                     ItemStack display = stack.copy();
-                    display.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE.value(), chance);
+                    setRecipeOutputChanceLore(display, chance);
                     displayStacks[i] = display;
                 }
             }
@@ -118,6 +118,10 @@ public final class RecipeOutputCompound {
             this.displayStacksCache = displayStacks;
             return displayStacks;
         }
+    }
+
+    public static void setRecipeOutputChanceLore(ItemStack target, double chance) {
+        target.set(KlaxonDataComponentTypes.RECIPE_OUTPUT_CHANCE_LORE.value(), chance);
     }
 
     public List<Pair<ItemStack, Double>> getRawDropsAndChances() {

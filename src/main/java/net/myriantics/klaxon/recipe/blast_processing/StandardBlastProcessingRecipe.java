@@ -1,11 +1,9 @@
 package net.myriantics.klaxon.recipe.blast_processing;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -57,7 +55,7 @@ public class StandardBlastProcessingRecipe implements BlastProcessingRecipe {
     }
 
     @Override
-    public ItemStack[] getDisplayStacks() {
+    public ItemStack[] getDisplayStacks(BlastProcessingRecipeInput input, HolderLookup.Provider registries) {
         return this.recipeOutputCompound.getDisplayStacks();
     }
 
@@ -68,7 +66,7 @@ public class StandardBlastProcessingRecipe implements BlastProcessingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeSerializers.BLAST_PROCESSING_RECIPE_SERIALIZER.value();
+        return KlaxonRecipeSerializers.BLAST_PROCESSING.value();
     }
 
     public static class Serializer implements RecipeSerializer<StandardBlastProcessingRecipe> {

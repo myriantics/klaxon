@@ -15,8 +15,10 @@ import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.datagen.NamedIngredient;
 import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotShatteringBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
@@ -389,6 +391,23 @@ public abstract class KlaxonRecipeSubProvider {
         );
 
         DecoratedPotCrackingBlastProcessingRecipe recipe = new DecoratedPotCrackingBlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addDecoratedPotShatteringBlastProcessingRecipe(
+            NamedIngredient input,
+            float explosionPowerMin, float explosionPowerMax,
+            final ResourceCondition... conditions
+    ) {
+        String path = input.getName();
+        ResourceLocation recipeId = provider.computeRecipeIdentifier(
+                KlaxonRecipeTypes.BLAST_PROCESSING,
+                path,
+                conditions
+        );
+
+        DecoratedPotShatteringBlastProcessingRecipe recipe = new DecoratedPotShatteringBlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }

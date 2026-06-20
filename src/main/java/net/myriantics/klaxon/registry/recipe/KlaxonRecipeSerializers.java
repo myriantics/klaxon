@@ -2,18 +2,13 @@ package net.myriantics.klaxon.registry.recipe;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingTransmutationRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotShatteringBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipeSerializer;
@@ -22,16 +17,18 @@ import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeSerializ
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeSerializer;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeSerializer;
 
-import java.util.Map;
-
 public abstract class KlaxonRecipeSerializers {
     // blast processing
-    public static final Holder<StandardBlastProcessingRecipe.Serializer> BLAST_PROCESSING_RECIPE_SERIALIZER = registerSerializer(
+    public static final Holder<StandardBlastProcessingRecipe.Serializer> BLAST_PROCESSING = registerSerializer(
             KlaxonRecipeTypes.BLAST_PROCESSING, new StandardBlastProcessingRecipe.Serializer()
     );
-    public static final Holder<RecipeSerializer<DecoratedPotCrackingBlastProcessingRecipe>> DECORATED_POT_CRACKING_BLAST_PROCESSING_SERIALIZER = registerSerializer(
+    public static final Holder<RecipeSerializer<DecoratedPotCrackingBlastProcessingRecipe>> BLAST_PROCESSING_DECORATED_POT_CRACKING = registerSerializer(
             "blast_processing/decorated_pot_cracking",
             DecoratedPotCrackingBlastProcessingRecipe.SERIALIZER
+    );
+    public static final Holder<RecipeSerializer<DecoratedPotShatteringBlastProcessingRecipe>> BLAST_PROCESSING_DECORATED_POT_SHATTERING = registerSerializer("" +
+            "blast_processing/decorated_pot_shattering",
+            new DecoratedPotShatteringBlastProcessingRecipe.Serializer()
     );
     // tool usage
     public static final Holder<ToolUsageRecipeSerializer> TOOL_USAGE_RECIPE_SERIALIZER = registerSerializer(

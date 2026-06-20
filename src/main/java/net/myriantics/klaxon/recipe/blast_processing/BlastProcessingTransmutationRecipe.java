@@ -1,10 +1,9 @@
 package net.myriantics.klaxon.recipe.blast_processing;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -40,7 +39,7 @@ public abstract class BlastProcessingTransmutationRecipe implements BlastProcess
     }
 
     @Override
-    public ItemStack[] getDisplayStacks() {
+    public ItemStack[] getDisplayStacks(BlastProcessingRecipeInput input, HolderLookup.Provider registries) {
         return this.ingredient.getItems().length == 0 ? new ItemStack[0] : new ItemStack[]{this.ingredient.getItems()[0]};
     }
 

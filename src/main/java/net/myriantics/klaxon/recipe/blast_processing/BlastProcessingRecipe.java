@@ -30,7 +30,7 @@ public interface BlastProcessingRecipe extends Recipe<BlastProcessingRecipeInput
 
     Ingredient getIngredient();
 
-    ItemStack[] getDisplayStacks();
+    ItemStack[] getDisplayStacks(BlastProcessingRecipeInput input, HolderLookup.Provider registries);
 
     @Override
     default boolean matches(BlastProcessingRecipeInput inventory, Level world) {

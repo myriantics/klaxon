@@ -41,6 +41,6 @@ public class DecoratedPotCrackingBlastProcessingRecipe extends BlastProcessingTr
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return KlaxonRecipeSerializers.DECORATED_POT_CRACKING_BLAST_PROCESSING_SERIALIZER.value();
+        return KlaxonRecipeSerializers.BLAST_PROCESSING_DECORATED_POT_CRACKING.value();
     }
 }

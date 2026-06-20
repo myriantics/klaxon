@@ -184,7 +184,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         if (match.isPresent()) {
             BlastProcessingRecipe recipe = match.get();
 
-            ItemStack[] rawOutput = recipe.getDisplayStacks();
+            ItemStack[] rawOutput = recipe.getDisplayStacks(input, level.registryAccess());
             List<ItemStack> outputStacks = new ArrayList<>(rawOutput.length);
 
             for (ItemStack stack : rawOutput) {

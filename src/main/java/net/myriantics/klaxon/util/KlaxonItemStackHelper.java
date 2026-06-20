@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.util;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -31,19 +30,19 @@ public abstract class KlaxonItemStackHelper {
         }
     }
 
-    public static ItemStack combineStacksIfPossible(ItemStack stackA, ItemStack stackB) {
-        if (stackA.isEmpty()) {
-            throw new AssertionError("Cannot merge into an empty stack! Tried to merge " + stackA + " into " + stackB);
+    public static ItemStack combineStacksIfPossible(ItemStack stackThatYouGetBack, ItemStack stackMergedIntoOther) {
+        if (stackThatYouGetBack.isEmpty()) {
+            throw new AssertionError("Cannot merge into an empty stack! Tried to merge " + stackThatYouGetBack + " into " + stackMergedIntoOther);
         }
 
-        if (canStacksMerge(stackA, stackB)) {
-            int maxAcceptedItems = stackA.getMaxStackSize() - stackA.getCount();
-            int transferredItems = Math.min(stackB.getCount(), maxAcceptedItems);
-            stackA.grow(transferredItems);
-            stackB.shrink(transferredItems);
+        if (canStacksMerge(stackThatYouGetBack, stackMergedIntoOther)) {
+            int maxAcceptedItems = stackThatYouGetBack.getMaxStackSize() - stackThatYouGetBack.getCount();
+            int transferredItems = Math.min(stackMergedIntoOther.getCount(), maxAcceptedItems);
+            stackThatYouGetBack.grow(transferredItems);
+            stackMergedIntoOther.shrink(transferredItems);
         }
 
-        return stackA;
+        return stackThatYouGetBack;
     }
 
     public static boolean canStacksMerge(ItemStack stackA, ItemStack stackB) {
