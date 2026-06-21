@@ -76,25 +76,33 @@ public final class RecipeOutputCompound {
                 continue;
             }
 
-            /*
-            double max = 31 - Integer.numberOfLeadingZeros(stack.getCount() - 1);
-            int count = (int) (stack.getCount() * chance + Math.sqrt(max * (1 - chance)) * random.nextGaussian() + 0.5);
-            if (count > 0) {
-                outputList.add(stack.copyWithCount(count));
-            }*/
-
-            int count = (int) (0.5 + random.triangle(
-                    stack.getCount() * chance,
-                    stack.getCount() / 2f
-            ));
-            if (count > 0) {
-                outputList[i] = stack.copyWithCount(count);
-            } else {
-                outputList[i] = ItemStack.EMPTY;
-            }
+            outputList[i] = copyWithSuccessChance(stack, random, chance);
         }
 
         return outputList;
+    }
+
+    public static ItemStack copyWithSuccessChance(ItemStack stack, RandomSource random, double successChance) {
+        int count = getCountForChance(stack, random, successChance);
+        if (count > 0) {
+            return stack.copyWithCount(count);
+        } else {
+            return ItemStack.EMPTY;
+        }
+    }
+
+    public static int getCountForChance(ItemStack stack, RandomSource random, double successChance) {
+        if (successChance >= 1) {
+            return stack.getCount();
+        }
+        if (successChance <= 0) {
+            return 0;
+        }
+
+        return (int) (0.5 + random.triangle(
+                stack.getCount() * successChance,
+                stack.getCount() / 2f
+        ));
     }
 
     public ItemStack[] getDisplayStacks() {

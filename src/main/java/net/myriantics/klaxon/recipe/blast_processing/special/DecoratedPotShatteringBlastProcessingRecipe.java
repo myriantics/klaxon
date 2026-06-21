@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,31 +27,39 @@ public class DecoratedPotShatteringBlastProcessingRecipe implements BlastProcess
 
     public static final MapCodec<DecoratedPotShatteringBlastProcessingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(DecoratedPotShatteringBlastProcessingRecipe::getIngredient),
-            Bounds.CODEC.fieldOf("bounds").forGetter(DecoratedPotShatteringBlastProcessingRecipe::getBounds)
+            Bounds.CODEC.fieldOf("bounds").forGetter(DecoratedPotShatteringBlastProcessingRecipe::getBounds),
+            Codec.doubleRange(0, 1).fieldOf("success_chance").forGetter(i -> i.successChance)
     ).apply(instance, DecoratedPotShatteringBlastProcessingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, DecoratedPotShatteringBlastProcessingRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC, DecoratedPotShatteringBlastProcessingRecipe::getIngredient,
             Bounds.STREAM_CODEC, DecoratedPotShatteringBlastProcessingRecipe::getBounds,
+            ByteBufCodecs.DOUBLE, i -> i.successChance,
             DecoratedPotShatteringBlastProcessingRecipe::new
     );
 
     private final Ingredient potIngredient;
     private final Bounds bounds;
+    private final double successChance;
 
-    public DecoratedPotShatteringBlastProcessingRecipe(Ingredient potIngredient, float explosionPowerMin, float explosionPowerMax) {
-        this(potIngredient, new Bounds(explosionPowerMin, explosionPowerMax));
+    public DecoratedPotShatteringBlastProcessingRecipe(Ingredient potIngredient, float explosionPowerMin, float explosionPowerMax, double successChance) {
+        this(potIngredient, new Bounds(explosionPowerMin, explosionPowerMax), successChance);
     }
 
-    public DecoratedPotShatteringBlastProcessingRecipe(Ingredient potIngredient, Bounds bounds) {
+    public DecoratedPotShatteringBlastProcessingRecipe(Ingredient potIngredient, Bounds bounds, double successChance) {
         this.potIngredient = potIngredient;
         this.bounds = bounds;
+        this.successChance = successChance;
     }
 
     @Override
     public ItemStack[] properlyAssemble(BlastProcessingRecipeInput input, HolderLookup.Provider registries) {
         if (input.getIngredientStack().get(DataComponents.POT_DECORATIONS) instanceof PotDecorations decorations) {
-            return this.gatherPotDecorationStacks(decorations);
+            ItemStack[] stacks = this.gatherPotDecorationStacks(decorations);
+            for (ItemStack stack : stacks) {
+                stack.setCount(RecipeOutputCompound.getCountForChance(stack, input.getRandom(), this.successChance));
+            }
+            return stacks;
         } else {
             return new ItemStack[0];
         }
@@ -72,7 +81,7 @@ public class DecoratedPotShatteringBlastProcessingRecipe implements BlastProcess
         if (ingredientStack.get(DataComponents.POT_DECORATIONS) instanceof PotDecorations decorations) {
             ItemStack[] displayDecorationStacks = this.gatherPotDecorationStacks(decorations);
             for (ItemStack stack : displayDecorationStacks) {
-                RecipeOutputCompound.setRecipeOutputChanceLore(stack, 1.0);
+                RecipeOutputCompound.setRecipeOutputChanceLore(stack, this.successChance);
             }
             return displayDecorationStacks;
         } else {

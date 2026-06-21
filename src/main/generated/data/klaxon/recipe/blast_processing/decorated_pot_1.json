@@ -6,5 +6,6 @@
   },
   "ingredient": {
     "item": "minecraft:decorated_pot"
-  }
+  },
+  "success_chance": 1.0
 }

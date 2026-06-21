@@ -398,6 +398,7 @@ public abstract class KlaxonRecipeSubProvider {
     public void addDecoratedPotShatteringBlastProcessingRecipe(
             NamedIngredient input,
             float explosionPowerMin, float explosionPowerMax,
+            double successChance,
             final ResourceCondition... conditions
     ) {
         String path = input.getName();
@@ -407,7 +408,7 @@ public abstract class KlaxonRecipeSubProvider {
                 conditions
         );
 
-        DecoratedPotShatteringBlastProcessingRecipe recipe = new DecoratedPotShatteringBlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax);
+        DecoratedPotShatteringBlastProcessingRecipe recipe = new DecoratedPotShatteringBlastProcessingRecipe(input.toIngredient(), explosionPowerMin, explosionPowerMax, successChance);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
     }
