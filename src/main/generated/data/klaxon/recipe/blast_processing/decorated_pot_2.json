@@ -1,0 +1,11 @@
+{
+  "type": "klaxon:blast_processing/decorated_pot_shattering",
+  "bounds": {
+    "explosion_power_max": 2.0,
+    "explosion_power_min": 1.2
+  },
+  "ingredient": {
+    "item": "minecraft:decorated_pot"
+  },
+  "success_chance": 0.6000000238418579
+}
