@@ -265,6 +265,7 @@
   "klaxon.text.tooltip.modular_explosive_block_config.fuse_ticks": "Fuse Ticks: %s",
   "klaxon.text.tooltip.modular_explosive_block_config.modify_world.false": "Does Not Modify World",
   "klaxon.text.tooltip.modular_explosive_block_config.modify_world.true": "Modifies World",
+  "klaxon.text.tooltip.pot_cracked_indicator": "Cracked",
   "klaxon.text.tooltip.recipe_output_lore.chance": "Chance: %1$s",
   "tag.block.c.natural_logs": "Natural Logs",
   "tag.block.c.natural_woods": "Natural Woods",

@@ -24,6 +24,7 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
     }
 
     private void generateTooltipText() {
+        addTooltipText("pot_cracked_indicator", "Cracked");
         addTooltipText("recipe_output_lore.chance", "Chance: %1$s");
         addTooltipText("missing_block_item", "Missing Block Item");
         addTooltipText("heavy_equipment", "Heavy Equipment");

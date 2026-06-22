@@ -40,8 +40,12 @@ public abstract class BlastProcessingTransmutationRecipe implements BlastProcess
 
     @Override
     public ItemStack[] getDisplayStacks(BlastProcessingRecipeInput input, HolderLookup.Provider registries) {
-        return this.ingredient.getItems().length == 0 ? new ItemStack[0] : new ItemStack[]{this.ingredient.getItems()[0]};
+        ItemStack inputStackCopy = input.getIngredientStack().copy();
+        this.addDisplayComponents(inputStackCopy);
+        return this.ingredient.getItems().length == 0 ? new ItemStack[0] : new ItemStack[]{inputStackCopy};
     }
+
+    public abstract void addDisplayComponents(ItemStack stack);
 
     public interface BlastProcessingTransmutationConstructor<T extends BlastProcessingTransmutationRecipe> {
         T create(Ingredient ingredient, Bounds bounds);

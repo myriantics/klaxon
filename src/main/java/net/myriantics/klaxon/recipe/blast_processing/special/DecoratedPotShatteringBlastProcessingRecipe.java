@@ -21,6 +21,7 @@ import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class DecoratedPotShatteringBlastProcessingRecipe implements BlastProcessingRecipe {
@@ -40,7 +41,7 @@ public class DecoratedPotShatteringBlastProcessingRecipe implements BlastProcess
 
     private final Ingredient potIngredient;
     private final Bounds bounds;
-    private final double successChance;
+    public final double successChance;
 
     public DecoratedPotShatteringBlastProcessingRecipe(Ingredient potIngredient, float explosionPowerMin, float explosionPowerMax, double successChance) {
         this(potIngredient, new Bounds(explosionPowerMin, explosionPowerMax), successChance);
@@ -81,7 +82,9 @@ public class DecoratedPotShatteringBlastProcessingRecipe implements BlastProcess
         if (ingredientStack.get(DataComponents.POT_DECORATIONS) instanceof PotDecorations decorations) {
             ItemStack[] displayDecorationStacks = this.gatherPotDecorationStacks(decorations);
             for (ItemStack stack : displayDecorationStacks) {
-                RecipeOutputCompound.setRecipeOutputChanceLore(stack, this.successChance);
+                if (!stack.isEmpty()) {
+                    RecipeOutputCompound.setRecipeOutputChanceLore(stack, this.successChance);
+                }
             }
             return displayDecorationStacks;
         } else {
@@ -94,7 +97,7 @@ public class DecoratedPotShatteringBlastProcessingRecipe implements BlastProcess
         return KlaxonRecipeSerializers.BLAST_PROCESSING_DECORATED_POT_SHATTERING.value();
     }
 
-    protected ItemStack[] gatherPotDecorationStacks(PotDecorations decorations) {
+    public ItemStack[] gatherPotDecorationStacks(PotDecorations decorations) {
         ItemStack[] stacks = new ItemStack[] {
                 new ItemStack(decorations.front().orElse(Items.BRICK)),
                 new ItemStack(decorations.right().orElse(Items.BRICK)),
@@ -111,6 +114,8 @@ public class DecoratedPotShatteringBlastProcessingRecipe implements BlastProcess
                 KlaxonItemStackHelper.combineStacksIfPossible(stacks[i], stacks[j]);
             }
         }
+
+        Arrays.sort(stacks, (stack1, stack2) -> (stack1.isEmpty() ? 1 : 0) + (stack2.isEmpty() ? -1 : 0));
 
         return stacks;
     }

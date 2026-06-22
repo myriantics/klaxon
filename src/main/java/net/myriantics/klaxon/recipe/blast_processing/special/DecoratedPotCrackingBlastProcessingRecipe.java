@@ -2,9 +2,13 @@ package net.myriantics.klaxon.recipe.blast_processing.special;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockItemStateProperties;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -13,11 +17,13 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingTransmutationRecipe;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 
+import java.util.List;
 import java.util.Map;
 
 public class DecoratedPotCrackingBlastProcessingRecipe extends BlastProcessingTransmutationRecipe {
 
     public static final RecipeSerializer<DecoratedPotCrackingBlastProcessingRecipe> SERIALIZER = create(DecoratedPotCrackingBlastProcessingRecipe::new);
+    private static final ItemLore DISPLAY_CRACKED_INDICATOR_LORE = new ItemLore(List.of(Component.translatable("klaxon.text.tooltip.pot_cracked_indicator").setStyle(Style.EMPTY.withColor(CommonColors.LIGHT_GRAY).withItalic(false))));
 
     public DecoratedPotCrackingBlastProcessingRecipe(Ingredient ingredient, float explosionPowerMin, float explosionPowerMax) {
         super(ingredient, explosionPowerMin, explosionPowerMax);
@@ -25,6 +31,11 @@ public class DecoratedPotCrackingBlastProcessingRecipe extends BlastProcessingTr
 
     public DecoratedPotCrackingBlastProcessingRecipe(Ingredient ingredient, Bounds bounds) {
         super(ingredient, bounds);
+    }
+
+    @Override
+    public void addDisplayComponents(ItemStack stack) {
+        stack.set(DataComponents.LORE, DISPLAY_CRACKED_INDICATOR_LORE);
     }
 
     @Override

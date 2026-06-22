@@ -9,17 +9,22 @@ import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.compat.emi.recipes.blast_processing.BlastProcessingTransmutationEmiRecipe;
+import net.myriantics.klaxon.compat.emi.recipes.blast_processing.DecoratedPotShatteringBlastProcessingEmiRecipe;
+import net.myriantics.klaxon.compat.emi.recipes.blast_processing.StandardBlastProcessingEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.special.ExplosiveCatalystTransmutationEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.special.FuseExtensionEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.special.KlaxonSuspiciousStewRecipe;
@@ -28,7 +33,9 @@ import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
 import net.myriantics.klaxon.compat.emi.recipes.*;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingTransmutationRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
+import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotShatteringBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
 import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtensionRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
@@ -57,10 +64,11 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         registerRecipes(registry);
         ExplosiveCatalystDefinition[] explosiveCatalystDefinitions = this.initExplosiveCatalystDefinition(registry);
         initCustomCraftingRecipes(registry, explosiveCatalystDefinitions);
-        initBlastProcessingRecipes(registry);
 
-        Level level = Minecraft.getInstance().level;
+        ClientLevel level = Minecraft.getInstance().level;
+
         if (level != null) {
+            initBlastProcessingRecipes(level, registry);
             for (Holder<ToolUsageRecipeType> typeHolder : level.registryAccess().registryOrThrow(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
                 Optional<ResourceKey<ToolUsageRecipeType>> optionalKey = typeHolder.unwrapKey();
 
@@ -120,10 +128,22 @@ public class KlaxonEmiPlugin implements EmiPlugin {
         return new ExplosiveCatalystDefinition[0];
     }
 
-    private void initBlastProcessingRecipes(EmiRegistry registry) {
-        for (RecipeHolder<BlastProcessingRecipe> holder : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.BLAST_PROCESSING.value())) {
+    private void initBlastProcessingRecipes(ClientLevel level, EmiRegistry registry) {
+        List<Item> potDecoratorItems = level.registryAccess().lookup(Registries.ITEM).map(
+                lookup -> lookup.get(ItemTags.DECORATED_POT_INGREDIENTS).map(
+                        holders -> holders.stream().map(Holder::value).toList()
+                ).orElse(List.of())
+        ).orElse(List.of());
+
+        for (RecipeHolder<? extends BlastProcessingRecipe> holder : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.BLAST_PROCESSING.value())) {
             if (holder.value() instanceof StandardBlastProcessingRecipe standardBlastProcessingRecipe) {
                 registry.addRecipe(new StandardBlastProcessingEmiRecipe(standardBlastProcessingRecipe, holder.id()));
+            } else if (holder.value() instanceof BlastProcessingTransmutationRecipe blastProcessingTransmutationRecipe) {
+                registry.addRecipe(new BlastProcessingTransmutationEmiRecipe(blastProcessingTransmutationRecipe, holder.id()));
+            } else if (holder.value() instanceof DecoratedPotShatteringBlastProcessingRecipe decoratedPotShatteringBlastProcessingRecipe) {
+                if (!potDecoratorItems.isEmpty()) {
+                    registry.addRecipe(new DecoratedPotShatteringBlastProcessingEmiRecipe(decoratedPotShatteringBlastProcessingRecipe, holder.id(), potDecoratorItems));
+                }
             }
         }
     }
