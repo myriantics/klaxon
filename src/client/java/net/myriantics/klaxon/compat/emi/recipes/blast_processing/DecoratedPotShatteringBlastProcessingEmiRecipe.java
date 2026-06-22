@@ -101,4 +101,9 @@ public class DecoratedPotShatteringBlastProcessingEmiRecipe extends AbstractBlas
     private Item selectRandomPotDecoratorItem(Random random) {
         return this.potDecoratorItems.get(random.nextInt(this.potDecoratorItems.size()));
     }
+
+    @Override
+    public boolean supportsRecipeTree() {
+        return false;
+    }
 }

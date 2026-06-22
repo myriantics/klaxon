@@ -71,4 +71,9 @@ public class BlastProcessingTransmutationEmiRecipe extends AbstractBlastProcessi
     public List<EmiStack> getOutputs() {
         return this.outputs;
     }
+
+    @Override
+    public boolean supportsRecipeTree() {
+        return false;
+    }
 }
