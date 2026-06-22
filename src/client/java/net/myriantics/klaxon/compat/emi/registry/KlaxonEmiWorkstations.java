@@ -28,6 +28,7 @@ public final class KlaxonEmiWorkstations {
         // klaxon workstations
         register(KlaxonEmiCategories.BLAST_PROCESSING, EmiIngredient.of(KlaxonBlockTags.BLAST_PROCESSORS));
         register(KlaxonEmiCategories.EXPLOSIVE_CATALYST_DEFINITION, EmiIngredient.of(KlaxonBlockTags.BLAST_PROCESSORS));
+        register(KlaxonEmiCategories.EXPLOSIVE_CATALYST_DEFINITION, KlaxonItems.MODULAR_EXPLOSIVE_BLOCK);
         register(KlaxonEmiCategories.WORLD_ITEM_APPLICATION, Items.DISPENSER);
         register(KlaxonEmiCategories.WORLD_ITEM_APPLICATION, KlaxonItems.PRECISION_DISPENSER);
         register(KlaxonEmiCategories.NETHER_REACTION, EmiIngredient.of(KlaxonBlockTags.NETHER_REACTOR_CORES));
