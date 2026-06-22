@@ -38,6 +38,7 @@ public class KlaxonBlastProcessingRecipeProvider extends KlaxonRecipeSubProvider
 
         // pot shattering
         addDecoratedPotShatteringBlastProcessingRecipe(NamedIngredient.ofItems(Items.DECORATED_POT), 0.4f, 1.2f, 1.0f);
+        addDecoratedPotShatteringBlastProcessingRecipe(NamedIngredient.ofItems(Items.DECORATED_POT), 1.2f, 2.0f, 0.6f);
 
         // misc
         addBlastProcessingRecipe(NamedIngredient.ofItems(Items.COAL), 0.3f, 1.4f, RecipeOutputCompound.of(KlaxonItems.FRACTURED_COAL, 1.0, KlaxonItems.FRACTURED_COAL, 0.5));
