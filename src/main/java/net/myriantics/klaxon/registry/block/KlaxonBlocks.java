@@ -22,6 +22,8 @@ import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateB
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlock;
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlock;
+import net.myriantics.klaxon.block.machines.filing_cabinet.FilingCabinetBaseBlock;
+import net.myriantics.klaxon.block.machines.filing_cabinet.FilingCabinetDrawerBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
@@ -102,6 +104,12 @@ public abstract class KlaxonBlocks {
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.CRUDE_STEEL_CASING).lightLevel((state) -> 12).noOcclusion()));
     public static final Holder<Block> MODULAR_EXPLOSIVE_BLOCK = registerBlock("modular_explosive_block",
             new ModularExplosiveBlock(copyProperties(STEEL_CASING)));
+    public static final Holder<Block> FILING_CABINET_DRAWER = registerBlock("filing_cabinet_drawer",
+            new FilingCabinetDrawerBlock(copyProperties(Blocks.IRON_BLOCK))
+    );
+    public static final Holder<Block> FILING_CABINET_BASE = registerBlock("filing_cabinet_base",
+            new FilingCabinetBaseBlock(copyProperties(FILING_CABINET_DRAWER), FILING_CABINET_DRAWER)
+    );
 
     // item ducts
     public static final Holder<Block> DUCT_SEGMENT = registerBlock("duct_segment",

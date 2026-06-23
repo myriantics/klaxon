@@ -61,6 +61,9 @@ public abstract class KlaxonCreativeModeTabs {
                 entries.accept(KlaxonItems.DUCT_SEGMENT.value());
                 entries.accept(KlaxonItems.AIO_DUCT_DRIVER.value());
 
+                // filing cabinets
+                entries.accept(KlaxonItems.FILING_CABINET.value());
+
                 // bs
                 entries.accept(KlaxonItems.HEAVY_GATED_PRESSURE_PLATE.value());
                 entries.accept(KlaxonItems.FAULTY_HEAVY_GATED_PRESSURE_PLATE.value());

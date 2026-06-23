@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.Function;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import it.unimi.dsi.fastutil.objects.Object2IntFunction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -41,6 +42,7 @@ public abstract class KlaxonCodecUtils {
             );
     public static final Codec<TagKey<Block>> BLOCK_TAG_CODEC = tagCodec(Registries.BLOCK);
     public static final StreamCodec<ByteBuf, TagKey<Block>> BLOCK_TAG_PACKET_CODEC = tagPacketCodec(Registries.BLOCK);
+    public static final Codec<Holder<Block>> BLOCK_HOLDER_CODEC = BuiltInRegistries.BLOCK.holderByNameCodec();
     public static final Codec<Block> BLOCK_CODEC = BuiltInRegistries.BLOCK.byNameCodec();
     public static final StreamCodec<ByteBuf, Block> BLOCK_PACKET_CODEC = ByteBufCodecs.fromCodec(BLOCK_CODEC);
 

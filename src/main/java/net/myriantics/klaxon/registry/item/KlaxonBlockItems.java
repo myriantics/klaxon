@@ -84,6 +84,7 @@ public abstract class KlaxonBlockItems {
                     .component(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA, ExplosiveCatalystData.ZERO)
                     .getProperties()
     ));
+    public static final Holder<Item> FILING_CABINET = registerBlockItem("filing_cabinet", KlaxonBlocks.FILING_CABINET_BASE, new Item.Properties());
 
     // ducts
     public static final Holder<Item> AIO_DUCT_DRIVER = registerBlockItem(KlaxonBlocks.AIO_DUCT_DRIVER);
@@ -138,8 +139,16 @@ public abstract class KlaxonBlockItems {
         return registerBlockItem(name, holder.value());
     }
 
+    private static Holder<Item> registerBlockItem(String name, Holder<Block> holder, Item.Properties properties) {
+        return registerBlockItem(name, holder.value(), properties);
+    }
+
     private static Holder<Item> registerBlockItem(String name, Block block) {
-        return registerBlockItem(name, new ItemNameBlockItem(block, new Item.Properties()));
+        return registerBlockItem(name, block, new Item.Properties());
+    }
+
+    private static Holder<Item> registerBlockItem(String name, Block block, Item.Properties properties) {
+        return registerBlockItem(name, new ItemNameBlockItem(block, properties));
     }
 
     private static Holder<Item> registerBlockItem(Holder<Block> holder) {

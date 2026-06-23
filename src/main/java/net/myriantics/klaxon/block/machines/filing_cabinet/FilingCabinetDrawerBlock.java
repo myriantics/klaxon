@@ -1,0 +1,192 @@
+package net.myriantics.klaxon.block.machines.filing_cabinet;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.FrontAndTop;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
+
+public class FilingCabinetDrawerBlock extends Block implements SimpleWaterloggedBlock {
+
+    private final MapCodec<FilingCabinetDrawerBlock> CODEC = simpleCodec(FilingCabinetDrawerBlock::new);
+    public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
+    private static final VoxelShape X = box(0, 2, 2, 16, 14, 14);
+    private static final VoxelShape Y = box(2, 0, 2, 14, 16, 14);
+    private static final VoxelShape Z = box(2, 2, 0, 14, 14, 16);
+
+    public FilingCabinetDrawerBlock(Properties properties) {
+        super(properties);
+        registerDefaultState(this.stateDefinition.any()
+                .setValue(ORIENTATION, FrontAndTop.NORTH_UP)
+        );
+    }
+
+    @Override
+    protected MapCodec<? extends Block> codec() {
+        return CODEC;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(ORIENTATION, WATERLOGGED);
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        BlockPos filingCabinetBasePosition = this.findAttachedPosition(pos, state);
+        if (filingCabinetBasePosition.equals(neighborPos) && !this.isCompatibleWithBase(state, neighborState)) {
+            return Blocks.AIR.defaultBlockState();
+        }
+        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        BlockPos filingCabinetBasePosition = this.findAttachedPosition(pos, state);
+        BlockState filingCabinetBaseState = level.getBlockState(filingCabinetBasePosition);
+        if (!this.isCompatibleWithBase(state, filingCabinetBaseState)) {
+            level.destroyBlock(pos, false);
+            return InteractionResult.SUCCESS;
+        }
+
+        // we know we're compatible with base from here on out
+
+        Direction front = state.getValue(ORIENTATION).front();
+        if (hitResult.getDirection().getAxis() == front.getAxis()) {
+            if (hitResult.getDirection() == front && ((FilingCabinetBaseBlock) filingCabinetBaseState.getBlock()).retractDrawer(level, filingCabinetBaseState, filingCabinetBasePosition)) {
+                return InteractionResult.SUCCESS;
+            }
+        } else if (level.getBlockEntity(filingCabinetBasePosition) instanceof FilingCabinetBlockEntity blockEntity) {
+            player.openMenu(blockEntity);
+            return InteractionResult.SUCCESS;
+        }
+
+        return InteractionResult.FAIL;
+    }
+
+    @Override
+    protected FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide() && player.getAbilities().instabuild) {
+            BlockPos basePos = this.findAttachedPosition(pos, state);
+            BlockState baseState = level.getBlockState(basePos);
+            if (this.isCompatibleWithBase(state, baseState)) {
+                level.destroyBlock(basePos, false);
+            }
+        }
+
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        super.onPlace(state, level, pos, oldState, movedByPiston);
+        FluidState fluidState = state.getFluidState();
+        if (fluidState != oldState.getFluidState()) {
+            level.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(level));
+        }
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        super.onRemove(state, level, pos, newState, movedByPiston);
+        if (state.is(newState.getBlock())) {
+            if (newState.getValue(WATERLOGGED) && !state.getValue(WATERLOGGED)) {
+                level.scheduleTick(pos, newState.getFluidState().getType(), newState.getFluidState().getType().getTickDelay(level));
+            }
+        } else {
+            level.updateNeighbourForOutputSignal(pos, this);
+            if (!movedByPiston) {
+                BlockPos basePos = this.findAttachedPosition(pos, state);
+                BlockState baseState = level.getBlockState(basePos);
+                if (this.isCompatibleWithBase(state, baseState)) {
+                    level.destroyBlock(basePos, true);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        @Nullable FilingCabinetBlockEntity blockEntity = this.findFilingCabinetBlockEntity(level, pos, state);
+        if (blockEntity != null) {
+            BlockPos filingCabinetBasePosition = this.findAttachedPosition(pos, state);
+            BlockState filingCabinetBaseState = level.getBlockState(filingCabinetBasePosition);
+
+            // delegate to filing cabinet base
+            if (this.isCompatibleWithBase(state, filingCabinetBaseState)) {
+                return filingCabinetBaseState.getAnalogOutputSignal(level, filingCabinetBasePosition);
+            }
+        }
+
+        return 0;
+    }
+
+    protected BlockPos findAttachedPosition(BlockPos pos, BlockState state) {
+        return pos.relative(state.getValue(ORIENTATION).front().getOpposite());
+    }
+
+    protected boolean isCompatibleWithBase(BlockState drawerState, BlockState baseState) {
+        return baseState.getBlock() instanceof FilingCabinetBaseBlock baseBlock && baseBlock.getDrawerBlock() == this && baseState.hasProperty(FilingCabinetBaseBlock.ORIENTATION) && baseState.getValue(FilingCabinetBaseBlock.ORIENTATION) == drawerState.getValue(ORIENTATION);
+    }
+
+    public @Nullable FilingCabinetBlockEntity findFilingCabinetBlockEntity(Level level, BlockPos drawerPos, BlockState drawerState) {
+        BlockPos potentialBasePosition = this.findAttachedPosition(drawerPos, drawerState);
+        BlockState cabinetBaseState = level.getBlockState(potentialBasePosition);
+
+        if (this.isCompatibleWithBase(drawerState, cabinetBaseState) && level.getBlockEntity(potentialBasePosition) instanceof FilingCabinetBlockEntity blockEntity) {
+            return blockEntity;
+        }
+        return null;
+    }
+
+    @Override
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return this.isCompatibleWithBase(state, level.getBlockState(this.findAttachedPosition(pos, state)));
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(ORIENTATION).front().getAxis()) {
+            case X -> X;
+            case Y -> Y;
+            case Z -> Z;
+        };
+    }
+}
