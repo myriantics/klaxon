@@ -94,6 +94,23 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     }
 
     @Override
+    protected void attack(BlockState state, Level level, BlockPos pos, Player player) {
+        super.attack(state, level, pos, player);
+        BlockPos attachedPosition = this.findAttachedPosition(pos, state);
+        BlockState attachedState = level.getBlockState(attachedPosition);
+        Direction drawerFacing = state.getValue(ORIENTATION).front();
+        if (this.isCompatibleWithBase(state, attachedState)) {
+            if (drawerFacing.getOpposite().equals(player.getNearestViewDirection())) {
+                // default retract sound is played in this method
+                ((FilingCabinetBaseBlock) attachedState.getBlock()).retractDrawer(level, attachedState, attachedPosition);
+            } else {
+                // rattling sound plays alongside maybe particles to indicate that player is pushing the wrong direction
+            }
+
+        }
+    }
+
+    @Override
     protected FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
