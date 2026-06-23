@@ -10,7 +10,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -36,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 public class FilingCabinetBaseBlock extends BaseEntityBlock {
 
@@ -96,6 +99,19 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
                 return InteractionResult.FAIL;
             }
         }
+    }
+
+    @Override
+    protected void onExplosionHit(BlockState state, Level level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
+        if (explosion.canTriggerBlocks() && !state.getValue(POWERED)) {
+            if (this.isOpen(level, state, pos)) {
+                this.retractDrawer(level, state, pos);
+            } else {
+                this.extendDrawer(level, state, pos);
+            }
+        }
+
+        super.onExplosionHit(state, level, pos, explosion, dropConsumer);
     }
 
     @Override

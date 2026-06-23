@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.DispenserMenu;
@@ -62,6 +63,6 @@ public class FilingCabinetBlockEntity extends KlaxonBaseSidedContainerBlockEntit
     }
 
     public int getAnalogSignalStrength() {
-        return this.items == null ? 0 : (int) (this.items.computeFill() * 15);
+        return this.items == null ? 0 : AbstractContainerMenu.getRedstoneSignalFromContainer(this.items);
     }
 }
