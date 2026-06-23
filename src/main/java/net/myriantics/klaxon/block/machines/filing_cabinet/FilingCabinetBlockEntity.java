@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.block.machines.filing_cabinet;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -14,15 +15,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.util.container.ContainerPartition;
 import net.myriantics.klaxon.util.container.KlaxonBaseContainerBlockEntity;
+import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
-public class FilingCabinetBlockEntity extends KlaxonBaseContainerBlockEntity {
+public class FilingCabinetBlockEntity extends KlaxonBaseSidedContainerBlockEntity {
 
     private ContainerPartition items;
 
     protected FilingCabinetBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+    }
+
+    @Override
+    protected ContainerPartition getAccessForDirection(@Nullable Direction side) {
+        return items;
     }
 
     public FilingCabinetBlockEntity(BlockPos pos, BlockState state) {

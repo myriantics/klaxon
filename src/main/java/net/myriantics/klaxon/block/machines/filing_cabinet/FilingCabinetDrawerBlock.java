@@ -6,6 +6,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -30,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-public class FilingCabinetDrawerBlock extends Block implements SimpleWaterloggedBlock {
+public class FilingCabinetDrawerBlock extends Block implements SimpleWaterloggedBlock, WorldlyContainerHolder {
 
     private final MapCodec<FilingCabinetDrawerBlock> CODEC = simpleCodec(FilingCabinetDrawerBlock::new);
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
@@ -166,7 +168,7 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
         return baseState.getBlock() instanceof FilingCabinetBaseBlock baseBlock && baseBlock.getDrawerBlock() == this && baseState.hasProperty(FilingCabinetBaseBlock.ORIENTATION) && baseState.getValue(FilingCabinetBaseBlock.ORIENTATION) == drawerState.getValue(ORIENTATION);
     }
 
-    public @Nullable FilingCabinetBlockEntity findFilingCabinetBlockEntity(Level level, BlockPos drawerPos, BlockState drawerState) {
+    public @Nullable FilingCabinetBlockEntity findFilingCabinetBlockEntity(LevelAccessor level, BlockPos drawerPos, BlockState drawerState) {
         BlockPos potentialBasePosition = this.findAttachedPosition(drawerPos, drawerState);
         BlockState cabinetBaseState = level.getBlockState(potentialBasePosition);
 
@@ -188,5 +190,10 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
             case Y -> Y;
             case Z -> Z;
         };
+    }
+
+    @Override
+    public @Nullable WorldlyContainer getContainer(BlockState state, LevelAccessor level, BlockPos pos) {
+        return this.findFilingCabinetBlockEntity(level, pos, state);
     }
 }
