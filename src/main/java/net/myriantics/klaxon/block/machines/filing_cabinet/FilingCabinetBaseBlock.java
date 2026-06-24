@@ -115,6 +115,23 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+
+        boolean powered = level.hasNeighborSignal(pos);
+        if (powered != state.getValue(POWERED)) {
+            level.setBlockAndUpdate(pos, state.setValue(POWERED, powered));
+            if (powered != this.isOpen(level, state, pos)) {
+                if (powered) {
+                    this.extendDrawer(level, state, pos);
+                } else {
+                    this.retractDrawer(level, state, pos);
+                }
+            }
+        }
+    }
+
+    @Override
     protected boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
