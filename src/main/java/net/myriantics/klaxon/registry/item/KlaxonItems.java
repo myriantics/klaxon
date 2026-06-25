@@ -76,6 +76,8 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .withMirroredLeftHandModel()
                     .getProperties()
             ));
+    public static final Holder<Item> FABRICATRON = registerItem("fabricatron",
+            new FabricatronItem(new Item.Properties()));
 
     // armor
     public static final Holder<Item> CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemProperties()

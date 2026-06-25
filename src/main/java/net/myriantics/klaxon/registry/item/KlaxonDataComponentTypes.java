@@ -8,6 +8,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Unit;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
@@ -15,7 +17,9 @@ import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.component.configuration.*;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.util.KlaxonCodecUtils;
 
+import java.util.List;
 import java.util.function.UnaryOperator;
 
 public abstract class KlaxonDataComponentTypes {
@@ -117,6 +121,12 @@ public abstract class KlaxonDataComponentTypes {
     });
 
     public static final Holder<DataComponentType<Unit>> HELMET_CREST_COMPONENT = registerUnit("helmet_crest");
+
+    public static final Holder<DataComponentType<List<Ingredient>>> FABRICATRON_PATTERN = register("fabricatron_pattern", builder -> {
+        builder.persistent(KlaxonCodecUtils.INGREDIENT_LIST_CODEC);
+        builder.networkSynchronized(KlaxonCodecUtils.INGREDIENT_LIST_PACKET_CODEC);
+        return builder;
+    });
 
     @SuppressWarnings("unchecked")
     private static <T> Holder<DataComponentType<T>> register(String name, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {

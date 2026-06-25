@@ -35,6 +35,8 @@ public abstract class KlaxonCreativeModeTabs {
                 entries.accept(KlaxonItems.STEEL_BOOTS.value());
                 entries.accept(KlaxonItems.CRESTED_STEEL_HELMET.value());
 
+                entries.accept(KlaxonItems.FABRICATRON.value());
+
                 entries.accept(KlaxonItems.GRAPPLE_WINCH.value());
                 entries.accept(KlaxonItems.STEEL_GRAPPLE_CLAW.value());
             })).build();
