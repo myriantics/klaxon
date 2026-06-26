@@ -1,6 +1,9 @@
 package net.myriantics.klaxon.item.equipment.tools;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -15,7 +18,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.CrafterBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 
 public class FabricatronItem extends Item {
 
@@ -89,27 +90,40 @@ public class FabricatronItem extends Item {
         List<Ingredient> ingredients = fabricatronStack.getOrDefault(KlaxonDataComponentTypes.FABRICATRON_PATTERN.value(), List.of());
 
         if (!ingredients.isEmpty()) {
-            CraftingInput testingInput = this.gatherFromInventory(player.getInventory(), ingredients, s -> s.copyWithCount(1));
 
-            Optional<RecipeHolder<CraftingRecipe>> match = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, testingInput, level);
+            PlayerInventoryStorage playerInventory = PlayerInventoryStorage.of(player);
 
-            if (match.isEmpty()) {
-                return false;
+            ItemStack result = ItemStack.EMPTY;
+
+            try (Transaction tx = Transaction.openOuter()) {
+                CraftingInput input = this.gatherFromInventory(playerInventory, ingredients, tx);
+                Optional<RecipeHolder<CraftingRecipe>> match = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level);
+
+                if (match.isEmpty()) {
+                    tx.abort();
+                    return false;
+                }
+
+                result = match.get().value().assemble(input, level.registryAccess());
+
+                if (player.getAbilities().instabuild) {
+                    tx.abort();
+                } else {
+                    tx.commit();
+                }
             }
-
-            CraftingInput realInput = player.getAbilities().instabuild || level.isClientSide() ? testingInput : this.gatherFromInventory(player.getInventory(), ingredients, s -> s.split(1));
-
-            ItemStack result = match.get().value().assemble(realInput, level.registryAccess());
 
             if (!result.isEmpty()) {
-                player.setItemInHand(hand, result);
-                useHandler.accept(result);
-                player.setItemInHand(hand, fabricatronStack);
-            }
+                if (!player.getCooldowns().isOnCooldown(result.getItem())) {
+                    player.setItemInHand(hand, result);
+                    useHandler.accept(result);
+                    player.setItemInHand(hand, fabricatronStack);
+                }
 
-            if (!player.getAbilities().instabuild && !result.isEmpty() && !level.isClientSide()) {
-                if (!player.addItem(result)) {
-                    player.drop(result, false);
+                if (!player.getAbilities().instabuild && !level.isClientSide()) {
+                    if (!player.addItem(result)) {
+                        player.drop(result, false);
+                    }
                 }
             }
 
@@ -122,8 +136,7 @@ public class FabricatronItem extends Item {
         return false;
     }
 
-    protected CraftingInput gatherFromInventory(Inventory inventory, List<Ingredient> ingredients, UnaryOperator<ItemStack> splitter) {
-        List<ItemStack> inventoryStacks = inventory.items.stream().filter(stack -> !stack.isEmpty()).toList();
+    protected CraftingInput gatherFromInventory(PlayerInventoryStorage inventory, List<Ingredient> ingredients, Transaction tx) {
         NonNullList<ItemStack> inputStacks = NonNullList.withSize(9, ItemStack.EMPTY);
 
         for (int i = 0; i < ingredients.size(); i++) {
@@ -134,10 +147,23 @@ public class FabricatronItem extends Item {
                 continue;
             }
 
-            for (ItemStack inventoryStack : inventoryStacks) {
-                if (selected.test(inventoryStack)) {
-                    inputStacks.set(i, splitter.apply(inventoryStack));
-                    break;
+            for (int j = 0; j < Inventory.INVENTORY_SIZE; j++) {
+                SingleSlotStorage<ItemVariant> slot = inventory.getSlot(j);
+
+                ItemVariant resource = slot.getResource();
+                ItemStack resourceStack = resource.toStack();
+
+                if (selected.test(resourceStack)) {
+                    try (Transaction txInner = Transaction.openNested(tx)) {
+                        if (slot.extract(resource, 1, tx) == 1) {
+                            txInner.commit();
+                            resourceStack.setCount(1);
+                            inputStacks.set(i, resourceStack);
+                            break;
+                        } else {
+                            txInner.abort();
+                        }
+                    }
                 }
             }
         }
