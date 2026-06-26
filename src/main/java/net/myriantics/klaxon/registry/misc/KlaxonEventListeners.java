@@ -2,9 +2,11 @@ package net.myriantics.klaxon.registry.misc;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.item.equipment.tools.FabricatronItem;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeLogic;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeLogic;
 import net.myriantics.klaxon.registry.item.KlaxonDefaultItemComponentModifications;
@@ -22,6 +24,8 @@ public abstract class KlaxonEventListeners {
         ServerLifecycleEvents.SERVER_STARTED.register(WorldItemApplicationRecipeLogic::onServerStarted);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(WorldItemApplicationRecipeLogic::onDatapackReload);
         CommonLifecycleEvents.TAGS_LOADED.register(WorldItemApplicationRecipeLogic::onTagsLoaded);
+
+        UseEntityCallback.EVENT.register(FabricatronItem::handleEntityInteraction);
 
         KlaxonCommon.LOGGER.info("Registered KLAXON's Event Listeners!");
     }
