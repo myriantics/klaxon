@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.CrafterBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 public class FabricatronItem extends Item {
 
@@ -64,10 +67,17 @@ public class FabricatronItem extends Item {
         }
 
         if (this.performCraft(fabricatronStack, player, level, hand, itemStack -> {
-            InteractionResult result = itemStack.useOn(new UseOnContext(level, player, hand, itemStack, new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside())));
-            if (!itemStack.isEmpty() && result == InteractionResult.PASS) {
-                itemStack.use(level, player, hand);
+            BlockHitResult hitResult = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside());
+
+            if (level.getBlockState(pos).useItemOn(itemStack, level, player, hand, hitResult).consumesAction()) {
+                return player.getItemInHand(hand);
             }
+
+            if (itemStack.useOn(new UseOnContext(level, player, hand, itemStack, hitResult)).consumesAction()) {
+                return player.getItemInHand(hand);
+            }
+
+            return itemStack.use(level, player, hand).getObject();
         })) {
             return InteractionResult.SUCCESS;
         }
@@ -79,14 +89,14 @@ public class FabricatronItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
 
-        if (this.performCraft(stack, player, level, usedHand, itemStack -> itemStack.use(level, player, usedHand))) {
+        if (this.performCraft(stack, player, level, usedHand, itemStack -> itemStack.use(level, player, usedHand).getObject())) {
             return InteractionResultHolder.success(stack);
         }
 
         return InteractionResultHolder.fail(stack);
     }
 
-    protected boolean performCraft(ItemStack fabricatronStack, Player player, Level level, InteractionHand hand, Consumer<ItemStack> useHandler) {
+    protected boolean performCraft(ItemStack fabricatronStack, Player player, Level level, InteractionHand hand, UnaryOperator<ItemStack> useHandler) {
         List<Ingredient> ingredients = fabricatronStack.getOrDefault(KlaxonDataComponentTypes.FABRICATRON_PATTERN.value(), List.of());
 
         if (!ingredients.isEmpty()) {
@@ -116,7 +126,7 @@ public class FabricatronItem extends Item {
             if (!result.isEmpty()) {
                 if (!player.getCooldowns().isOnCooldown(result.getItem())) {
                     player.setItemInHand(hand, result);
-                    useHandler.accept(result);
+                    result = useHandler.apply(result);
                     player.setItemInHand(hand, fabricatronStack);
                 }
 
