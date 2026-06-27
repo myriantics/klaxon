@@ -150,6 +150,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
         BlockState stateWhereWeWantToPutDrawer = level.getBlockState(drawerPos);
         if (this.canDrawerReplace(level, drawerPos, stateWhereWeWantToPutDrawer)) {
             BlockState proposedDrawerState = this.getDrawerBlock().defaultBlockState().setValue(FilingCabinetDrawerBlock.ORIENTATION, orientation).setValue(FilingCabinetDrawerBlock.WATERLOGGED, stateWhereWeWantToPutDrawer.getFluidState().is(Fluids.WATER));
+            level.destroyBlock(drawerPos, true);
             level.setBlockAndUpdate(drawerPos, proposedDrawerState);
 
             Direction.Axis movementAxis = orientation.front().getAxis();
@@ -197,7 +198,17 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
         if (state.is(KlaxonBlockTags.FILING_CABINET_DRAWER_REPLACEABLE_ALLOWLIST)) {
             return true;
         }
-        if (state.getPistonPushReaction() == PushReaction.DESTROY) {
+        final PushReaction pushReaction = state.getPistonPushReaction();
+        if (pushReaction == PushReaction.BLOCK) {
+            return false;
+        }
+        if (state.getBlock() instanceof GameMasterBlock) {
+            return false;
+        }
+        if (pushReaction == PushReaction.DESTROY) {
+            return true;
+        }
+        if (state.getCollisionShape(level, pos).isEmpty()) {
             return true;
         }
         if (state.canBeReplaced()) {
