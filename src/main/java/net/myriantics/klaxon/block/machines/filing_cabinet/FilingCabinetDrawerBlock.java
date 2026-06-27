@@ -27,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.myriantics.klaxon.util.KlaxonVoxelShapeHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -37,6 +38,10 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     private final MapCodec<FilingCabinetDrawerBlock> CODEC = simpleCodec(FilingCabinetDrawerBlock::new);
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
+    private static VoxelShape[] DRAWER_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 4d/16, 15d/16, 12d/16, 16d/16);
+    private static VoxelShape[] WALL_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 2d/16, 15d/16, 14d/16, 4d/16);
+    private static VoxelShape[] SHAPES = KlaxonVoxelShapeHelper.arrayUnion(DRAWER_SHAPES, WALL_SHAPES);
 
     private static final VoxelShape X = box(0, 2, 2, 16, 14, 14);
     private static final VoxelShape Y = box(2, 0, 2, 14, 16, 14);
@@ -232,11 +237,12 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(ORIENTATION).front().getAxis()) {
-            case X -> X;
-            case Y -> Y;
-            case Z -> Z;
-        };
+        return SHAPES[state.getValue(ORIENTATION).ordinal()];
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.INVISIBLE;
     }
 
     @Override
