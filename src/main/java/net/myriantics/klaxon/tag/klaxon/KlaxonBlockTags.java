@@ -69,6 +69,10 @@ public abstract class KlaxonBlockTags {
             createTag("steel_blast_processor_exhaust_overwritable_denylist");
     public static final TagKey<Block> STEEL_BLAST_PROCESSOR_FIRE_HOLDERS =
             createTag("steel_blast_processor_fire_holders");
+    public static final TagKey<Block> FILING_CABINET_DRAWER_REPLACEABLE_ALLOWLIST =
+            createTag("filing_cabinet_drawer_replaceable_allowlist");
+    public static final TagKey<Block> FILING_CABINET_DRAWER_REPLACEABLE_DENYLIST =
+            createTag("filing_cabinet_drawer_replaceable_denylist");
 
     // nether reaction tags
     public static final TagKey<Block> NETHER_REACTION_IMMUNE =

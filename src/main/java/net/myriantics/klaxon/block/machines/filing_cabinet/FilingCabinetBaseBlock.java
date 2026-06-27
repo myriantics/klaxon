@@ -1,8 +1,9 @@
 package net.myriantics.klaxon.block.machines.filing_cabinet;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
@@ -29,14 +30,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
+import net.myriantics.klaxon.util.container.KlaxonStorageUtil;
 import org.jetbrains.annotations.Nullable;
-import snownee.jade.addon.debug.BlockStatesProvider;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class FilingCabinetBaseBlock extends BaseEntityBlock {
@@ -88,7 +87,8 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (this.isOpen(level, state, pos) && level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity) {
+        // can always open from back for qol
+        if ((hitResult.getDirection().getOpposite().equals(state.getValue(ORIENTATION).front()) || this.isOpen(level, state, pos)) && level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity) {
             player.openMenu(blockEntity);
         } else {
             level.scheduleTick(pos, this, EXTENSION_DELAY_TICKS);
@@ -144,30 +144,37 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
         return level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity ? blockEntity.getAnalogSignalStrength() : 0;
     }
 
-    // todo: add restrictions on this
-    public boolean extendDrawer(Level level, BlockState state, BlockPos pos) {
+    public void extendDrawer(Level level, BlockState state, BlockPos pos) {
         FrontAndTop orientation = state.getValue(ORIENTATION);
         BlockPos drawerPos = this.findDrawerPos(state, pos);
         BlockState stateWhereWeWantToPutDrawer = level.getBlockState(drawerPos);
-        BlockState proposedDrawerState = this.getDrawerBlock().defaultBlockState().setValue(FilingCabinetDrawerBlock.ORIENTATION, orientation).setValue(FilingCabinetDrawerBlock.WATERLOGGED, stateWhereWeWantToPutDrawer.getFluidState().is(Fluids.WATER));
-        level.setBlockAndUpdate(drawerPos, proposedDrawerState);
+        if (this.canDrawerReplace(level, drawerPos, stateWhereWeWantToPutDrawer)) {
+            BlockState proposedDrawerState = this.getDrawerBlock().defaultBlockState().setValue(FilingCabinetDrawerBlock.ORIENTATION, orientation).setValue(FilingCabinetDrawerBlock.WATERLOGGED, stateWhereWeWantToPutDrawer.getFluidState().is(Fluids.WATER));
+            level.setBlockAndUpdate(drawerPos, proposedDrawerState);
 
-        Direction.Axis movementAxis = orientation.front().getAxis();
-        VoxelShape shape = proposedDrawerState.getShape(level, drawerPos).move(drawerPos.getX(), drawerPos.getY(), drawerPos.getZ());
+            Direction.Axis movementAxis = orientation.front().getAxis();
+            VoxelShape shape = proposedDrawerState.getShape(level, drawerPos).move(drawerPos.getX(), drawerPos.getY(), drawerPos.getZ());
 
-        double x = movementAxis == Direction.Axis.X ? 1 : 0;
-        double y = movementAxis == Direction.Axis.Y ? 1 : 0;
-        double z = movementAxis == Direction.Axis.Z ? 1 : 0;
+            double x = movementAxis == Direction.Axis.X ? 1 : 0;
+            double y = movementAxis == Direction.Axis.Y ? 1 : 0;
+            double z = movementAxis == Direction.Axis.Z ? 1 : 0;
 
-        for (Entity entity : level.getEntities(null, shape.bounds())) {
-            if (entity.getPistonPushReaction().equals(PushReaction.IGNORE)) {
-                continue;
+            for (Entity entity : level.getEntities(null, shape.bounds())) {
+                if (entity.getPistonPushReaction().equals(PushReaction.IGNORE)) {
+                    continue;
+                }
+                double diff = Shapes.collide(movementAxis, entity.getBoundingBox().move(x, y, z), List.of(shape), -1.0);
+                entity.addDeltaMovement(new Vec3(x + (x * diff), y + (y * diff), z + (z * diff)));
+
             }
-            double diff = Shapes.collide(movementAxis, entity.getBoundingBox().move(x, y, z), List.of(shape), -1.0);
-            entity.addDeltaMovement(new Vec3(x + (x * diff), y + (y * diff), z + (z * diff)));
-
+        } else {
+            if (level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity) {
+                @Nullable Storage<ItemVariant> storage = KlaxonStorageUtil.findStorage(level, drawerPos, orientation.front().getOpposite());
+                if (storage != null) {
+                    blockEntity.transferStacks(storage);
+                }
+            }
         }
-        return true;
     }
 
     public boolean retractDrawer(Level level, BlockState state, BlockPos pos) {
@@ -181,6 +188,22 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
             return true;
         }
         return false;
+    }
+
+    public boolean canDrawerReplace(Level level, BlockPos pos, BlockState state) {
+        if (state.is(KlaxonBlockTags.FILING_CABINET_DRAWER_REPLACEABLE_DENYLIST)) {
+            return false;
+        }
+        if (state.is(KlaxonBlockTags.FILING_CABINET_DRAWER_REPLACEABLE_ALLOWLIST)) {
+            return true;
+        }
+        if (state.getPistonPushReaction() == PushReaction.DESTROY) {
+            return true;
+        }
+        if (state.canBeReplaced()) {
+            return true;
+        }
+        return state.getDestroySpeed(level, pos) == 0;
     }
 
     public boolean isOpen(Level level, BlockState state, BlockPos pos) {

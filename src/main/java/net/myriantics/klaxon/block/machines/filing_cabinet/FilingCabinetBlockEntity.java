@@ -1,5 +1,8 @@
 package net.myriantics.klaxon.block.machines.filing_cabinet;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
@@ -55,6 +58,22 @@ public class FilingCabinetBlockEntity extends KlaxonBaseSidedContainerBlockEntit
         if (this.level != null && ((FilingCabinetBaseBlock) this.getBlockState().getBlock()).isOpen(this.level, this.getBlockState(), this.worldPosition)) {
             this.level.updateNeighbourForOutputSignal(((FilingCabinetBaseBlock) this.getBlockState().getBlock()).findDrawerPos(this.getBlockState(), this.worldPosition), ((FilingCabinetBaseBlock) this.getBlockState().getBlock()).getDrawerBlock());
         }
+    }
+
+    public void transferStacks(Storage<ItemVariant> storage) {
+        for (int i = 0; i < this.items.getContainerSize(); i++) {
+            ItemStack selected = this.items.getItem(i);
+            if (selected.isEmpty()) {
+                continue;
+            }
+            try (Transaction tx = Transaction.openOuter()) {
+                int count = selected.getCount();
+                int transferred = Math.toIntExact(storage.insert(ItemVariant.of(selected), count, tx));
+                tx.commit();
+                selected.setCount(count - transferred);
+            }
+        }
+        this.setChanged();
     }
 
     @Override
