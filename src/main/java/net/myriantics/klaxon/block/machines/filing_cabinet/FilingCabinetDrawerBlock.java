@@ -114,11 +114,14 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
         BlockPos attachedPosition = this.findAttachedPosition(hit.getBlockPos(), state);
         BlockState attachedState = level.getBlockState(attachedPosition);
         Direction drawerFacing = state.getValue(ORIENTATION).front();
-        if (this.isCompatibleWithBase(state, attachedState)) {
+        if (this.isCompatibleWithBase(state, attachedState) && !attachedState.getValue(FilingCabinetBaseBlock.POWERED)) {
             if (drawerFacing.equals(hit.getDirection())) {
                 // default retract sound is played in this method
-                projectile.setDeltaMovement(Vec3.ZERO);
-                ((FilingCabinetBaseBlock) attachedState.getBlock()).retractDrawer(level, attachedState, attachedPosition);
+                if (!level.isClientSide()) {
+                    projectile.setDeltaMovement(Vec3.ZERO);
+                    projectile.hurtMarked = true;
+                    ((FilingCabinetBaseBlock) attachedState.getBlock()).retractDrawer(level, attachedState, attachedPosition);
+                }
             } else {
                 // rattling sound plays alongside maybe particles to indicate that player is pushing the wrong direction
             }
