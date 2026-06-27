@@ -103,7 +103,6 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
             } else {
                 // rattling sound plays alongside maybe particles to indicate that player is pushing the wrong direction
             }
-
         }
     }
 

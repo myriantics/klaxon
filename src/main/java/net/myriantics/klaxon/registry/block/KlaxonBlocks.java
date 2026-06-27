@@ -105,7 +105,7 @@ public abstract class KlaxonBlocks {
     public static final Holder<Block> MODULAR_EXPLOSIVE_BLOCK = registerBlock("modular_explosive_block",
             new ModularExplosiveBlock(copyProperties(STEEL_CASING)));
     public static final Holder<Block> FILING_CABINET_DRAWER = registerBlock("filing_cabinet_drawer",
-            new FilingCabinetDrawerBlock(copyProperties(Blocks.IRON_BLOCK))
+            new FilingCabinetDrawerBlock(copyProperties(Blocks.IRON_BLOCK).pushReaction(PushReaction.DESTROY))
     );
     public static final Holder<Block> FILING_CABINET_BASE = registerBlock("filing_cabinet_base",
             new FilingCabinetBaseBlock(copyProperties(FILING_CABINET_DRAWER), FILING_CABINET_DRAWER)

@@ -7,6 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -47,6 +49,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     private final Holder<FilingCabinetDrawerBlock> extendedDrawerBlockHolder;
+    public static final int EXTENSION_DELAY_TICKS = 4;
 
     @SuppressWarnings("unchecked")
     public FilingCabinetBaseBlock(Properties properties, Holder<Block> extendedDrawerBlockHolder) {
@@ -87,15 +90,10 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (this.isOpen(level, state, pos) && level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity) {
             player.openMenu(blockEntity);
-            return InteractionResult.SUCCESS;
         } else {
-            if (this.extendDrawer(level, state, pos)) {
-                return InteractionResult.SUCCESS;
-            } else {
-                // todo: play fail fx
-                return InteractionResult.FAIL;
-            }
+            level.scheduleTick(pos, this, EXTENSION_DELAY_TICKS);
         }
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -104,7 +102,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
             if (this.isOpen(level, state, pos)) {
                 this.retractDrawer(level, state, pos);
             } else {
-                this.extendDrawer(level, state, pos);
+                level.scheduleTick(pos, this, EXTENSION_DELAY_TICKS);
             }
         }
 
@@ -120,11 +118,19 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
             level.setBlockAndUpdate(pos, state.setValue(POWERED, powered));
             if (powered != this.isOpen(level, state, pos)) {
                 if (powered) {
-                    this.extendDrawer(level, state, pos);
+                    level.scheduleTick(pos, this, EXTENSION_DELAY_TICKS);
                 } else {
                     this.retractDrawer(level, state, pos);
                 }
             }
+        }
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        super.tick(state, level, pos, random);
+        if (!this.isOpen(level, state, pos)) {
+            this.extendDrawer(level, state, pos);
         }
     }
 
@@ -166,9 +172,12 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
 
     public boolean retractDrawer(Level level, BlockState state, BlockPos pos) {
         if (this.isOpen(level, state, pos)) {
-            BlockPos drawerPos = this.findDrawerPos(state, pos);
-            BlockState drawerState = level.getBlockState(drawerPos);
-            level.setBlock(drawerPos, drawerState.getFluidState().createLegacyBlock(), (Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL_IMMEDIATE));
+            if (!level.isClientSide()) {
+                BlockPos drawerPos = this.findDrawerPos(state, pos);
+                BlockState drawerState = level.getBlockState(drawerPos);
+                level.setBlock(drawerPos, drawerState.getFluidState().createLegacyBlock(), (Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL_IMMEDIATE));
+            }
+
             return true;
         }
         return false;
