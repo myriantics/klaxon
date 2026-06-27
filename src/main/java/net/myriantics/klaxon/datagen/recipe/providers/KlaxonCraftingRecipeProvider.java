@@ -276,6 +276,21 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingBookCategory.REDSTONE,
                 "steel_blast_processor"
         );
+        addShapedCraftingRecipe(
+                Map.of(
+                        'I', Ingredient.of(KlaxonConventionalItemTags.IRON_PLATES),
+                        'P', Ingredient.of(Items.PISTON),
+                        'W', Ingredient.of(KlaxonConventionalItemTags.IRON_WIRES)
+                ),
+                new String[] {
+                        " II",
+                        "IPW",
+                        " II"
+                },
+                new ItemStack(KlaxonItems.FILING_CABINET),
+                CraftingBookCategory.REDSTONE,
+                "filing_cabinet"
+        );
 
         /*
         addShapedCraftingRecipe(Map.of(

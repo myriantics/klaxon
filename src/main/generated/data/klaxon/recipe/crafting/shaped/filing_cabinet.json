@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "filing_cabinet",
+  "key": {
+    "I": {
+      "tag": "c:plates/iron"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "W": {
+      "tag": "c:wires/iron"
+    }
+  },
+  "pattern": [
+    " II",
+    "IPW",
+    " II"
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:filing_cabinet"
+  }
+}
