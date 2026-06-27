@@ -97,7 +97,7 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
         BlockState attachedState = level.getBlockState(attachedPosition);
         Direction drawerFacing = state.getValue(ORIENTATION).front();
         if (this.isCompatibleWithBase(state, attachedState)) {
-            if (drawerFacing.getOpposite().equals(player.getNearestViewDirection())) {
+            if (drawerFacing.getOpposite().equals(player.getNearestViewDirection()) || drawerFacing.getOpposite().equals(player.getDirection())) {
                 // default retract sound is played in this method
                 ((FilingCabinetBaseBlock) attachedState.getBlock()).retractDrawer(level, attachedState, attachedPosition);
             } else {
