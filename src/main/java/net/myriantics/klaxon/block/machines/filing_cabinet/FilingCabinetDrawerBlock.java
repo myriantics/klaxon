@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -99,6 +101,23 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
         if (this.isCompatibleWithBase(state, attachedState)) {
             if (drawerFacing.getOpposite().equals(player.getNearestViewDirection()) || drawerFacing.getOpposite().equals(player.getDirection())) {
                 // default retract sound is played in this method
+                ((FilingCabinetBaseBlock) attachedState.getBlock()).retractDrawer(level, attachedState, attachedPosition);
+            } else {
+                // rattling sound plays alongside maybe particles to indicate that player is pushing the wrong direction
+            }
+        }
+    }
+
+    @Override
+    protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
+        super.onProjectileHit(level, state, hit, projectile);
+        BlockPos attachedPosition = this.findAttachedPosition(hit.getBlockPos(), state);
+        BlockState attachedState = level.getBlockState(attachedPosition);
+        Direction drawerFacing = state.getValue(ORIENTATION).front();
+        if (this.isCompatibleWithBase(state, attachedState)) {
+            if (drawerFacing.equals(hit.getDirection())) {
+                // default retract sound is played in this method
+                projectile.setDeltaMovement(Vec3.ZERO);
                 ((FilingCabinetBaseBlock) attachedState.getBlock()).retractDrawer(level, attachedState, attachedPosition);
             } else {
                 // rattling sound plays alongside maybe particles to indicate that player is pushing the wrong direction
