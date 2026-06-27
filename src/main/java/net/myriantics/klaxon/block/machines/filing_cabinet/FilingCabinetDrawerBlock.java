@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.player.Player;
@@ -57,6 +58,17 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(ORIENTATION, WATERLOGGED);
+    }
+
+    @Override
+    protected @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        BlockPos attachedPos = this.findAttachedPosition(pos, state);
+        BlockState attachedState = level.getBlockState(attachedPos);
+        if (this.isCompatibleWithBase(state, attachedState)) {
+            return attachedState.getMenuProvider(level, attachedPos);
+        } else {
+            return null;
+        }
     }
 
     @Override
