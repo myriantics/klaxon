@@ -7,6 +7,14 @@ import net.myriantics.klaxon.KlaxonCommon;
 
 public abstract class KlaxonSoundEvents {
 
+    // filing cabinets
+    public static final SoundEvent BLOCK_FILING_CABINET_EXTEND = register("block.filing_cabinet.extend", SoundEvents.BARREL_OPEN);
+    public static final SoundEvent BLOCK_FILING_CABINET_RETRACT = register("block.filing_cabinet.retract", SoundEvents.BARREL_CLOSE);
+    public static final SoundEvent BLOCK_FILING_CABINET_SEARCH = register("block.filing_cabinet.search", SoundEvents.DECORATED_POT_INSERT);
+    public static final SoundEvent BLOCK_FILING_CABINET_EJECT = register("block.filing_cabinet.eject", SoundEvents.DISPENSER_LAUNCH);
+    public static final SoundEvent BLOCK_FILING_CABINET_RATTLE = register("block.filing_cabinet.rattle", SoundEvents.ZOMBIE_ATTACK_IRON_DOOR);
+    public static final SoundEvent BLOCK_FILING_CABINET_LOCKED = register("block.filing_cabinet.locked", SoundEvents.CHEST_LOCKED);
+
     public static final SoundEvent BLOCK_DEEPSLATE_BLAST_PROCESSOR_INSERT = register("block.deepslate_blast_processor.insert", SoundEvents.DEEPSLATE_PLACE);
     public static final SoundEvent BLOCK_STEEL_BLAST_PROCESSOR_ACTIVATE = register("block.steel_blast_processor.activate", SoundEvents.DRAGON_FIREBALL_EXPLODE);
     public static final SoundEvent BLOCK_STEEL_BLAST_PROCESSOR_FAIL = register("block.steel_blast_processor.fail", SoundEvents.CRAFTER_FAIL);

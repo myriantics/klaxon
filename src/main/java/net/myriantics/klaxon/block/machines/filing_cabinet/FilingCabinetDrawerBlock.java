@@ -5,6 +5,8 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
@@ -28,6 +30,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.util.KlaxonVoxelShapeHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,6 +113,8 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
             }
         } else if (level.getBlockEntity(filingCabinetBasePosition) instanceof FilingCabinetBlockEntity blockEntity) {
             player.openMenu(blockEntity);
+            RandomSource random = level.getRandom();
+            level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_SEARCH, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.4f);
             return InteractionResult.SUCCESS;
         }
 
@@ -119,6 +124,9 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     @Override
     protected void attack(BlockState state, Level level, BlockPos pos, Player player) {
         super.attack(state, level, pos, player);
+        if (level.isClientSide()) {
+            return;
+        }
         BlockPos attachedPosition = this.findAttachedPosition(pos, state);
         BlockState attachedState = level.getBlockState(attachedPosition);
         Direction drawerFacing = state.getValue(ORIENTATION).front();
@@ -127,7 +135,9 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
                 // default retract sound is played in this method
                 ((FilingCabinetBaseBlock) attachedState.getBlock()).retractDrawer(level, attachedState, attachedPosition);
             } else {
+                RandomSource random = level.getRandom();
                 // rattling sound plays alongside maybe particles to indicate that player is pushing the wrong direction
+                level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_RATTLE, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.4f);
             }
         }
     }

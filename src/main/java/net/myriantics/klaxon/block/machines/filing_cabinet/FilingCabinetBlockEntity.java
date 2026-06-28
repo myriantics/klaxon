@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.util.container.ContainerPartition;
 import net.myriantics.klaxon.util.container.KlaxonBaseContainerBlockEntity;
 import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
@@ -83,5 +85,10 @@ public class FilingCabinetBlockEntity extends KlaxonBaseSidedContainerBlockEntit
 
     public int getAnalogSignalStrength() {
         return this.items == null ? 0 : AbstractContainerMenu.getRedstoneSignalFromContainer(this.items);
+    }
+
+    @Override
+    protected SoundEvent getLockedSound() {
+        return KlaxonSoundEvents.BLOCK_FILING_CABINET_LOCKED;
     }
 }

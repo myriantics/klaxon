@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
@@ -25,18 +26,21 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.KlaxonCodecUtils;
 import net.myriantics.klaxon.util.container.KlaxonStorageUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.BiConsumer;
 
 public class FilingCabinetBaseBlock extends BaseEntityBlock {
@@ -58,6 +62,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(ORIENTATION, FrontAndTop.NORTH_UP)
                 .setValue(POWERED,  false)
+                .setValue(OPEN, false)
         );
         if (extendedDrawerBlockHolder.value() instanceof FilingCabinetDrawerBlock) {
             this.extendedDrawerBlockHolder = (Holder<FilingCabinetDrawerBlock>) (Object) extendedDrawerBlockHolder;
@@ -90,12 +95,25 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
+
+        RandomSource random = level.getRandom();
+
         // can always open from back for qol
         if ((hitResult.getDirection().getOpposite().equals(state.getValue(ORIENTATION).front()) || this.isOpen(level, state, pos)) && level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity) {
             player.openMenu(blockEntity);
+            level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_SEARCH, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.4f);
         } else {
-            level.scheduleTick(pos, this, EXTENSION_DELAY_TICKS);
+            if (this.canDrawerExtend(level, pos, state)) {
+                level.scheduleTick(pos, this, EXTENSION_DELAY_TICKS);
+            } else {
+                // super F
+                level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_RATTLE, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.4f);
+            }
         }
+
         return InteractionResult.SUCCESS;
     }
 
@@ -157,10 +175,14 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
         FrontAndTop orientation = state.getValue(ORIENTATION);
         BlockPos drawerPos = this.findDrawerPos(state, pos);
         BlockState stateWhereWeWantToPutDrawer = level.getBlockState(drawerPos);
+        RandomSource random = level.getRandom();
         if (this.canDrawerReplace(level, drawerPos, stateWhereWeWantToPutDrawer)) {
             BlockState proposedDrawerState = this.getDrawerBlock().defaultBlockState().setValue(FilingCabinetDrawerBlock.ORIENTATION, orientation).setValue(FilingCabinetDrawerBlock.WATERLOGGED, stateWhereWeWantToPutDrawer.getFluidState().is(Fluids.WATER));
             level.destroyBlock(drawerPos, true);
             level.setBlockAndUpdate(drawerPos, proposedDrawerState);
+
+            level.gameEvent(GameEvent.BLOCK_OPEN, pos, GameEvent.Context.of(state));
+            level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_EXTEND, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.4f);
 
             Direction.Axis movementAxis = orientation.front().getAxis();
             VoxelShape shape = proposedDrawerState.getShape(level, drawerPos).move(drawerPos.getX(), drawerPos.getY(), drawerPos.getZ());
@@ -175,13 +197,13 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
                 }
                 double diff = Shapes.collide(movementAxis, entity.getBoundingBox().move(x, y, z), List.of(shape), -1.0);
                 entity.addDeltaMovement(new Vec3(x + (x * diff), y + (y * diff), z + (z * diff)));
-
             }
         } else {
             if (level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity) {
                 @Nullable Storage<ItemVariant> storage = KlaxonStorageUtil.findStorage(level, drawerPos, orientation.front().getOpposite());
                 if (storage != null) {
                     blockEntity.transferStacks(storage);
+                    level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_EJECT, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.7f);
                 }
             }
         }
@@ -192,12 +214,24 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
             if (!level.isClientSide()) {
                 BlockPos drawerPos = this.findDrawerPos(state, pos);
                 BlockState drawerState = level.getBlockState(drawerPos);
+                RandomSource random = level.getRandom();
+                level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_RETRACT, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.7f);
+                level.gameEvent(GameEvent.BLOCK_CLOSE, pos, GameEvent.Context.of(state));
                 level.setBlock(drawerPos, drawerState.getFluidState().createLegacyBlock(), (Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL_IMMEDIATE));
             }
 
             return true;
         }
         return false;
+    }
+
+    public boolean canDrawerExtend(Level level, BlockPos pos, BlockState state) {
+        if (state.getValue(OPEN)) {
+            return false;
+        }
+        BlockPos desiredExtensionPos = this.findDrawerPos(state, pos);
+        BlockState obstructionState = level.getBlockState(desiredExtensionPos);
+        return this.canDrawerReplace(level, desiredExtensionPos, obstructionState);
     }
 
     public boolean canDrawerReplace(Level level, BlockPos pos, BlockState state) {
