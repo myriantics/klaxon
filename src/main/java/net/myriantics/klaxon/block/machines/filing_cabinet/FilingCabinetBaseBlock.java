@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.redstone.NeighborUpdater;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -133,7 +135,9 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
 
-        boolean powered = level.hasNeighborSignal(pos);
+        Direction facing = state.getValue(ORIENTATION).front();
+        boolean powered = this.getNeighborSignal(level, pos, facing);
+
         if (powered != state.getValue(POWERED)) {
             level.setBlockAndUpdate(pos, state.setValue(POWERED, powered));
             if (powered != this.isOpen(state)) {
@@ -144,6 +148,16 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
                 }
             }
         }
+    }
+
+    protected boolean getNeighborSignal(SignalGetter signalGetter, BlockPos pos, Direction facing) {
+        for (Direction direction2 : Direction.values()) {
+            if (direction2 != facing && signalGetter.hasSignal(pos.relative(direction2), direction2)) {
+                return true;
+            }
+        }
+
+        return signalGetter.hasSignal(pos, Direction.DOWN);
     }
 
     @Override
