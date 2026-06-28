@@ -759,9 +759,44 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(KlaxonBlockTags.FILING_CABINET_BASES)
                 .addTag(KlaxonBlockTags.FILING_CABINET_DRAWERS);
         getOrCreateTagBuilder(KlaxonBlockTags.FILING_CABINET_BASES)
-                .add(KlaxonBlocks.FILING_CABINET_BASE.value());
+                .add(
+                        KlaxonBlocks.FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.WHITE_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.ORANGE_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.MAGENTA_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.YELLOW_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.LIME_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.PINK_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.GRAY_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.CYAN_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.PURPLE_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.BLUE_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.BROWN_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.GREEN_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.RED_FILING_CABINET_BASE.value(),
+                        KlaxonBlocks.BLACK_FILING_CABINET_BASE.value()
+                );
         getOrCreateTagBuilder(KlaxonBlockTags.FILING_CABINET_DRAWERS)
-                .add(KlaxonBlocks.FILING_CABINET_DRAWER.value());
+                .add(
+                        KlaxonBlocks.FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.WHITE_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.ORANGE_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.MAGENTA_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.YELLOW_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.LIME_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.PINK_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.GRAY_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.CYAN_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.PURPLE_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.BLUE_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.GREEN_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.RED_FILING_CABINET_DRAWER.value(),
+                        KlaxonBlocks.BLACK_FILING_CABINET_DRAWER.value()
+                );
 
         // funny
         getOrCreateTagBuilder(BlockTags.FLOWER_POTS)

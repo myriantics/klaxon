@@ -8,6 +8,8 @@ import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorageUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -20,6 +22,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluids;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.compat.emi.recipes.special.ExplosiveCatalystTransmutationEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.special.FuseExtensionEmiRecipe;
 import net.myriantics.klaxon.compat.emi.recipes.special.KlaxonSuspiciousStewRecipe;
@@ -166,6 +170,35 @@ public class KlaxonEmiPlugin implements EmiPlugin {
             Optional<HolderSet.Named<Item>> holders = level.registryAccess().registryOrThrow(Registries.ITEM).getTag(KlaxonItemTags.SUSPICIOUS_STEW_INGREDIENTS);
             holders.ifPresent(itemNamed -> registry.addRecipe(new KlaxonSuspiciousStewRecipe(itemNamed)));
         }
+
+        EmiStack cauldron = EmiStack.of(Items.CAULDRON);
+        EmiStack waterThird = EmiStack.of(Fluids.WATER, FluidConstants.BOTTLE);
+        registry.addRecipe(EmiWorldInteractionRecipe.builder()
+                .id(KlaxonCommon.locate("/cauldron_washing/filing_cabinet"))
+                .leftInput(EmiIngredient.of(Ingredient.of(
+                        KlaxonItems.WHITE_FILING_CABINET.value(),
+                        KlaxonItems.ORANGE_FILING_CABINET.value(),
+                        KlaxonItems.MAGENTA_FILING_CABINET.value(),
+                        KlaxonItems.LIGHT_BLUE_FILING_CABINET.value(),
+                        KlaxonItems.YELLOW_FILING_CABINET.value(),
+                        KlaxonItems.LIME_FILING_CABINET.value(),
+                        KlaxonItems.PINK_FILING_CABINET.value(),
+                        KlaxonItems.GRAY_FILING_CABINET.value(),
+                        KlaxonItems.LIGHT_GRAY_FILING_CABINET.value(),
+                        KlaxonItems.CYAN_FILING_CABINET.value(),
+                        KlaxonItems.PURPLE_FILING_CABINET.value(),
+                        KlaxonItems.BLUE_FILING_CABINET.value(),
+                        KlaxonItems.BROWN_FILING_CABINET.value(),
+                        KlaxonItems.GREEN_FILING_CABINET.value(),
+                        KlaxonItems.RED_FILING_CABINET.value(),
+                        KlaxonItems.BLACK_FILING_CABINET.value()
+                )))
+                .rightInput(cauldron, true)
+                .rightInput(waterThird, false)
+                .output(EmiStack.of(KlaxonItems.FILING_CABINET.value()))
+                .supportsRecipeTree(true)
+                .build()
+        );
     }
 
     private void ifPopulated(TagKey<Item> tagKey, Consumer<TagKey<Item>> consumer) {

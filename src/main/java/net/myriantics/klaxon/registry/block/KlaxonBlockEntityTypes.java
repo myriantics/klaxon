@@ -16,6 +16,9 @@ import net.myriantics.klaxon.block.machines.filing_cabinet.FilingCabinetBlockEnt
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlockEntity;
 
+import java.util.Collection;
+import java.util.List;
+
 public abstract class KlaxonBlockEntityTypes {
     public static final Holder<BlockEntityType<DeepslateBlastProcessorBlockEntity>> DEEPSLATE_BLAST_PROCESSOR = register(
             "deepslate_blast_processor",
@@ -39,7 +42,25 @@ public abstract class KlaxonBlockEntityTypes {
     );
     public static final Holder<BlockEntityType<FilingCabinetBlockEntity>> FILING_CABINET = register(
             "filing_cabinet",
-            KlaxonBlocks.FILING_CABINET_BASE,
+            List.of(
+                    KlaxonBlocks.FILING_CABINET_BASE,
+                    KlaxonBlocks.WHITE_FILING_CABINET_BASE,
+                    KlaxonBlocks.ORANGE_FILING_CABINET_BASE,
+                    KlaxonBlocks.MAGENTA_FILING_CABINET_BASE,
+                    KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_BASE,
+                    KlaxonBlocks.YELLOW_FILING_CABINET_BASE,
+                    KlaxonBlocks.LIME_FILING_CABINET_BASE,
+                    KlaxonBlocks.PINK_FILING_CABINET_BASE,
+                    KlaxonBlocks.GRAY_FILING_CABINET_BASE,
+                    KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_BASE,
+                    KlaxonBlocks.CYAN_FILING_CABINET_BASE,
+                    KlaxonBlocks.PURPLE_FILING_CABINET_BASE,
+                    KlaxonBlocks.BLUE_FILING_CABINET_BASE,
+                    KlaxonBlocks.BROWN_FILING_CABINET_BASE,
+                    KlaxonBlocks.GREEN_FILING_CABINET_BASE,
+                    KlaxonBlocks.RED_FILING_CABINET_BASE,
+                    KlaxonBlocks.BLACK_FILING_CABINET_BASE
+            ),
             FilingCabinetBlockEntity::new
     );
     public static final Holder<BlockEntityType<AIODuctDriverBlockEntity>> AIO_DUCT_DRIVER = register(
@@ -69,8 +90,18 @@ public abstract class KlaxonBlockEntityTypes {
         type.addSupportedBlock(block);
     }
 
+
+    public static <T extends BlockEntity> Holder<BlockEntityType<T>> register(String id, Collection<Holder<Block>> holders, BlockEntityType.BlockEntitySupplier<T> factory) {
+        return register(id, holders.stream().map(Holder::value).toList(), factory);
+    }
+
     public static <T extends BlockEntity> Holder<BlockEntityType<T>> register(String id, Holder<Block> holder, BlockEntityType.BlockEntitySupplier<T> factory) {
         return register(id, holder.value(), factory);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends BlockEntity> Holder<BlockEntityType<T>> register(String id, List<Block> blocks, BlockEntityType.BlockEntitySupplier<T> factory) {
+        return (Holder<BlockEntityType<T>>) (Object) Registry.registerForHolder(BuiltInRegistries.BLOCK_ENTITY_TYPE, KlaxonCommon.locate(id), BlockEntityType.Builder.of(factory, blocks.toArray(Block[]::new)).build());
     }
 
     @SuppressWarnings("unchecked")

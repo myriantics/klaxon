@@ -1,0 +1,11 @@
+{
+  "parent": "klaxon:block/template/front_side_top_bottom_back",
+  "textures": {
+    "back": "klaxon:block/gray_filing_cabinet_base/back_powered",
+    "bottom": "klaxon:block/gray_filing_cabinet_base/bottom",
+    "front": "klaxon:block/gray_filing_cabinet_base/front_closed_powered",
+    "particle": "klaxon:block/gray_filing_cabinet_base/side_powered",
+    "side": "klaxon:block/gray_filing_cabinet_base/side_powered",
+    "top": "klaxon:block/gray_filing_cabinet_base/top"
+  }
+}

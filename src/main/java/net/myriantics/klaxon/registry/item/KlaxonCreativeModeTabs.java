@@ -63,6 +63,22 @@ public abstract class KlaxonCreativeModeTabs {
 
                 // filing cabinets
                 entries.accept(KlaxonItems.FILING_CABINET.value());
+                entries.accept(KlaxonItems.WHITE_FILING_CABINET.value());
+                entries.accept(KlaxonItems.ORANGE_FILING_CABINET.value());
+                entries.accept(KlaxonItems.MAGENTA_FILING_CABINET.value());
+                entries.accept(KlaxonItems.LIGHT_BLUE_FILING_CABINET.value());
+                entries.accept(KlaxonItems.YELLOW_FILING_CABINET.value());
+                entries.accept(KlaxonItems.LIME_FILING_CABINET.value());
+                entries.accept(KlaxonItems.PINK_FILING_CABINET.value());
+                entries.accept(KlaxonItems.GRAY_FILING_CABINET.value());
+                entries.accept(KlaxonItems.LIGHT_GRAY_FILING_CABINET.value());
+                entries.accept(KlaxonItems.CYAN_FILING_CABINET.value());
+                entries.accept(KlaxonItems.PURPLE_FILING_CABINET.value());
+                entries.accept(KlaxonItems.BLUE_FILING_CABINET.value());
+                entries.accept(KlaxonItems.BROWN_FILING_CABINET.value());
+                entries.accept(KlaxonItems.GREEN_FILING_CABINET.value());
+                entries.accept(KlaxonItems.RED_FILING_CABINET.value());
+                entries.accept(KlaxonItems.BLACK_FILING_CABINET.value());
 
                 // bs
                 entries.accept(KlaxonItems.HEAVY_GATED_PRESSURE_PLATE.value());

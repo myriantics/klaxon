@@ -17,6 +17,8 @@ import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
@@ -276,6 +278,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingBookCategory.REDSTONE,
                 "steel_blast_processor"
         );
+
+        // filing cabinet base
         addShapedCraftingRecipe(
                 Map.of(
                         'I', Ingredient.of(KlaxonConventionalItemTags.IRON_PLATES),
@@ -291,6 +295,43 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingBookCategory.REDSTONE,
                 "filing_cabinet"
         );
+
+        // filing cabinet dyeing
+        List<Item> allFilingCabinets = List.of(
+                KlaxonItems.FILING_CABINET.value(),
+                KlaxonItems.WHITE_FILING_CABINET.value(),
+                KlaxonItems.ORANGE_FILING_CABINET.value(),
+                KlaxonItems.MAGENTA_FILING_CABINET.value(),
+                KlaxonItems.LIGHT_BLUE_FILING_CABINET.value(),
+                KlaxonItems.YELLOW_FILING_CABINET.value(),
+                KlaxonItems.LIME_FILING_CABINET.value(),
+                KlaxonItems.PINK_FILING_CABINET.value(),
+                KlaxonItems.GRAY_FILING_CABINET.value(),
+                KlaxonItems.LIGHT_GRAY_FILING_CABINET.value(),
+                KlaxonItems.CYAN_FILING_CABINET.value(),
+                KlaxonItems.PURPLE_FILING_CABINET.value(),
+                KlaxonItems.BLUE_FILING_CABINET.value(),
+                KlaxonItems.BROWN_FILING_CABINET.value(),
+                KlaxonItems.GREEN_FILING_CABINET.value(),
+                KlaxonItems.RED_FILING_CABINET.value(),
+                KlaxonItems.BLACK_FILING_CABINET.value()
+        );
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.WHITE_DYE, KlaxonItems.WHITE_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.ORANGE_DYE, KlaxonItems.ORANGE_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.MAGENTA_DYE, KlaxonItems.MAGENTA_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.LIGHT_BLUE_DYE, KlaxonItems.LIGHT_BLUE_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.YELLOW_DYE, KlaxonItems.YELLOW_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.LIME_DYE, KlaxonItems.LIME_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.PINK_DYE, KlaxonItems.PINK_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.GRAY_DYE, KlaxonItems.GRAY_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.LIGHT_GRAY_DYE, KlaxonItems.LIGHT_GRAY_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.CYAN_DYE, KlaxonItems.CYAN_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.PURPLE_DYE, KlaxonItems.PURPLE_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.BLUE_DYE, KlaxonItems.BLUE_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.BROWN_DYE, KlaxonItems.BROWN_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.GREEN_DYE, KlaxonItems.GREEN_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.RED_DYE, KlaxonItems.RED_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
+        addSimpleShapelessDyeingRecipe(allFilingCabinets, Items.BLACK_DYE, KlaxonItems.BLACK_FILING_CABINET.value(), CraftingBookCategory.REDSTONE, "filing_cabinet_dye");
 
         /*
         addShapedCraftingRecipe(Map.of(
@@ -709,5 +750,9 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 CraftingBookCategory.REDSTONE,
                 "dispenser"
         );
+    }
+
+    private void addSimpleShapelessDyeingRecipe(Collection<Item> allVariants, Item dyeItem, Item resultItem, CraftingBookCategory category, String group, ResourceCondition... conditions) {
+        this.addShapelessCraftingRecipe(NonNullList.of(Ingredient.EMPTY, Ingredient.of(allVariants.stream().filter(item -> item != resultItem).map(ItemStack::new)), Ingredient.of(dyeItem)), new ItemStack(resultItem), category, group, conditions);
     }
 }

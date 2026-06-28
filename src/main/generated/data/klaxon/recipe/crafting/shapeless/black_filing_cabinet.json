@@ -1,0 +1,64 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "filing_cabinet_dye",
+  "ingredients": [
+    [
+      {
+        "item": "klaxon:filing_cabinet"
+      },
+      {
+        "item": "klaxon:white_filing_cabinet"
+      },
+      {
+        "item": "klaxon:orange_filing_cabinet"
+      },
+      {
+        "item": "klaxon:magenta_filing_cabinet"
+      },
+      {
+        "item": "klaxon:light_blue_filing_cabinet"
+      },
+      {
+        "item": "klaxon:yellow_filing_cabinet"
+      },
+      {
+        "item": "klaxon:lime_filing_cabinet"
+      },
+      {
+        "item": "klaxon:pink_filing_cabinet"
+      },
+      {
+        "item": "klaxon:gray_filing_cabinet"
+      },
+      {
+        "item": "klaxon:light_gray_filing_cabinet"
+      },
+      {
+        "item": "klaxon:cyan_filing_cabinet"
+      },
+      {
+        "item": "klaxon:purple_filing_cabinet"
+      },
+      {
+        "item": "klaxon:blue_filing_cabinet"
+      },
+      {
+        "item": "klaxon:brown_filing_cabinet"
+      },
+      {
+        "item": "klaxon:green_filing_cabinet"
+      },
+      {
+        "item": "klaxon:red_filing_cabinet"
+      }
+    ],
+    {
+      "item": "minecraft:black_dye"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:black_filing_cabinet"
+  }
+}

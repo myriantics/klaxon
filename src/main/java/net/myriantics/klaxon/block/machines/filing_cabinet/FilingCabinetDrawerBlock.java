@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.block.machines.filing_cabinet;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.entity.projectile.windcharge.WindCharge;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -37,22 +39,28 @@ import org.jetbrains.annotations.Nullable;
 
 public class FilingCabinetDrawerBlock extends Block implements SimpleWaterloggedBlock, WorldlyContainerHolder, WrenchItem.WrenchPickupOffsettor {
 
-    private static final MapCodec<FilingCabinetDrawerBlock> CODEC = simpleCodec(FilingCabinetDrawerBlock::new);
-    public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    private static final MapCodec<FilingCabinetDrawerBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Block.propertiesCodec(),
+            DyeColor.CODEC.fieldOf("dye_color").forGetter(FilingCabinetDrawerBlock::getDyeColor)
+    ).apply(instance, FilingCabinetDrawerBlock::new));
 
+    public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
+
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final VoxelShape[] DRAWER_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 4d/16, 15d/16, 12d/16, 16d/16);
+
     private static final VoxelShape[] WALL_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 2d/16, 15d/16, 14d/16, 4d/16);
     private static final VoxelShape[] SHAPES = KlaxonVoxelShapeHelper.arrayUnion(DRAWER_SHAPES, WALL_SHAPES);
+    private final DyeColor color;
 
     private Block filingCabinetBaseBlock = null;
-
-    public FilingCabinetDrawerBlock(Properties properties) {
+    public FilingCabinetDrawerBlock(Properties properties, DyeColor color) {
         super(properties);
         registerDefaultState(this.stateDefinition.any()
                 .setValue(ORIENTATION, FrontAndTop.NORTH_UP)
                 .setValue(WATERLOGGED, false)
         );
+        this.color = color;
     }
 
     @Override
@@ -64,6 +72,10 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(ORIENTATION, WATERLOGGED);
+    }
+
+    public DyeColor getDyeColor() {
+        return this.color;
     }
 
     void setFilingCabinetBaseBlock(Block filingCabinetBaseBlock) {

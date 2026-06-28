@@ -55,7 +55,39 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
 
         // filing cabinets
         registerFilingCabinetBaseBlock(KlaxonBlocks.FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.WHITE_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.ORANGE_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.MAGENTA_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.YELLOW_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.LIME_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.PINK_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.GRAY_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.CYAN_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.PURPLE_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.BLUE_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.BROWN_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.GREEN_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.RED_FILING_CABINET_BASE.value());
+        registerFilingCabinetBaseBlock(KlaxonBlocks.BLACK_FILING_CABINET_BASE.value());
         registerFilingCabinetDrawerBlock(KlaxonBlocks.FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.WHITE_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.ORANGE_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.MAGENTA_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.YELLOW_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.LIME_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.PINK_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.GRAY_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.CYAN_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.PURPLE_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.BLUE_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.BROWN_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.GREEN_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.RED_FILING_CABINET_DRAWER.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.BLACK_FILING_CABINET_DRAWER.value());
 
         // pipe matrices
         registerPipeMatrixUBend(KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.COPPER_PIPE_MATRIX);

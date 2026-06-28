@@ -1,0 +1,57 @@
+{
+  "variants": {
+    "orientation=down_east": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "x": 90,
+      "y": 90
+    },
+    "orientation=down_north": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "x": 90
+    },
+    "orientation=down_south": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "x": 90,
+      "y": 180
+    },
+    "orientation=down_west": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "x": 90,
+      "y": 270
+    },
+    "orientation=east_up": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "y": 90
+    },
+    "orientation=north_up": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer"
+    },
+    "orientation=south_up": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "y": 180
+    },
+    "orientation=up_east": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "x": 270,
+      "y": 270
+    },
+    "orientation=up_north": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "x": 270,
+      "y": 180
+    },
+    "orientation=up_south": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "x": 270
+    },
+    "orientation=up_west": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "x": 270,
+      "y": 90
+    },
+    "orientation=west_up": {
+      "model": "klaxon:block/magenta_filing_cabinet_drawer",
+      "y": 270
+    }
+  }
+}

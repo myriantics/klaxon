@@ -1,5 +1,20 @@
 {
   "values": [
-    "klaxon:filing_cabinet_drawer"
+    "klaxon:filing_cabinet_drawer",
+    "klaxon:white_filing_cabinet_drawer",
+    "klaxon:orange_filing_cabinet_drawer",
+    "klaxon:magenta_filing_cabinet_drawer",
+    "klaxon:light_blue_filing_cabinet_drawer",
+    "klaxon:yellow_filing_cabinet_drawer",
+    "klaxon:lime_filing_cabinet_drawer",
+    "klaxon:pink_filing_cabinet_drawer",
+    "klaxon:gray_filing_cabinet_drawer",
+    "klaxon:light_gray_filing_cabinet_drawer",
+    "klaxon:cyan_filing_cabinet_drawer",
+    "klaxon:purple_filing_cabinet_drawer",
+    "klaxon:blue_filing_cabinet_drawer",
+    "klaxon:green_filing_cabinet_drawer",
+    "klaxon:red_filing_cabinet_drawer",
+    "klaxon:black_filing_cabinet_drawer"
   ]
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Explosion;
@@ -48,17 +49,20 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
 
     @SuppressWarnings("unchecked")
     private static final MapCodec<FilingCabinetBaseBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Properties.CODEC.fieldOf("properties").forGetter(Block::properties),
-            KlaxonCodecUtils.BLOCK_HOLDER_CODEC.fieldOf("extended_drawer_block").forGetter(i -> (Holder<Block>) (Object) i.extendedDrawerBlockHolder)
+            propertiesCodec(),
+            KlaxonCodecUtils.BLOCK_HOLDER_CODEC.fieldOf("extended_drawer_block").forGetter(i -> (Holder<Block>) (Object) i.extendedDrawerBlockHolder),
+            DyeColor.CODEC.fieldOf("dye_color").forGetter(FilingCabinetBaseBlock::getDyeColor)
     ).apply(instance, FilingCabinetBaseBlock::new));
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
-    private final Holder<FilingCabinetDrawerBlock> extendedDrawerBlockHolder;
     public static final int EXTENSION_DELAY_TICKS = 4;
 
+    private final Holder<FilingCabinetDrawerBlock> extendedDrawerBlockHolder;
+    private final DyeColor color;
+
     @SuppressWarnings("unchecked")
-    public FilingCabinetBaseBlock(Properties properties, Holder<Block> extendedDrawerBlockHolder) {
+    public FilingCabinetBaseBlock(Properties properties, Holder<Block> extendedDrawerBlockHolder, DyeColor color) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(ORIENTATION, FrontAndTop.NORTH_UP)
@@ -71,6 +75,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
         } else {
             throw new AssertionError("Provided drawer block holder is not valid! Was + [" + extendedDrawerBlockHolder.value().getClass().getSimpleName() + "]");
         }
+        this.color = color;
     }
 
     @Override
@@ -82,6 +87,10 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
+    }
+
+    public DyeColor getDyeColor() {
+        return this.color;
     }
 
     @Override

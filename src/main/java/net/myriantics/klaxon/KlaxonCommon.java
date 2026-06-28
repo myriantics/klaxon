@@ -2,12 +2,11 @@ package net.myriantics.klaxon;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.behavior.KlaxonBlockStateWrenchBehaviors;
-import net.myriantics.klaxon.registry.behavior.KlaxonCauldronBehaviors;
+import net.myriantics.klaxon.registry.behavior.KlaxonCauldronInteractions;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.behavior.KlaxonDispenserBehaviors;
 import net.myriantics.klaxon.registry.block.*;
@@ -73,7 +72,7 @@ public class KlaxonCommon implements ModInitializer {
         KlaxonEntityAttributes.init();
         KlaxonDynamicRegistries.init();
         KlaxonBlockStateWrenchBehaviors.init();
-		KlaxonCauldronBehaviors.init();
+		KlaxonCauldronInteractions.init();
 		KlaxonItemUsageTweaks.init();
 		KlaxonAttachmentTypes.init();
 		KlaxonExplosiveCatalystHandlers.init();

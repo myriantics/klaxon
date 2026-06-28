@@ -1,0 +1,216 @@
+{
+  "variants": {
+    "open=false,orientation=down_east,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "x": 90,
+      "y": 90
+    },
+    "open=false,orientation=down_east,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "x": 90,
+      "y": 90
+    },
+    "open=false,orientation=down_north,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "x": 90
+    },
+    "open=false,orientation=down_north,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "x": 90
+    },
+    "open=false,orientation=down_south,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "x": 90,
+      "y": 180
+    },
+    "open=false,orientation=down_south,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "x": 90,
+      "y": 180
+    },
+    "open=false,orientation=down_west,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "x": 90,
+      "y": 270
+    },
+    "open=false,orientation=down_west,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "x": 90,
+      "y": 270
+    },
+    "open=false,orientation=east_up,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "y": 90
+    },
+    "open=false,orientation=east_up,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "y": 90
+    },
+    "open=false,orientation=north_up,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed"
+    },
+    "open=false,orientation=north_up,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed"
+    },
+    "open=false,orientation=south_up,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "y": 180
+    },
+    "open=false,orientation=south_up,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "y": 180
+    },
+    "open=false,orientation=up_east,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "x": 270,
+      "y": 270
+    },
+    "open=false,orientation=up_east,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "x": 270,
+      "y": 270
+    },
+    "open=false,orientation=up_north,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "x": 270,
+      "y": 180
+    },
+    "open=false,orientation=up_north,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "x": 270,
+      "y": 180
+    },
+    "open=false,orientation=up_south,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "x": 270
+    },
+    "open=false,orientation=up_south,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "x": 270
+    },
+    "open=false,orientation=up_west,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "x": 270,
+      "y": 90
+    },
+    "open=false,orientation=up_west,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "x": 270,
+      "y": 90
+    },
+    "open=false,orientation=west_up,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_closed",
+      "y": 270
+    },
+    "open=false,orientation=west_up,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_closed",
+      "y": 270
+    },
+    "open=true,orientation=down_east,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "x": 90,
+      "y": 90
+    },
+    "open=true,orientation=down_east,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "x": 90,
+      "y": 90
+    },
+    "open=true,orientation=down_north,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "x": 90
+    },
+    "open=true,orientation=down_north,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "x": 90
+    },
+    "open=true,orientation=down_south,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "x": 90,
+      "y": 180
+    },
+    "open=true,orientation=down_south,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "x": 90,
+      "y": 180
+    },
+    "open=true,orientation=down_west,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "x": 90,
+      "y": 270
+    },
+    "open=true,orientation=down_west,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "x": 90,
+      "y": 270
+    },
+    "open=true,orientation=east_up,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "y": 90
+    },
+    "open=true,orientation=east_up,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "y": 90
+    },
+    "open=true,orientation=north_up,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open"
+    },
+    "open=true,orientation=north_up,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open"
+    },
+    "open=true,orientation=south_up,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "y": 180
+    },
+    "open=true,orientation=south_up,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "y": 180
+    },
+    "open=true,orientation=up_east,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "x": 270,
+      "y": 270
+    },
+    "open=true,orientation=up_east,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "x": 270,
+      "y": 270
+    },
+    "open=true,orientation=up_north,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "x": 270,
+      "y": 180
+    },
+    "open=true,orientation=up_north,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "x": 270,
+      "y": 180
+    },
+    "open=true,orientation=up_south,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "x": 270
+    },
+    "open=true,orientation=up_south,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "x": 270
+    },
+    "open=true,orientation=up_west,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "x": 270,
+      "y": 90
+    },
+    "open=true,orientation=up_west,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "x": 270,
+      "y": 90
+    },
+    "open=true,orientation=west_up,powered=false": {
+      "model": "klaxon:block/lime_filing_cabinet_base/unpowered_open",
+      "y": 270
+    },
+    "open=true,orientation=west_up,powered=true": {
+      "model": "klaxon:block/lime_filing_cabinet_base/powered_open",
+      "y": 270
+    }
+  }
+}

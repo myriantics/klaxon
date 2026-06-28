@@ -36,7 +36,25 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
         dropSelf(KlaxonBlocks.STEEL_WORKBENCH);
         add(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, this::createModularExplosiveBlock);
+
+        // filing cabinets
         dropSelf(KlaxonBlocks.FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.WHITE_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.ORANGE_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.MAGENTA_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.YELLOW_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.LIME_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.PINK_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.GRAY_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.CYAN_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.PURPLE_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.BLUE_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.BROWN_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.GREEN_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.RED_FILING_CABINET_BASE);
+        dropSelf(KlaxonBlocks.BLACK_FILING_CABINET_BASE);
 
         // steel
         dropSelf(KlaxonBlocks.STEEL_BLOCK);

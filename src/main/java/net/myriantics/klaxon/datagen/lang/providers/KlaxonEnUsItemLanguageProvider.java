@@ -39,6 +39,22 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
     private void generateAliasedBlockItemTranslations() {
         // filing cabinets
         addItem(KlaxonItems.FILING_CABINET, "Filing Cabinet");
+        addItem(KlaxonItems.WHITE_FILING_CABINET, "White Filing Cabinet");
+        addItem(KlaxonItems.ORANGE_FILING_CABINET, "Orange Filing Cabinet");
+        addItem(KlaxonItems.MAGENTA_FILING_CABINET, "Magenta Filing Cabinet");
+        addItem(KlaxonItems.LIGHT_BLUE_FILING_CABINET, "Light Blue Filing Cabinet");
+        addItem(KlaxonItems.YELLOW_FILING_CABINET, "Yellow Filing Cabinet");
+        addItem(KlaxonItems.LIME_FILING_CABINET, "Lime Filing Cabinet");
+        addItem(KlaxonItems.PINK_FILING_CABINET, "Pink Filing Cabinet");
+        addItem(KlaxonItems.GRAY_FILING_CABINET, "Gray Filing Cabinet");
+        addItem(KlaxonItems.LIGHT_GRAY_FILING_CABINET, "Light Gray Filing Cabinet");
+        addItem(KlaxonItems.CYAN_FILING_CABINET, "Cyan Filing Cabinet");
+        addItem(KlaxonItems.PURPLE_FILING_CABINET, "Purple Filing Cabinet");
+        addItem(KlaxonItems.BLUE_FILING_CABINET, "Blue Filing Cabinet");
+        addItem(KlaxonItems.BROWN_FILING_CABINET, "Brown Filing Cabinet");
+        addItem(KlaxonItems.GREEN_FILING_CABINET, "Green Filing Cabinet");
+        addItem(KlaxonItems.RED_FILING_CABINET, "Red Filing Cabinet");
+        addItem(KlaxonItems.BLACK_FILING_CABINET, "Black Filing Cabinet");
 
         // pipe matrices
         addItem(KlaxonItems.COPPER_PIPE_MATRIX, "Copper Pipe Matrix");

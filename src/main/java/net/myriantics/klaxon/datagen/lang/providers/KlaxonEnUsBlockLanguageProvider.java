@@ -28,7 +28,40 @@ public final class KlaxonEnUsBlockLanguageProvider extends KlaxonEnUsLanguageSub
 
         // filing cabinets
         addBlock(KlaxonBlocks.FILING_CABINET_BASE, "Filing Cabinet Base");
+        addBlock(KlaxonBlocks.WHITE_FILING_CABINET_BASE, "White Filing Cabinet Base");
+        addBlock(KlaxonBlocks.ORANGE_FILING_CABINET_BASE, "Orange Filing Cabinet Base");
+        addBlock(KlaxonBlocks.MAGENTA_FILING_CABINET_BASE, "Magenta Filing Cabinet Base");
+        addBlock(KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_BASE, "Light Blue Filing Cabinet Base");
+        addBlock(KlaxonBlocks.YELLOW_FILING_CABINET_BASE, "Yellow Filing Cabinet Base");
+        addBlock(KlaxonBlocks.LIME_FILING_CABINET_BASE, "Lime Filing Cabinet Base");
+        addBlock(KlaxonBlocks.PINK_FILING_CABINET_BASE, "Pink Filing Cabinet Base");
+        addBlock(KlaxonBlocks.GRAY_FILING_CABINET_BASE, "Gray Filing Cabinet Base");
+        addBlock(KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_BASE, "Light Gray Filing Cabinet Base");
+        addBlock(KlaxonBlocks.CYAN_FILING_CABINET_BASE, "Cyan Filing Cabinet Base");
+        addBlock(KlaxonBlocks.PURPLE_FILING_CABINET_BASE, "Purple Filing Cabinet Base");
+        addBlock(KlaxonBlocks.BLUE_FILING_CABINET_BASE, "Blue Filing Cabinet Base");
+        addBlock(KlaxonBlocks.BROWN_FILING_CABINET_BASE, "Brown Filing Cabinet Base");
+        addBlock(KlaxonBlocks.GREEN_FILING_CABINET_BASE, "Green Filing Cabinet Base");
+        addBlock(KlaxonBlocks.RED_FILING_CABINET_BASE, "Red Filing Cabinet Base");
+        addBlock(KlaxonBlocks.BLACK_FILING_CABINET_BASE, "Black Filing Cabinet Base");
+
         addBlock(KlaxonBlocks.FILING_CABINET_DRAWER, "Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.WHITE_FILING_CABINET_DRAWER, "White Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.ORANGE_FILING_CABINET_DRAWER, "Orange Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.MAGENTA_FILING_CABINET_DRAWER, "Magenta Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_DRAWER, "Light Blue Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.YELLOW_FILING_CABINET_DRAWER, "Yellow Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.LIME_FILING_CABINET_DRAWER, "Lime Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.PINK_FILING_CABINET_DRAWER, "Pink Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.GRAY_FILING_CABINET_DRAWER, "Gray Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_DRAWER, "Light Gray Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.CYAN_FILING_CABINET_DRAWER, "Cyan Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.PURPLE_FILING_CABINET_DRAWER, "Purple Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.BLUE_FILING_CABINET_DRAWER, "Blue Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.BROWN_FILING_CABINET_DRAWER, "Brown Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.GREEN_FILING_CABINET_DRAWER, "Green Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.RED_FILING_CABINET_DRAWER, "Red Filing Cabinet Drawer");
+        addBlock(KlaxonBlocks.BLACK_FILING_CABINET_DRAWER, "Black Filing Cabinet Drawer");
 
         // casing
         addBlock(KlaxonBlocks.STEEL_CASING, "Steel Casing");

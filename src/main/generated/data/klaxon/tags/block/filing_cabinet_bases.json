@@ -1,5 +1,21 @@
 {
   "values": [
-    "klaxon:filing_cabinet_base"
+    "klaxon:filing_cabinet_base",
+    "klaxon:white_filing_cabinet_base",
+    "klaxon:orange_filing_cabinet_base",
+    "klaxon:magenta_filing_cabinet_base",
+    "klaxon:light_blue_filing_cabinet_base",
+    "klaxon:yellow_filing_cabinet_base",
+    "klaxon:lime_filing_cabinet_base",
+    "klaxon:pink_filing_cabinet_base",
+    "klaxon:gray_filing_cabinet_base",
+    "klaxon:light_gray_filing_cabinet_base",
+    "klaxon:cyan_filing_cabinet_base",
+    "klaxon:purple_filing_cabinet_base",
+    "klaxon:blue_filing_cabinet_base",
+    "klaxon:brown_filing_cabinet_base",
+    "klaxon:green_filing_cabinet_base",
+    "klaxon:red_filing_cabinet_base",
+    "klaxon:black_filing_cabinet_base"
   ]
 }

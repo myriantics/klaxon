@@ -84,7 +84,25 @@ public abstract class KlaxonBlockItems {
                     .component(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA, ExplosiveCatalystData.ZERO)
                     .getProperties()
     ));
-    public static final Holder<Item> FILING_CABINET = registerBlockItem("filing_cabinet", KlaxonBlocks.FILING_CABINET_BASE, new Item.Properties());
+
+    // filing cabinets
+    public static final Holder<Item> FILING_CABINET = registerBlockItem("filing_cabinet", KlaxonBlocks.FILING_CABINET_BASE);
+    public static final Holder<Item> WHITE_FILING_CABINET = registerBlockItem("white_filing_cabinet", KlaxonBlocks.WHITE_FILING_CABINET_BASE);
+    public static final Holder<Item> ORANGE_FILING_CABINET = registerBlockItem("orange_filing_cabinet", KlaxonBlocks.ORANGE_FILING_CABINET_BASE);
+    public static final Holder<Item> MAGENTA_FILING_CABINET = registerBlockItem("magenta_filing_cabinet", KlaxonBlocks.MAGENTA_FILING_CABINET_BASE);
+    public static final Holder<Item> LIGHT_BLUE_FILING_CABINET = registerBlockItem("light_blue_filing_cabinet", KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_BASE);
+    public static final Holder<Item> YELLOW_FILING_CABINET = registerBlockItem("yellow_filing_cabinet", KlaxonBlocks.YELLOW_FILING_CABINET_BASE);
+    public static final Holder<Item> LIME_FILING_CABINET = registerBlockItem("lime_filing_cabinet", KlaxonBlocks.LIME_FILING_CABINET_BASE);
+    public static final Holder<Item> PINK_FILING_CABINET = registerBlockItem("pink_filing_cabinet", KlaxonBlocks.PINK_FILING_CABINET_BASE);
+    public static final Holder<Item> GRAY_FILING_CABINET = registerBlockItem("gray_filing_cabinet", KlaxonBlocks.GRAY_FILING_CABINET_BASE);
+    public static final Holder<Item> LIGHT_GRAY_FILING_CABINET = registerBlockItem("light_gray_filing_cabinet", KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_BASE);
+    public static final Holder<Item> CYAN_FILING_CABINET = registerBlockItem("cyan_filing_cabinet", KlaxonBlocks.CYAN_FILING_CABINET_BASE);
+    public static final Holder<Item> PURPLE_FILING_CABINET = registerBlockItem("purple_filing_cabinet", KlaxonBlocks.PURPLE_FILING_CABINET_BASE);
+    public static final Holder<Item> BLUE_FILING_CABINET = registerBlockItem("blue_filing_cabinet", KlaxonBlocks.BLUE_FILING_CABINET_BASE);
+    public static final Holder<Item> BROWN_FILING_CABINET = registerBlockItem("brown_filing_cabinet", KlaxonBlocks.BROWN_FILING_CABINET_BASE);
+    public static final Holder<Item> GREEN_FILING_CABINET = registerBlockItem("green_filing_cabinet", KlaxonBlocks.GREEN_FILING_CABINET_BASE);
+    public static final Holder<Item> RED_FILING_CABINET = registerBlockItem("red_filing_cabinet", KlaxonBlocks.RED_FILING_CABINET_BASE);
+    public static final Holder<Item> BLACK_FILING_CABINET = registerBlockItem("black_filing_cabinet", KlaxonBlocks.BLACK_FILING_CABINET_BASE);
 
     // ducts
     public static final Holder<Item> AIO_DUCT_DRIVER = registerBlockItem(KlaxonBlocks.AIO_DUCT_DRIVER);
