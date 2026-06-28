@@ -67,6 +67,14 @@ public class ModularExplosiveBlockEntity extends BlockEntity implements Explosiv
         }
     }
 
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA);
+        tag.remove(KlaxonNBTIds.MAX_FUSE_TIME);
+        tag.remove(KlaxonNBTIds.MODIFY_WORLD);
+    }
+
     public void setData(ExplosiveCatalystData newData) {
         this.explosiveCatalystData = newData;
         if (this.level != null) {

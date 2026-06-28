@@ -15,6 +15,11 @@ public final class KlaxonEnUsTextLanguageProvider extends KlaxonEnUsLanguageSubP
         generateTooltipText();
         generateMiscText();
         generateActionBartext();
+        generateContainerText();
+    }
+
+    private void generateContainerText() {
+        addRawText("container.klaxon.filing_cabinet", "Filing Cabinet");
     }
 
     private void generateActionBartext() {
