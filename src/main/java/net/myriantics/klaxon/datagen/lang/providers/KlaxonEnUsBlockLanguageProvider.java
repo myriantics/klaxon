@@ -26,6 +26,10 @@ public final class KlaxonEnUsBlockLanguageProvider extends KlaxonEnUsLanguageSub
         addBlock(KlaxonBlocks.STEEL_WORKBENCH, "Steel Workbench");
         addBlock(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, "Modular Explosive Block");
 
+        // filing cabinets
+        addBlock(KlaxonBlocks.FILING_CABINET_BASE, "Filing Cabinet Base");
+        addBlock(KlaxonBlocks.FILING_CABINET_DRAWER, "Filing Cabinet Drawer");
+
         // casing
         addBlock(KlaxonBlocks.STEEL_CASING, "Steel Casing");
         addBlock(KlaxonBlocks.CRUDE_STEEL_CASING, "Crude Steel Casing");

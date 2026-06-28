@@ -37,6 +37,9 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
     }
 
     private void generateAliasedBlockItemTranslations() {
+        // filing cabinets
+        addItem(KlaxonItems.FILING_CABINET, "Filing Cabinet");
+
         // pipe matrices
         addItem(KlaxonItems.COPPER_PIPE_MATRIX, "Copper Pipe Matrix");
         addItem(KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX, "Exposed Copper Pipe Matrix");
