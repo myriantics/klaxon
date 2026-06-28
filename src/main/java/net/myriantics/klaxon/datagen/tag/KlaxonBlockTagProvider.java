@@ -150,6 +150,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addOptionalTag(KlaxonCompatBlockTags.WRENCH_PICKUP)
                 .forceAddTag(BlockTags.SHULKER_BOXES)
                 .forceAddTag(BlockTags.RAILS)
+                .forceAddTag(KlaxonBlockTags.FILING_CABINET_BLOCKS)
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_DOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.SCAFFOLDINGS)
@@ -214,6 +215,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(KlaxonBlocks.STEEL_WORKBENCH.value())
                 .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value())
+                .forceAddTag(KlaxonBlockTags.FILING_CABINET_BLOCKS)
                 .add(KlaxonBlocks.PRECISION_DISPENSER.value())
                 .add(
                         KlaxonBlocks.CRUDE_STEEL_BLOCK.value(),
@@ -752,6 +754,15 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         KlaxonBlocks.WAXED_OXIDIZED_COPPER_PIPE_MATRIX_SEGMENT.value()
                 );
 
+        // filing cabinets
+        getOrCreateTagBuilder(KlaxonBlockTags.FILING_CABINET_BLOCKS)
+                .addTag(KlaxonBlockTags.FILING_CABINET_BASES)
+                .addTag(KlaxonBlockTags.FILING_CABINET_DRAWERS);
+        getOrCreateTagBuilder(KlaxonBlockTags.FILING_CABINET_BASES)
+                .add(KlaxonBlocks.FILING_CABINET_BASE.value());
+        getOrCreateTagBuilder(KlaxonBlockTags.FILING_CABINET_DRAWERS)
+                .add(KlaxonBlocks.FILING_CABINET_DRAWER.value());
+
         // funny
         getOrCreateTagBuilder(BlockTags.FLOWER_POTS)
                 .add(KlaxonBlocks.POTTED_HALLNOX_POD.value());
@@ -937,6 +948,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonBlockTags.COPPER_PLATING_BLOCKS)
                 .forceAddTag(KlaxonBlockTags.IRON_WIRE_SPOOLS)
                 .forceAddTag(KlaxonBlockTags.IRON_PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.FILING_CABINET_BLOCKS)
                 .add(KlaxonBlocks.CRUDE_STEEL_BLOCK.value())
                 .add(KlaxonBlocks.CRUDE_STEEL_CASING.value())
                 .add(KlaxonBlocks.CRUDE_STEEL_DOOR.value())

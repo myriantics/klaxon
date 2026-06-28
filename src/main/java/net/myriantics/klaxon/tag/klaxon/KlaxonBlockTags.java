@@ -199,6 +199,12 @@ public abstract class KlaxonBlockTags {
             createTag("machines");
     public static final TagKey<Block> HALLNOX_STEMS =
             createTag("hallnox_stems");
+    public static final TagKey<Block> FILING_CABINET_BLOCKS =
+            createTag("filing_cabinet_blocks");
+    public static final TagKey<Block> FILING_CABINET_DRAWERS =
+            createTag("filing_cabinet_drawers");
+    public static final TagKey<Block> FILING_CABINET_BASES =
+            createTag("filing_cabinet_bases");
 
     // plating blocks
     public static final TagKey<Block> PLATING_BLOCKS =
