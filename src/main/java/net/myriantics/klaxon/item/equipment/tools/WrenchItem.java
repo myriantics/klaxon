@@ -74,8 +74,11 @@ public class WrenchItem extends DiggerItem {
 
         // Wrench pickup ability requires both CAN_PLACE_ON and CAN_DESTROY components to work in Adventure Mode
         if (canPickup(targetState, targetPos, level, player, wrenchStack)) {
-            // offset target pos down for doors and the like
-            if (shouldOffsetPickupDownward(level, targetPos, targetState)) {
+            // have both custom handling and door handling
+            if (targetState.getBlock() instanceof WrenchPickupOffsettor offsettor && offsettor.shouldOffset(level, targetPos, targetState)) {
+                targetPos = offsettor.getOffsetPickupPosition(level, targetPos, targetState);
+                targetState = level.getBlockState(targetPos);
+            } else if (shouldOffsetPickupDownward(level, targetPos, targetState)) {
                 targetPos = targetPos.relative(Direction.DOWN);
                 targetState = level.getBlockState(targetPos);
             }
@@ -194,4 +197,9 @@ public class WrenchItem extends DiggerItem {
         return player == null || PermissionsHelper.canModifyWorld(player) || wrenchStack.canBreakBlockInAdventureMode(new BlockInWorld(world, targetPos, false));
     }
 
+    public interface WrenchPickupOffsettor {
+        BlockPos getOffsetPickupPosition(Level level, BlockPos pos, BlockState state);
+
+        boolean shouldOffset(Level level, BlockPos pos, BlockState state);
+    }
 }

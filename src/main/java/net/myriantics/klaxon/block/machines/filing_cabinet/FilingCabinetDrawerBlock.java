@@ -27,13 +27,14 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 import net.myriantics.klaxon.util.KlaxonVoxelShapeHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.function.BiConsumer;
 
-public class FilingCabinetDrawerBlock extends Block implements SimpleWaterloggedBlock, WorldlyContainerHolder {
+public class FilingCabinetDrawerBlock extends Block implements SimpleWaterloggedBlock, WorldlyContainerHolder, WrenchItem.WrenchPickupOffsettor {
 
     private final MapCodec<FilingCabinetDrawerBlock> CODEC = simpleCodec(FilingCabinetDrawerBlock::new);
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
@@ -258,5 +259,17 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     @Override
     protected BlockState mirror(BlockState state, Mirror mirror) {
         return state.setValue(ORIENTATION, mirror.rotation().rotate(state.getValue(ORIENTATION)));
+    }
+
+    @Override
+    public BlockPos getOffsetPickupPosition(Level level, BlockPos pos, BlockState state) {
+        return this.findAttachedPosition(pos, state);
+    }
+
+    @Override
+    public boolean shouldOffset(Level level, BlockPos pos, BlockState state) {
+        BlockPos attachedPos = this.findAttachedPosition(pos, state);
+        BlockState attachedState = level.getBlockState(attachedPos);
+        return this.isCompatibleWithBase(state, attachedState);
     }
 }
