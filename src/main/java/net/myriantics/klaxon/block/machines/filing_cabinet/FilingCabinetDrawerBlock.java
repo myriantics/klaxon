@@ -242,11 +242,6 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
-    }
-
-    @Override
     public @Nullable WorldlyContainer getContainer(BlockState state, LevelAccessor level, BlockPos pos) {
         return this.findFilingCabinetBlockEntity(level, pos, state);
     }

@@ -14,6 +14,7 @@ import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.filing_cabinet.FilingCabinetBaseBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.UBendRotation;
 import net.myriantics.klaxon.block.machines.modular_explosive.FuseState;
@@ -567,6 +568,53 @@ public abstract class KlaxonBlockModelSubProvider {
                         Variant.variant().with(VariantProperties.MODEL, modelId)
                 )
                 .with(createDownDefaultRotationStates()));
+    }
+
+    protected void registerFilingCabinetBaseBlock(Block block) {
+        ResourceLocation baseRl = ModelLocationUtils.getModelLocation(block);
+        TextureMapping poweredOpenMap = new TextureMapping()
+                .put(TextureSlot.TOP, baseRl.withSuffix("/top"))
+                .put(TextureSlot.SIDE, baseRl.withSuffix("/side_powered"))
+                .put(TextureSlot.FRONT, baseRl.withSuffix("/front_open_powered"))
+                .put(TextureSlot.BOTTOM, baseRl.withSuffix("/bottom"))
+                .put(TextureSlot.BACK, baseRl.withSuffix("/back_powered"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_powered"));
+        TextureMapping poweredClosedMap = poweredOpenMap
+                .copyAndUpdate(TextureSlot.FRONT, baseRl.withSuffix("/front_closed_powered"));
+        TextureMapping unpoweredOpenMap = poweredOpenMap.copyAndUpdate(TextureSlot.SIDE, baseRl.withSuffix("/side_unpowered"))
+                .put(TextureSlot.FRONT, baseRl.withSuffix("/front_open_unpowered"))
+                .put(TextureSlot.BACK, baseRl.withSuffix("/back_unpowered"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("side_unpowered"));
+        TextureMapping unpoweredClosedMap = unpoweredOpenMap.copyAndUpdate(TextureSlot.FRONT, baseRl.withSuffix("front_closed_unpowered"));
+
+        ResourceLocation poweredOpen = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(block, "/powered_open", poweredOpenMap, generator.modelOutput);
+        ResourceLocation poweredClosed = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(block, "/powered_closed", poweredClosedMap, generator.modelOutput);
+        ResourceLocation unpoweredOpen = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(block, "/unpowered_open", unpoweredOpenMap, generator.modelOutput);
+        ResourceLocation unpoweredClosed = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(block, "/unpowered_closed", unpoweredClosedMap, generator.modelOutput);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+                .with(PropertyDispatch.properties(FilingCabinetBaseBlock.OPEN, FilingCabinetBaseBlock.POWERED)
+                        .select(false, false, modelVariant(unpoweredClosed))
+                        .select(false, true, modelVariant(poweredClosed))
+                        .select(true, false, modelVariant(unpoweredOpen))
+                        .select(true, true, modelVariant(poweredOpen))
+                )
+                .with(PropertyDispatch.property(FilingCabinetBaseBlock.ORIENTATION).generate(frontAndTop -> this.generator.applyRotation(frontAndTop, Variant.variant()))));
+
+        generator.delegateItemModel(block, unpoweredClosed);
+    }
+
+    protected void registerFilingCabinetDrawerBlock(Block block) {
+        ResourceLocation baseRl = ModelLocationUtils.getModelLocation(block);
+        TextureMapping mapping = new TextureMapping()
+                .put(TextureSlot.TEXTURE, baseRl.withSuffix("/texture"))
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/particle"));
+
+        ResourceLocation modelRl = KlaxonModelTemplates.FILING_CABINET_DRAWER.create(block, mapping, generator.modelOutput);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+                .with(PropertyDispatch.property(FilingCabinetBaseBlock.ORIENTATION).generate(frontAndTop -> this.generator.applyRotation(frontAndTop, modelVariant(modelRl))))
+        );
     }
 
     public static PropertyDispatch createDownDefaultRotationStates() {

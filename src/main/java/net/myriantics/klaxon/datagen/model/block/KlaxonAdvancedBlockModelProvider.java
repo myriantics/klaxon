@@ -53,6 +53,10 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         // workstations
         registerSteelWorkbench(KlaxonBlocks.STEEL_WORKBENCH);
 
+        // filing cabinets
+        registerFilingCabinetBaseBlock(KlaxonBlocks.FILING_CABINET_BASE.value());
+        registerFilingCabinetDrawerBlock(KlaxonBlocks.FILING_CABINET_DRAWER.value());
+
         // pipe matrices
         registerPipeMatrixUBend(KlaxonBlocks.COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.COPPER_PIPE_MATRIX);
         registerPipeMatrixUBend(KlaxonBlocks.EXPOSED_COPPER_PIPE_MATRIX_U_BEND, KlaxonItems.EXPOSED_COPPER_PIPE_MATRIX);

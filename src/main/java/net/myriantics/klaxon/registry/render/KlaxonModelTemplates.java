@@ -45,6 +45,11 @@ public abstract class KlaxonModelTemplates {
             TextureSlot.PARTICLE
     );
     public static final ModelTemplate ROTATED_NETHER_REACTOR_CORE = copyDir("rotated", NORMAL_NETHER_REACTOR_CORE);
+    public static final ModelTemplate FILING_CABINET_DRAWER = block(
+            "template/filing_cabinet_drawer",
+            TextureSlot.TEXTURE,
+            TextureSlot.PARTICLE
+    );
     public static final ModelTemplate CUBE_FRONT_SIDE_TOP_BOTTOM_BACK = block(
             "template/front_side_top_bottom_back",
             TextureSlot.FRONT,

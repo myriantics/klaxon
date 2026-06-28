@@ -48,6 +48,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
     ).apply(instance, FilingCabinetBaseBlock::new));
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     private final Holder<FilingCabinetDrawerBlock> extendedDrawerBlockHolder;
     public static final int EXTENSION_DELAY_TICKS = 4;
 
@@ -68,7 +69,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(ORIENTATION, POWERED);
+        builder.add(ORIENTATION, POWERED, OPEN);
     }
 
     @Override
