@@ -40,9 +40,9 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static VoxelShape[] DRAWER_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 4d/16, 15d/16, 12d/16, 16d/16);
-    private static VoxelShape[] WALL_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 2d/16, 15d/16, 14d/16, 4d/16);
-    private static VoxelShape[] SHAPES = KlaxonVoxelShapeHelper.arrayUnion(DRAWER_SHAPES, WALL_SHAPES);
+    private static final VoxelShape[] DRAWER_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 4d/16, 15d/16, 12d/16, 16d/16);
+    private static final VoxelShape[] WALL_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 2d/16, 15d/16, 14d/16, 4d/16);
+    private static final VoxelShape[] SHAPES = KlaxonVoxelShapeHelper.arrayUnion(DRAWER_SHAPES, WALL_SHAPES);
 
     private Block filingCabinetBaseBlock = null;
 
@@ -224,7 +224,7 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     }
 
     protected boolean isCompatibleWithBase(BlockState drawerState, BlockState baseState) {
-        return baseState.is(this) && baseState.hasProperty(FilingCabinetBaseBlock.ORIENTATION) && baseState.getValue(FilingCabinetBaseBlock.ORIENTATION) == drawerState.getValue(ORIENTATION);
+        return baseState.is(this.filingCabinetBaseBlock) && baseState.hasProperty(FilingCabinetBaseBlock.ORIENTATION) && baseState.getValue(FilingCabinetBaseBlock.ORIENTATION) == drawerState.getValue(ORIENTATION);
     }
 
     public @Nullable FilingCabinetBlockEntity findFilingCabinetBlockEntity(LevelAccessor level, BlockPos drawerPos, BlockState drawerState) {
