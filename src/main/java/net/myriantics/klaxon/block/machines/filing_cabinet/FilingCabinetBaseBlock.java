@@ -61,6 +61,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
         );
         if (extendedDrawerBlockHolder.value() instanceof FilingCabinetDrawerBlock) {
             this.extendedDrawerBlockHolder = (Holder<FilingCabinetDrawerBlock>) (Object) extendedDrawerBlockHolder;
+            this.extendedDrawerBlockHolder.value().setFilingCabinetBaseBlock(this);
         } else {
             throw new AssertionError("Provided drawer block holder is not valid! Was + [" + extendedDrawerBlockHolder.value().getClass().getSimpleName() + "]");
         }

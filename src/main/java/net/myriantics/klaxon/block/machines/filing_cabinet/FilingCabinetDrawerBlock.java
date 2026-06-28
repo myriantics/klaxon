@@ -44,9 +44,7 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     private static VoxelShape[] WALL_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 2d/16, 15d/16, 14d/16, 4d/16);
     private static VoxelShape[] SHAPES = KlaxonVoxelShapeHelper.arrayUnion(DRAWER_SHAPES, WALL_SHAPES);
 
-    private static final VoxelShape X = box(0, 2, 2, 16, 14, 14);
-    private static final VoxelShape Y = box(2, 0, 2, 14, 16, 14);
-    private static final VoxelShape Z = box(2, 2, 0, 14, 14, 16);
+    private Block filingCabinetBaseBlock = null;
 
     public FilingCabinetDrawerBlock(Properties properties) {
         super(properties);
@@ -64,6 +62,14 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(ORIENTATION, WATERLOGGED);
+    }
+
+    void setFilingCabinetBaseBlock(Block filingCabinetBaseBlock) {
+        if (this.filingCabinetBaseBlock == null) {
+            this.filingCabinetBaseBlock = filingCabinetBaseBlock;
+        } else {
+            throw new AssertionError("Tried to register [" + filingCabinetBaseBlock + "] as the base block for [" + this + "], which has already been assigned to [" + this.filingCabinetBaseBlock + "]!");
+        }
     }
 
     @Override
@@ -218,7 +224,7 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     }
 
     protected boolean isCompatibleWithBase(BlockState drawerState, BlockState baseState) {
-        return baseState.getBlock() instanceof FilingCabinetBaseBlock baseBlock && baseBlock.getDrawerBlock() == this && baseState.hasProperty(FilingCabinetBaseBlock.ORIENTATION) && baseState.getValue(FilingCabinetBaseBlock.ORIENTATION) == drawerState.getValue(ORIENTATION);
+        return baseState.is(this) && baseState.hasProperty(FilingCabinetBaseBlock.ORIENTATION) && baseState.getValue(FilingCabinetBaseBlock.ORIENTATION) == drawerState.getValue(ORIENTATION);
     }
 
     public @Nullable FilingCabinetBlockEntity findFilingCabinetBlockEntity(LevelAccessor level, BlockPos drawerPos, BlockState drawerState) {
@@ -234,6 +240,11 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         return this.isCompatibleWithBase(state, level.getBlockState(this.findAttachedPosition(pos, state)));
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        return new ItemStack(this.filingCabinetBaseBlock);
     }
 
     @Override
