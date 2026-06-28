@@ -51,7 +51,7 @@ public class FilingCabinetBlockEntity extends KlaxonBaseSidedContainerBlockEntit
     public void setChanged() {
         super.setChanged();
         // if open, update comparators around drawer block too
-        if (this.level != null && ((FilingCabinetBaseBlock) this.getBlockState().getBlock()).isOpen(this.level, this.getBlockState(), this.worldPosition)) {
+        if (this.level != null && ((FilingCabinetBaseBlock) this.getBlockState().getBlock()).isOpen(this.getBlockState())) {
             this.level.updateNeighbourForOutputSignal(((FilingCabinetBaseBlock) this.getBlockState().getBlock()).findDrawerPos(this.getBlockState(), this.worldPosition), ((FilingCabinetBaseBlock) this.getBlockState().getBlock()).getDrawerBlock());
         }
     }

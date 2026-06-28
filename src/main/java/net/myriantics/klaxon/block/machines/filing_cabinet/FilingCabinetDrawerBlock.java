@@ -1,6 +1,5 @@
 package net.myriantics.klaxon.block.machines.filing_cabinet;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,6 +12,8 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
+import net.minecraft.world.entity.projectile.windcharge.WindCharge;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -21,21 +22,16 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.myriantics.klaxon.item.equipment.tools.WrenchItem;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.util.KlaxonVoxelShapeHelper;
 import org.jetbrains.annotations.Nullable;
-
-import java.awt.*;
-import java.util.function.BiConsumer;
 
 public class FilingCabinetDrawerBlock extends Block implements SimpleWaterloggedBlock, WorldlyContainerHolder, WrenchItem.WrenchPickupOffsettor {
 
@@ -145,9 +141,13 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     @Override
     protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
         super.onProjectileHit(level, state, hit, projectile);
+        if (projectile instanceof AbstractWindCharge) {
+            return;
+        }
         BlockPos attachedPosition = this.findAttachedPosition(hit.getBlockPos(), state);
         BlockState attachedState = level.getBlockState(attachedPosition);
-        Direction drawerFacing = state.getValue(ORIENTATION).front();
+        FrontAndTop orientation = state.getValue(ORIENTATION);
+        Direction drawerFacing = orientation.front();
         if (this.isCompatibleWithBase(state, attachedState) && !attachedState.getValue(FilingCabinetBaseBlock.POWERED)) {
             if (drawerFacing.equals(hit.getDirection())) {
                 // default retract sound is played in this method
@@ -157,7 +157,9 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
                     ((FilingCabinetBaseBlock) attachedState.getBlock()).retractDrawer(level, attachedState, attachedPosition);
                 }
             } else {
+                RandomSource random = level.getRandom();
                 // rattling sound plays alongside maybe particles to indicate that player is pushing the wrong direction
+                level.playSound(null, hit.getBlockPos(), KlaxonSoundEvents.BLOCK_FILING_CABINET_RATTLE, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.4f);
             }
         }
     }
