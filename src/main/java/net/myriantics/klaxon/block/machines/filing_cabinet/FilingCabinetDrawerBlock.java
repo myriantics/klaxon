@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.block.machines.filing_cabinet;
 
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -102,9 +104,11 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
 
         // we know we're compatible with base from here on out
 
-        Direction front = state.getValue(ORIENTATION).front();
-        if (hitResult.getDirection().getAxis() == front.getAxis()) {
-            if (hitResult.getDirection() == front && ((FilingCabinetBaseBlock) filingCabinetBaseState.getBlock()).retractDrawer(level, filingCabinetBaseState, filingCabinetBasePosition)) {
+        FrontAndTop orientation = state.getValue(ORIENTATION);
+        AABB wallShape = WALL_SHAPES[orientation.ordinal()].move(pos.getX(), pos.getY(), pos.getZ()).bounds();
+        Vec3 hitPos = hitResult.getLocation();
+        if (wallShape.inflate(0.005).contains(hitPos)) {
+            if (((FilingCabinetBaseBlock) filingCabinetBaseState.getBlock()).retractDrawer(level, filingCabinetBaseState, filingCabinetBasePosition)) {
                 return InteractionResult.SUCCESS;
             }
         } else if (level.getBlockEntity(filingCabinetBasePosition) instanceof FilingCabinetBlockEntity blockEntity) {
