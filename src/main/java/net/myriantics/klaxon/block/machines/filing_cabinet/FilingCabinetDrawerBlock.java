@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FilingCabinetDrawerBlock extends Block implements SimpleWaterloggedBlock, WorldlyContainerHolder, WrenchItem.WrenchPickupOffsettor {
 
-    private final MapCodec<FilingCabinetDrawerBlock> CODEC = simpleCodec(FilingCabinetDrawerBlock::new);
+    private static final MapCodec<FilingCabinetDrawerBlock> CODEC = simpleCodec(FilingCabinetDrawerBlock::new);
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -51,6 +51,7 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
         super(properties);
         registerDefaultState(this.stateDefinition.any()
                 .setValue(ORIENTATION, FrontAndTop.NORTH_UP)
+                .setValue(WATERLOGGED, false)
         );
     }
 
