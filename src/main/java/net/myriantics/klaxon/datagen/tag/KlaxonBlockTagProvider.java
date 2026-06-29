@@ -370,7 +370,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         // filing cabinets
         getOrCreateTagBuilder(KlaxonBlockTags.FILING_CABINET_DRAWER_REPLACEABLE_DENYLIST)
-                .addOptionalTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED);
+                .addOptionalTag(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED)
+                .addOptionalTag(BlockTags.RAILS);
         getOrCreateTagBuilder(KlaxonBlockTags.FILING_CABINET_DRAWER_REPLACEABLE_ALLOWLIST);
     }
 

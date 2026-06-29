@@ -3,6 +3,10 @@
     {
       "id": "#c:relocation_not_supported",
       "required": false
+    },
+    {
+      "id": "#minecraft:rails",
+      "required": false
     }
   ]
 }
