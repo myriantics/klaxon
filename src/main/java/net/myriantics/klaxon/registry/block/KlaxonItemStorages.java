@@ -17,8 +17,26 @@ public abstract class KlaxonItemStorages {
     static {
         register(KlaxonBlockEntityTypes.DEEPSLATE_BLAST_PROCESSOR);
         register(KlaxonBlockEntityTypes.STEEL_BLAST_PROCESSOR);
+
+        // filing cabinets
         register(KlaxonBlockEntityTypes.FILING_CABINET);
         registerFilingCabinetDrawer(KlaxonBlocks.FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.WHITE_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.ORANGE_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.MAGENTA_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.YELLOW_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.LIME_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.PINK_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.GRAY_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.CYAN_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.PURPLE_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.BLUE_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.BROWN_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.GREEN_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.RED_FILING_CABINET_DRAWER);
+        registerFilingCabinetDrawer(KlaxonBlocks.BLACK_FILING_CABINET_DRAWER);
     }
 
     public static void init() {
