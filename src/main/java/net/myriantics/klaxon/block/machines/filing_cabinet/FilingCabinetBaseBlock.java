@@ -2,6 +2,7 @@ package net.myriantics.klaxon.block.machines.filing_cabinet;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
@@ -227,7 +228,6 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
                 if (storage != null) {
                     blockEntity.transferStacks(storage);
                     level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_EJECT, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.7f);
-                    level.setBlockAndUpdate(pos, state.setValue(OPEN, true));
                 }
             }
         }
@@ -238,6 +238,9 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
             if (!level.isClientSide()) {
                 BlockPos drawerPos = this.findDrawerPos(state, pos);
                 BlockState drawerState = level.getBlockState(drawerPos);
+                if (!drawerState.is(this.extendedDrawerBlockHolder.value())) {
+                    return false;
+                }
                 RandomSource random = level.getRandom();
                 level.playSound(null, pos, KlaxonSoundEvents.BLOCK_FILING_CABINET_RETRACT, SoundSource.BLOCKS, (random.nextFloat() * 0.3f) + 0.4f, (random.nextFloat() * 0.3f) + 0.7f);
                 level.gameEvent(GameEvent.BLOCK_CLOSE, pos, GameEvent.Context.of(state));
@@ -256,7 +259,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
         }
         BlockPos desiredExtensionPos = this.findDrawerPos(state, pos);
         BlockState obstructionState = level.getBlockState(desiredExtensionPos);
-        return this.canDrawerReplace(level, desiredExtensionPos, obstructionState);
+        return this.canDrawerReplace(level, desiredExtensionPos, obstructionState) || ItemStorage.SIDED.find(level, desiredExtensionPos, obstructionState, null, state.getValue(ORIENTATION).front().getOpposite()) != null;
     }
 
     public boolean canDrawerReplace(Level level, BlockPos pos, BlockState state) {

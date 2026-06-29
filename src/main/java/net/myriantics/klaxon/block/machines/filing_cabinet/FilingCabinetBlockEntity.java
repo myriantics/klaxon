@@ -57,16 +57,39 @@ public class FilingCabinetBlockEntity extends KlaxonBaseSidedContainerBlockEntit
     }
 
     public void transferStacks(Storage<ItemVariant> storage) {
+        if (!storage.supportsInsertion()) {
+            return;
+        }
+
+        // try to transfer 9 times - going in order
+        int transferCredits = this.items.getContainerSize();
         for (int i = 0; i < this.items.getContainerSize(); i++) {
             ItemStack selected = this.items.getItem(i);
+            int startCount = selected.getCount();
+
             if (selected.isEmpty()) {
                 continue;
             }
-            try (Transaction tx = Transaction.openOuter()) {
-                int count = selected.getCount();
-                int transferred = Math.toIntExact(storage.insert(ItemVariant.of(selected), count, tx));
-                tx.commit();
-                selected.setCount(count - transferred);
+
+            ItemVariant variant = ItemVariant.of(selected);
+            int totalInserted = 0;
+            while (transferCredits > 0 && startCount - totalInserted > 0) {
+                try (Transaction tx = Transaction.openOuter()) {
+                     int inserted = Math.toIntExact(storage.insert(variant, startCount - totalInserted, tx));
+                     if (inserted > 0) {
+                         transferCredits--;
+                         tx.commit();
+                         totalInserted += inserted;
+                     } else {
+                         tx.abort();
+                         break;
+                     }
+                }
+            }
+            selected.setCount(startCount - totalInserted);
+
+            if (transferCredits <= 0) {
+                break;
             }
         }
         this.setChanged();
