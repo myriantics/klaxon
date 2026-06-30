@@ -1,6 +1,5 @@
 {
   "credit": "Made with Blockbench. Some JSON stuff also yonked from Spelunkery",
-  "ambientocclusion": false,
   "textures": {
     "front": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_front_unlit",
     "side": "klaxon:block/deepslate_blast_processor/deepslate_blast_processor_side_empty",

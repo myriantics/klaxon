@@ -1,7 +1,7 @@
 {
   "parent": "klaxon:block/template/filing_cabinet_drawer",
   "textures": {
-    "particle": "klaxon:block/pink_filing_cabinet_drawer/particle",
-    "texture": "klaxon:block/pink_filing_cabinet_drawer/texture"
+    "particle": "klaxon:block/filing_cabinet/pink/particle",
+    "texture": "klaxon:block/filing_cabinet/pink/texture"
   }
 }

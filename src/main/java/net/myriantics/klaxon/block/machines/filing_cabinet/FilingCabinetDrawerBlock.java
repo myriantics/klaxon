@@ -47,9 +47,8 @@ public class FilingCabinetDrawerBlock extends Block implements SimpleWaterlogged
     public static final EnumProperty<FrontAndTop> ORIENTATION = BlockStateProperties.ORIENTATION;
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    private static final VoxelShape[] DRAWER_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 4d/16, 15d/16, 12d/16, 16d/16);
-
-    private static final VoxelShape[] WALL_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(1d/16, 1d/16, 2d/16, 15d/16, 14d/16, 4d/16);
+    private static final VoxelShape[] DRAWER_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(3d/16, 2d/16, 4d/16, 13d/16, 9d/16, 16d/16);
+    private static final VoxelShape[] WALL_SHAPES = KlaxonVoxelShapeHelper.northUpDefaultFrontAndTopRotated(2d/16, 2d/16, 2d/16, 14d/16, 12d/16, 4d/16);
     private static final VoxelShape[] SHAPES = KlaxonVoxelShapeHelper.arrayUnion(DRAWER_SHAPES, WALL_SHAPES);
     private final DyeColor color;
 

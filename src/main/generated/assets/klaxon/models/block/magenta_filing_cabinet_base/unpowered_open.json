@@ -1,11 +1,11 @@
 {
   "parent": "klaxon:block/template/front_side_top_bottom_back",
   "textures": {
-    "back": "klaxon:block/magenta_filing_cabinet_base/back_unpowered",
-    "bottom": "klaxon:block/magenta_filing_cabinet_base/bottom",
-    "front": "klaxon:block/magenta_filing_cabinet_base/front_open_unpowered",
-    "particle": "klaxon:block/magenta_filing_cabinet_baseside_unpowered",
-    "side": "klaxon:block/magenta_filing_cabinet_base/side_unpowered",
-    "top": "klaxon:block/magenta_filing_cabinet_base/top"
+    "back": "klaxon:block/filing_cabinet/magenta/base/back_unpowered",
+    "bottom": "klaxon:block/filing_cabinet/magenta/base/bottom",
+    "front": "klaxon:block/filing_cabinet/magenta/base/front_open",
+    "particle": "klaxon:block/filing_cabinet/magenta/base/front_open",
+    "side": "klaxon:block/filing_cabinet/magenta/base/side",
+    "top": "klaxon:block/filing_cabinet/magenta/base/top"
   }
 }

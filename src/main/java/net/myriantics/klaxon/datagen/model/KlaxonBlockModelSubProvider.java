@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
@@ -570,50 +571,57 @@ public abstract class KlaxonBlockModelSubProvider {
                 .with(createDownDefaultRotationStates()));
     }
 
-    protected void registerFilingCabinetBaseBlock(Block block) {
-        ResourceLocation baseRl = ModelLocationUtils.getModelLocation(block);
+    protected void registerFilingCabinet(String path, Holder<Block> baseBlockHolder, Holder<Block> drawerBlockHolder) {
+        this.registerFilingCabinet(path, baseBlockHolder.value(), drawerBlockHolder.value());
+    }
+
+    protected void registerFilingCabinet(String path, Block baseBlock, Block drawerBlock) {
+        ResourceLocation id = KlaxonCommon.locate(path).withPrefix("block/filing_cabinet/");
+
+        // base block
+
+        ResourceLocation baseTexId = id.withSuffix("/base");
+
         TextureMapping poweredOpenMap = new TextureMapping()
-                .put(TextureSlot.TOP, baseRl.withSuffix("/top"))
-                .put(TextureSlot.SIDE, baseRl.withSuffix("/side_powered"))
-                .put(TextureSlot.FRONT, baseRl.withSuffix("/front_open_powered"))
-                .put(TextureSlot.BOTTOM, baseRl.withSuffix("/bottom"))
-                .put(TextureSlot.BACK, baseRl.withSuffix("/back_powered"))
-                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/side_powered"));
+                .put(TextureSlot.TOP, baseTexId.withSuffix("/top"))
+                .put(TextureSlot.SIDE, baseTexId.withSuffix("/side"))
+                .put(TextureSlot.FRONT, baseTexId.withSuffix("/front_open"))
+                .put(TextureSlot.BOTTOM, baseTexId.withSuffix("/bottom"))
+                .put(TextureSlot.BACK, baseTexId.withSuffix("/back_powered"))
+                .put(TextureSlot.PARTICLE, baseTexId.withSuffix("/side"));
         TextureMapping poweredClosedMap = poweredOpenMap
-                .copyAndUpdate(TextureSlot.FRONT, baseRl.withSuffix("/front_closed_powered"));
-        TextureMapping unpoweredOpenMap = poweredOpenMap.copyAndUpdate(TextureSlot.SIDE, baseRl.withSuffix("/side_unpowered"))
-                .put(TextureSlot.FRONT, baseRl.withSuffix("/front_open_unpowered"))
-                .put(TextureSlot.BACK, baseRl.withSuffix("/back_unpowered"))
-                .put(TextureSlot.PARTICLE, baseRl.withSuffix("side_unpowered"));
-        TextureMapping unpoweredClosedMap = unpoweredOpenMap.copyAndUpdate(TextureSlot.FRONT, baseRl.withSuffix("front_closed_unpowered"));
+                .copyAndUpdate(TextureSlot.FRONT, baseTexId.withSuffix("/front_closed"));
+        TextureMapping unpoweredOpenMap = poweredOpenMap.copyAndUpdate(TextureSlot.SIDE, baseTexId.withSuffix("/side"))
+                .put(TextureSlot.BACK, baseTexId.withSuffix("/back_unpowered"))
+                .put(TextureSlot.PARTICLE, baseTexId.withSuffix("/front_open"));
+        TextureMapping unpoweredClosedMap = unpoweredOpenMap.copyAndUpdate(TextureSlot.FRONT, baseTexId.withSuffix("/front_closed"));
 
-        ResourceLocation poweredOpen = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(block, "/powered_open", poweredOpenMap, generator.modelOutput);
-        ResourceLocation poweredClosed = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(block, "/powered_closed", poweredClosedMap, generator.modelOutput);
-        ResourceLocation unpoweredOpen = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(block, "/unpowered_open", unpoweredOpenMap, generator.modelOutput);
-        ResourceLocation unpoweredClosed = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(block, "/unpowered_closed", unpoweredClosedMap, generator.modelOutput);
+        ResourceLocation basePoweredOpen = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(baseBlock, "/powered_open", poweredOpenMap, generator.modelOutput);
+        ResourceLocation basePoweredClosed = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(baseBlock, "/powered_closed", poweredClosedMap, generator.modelOutput);
+        ResourceLocation baseUnpoweredOpen = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(baseBlock, "/unpowered_open", unpoweredOpenMap, generator.modelOutput);
+        ResourceLocation baseUnpoweredClosed = KlaxonModelTemplates.CUBE_FRONT_SIDE_TOP_BOTTOM_BACK.createWithSuffix(baseBlock, "/unpowered_closed", unpoweredClosedMap, generator.modelOutput);
 
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(baseBlock)
                 .with(PropertyDispatch.properties(FilingCabinetBaseBlock.OPEN, FilingCabinetBaseBlock.POWERED)
-                        .select(false, false, modelVariant(unpoweredClosed))
-                        .select(false, true, modelVariant(poweredClosed))
-                        .select(true, false, modelVariant(unpoweredOpen))
-                        .select(true, true, modelVariant(poweredOpen))
+                        .select(false, false, modelVariant(baseUnpoweredClosed))
+                        .select(false, true, modelVariant(basePoweredClosed))
+                        .select(true, false, modelVariant(baseUnpoweredOpen))
+                        .select(true, true, modelVariant(basePoweredOpen))
                 )
                 .with(PropertyDispatch.property(FilingCabinetBaseBlock.ORIENTATION).generate(frontAndTop -> this.generator.applyRotation(frontAndTop, Variant.variant()))));
 
-        generator.delegateItemModel(block, unpoweredClosed);
-    }
+        generator.delegateItemModel(baseBlock, baseUnpoweredClosed);
 
-    protected void registerFilingCabinetDrawerBlock(Block block) {
-        ResourceLocation baseRl = ModelLocationUtils.getModelLocation(block);
+        // drawer block
+
         TextureMapping mapping = new TextureMapping()
-                .put(TextureSlot.TEXTURE, baseRl.withSuffix("/texture"))
-                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/particle"));
+                .put(TextureSlot.TEXTURE, id.withSuffix("/texture"))
+                .put(TextureSlot.PARTICLE, id.withSuffix("/particle"));
 
-        ResourceLocation modelRl = KlaxonModelTemplates.FILING_CABINET_DRAWER.create(block, mapping, generator.modelOutput);
+        ResourceLocation drawerModelRl = KlaxonModelTemplates.FILING_CABINET_DRAWER.create(drawerBlock, mapping, generator.modelOutput);
 
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
-                .with(PropertyDispatch.property(FilingCabinetBaseBlock.ORIENTATION).generate(frontAndTop -> this.generator.applyRotation(frontAndTop, modelVariant(modelRl))))
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(drawerBlock)
+                .with(PropertyDispatch.property(FilingCabinetBaseBlock.ORIENTATION).generate(frontAndTop -> this.generator.applyRotation(frontAndTop, modelVariant(drawerModelRl))))
         );
     }
 
