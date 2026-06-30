@@ -29,32 +29,32 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         // machines
-        dropSelf(KlaxonBlocks.STEEL_BLAST_PROCESSOR);
-        dropSelf(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
-        dropSelf(KlaxonBlocks.PRECISION_DISPENSER);
+        randomizableContainerSelfLoot(KlaxonBlocks.STEEL_BLAST_PROCESSOR);
+        randomizableContainerSelfLoot(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR);
+        randomizableContainerSelfLoot(KlaxonBlocks.PRECISION_DISPENSER);
         dropSelf(KlaxonBlocks.NETHER_REACTOR_CORE);
         dropSelf(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
         dropSelf(KlaxonBlocks.STEEL_WORKBENCH);
         add(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, this::createModularExplosiveBlock);
 
         // filing cabinets
-        dropSelf(KlaxonBlocks.FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.WHITE_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.ORANGE_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.MAGENTA_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.YELLOW_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.LIME_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.PINK_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.GRAY_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.CYAN_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.PURPLE_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.BLUE_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.BROWN_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.GREEN_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.RED_FILING_CABINET_BASE);
-        dropSelf(KlaxonBlocks.BLACK_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.WHITE_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.ORANGE_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.MAGENTA_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.LIGHT_BLUE_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.YELLOW_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.LIME_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.PINK_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.GRAY_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.LIGHT_GRAY_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.CYAN_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.PURPLE_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.BLUE_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.BROWN_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.GREEN_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.RED_FILING_CABINET_BASE);
+        randomizableContainerSelfLoot(KlaxonBlocks.BLACK_FILING_CABINET_BASE);
 
         // steel
         dropSelf(KlaxonBlocks.STEEL_BLOCK);
@@ -154,6 +154,10 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     private void add(Holder<Block> holder, LootTable.Builder builder) {
         add(holder.value(), builder);
+    }
+
+    private void randomizableContainerSelfLoot(Holder<Block> holder) {
+        add(holder, this.createNameableBlockEntityTable(holder.value()));
     }
 
     private void dropSelf(Holder<Block> holder) {

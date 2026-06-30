@@ -228,7 +228,7 @@ public class FilingCabinetBaseBlock extends BaseEntityBlock {
                 entity.addDeltaMovement(new Vec3(x + (x * diff), y + (y * diff), z + (z * diff)));
             }
         } else {
-            if (level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity) {
+            if (level.getBlockEntity(pos) instanceof FilingCabinetBlockEntity blockEntity && !stateWhereWeWantToPutDrawer.is(this.extendedDrawerBlockHolder.value())) {
                 @Nullable Storage<ItemVariant> storage = KlaxonStorageUtil.findStorage(level, drawerPos, orientation.front().getOpposite());
                 if (storage != null) {
                     blockEntity.transferStacks(storage);
