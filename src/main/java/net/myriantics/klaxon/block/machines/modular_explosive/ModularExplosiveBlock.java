@@ -73,7 +73,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity) {
+        if (level.getBlockEntity(pos) instanceof ModularExplosiveBlockEntity blockEntity && (player.isCreative() || !stack.is(this.asItem()))) {
             if (stack.is(KlaxonItemTags.DEFUSERS)) {
                 if (state.getValue(FUSE).isCountingDown()) {
                     if (!level.isClientSide()) {
@@ -100,7 +100,7 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                         if (level.hasNeighborSignal(pos)) {
                             redstoneTrigger(level, pos, state);
                         }
-                        if (player.isCreative()) {
+                        if (player.isCreative() || stack.is(KlaxonItemTags.REUSABLE_EXPLOSIVE_CATALYSTS)) {
                             player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", stack.getDisplayName(), blockName), true);
                             soundEvent = KlaxonSoundEvents.MODULAR_EXPLOSIVE_CLONE_CATALYST;
                         } else {

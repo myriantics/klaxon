@@ -4,6 +4,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
@@ -312,6 +315,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildMechanicsTags() {
+        /*
+        getOrCreateTagBuilder(KlaxonItemTags.REUSABLE_EXPLOSIVE_CATALYSTS)
+                .addOptional(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("spectrum", "creeper_idol")))
+                .addOptional(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("spectrum", "wither_idol")));
+         */
         getOrCreateTagBuilder(ItemTags.DYEABLE)
                 .add(KlaxonItems.CRESTED_STEEL_HELMET.value());
         getOrCreateTagBuilder(KlaxonItemTags.HEAVY_EQUIPMENT)

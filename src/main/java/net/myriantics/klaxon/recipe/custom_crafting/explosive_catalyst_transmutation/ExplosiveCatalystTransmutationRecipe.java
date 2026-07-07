@@ -4,6 +4,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -118,6 +120,16 @@ public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
         } else {
             return calculator.calculate(stack);
         }
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput input) {
+        NonNullList<ItemStack> remainders = super.getRemainingItems(input);
+        ItemStack catalystStack = input.getItem(4);
+        if (catalystStack.is(KlaxonItemTags.REUSABLE_EXPLOSIVE_CATALYSTS)) {
+            remainders.set(4, catalystStack.copyWithCount(1));
+        }
+        return remainders;
     }
 
     public interface FallbackCatalystDataCalculator {

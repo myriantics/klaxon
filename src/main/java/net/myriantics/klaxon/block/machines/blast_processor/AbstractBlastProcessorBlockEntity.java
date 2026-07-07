@@ -90,6 +90,8 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
             for (ServerPlayer serverPlayerEntity : level.getEntitiesOfClass(ServerPlayer.class, AABB.ofSize((Vec3) itemOutputPos, advancementGrantRange, advancementGrantRange, advancementGrantRange))) {
                 KlaxonAdvancementTriggers.triggerBlockActivation(serverPlayerEntity, this.getBlockState());
             }
+
+            this.ingredientPartition.clearContent();
         } else if (catalystData.explosionPower() <= 0 || catalystData.explosionPower() < recipeData.explosionPowerMin()) {
             List<ItemStack> ejectedContents = new ArrayList<>(this.getContainerSize());
             for (ItemStack contained : this.getItems()) {
@@ -98,10 +100,9 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
             for (ItemStack ejected : ejectedContents) {
                 this.ejectItem(ejected, facing);
             }
+            this.clearContent();
         }
 
-        // blast processor will always be empty after actions have been performed
-        this.clearContent();
         this.setChanged();
     }
 

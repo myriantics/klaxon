@@ -27,6 +27,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.container.ContainerPartition;
 import org.jetbrains.annotations.Nullable;
@@ -88,7 +89,9 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
                 // clear catalyst and do explosion effect if power is greater than 0
                 if (catalystData.explosionPower() > 0) {
-                    this.catalystPartition.clearContent();
+                    if (!this.getCatalystStack().is(KlaxonItemTags.REUSABLE_EXPLOSIVE_CATALYSTS)) {
+                        this.catalystPartition.clearContent();
+                    }
                     behaviorHolder.value().createExplosion(context, this.getExplosionOutputLocation(), catalystData, this.level.getGameRules().getBoolean(KlaxonGameRules.BLAST_PROCESSOR_EXPLOSIONS_MODIFY_WORLD));
                 }
 

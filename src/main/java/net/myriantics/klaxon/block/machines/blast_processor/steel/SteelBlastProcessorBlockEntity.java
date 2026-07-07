@@ -34,6 +34,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.container.ContainerPartition;
 import net.myriantics.klaxon.util.container.KlaxonStorageUtil;
 import org.jetbrains.annotations.Nullable;
@@ -112,7 +113,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                             serverLevel.getRandom())
                     );
 
-                    if (catalystData.explosionPower() > 0) {
+                    if (catalystData.explosionPower() > 0 && !this.getCatalystStack().is(KlaxonItemTags.REUSABLE_EXPLOSIVE_CATALYSTS)) {
                         this.catalystPartition.clearContent();
                     }
 
