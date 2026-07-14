@@ -41,4 +41,10 @@ public abstract class KlaxonNBTIds {
     public static final String DUCT_PAYLOAD = KlaxonCommon.locateAlt("duct_payload");
     public static final String DUCT_PAYLOAD_SIZE = KlaxonCommon.locateAlt("size");
     public static final String DUCT_PAYLOAD_STACKS = KlaxonCommon.locateAlt("stacks");
+
+    // contact charger
+    public static final String CHARGING_STACK = KlaxonCommon.locateAlt("charging_stack");
+    public static final String PREFERRED_REPLACEMENT_SLOT = KlaxonCommon.locateAlt("preferred_replacement_slot");
+    public static final String KEEP_ALIVE_TICKS = KlaxonCommon.locateAlt("keep_alive_ticks");
+    public static final String USER_UUID = KlaxonCommon.locateAlt("user_uuid");
 }

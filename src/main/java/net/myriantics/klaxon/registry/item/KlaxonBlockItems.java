@@ -84,7 +84,7 @@ public abstract class KlaxonBlockItems {
                     .component(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA, ExplosiveCatalystData.ZERO)
                     .getProperties()
     ));
-    public static final Holder<Item> CREATIVE_CONTACT_CHARGER_BLOCK = registerBlockItem(KlaxonBlocks.CREATIVE_CONTACT_CHARGER_BLOCK);
+    public static final Holder<Item> CREATIVE_CONTACT_CHARGER_BLOCK = registerBlockItem(KlaxonBlocks.CREATIVE_CONTACT_CHARGER);
 
     // ducts
     public static final Holder<Item> AIO_DUCT_DRIVER = registerBlockItem(KlaxonBlocks.AIO_DUCT_DRIVER);

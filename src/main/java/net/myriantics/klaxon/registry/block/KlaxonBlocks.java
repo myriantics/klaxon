@@ -103,7 +103,7 @@ public abstract class KlaxonBlocks {
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.CRUDE_STEEL_CASING).lightLevel((state) -> 12).noOcclusion()));
     public static final Holder<Block> MODULAR_EXPLOSIVE_BLOCK = registerBlock("modular_explosive_block",
             new ModularExplosiveBlock(copyProperties(STEEL_CASING)));
-    public static final Holder<Block> CREATIVE_CONTACT_CHARGER_BLOCK = registerBlock("creative_contact_charger",
+    public static final Holder<Block> CREATIVE_CONTACT_CHARGER = registerBlock("creative_contact_charger",
             new ContactChargerBlock(copyProperties(STEEL_CASING)));
 
     // item ducts
