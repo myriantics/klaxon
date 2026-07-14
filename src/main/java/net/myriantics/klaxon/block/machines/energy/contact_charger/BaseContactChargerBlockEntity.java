@@ -180,7 +180,7 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
     }
 
     public boolean acceptsStack(ItemStack stack) {
-        return true;//EnergyStorageUtil.isEnergyStorage(stack);
+        return !stack.isEmpty();//EnergyStorageUtil.isEnergyStorage(stack);
     }
 
     private boolean isPlayerValid() {
