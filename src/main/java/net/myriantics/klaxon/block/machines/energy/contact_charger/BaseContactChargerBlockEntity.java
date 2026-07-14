@@ -9,6 +9,9 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -16,10 +19,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import org.jetbrains.annotations.Nullable;
@@ -48,16 +53,14 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
     }
 
     public boolean startCharging(ItemStack stack, ServerPlayer player, int preferredReplacementSlot) {
-        if (this.chargingStack == null) {
-            this.chargingStack = stack;
-            this.stackEnergyStorage = this.initEnergyStorage();
-            this.userUUID = player.getUUID();
-            this.user = player;
-            this.preferredReplacementSlot = preferredReplacementSlot;
-            this.refreshKeepAliveTicks();
-            return true;
-        }
-        return false;
+        this.chargingStack = stack;
+        this.stackEnergyStorage = this.initEnergyStorage();
+        this.userUUID = player.getUUID();
+        this.user = player;
+        this.preferredReplacementSlot = preferredReplacementSlot;
+        this.refreshKeepAliveTicks();
+        this.updateClients();
+        return true;
     }
 
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
@@ -96,6 +99,11 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
 
     public void refreshKeepAliveTicks() {
         this.keepAliveTicks = MAX_KEEP_ALIVE_TICKS;
+        this.setChanged();
+    }
+
+    public ItemStack getChargingStack() {
+        return this.chargingStack;
     }
 
     /**
@@ -159,7 +167,6 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
         ItemEntity droppedItem = new ItemEntity(this.level, centerPos.x, centerPos.y, centerPos.z, this.chargingStack.copy());
         droppedItem.setPos(centerPos.x, centerPos.y - (droppedItem.getBbHeight() / 2), centerPos.z);
         this.level.addFreshEntity(droppedItem);
-        this.clear();
     }
 
     public void clear() {
@@ -169,10 +176,11 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
         this.userUUID = null;
         this.preferredReplacementSlot = -1;
         this.setChanged();
+        this.updateClients();
     }
 
     public boolean acceptsStack(ItemStack stack) {
-        return EnergyStorageUtil.isEnergyStorage(stack);
+        return true;//EnergyStorageUtil.isEnergyStorage(stack);
     }
 
     private boolean isPlayerValid() {
@@ -199,7 +207,7 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
     }
 
     public @Nullable Player getUser() {
-        if (this.chargingStack == null) {
+        if (!this.hasItem()) {
             return null;
         }
         if (this.user == null) {
@@ -216,7 +224,7 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
     }
 
     public boolean hasItem() {
-        return this.chargingStack != null;
+        return this.chargingStack != null && !this.chargingStack.isEmpty();
     }
 
     private EnergyStorage initEnergyStorage() {
@@ -230,22 +238,31 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
             protected void setStack(ItemStack stack) {
                 BaseContactChargerBlockEntity.this.chargingStack = stack;
                 BaseContactChargerBlockEntity.this.setChanged();
+                BaseContactChargerBlockEntity.this.updateClients();
             }
         }));
+    }
+
+    protected void updateClients() {
+        this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), (Block.UPDATE_ALL_IMMEDIATE));
     }
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = this.saveCustomOnly(registries);
-        tag.remove(KlaxonNBTIds.KEEP_ALIVE_TICKS);
         tag.remove(KlaxonNBTIds.PREFERRED_REPLACEMENT_SLOT);
         return tag;
     }
 
     @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if (this.chargingStack != null) {
+        if (this.chargingStack != null && !this.chargingStack.isEmpty()) {
             tag.put(KlaxonNBTIds.CHARGING_STACK, this.chargingStack.save(registries));
         }
         if (this.userUUID != null) {
@@ -261,9 +278,14 @@ public class BaseContactChargerBlockEntity extends BlockEntity {
         if (tag.contains(KlaxonNBTIds.CHARGING_STACK)) {
             this.chargingStack = ItemStack.parse(registries, tag.get(KlaxonNBTIds.CHARGING_STACK)).orElse(null);
             this.stackEnergyStorage = this.chargingStack == null ? null : this.initEnergyStorage();
+        } else {
+            this.chargingStack = null;
+            this.stackEnergyStorage = null;
         }
         if (tag.contains(KlaxonNBTIds.USER_UUID)) {
             this.userUUID = tag.getUUID(KlaxonNBTIds.USER_UUID);
+        } else {
+            this.userUUID = null;
         }
         this.preferredReplacementSlot = this.validatePreferredReplacementSlot(tag.getInt(KlaxonNBTIds.PREFERRED_REPLACEMENT_SLOT));
         this.keepAliveTicks = Math.clamp(tag.getInt(KlaxonNBTIds.KEEP_ALIVE_TICKS), -1, MAX_KEEP_ALIVE_TICKS);

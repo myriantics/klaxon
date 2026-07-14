@@ -21,6 +21,9 @@ public class KlaxonClient implements ClientModInitializer {
         // entity renderers
         KlaxonEntityRenderers.init();
 
+        // block entity renderers
+        KlaxonBlockEntityRenderers.init();
+
         // screens
         KlaxonScreens.init();
 
