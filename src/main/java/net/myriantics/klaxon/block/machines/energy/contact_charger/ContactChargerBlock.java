@@ -2,6 +2,7 @@ package net.myriantics.klaxon.block.machines.energy.contact_charger;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -21,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
     public static final MapCodec<ContactChargerBlock> CODEC = simpleCodec(ContactChargerBlock::new);
@@ -43,7 +46,7 @@ public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock 
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof BaseContactChargerBlockEntity blockEntity) {
+        if (canInteractWithSide(hitResult.getDirection(), state) && level.getBlockEntity(pos) instanceof BaseContactChargerBlockEntity blockEntity) {
             if (!blockEntity.hasItem() && blockEntity.acceptsStack(stack)) {
                 if (player instanceof ServerPlayer serverPlayer) {
                     int selectedSlot = hand == InteractionHand.OFF_HAND ? Inventory.SLOT_OFFHAND : player.getInventory().selected;
@@ -65,7 +68,7 @@ public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock 
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof BaseContactChargerBlockEntity blockEntity) {
+        if (canInteractWithSide(hitResult.getDirection(), state) && level.getBlockEntity(pos) instanceof BaseContactChargerBlockEntity blockEntity) {
             if (blockEntity.hasItem() && player == blockEntity.getUser()) {
                 blockEntity.refreshKeepAliveTicks();
                 return InteractionResult.CONSUME;
@@ -73,6 +76,37 @@ public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock 
         }
 
         return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
+    protected void attack(BlockState state, Level level, BlockPos pos, Player player) {
+        super.attack(state, level, pos, player);
+
+        // fast retrieval if one so wants
+        if (level.getBlockEntity(pos) instanceof BaseContactChargerBlockEntity blockEntity) {
+            if (blockEntity.hasItem() && player == blockEntity.getUser()) {
+                blockEntity.grantHeldStackBackToPlayer();
+                blockEntity.clear();
+            }
+        }
+    }
+
+    protected boolean canInteractWithSide(Direction desiredInteractionSide, BlockState state) {
+        return switch (state.getValue(FACE)) {
+            case FLOOR -> desiredInteractionSide != Direction.DOWN;
+            case WALL -> desiredInteractionSide != state.getValue(FACING).getOpposite();
+            case CEILING -> desiredInteractionSide != Direction.UP;
+        };
+    }
+
+    @Override
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return this.canAttachButGooder(level, pos, getConnectedDirection(state).getOpposite());
+    }
+
+    protected boolean canAttachButGooder(LevelReader reader, BlockPos pos, Direction direction) {
+        BlockPos supportingPos = pos.relative(direction);
+        return Block.canSupportCenter(reader, supportingPos, direction.getOpposite());
     }
 
     @Override
