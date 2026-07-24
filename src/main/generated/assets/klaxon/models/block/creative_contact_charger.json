@@ -1,0 +1,7 @@
+{
+  "parent": "klaxon:block/template/contact_charger",
+  "textures": {
+    "particle": "klaxon:block/creative_contact_charger",
+    "texture": "klaxon:block/creative_contact_charger"
+  }
+}

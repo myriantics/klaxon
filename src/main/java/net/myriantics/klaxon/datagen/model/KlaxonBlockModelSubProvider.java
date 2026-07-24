@@ -9,6 +9,8 @@ import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.myriantics.klaxon.block.decor.hallnox_bulb.HallnoxBulbBlock;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
@@ -567,6 +569,61 @@ public abstract class KlaxonBlockModelSubProvider {
                         Variant.variant().with(VariantProperties.MODEL, modelId)
                 )
                 .with(createDownDefaultRotationStates()));
+    }
+
+    protected void registerContactCharger(Block block) {
+        ResourceLocation rl = ModelLocationUtils.getModelLocation(block);
+
+        TextureMapping mapping = new TextureMapping()
+                .put(TextureSlot.TEXTURE, rl)
+                .put(TextureSlot.TEXTURE, rl);
+
+        ResourceLocation modelRl = KlaxonModelTemplates.CONTACT_CHARGER.create(block, mapping, generator.modelOutput);
+
+        generator.createSimpleFlatItemModel(block);
+        generator.blockStateOutput
+                .accept(
+                        MultiVariantGenerator.multiVariant(block, modelVariant(modelRl))
+                                .with(
+                                        PropertyDispatch.properties(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING)
+                                                .select(
+                                                        AttachFace.CEILING,
+                                                        Direction.NORTH,
+                                                        Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R180).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+                                                )
+                                                .select(
+                                                        AttachFace.CEILING,
+                                                        Direction.EAST,
+                                                        Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R180).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+                                                )
+                                                .select(AttachFace.CEILING, Direction.SOUTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R180))
+                                                .select(
+                                                        AttachFace.CEILING,
+                                                        Direction.WEST,
+                                                        Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R180).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                                                )
+                                                .select(AttachFace.FLOOR, Direction.NORTH, Variant.variant())
+                                                .select(AttachFace.FLOOR, Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                                                .select(AttachFace.FLOOR, Direction.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
+                                                .select(AttachFace.FLOOR, Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                                                .select(AttachFace.WALL, Direction.NORTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90))
+                                                .select(
+                                                        AttachFace.WALL,
+                                                        Direction.EAST,
+                                                        Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                                                )
+                                                .select(
+                                                        AttachFace.WALL,
+                                                        Direction.SOUTH,
+                                                        Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+                                                )
+                                                .select(
+                                                        AttachFace.WALL,
+                                                        Direction.WEST,
+                                                        Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+                                                )
+                                )
+                );
     }
 
     public static PropertyDispatch createDownDefaultRotationStates() {

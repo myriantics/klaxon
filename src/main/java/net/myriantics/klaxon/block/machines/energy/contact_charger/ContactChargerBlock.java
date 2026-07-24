@@ -10,6 +10,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
@@ -22,6 +23,8 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -30,6 +33,15 @@ public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock 
     public static final EnumProperty<AttachFace> FACE = FaceAttachedHorizontalDirectionalBlock.FACE;
     public static final DirectionProperty FACING = FaceAttachedHorizontalDirectionalBlock.FACING;
 
+    private static final VoxelShape FLOOR_X = box(1, 0, 4, 15, 3, 12);
+    private static final VoxelShape CEILING_X = box(1, 13, 4, 15, 16, 12);
+    private static final VoxelShape FLOOR_Z = box(4, 0, 1, 12, 3, 15);
+    private static final VoxelShape CEILING_Z = box(4, 13, 1, 12, 16, 15);
+    private static final VoxelShape WALL_SOUTH = box(4, 1, 0, 12, 15, 3);
+    private static final VoxelShape WALL_NORTH = box(4, 1, 13, 12, 15, 16);
+    private static final VoxelShape WALL_EAST = box(0, 1, 4, 3, 15, 12);
+    private static final VoxelShape WALL_WEST = box(13, 1, 4, 16, 15, 12);
+
     public ContactChargerBlock(Properties properties) {
         super(properties);
     }
@@ -37,11 +49,6 @@ public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock 
     @Override
     protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
         return CODEC;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
     }
 
     @Override
@@ -126,6 +133,29 @@ public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock 
         } else {
             return 0;
         }
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(FACE)) {
+            case FLOOR -> switch (state.getValue(FACING).getAxis()) {
+                case X -> FLOOR_X;
+                case Y -> throw new AssertionError();
+                case Z -> FLOOR_Z;
+            };
+            case WALL -> switch (state.getValue(FACING)) {
+                case DOWN, UP -> throw new AssertionError();
+                case NORTH -> WALL_NORTH;
+                case SOUTH -> WALL_SOUTH;
+                case WEST -> WALL_WEST;
+                case EAST -> WALL_EAST;
+            };
+            case CEILING -> switch (state.getValue(FACING).getAxis()) {
+                case X -> CEILING_X;
+                case Y -> throw new AssertionError();
+                case Z -> CEILING_Z;
+            };
+        };
     }
 
     @Override

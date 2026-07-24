@@ -44,8 +44,8 @@ public class AbstractContactChargerBlockEntityRenderer<T extends BaseContactChar
 
                 poseStack.pushPose();
                 poseStack.translate(0.5, 0.5, 0.5);
-                poseStack.translate(frontDirection.getStepX() * -0.4, frontDirection.getStepY() * -0.4, frontDirection.getStepZ() * -0.4);
-                poseStack.scale(0.75f, 0.75f, 0.75f);
+                poseStack.translate(frontDirection.getStepX() * -0.33, frontDirection.getStepY() * -0.33, frontDirection.getStepZ() * -0.33);
+                poseStack.scale(0.5f, 0.5f, 0.5f);
                 float yRot = 180 - switch (attachedFace) {
                     case FLOOR, CEILING -> topDirection.getOpposite().toYRot();
                     case WALL -> frontDirection.toYRot();

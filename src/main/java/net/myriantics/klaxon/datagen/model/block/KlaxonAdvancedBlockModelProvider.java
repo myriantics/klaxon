@@ -46,6 +46,9 @@ public class KlaxonAdvancedBlockModelProvider extends KlaxonBlockModelSubProvide
         registerPrecisionDispenser(KlaxonBlocks.PRECISION_DISPENSER.value());
         registerModularExplosive(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value());
 
+        // contact chargers
+        registerContactCharger(KlaxonBlocks.CREATIVE_CONTACT_CHARGER.value());
+
         // nether reactors
         registerNetherReactorCore(KlaxonBlocks.NETHER_REACTOR_CORE);
         registerNetherReactorCore(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);

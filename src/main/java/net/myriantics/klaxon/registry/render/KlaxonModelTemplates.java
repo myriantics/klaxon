@@ -73,6 +73,13 @@ public abstract class KlaxonModelTemplates {
             TextureSlot.PARTICLE
     );
 
+    public static final ModelTemplate CONTACT_CHARGER = copyDir(
+            "contact_charger",
+            CUBE_TOP_SIDE_BOTTOM_TWO_LAYERS,
+            TextureSlot.TEXTURE,
+            TextureSlot.PARTICLE
+    );
+
     public static Optional<ResourceLocation> id(ModelTemplate model) {
         return ((ModelTemplateAccessor) model).klaxon$getParent();
     }
