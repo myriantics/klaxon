@@ -57,6 +57,9 @@ public abstract class KlaxonCreativeModeTabs {
                 cosmeticModularExplosive.set(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG.value(), new ModularExplosiveBlockConfigComponent(-1, false));
                 entries.accept(cosmeticModularExplosive);
 
+                // electrical
+                entries.accept(KlaxonItems.CREATIVE_CONTACT_CHARGER_BLOCK.value());
+
                 // ducts
                 entries.accept(KlaxonItems.DUCT_SEGMENT.value());
                 entries.accept(KlaxonItems.AIO_DUCT_DRIVER.value());

@@ -25,6 +25,7 @@ public final class KlaxonEnUsBlockLanguageProvider extends KlaxonEnUsLanguageSub
         addBlock(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE, "Crude Nether Reactor Core");
         addBlock(KlaxonBlocks.STEEL_WORKBENCH, "Steel Workbench");
         addBlock(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, "Modular Explosive Block");
+        addBlock(KlaxonBlocks.CREATIVE_CONTACT_CHARGER, "Creative Contact Charger");
 
         // casing
         addBlock(KlaxonBlocks.STEEL_CASING, "Steel Casing");

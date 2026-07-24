@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -90,7 +91,7 @@ public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock 
         super.attack(state, level, pos, player);
 
         // fast retrieval if one so wants
-        if (level.getBlockEntity(pos) instanceof BaseContactChargerBlockEntity blockEntity) {
+        if (!level.isClientSide() && !player.isCreative() && level.getBlockEntity(pos) instanceof BaseContactChargerBlockEntity blockEntity) {
             if (blockEntity.hasItem() && player == blockEntity.getUser()) {
                 blockEntity.grantHeldStackBackToPlayer();
                 blockEntity.clear();
@@ -133,6 +134,17 @@ public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock 
         } else {
             return 0;
         }
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof BaseContactChargerBlockEntity blockEntity) {
+            if (blockEntity.hasItem()) {
+                Containers.dropItemStack(level, pos.getX(), pos.getZ(), pos.getY(), blockEntity.getChargingStack());
+            }
+            level.updateNeighbourForOutputSignal(pos, state.getBlock());
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override

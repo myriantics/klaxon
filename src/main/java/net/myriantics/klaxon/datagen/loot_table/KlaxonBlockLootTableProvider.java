@@ -36,6 +36,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
         dropSelf(KlaxonBlocks.STEEL_WORKBENCH);
         add(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, this::createModularExplosiveBlock);
+        dropSelf(KlaxonBlocks.CREATIVE_CONTACT_CHARGER);
 
         // steel
         dropSelf(KlaxonBlocks.STEEL_BLOCK);
