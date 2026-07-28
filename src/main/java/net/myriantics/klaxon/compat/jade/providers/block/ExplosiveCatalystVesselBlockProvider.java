@@ -48,7 +48,7 @@ public enum ExplosiveCatalystVesselBlockProvider implements IBlockComponentProvi
 
     @Override
     public Optional<ExplosiveCatalystData> streamData(BlockAccessor blockAccessor) {
-        if (blockAccessor.getBlockEntity() instanceof ExplosiveCatalystVessel vessel) {
+        if (blockAccessor.getBlockEntity() instanceof ExplosiveCatalystVessel vessel && vessel.hasDataReady()) {
             return Optional.ofNullable(vessel.getEffectiveCatalystData());
         } else {
             return Optional.empty();

@@ -14,6 +14,7 @@ import net.myriantics.klaxon.datagen.custom.providers.KlaxonVeinmineGroupProvide
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonGameplayLootTableProvider;
+import net.myriantics.klaxon.datagen.loot_table.KlaxonStructureLootTableProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
 import net.myriantics.klaxon.datagen.tag.*;
@@ -30,6 +31,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
         // loot tables
 		pack.addProvider(KlaxonBlockLootTableProvider::new);
         pack.addProvider(KlaxonGameplayLootTableProvider::new);
+		pack.addProvider(KlaxonStructureLootTableProvider::new);
 
 		pack.addProvider(KlaxonRecipeProvider::new);
 		pack.addProvider(KlaxonAdvancementProvider::new);

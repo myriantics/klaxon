@@ -81,8 +81,11 @@ dependencies {
 	// jade
 	modImplementation "maven.modrinth:jade:${project.jade_version}"
 
+	// dev qol
     // scalding hot
     modLocalRuntime "maven.modrinth:scaldinghot:${project.scaldinghot_version}"
+	// visible barriers
+	modLocalRuntime "maven.modrinth:visiblebarriers:${project.visiblebarriers_version}"
 
 	// testing
 	productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"

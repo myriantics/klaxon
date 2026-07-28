@@ -5,4 +5,8 @@ public interface ExplosiveCatalystVessel {
     ExplosiveCatalystData getRawData();
 
     ExplosiveCatalystData getEffectiveCatalystData();
+
+    default boolean hasDataReady() {
+        return true;
+    }
 }

@@ -252,6 +252,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
     @Override
     public ExplosiveCatalystData getEffectiveCatalystData() {
+
         return this.level instanceof ServerLevel serverLevel
                 ? ExplosiveCatalystData.findEffective(this.getContext(serverLevel), this.getCatalystStack())
                 : ExplosiveCatalystData.ZERO;
@@ -267,6 +268,11 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         }
 
         return ExplosiveCatalystData.ZERO;
+    }
+
+    @Override
+    public boolean hasDataReady() {
+        return !this.isUnlooted();
     }
 
     public abstract Position getItemOutputLocation(Direction facing);
