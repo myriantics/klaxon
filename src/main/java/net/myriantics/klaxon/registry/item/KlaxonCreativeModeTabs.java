@@ -59,6 +59,7 @@ public abstract class KlaxonCreativeModeTabs {
 
                 // electrical
                 entries.accept(KlaxonItems.CREATIVE_CONTACT_CHARGER_BLOCK.value());
+                entries.accept(KlaxonItems.CREATIVE_POWER_BANK.value());
 
                 // ducts
                 entries.accept(KlaxonItems.DUCT_SEGMENT.value());

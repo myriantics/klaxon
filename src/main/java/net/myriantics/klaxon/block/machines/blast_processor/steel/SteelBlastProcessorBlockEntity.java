@@ -35,8 +35,8 @@ import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
-import net.myriantics.klaxon.util.container.ContainerPartition;
-import net.myriantics.klaxon.util.container.KlaxonStorageUtil;
+import net.myriantics.klaxon.util.storage.item.ContainerPartition;
+import net.myriantics.klaxon.util.storage.item.KlaxonStorageUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket> {

@@ -1,8 +1,7 @@
-package net.myriantics.klaxon.util.container;
+package net.myriantics.klaxon.util.storage.item;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import org.jetbrains.annotations.Nullable;

@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.util.container;
+package net.myriantics.klaxon.util.storage.item;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;

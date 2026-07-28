@@ -6,9 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.util.container.KlaxonBaseContainerBlockEntity;
-import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
-import net.myriantics.klaxon.util.container.KlaxonStorageProvider;
+import net.myriantics.klaxon.util.storage.KlaxonStorageProvider;
 
 public abstract class KlaxonItemStorages {
 

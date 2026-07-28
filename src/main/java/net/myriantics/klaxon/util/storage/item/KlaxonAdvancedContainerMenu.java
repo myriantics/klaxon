@@ -1,13 +1,10 @@
-package net.myriantics.klaxon.util.container;
+package net.myriantics.klaxon.util.storage.item;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 
 public abstract class KlaxonAdvancedContainerMenu extends KlaxonBaseContainerMenu {
 

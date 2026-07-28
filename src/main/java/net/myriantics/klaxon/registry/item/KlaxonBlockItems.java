@@ -90,6 +90,12 @@ public abstract class KlaxonBlockItems {
                     .rarity(Rarity.EPIC)
                     .getProperties()
     ));
+    public static final Holder<Item> CREATIVE_POWER_BANK = registerBlockItem(KlaxonBlocks.CREATIVE_POWER_BANK, new BlockItem(
+            KlaxonBlocks.CREATIVE_POWER_BANK.value(),
+            new KlaxonItemProperties()
+                    .rarity(Rarity.EPIC)
+                    .getProperties()
+    ));
 
     // ducts
     public static final Holder<Item> AIO_DUCT_DRIVER = registerBlockItem(KlaxonBlocks.AIO_DUCT_DRIVER);

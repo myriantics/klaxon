@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.DropperBlockEntity;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
-import net.myriantics.klaxon.util.container.ContainerPartition;
+import net.myriantics.klaxon.util.storage.item.ContainerPartition;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestHelper;
 import net.myriantics.klaxon_gametest.util.KlaxonGameTestTemplates;
 

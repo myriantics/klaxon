@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.mechanics.muffling.MufflerSlot;
 import net.myriantics.klaxon.registry.misc.KlaxonMenuTypes;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
-import net.myriantics.klaxon.util.container.KlaxonBaseContainerMenu;
+import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerMenu;
 
 public class PrecisionDispenserMenu extends KlaxonBaseContainerMenu {
 

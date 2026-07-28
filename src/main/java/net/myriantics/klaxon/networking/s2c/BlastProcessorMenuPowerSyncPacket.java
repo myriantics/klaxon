@@ -6,7 +6,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorMenu;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
-import net.myriantics.klaxon.util.container.KlaxonClientMenuInitializer;
+import net.myriantics.klaxon.util.storage.item.KlaxonClientMenuInitializer;
 
 public record BlastProcessorMenuPowerSyncPacket(double explosionPowerMin, double explosionPowerMax, double explosionPower, boolean producesFire) implements CustomPacketPayload, KlaxonClientMenuInitializer<AbstractBlastProcessorMenu> {
 

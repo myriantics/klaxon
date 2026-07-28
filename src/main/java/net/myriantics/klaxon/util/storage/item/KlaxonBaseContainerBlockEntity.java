@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.util.container;
+package net.myriantics.klaxon.util.storage.item;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.myriantics.klaxon.util.storage.KlaxonStorageProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

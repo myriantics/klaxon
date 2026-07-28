@@ -21,7 +21,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehav
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
-import net.myriantics.klaxon.util.container.KlaxonBaseSidedContainerBlockEntity;
+import net.myriantics.klaxon.util.storage.item.KlaxonBaseSidedContainerBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
@@ -30,7 +30,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
-import net.myriantics.klaxon.util.container.ContainerPartition;
+import net.myriantics.klaxon.util.storage.item.ContainerPartition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,11 +1,10 @@
-package net.myriantics.klaxon.util.container;
+package net.myriantics.klaxon.util.storage.item;
 
 import com.google.common.base.Supplier;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class KlaxonBaseContainerMenu extends AbstractContainerMenu {
 

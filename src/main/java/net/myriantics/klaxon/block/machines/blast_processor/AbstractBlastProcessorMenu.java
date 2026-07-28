@@ -20,8 +20,8 @@ import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.util.PermissionsHelper;
-import net.myriantics.klaxon.util.container.KlaxonAdvancedContainerMenu;
-import net.myriantics.klaxon.util.container.KlaxonClientMenuInitializer;
+import net.myriantics.klaxon.util.storage.item.KlaxonAdvancedContainerMenu;
+import net.myriantics.klaxon.util.storage.item.KlaxonClientMenuInitializer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
