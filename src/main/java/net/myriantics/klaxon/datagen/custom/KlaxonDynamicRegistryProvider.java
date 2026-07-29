@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider
 import net.minecraft.core.HolderLookup;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.custom.providers.*;
+import net.myriantics.klaxon.datagen.structure.KlaxonStructureTemplatePoolProvider;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -23,6 +24,7 @@ public final class KlaxonDynamicRegistryProvider extends FabricDynamicRegistryPr
         new KlaxonWrenchInteractionPredicateProvider(registries, entries);
         new KlaxonExplosiveCatalystBehaviorProvider(registries, entries);
         new KlaxonExplosiveCatalystDefinitionProvider(registries, entries);
+        new KlaxonStructureTemplatePoolProvider(registries, entries);
     }
 
     @Override

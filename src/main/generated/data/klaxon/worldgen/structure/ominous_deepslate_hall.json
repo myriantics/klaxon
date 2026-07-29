@@ -1,0 +1,53 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#klaxon:has_structure/ominous_deepslate_hall",
+  "liquid_settings": "ignore_waterlogging",
+  "max_distance_from_center": 32,
+  "size": 1,
+  "spawn_overrides": {
+    "ambient": {
+      "bounding_box": "full",
+      "spawns": []
+    },
+    "axolotls": {
+      "bounding_box": "full",
+      "spawns": []
+    },
+    "creature": {
+      "bounding_box": "full",
+      "spawns": []
+    },
+    "misc": {
+      "bounding_box": "full",
+      "spawns": []
+    },
+    "monster": {
+      "bounding_box": "full",
+      "spawns": []
+    },
+    "underground_water_creature": {
+      "bounding_box": "full",
+      "spawns": []
+    },
+    "water_ambient": {
+      "bounding_box": "full",
+      "spawns": []
+    },
+    "water_creature": {
+      "bounding_box": "full",
+      "spawns": []
+    }
+  },
+  "start_height": {
+    "type": "minecraft:uniform",
+    "max_inclusive": {
+      "absolute": -30
+    },
+    "min_inclusive": {
+      "absolute": -56
+    }
+  },
+  "start_pool": "klaxon:ominous_deepslate_hall",
+  "step": "underground_structures",
+  "use_expansion_hack": false
+}

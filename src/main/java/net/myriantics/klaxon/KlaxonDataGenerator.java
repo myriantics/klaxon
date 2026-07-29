@@ -7,16 +7,15 @@ import net.minecraft.core.registries.Registries;
 import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
 import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistryProvider;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonDamageTypeProvider;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonExplosiveCatalystBehaviorProvider;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonToolUsageRecipeTypeProvider;
-import net.myriantics.klaxon.datagen.custom.providers.KlaxonVeinmineGroupProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonGameplayLootTableProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonStructureLootTableProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
 import net.myriantics.klaxon.datagen.recipe.KlaxonRecipeProvider;
+import net.myriantics.klaxon.datagen.structure.KlaxonStructureProvider;
+import net.myriantics.klaxon.datagen.structure.KlaxonStructureSetProvider;
+import net.myriantics.klaxon.datagen.structure.KlaxonStructureTemplatePoolProvider;
 import net.myriantics.klaxon.datagen.tag.*;
 
 public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
@@ -50,6 +49,11 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(KlaxonStatusEffectTagProvider::new);
         pack.addProvider(KlaxonBlockEntityTypeTagProvider::new);
 		pack.addProvider(KlaxonExplosiveCatalystBehaviorTagProvider::new);
+		pack.addProvider(KlaxonBiomeTagProvider::new);
+
+
+		pack.addProvider(KlaxonStructureProvider::new);
+		pack.addProvider(KlaxonStructureSetProvider::new);
 	}
 
 	@Override
@@ -58,5 +62,9 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		registryBuilder.add(Registries.PLACED_FEATURE, KlaxonFeatureProvider::generatePlacedFeatures);
 		registryBuilder.add(Registries.TRIM_MATERIAL, KlaxonArmorTrimMaterialProvider::generateArmorTrimMaterials);
         registryBuilder.add(Registries.ENCHANTMENT, KlaxonEnchantmentProvider::bootstrap);
+		registryBuilder.add(Registries.TEMPLATE_POOL, KlaxonStructureTemplatePoolProvider::bootstrap);
+		registryBuilder.add(Registries.STRUCTURE, KlaxonStructureProvider::bootstrap);
+		registryBuilder.add(Registries.STRUCTURE_SET, KlaxonStructureSetProvider::bootstrap);
+		KlaxonCommon.LOGGER.info("shitballs");
 	}
 }

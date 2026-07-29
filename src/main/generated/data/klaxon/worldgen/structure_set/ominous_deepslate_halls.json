@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 67676769,
+    "separation": 6,
+    "spacing": 20
+  },
+  "structures": [
+    {
+      "structure": "klaxon:ominous_deepslate_hall",
+      "weight": 1
+    }
+  ]
+}
