@@ -96,6 +96,7 @@ public abstract class KlaxonBlockItems {
                     .rarity(Rarity.EPIC)
                     .getProperties()
     ));
+    public static final Holder<Item> ENERGY_SINK = registerBlockItem(KlaxonBlocks.ENERGY_SINK);
 
     // ducts
     public static final Holder<Item> AIO_DUCT_DRIVER = registerBlockItem(KlaxonBlocks.AIO_DUCT_DRIVER);

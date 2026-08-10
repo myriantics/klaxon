@@ -12,6 +12,7 @@ import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProc
 import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlockEntity;
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.contact_charger.BaseContactChargerBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.energy_sink.EnergySinkBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.power_bank.creative.CreativePowerBankBlockEntity;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlockEntity;
@@ -56,6 +57,11 @@ public abstract class KlaxonBlockEntityTypes {
             "creative_power_bank",
             KlaxonBlocks.CREATIVE_POWER_BANK,
             CreativePowerBankBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<EnergySinkBlockEntity>> ENERGY_SINK = register(
+            "energy_sink",
+            KlaxonBlocks.ENERGY_SINK,
+            EnergySinkBlockEntity::new
     );
 
     public static void init() {

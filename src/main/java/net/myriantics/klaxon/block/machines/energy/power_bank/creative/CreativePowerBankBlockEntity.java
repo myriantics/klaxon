@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block.machines.energy.power_bank.creative;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -21,6 +22,15 @@ public class CreativePowerBankBlockEntity extends BasePowerBankBlockEntity {
 
     @Override
     public @Nullable EnergyStorage getStorageForSide(@Nullable Direction direction) {
-        return InfiniteEnergyStorage.INSTANCE;
+        return direction == null || direction == this.getFacing() ? InfiniteEnergyStorage.INSTANCE : null;
+    }
+
+    @Override
+    protected void transferInto(@Nullable EnergyStorage storage) {
+        if (storage != null && storage.supportsInsertion()) {
+            try (Transaction tx = Transaction.openOuter()) {
+                storage.insert(storage.getCapacity(), tx);
+            }
+        }
     }
 }

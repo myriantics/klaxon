@@ -3,6 +3,7 @@ package net.myriantics.klaxon.util;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class KlaxonMathHelper {
     public static double roundToTenth(double roundee) {

@@ -47,4 +47,7 @@ public abstract class KlaxonNBTIds {
     public static final String PREFERRED_REPLACEMENT_SLOT = KlaxonCommon.locateAlt("preferred_replacement_slot");
     public static final String KEEP_ALIVE_TICKS = KlaxonCommon.locateAlt("keep_alive_ticks");
     public static final String USER_UUID = KlaxonCommon.locateAlt("user_uuid");
+
+    // energy sink
+    public static final String REMAINING_POWERED_TICKS = KlaxonCommon.locateAlt("remaining_powered_ticks");
 }

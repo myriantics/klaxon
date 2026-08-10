@@ -23,6 +23,7 @@ import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProc
 import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlock;
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlock;
 import net.myriantics.klaxon.block.machines.energy.contact_charger.ContactChargerBlock;
+import net.myriantics.klaxon.block.machines.energy.energy_sink.EnergySinkBlock;
 import net.myriantics.klaxon.block.machines.energy.power_bank.creative.CreativePowerBankBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
@@ -110,6 +111,8 @@ public abstract class KlaxonBlocks {
             new CreativePowerBankBlock(copyProperties(STEEL_CASING)));
     public static final Holder<Block> CREATIVE_CONTACT_CHARGER = registerBlock("creative_contact_charger",
             new ContactChargerBlock(copyProperties(STEEL_CASING)));
+    public static final Holder<Block> ENERGY_SINK = registerBlock("energy_sink",
+            new EnergySinkBlock(copyProperties(STEEL_CASING)));
 
     // item ducts
     public static final Holder<Block> DUCT_SEGMENT = registerBlock("duct_segment",

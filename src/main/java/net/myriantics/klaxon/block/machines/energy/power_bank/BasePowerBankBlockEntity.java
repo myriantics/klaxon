@@ -10,34 +10,38 @@ import net.myriantics.klaxon.util.storage.KlaxonStorageProvider;
 import net.myriantics.klaxon.util.storage.energy.KlaxonEnergyStorageProvider;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
+import team.reborn.energy.api.base.InfiniteEnergyStorage;
 
 public abstract class BasePowerBankBlockEntity extends BlockEntity implements KlaxonEnergyStorageProvider {
 
+    protected @Nullable EnergyStorage targetStorage = null;
     protected EnergyStorage[] neighborStorages = new EnergyStorage[6];
 
     protected BasePowerBankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 
-    public void setNeighboringStorageForSide(Direction side, @Nullable EnergyStorage storage) {
-        this.neighborStorages[side.ordinal()] = storage;
+    public Direction getFacing() {
+        return this.getBlockState().getValue(BasePowerBankBlock.FACING);
     }
 
-    public @Nullable EnergyStorage getNeighboringStorageForSide(Direction side) {
-        return this.neighborStorages[side.ordinal()];
+    public boolean isEnabled() {
+        return this.getBlockState().getValue(BasePowerBankBlock.ENABLED);
+    }
+
+    public void setTargetStorage(@Nullable EnergyStorage storage) {
+        this.targetStorage = storage;
     }
 
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
         if (this.canTransfer()) {
-            for (@Nullable EnergyStorage storage : this.neighborStorages) {
-                if (storage != null) {
-                    this.transferInto(storage);
-                }
-            }
+            this.transferInto(this.targetStorage);
         }
     }
 
-    protected abstract boolean canTransfer();
+    protected boolean canTransfer() {
+        return this.isEnabled();
+    }
 
     protected abstract void transferInto(@Nullable EnergyStorage storage);
 }
