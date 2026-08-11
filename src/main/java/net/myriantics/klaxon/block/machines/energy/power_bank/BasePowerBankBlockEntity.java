@@ -6,16 +6,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.myriantics.klaxon.util.storage.KlaxonStorageProvider;
 import net.myriantics.klaxon.util.storage.energy.KlaxonEnergyStorageProvider;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.InfiniteEnergyStorage;
 
 public abstract class BasePowerBankBlockEntity extends BlockEntity implements KlaxonEnergyStorageProvider {
 
     protected @Nullable EnergyStorage targetStorage = null;
-    protected EnergyStorage[] neighborStorages = new EnergyStorage[6];
+    private boolean initialized = false;
 
     protected BasePowerBankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -33,7 +31,15 @@ public abstract class BasePowerBankBlockEntity extends BlockEntity implements Kl
         this.targetStorage = storage;
     }
 
-    public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
+    public void serverTick(Level level, BlockPos pos, BlockState state) {
+        // initialize storage when loading world
+        if (!this.initialized) {
+            Direction facing = this.getFacing();
+            this.targetStorage = EnergyStorage.SIDED.find(level, pos.relative(facing), facing.getOpposite());
+            this.initialized = true;
+        }
+
+        // try transferring
         if (this.canTransfer()) {
             this.transferInto(this.targetStorage);
         }
