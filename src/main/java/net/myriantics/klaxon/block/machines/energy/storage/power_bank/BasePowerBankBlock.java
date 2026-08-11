@@ -1,10 +1,9 @@
-package net.myriantics.klaxon.block.machines.energy.power_bank;
+package net.myriantics.klaxon.block.machines.energy.storage.power_bank;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,9 +14,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.redstone.NeighborUpdater;
-import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.block.machines.energy.contact_charger.BaseContactChargerBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 

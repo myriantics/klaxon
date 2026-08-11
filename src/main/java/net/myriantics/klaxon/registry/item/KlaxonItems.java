@@ -96,6 +96,9 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             .getProperties()
     ));
 
+    // machine components
+    public static final Holder<Item> STEEL_TURBINE = registerSimpleItem("steel_turbine", new Item(new Item.Properties().durability(KlaxonToolMaterials.STEEL_PLATE.getUses())));
+
     // fractured materials
     public static final Holder<Item> FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");
     public static final Holder<Item> FRACTURED_RAW_COPPER = registerReallySimpleItem("fractured_raw_copper");

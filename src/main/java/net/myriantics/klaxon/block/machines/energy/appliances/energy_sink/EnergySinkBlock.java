@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.machines.energy.energy_sink;
+package net.myriantics.klaxon.block.machines.energy.appliances.energy_sink;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;

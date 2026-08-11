@@ -50,4 +50,9 @@ public abstract class KlaxonNBTIds {
 
     // energy sink
     public static final String REMAINING_POWERED_TICKS = KlaxonCommon.locateAlt("remaining_powered_ticks");
+
+    // turbine generator
+    public static final String VELOCITY = KlaxonCommon.locateAlt("velocity");
+    public static final String TARGET_VELOCITY = KlaxonCommon.locateAlt("target_velocity");
+    public static final String STORED_POWER = KlaxonCommon.locateAlt("stored_power");
 }

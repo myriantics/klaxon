@@ -1,0 +1,181 @@
+package net.myriantics.klaxon.block.machines.energy.generators.turbine;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
+import net.myriantics.klaxon.util.storage.energy.KlaxonEnergyStorageProvider;
+import net.myriantics.klaxon.util.storage.item.ContainerPartition;
+import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerBlockEntity;
+import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
+import team.reborn.energy.api.EnergyStorageUtil;
+
+public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity implements KlaxonEnergyStorageProvider {
+
+    protected long storedPower = 0;
+    protected long velocity = 0;
+    protected long targetVelocity = 0;
+    protected long maxBoost = 0;
+
+    public static final float ACCELERATION_FACTOR = 0.4f;
+
+    protected final EnergyStorage generatedPowerStorage;
+    protected @Nullable EnergyStorage targetStorageCache;
+    private boolean initialized = false;
+
+    protected ContainerPartition turbinePartition;
+
+    protected TurbineGeneratorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
+        this.generatedPowerStorage = new EnergyStorage() {
+
+
+            @Override
+            public long insert(long maxAmount, TransactionContext transaction) {
+                return 0;
+            }
+
+            @Override
+            public long extract(long maxAmount, TransactionContext transaction) {
+                long extracted = Math.min(maxAmount, TurbineGeneratorBlockEntity.this.storedPower);
+                TurbineGeneratorBlockEntity.this.storedPower -= extracted;
+                TurbineGeneratorBlockEntity.this.setChanged();
+                return extracted;
+            }
+
+            @Override
+            public long getAmount() {
+                return TurbineGeneratorBlockEntity.this.storedPower;
+            }
+
+            @Override
+            public long getCapacity() {
+                return TurbineGeneratorBlockEntity.this.storedPower;
+            }
+
+            @Override
+            public boolean supportsInsertion() {
+                return false;
+            }
+        };
+    }
+
+    public TurbineGeneratorBlockEntity(BlockPos pos, BlockState state) {
+        this(KlaxonBlockEntityTypes.TURBINE_GENERATOR.value(), pos, state);
+    }
+
+    @Override
+    protected void initPartitions(PartitionBuilder partitions) {
+        this.turbinePartition = partitions.partition(1, 1);
+    }
+
+    @Override
+    protected Component getDefaultName() {
+        return null;
+    }
+
+    @Override
+    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
+        return null;
+    }
+
+    public Direction getFacing() {
+        return this.getBlockState().getValue(TurbineGeneratorBlock.FACING);
+    }
+
+    public void serverTick(ServerLevel level, BlockPos pos, BlockState state) {
+        // initialize storage when loading world
+        if (!this.initialized) {
+            Direction facing = this.getFacing();
+            this.targetStorageCache = EnergyStorage.SIDED.find(level, pos.relative(facing), facing.getOpposite());
+            this.initialized = true;
+        }
+
+        /*
+        if (this.turbinePartition.isEmpty()) {
+            return;
+        }
+         */
+
+        // 4000 = 500 * 8
+
+        // reassess power sources every 10 ticks
+        if (level.getServer().getTickCount() % 10 == 0) {
+            this.reassessConstantPowerSource(level, pos, state);
+        }
+
+        // update velocity
+        if (this.targetVelocity != this.velocity) {
+            double progress = (this.targetVelocity - this.velocity) * ACCELERATION_FACTOR;
+            this.velocity += progress > 0
+                    ? Math.max((int) progress, 1)
+                    : Math.min((int) progress, -1);
+        }
+
+        // move generated power
+        long exportedPower = 0;
+        try (Transaction tx = Transaction.openOuter()) {
+            exportedPower = EnergyStorageUtil.move(this.generatedPowerStorage, this.targetStorageCache, this.generatedPowerStorage.getCapacity(), tx);
+        }
+
+        long remainder = Math.max(this.velocity - exportedPower, 0);
+
+        this.storedPower = this.velocity;
+        this.velocity = this.velocity - ((this.velocity - remainder) / 20);
+        this.setChanged();
+    }
+
+    protected void reassessConstantPowerSource(ServerLevel level, BlockPos pos, BlockState state) {
+        Direction facing = this.getFacing();
+        if (facing == Direction.DOWN && level.getBlockState(pos.relative(facing)).is(Blocks.CAMPFIRE)) {
+            this.targetVelocity = 100;
+        } else {
+            this.targetVelocity = 0;
+        }
+    }
+
+    protected long getTargetVelocity() {
+        return this.targetVelocity;
+    }
+
+    public void boost() {
+
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putLong(KlaxonNBTIds.VELOCITY, this.velocity);
+        tag.putLong(KlaxonNBTIds.TARGET_VELOCITY, this.targetVelocity);
+        tag.putLong(KlaxonNBTIds.STORED_POWER, this.storedPower);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.velocity = Math.max(tag.getLong(KlaxonNBTIds.VELOCITY), 0);
+        this.targetVelocity = Math.max(tag.getLong(KlaxonNBTIds.VELOCITY), 0);
+        this.storedPower = Math.max(tag.getLong(KlaxonNBTIds.STORED_POWER), 0);
+    }
+
+    public void setTargetStorage(EnergyStorage energyStorage) {
+        this.targetStorageCache = energyStorage;
+    }
+
+    @Override
+    public @Nullable EnergyStorage getEnergyStorageForSide(@Nullable Direction direction) {
+        return direction == null || direction == this.getFacing() ? this.generatedPowerStorage : null;
+    }
+}

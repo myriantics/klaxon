@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.machines.energy.power_bank;
+package net.myriantics.klaxon.block.machines.energy.storage.power_bank;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

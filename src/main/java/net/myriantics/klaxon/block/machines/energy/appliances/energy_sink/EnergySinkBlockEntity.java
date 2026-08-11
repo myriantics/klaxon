@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.machines.energy.energy_sink;
+package net.myriantics.klaxon.block.machines.energy.appliances.energy_sink;
 
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
@@ -70,6 +70,10 @@ public class EnergySinkBlockEntity extends BlockEntity implements KlaxonEnergySt
     }
 
     protected long handleInsertion(long maxAmount) {
+        if (maxAmount == 0) {
+            return 0;
+        }
+
         this.resetRemainingPoweredTicks();
         if (!this.isEmittingPower()) {
             this.startEmittingPower();
@@ -107,7 +111,7 @@ public class EnergySinkBlockEntity extends BlockEntity implements KlaxonEnergySt
     }
 
     @Override
-    public @Nullable EnergyStorage getStorageForSide(@Nullable Direction direction) {
+    public @Nullable EnergyStorage getEnergyStorageForSide(@Nullable Direction direction) {
         return this.storage;
     }
 }

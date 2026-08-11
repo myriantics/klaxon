@@ -119,7 +119,6 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         }
     }
 
-    @Override
     public @Nullable Storage<ItemVariant> getStorageForSide(@Nullable Direction direction) {
         return this.fullAccess;
     }

@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.machines.energy.contact_charger;
+package net.myriantics.klaxon.block.machines.energy.appliances.contact_charger;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -24,12 +24,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.EnergyStorageUtil;
 
 import java.util.UUID;
 

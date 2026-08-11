@@ -22,9 +22,10 @@ import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateB
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlock;
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlock;
-import net.myriantics.klaxon.block.machines.energy.contact_charger.ContactChargerBlock;
-import net.myriantics.klaxon.block.machines.energy.energy_sink.EnergySinkBlock;
-import net.myriantics.klaxon.block.machines.energy.power_bank.creative.CreativePowerBankBlock;
+import net.myriantics.klaxon.block.machines.energy.appliances.contact_charger.ContactChargerBlock;
+import net.myriantics.klaxon.block.machines.energy.appliances.energy_sink.EnergySinkBlock;
+import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlock;
+import net.myriantics.klaxon.block.machines.energy.storage.power_bank.creative.CreativePowerBankBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixUBendBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.PipeMatrixSegmentBlock;
@@ -105,6 +106,10 @@ public abstract class KlaxonBlocks {
             new NetherReactorCoreBlock(copyProperties(KlaxonBlocks.CRUDE_STEEL_CASING).lightLevel((state) -> 12).noOcclusion()));
     public static final Holder<Block> MODULAR_EXPLOSIVE_BLOCK = registerBlock("modular_explosive_block",
             new ModularExplosiveBlock(copyProperties(STEEL_CASING)));
+
+    // energy machines
+    public static final Holder<Block> TURBINE_GENERATOR = registerBlock("turbine_generator",
+            new TurbineGeneratorBlock(copyProperties(STEEL_CASING)));
 
     // creative energy items
     public static final Holder<Block> CREATIVE_POWER_BANK = registerBlock("creative_power_bank",

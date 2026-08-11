@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.block.machines.energy.contact_charger;
+package net.myriantics.klaxon.block.machines.energy.appliances.contact_charger;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -27,7 +27,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
 
 public class ContactChargerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
     public static final MapCodec<ContactChargerBlock> CODEC = simpleCodec(ContactChargerBlock::new);

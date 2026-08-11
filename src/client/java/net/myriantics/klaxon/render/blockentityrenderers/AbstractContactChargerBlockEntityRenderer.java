@@ -12,8 +12,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.myriantics.klaxon.block.machines.energy.contact_charger.BaseContactChargerBlockEntity;
-import net.myriantics.klaxon.block.machines.energy.contact_charger.ContactChargerBlock;
+import net.myriantics.klaxon.block.machines.energy.appliances.contact_charger.BaseContactChargerBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.appliances.contact_charger.ContactChargerBlock;
 import org.jetbrains.annotations.Nullable;
 
 public class AbstractContactChargerBlockEntityRenderer<T extends BaseContactChargerBlockEntity> implements BlockEntityRenderer<T> {

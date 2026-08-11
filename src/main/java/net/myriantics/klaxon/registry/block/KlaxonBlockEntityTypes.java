@@ -11,9 +11,10 @@ import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateB
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlockEntity;
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlockEntity;
-import net.myriantics.klaxon.block.machines.energy.contact_charger.BaseContactChargerBlockEntity;
-import net.myriantics.klaxon.block.machines.energy.energy_sink.EnergySinkBlockEntity;
-import net.myriantics.klaxon.block.machines.energy.power_bank.creative.CreativePowerBankBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.appliances.contact_charger.BaseContactChargerBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.appliances.energy_sink.EnergySinkBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.storage.power_bank.creative.CreativePowerBankBlockEntity;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlockEntity;
 
@@ -62,6 +63,11 @@ public abstract class KlaxonBlockEntityTypes {
             "energy_sink",
             KlaxonBlocks.ENERGY_SINK,
             EnergySinkBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<TurbineGeneratorBlockEntity>> TURBINE_GENERATOR = register(
+            "turbine_generator",
+            KlaxonBlocks.TURBINE_GENERATOR,
+            TurbineGeneratorBlockEntity::new
     );
 
     public static void init() {
