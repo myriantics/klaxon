@@ -1,0 +1,14 @@
+{
+  "max_range": 1,
+  "side_checker": {
+    "sided": {
+      "down": {
+        "blocks": "minecraft:bubble_column",
+        "state": {
+          "drag": "false"
+        }
+      }
+    }
+  },
+  "target_velocity": 200
+}

@@ -9,6 +9,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
+import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 
@@ -20,6 +21,7 @@ public abstract class KlaxonDynamicRegistries {
         registerSynced(KlaxonRegistries.WRENCH_INTERACTION_DENIAL_PREDICATE, WrenchInteractionDenialPredicate.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
         registerSynced(KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIOR, ExplosiveCatalystBehavior.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
         registerSynced(KlaxonRegistries.EXPLOSIVE_CATALYST_DEFINITION, ExplosiveCatalystDefinition.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
+        registerSynced(KlaxonRegistries.STATIC_TURBINE_GENERATOR_POWER_SOURCE, StaticTurbineGeneratorPowerSource.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
     }
 
     private static <T> void registerSynced(ResourceKey<? extends Registry<T>> key, Codec<T> codec, DynamicRegistries.SyncOption... options) {

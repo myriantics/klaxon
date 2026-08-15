@@ -53,6 +53,5 @@ public abstract class KlaxonNBTIds {
 
     // turbine generator
     public static final String VELOCITY = KlaxonCommon.locateAlt("velocity");
-    public static final String TARGET_VELOCITY = KlaxonCommon.locateAlt("target_velocity");
     public static final String STORED_POWER = KlaxonCommon.locateAlt("stored_power");
 }

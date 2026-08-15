@@ -1,0 +1,36 @@
+{
+  "max_range": 1,
+  "side_checker": {
+    "sided": {
+      "east": {
+        "blocks": "minecraft:blast_furnace",
+        "state": {
+          "facing": "west",
+          "lit": "true"
+        }
+      },
+      "north": {
+        "blocks": "minecraft:blast_furnace",
+        "state": {
+          "facing": "south",
+          "lit": "true"
+        }
+      },
+      "south": {
+        "blocks": "minecraft:blast_furnace",
+        "state": {
+          "facing": "north",
+          "lit": "true"
+        }
+      },
+      "west": {
+        "blocks": "minecraft:blast_furnace",
+        "state": {
+          "facing": "east",
+          "lit": "true"
+        }
+      }
+    }
+  },
+  "target_velocity": 300
+}

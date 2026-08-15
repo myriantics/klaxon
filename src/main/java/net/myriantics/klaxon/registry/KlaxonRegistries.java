@@ -8,6 +8,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandl
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
+import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionType;
 import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
@@ -26,6 +27,7 @@ public abstract class KlaxonRegistries {
     public static final ResourceKey<Registry<ToolUsageRecipeType>> TOOL_USAGE_RECIPE_TYPE = of("tool_usage_recipe_type");
     public static final ResourceKey<Registry<VeinmineGroup>> VEINMINE_GROUP = of("veinmine_group");
     public static final ResourceKey<Registry<ExplosiveCatalystDefinition>> EXPLOSIVE_CATALYST_DEFINITION = of("explosive_catalyst_definition");
+    public static final ResourceKey<Registry<StaticTurbineGeneratorPowerSource>> STATIC_TURBINE_GENERATOR_POWER_SOURCE = of("turbine_generator_power_source");
 
     private static <T> ResourceKey<Registry<T>> of(String id) {
         return ResourceKey.createRegistryKey(KlaxonCommon.locate(id));

@@ -1,0 +1,11 @@
+{
+  "max_range": 2,
+  "side_checker": {
+    "sided": {
+      "down": {
+        "blocks": "minecraft:vault"
+      }
+    }
+  },
+  "target_velocity": 45
+}

@@ -4,7 +4,9 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.block.machines.energy.storage.power_bank.BasePowerBankBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
@@ -65,10 +68,15 @@ public class TurbineGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
+        super.onProjectileHit(level, state, hit, projectile);
+    }
+
+    @Override
     protected void onExplosionHit(BlockState state, Level level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
         super.onExplosionHit(state, level, pos, explosion, dropConsumer);
         if (explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof TurbineGeneratorBlockEntity blockEntity) {
-            blockEntity.boost();
+            // blockEntity.boost();
         }
     }
 
@@ -97,6 +105,12 @@ public class TurbineGeneratorBlock extends BaseEntityBlock {
                 blockEntity.setTargetStorage(EnergyStorage.SIDED.find(level, neighborPos, neighborDirection.getOpposite()));
             }
         }
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState baseState = this.defaultBlockState();
+        return baseState.setValue(FACING, context.isSecondaryUseActive() ? context.getNearestLookingDirection() : context.getNearestLookingDirection().getOpposite());
     }
 
     public static boolean conductsTurbineThrust(Level level, BlockPos pos, BlockState state) {
