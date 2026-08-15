@@ -23,6 +23,7 @@ import net.myriantics.klaxon.util.storage.KlaxonStorageProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContainerBlockEntity implements KlaxonStorageProvider<ItemVariant> {
 

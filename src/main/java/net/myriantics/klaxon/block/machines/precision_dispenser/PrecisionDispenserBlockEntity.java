@@ -1,6 +1,11 @@
 package net.myriantics.klaxon.block.machines.precision_dispenser;
 
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
@@ -14,8 +19,10 @@ import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.util.storage.KlaxonStorageProvider;
+import org.jetbrains.annotations.Nullable;
 
-public class PrecisionDispenserBlockEntity extends DispenserBlockEntity {
+public class PrecisionDispenserBlockEntity extends DispenserBlockEntity implements KlaxonStorageProvider<ItemVariant> {
 
     final MufflerStorage mufflerStorage = new MufflerStorage() {
         @Override
@@ -23,6 +30,7 @@ public class PrecisionDispenserBlockEntity extends DispenserBlockEntity {
             PrecisionDispenserBlockEntity.this.updateMufflerState();
         }
     };
+    final Storage<ItemVariant> storage = InventoryStorage.of(this, null);
 
     protected PrecisionDispenserBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -85,5 +93,10 @@ public class PrecisionDispenserBlockEntity extends DispenserBlockEntity {
 
     public ItemStack getMuffler() {
         return this.mufflerStorage.get();
+    }
+
+    @Override
+    public @Nullable Storage<ItemVariant> getStorageForSide(@Nullable Direction direction) {
+        return this.storage;
     }
 }

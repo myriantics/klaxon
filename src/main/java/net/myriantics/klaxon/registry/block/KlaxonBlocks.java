@@ -24,6 +24,7 @@ import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlock;
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlock;
 import net.myriantics.klaxon.block.machines.energy.appliances.contact_charger.ContactChargerBlock;
 import net.myriantics.klaxon.block.machines.energy.appliances.energy_sink.EnergySinkBlock;
+import net.myriantics.klaxon.block.machines.energy.generators.furnace.FurnaceGeneratorBlock;
 import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlock;
 import net.myriantics.klaxon.block.machines.energy.storage.power_bank.creative.CreativePowerBankBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.OxidizablePipeMatrixSegmentBlock;
@@ -110,6 +111,8 @@ public abstract class KlaxonBlocks {
     // energy machines
     public static final Holder<Block> TURBINE_GENERATOR = registerBlock("turbine_generator",
             new TurbineGeneratorBlock(copyProperties(STEEL_CASING)));
+    public static final Holder<Block> FURNACE_GENERATOR = registerBlock("furnace_generator",
+            new FurnaceGeneratorBlock(copyProperties(STEEL_CASING)));
 
     // creative energy items
     public static final Holder<Block> CREATIVE_POWER_BANK = registerBlock("creative_power_bank",

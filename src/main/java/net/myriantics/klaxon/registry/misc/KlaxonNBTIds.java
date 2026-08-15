@@ -54,4 +54,7 @@ public abstract class KlaxonNBTIds {
     // turbine generator
     public static final String VELOCITY = KlaxonCommon.locateAlt("velocity");
     public static final String STORED_POWER = KlaxonCommon.locateAlt("stored_power");
+
+    // furnace generator
+    public static final String REMAINING_FUEL_DURATION = KlaxonCommon.locateAlt("remaining_fuel_duration");
 }

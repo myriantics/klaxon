@@ -18,7 +18,7 @@ public enum TurbineGeneratorPartProvider implements IBlockComponentProvider, Str
     INSTANCE;
 
     public static final ResourceLocation ID = KlaxonJadePlugin.locate("turbine_generator_part");
-    public static final String CONFIG = KlaxonJadePlugin.textTranslationKey(ID);
+    public static final String CONFIG = KlaxonJadePlugin.configTranslationKey(ID);
     public static final String TURBINE_DURABILITY = KlaxonJadePlugin.textTranslationKey(ID, "turbine_durability");
     public static final String TURBINE_MISSING = KlaxonJadePlugin.textTranslationKey(ID, "turbine_missing");
 

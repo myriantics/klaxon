@@ -16,11 +16,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
-import net.myriantics.klaxon.mechanics.turbine_generator.TurbineGeneratorBoostInstance;
+import net.myriantics.klaxon.mechanics.turbine_generator.boost.TurbineGeneratorBoostInstance;
+import net.myriantics.klaxon.mechanics.turbine_generator.boost.TurbineGeneratorBoostManager;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
@@ -34,7 +34,6 @@ import team.reborn.energy.api.EnergyStorageUtil;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity implements KlaxonEnergyStorageProvider {
 
@@ -44,6 +43,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     protected long maxBoost = 0;
 
     protected StaticTurbineGeneratorPowerSource powerSource = null;
+    protected final TurbineGeneratorBoostManager boostManager = new TurbineGeneratorBoostManager(this);
 
     public static final float ACCELERATION_FACTOR = 0.4f;
 
@@ -108,7 +108,13 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
             this.initialized = true;
         }
 
+        // if we don't have a turbine, reset stored power and velocity then no-op
         if (!this.hasTurbine()) {
+            if (this.storedPower != 0 || this.velocity != 0) {
+                this.storedPower = 0;
+                this.velocity = 0;
+                this.setChanged();
+            }
             return;
         }
 
@@ -150,6 +156,11 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
             // trim power sources that are out of range
             final int distance = i;
             powerSources.removeIf(source -> !source.isWithinRange(distance));
+
+            // don't bother checking for power sources if we have no more valid ones in the registry
+            if (powerSources.isEmpty()) {
+                break;
+            }
 
             // shift blockpos and check blockstate
             BlockPos offsetPos = pos.relative(facing, i + 1);
