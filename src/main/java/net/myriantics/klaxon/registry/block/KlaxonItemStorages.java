@@ -13,6 +13,9 @@ public abstract class KlaxonItemStorages {
     static {
         register(KlaxonBlockEntityTypes.DEEPSLATE_BLAST_PROCESSOR);
         register(KlaxonBlockEntityTypes.STEEL_BLAST_PROCESSOR);
+        register(KlaxonBlockEntityTypes.TURBINE_GENERATOR);
+        register(KlaxonBlockEntityTypes.FURNACE_GENERATOR);
+        register(KlaxonBlockEntityTypes.PRECISION_DISPENSER);
     }
 
     public static void init() {

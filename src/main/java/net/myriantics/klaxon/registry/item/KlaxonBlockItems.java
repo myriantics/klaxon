@@ -98,6 +98,7 @@ public abstract class KlaxonBlockItems {
     ));
     public static final Holder<Item> ENERGY_SINK = registerBlockItem(KlaxonBlocks.ENERGY_SINK);
     public static final Holder<Item> TURBINE_GENERATOR = registerBlockItem(KlaxonBlocks.TURBINE_GENERATOR);
+    public static final Holder<Item> FURNACE_GENERATOR = registerBlockItem(KlaxonBlocks.FURNACE_GENERATOR);
 
     // ducts
     public static final Holder<Item> AIO_DUCT_DRIVER = registerBlockItem(KlaxonBlocks.AIO_DUCT_DRIVER);

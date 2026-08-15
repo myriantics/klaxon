@@ -13,6 +13,7 @@ import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlockEn
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.appliances.contact_charger.BaseContactChargerBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.appliances.energy_sink.EnergySinkBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.generators.furnace.FurnaceGeneratorBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.storage.power_bank.creative.CreativePowerBankBlockEntity;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlockEntity;
@@ -68,6 +69,11 @@ public abstract class KlaxonBlockEntityTypes {
             "turbine_generator",
             KlaxonBlocks.TURBINE_GENERATOR,
             TurbineGeneratorBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<FurnaceGeneratorBlockEntity>> FURNACE_GENERATOR = register(
+            "furnace_generator",
+            KlaxonBlocks.FURNACE_GENERATOR,
+            FurnaceGeneratorBlockEntity::new
     );
 
     public static void init() {

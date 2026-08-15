@@ -1,13 +1,18 @@
 package net.myriantics.klaxon.mechanics.turbine_generator.power_source;
 
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,6 +25,8 @@ public class StaticTurbineGeneratorPowerSource {
             Codec.intRange(0, TurbineGeneratorBlockEntity.MAX_POWER_SOURCE_RANGE).optionalFieldOf("max_range", 0).forGetter(i -> i.range),
             Codec.LONG.fieldOf("target_velocity").validate(aLong -> aLong > 0 ? DataResult.success(aLong) : DataResult.error(() -> "Target velocity must be greater than 0")).forGetter(i -> i.targetVelocity)
     ).apply(instance, StaticTurbineGeneratorPowerSource::new));
+
+    private static final Pair<?, ?> EMPTY_PAIR = Pair.of(null, null);
 
     private final SideChecker checker;
     private final int range;
@@ -41,6 +48,15 @@ public class StaticTurbineGeneratorPowerSource {
 
     public boolean test(BlockInWorld blockInWorld, Direction generatorFacing) {
         return this.checker.valid(blockInWorld, generatorFacing);
+    }
+
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+        CODEC.encode(this, registries.createSerializationContext(NbtOps.INSTANCE), tag);
+        return tag;
+    }
+
+    public static @Nullable StaticTurbineGeneratorPowerSource load(CompoundTag tag, HolderLookup.Provider registries) {
+        return CODEC.decode(registries.createSerializationContext(NbtOps.INSTANCE), tag).resultOrPartial(string -> KlaxonCommon.LOGGER.error("Tried to load invalid static turbine power source: '{}'", string)).orElse(Pair.of(null, null)).getFirst();
     }
 
     public static Builder builder() {
