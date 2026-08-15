@@ -449,6 +449,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE);
         getOrCreateTagBuilder(KlaxonItemTags.MUFFLER_REMOVERS)
                 .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
+        getOrCreateTagBuilder(KlaxonItemTags.TURBINE_GENERATOR_TURBINES)
+                .add(KlaxonItems.STEEL_TURBINE.value());
     }
 
     private void buildRepairTags() {

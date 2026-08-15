@@ -9,10 +9,12 @@ import net.myriantics.klaxon.block.functional.hallnox_pod.HallnoxPodBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
+import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlock;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlock;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlock;
 import net.myriantics.klaxon.compat.jade.providers.block.ExplosiveCatalystVesselBlockProvider;
 import net.myriantics.klaxon.compat.jade.providers.block.MufflableBlockProvider;
+import net.myriantics.klaxon.compat.jade.providers.block.TurbineGeneratorPartProvider;
 import net.myriantics.klaxon.compat.jade.providers.entity.GrappleClawEntityProvider;
 import net.myriantics.klaxon.compat.jade.providers.block.HallnoxPodStatusProvider;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
@@ -47,6 +49,7 @@ public class KlaxonJadePlugin implements IWailaPlugin {
             registration.registerBlockDataProvider(ExplosiveCatalystVesselBlockProvider.INSTANCE, clazz);
         }
 
+        registration.registerBlockDataProvider(TurbineGeneratorPartProvider.INSTANCE, TurbineGeneratorBlock.class);
         registration.registerEntityDataProvider(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
         IWailaPlugin.super.register(registration);
     }
@@ -73,6 +76,7 @@ public class KlaxonJadePlugin implements IWailaPlugin {
             registration.registerBlockComponent(ExplosiveCatalystVesselBlockProvider.INSTANCE, clazz);
         }
 
+        registration.registerBlockComponent(TurbineGeneratorPartProvider.INSTANCE, TurbineGeneratorBlock.class);
         registration.registerBlockComponent(HallnoxPodStatusProvider.INSTANCE, HallnoxPodBlock.class);
         registration.registerEntityComponent(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
         registration.registerEntityIcon(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);

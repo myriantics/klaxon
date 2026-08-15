@@ -4,6 +4,11 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -21,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.block.machines.energy.storage.power_bank.BasePowerBankBlockEntity;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -47,19 +53,31 @@ public class TurbineGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide()
-                ? null
-                : (level1, blockPos, blockState, blockEntity) -> {
-            if (blockEntity instanceof TurbineGeneratorBlockEntity turbineGeneratorBlockEntity) {
-                turbineGeneratorBlockEntity.serverTick((ServerLevel) level1, blockPos, blockState);
-            }
-        };
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof TurbineGeneratorBlockEntity turbineGeneratorBlockEntity) {
+            if (!level.isClientSide() && !turbineGeneratorBlockEntity.hasTurbine() && stack.is(KlaxonItemTags.TURBINE_GENERATOR_TURBINES)) {
+                turbineGeneratorBlockEntity.setTurbineStack(player.isCreative() ? stack.copyWithCount(1) : stack.split(1));
+            } else {
+                player.openMenu(turbineGeneratorBlockEntity);
+            }
+        }
+
+        return ItemInteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof TurbineGeneratorBlockEntity blockEntity ? blockEntity.getComparatorSignalStrength() : 0;
     }
 
     @Override
@@ -78,6 +96,12 @@ public class TurbineGeneratorBlock extends BaseEntityBlock {
         if (explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof TurbineGeneratorBlockEntity blockEntity) {
             // blockEntity.boost();
         }
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        Containers.dropContentsOnDestroy(state, newState, level, pos);
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
@@ -105,6 +129,17 @@ public class TurbineGeneratorBlock extends BaseEntityBlock {
                 blockEntity.setTargetStorage(EnergyStorage.SIDED.find(level, neighborPos, neighborDirection.getOpposite()));
             }
         }
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide()
+                ? null
+                : (level1, blockPos, blockState, blockEntity) -> {
+            if (blockEntity instanceof TurbineGeneratorBlockEntity turbineGeneratorBlockEntity) {
+                turbineGeneratorBlockEntity.serverTick((ServerLevel) level1, blockPos, blockState);
+            }
+        };
     }
 
     @Override

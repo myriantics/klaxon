@@ -25,6 +25,7 @@ public abstract class KlaxonDispenserBehaviors {
         register(KlaxonItems.STEEL_GRAPPLE_CLAW, new ProjectileDispenseBehavior(KlaxonItems.STEEL_GRAPPLE_CLAW.value()));
         register(KlaxonItems.STEEL_LIGHTER, DispenserBlock.DISPENSER_REGISTRY.get(Items.FLINT_AND_STEEL));
         register(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK, new ModularExplosiveBlockDispenserBehavior());
+
     }
 
     private static void register(Holder<Item> itemHolder, DispenseItemBehavior behavior) {

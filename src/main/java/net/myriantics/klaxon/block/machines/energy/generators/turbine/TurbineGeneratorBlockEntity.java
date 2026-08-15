@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -79,6 +80,26 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         return this.getBlockState().getValue(TurbineGeneratorBlock.FACING);
     }
 
+    public ItemStack getTurbineStack() {
+        return this.turbinePartition.getFirstNonEmptyStack();
+    }
+
+    public void setTurbineStack(ItemStack newTurbineStack) {
+        this.turbinePartition.setItem(0, newTurbineStack);
+    }
+
+    public boolean hasTurbine() {
+        return !this.getTurbineStack().isEmpty();
+    }
+
+    public int getComparatorSignalStrength() {
+        ItemStack turbineStack = this.getTurbineStack();
+        if (turbineStack.isEmpty()) {
+            return 0;
+        }
+        return ((turbineStack.getMaxDamage() - turbineStack.getDamageValue()) * 14 / turbineStack.getMaxDamage()) + 1;
+    }
+
     public void serverTick(ServerLevel level, BlockPos pos, BlockState state) {
         // initialize storage when loading world
         if (!this.initialized) {
@@ -87,11 +108,9 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
             this.initialized = true;
         }
 
-        /*
-        if (this.turbinePartition.isEmpty()) {
+        if (!this.hasTurbine()) {
             return;
         }
-         */
 
         // 4000 = 500 * 8
 

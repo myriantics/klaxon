@@ -62,6 +62,7 @@ public abstract class KlaxonCreativeModeTabs {
                 entries.accept(KlaxonItems.CREATIVE_POWER_BANK.value());
                 entries.accept(KlaxonItems.ENERGY_SINK.value());
                 entries.accept(KlaxonItems.TURBINE_GENERATOR.value());
+                entries.accept(KlaxonItems.STEEL_TURBINE.value());
 
                 // ducts
                 entries.accept(KlaxonItems.DUCT_SEGMENT.value());

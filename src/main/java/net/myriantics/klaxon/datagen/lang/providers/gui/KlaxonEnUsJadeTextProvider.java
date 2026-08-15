@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.lang.providers.gui;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.myriantics.klaxon.compat.jade.providers.block.ExplosiveCatalystVesselBlockProvider;
 import net.myriantics.klaxon.compat.jade.providers.block.MufflableBlockProvider;
+import net.myriantics.klaxon.compat.jade.providers.block.TurbineGeneratorPartProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageSubProvider;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
@@ -26,11 +27,14 @@ public final class KlaxonEnUsJadeTextProvider extends KlaxonEnUsLanguageSubProvi
         addJadeTooltipText("blast_processor.explosion_power", "Explosion Power: %s");
         addJadeTooltipText("crop_growth_disabled", "Crop Growth Disabled");
         addJadeTooltipText("natural_crop_growth_inhibited", "Natural Crop Growth Inhibited");
+        addRawText(TurbineGeneratorPartProvider.TURBINE_DURABILITY, "Turbine Durability: %s / %s");
+        addRawText(TurbineGeneratorPartProvider.TURBINE_MISSING, "Turbine Missing");
     }
 
     private void generateConfigTextTranslations() {
         addJadeConfigText("crop_growth_disabled", "Crop Growth Disabled");
         addJadeConfigText("grapple_claw", "Grapple Claw");
+        addRawText(TurbineGeneratorPartProvider.CONFIG, "Turbine Generator Status");
         addRawText(ExplosiveCatalystVesselBlockProvider.CONFIG, "Explosive Catalyst Vessels: ");
         addRawText(MufflableBlockProvider.CONFIG, "Mufflable Blocks");
     }
