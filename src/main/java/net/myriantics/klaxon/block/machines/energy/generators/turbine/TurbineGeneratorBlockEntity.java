@@ -253,7 +253,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
 
     @Override
     public @Nullable EnergyStorage getEnergyStorageForSide(@Nullable Direction direction) {
-        return direction == null || direction == this.getFacing() ? this.generatedPowerStorage : null;
+        return direction == null || direction == this.getFacing().getOpposite() ? this.generatedPowerStorage : null;
     }
 
     private final class TurbineGeneratorEnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage {
