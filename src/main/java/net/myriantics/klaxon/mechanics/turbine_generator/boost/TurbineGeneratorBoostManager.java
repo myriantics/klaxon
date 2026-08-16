@@ -1,10 +1,13 @@
 package net.myriantics.klaxon.mechanics.turbine_generator.boost;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public final class TurbineGeneratorBoostManager {
     private final TurbineGeneratorBlockEntity blockEntity;

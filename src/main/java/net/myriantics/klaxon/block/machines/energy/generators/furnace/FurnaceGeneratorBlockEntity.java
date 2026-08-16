@@ -17,6 +17,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -29,8 +40,6 @@ import net.myriantics.klaxon.util.storage.item.KlaxonBaseSidedContainerBlockEnti
 import org.jetbrains.annotations.Nullable;
 
 public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEntity {
-
-    public static final int MAX_TURBINE_GENERATOR_RANGE = 3;
 
     protected ContainerPartition fuelPartition;
     protected TurbineGeneratorBlockEntity turbineGeneratorCache = null;
@@ -135,10 +144,6 @@ public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEn
         }
     }
 
-    protected void consumeFuel() {
-        this.remainingFuelDuration -= this.speed;
-    }
-
     protected void ejectOverflowRemainder(ServerLevel level, ItemStack remainder) {
         if (remainder.isEmpty()) {
             return;
@@ -164,6 +169,10 @@ public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEn
         // dump in world if that fails
         Vec3 outputPosition = this.worldPosition.getCenter().relative(facing, 0.7);
         DefaultDispenseItemBehavior.spawnItem(level, remainder, 6, facing, outputPosition);
+    }
+
+    protected void consumeFuel() {
+        this.remainingFuelDuration--;
     }
 
     @Override
