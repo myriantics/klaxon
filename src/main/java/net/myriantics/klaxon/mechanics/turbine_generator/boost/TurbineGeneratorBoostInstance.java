@@ -18,14 +18,14 @@ public abstract sealed class TurbineGeneratorBoostInstance permits TurbineGenera
 
     public static final class AddToBase extends TurbineGeneratorBoostInstance {
 
-        private final long addedValue;
+        private final double addedValue;
 
-        public AddToBase(int duration, long addedValue) {
+        public AddToBase(int duration, double addedValue) {
             super(duration);
             this.addedValue = addedValue;
         }
 
-        public long getAddedValue() {
+        public double getAddedValue() {
             return this.addedValue;
         }
     }

@@ -29,7 +29,11 @@ public class CreativePowerBankBlockEntity extends BasePowerBankBlockEntity {
     protected void transferInto(@Nullable EnergyStorage storage) {
         if (storage != null && storage.supportsInsertion()) {
             try (Transaction tx = Transaction.openOuter()) {
-                storage.insert(storage.getCapacity(), tx);
+                if (storage.insert(storage.getCapacity(), tx) > 0) {
+                    tx.commit();
+                } else {
+                    tx.abort();
+                }
             }
         }
     }

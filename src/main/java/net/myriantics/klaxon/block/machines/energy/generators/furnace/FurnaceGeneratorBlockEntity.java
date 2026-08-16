@@ -46,7 +46,7 @@ public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEn
 
     protected int remainingFuelDuration = 0;
     protected int initialFuelDuration = 0;
-    protected int speed = 2;
+    protected int speed = 4;
 
     protected static final ResourceLocation BOOST_RL = KlaxonCommon.locate("furnace_generator");
 
@@ -125,7 +125,7 @@ public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEn
                 }
 
                 if (this.turbineGeneratorCache != null) {
-                    this.turbineGeneratorCache.additionBoost(BOOST_RL, (long) (2.5 * this.speed), 1);
+                    this.turbineGeneratorCache.additionBoost(BOOST_RL, 0.5 * this.speed, 1);
                     this.turbineGeneratorCache.coupleForTicks(1);
                 }
             }
@@ -172,7 +172,7 @@ public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEn
     }
 
     protected void consumeFuel() {
-        this.remainingFuelDuration--;
+        this.remainingFuelDuration -= this.speed;
     }
 
     @Override

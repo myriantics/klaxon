@@ -13,7 +13,7 @@ public final class TurbineGeneratorBoostManager {
     private final TurbineGeneratorBlockEntity blockEntity;
     private final HashMap<ResourceLocation, TurbineGeneratorBoostInstance.AddToBase> additionBoostMap = new HashMap<>();
     private final HashMap<ResourceLocation, TurbineGeneratorBoostInstance.MultiplyFinal> multiplicationBoostMap = new HashMap<>();
-    private long addedBoostCache = 0;
+    private double addedBoostCache = 0;
     private double boostMultiplierCache = 1;
 
     public TurbineGeneratorBoostManager(TurbineGeneratorBlockEntity blockEntity) {
@@ -43,8 +43,8 @@ public final class TurbineGeneratorBoostManager {
         }
     }
 
-    public long modify(long base) {
-        return (long) ((base + this.addedBoostCache) * this.boostMultiplierCache);
+    public double modify(double base) {
+        return (base + this.addedBoostCache) * this.boostMultiplierCache;
     }
 
     private void recomputeAdditionCache() {
@@ -63,7 +63,7 @@ public final class TurbineGeneratorBoostManager {
         this.boostMultiplierCache = total;
     }
 
-    public void additionBoost(ResourceLocation boostRl, long boostAmount, int boostDuration) {
+    public void additionBoost(ResourceLocation boostRl, double boostAmount, int boostDuration) {
         @Nullable TurbineGeneratorBoostInstance.AddToBase existing = this.additionBoostMap.get(boostRl);
         if (existing == null || existing.getAddedValue() != boostAmount) {
             this.additionBoostMap.put(boostRl, new TurbineGeneratorBoostInstance.AddToBase(boostDuration, boostAmount));

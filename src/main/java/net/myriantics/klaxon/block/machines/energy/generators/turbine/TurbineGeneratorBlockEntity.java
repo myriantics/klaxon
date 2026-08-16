@@ -39,7 +39,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
 
     public static final int MAX_POWER_SOURCE_RANGE = 32;
     protected long storedPower = 0;
-    protected long velocity = 0;
+    protected double velocity = 0;
 
     protected StaticTurbineGeneratorPowerSource powerSource = null;
     protected final TurbineGeneratorBoostManager boostManager = new TurbineGeneratorBoostManager(this);
@@ -132,23 +132,26 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         }
 
         // update velocity
-        long targetVelocity = this.getTargetVelocity();
+        double targetVelocity = this.getTargetVelocity();
         if (targetVelocity != this.velocity) {
             double progress = (targetVelocity - this.velocity) * ACCELERATION_FACTOR;
-            this.velocity += progress > 0
-                    ? Math.max((int) progress, 1)
-                    : Math.min((int) progress, -1);
+            this.velocity += progress;
         }
 
         // move generated power
         long exportedPower = 0;
         try (Transaction tx = Transaction.openOuter()) {
             exportedPower = EnergyStorageUtil.move(this.generatedPowerStorage, this.targetStorageCache, this.generatedPowerStorage.getCapacity(), tx);
+            if (exportedPower > 0) {
+                tx.commit();
+            } else {
+                tx.abort();
+            }
         }
 
-        long remainder = Math.max(this.velocity - exportedPower, 0);
+        long remainder = (long) Math.max(this.velocity - exportedPower, 0);
 
-        this.storedPower = this.velocity;
+        this.storedPower = (long) (this.velocity * 5);
         this.velocity = this.velocity - ((this.velocity - remainder) / 20);
         this.setChanged();
     }
@@ -192,11 +195,11 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         this.powerSource = source;
     }
 
-    protected long getTargetVelocity() {
+    protected double getTargetVelocity() {
         return this.boostManager.modify(this.powerSource == null ? 0 : this.powerSource.getTargetVelocity());
     }
 
-    public void additionBoost(ResourceLocation boostRl, long boostAmount, int boostDuration) {
+    public void additionBoost(ResourceLocation boostRl, double boostAmount, int boostDuration) {
         this.boostManager.additionBoost(boostRl, boostAmount, boostDuration);
     }
 
@@ -228,7 +231,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.putLong(KlaxonNBTIds.VELOCITY, this.velocity);
+        tag.putDouble(KlaxonNBTIds.VELOCITY, this.velocity);
         tag.putLong(KlaxonNBTIds.STORED_POWER, this.storedPower);
         tag.putInt(KlaxonNBTIds.COUPLED_TICKS, this.coupledTicks);
         if (this.powerSource instanceof StaticTurbineGeneratorPowerSource staticPowerSource) {
@@ -239,7 +242,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.velocity = Math.max(tag.getLong(KlaxonNBTIds.VELOCITY), 0);
+        this.velocity = Math.max(tag.getDouble(KlaxonNBTIds.VELOCITY), 0);
         this.storedPower = Math.max(tag.getLong(KlaxonNBTIds.STORED_POWER), 0);
         this.coupledTicks = Math.max(tag.getInt(KlaxonNBTIds.COUPLED_TICKS), 0);
         if (tag.contains(KlaxonNBTIds.STATIC_POWER_SOURCE) && StaticTurbineGeneratorPowerSource.load(tag.getCompound(KlaxonNBTIds.STATIC_POWER_SOURCE), registries) instanceof StaticTurbineGeneratorPowerSource powerSource) {
