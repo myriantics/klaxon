@@ -19,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
-import net.myriantics.klaxon.mechanics.turbine_generator.boost.TurbineGeneratorBoostInstance;
 import net.myriantics.klaxon.mechanics.turbine_generator.boost.TurbineGeneratorBoostManager;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
@@ -159,7 +158,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     protected void reassessPowerSource(ServerLevel level, BlockPos pos, BlockState state) {
         Direction facing = this.getFacing();
 
-        Set<StaticTurbineGeneratorPowerSource> powerSources = level.registryAccess().lookupOrThrow(KlaxonRegistries.STATIC_TURBINE_GENERATOR_POWER_SOURCE).listElements().map(Holder::value).collect(Collectors.toSet());
+        Set<StaticTurbineGeneratorPowerSource> powerSources = level.registryAccess().lookupOrThrow(KlaxonRegistries.STATIC_TURBINE_GENERATOR_POWER_SOURCE).listElements().map(Holder::value).filter(source -> source.canBeValidForDirection(facing)).collect(Collectors.toSet());
         for (int i = 0; i < MAX_POWER_SOURCE_RANGE; i++) {
 
             // trim power sources that are out of range

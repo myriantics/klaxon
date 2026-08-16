@@ -1,11 +1,10 @@
 {
-  "max_range": 1,
-  "side_checker": {
-    "sided": {
-      "down": {
-        "blocks": "minecraft:brewing_stand"
-      }
-    }
+  "block_predicate": {
+    "blocks": "minecraft:brewing_stand"
   },
-  "target_velocity": 5
+  "max_range": 1,
+  "sidedness_checker": {
+    "down": {}
+  },
+  "target_velocity": 5.0
 }

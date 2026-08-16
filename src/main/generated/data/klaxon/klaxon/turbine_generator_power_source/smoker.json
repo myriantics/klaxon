@@ -1,14 +1,13 @@
 {
-  "max_range": 1,
-  "side_checker": {
-    "sided": {
-      "down": {
-        "blocks": "minecraft:smoker",
-        "state": {
-          "lit": "true"
-        }
-      }
+  "block_predicate": {
+    "blocks": "minecraft:smoker",
+    "state": {
+      "lit": "true"
     }
   },
-  "target_velocity": 250
+  "max_range": 1,
+  "sidedness_checker": {
+    "down": {}
+  },
+  "target_velocity": 250.0
 }

@@ -9,8 +9,7 @@ public abstract class KlaxonTurbineGeneratorPowerSources {
 
     public static final ResourceKey<StaticTurbineGeneratorPowerSource> CAMPFIRE = create("campfire/normal");
     public static final ResourceKey<StaticTurbineGeneratorPowerSource> SIGNAL_CAMPFIRE = create("campfire/signal");
-    public static final ResourceKey<StaticTurbineGeneratorPowerSource> UP_BUBBLE_COLUMN = create("bubble_column/up");
-    public static final ResourceKey<StaticTurbineGeneratorPowerSource> DOWN_BUBBLE_COLUMN = create("bubble_column/down");
+    public static final ResourceKey<StaticTurbineGeneratorPowerSource> BUBBLE_COLUMN = create("bubble_column");
     public static final ResourceKey<StaticTurbineGeneratorPowerSource> SCULK_SHRIEKER = create("sculk_shrieker");
     public static final ResourceKey<StaticTurbineGeneratorPowerSource> BREWING_STAND = create("brewing_stand");
     public static final ResourceKey<StaticTurbineGeneratorPowerSource> SMOKER = create("smoker");

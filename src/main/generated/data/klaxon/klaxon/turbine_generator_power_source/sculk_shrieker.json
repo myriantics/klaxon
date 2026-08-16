@@ -1,14 +1,13 @@
 {
-  "max_range": 3,
-  "side_checker": {
-    "sided": {
-      "down": {
-        "blocks": "minecraft:sculk_shrieker",
-        "state": {
-          "shrieking": "true"
-        }
-      }
+  "block_predicate": {
+    "blocks": "minecraft:sculk_shrieker",
+    "state": {
+      "shrieking": "true"
     }
   },
-  "target_velocity": 40
+  "max_range": 3,
+  "sidedness_checker": {
+    "down": {}
+  },
+  "target_velocity": 40.0
 }

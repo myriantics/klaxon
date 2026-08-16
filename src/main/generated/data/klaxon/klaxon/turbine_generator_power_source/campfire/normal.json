@@ -1,15 +1,14 @@
 {
-  "max_range": 5,
-  "side_checker": {
-    "sided": {
-      "down": {
-        "blocks": "minecraft:campfire",
-        "state": {
-          "lit": "true",
-          "signal_fire": "false"
-        }
-      }
+  "block_predicate": {
+    "blocks": "minecraft:campfire",
+    "state": {
+      "lit": "true",
+      "signal_fire": "false"
     }
   },
-  "target_velocity": 100
+  "max_range": 5,
+  "sidedness_checker": {
+    "down": {}
+  },
+  "target_velocity": 100.0
 }

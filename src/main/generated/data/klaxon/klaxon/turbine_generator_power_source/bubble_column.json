@@ -1,0 +1,15 @@
+{
+  "block_predicate": {
+    "blocks": "minecraft:bubble_column"
+  },
+  "max_range": 1,
+  "sidedness_checker": {
+    "down": {
+      "drag": "false"
+    },
+    "up": {
+      "drag": "true"
+    }
+  },
+  "target_velocity": 200.0
+}

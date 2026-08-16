@@ -1,14 +1,13 @@
 {
-  "max_range": 3,
-  "side_checker": {
-    "sided": {
-      "down": {
-        "blocks": "minecraft:trial_spawner",
-        "state": {
-          "trial_spawner_state": "cooldown"
-        }
-      }
+  "block_predicate": {
+    "blocks": "minecraft:trial_spawner",
+    "state": {
+      "trial_spawner_state": "active"
     }
   },
-  "target_velocity": 60
+  "max_range": 3,
+  "sidedness_checker": {
+    "down": {}
+  },
+  "target_velocity": 60.0
 }
