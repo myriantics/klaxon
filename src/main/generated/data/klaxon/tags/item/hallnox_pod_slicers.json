@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "#c:tools/cleaver",
+      "required": false
+    },
+    {
+      "id": "#c:tools/knife",
+      "required": false
+    },
+    {
+      "id": "#minecraft:swords",
+      "required": false
+    },
+    {
+      "id": "#minecraft:axes",
+      "required": false
+    }
+  ]
+}

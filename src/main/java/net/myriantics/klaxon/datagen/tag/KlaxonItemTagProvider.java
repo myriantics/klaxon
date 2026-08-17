@@ -312,6 +312,11 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private void buildMechanicsTags() {
+        getOrCreateTagBuilder(KlaxonItemTags.HALLNOX_POD_SLICERS)
+                .addOptionalTag(KlaxonConventionalItemTags.CLEAVERS)
+                .addOptionalTag(KlaxonConventionalItemTags.KNIVES)
+                .addOptionalTag(ItemTags.SWORDS)
+                .addOptionalTag(ItemTags.AXES);
         getOrCreateTagBuilder(ItemTags.DYEABLE)
                 .add(KlaxonItems.CRESTED_STEEL_HELMET.value());
         getOrCreateTagBuilder(KlaxonItemTags.HEAVY_EQUIPMENT)

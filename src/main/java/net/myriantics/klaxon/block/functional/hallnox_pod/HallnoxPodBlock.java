@@ -11,6 +11,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -36,6 +37,7 @@ import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonParticleTypes;
 import net.myriantics.klaxon.registry.worldgen.KlaxonSaplingGenerators;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -216,6 +218,11 @@ public class HallnoxPodBlock extends SaplingBlock implements Fallable, SimpleWat
         if (!world.isClientSide() && offsetPos.equals(neighborPos)) world.scheduleTick(pos, this, FALLING_DELAY);
 
         return state;
+    }
+
+    @Override
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        return player.getMainHandItem().is(KlaxonItemTags.HALLNOX_POD_SLICERS) ? 1.0f : super.getDestroyProgress(state, player, level, pos);
     }
 
     // don't grow when connected to a tree or if it's been sheared

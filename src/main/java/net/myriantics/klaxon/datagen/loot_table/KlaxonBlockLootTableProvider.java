@@ -2,21 +2,32 @@ package net.myriantics.klaxon.datagen.loot_table;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.item.KlaxonItems;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -117,7 +128,7 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(KlaxonBlocks.HALLNOX_TRAPDOOR);
         dropSelf(KlaxonBlocks.HALLNOX_PRESSURE_PLATE);
         dropSelf(KlaxonBlocks.HALLNOX_BUTTON);
-        dropSelf(KlaxonBlocks.HALLNOX_POD);
+        hallnoxPodSlicing(KlaxonBlocks.HALLNOX_POD.value(), KlaxonItems.HALLNOX_SLICE.value(), 2, 4);
         dropPottedContents(KlaxonBlocks.POTTED_HALLNOX_POD);
         dropSelf(KlaxonBlocks.HALLNOX_WART_BLOCK);
         dropSelf(KlaxonBlocks.HALLNOX_SIGN);
@@ -139,6 +150,48 @@ public class KlaxonBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     private void dropSelf(Holder<Block> holder) {
         dropSelf(holder.value());
+    }
+
+    private void hallnoxPodSlicing(Block block, Item slice, int min, int max) {
+        HolderLookup.RegistryLookup<Enchantment> registryLookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
+        this.add(
+                block,
+                LootTable.lootTable().withPool(LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0f))
+                        .add(
+                                this.applyExplosionCondition(
+                                        block,
+                                        LootItem.lootTableItem(block)
+                                                .when(
+                                                        AnyOfCondition.anyOf(
+                                                                MatchTool.toolMatches(
+                                                                        ItemPredicate.Builder.item()
+                                                                                .withSubPredicate(
+                                                                                        ItemSubPredicates.ENCHANTMENTS,
+                                                                                        ItemEnchantmentsPredicate.enchantments(List.of(new EnchantmentPredicate(registryLookup.getOrThrow(Enchantments.SILK_TOUCH), MinMaxBounds.Ints.atLeast(1))))
+                                                                                )
+                                                                ),
+                                                                InvertedLootItemCondition.invert(
+                                                                        MatchTool.toolMatches(
+                                                                                ItemPredicate.Builder.item()
+                                                                                        .of(KlaxonItemTags.HALLNOX_POD_SLICERS)
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                                .otherwise(
+                                                        this.applyExplosionCondition(
+                                                                slice,
+                                                                LootItem.lootTableItem(slice)
+                                                                        .apply(
+                                                                                SetItemCountFunction.setCount(UniformGenerator.between(min, max))
+                                                                        )
+                                                        )
+                                                )
+                                )
+                        )
+                )
+        );
     }
 
     private void faultyHeavyGatedPressurePlate(Block block) {

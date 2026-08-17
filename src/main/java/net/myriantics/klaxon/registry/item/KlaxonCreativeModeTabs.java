@@ -109,6 +109,7 @@ public abstract class KlaxonCreativeModeTabs {
 
                 // hallnox
                 entries.accept(KlaxonItems.HALLNOX_POD.value());
+                entries.accept(KlaxonItems.HALLNOX_SLICE.value());
 
                 // plates
                 entries.accept(KlaxonItems.IRON_PLATE.value());
