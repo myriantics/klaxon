@@ -17,29 +17,23 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlockEntity;
+import net.myriantics.klaxon.mechanics.turbine_generator.TurbineGeneratorUtil;
+import net.myriantics.klaxon.mechanics.turbine_generator.power_source.TurbineGeneratorPowerSource;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.util.storage.item.ContainerPartition;
 import net.myriantics.klaxon.util.storage.item.KlaxonBaseSidedContainerBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEntity {
+public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEntity implements TurbineGeneratorPowerSource {
+
+    private static final int AFFECTED_RANGE = 5;
+    private static final int TURBINE_GENERATOR_SCANNING_INTERVAL = 10;
 
     protected ContainerPartition fuelPartition;
     protected TurbineGeneratorBlockEntity turbineGeneratorCache = null;
@@ -82,7 +76,7 @@ public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEn
     }
 
     @Override
-    protected ContainerPartition getAccessForDirection(@Nullable Direction side) {
+    protected ContainerPartition getAccessForDirection(Direction side) {
         return side == Direction.UP || side == this.getFacing() ? null : this.fuelPartition;
     }
 
@@ -120,18 +114,17 @@ public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEn
             // affect turbine generator
             if (this.isLit()) {
                 // re-validate turbine generator cache
-                if (level.getServer().getTickCount() % 5 == 0) {
-                    this.turbineGeneratorCache = level.getBlockEntity(this.worldPosition.relative(Direction.UP)) instanceof TurbineGeneratorBlockEntity blockEntity ? blockEntity : null;
+                if (level.getServer().getTickCount() % TURBINE_GENERATOR_SCANNING_INTERVAL == 0) {
+                    this.turbineGeneratorCache = TurbineGeneratorUtil.findTurbineGenerator(level, blockPos, Direction.UP, AFFECTED_RANGE);
                 }
 
                 if (this.turbineGeneratorCache != null) {
-                    this.turbineGeneratorCache.additionBoost(BOOST_RL, 0.5 * this.speed, 1);
-                    this.turbineGeneratorCache.coupleForTicks(1);
+                    this.turbineGeneratorCache.couple(this, TURBINE_GENERATOR_SCANNING_INTERVAL);
                 }
             }
         }
 
-        // if we need to update lit state, do so
+        // if we need to update lit turbineState, do so
         if (litAtTickStart != this.isLit()) {
             editsMade = true;
             blockState = blockState.setValue(FurnaceGeneratorBlock.LIT, this.isLit());
@@ -202,13 +195,29 @@ public class FurnaceGeneratorBlockEntity extends KlaxonBaseSidedContainerBlockEn
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.initialFuelDuration = this.getFuelTicksForItem(this.getFuelStack().getItem());
+        this.initialFuelDuration = Math.max(tag.getInt(KlaxonNBTIds.INITIAL_FUEL_DURATION), 0);
         this.remainingFuelDuration = Math.clamp(tag.getInt(KlaxonNBTIds.REMAINING_FUEL_DURATION), 0, this.initialFuelDuration);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        tag.putInt(KlaxonNBTIds.INITIAL_FUEL_DURATION, this.initialFuelDuration);
         tag.putInt(KlaxonNBTIds.REMAINING_FUEL_DURATION, this.remainingFuelDuration);
+    }
+
+    @Override
+    public double getTargetVelocity() {
+        return 0.5 * this.speed;
+    }
+
+    @Override
+    public void turbinePowerTick(TurbineGeneratorBlockEntity blockEntity, ServerLevel serverLevel, BlockPos turbinePos, BlockState turbineState) {
+        TurbineGeneratorPowerSource.super.turbinePowerTick(blockEntity, serverLevel, turbinePos, turbineState);
+    }
+
+    @Override
+    public boolean stillValid() {
+        return this.isLit();
     }
 }

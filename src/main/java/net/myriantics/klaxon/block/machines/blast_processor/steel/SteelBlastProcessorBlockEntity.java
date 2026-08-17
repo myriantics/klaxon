@@ -37,7 +37,6 @@ import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.storage.item.ContainerPartition;
 import net.myriantics.klaxon.util.storage.item.KlaxonStorageUtil;
-import org.jetbrains.annotations.Nullable;
 
 public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket> {
 
@@ -193,7 +192,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
     }
 
     @Override
-    protected ContainerPartition getAccessForDirection(@Nullable Direction side) {
+    protected ContainerPartition getAccessForDirection(Direction side) {
         Direction facing = this.getFacing();
         if (side == facing.getOpposite() || side == Direction.DOWN) { // if back or down do catalyst
             return this.catalystPartition;

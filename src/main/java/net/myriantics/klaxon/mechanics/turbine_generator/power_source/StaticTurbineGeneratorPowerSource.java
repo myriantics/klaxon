@@ -22,13 +22,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
-public class StaticTurbineGeneratorPowerSource {
+public class StaticTurbineGeneratorPowerSource implements TurbineGeneratorPowerSource {
 
     public static final Codec<StaticTurbineGeneratorPowerSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BlockPredicate.CODEC.fieldOf("block_predicate").validate(StaticTurbineGeneratorPowerSource::validateBlockPredicate).forGetter(i -> i.predicate),
             SidednessChecker.CODEC.optionalFieldOf("sidedness_checker").forGetter(i -> i.checker),
-            Codec.intRange(0, TurbineGeneratorBlockEntity.MAX_POWER_SOURCE_RANGE).optionalFieldOf("max_range", 0).forGetter(i -> i.range),
-            Codec.DOUBLE.fieldOf("target_velocity").validate(aLong -> aLong > 0 ? DataResult.success(aLong) : DataResult.error(() -> "Target velocity must be greater than 0")).forGetter(i -> i.targetVelocity)
+            Codec.intRange(0, TurbineGeneratorBlockEntity.MAX_STATIC_POWER_SOURCE_RANGE).optionalFieldOf("max_range", 0).forGetter(i -> i.range),
+            Codec.doubleRange(0, Double.MAX_VALUE).fieldOf("target_velocity").validate(aLong -> aLong > 0 ? DataResult.success(aLong) : DataResult.error(() -> "Target velocity must be greater than 0")).forGetter(i -> i.targetVelocity)
     ).apply(instance, StaticTurbineGeneratorPowerSource::new));
 
     private static final Pair<StaticTurbineGeneratorPowerSource, Tag> EMPTY_PAIR = Pair.of(null, null);
@@ -49,6 +49,7 @@ public class StaticTurbineGeneratorPowerSource {
         return offset < this.range;
     }
 
+    @Override
     public double getTargetVelocity() {
         return this.targetVelocity;
     }
@@ -61,9 +62,8 @@ public class StaticTurbineGeneratorPowerSource {
         return this.checker.isEmpty() || this.checker.get().canPermitDirection(generatorFacing);
     }
 
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        CODEC.encode(this, registries.createSerializationContext(NbtOps.INSTANCE), tag);
-        return tag;
+    public Tag save(Tag tag, HolderLookup.Provider registries) {
+        return CODEC.encode(this, registries.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
     }
 
     public static @Nullable StaticTurbineGeneratorPowerSource load(CompoundTag tag, HolderLookup.Provider registries) {
@@ -90,7 +90,7 @@ public class StaticTurbineGeneratorPowerSource {
         }
 
         public Builder range(int range) {
-            if (range < 1 || range > TurbineGeneratorBlockEntity.MAX_POWER_SOURCE_RANGE) {
+            if (range < 1 || range > TurbineGeneratorBlockEntity.MAX_STATIC_POWER_SOURCE_RANGE) {
                 throw new UnsupportedOperationException("Range must be between 1 & 32!");
             }
             this.range = range;

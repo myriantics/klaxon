@@ -59,5 +59,5 @@ public abstract class KlaxonBaseSidedContainerBlockEntity extends KlaxonBaseCont
         }
     }
 
-    protected abstract ContainerPartition getAccessForDirection(@Nullable Direction side);
+    protected abstract ContainerPartition getAccessForDirection(Direction side);
 }

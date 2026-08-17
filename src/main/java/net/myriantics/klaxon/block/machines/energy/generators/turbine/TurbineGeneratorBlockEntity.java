@@ -15,11 +15,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.myriantics.klaxon.mechanics.turbine_generator.TurbineGeneratorUtil;
 import net.myriantics.klaxon.mechanics.turbine_generator.boost.TurbineGeneratorBoostManager;
+import net.myriantics.klaxon.mechanics.turbine_generator.power_source.TurbineGeneratorPowerSource;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
@@ -36,11 +37,11 @@ import java.util.stream.Collectors;
 
 public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity implements KlaxonEnergyStorageProvider {
 
-    public static final int MAX_POWER_SOURCE_RANGE = 32;
+    public static final int MAX_STATIC_POWER_SOURCE_RANGE = 32;
     protected long storedPower = 0;
     protected double velocity = 0;
 
-    protected StaticTurbineGeneratorPowerSource powerSource = null;
+    protected final PowerSourceHandler powerSourceHandler = new PowerSourceHandler();
     protected final TurbineGeneratorBoostManager boostManager = new TurbineGeneratorBoostManager(this);
 
     public static final float ACCELERATION_FACTOR = 0.4f;
@@ -48,7 +49,6 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     protected final EnergyStorage generatedPowerStorage = new TurbineGeneratorEnergyStorage();
     protected @Nullable EnergyStorage targetStorageCache;
     private boolean initialized = false;
-    private int coupledTicks = 0;
 
     protected ContainerPartition turbinePartition;
 
@@ -120,15 +120,8 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         // tick boosts
         this.boostManager.tick();
 
-        // 4000 = 500 * 8
-
-        // reassess power sources every 10 ticks unless coupled
-
-        if (this.isCoupled()) {
-            this.coupledTicks--;
-        } else if (level.getServer().getTickCount() % 10 == 0) {
-            this.reassessPowerSource(level, pos, state);
-        }
+        // tick power sources
+        this.powerSourceHandler.tick(level, pos, state);
 
         // update velocity
         double targetVelocity = this.getTargetVelocity();
@@ -155,47 +148,8 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         this.setChanged();
     }
 
-    protected void reassessPowerSource(ServerLevel level, BlockPos pos, BlockState state) {
-        Direction facing = this.getFacing();
-
-        Set<StaticTurbineGeneratorPowerSource> powerSources = level.registryAccess().lookupOrThrow(KlaxonRegistries.STATIC_TURBINE_GENERATOR_POWER_SOURCE).listElements().map(Holder::value).filter(source -> source.canBeValidForDirection(facing)).collect(Collectors.toSet());
-        for (int i = 0; i < MAX_POWER_SOURCE_RANGE; i++) {
-
-            // trim power sources that are out of range
-            final int distance = i;
-            powerSources.removeIf(source -> !source.isWithinRange(distance));
-
-            // don't bother checking for power sources if we have no more valid ones in the registry
-            if (powerSources.isEmpty()) {
-                break;
-            }
-
-            // shift blockpos and check blockstate
-            BlockPos offsetPos = pos.relative(facing, i + 1);
-            BlockInWorld block = new BlockInWorld(level, offsetPos, false);
-            if (this.stateConductsAirflow(level, offsetPos, block.getState())) {
-                continue;
-            }
-
-            // if we can't conduct airflow, check if we've hit a power source.
-            for (StaticTurbineGeneratorPowerSource source : powerSources) {
-                if (source.test(block, facing)) {
-                    this.setPowerSource(source);
-                    return;
-                }
-            }
-
-            // if all attempts to find a power source from the nonconductive block failed, clear power source.
-            this.setPowerSource(null);
-        }
-    }
-
-    protected void setPowerSource(@Nullable StaticTurbineGeneratorPowerSource source) {
-        this.powerSource = source;
-    }
-
     protected double getTargetVelocity() {
-        return this.boostManager.modify(this.powerSource == null ? 0 : this.powerSource.getTargetVelocity());
+        return this.boostManager.modify(this.powerSourceHandler.getTargetVelocity());
     }
 
     public void additionBoost(ResourceLocation boostRl, double boostAmount, int boostDuration) {
@@ -206,25 +160,13 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         this.boostManager.multiplicationBoost(boostRl, boostMultiplier, boostDuration);
     }
 
-    public void coupleForTicks(int ticks) {
-        this.setPowerSource(null);
-        this.coupledTicks = ticks;
+    public void couple(TurbineGeneratorPowerSource source, int coupledTicks) {
+        this.powerSourceHandler.setPowerSource(source);
+        this.powerSourceHandler.setCoupledTicks(coupledTicks);
     }
 
-    public void decouple() {
-        this.coupledTicks = 0;
-    }
-
-    public boolean isCoupled() {
-        return this.coupledTicks > 0;
-    }
-
-    protected boolean stateConductsAirflow(Level level, BlockPos pos, BlockState state) {
-        return state.isAir();
-    }
-
-    protected boolean stateObstructsAirflow(Level level, BlockPos pos, BlockState state) {
-        return false;
+    public void setCoupledTicks(int ticks) {
+        this.powerSourceHandler.setCoupledTicks(ticks);
     }
 
     @Override
@@ -232,9 +174,8 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         super.saveAdditional(tag, registries);
         tag.putDouble(KlaxonNBTIds.VELOCITY, this.velocity);
         tag.putLong(KlaxonNBTIds.STORED_POWER, this.storedPower);
-        tag.putInt(KlaxonNBTIds.COUPLED_TICKS, this.coupledTicks);
-        if (this.powerSource instanceof StaticTurbineGeneratorPowerSource staticPowerSource) {
-            tag.put(KlaxonNBTIds.STATIC_POWER_SOURCE, staticPowerSource.save(new CompoundTag(), registries));
+        if (this.powerSourceHandler.hasPowerSource()) {
+            tag.put(KlaxonNBTIds.POWER_SOURCE_HANDLER, this.powerSourceHandler.save(new CompoundTag(), registries));
         }
     }
 
@@ -243,9 +184,8 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         super.loadAdditional(tag, registries);
         this.velocity = Math.max(tag.getDouble(KlaxonNBTIds.VELOCITY), 0);
         this.storedPower = Math.max(tag.getLong(KlaxonNBTIds.STORED_POWER), 0);
-        this.coupledTicks = Math.max(tag.getInt(KlaxonNBTIds.COUPLED_TICKS), 0);
-        if (tag.contains(KlaxonNBTIds.STATIC_POWER_SOURCE) && StaticTurbineGeneratorPowerSource.load(tag.getCompound(KlaxonNBTIds.STATIC_POWER_SOURCE), registries) instanceof StaticTurbineGeneratorPowerSource powerSource) {
-            this.powerSource = powerSource;
+        if (tag.contains(KlaxonNBTIds.POWER_SOURCE_HANDLER)) {
+            this.powerSourceHandler.load(tag.getCompound(KlaxonNBTIds.POWER_SOURCE_HANDLER), registries);
         }
     }
 
@@ -256,6 +196,99 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     @Override
     public @Nullable EnergyStorage getEnergyStorageForSide(@Nullable Direction direction) {
         return direction == null || direction == this.getFacing().getOpposite() ? this.generatedPowerStorage : null;
+    }
+
+    protected final class PowerSourceHandler {
+        private static final int MAX_COUPLED_TICKS = 100;
+        private static final int STATIC_POWER_SOURCE_POLLING_INTERVAL = 10;
+
+        private @Nullable TurbineGeneratorPowerSource powerSource = null;
+        private int coupledTicks = 0;
+
+        private void tick(ServerLevel serverLevel, BlockPos pos, BlockState state) {
+            if (this.powerSource != null) {
+                this.powerSource.turbinePowerTick(TurbineGeneratorBlockEntity.this, serverLevel, pos, state);
+                if (!this.powerSource.stillValid()) {
+                    this.powerSource = null;
+                    this.coupledTicks = 0;
+                }
+            }
+            if (this.coupledTicks > 0) {
+                this.coupledTicks--;
+            } else {
+                if (serverLevel.getServer().getTickCount() % STATIC_POWER_SOURCE_POLLING_INTERVAL == 0) {
+                    this.reassessStaticPowerSource(serverLevel, pos, state);
+                }
+            }
+        }
+
+        private void reassessStaticPowerSource(ServerLevel level, BlockPos pos, BlockState state) {
+            Direction facing = TurbineGeneratorBlockEntity.this.getFacing();
+
+            // get all static power sources that could potentially work for the turbine's orientation
+            Set<StaticTurbineGeneratorPowerSource> powerSources = level.registryAccess().lookupOrThrow(KlaxonRegistries.STATIC_TURBINE_GENERATOR_POWER_SOURCE).listElements().map(Holder::value).filter(source -> source.canBeValidForDirection(facing)).collect(Collectors.toSet());
+            for (int i = 0; i < MAX_STATIC_POWER_SOURCE_RANGE; i++) {
+
+                // trim power sources that are out of range
+                final int distance = i;
+                powerSources.removeIf(source -> !source.isWithinRange(distance));
+
+                // don't bother checking for power sources if we have no more valid ones in the registry
+                if (powerSources.isEmpty()) {
+                    break;
+                }
+
+                // shift blockpos and check blockstate
+                BlockPos offsetPos = pos.relative(facing, i + 1);
+                BlockInWorld block = new BlockInWorld(level, offsetPos, false);
+                if (TurbineGeneratorUtil.stateConductsAirflow(level, offsetPos, block.getState(), facing.getOpposite())) {
+                    continue;
+                }
+
+                // if we can't conduct airflow, check if we've hit a power source.
+                for (StaticTurbineGeneratorPowerSource source : powerSources) {
+                    if (source.test(block, facing)) {
+                        this.setPowerSource(source);
+                        return;
+                    }
+                }
+
+                // if all attempts to find a power source from the nonconductive block failed, clear power source.
+                this.setPowerSource(null);
+            }
+        }
+
+        public boolean hasPowerSource() {
+            return this.powerSource != null || this.coupledTicks > 0;
+        }
+
+        public double getTargetVelocity() {
+            return this.powerSource == null ? 0 : this.powerSource.getTargetVelocity();
+        }
+
+        private void setCoupledTicks(int coupledTicks) {
+            this.coupledTicks = Math.clamp(coupledTicks, 0, MAX_COUPLED_TICKS);
+        }
+
+        private void setPowerSource(@Nullable TurbineGeneratorPowerSource powerSource) {
+            this.powerSource = powerSource;
+        }
+
+        protected CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+            if (this.coupledTicks > 0) {
+                tag.putInt(KlaxonNBTIds.COUPLED_TICKS, this.coupledTicks);
+            } else if (this.powerSource instanceof StaticTurbineGeneratorPowerSource staticPowerSource) {
+                tag.put(KlaxonNBTIds.STATIC_POWER_SOURCE, staticPowerSource.save(new CompoundTag(), registries));
+            }
+            return tag;
+        }
+
+        protected void load(CompoundTag tag, HolderLookup.Provider registries) {
+            this.setCoupledTicks(tag.getInt(KlaxonNBTIds.COUPLED_TICKS));
+            if (tag.contains(KlaxonNBTIds.STATIC_POWER_SOURCE) && StaticTurbineGeneratorPowerSource.load(tag.getCompound(KlaxonNBTIds.STATIC_POWER_SOURCE), registries) instanceof StaticTurbineGeneratorPowerSource powerSource) {
+                this.powerSource = powerSource;
+            }
+        }
     }
 
     private final class TurbineGeneratorEnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage {
@@ -282,7 +315,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
             long extracted = Math.min(maxAmount, this.getAmount());
 
             if (extracted > 0) {
-                updateSnapshots(transaction);
+                this.updateSnapshots(transaction);
                 TurbineGeneratorBlockEntity.this.storedPower -= extracted;
                 return extracted;
             }

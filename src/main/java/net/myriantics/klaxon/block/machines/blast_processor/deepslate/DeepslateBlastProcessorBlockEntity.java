@@ -175,7 +175,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     }
 
     @Override
-    protected ContainerPartition getAccessForDirection(@Nullable Direction side) {
+    protected ContainerPartition getAccessForDirection(Direction side) {
         Direction facing = this.getFacing();
         if (side == BlockDirectionHelper.getLeft(facing) || side == BlockDirectionHelper.getRight(facing)) { // catalyst is only accessible from the sides on this
             return this.catalystPartition;
