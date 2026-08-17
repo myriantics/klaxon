@@ -3,13 +3,14 @@ package net.myriantics.klaxon.block.machines.energy.generators.turbine;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.windcharge.WindCharge;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Explosion;
@@ -25,7 +26,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.myriantics.klaxon.block.machines.energy.storage.power_bank.BasePowerBankBlockEntity;
+import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
@@ -36,6 +37,8 @@ public class TurbineGeneratorBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final MapCodec<TurbineGeneratorBlock> CODEC = simpleCodec(TurbineGeneratorBlock::new);
+
+    private static final ResourceLocation WIND_CHARGE_BOOST_ID = KlaxonCommon.locate("explosion");
 
     public TurbineGeneratorBlock(Properties properties) {
         super(properties);
@@ -88,13 +91,18 @@ public class TurbineGeneratorBlock extends BaseEntityBlock {
     @Override
     protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
         super.onProjectileHit(level, state, hit, projectile);
+        if (projectile instanceof WindCharge && level.getBlockEntity(hit.getBlockPos()) instanceof TurbineGeneratorBlockEntity blockEntity) {
+            blockEntity.additionBoost(WIND_CHARGE_BOOST_ID, 10, 20);
+            blockEntity.multiplicationBoost(WIND_CHARGE_BOOST_ID, 1.5, 20);
+        }
     }
 
     @Override
     protected void onExplosionHit(BlockState state, Level level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
         super.onExplosionHit(state, level, pos, explosion, dropConsumer);
         if (explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof TurbineGeneratorBlockEntity blockEntity) {
-            // blockEntity.boost();
+            blockEntity.additionBoost(WIND_CHARGE_BOOST_ID, 5, 20);
+            blockEntity.multiplicationBoost(WIND_CHARGE_BOOST_ID, 1.25, 20);
         }
     }
 

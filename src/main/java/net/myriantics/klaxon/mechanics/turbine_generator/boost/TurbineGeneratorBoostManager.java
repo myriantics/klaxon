@@ -65,7 +65,7 @@ public final class TurbineGeneratorBoostManager {
 
     public void additionBoost(ResourceLocation boostRl, double boostAmount, int boostDuration) {
         @Nullable TurbineGeneratorBoostInstance.AddToBase existing = this.additionBoostMap.get(boostRl);
-        if (existing == null || existing.getAddedValue() != boostAmount) {
+        if (existing == null || existing.getAddedValue() < boostAmount) {
             this.additionBoostMap.put(boostRl, new TurbineGeneratorBoostInstance.AddToBase(boostDuration, boostAmount));
             this.recomputeAdditionCache();
         } else {
@@ -75,7 +75,7 @@ public final class TurbineGeneratorBoostManager {
 
     public void multiplicationBoost(ResourceLocation boostRl, double boostMultiplier, int boostDuration) {
         @Nullable TurbineGeneratorBoostInstance.MultiplyFinal existing = this.multiplicationBoostMap.get(boostRl);
-        if (existing == null || existing.getMultiplyValue() != boostMultiplier) {
+        if (existing == null || existing.getMultiplyValue() < boostMultiplier) {
             this.multiplicationBoostMap.put(boostRl, new TurbineGeneratorBoostInstance.MultiplyFinal(boostDuration, boostMultiplier));
             this.recomputeMultiplicationCache();
         } else {
