@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.GrappleClawEntityRenderer;
+import net.myriantics.klaxon.entity.OminousDeepslateBlastProcessorEntityRenderer;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 
@@ -14,6 +15,7 @@ public abstract class KlaxonEntityRenderers {
 
     static {
         register(KlaxonEntityTypes.GRAPPLE_CLAW, GrappleClawEntityRenderer::new);
+        register(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR, OminousDeepslateBlastProcessorEntityRenderer::new);
     }
 
     public static void init() {

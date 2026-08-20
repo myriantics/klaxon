@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_processor.OminousDeepslateBlastProcessorEntity;
 
 public abstract class KlaxonEntityTypes {
 
@@ -18,6 +19,13 @@ public abstract class KlaxonEntityTypes {
                     .eyeHeight(0.4f)
                     .clientTrackingRange(4)
                     .updateInterval(20)
+    );
+    public static final Holder<EntityType<OminousDeepslateBlastProcessorEntity>> OMINOUS_DEEPSLATE_BLAST_PROCESSOR = register(
+            "ominous_deepslate_blast_processor",
+            EntityType.Builder.of(OminousDeepslateBlastProcessorEntity::new, MobCategory.MISC)
+                    .sized(1.0f, 1.0f)
+                    .eyeHeight(0.5f)
+                    .clientTrackingRange(10)
     );
 
     public static void init() {

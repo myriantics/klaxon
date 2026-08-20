@@ -79,6 +79,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonExplosiveCatalystHandlers.init();
 		KlaxonExplosiveCatalystTransformerTypes.init();
 		KlaxonCommands.init();
+		KlaxonDefaultEntityAttributes.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}
