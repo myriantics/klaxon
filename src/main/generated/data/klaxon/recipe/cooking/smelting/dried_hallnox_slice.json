@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 0.2,
+  "group": "dried_hallnox_slice",
+  "ingredient": {
+    "item": "klaxon:hallnox_slice"
+  },
+  "result": {
+    "id": "klaxon:dried_hallnox_slice"
+  }
+}

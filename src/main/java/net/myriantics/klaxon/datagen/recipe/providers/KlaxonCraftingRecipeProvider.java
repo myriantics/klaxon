@@ -35,6 +35,45 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
         buildWoodCraftingRecipes();
         buildEquipmentCraftingRecipes();
         buildSpecialCraftingRecipes();
+        buildFoodCraftingRecipes();
+    }
+
+    private void buildFoodCraftingRecipes() {
+        this.addShapelessCraftingRecipe(
+                NonNullList.of(
+                        Ingredient.EMPTY,
+                        Ingredient.of(KlaxonItems.HALLNOX_SLICE.value()),
+                        Ingredient.of(KlaxonItems.HALLNOX_SLICE.value()),
+                        Ingredient.of(Items.BOWL),
+                        Ingredient.of(Items.GLOW_LICHEN, Items.GLOW_BERRIES)
+                ),
+                new ItemStack(KlaxonItems.ILLUMINATING_SOUP),
+                CraftingBookCategory.MISC,
+                null
+        );
+        this.addShapelessCraftingRecipe(
+                NonNullList.of(
+                        Ingredient.EMPTY,
+                        Ingredient.of(KlaxonItems.HALLNOX_SLICE.value()),
+                        Ingredient.of(KlaxonItems.HALLNOX_SLICE.value()),
+                        Ingredient.of(Items.BOWL),
+                        Ingredient.of(Items.GLOWSTONE_DUST, Items.BLAZE_POWDER)
+                ),
+                new ItemStack(KlaxonItems.INCANDESCENT_STEW),
+                CraftingBookCategory.MISC,
+                null
+        );
+        this.addShapelessCraftingRecipe(
+                NonNullList.of(
+                        Ingredient.EMPTY,
+                        Ingredient.of(KlaxonItems.DRIED_HALLNOX_SLICE.value()),
+                        Ingredient.of(KlaxonItems.DRIED_HALLNOX_SLICE.value()),
+                        Ingredient.of(Items.GLOW_LICHEN)
+                ),
+                new ItemStack(Items.GLOWSTONE_DUST, 2),
+                CraftingBookCategory.MISC,
+                null
+        );
     }
 
     private void buildSpecialCraftingRecipes() {
@@ -91,6 +130,20 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                 Ingredient.of(KlaxonItems.STEEL_WIRE_SPOOL_BLOCK.value()),
                 Ingredient.of(KlaxonItemTags.GEAR_GRIP_MATERIALS),
                 new ItemStack(KlaxonItems.GRAPPLE_WINCH)
+        );
+        addShapedCraftingRecipe(
+                Map.of(
+                        'A', Ingredient.of(Items.ARROW),
+                        'H', Ingredient.of(KlaxonItems.HALLNOX_SLICE.value())
+                ),
+                new String[] {
+                        " H ",
+                        "HAH",
+                        " H "
+                },
+                new ItemStack(Items.SPECTRAL_ARROW, 2),
+                CraftingBookCategory.EQUIPMENT,
+                null
         );
     }
 

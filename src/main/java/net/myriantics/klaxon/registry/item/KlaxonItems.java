@@ -4,8 +4,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.myriantics.klaxon.KlaxonCommon;
@@ -117,6 +120,30 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Holder<Item> RUBBER_GLOB = registerReallySimpleItem("rubber_glob");
     public static final Holder<Item> COPPER_NUGGET = registerReallySimpleItem("copper_nugget");
     public static final Holder<Item> HALLNOX_SLICE = registerSimpleItem("hallnox_slice", new Item(new Item.Properties()));
+    public static final Holder<Item> DRIED_HALLNOX_SLICE = registerReallySimpleItem("dried_hallnox_slice");
+
+    // foods
+    public static final Holder<Item> ILLUMINATING_SOUP = registerItem("illuminating_soup", new Item(new KlaxonItemProperties()
+            .food(builder -> builder
+                    .nutrition(4)
+                    .usingConvertsTo(Items.BOWL)
+                    .alwaysEdible()
+                    .effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 2400), 1.0f)
+            )
+            .maxCount(1)
+            .getProperties()
+    ));
+    public static final Holder<Item> INCANDESCENT_STEW = registerItem("incandescent_stew", new Item(new KlaxonItemProperties()
+            .food(builder -> builder
+                    .nutrition(6)
+                    .usingConvertsTo(Items.BOWL)
+                    .alwaysEdible()
+                    .effect(new MobEffectInstance(MobEffects.GLOWING, 2400), 1.0f)
+                    .effect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800), 1.0f)
+            )
+            .maxCount(1)
+            .getProperties()
+    ));
 
     // plates / sheets
     public static final Holder<Item> STEEL_PLATE = registerReallySimpleItem("steel_plate");

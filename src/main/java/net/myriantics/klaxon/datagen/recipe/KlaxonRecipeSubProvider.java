@@ -90,6 +90,12 @@ public abstract class KlaxonRecipeSubProvider {
                                                float experience, int cookingTime,
                                                @Nullable String group,
                                                final ResourceCondition... conditions) {
+        addCampfireCookingRecipe(
+                input, output, experience, cookingTime * 3,
+                CookingBookCategory.FOOD,
+                group,
+                conditions
+        );
         addSmokingSmeltingRecipe(
                 input, output, experience, (int) (cookingTime * 0.5),
                 CookingBookCategory.FOOD, group, conditions);
@@ -136,6 +142,29 @@ public abstract class KlaxonRecipeSubProvider {
         SmeltingRecipe recipe = new SmeltingRecipe(group, category, input, output, experience, cookingTime);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addCampfireCookingRecipe(Ingredient input, ItemStack output,
+                                         float experience, int cookingTime,
+                                         @Nullable CookingBookCategory category, @Nullable String group,
+                                         final ResourceCondition... conditions) {
+        String outputPath = getItemName(output.getItem());
+
+        ResourceLocation recipeId = provider.computeRecipeIdentifier("cooking/campfire",
+                outputPath,
+                conditions
+        );
+
+        if (category == null) {
+            category = CookingBookCategory.MISC;
+        }
+
+        if (group == null) {
+            group = outputPath;
+        }
+
+        CampfireCookingRecipe cookingRecipe = new CampfireCookingRecipe(group, category, input, output, experience, cookingTime);
+        provider.acceptRecipeWithConditions(exporter, recipeId, cookingRecipe, conditions);
     }
 
     public void addSmokingSmeltingRecipe(Ingredient input, ItemStack output,

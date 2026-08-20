@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "food",
+  "cookingtime": 600,
+  "experience": 0.2,
+  "group": "dried_hallnox_slice",
+  "ingredient": {
+    "item": "klaxon:hallnox_slice"
+  },
+  "result": {
+    "id": "klaxon:dried_hallnox_slice"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "illuminating_soup",
+  "ingredients": [
+    {
+      "item": "klaxon:hallnox_slice"
+    },
+    {
+      "item": "klaxon:hallnox_slice"
+    },
+    {
+      "item": "minecraft:bowl"
+    },
+    [
+      {
+        "item": "minecraft:glow_lichen"
+      },
+      {
+        "item": "minecraft:glow_berries"
+      }
+    ]
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:illuminating_soup"
+  }
+}

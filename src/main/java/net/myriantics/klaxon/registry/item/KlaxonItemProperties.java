@@ -6,11 +6,15 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
+
+import java.util.function.UnaryOperator;
 
 public class KlaxonItemProperties {
 
@@ -42,6 +46,10 @@ public class KlaxonItemProperties {
     public KlaxonItemProperties rarity(Rarity rarity) {
         this.component(DataComponents.RARITY, rarity);
         return this;
+    }
+
+    public KlaxonItemProperties food(UnaryOperator<FoodProperties.Builder> food) {
+        return this.component(DataComponents.FOOD, food.apply(new FoodProperties.Builder()).build());
     }
 
     public KlaxonItemProperties maxDamage(int maxDamage) {

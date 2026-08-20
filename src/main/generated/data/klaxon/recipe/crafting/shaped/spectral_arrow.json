@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "spectral_arrow",
+  "key": {
+    "A": {
+      "item": "minecraft:arrow"
+    },
+    "H": {
+      "item": "klaxon:hallnox_slice"
+    }
+  },
+  "pattern": [
+    " H ",
+    "HAH",
+    " H "
+  ],
+  "result": {
+    "count": 2,
+    "id": "minecraft:spectral_arrow"
+  }
+}

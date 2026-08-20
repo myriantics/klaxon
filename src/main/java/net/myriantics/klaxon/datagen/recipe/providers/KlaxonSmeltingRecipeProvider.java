@@ -38,5 +38,7 @@ public class KlaxonSmeltingRecipeProvider extends KlaxonRecipeSubProvider {
 
     private void buildCookingRecipes() {
         addBlastingAndSmeltingRecipe(Ingredient.of(KlaxonItems.CRUDE_STEEL_MIXTURE.value()), new ItemStack(KlaxonItems.CRUDE_STEEL_INGOT), 1.0f, null, null);
+
+        addFoodProcessingCookingRecipe(Ingredient.of(KlaxonItems.HALLNOX_SLICE.value()), new ItemStack(KlaxonItems.DRIED_HALLNOX_SLICE), 0.2f, 200, null);
     }
 }

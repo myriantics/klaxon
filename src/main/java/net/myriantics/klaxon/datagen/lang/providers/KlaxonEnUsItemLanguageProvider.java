@@ -14,6 +14,7 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
         generateEquipmentTranslations();
         generateMaterialTranslations();
         generateAliasedBlockItemTranslations();
+        generateFoodTranslations();
     }
 
     private void generateEquipmentTranslations() {
@@ -78,6 +79,10 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
         addItem(KlaxonItems.GOLD_PLATE, "Gold Plate");
         addItem(KlaxonItems.COPPER_PLATE, "Copper Plate");
 
+        // slices
+        addItem(KlaxonItems.HALLNOX_SLICE, "Hallnox Slice");
+        addItem(KlaxonItems.DRIED_HALLNOX_SLICE, "Dried Hallnox Slice");
+
         // globs
         addItem(KlaxonItems.RUBBER_GLOB, "Rubber Glob");
 
@@ -89,5 +94,10 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
         addItem(KlaxonItems.IRON_WIRE, "Iron Wire");
         addItem(KlaxonItems.COPPER_WIRE, "Copper Wire");
         addItem(KlaxonItems.GOLD_WIRE, "Gold Wire");
+    }
+
+    private void generateFoodTranslations() {
+        addItem(KlaxonItems.ILLUMINATING_SOUP, "Illuminating Soup");
+        addItem(KlaxonItems.INCANDESCENT_STEW, "Incandescent Stew");
     }
 }

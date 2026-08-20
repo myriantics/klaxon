@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "incandescent_stew",
+  "ingredients": [
+    {
+      "item": "klaxon:hallnox_slice"
+    },
+    {
+      "item": "klaxon:hallnox_slice"
+    },
+    {
+      "item": "minecraft:bowl"
+    },
+    [
+      {
+        "item": "minecraft:glowstone_dust"
+      },
+      {
+        "item": "minecraft:blaze_powder"
+      }
+    ]
+  ],
+  "result": {
+    "count": 1,
+    "id": "klaxon:incandescent_stew"
+  }
+}
