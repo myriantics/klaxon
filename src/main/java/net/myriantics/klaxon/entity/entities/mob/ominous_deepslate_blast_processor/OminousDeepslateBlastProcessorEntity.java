@@ -69,7 +69,7 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
 
     protected double getLevitationVelocity() {
         double targetHoverHeight = this.getTargetHoverHeight();
-        return (targetHoverHeight < 0 ? targetHoverHeight * 1.2 : targetHoverHeight * 0.6) / 20;
+        return (targetHoverHeight < 0 ? targetHoverHeight * 1.2 : targetHoverHeight * 0.3) / 20;
     }
 
     protected double getTargetHoverHeight() {
@@ -81,7 +81,7 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
         }
 
         // if we don't have enough room beneath ceiling, pick a point about midway thru, otherwise use normal target height
-        return distanceToCeiling < 2 ? (distanceToGround + distanceToCeiling + this.getBbHeight()) * 0.7 : this.desiredLevitationHeight - distanceToGround;
+        return distanceToCeiling < 2 ? ((distanceToGround + this.getBbHeight() + distanceToCeiling) * 0.4) - distanceToGround : this.desiredLevitationHeight - distanceToGround;
     }
 
     protected double getFreeAbsYDistanceBetween(Vec3 start, float maxYOffsetThatAlsoIndicatesRaycastDirection) {
