@@ -69,6 +69,8 @@ public abstract class KlaxonBlockTags {
             createTag("steel_blast_processor_exhaust_overwritable_denylist");
     public static final TagKey<Block> STEEL_BLAST_PROCESSOR_FIRE_HOLDERS =
             createTag("steel_blast_processor_fire_holders");
+    public static final TagKey<Block> OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_BLOCKS =
+            createTag("ominous_deepslate_blast_processor_healing_blocks");
 
     // nether reaction tags
     public static final TagKey<Block> NETHER_REACTION_IMMUNE =

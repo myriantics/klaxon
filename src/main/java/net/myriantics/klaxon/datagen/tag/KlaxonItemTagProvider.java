@@ -9,14 +9,15 @@ import net.minecraft.world.item.Items;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.compat.KlaxonCompatItemTags;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
 import java.util.concurrent.CompletableFuture;
 
 public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
-    public KlaxonItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
-        super(output, completableFuture);
+    public KlaxonItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture, KlaxonBlockTagProvider provider) {
+        super(output, completableFuture, provider);
     }
 
     @Override
@@ -441,6 +442,8 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE);
         getOrCreateTagBuilder(KlaxonItemTags.MUFFLER_REMOVERS)
                 .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
+
+        copy(KlaxonBlockTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_BLOCKS, KlaxonItemTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_ITEMS);
     }
 
     private void buildRepairTags() {

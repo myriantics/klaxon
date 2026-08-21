@@ -87,6 +87,8 @@ public abstract class KlaxonItemTags {
             createTag("mufflers");
     public static final TagKey<Item> MUFFLER_REMOVERS =
             createTag("muffler_removers");
+    public static final TagKey<Item> OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_ITEMS =
+            createTag("ominous_deepslate_blast_processor_healing_items");
 
     // enchantment tags
     public static final TagKey<Item> STREAMLINE_ENCHANTABLE =

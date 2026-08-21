@@ -41,8 +41,8 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(KlaxonEnUsLanguageProvider::new);
 
         // tags
-        pack.addProvider(KlaxonItemTagProvider::new);
-        pack.addProvider(KlaxonBlockTagProvider::new);
+		KlaxonBlockTagProvider provider = pack.addProvider(KlaxonBlockTagProvider::new);
+		pack.addProvider(((output, registriesFuture) -> new KlaxonItemTagProvider(output, registriesFuture, provider)));
         pack.addProvider(KlaxonDamageTypeTagProvider::new);
         pack.addProvider(KlaxonEntityTypeTagProvider::new);
         pack.addProvider(KlaxonFluidTagProvider::new);

@@ -365,6 +365,34 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.COMPARATOR);
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS)
                 .addOptionalTag(BlockTags.CAMPFIRES);
+        getOrCreateTagBuilder(KlaxonBlockTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_BLOCKS)
+                .addOptionalTag(ConventionalBlockTags.DEEPSLATE_COBBLESTONES)
+                .add(
+                        Blocks.POLISHED_DEEPSLATE,
+                        Blocks.POLISHED_DEEPSLATE_SLAB,
+                        Blocks.POLISHED_DEEPSLATE_STAIRS,
+                        Blocks.POLISHED_DEEPSLATE_WALL
+                )
+                .add(
+                        Blocks.DEEPSLATE_TILES,
+                        Blocks.DEEPSLATE_TILE_SLAB,
+                        Blocks.DEEPSLATE_TILE_STAIRS,
+                        Blocks.DEEPSLATE_TILE_WALL,
+                        Blocks.CRACKED_DEEPSLATE_TILES
+                )
+                .add(
+                        Blocks.DEEPSLATE_BRICKS,
+                        Blocks.DEEPSLATE_BRICK_SLAB,
+                        Blocks.DEEPSLATE_BRICK_STAIRS,
+                        Blocks.DEEPSLATE_BRICK_WALL,
+                        Blocks.CRACKED_DEEPSLATE_BRICKS
+                )
+                .add(
+                        Blocks.CHISELED_DEEPSLATE
+                )
+                .add(
+                        KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value()
+                );
     }
 
     private void buildVeinmineGroupTags() {

@@ -2,7 +2,10 @@ package net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_proces
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,6 +23,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -53,6 +59,20 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
         if (!this.level().isClientSide() && this.isAlive()) {
             this.tickLevitation();
         }
+    }
+
+    @Override
+    public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
+        ItemStack usedStack = player.getItemInHand(hand);
+        if (usedStack.is(KlaxonItemTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_ITEMS) && this.getHealth() < this.getMaxHealth()) {
+            if (!this.level().isClientSide()) {
+                this.heal(1);
+                usedStack.consume(1, player);
+                this.playSound(KlaxonSoundEvents.BLOCK_DEEPSLATE_BLAST_PROCESSOR_INSERT, random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F);
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return super.interactAt(player, vec, hand);
     }
 
     protected void tickLevitation() {
@@ -117,6 +137,11 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
 
     @Override
     public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        return false;
+    }
+
+    @Override
+    public boolean isAffectedByPotions() {
         return false;
     }
 
