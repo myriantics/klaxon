@@ -77,5 +77,12 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
 
         getOrCreateTagBuilder(EntityTypeTags.IMPACT_PROJECTILES)
                 .add(KlaxonEntityTypes.GRAPPLE_CLAW.value());
+
+        getOrCreateTagBuilder(ConventionalEntityTypeTags.BOSSES)
+                .add(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value());
+        getOrCreateTagBuilder(EntityTypeTags.WITHER_FRIENDS)
+                .add(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value());
+        getOrCreateTagBuilder(EntityTypeTags.CAN_BREATHE_UNDER_WATER)
+                .add(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value());
     }
 }
