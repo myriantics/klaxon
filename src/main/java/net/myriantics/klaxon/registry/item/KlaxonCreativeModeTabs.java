@@ -37,6 +37,8 @@ public abstract class KlaxonCreativeModeTabs {
 
                 entries.accept(KlaxonItems.GRAPPLE_WINCH.value());
                 entries.accept(KlaxonItems.STEEL_GRAPPLE_CLAW.value());
+
+                entries.accept(KlaxonItems.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_SPAWN_EGG.value());
             })).build();
 
     public static final CreativeModeTab KLAXON_MACHINES = FabricItemGroup.builder()

@@ -21,6 +21,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class OminousDeepslateBlastProcessorEntity extends Mob {
 
     protected final float desiredLevitationHeight;
@@ -49,27 +51,37 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide() && this.isAlive()) {
-            this.levitate();
+            this.tickLevitation();
         }
     }
 
-    protected void levitate() {
-        Vec3 original = this.getDeltaMovement();
-        this.setDeltaMovement(original.x, Math.signum(this.getTargetY() - this.getY()) * 0.2, original.z);
+    protected void tickLevitation() {
+        if (Objects.requireNonNull(this.getServer()).getTickCount() % 4 == 0) {
+            double diff = this.getLevitationVelocity();
+            Vec3 motion = this.getDeltaMovement();
+            if (Math.signum(this.getDeltaMovement().y) < 0.5) {
+                this.setDeltaMovement(motion.x, diff, motion.z);
+            } else {
+                this.addDeltaMovement(new Vec3(0, diff, 0));
+            }
+        }
     }
 
-    protected double getTargetY() {
-        double currentY = this.getY();
+    protected double getLevitationVelocity() {
+        double targetHoverHeight = this.getTargetHoverHeight();
+        return (targetHoverHeight < 0 ? targetHoverHeight * 1.2 : targetHoverHeight * 0.6) / 20;
+    }
+
+    protected double getTargetHoverHeight() {
         double distanceToGround = this.getFreeAbsYDistanceBetween(this.position(), this.desiredLevitationHeight * -2);
-        if (this.desiredLevitationHeight - distanceToGround > -this.levitationTolerance && this.desiredLevitationHeight - distanceToGround < this.levitationTolerance) {
-            return currentY;
-        }
         double distanceToCeiling = this.getFreeAbsYDistanceBetween(this.position().add(0, this.getBbHeight(), 0), 2);
-        if (distanceToCeiling < 2) {
-            return currentY + ((distanceToGround + distanceToCeiling) / 2);
-        } else {
-            return currentY + this.desiredLevitationHeight - distanceToGround;
+        // if we've got enough room above and we're within tolerance, make no changes
+        if (distanceToCeiling >= 2 && (this.desiredLevitationHeight - distanceToGround > -this.levitationTolerance && this.desiredLevitationHeight - distanceToGround < this.levitationTolerance)) {
+            return 0;
         }
+
+        // if we don't have enough room beneath ceiling, pick a point about midway thru, otherwise use normal target height
+        return distanceToCeiling < 2 ? (distanceToGround + distanceToCeiling + this.getBbHeight()) * 0.7 : this.desiredLevitationHeight - distanceToGround;
     }
 
     protected double getFreeAbsYDistanceBetween(Vec3 start, float maxYOffsetThatAlsoIndicatesRaycastDirection) {

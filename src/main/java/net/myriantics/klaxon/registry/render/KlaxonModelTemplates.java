@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public abstract class KlaxonModelTemplates {
 
+    public static final ModelTemplate SPAWN_EGG = raw(ResourceLocation.withDefaultNamespace("item/template_spawn_egg"));
     public static final ModelTemplate GRAPPLE_WINCH_3D_SPOOL_6 = item("grapple_winch_3d/spool_6",
             TextureSlot.create("structure"),
             TextureSlot.create("spool"),
@@ -104,6 +105,10 @@ public abstract class KlaxonModelTemplates {
 
     private static ModelTemplate item(String path, TextureSlot... requiredTextureKeys) {
         return new ModelTemplate(Optional.of(KlaxonCommon.locate("item/" + path)), Optional.empty(), requiredTextureKeys);
+    }
+
+    private static ModelTemplate raw(ResourceLocation rl, TextureSlot... requiredTextureKeys) {
+        return new ModelTemplate(Optional.of(rl), Optional.empty(), requiredTextureKeys);
     }
 
     private static ModelTemplate copyTextureMap(String path, ModelTemplate model) {

@@ -21,6 +21,7 @@ public final class KlaxonEnUsEntityTypeLanguageProvider extends KlaxonEnUsLangua
 
     private void generateNonLivingEntities() {
         addEntityType(KlaxonEntityTypes.GRAPPLE_CLAW.value(), "Steel Grapple Claw");
+        addEntityType(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value(), "Ominous Deepslate Blast Processor");
     }
 
     private void generateLivingEntities() {

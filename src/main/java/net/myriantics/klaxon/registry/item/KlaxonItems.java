@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
@@ -16,6 +17,7 @@ import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -108,6 +110,9 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
 
     // alloy blends
     public static final Holder<Item> CRUDE_STEEL_MIXTURE = registerReallySimpleItem("crude_steel_mixture");
+
+    // spawn eggs
+    public static final Holder<Item> OMINOUS_DEEPSLATE_BLAST_PROCESSOR_SPAWN_EGG = registerItem("ominous_deepslate_blast_processor_spawn_egg", new SpawnEggItem(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value(), 0x242424, 0xd5c3c3, new Item.Properties()));
 
     // raw materials
     public static final Holder<Item> STEEL_INGOT = registerReallySimpleItem("steel_ingot");

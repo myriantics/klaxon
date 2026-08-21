@@ -34,6 +34,9 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
         addItem(KlaxonItems.STEEL_CHESTPLATE, "Steel Chestplate");
         addItem(KlaxonItems.STEEL_LEGGINGS, "Steel Leggings");
         addItem(KlaxonItems.STEEL_BOOTS, "Steel Boots");
+
+        // spawn eggs
+        addItem(KlaxonItems.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_SPAWN_EGG, "Ominous Deepslate Blast Processor Spawn Egg");
     }
 
     private void generateAliasedBlockItemTranslations() {

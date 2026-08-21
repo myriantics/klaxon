@@ -3,6 +3,7 @@ package net.myriantics.klaxon.datagen.model;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceKey;
@@ -123,6 +124,10 @@ public abstract class KlaxonItemModelSubProvider {
 
     protected void registerCrestedSteelHelmet() {
         generator.generateLayeredItem(getItemId(KlaxonItems.CRESTED_STEEL_HELMET.unwrapKey().get().location()), KlaxonTextures.CRESTED_STEEL_HELMET_2D_CREST, KlaxonTextures.CRESTED_STEEL_HELMET_2D_BASE);
+    }
+
+    protected void spawnEgg(Holder<Item> item) {
+        generator.generateFlatItem(item.value(), KlaxonModelTemplates.SPAWN_EGG);
     }
 
     protected void registerArmor(Holder<Item> armor) {
