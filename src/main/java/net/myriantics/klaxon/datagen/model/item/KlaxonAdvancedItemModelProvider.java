@@ -20,6 +20,7 @@ public class KlaxonAdvancedItemModelProvider extends KlaxonItemModelSubProvider 
         registerArmor(KlaxonItems.STEEL_BOOTS);
         register2DGrappleWinch();
         register3DGrappleWinch();
-        spawnEgg(KlaxonItems.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_SPAWN_EGG);
+        registerSpawnEgg(KlaxonItems.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_SPAWN_EGG);
+        registerBaseAndOverlay(KlaxonItems.EXPLOSIVE_DEEPSLATE_CHUNK.value());
     }
 }

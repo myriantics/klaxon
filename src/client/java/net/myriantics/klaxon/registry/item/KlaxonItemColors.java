@@ -16,17 +16,18 @@ public abstract class KlaxonItemColors {
 
     static {
         registerDyedComponent(CommonColors.WHITE, KlaxonItems.CRESTED_STEEL_HELMET);
-        registerExplosiveCatalystDataComponent(CommonColors.WHITE, KlaxonItems.MODULAR_EXPLOSIVE_BLOCK);
+        registerExplosiveCatalystDataComponent(CommonColors.WHITE, KlaxonItems.MODULAR_EXPLOSIVE_BLOCK, 0);
+        registerExplosiveCatalystDataComponent(CommonColors.GRAY, KlaxonItems.EXPLOSIVE_DEEPSLATE_CHUNK, 0);
     }
 
     public static void init() {
         KlaxonCommon.LOGGER.info("Initialized KLAXON's Item Colors!");
     }
 
-    private static void registerExplosiveCatalystDataComponent(int defaultColor, Holder<Item> itemHolder) {
+    private static void registerExplosiveCatalystDataComponent(int defaultColor, Holder<Item> itemHolder, int untintedIndex) {
         register(
                 (stack, tintIndex) -> {
-                    if (tintIndex == 0) {
+                    if (tintIndex == untintedIndex) {
                         return CommonColors.WHITE;
                     } else {
                         @Nullable Level level = Minecraft.getInstance().level;

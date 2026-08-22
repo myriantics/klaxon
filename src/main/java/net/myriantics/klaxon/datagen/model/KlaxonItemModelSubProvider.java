@@ -3,7 +3,7 @@ package net.myriantics.klaxon.datagen.model;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.model.ModelTemplate;
+import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceKey;
@@ -126,7 +126,7 @@ public abstract class KlaxonItemModelSubProvider {
         generator.generateLayeredItem(getItemId(KlaxonItems.CRESTED_STEEL_HELMET.unwrapKey().get().location()), KlaxonTextures.CRESTED_STEEL_HELMET_2D_CREST, KlaxonTextures.CRESTED_STEEL_HELMET_2D_BASE);
     }
 
-    protected void spawnEgg(Holder<Item> item) {
+    protected void registerSpawnEgg(Holder<Item> item) {
         generator.generateFlatItem(item.value(), KlaxonModelTemplates.SPAWN_EGG);
     }
 
@@ -140,6 +140,11 @@ public abstract class KlaxonItemModelSubProvider {
         } else {
             throw new IllegalArgumentException(armor + "is not an ArmorItem. Fix.");
         }
+    }
+
+    protected void registerBaseAndOverlay(Item item) {
+        ResourceLocation location = ModelLocationUtils.getModelLocation(item);
+        generator.generateLayeredItem(location, location.withSuffix("/base"), location.withSuffix("/overlay"));
     }
 
     public static ResourceLocation getItemId(String name) {

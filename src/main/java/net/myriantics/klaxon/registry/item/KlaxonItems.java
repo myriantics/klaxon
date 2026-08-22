@@ -80,7 +80,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .withMirroredLeftHandModel()
                     .getProperties()
             ));
-    public static final Holder<Item> EXPLOSIVE_DEEPSLATE_CHUNK = registerSimpleItem("explosive_deepslate_chunk",
+    public static final Holder<Item> EXPLOSIVE_DEEPSLATE_CHUNK = registerItem("explosive_deepslate_chunk",
             new ExplosiveDeepslateChunkItem(new KlaxonItemProperties()
                     .catalystData(ExplosiveCatalystData.ZERO)
                     .maxCount(16)

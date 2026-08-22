@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "klaxon:item/explosive_deepslate_chunk"
+    "layer0": "klaxon:item/explosive_deepslate_chunk/base",
+    "layer1": "klaxon:item/explosive_deepslate_chunk/overlay"
   }
 }
