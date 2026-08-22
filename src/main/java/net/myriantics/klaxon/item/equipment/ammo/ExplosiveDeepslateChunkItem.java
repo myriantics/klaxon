@@ -53,7 +53,7 @@ public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem 
         @Nullable BlockEntity interactedBlockEntity = level.getBlockEntity(interactedPos);
         ItemStack usedStack = context.getItemInHand();
         @Nullable Player player = context.getPlayer();
-        if (player != null && interactedBlockEntity instanceof ExplosiveCatalystVessel vessel && vessel.hasDataReady()) {
+        if (player != null && player.isCreative() && interactedBlockEntity instanceof ExplosiveCatalystVessel vessel && vessel.hasDataReady()) {
             if (!level.isClientSide() && vessel.hasDataReady()) {
                 Component blockName = level.getBlockEntity(interactedPos) instanceof Nameable nameable ? nameable.getDisplayName() : interactedState.getBlock().getName();
                 ExplosiveCatalystData vesselData = Objects.requireNonNullElse(vessel.getRawData(), ExplosiveCatalystData.ZERO);
