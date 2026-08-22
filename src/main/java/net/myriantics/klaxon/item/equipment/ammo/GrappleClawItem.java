@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.level.Level;
-import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.projectile.grapple_claw.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class GrappleClawItem extends Item implements ProjectileItem {

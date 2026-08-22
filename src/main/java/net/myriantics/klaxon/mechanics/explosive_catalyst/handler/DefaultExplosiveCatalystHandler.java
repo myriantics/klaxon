@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
-import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,7 +73,7 @@ public class DefaultExplosiveCatalystHandler extends ExplosiveCatalystHandler {
             ServerLevel level = context.level();
             if (!level.isClientSide()) {
                 level.explode(
-                        context.get(KlaxonExplosiveCatalystContextParams.SOURCE_ENTITY),
+                        context.get(KlaxonExplosiveCatalystContextParams.THIS_ENTITY),
                         this.getDamageSource(context, detonationPosition),
                         this.explosionDamageCalculator(context, data, modifyWorld),
                         detonationPosition.x(),
@@ -94,10 +93,10 @@ public class DefaultExplosiveCatalystHandler extends ExplosiveCatalystHandler {
     @Nullable
     protected DamageSource getDamageSource(ExplosiveCatalystContext context, Position position) {
         if (this.type == null) {
-            return null;
+            return context.level().damageSources().explosion(context.get(KlaxonExplosiveCatalystContextParams.THIS_ENTITY), context.get(KlaxonExplosiveCatalystContextParams.SOURCE_ENTITY));
         } else {
-            Optional<Holder.Reference<DamageType>> domed = context.level().damageSources().damageTypes.getHolder(KlaxonDamageTypes.HALLNOX_POD_DOMED);
-            return new DamageSource(domed.get(), context.get(KlaxonExplosiveCatalystContextParams.SOURCE_ENTITY));
+            Optional<Holder.Reference<DamageType>> ref = context.level().damageSources().damageTypes.getHolder(type);
+            return new DamageSource(ref.get(), context.get(KlaxonExplosiveCatalystContextParams.THIS_ENTITY), context.get(KlaxonExplosiveCatalystContextParams.SOURCE_ENTITY));
         }
     }
 

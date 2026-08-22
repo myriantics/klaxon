@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.projectile.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;

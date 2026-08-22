@@ -13,9 +13,11 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.item.equipment.ammo.ExplosiveDeepslateChunkItem;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 
@@ -78,6 +80,13 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
                     .withMirroredLeftHandModel()
                     .getProperties()
             ));
+    public static final Holder<Item> EXPLOSIVE_DEEPSLATE_CHUNK = registerSimpleItem("explosive_deepslate_chunk",
+            new ExplosiveDeepslateChunkItem(new KlaxonItemProperties()
+                    .catalystData(ExplosiveCatalystData.ZERO)
+                    .maxCount(16)
+                    .getProperties()
+            )
+    );
 
     // armor
     public static final Holder<Item> CRESTED_STEEL_HELMET = registerItem("crested_steel_helmet", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.HELMET, new KlaxonItemProperties()

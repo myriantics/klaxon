@@ -14,6 +14,8 @@ public abstract class KlaxonDamageTypeTags {
     public static final TagKey<DamageType> ELECTRICAL = createTag("electrical");
     public static final TagKey<DamageType> GRAPPLE_WINCH_CABLE_TRANSMISSIBLE = createTag("grapple_winch_cable_transmissible");
 
+    public static final TagKey<DamageType> DETONATES_EXPLOSIVE_DEEPSLATE_CHUNKS = createTag("detonates_explosive_deepslate_chunks");
+
     private static TagKey<DamageType> createTag(String name) {
         return TagKey.create(Registries.DAMAGE_TYPE, KlaxonCommon.locate(name));
     }

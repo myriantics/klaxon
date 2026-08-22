@@ -9,6 +9,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatal
 public abstract class KlaxonExplosiveCatalystContextParams {
     public static final ExplosiveCatalystContextParam<BlockPos> BLOCK_POS = create("origin");
     public static final ExplosiveCatalystContextParam<Entity> SOURCE_ENTITY = create("source_entity");
+    public static final ExplosiveCatalystContextParam<Entity> THIS_ENTITY = create("this_entity");
     public static final ExplosiveCatalystContextParam<BlockState> SUPPORT_STATE = create("support_state");
 
     private static <T> ExplosiveCatalystContextParam<T> create(String name) {

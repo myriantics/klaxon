@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.entity.entities.grapple_claw;
+package net.myriantics.klaxon.entity.entities.projectile.grapple_claw;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

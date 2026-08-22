@@ -5,7 +5,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.entity.entities.grapple_claw.GrappleClawEntity;
+import net.myriantics.klaxon.entity.entities.projectile.grapple_claw.GrappleClawEntity;
 import org.jetbrains.annotations.Nullable;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;

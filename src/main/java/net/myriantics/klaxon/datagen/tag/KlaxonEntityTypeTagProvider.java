@@ -76,7 +76,8 @@ public class KlaxonEntityTypeTagProvider extends FabricTagProvider<EntityType<?>
                 .forceAddTag(KlaxonEntityTypeTags.GRAPPLE_CLAW_DRAGGABLE);
 
         getOrCreateTagBuilder(EntityTypeTags.IMPACT_PROJECTILES)
-                .add(KlaxonEntityTypes.GRAPPLE_CLAW.value());
+                .add(KlaxonEntityTypes.GRAPPLE_CLAW.value())
+                .add(KlaxonEntityTypes.EXPLOSIVE_DEEPSLATE_CHUNK.value());
 
         getOrCreateTagBuilder(ConventionalEntityTypeTags.BOSSES)
                 .add(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value());

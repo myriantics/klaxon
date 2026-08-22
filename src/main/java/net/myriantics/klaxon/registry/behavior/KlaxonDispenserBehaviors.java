@@ -25,6 +25,8 @@ public abstract class KlaxonDispenserBehaviors {
         register(KlaxonItems.STEEL_GRAPPLE_CLAW, new ProjectileDispenseBehavior(KlaxonItems.STEEL_GRAPPLE_CLAW.value()));
         register(KlaxonItems.STEEL_LIGHTER, DispenserBlock.DISPENSER_REGISTRY.get(Items.FLINT_AND_STEEL));
         register(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK, new ModularExplosiveBlockDispenserBehavior());
+        register(KlaxonItems.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.TADPOLE_SPAWN_EGG));
+        register(KlaxonItems.EXPLOSIVE_DEEPSLATE_CHUNK, new ProjectileDispenseBehavior(KlaxonItems.EXPLOSIVE_DEEPSLATE_CHUNK.value()));
     }
 
     private static void register(Holder<Item> itemHolder, DispenseItemBehavior behavior) {

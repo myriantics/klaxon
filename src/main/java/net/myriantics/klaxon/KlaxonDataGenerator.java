@@ -65,6 +65,5 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		registryBuilder.add(Registries.TEMPLATE_POOL, KlaxonStructureTemplatePoolProvider::bootstrap);
 		registryBuilder.add(Registries.STRUCTURE, KlaxonStructureProvider::bootstrap);
 		registryBuilder.add(Registries.STRUCTURE_SET, KlaxonStructureSetProvider::bootstrap);
-		KlaxonCommon.LOGGER.info("shitballs");
 	}
 }

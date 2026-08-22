@@ -81,7 +81,7 @@ public abstract class KlaxonBlockItems {
             KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value(),
             new KlaxonItemProperties()
                     .component(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG, ModularExplosiveBlockConfigComponent.DEFAULT)
-                    .component(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA, ExplosiveCatalystData.ZERO)
+                    .catalystData(ExplosiveCatalystData.ZERO)
                     .getProperties()
     ));
 

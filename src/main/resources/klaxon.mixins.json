@@ -66,6 +66,7 @@
     "minecraft.neighbor_placement_listener.BlockItemMixin",
     "minecraft.nether_reaction.BeehiveBlockEntityMixin",
     "minecraft.nether_reaction.ExplosionMixin",
+    "minecraft.ominous_deepslate_blast_processor.BottleItemMixin",
     "minecraft.pick_stack_tweak.InventoryMixin",
     "minecraft.precision_dispenser.DefaultDispenseItemBehaviorMixin",
     "minecraft.precision_dispenser.DispenserBlockMixin",

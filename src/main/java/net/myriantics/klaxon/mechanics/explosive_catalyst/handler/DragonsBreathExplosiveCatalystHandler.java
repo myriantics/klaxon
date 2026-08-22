@@ -6,10 +6,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.LivingEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import org.joml.Vector3f;
 
@@ -23,6 +25,9 @@ public class DragonsBreathExplosiveCatalystHandler extends ExplosiveCatalystHand
         float radius = (float) data.explosionPower() / 3;
         float finalRadius = (float) data.explosionPower() / 2;
 
+        if (context.get(KlaxonExplosiveCatalystContextParams.SOURCE_ENTITY) instanceof LivingEntity livingEntity) {
+            areaEffectCloudEntity.setOwner(livingEntity);
+        }
         areaEffectCloudEntity.setParticle(ParticleTypes.DRAGON_BREATH);
         areaEffectCloudEntity.setRadius(radius);
         areaEffectCloudEntity.setDuration(80);

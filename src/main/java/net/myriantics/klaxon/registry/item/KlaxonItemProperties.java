@@ -11,6 +11,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.myriantics.klaxon.component.configuration.GrappleClawComponent;
 import net.myriantics.klaxon.component.configuration.MeleeDamageTypeOverrideComponent;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 
 public class KlaxonItemProperties {
 
@@ -37,6 +38,10 @@ public class KlaxonItemProperties {
     public KlaxonItemProperties helmetCrest() {
         this.component(KlaxonDataComponentTypes.HELMET_CREST_COMPONENT, Unit.INSTANCE);
         return this;
+    }
+
+    public KlaxonItemProperties catalystData(ExplosiveCatalystData data) {
+        return this.component(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), data);
     }
 
     public KlaxonItemProperties rarity(Rarity rarity) {

@@ -7,12 +7,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -23,30 +26,39 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class OminousDeepslateBlastProcessorEntity extends Mob {
+public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implements Enemy, RangedAttackMob {
 
     protected final float desiredLevitationHeight;
     protected final float levitationTolerance;
+    protected @Nullable BlockPos blockPos = null;
+    protected static final ExplosiveCatalystData DEFAULT = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH, 3.0, false);
 
     public OminousDeepslateBlastProcessorEntity(EntityType<? extends OminousDeepslateBlastProcessorEntity> entityType, Level level) {
         super(entityType, level);
-        this.xpReward = 10;
+        this.xpReward = Enemy.XP_REWARD_LARGE;
         this.lookControl = new LookControl(this);
         this.moveControl = new MoveControl(this);
         this.desiredLevitationHeight = 4;
         this.levitationTolerance = 0.25f;
+        this.setCanPickUpLoot(true);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(6, new HurtByTargetGoal(this, OminousDeepslateBlastProcessorEntity.class));
+        this.goalSelector.addGoal(7, new RangedAttackGoal(this, 1.25, 50, 10));
+        this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -62,13 +74,44 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
     }
 
     @Override
+    protected void pickUpItem(ItemEntity itemEntity) {
+        ItemStack pickupStack = itemEntity.getItem();
+        int neededHealing = this.getNeededHealing();
+        if (neededHealing > 0 && pickupStack.is(KlaxonItemTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_ITEMS)) {
+            if (pickupStack.getCount() > neededHealing) {
+                pickupStack.shrink(neededHealing);
+                this.heal(neededHealing);
+                this.playHealSound();
+            } else {
+                this.heal(pickupStack.getCount());
+                this.playHealSound();
+                itemEntity.setItem(ItemStack.EMPTY);
+                itemEntity.discard();
+            }
+        }
+    }
+
+    protected void playHealSound() {
+        this.playSound(KlaxonSoundEvents.BLOCK_DEEPSLATE_BLAST_PROCESSOR_INSERT, this.random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F);
+    }
+
+    @Override
+    public boolean wantsToPickUp(ItemStack stack) {
+        return this.getNeededHealing() > 0 && stack.is(KlaxonItemTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_ITEMS);
+    }
+
+    protected int getNeededHealing() {
+        return Mth.ceil(this.getMaxHealth() - this.getHealth());
+    }
+
+    @Override
     public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
         ItemStack usedStack = player.getItemInHand(hand);
-        if (usedStack.is(KlaxonItemTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_ITEMS) && this.getHealth() < this.getMaxHealth()) {
+        if (usedStack.is(KlaxonItemTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_ITEMS) && this.getNeededHealing() > 0) {
             if (!this.level().isClientSide()) {
                 this.heal(1);
                 usedStack.consume(1, player);
-                this.playSound(KlaxonSoundEvents.BLOCK_DEEPSLATE_BLAST_PROCESSOR_INSERT, random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F);
+                this.playHealSound();
             }
             return InteractionResult.SUCCESS;
         }
@@ -79,7 +122,7 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
         if (Objects.requireNonNull(this.getServer()).getTickCount() % 4 == 0) {
             double diff = this.getLevitationVelocity();
             Vec3 motion = this.getDeltaMovement();
-            if (Math.signum(this.getDeltaMovement().y) < 0.5) {
+            if (Math.abs(this.getDeltaMovement().y) < 0.5) {
                 this.setDeltaMovement(motion.x, diff, motion.z);
             } else {
                 this.addDeltaMovement(new Vec3(0, diff, 0));
@@ -150,11 +193,23 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
         return this.isAlive();
     }
 
-    static class LookControl extends net.minecraft.world.entity.ai.control.LookControl {
-        public LookControl(Mob mob) {
-            super(mob);
-            this.xMaxRotAngle = 30;
-        }
+    @Override
+    public int getMaxHeadXRot() {
+        return 30;
+    }
+
+    @Override
+    public void performRangedAttack(LivingEntity target, float velocity) {
+        ExplosiveDeepslateChunkEntity chunk = new ExplosiveDeepslateChunkEntity(KlaxonEntityTypes.EXPLOSIVE_DEEPSLATE_CHUNK.value(), this.level());
+        chunk.setData(DEFAULT);
+        chunk.setOwner(this);
+        double d = target.getEyeY() - 1.1F;
+        double e = target.getX() - this.getX();
+        double f = d - chunk.getY();
+        double g = target.getZ() - this.getZ();
+        double h = Math.sqrt(e * e + g * g) * 0.2F;
+        chunk.shoot(e, f + h, g, 1.6f, 12.0f);
+        level().addFreshEntity(chunk);
     }
 
     static class MoveControl extends net.minecraft.world.entity.ai.control.MoveControl {
@@ -164,8 +219,8 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
 
         @Override
         public void tick() {
-            // super.tick();
-            if (this.operation == Operation.MOVE_TO) {
+            super.tick();
+            /* if (this.operation == Operation.MOVE_TO) {
                 Vec3 motionVec = new Vec3(this.wantedX - this.mob.getX(), this.wantedY - this.mob.getY(), this.wantedZ - this.mob.getZ());
                 double distance = motionVec.length();
                 motionVec = motionVec.normalize();
@@ -174,7 +229,7 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
                 } else {
                     this.operation = Operation.WAIT;
                 }
-            }
+            }*/
         }
 
         private boolean canReach(Vec3 pos, int length) {
@@ -188,6 +243,14 @@ public class OminousDeepslateBlastProcessorEntity extends Mob {
             }
 
             return true;
+        }
+    }
+
+    static class ApproachTargetGoal extends Goal {
+
+        @Override
+        public boolean canUse() {
+            return false;
         }
     }
 }
