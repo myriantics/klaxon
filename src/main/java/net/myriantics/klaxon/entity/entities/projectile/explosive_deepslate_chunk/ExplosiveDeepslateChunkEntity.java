@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -32,6 +33,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatal
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonAttachmentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
@@ -43,7 +45,6 @@ import java.util.Optional;
 
 public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
 
-    protected @NotNull ExplosiveCatalystData data = ExplosiveCatalystData.ZERO;
     protected DataComponentMap components = DataComponentMap.EMPTY;
 
     public ExplosiveDeepslateChunkEntity(EntityType<? extends ExplosiveDeepslateChunkEntity> entityType, Level level) {
@@ -64,24 +65,25 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
             this.setData(ExplosiveCatalystData.ZERO);
         } else {
             this.setData(data);
-            this.setComponents(stack.getComponentsPatch().forget(this.data.behavior(this.level()).value()::isComponentIrrelevant));
+            this.setComponents(stack.getComponentsPatch().forget(data.behavior(this.level()).value()::isComponentIrrelevant));
         }
     }
 
     public int getCooldownTicks() {
-        if (this.data.behavior(this.level()).is(KlaxonExplosiveCatalystBehaviorTags.HARMLESS)) {
+        ExplosiveCatalystData data = this.getData();
+        if (data.behavior(this.level()).is(KlaxonExplosiveCatalystBehaviorTags.HARMLESS)) {
             return 10;
         } else {
-            return (int) (this.data.explosionPower() * 20);
+            return (int) (data.explosionPower() * 20);
         }
     }
 
     public ExplosiveCatalystData getData() {
-        return this.data;
+        return this.getAttachedOrElse(KlaxonAttachmentTypes.EXPLOSIVE_CATALYST_DATA, ExplosiveCatalystData.ZERO);
     }
 
     public void setData(ExplosiveCatalystData data) {
-        this.data = Objects.requireNonNull(data);
+        this.setAttached(KlaxonAttachmentTypes.EXPLOSIVE_CATALYST_DATA, Objects.requireNonNull(data));
     }
 
     protected void setComponents(DataComponentPatch patch) {
@@ -93,10 +95,11 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
         super.onHitEntity(result);
         if (!this.level().isClientSide()) {
             Entity entity = result.getEntity();
-            entity.hurt(this.damageSources().explosion(this.getOwner(), this), Math.clamp((float) this.getDeltaMovement().length() * 2, 1f, 5f));
-            if (this.data.producesFire() && !entity.fireImmune() && !entity.isInWaterOrRain()) {
-                entity.igniteForTicks(Mth.floor(this.data.explosionPower()) * 8);
+            ExplosiveCatalystData data = this.getData();
+            if (data.producesFire() && !entity.fireImmune() && !entity.isInWaterOrRain()) {
+                entity.igniteForTicks(Mth.floor(data.explosionPower()) * 8);
             }
+            entity.hurt(this.damageSources().explosion(this.getOwner(), this), Math.clamp((float) this.getDeltaMovement().length(), 1f, 5f));
             this.detonate(
                     this.createContext()
                             .add(KlaxonExplosiveCatalystContextParams.SUPPORT_STATE, result.getEntity().getBlockStateOn())
@@ -111,7 +114,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
 
     @Override
     public boolean fireImmune() {
-        return this.data.producesFire();
+        return this.getData().producesFire();
     }
 
     @Override
@@ -145,8 +148,9 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
 
     protected void detonate(ExplosiveCatalystContext context) {
         this.discard();
-        ExplosiveCatalystBehavior behavior = this.data.behavior(level()).value();
-        behavior.createExplosion(context, this.position(), behavior.transformExplosiveCatalystData(context, this.data), this.mayBreak(this.level()));
+        ExplosiveCatalystData data = this.getData();
+        ExplosiveCatalystBehavior behavior = data.behavior(level()).value();
+        behavior.createExplosion(context, this.position(), behavior.transformExplosiveCatalystData(context, data), this.mayBreak(this.level()));
     }
 
     @Override
@@ -164,9 +168,6 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA)) {
-            this.data = ExplosiveCatalystData.CODEC.decode(NbtOps.INSTANCE, compound.get(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA)).mapOrElse(Pair::getFirst, (pair) -> ExplosiveCatalystData.ZERO);
-        }
         if (compound.contains(KlaxonNBTIds.COMPONENTS)) {
             this.components = DataComponentMap.CODEC.decode(NbtOps.INSTANCE, compound.get(KlaxonNBTIds.COMPONENTS)).mapOrElse(Pair::getFirst, (pairError -> DataComponentMap.EMPTY));
         }
@@ -175,7 +176,6 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        ExplosiveCatalystData.CODEC.encode(this.data, NbtOps.INSTANCE, new CompoundTag()).ifSuccess(tag -> compound.put(KlaxonNBTIds.EXPLOSIVE_CATALYST_DATA, tag));
         DataComponentMap.CODEC.encode(this.components, NbtOps.INSTANCE, new CompoundTag()).ifSuccess(tag -> compound.put(KlaxonNBTIds.COMPONENTS, tag));
     }
 }
