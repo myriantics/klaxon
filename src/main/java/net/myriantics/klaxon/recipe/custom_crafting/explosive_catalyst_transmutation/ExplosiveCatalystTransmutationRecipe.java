@@ -1,10 +1,12 @@
 package net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -13,6 +15,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehav
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -22,30 +25,34 @@ public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
     public static final MapCodec<ExplosiveCatalystTransmutationRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             CraftingBookCategory.CODEC.fieldOf("category").forGetter(CustomRecipe::category),
             ShapedRecipePattern.MAP_CODEC.validate(ExplosiveCatalystTransmutationRecipe::validatePattern).fieldOf("pattern").forGetter(i -> i.pattern),
-            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(i -> i.result)
+            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(i -> i.result),
+            Codec.BOOL.lenientOptionalFieldOf("requires_catalyst", false).forGetter(i -> i.requiresCatalyst)
     ).apply(instance, ExplosiveCatalystTransmutationRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ExplosiveCatalystTransmutationRecipe> STREAM_CODEC = StreamCodec.composite(
             CraftingBookCategory.STREAM_CODEC, CustomRecipe::category,
             ShapedRecipePattern.STREAM_CODEC, i -> i.pattern,
             ItemStack.STREAM_CODEC, i -> i.result,
+            ByteBufCodecs.BOOL, i -> i.requiresCatalyst,
             ExplosiveCatalystTransmutationRecipe::new
     );
 
     public final ShapedRecipePattern pattern;
     public final ItemStack result;
+    public final boolean requiresCatalyst;
 
-    public ExplosiveCatalystTransmutationRecipe(CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack result) {
+    public ExplosiveCatalystTransmutationRecipe(CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack result, boolean requiresCatalyst) {
         super(category);
         this.pattern = pattern;
         this.result = result;
+        this.requiresCatalyst = requiresCatalyst;
     }
 
     @Override
     public boolean matches(CraftingInput input, Level level) {
         if (this.pattern.matches(this.withoutCenter(input))) {
             ItemStack center = input.getItem(4);
-            @Nullable ExplosiveCatalystData data = getDataForStack(center, stack -> ExplosiveCatalystData.findRaw(level, center));
+            @Nullable ExplosiveCatalystData data = this.getDataForStack(center, stack -> ExplosiveCatalystData.findRaw(level, center));
             return data != null;
         }
         return false;
@@ -55,10 +62,14 @@ public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         ItemStack result = this.getResultItem(registries).copy();
         ItemStack center = input.getItem(4);
-        @Nullable ExplosiveCatalystData data = getDataForStack(center, stack -> ExplosiveCatalystData.findRaw(registries, center));
+        @Nullable ExplosiveCatalystData data = this.getDataForStack(center, stack -> ExplosiveCatalystData.findRaw(registries, center));
         if (data == null) {
             return ItemStack.EMPTY;
         } else {
+            // no infinite recursive funkiness
+            if (result.getCount() > 1) {
+                data = data.copyWithPower(data.explosionPower() / result.getCount());
+            }
             ExplosiveCatalystBehavior behavior = data.behavior(registries).value();
             result.applyComponents(center.getComponentsPatch().forget(behavior::isComponentIrrelevant));
             result.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), data);
@@ -115,8 +126,8 @@ public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
         }
     }
 
-    public static @Nullable ExplosiveCatalystData getDataForStack(ItemStack stack, FallbackCatalystDataCalculator calculator) {
-        if (stack.isEmpty()) {
+    public @Nullable ExplosiveCatalystData getDataForStack(ItemStack stack, FallbackCatalystDataCalculator calculator) {
+        if (stack.isEmpty() || stack.is(KlaxonItemTags.UNUSABLE_FOR_EXPLOSIVE_CATALYST_TRANSMUTATION)) {
             return ExplosiveCatalystData.ZERO;
         } else {
             return calculator.calculate(stack);

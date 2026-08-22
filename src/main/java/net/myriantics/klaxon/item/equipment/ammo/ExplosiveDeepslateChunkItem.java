@@ -42,6 +42,9 @@ public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem 
         chunk.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
         level.addFreshEntity(chunk);
         stack.consume(1, player);
+        if (!player.isCreative()) {
+            player.getCooldowns().addCooldown(this, chunk.getCooldownTicks());
+        }
         return InteractionResultHolder.success(stack);
     }
 
@@ -53,15 +56,17 @@ public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem 
         @Nullable BlockEntity interactedBlockEntity = level.getBlockEntity(interactedPos);
         ItemStack usedStack = context.getItemInHand();
         @Nullable Player player = context.getPlayer();
-        if (player != null && player.isCreative() && interactedBlockEntity instanceof ExplosiveCatalystVessel vessel && vessel.hasDataReady()) {
-            if (!level.isClientSide() && vessel.hasDataReady()) {
-                Component blockName = level.getBlockEntity(interactedPos) instanceof Nameable nameable ? nameable.getDisplayName() : interactedState.getBlock().getName();
-                ExplosiveCatalystData vesselData = Objects.requireNonNullElse(vessel.getRawData(), ExplosiveCatalystData.ZERO);
-                usedStack.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), vessel.getRawData());
-                usedStack.applyComponents(interactedBlockEntity.collectComponents().filter(vesselData.behavior(level).value()::isComponentIrrelevant));
-                player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", blockName, usedStack.getDisplayName()), true);
+        if (player != null) {
+            if (player.isCreative() && interactedBlockEntity instanceof ExplosiveCatalystVessel vessel && vessel.hasDataReady()) {
+                if (!level.isClientSide() && vessel.hasDataReady()) {
+                    Component blockName = level.getBlockEntity(interactedPos) instanceof Nameable nameable ? nameable.getDisplayName() : interactedState.getBlock().getName();
+                    ExplosiveCatalystData vesselData = Objects.requireNonNullElse(vessel.getRawData(), ExplosiveCatalystData.ZERO);
+                    usedStack.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), vessel.getRawData());
+                    usedStack.applyComponents(interactedBlockEntity.collectComponents().filter(vesselData.behavior(level).value()::isComponentIrrelevant));
+                    player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", blockName, usedStack.getDisplayName()), true);
+                }
+                return InteractionResult.SUCCESS;
             }
-            return InteractionResult.SUCCESS;
         }
         return super.useOn(context);
     }

@@ -25,6 +25,8 @@ public class KlaxonExplosiveCatalystBehaviorTagProvider extends FabricTagProvide
                 .addOptional(KlaxonExplosiveCatalystBehaviors.NO_OP)
                 .addOptional(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH);
         getOrCreateTagBuilder(KlaxonExplosiveCatalystBehaviorTags.UNUSABLE_FOR_BLAST_PROCESSING)
+                .addOptionalTag(KlaxonExplosiveCatalystBehaviorTags.HARMLESS);
+        getOrCreateTagBuilder(KlaxonExplosiveCatalystBehaviorTags.HARMLESS)
                 .addOptional(KlaxonExplosiveCatalystBehaviors.WIND_BURST);
     }
 }

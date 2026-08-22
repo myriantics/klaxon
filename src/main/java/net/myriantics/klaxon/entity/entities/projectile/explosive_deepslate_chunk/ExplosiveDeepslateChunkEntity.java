@@ -34,6 +34,7 @@ import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalyst
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,6 +66,18 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
             this.setData(data);
             this.setComponents(stack.getComponentsPatch().forget(this.data.behavior(this.level()).value()::isComponentIrrelevant));
         }
+    }
+
+    public int getCooldownTicks() {
+        if (this.data.behavior(this.level()).is(KlaxonExplosiveCatalystBehaviorTags.HARMLESS)) {
+            return 10;
+        } else {
+            return (int) (this.data.explosionPower() * 20);
+        }
+    }
+
+    public ExplosiveCatalystData getData() {
+        return this.data;
     }
 
     public void setData(ExplosiveCatalystData data) {

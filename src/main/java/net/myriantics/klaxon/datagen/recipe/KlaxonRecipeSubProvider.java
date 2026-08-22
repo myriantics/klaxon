@@ -296,7 +296,7 @@ public abstract class KlaxonRecipeSubProvider {
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe);
     }
 
-    public void addExplosiveCatalystTransmutationRecipe(Map<Character, Ingredient> key, String[] stringPattern, ItemStack result, CraftingBookCategory category) {
+    public void addExplosiveCatalystTransmutationRecipe(Map<Character, Ingredient> key, String[] stringPattern, ItemStack result, CraftingBookCategory category, boolean requiresCatalyst) {
         ShapedRecipePattern pattern = ShapedRecipePattern.of(key, stringPattern);
 
         String outputPath = getItemName(result.getItem());
@@ -307,7 +307,7 @@ public abstract class KlaxonRecipeSubProvider {
             category = CraftingBookCategory.REDSTONE;
         }
 
-        ExplosiveCatalystTransmutationRecipe recipe = new ExplosiveCatalystTransmutationRecipe(category, pattern, result);
+        ExplosiveCatalystTransmutationRecipe recipe = new ExplosiveCatalystTransmutationRecipe(category, pattern, result, requiresCatalyst);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe);
     }

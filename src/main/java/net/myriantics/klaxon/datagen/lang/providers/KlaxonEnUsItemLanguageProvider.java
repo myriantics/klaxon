@@ -27,6 +27,7 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
 
         // ammo
         addItem(KlaxonItems.STEEL_GRAPPLE_CLAW, "Steel Grapple Claw");
+        addItem(KlaxonItems.EXPLOSIVE_DEEPSLATE_CHUNK, "Explosive Deepslate Chunk");
 
         // armor
         addItem(KlaxonItems.STEEL_HELMET, "Steel Helmet");

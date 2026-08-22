@@ -56,7 +56,8 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         " R "
                 },
                 new ItemStack(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK),
-                CraftingBookCategory.REDSTONE
+                CraftingBookCategory.REDSTONE,
+                false
         );
         this.addExplosiveCatalystTransmutationRecipe(
                 Map.of(
@@ -70,7 +71,21 @@ public class KlaxonCraftingRecipeProvider extends KlaxonRecipeSubProvider {
                         "PRP"
                 },
                 new ItemStack(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK),
-                CraftingBookCategory.REDSTONE
+                CraftingBookCategory.REDSTONE,
+                false
+        );
+        this.addExplosiveCatalystTransmutationRecipe(
+                Map.of(
+                        'D', Ingredient.of(Items.DEEPSLATE, Items.COBBLED_DEEPSLATE, Items.POLISHED_DEEPSLATE, Items.DEEPSLATE_TILES, Items.DEEPSLATE_BRICKS, Items.CRACKED_DEEPSLATE_TILES, Items.CRACKED_DEEPSLATE_BRICKS)
+                ),
+                new String[] {
+                        " D ",
+                        "D D",
+                        " D "
+                },
+                new ItemStack(KlaxonItems.EXPLOSIVE_DEEPSLATE_CHUNK, 4),
+                CraftingBookCategory.EQUIPMENT,
+                true
         );
     }
 

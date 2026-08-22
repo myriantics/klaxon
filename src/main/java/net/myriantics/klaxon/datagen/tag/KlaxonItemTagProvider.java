@@ -444,6 +444,10 @@ public class KlaxonItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addOptionalTag(ConventionalItemTags.SHEAR_TOOLS);
 
         copy(KlaxonBlockTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_BLOCKS, KlaxonItemTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_ITEMS);
+
+        getOrCreateTagBuilder(KlaxonItemTags.UNUSABLE_FOR_EXPLOSIVE_CATALYST_TRANSMUTATION)
+                .add(KlaxonItems.EXPLOSIVE_DEEPSLATE_CHUNK.value())
+                .add(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK.value());
     }
 
     private void buildRepairTags() {

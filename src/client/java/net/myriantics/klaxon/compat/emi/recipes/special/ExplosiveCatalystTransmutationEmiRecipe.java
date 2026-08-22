@@ -21,6 +21,7 @@ import java.util.Random;
 
 public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingRecipe {
 
+    private final ExplosiveCatalystTransmutationRecipe recipe;
     private final ShapedRecipePattern pattern;
     private final ExplosiveCatalystDefinition[] definitions;
     private final ItemStack result;
@@ -34,6 +35,7 @@ public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingR
                 id,
                 false
         );
+        this.recipe = recipe;
         this.definitions = definitions;
         this.result = recipe.result;
         this.pattern = recipe.pattern;
@@ -61,8 +63,11 @@ public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingR
                 random -> {
                     ItemStack resultStack = this.result.copy();
                     ItemStack catalystStack = this.getCatalystStack(random);
-                    @Nullable ExplosiveCatalystData data = ExplosiveCatalystTransmutationRecipe.getDataForStack(catalystStack, this::getDataForStack);
+                    @Nullable ExplosiveCatalystData data = this.recipe.getDataForStack(catalystStack, this::getDataForStack);
                     if (data != null) {
+                        if (resultStack.getCount() > 1) {
+                            data = data.copyWithPower(data.explosionPower() / resultStack.getCount());
+                        }
                         resultStack.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), data);
                     }
                     return EmiStack.of(resultStack);
@@ -82,12 +87,12 @@ public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingR
     }
 
     private ItemStack getCatalystStack(Random random) {
-        int selected = random.nextInt(this.definitions.length + 1);
-        if (selected == 0) {
+        int selected = random.nextInt(this.recipe.requiresCatalyst ? this.definitions.length : this.definitions.length + 1);
+        if (selected == this.definitions.length) {
             return ItemStack.EMPTY;
         } else {
             // balance it so you're not spammed with beds
-            ExplosiveCatalystDefinition definition = this.definitions[selected - 1];
+            ExplosiveCatalystDefinition definition = this.definitions[selected];
             ItemStack[] stacks = definition.ingredient().getItems();
             return stacks[random.nextInt(stacks.length)];
         }
