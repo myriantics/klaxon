@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
@@ -74,5 +75,10 @@ public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem 
     @Override
     public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
         return new ExplosiveDeepslateChunkEntity(level, stack, pos.x(), pos.y(), pos.z());
+    }
+
+    @Override
+    public DispenseConfig createDispenseConfig() {
+        return DispenseConfig.builder().overrideDispenseEvent(LevelEvent.SOUND_DISPENSER_DISPENSE).build();
     }
 }
