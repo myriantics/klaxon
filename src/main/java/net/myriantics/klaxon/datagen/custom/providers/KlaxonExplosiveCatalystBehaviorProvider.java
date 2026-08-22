@@ -4,6 +4,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.CommonColors;
@@ -21,6 +23,7 @@ import net.myriantics.klaxon.registry.misc.KlaxonColors;
 import net.myriantics.klaxon.util.DimensionTypePredicate;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -62,12 +65,14 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
                 KlaxonExplosiveCatalystBehaviors.FIREWORK_STAR,
                 KlaxonExplosiveCatalystHandlers.DEFAULT,
                 KlaxonColors.FIREWORK_STAR_GREY,
+                HolderSet.direct(BuiltInRegistries.DATA_COMPONENT_TYPE.wrapAsHolder(DataComponents.FIREWORK_EXPLOSION)),
                 fireworkExplosionTransformer
         );
         this.add(
                 KlaxonExplosiveCatalystBehaviors.FIREWORK_ROCKET,
                 KlaxonExplosiveCatalystHandlers.FIREWORK,
                 KlaxonColors.FIREWORK_ROCKET_RED,
+                HolderSet.direct(BuiltInRegistries.DATA_COMPONENT_TYPE.wrapAsHolder(DataComponents.FIREWORKS)),
                 new FireworksExplosiveCatalystTransformer(
                         fireworkExplosionTransformer,
                         new ExplosiveCatalystData(0.8, false)
@@ -143,6 +148,14 @@ public class KlaxonExplosiveCatalystBehaviorProvider extends KlaxonDynamicRegist
                 KlaxonExplosiveCatalystHandlers.CHARGED_CREEPER_MIMIC,
                 KlaxonColors.CREEPER_GREEN
         );
+    }
+
+    protected ExplosiveCatalystBehavior add(ResourceKey<ExplosiveCatalystBehavior> behaviorKey, Holder<ExplosiveCatalystHandler> handler, Color color, HolderSet<DataComponentType<?>> relevantComponents, ExplosiveCatalystTransformer... transformers) {
+        return this.add(behaviorKey, handler, color.getRGB(), relevantComponents, transformers);
+    }
+
+    protected ExplosiveCatalystBehavior add(ResourceKey<ExplosiveCatalystBehavior> behaviorKey, Holder<ExplosiveCatalystHandler> handler, int color, HolderSet<DataComponentType<?>> relevantComponents, ExplosiveCatalystTransformer... transformers) {
+        return this.add(behaviorKey, new ExplosiveCatalystBehavior(handler, color, relevantComponents, transformers));
     }
 
     protected ExplosiveCatalystBehavior add(ResourceKey<ExplosiveCatalystBehavior> behaviorKey, Holder<ExplosiveCatalystHandler> handler, Color color, ExplosiveCatalystTransformer... transformers) {

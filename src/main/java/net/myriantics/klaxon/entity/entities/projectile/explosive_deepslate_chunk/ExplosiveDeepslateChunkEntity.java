@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -34,6 +35,7 @@ import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.tag.klaxon.KlaxonDamageTypeTags;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -50,20 +52,27 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
     public ExplosiveDeepslateChunkEntity(Level level, ItemStack stack, double x, double y, double z) {
         super(KlaxonEntityTypes.EXPLOSIVE_DEEPSLATE_CHUNK.value(), level);
         this.setPos(x, y, z);
-        this.setComponents(stack.getComponentsPatch());
+        if (!level.isClientSide()) {
+            this.initFromStack(stack);
+        }
+    }
+
+    protected void initFromStack(ItemStack stack) {
+        @Nullable ExplosiveCatalystData data = ExplosiveCatalystData.findRaw(this.level(), stack);
+        if (data == null) {
+            this.setData(ExplosiveCatalystData.ZERO);
+        } else {
+            this.setData(data);
+            this.setComponents(stack.getComponentsPatch().forget(this.data.behavior(this.level()).value()::isComponentIrrelevant));
+        }
     }
 
     public void setData(ExplosiveCatalystData data) {
         this.data = Objects.requireNonNull(data);
     }
 
-    @SuppressWarnings("unchecked")
-    public void setComponents(DataComponentPatch patch) {
-        Optional<ExplosiveCatalystData> data = (Optional<ExplosiveCatalystData>) patch.get(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value());
-        if (data != null && data.isPresent()) {
-            this.data = data.get();
-        }
-        this.components = patch.forget(dataComponentType -> dataComponentType.equals(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value())).split().added();
+    protected void setComponents(DataComponentPatch patch) {
+        this.components = patch.split().added();
     }
 
     @Override
@@ -73,7 +82,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
             Entity entity = result.getEntity();
             entity.hurt(this.damageSources().explosion(this.getOwner(), this), Math.clamp((float) this.getDeltaMovement().length() * 2, 1f, 5f));
             if (this.data.producesFire() && !entity.fireImmune() && !entity.isInWaterOrRain()) {
-                entity.igniteForTicks(67);
+                entity.igniteForTicks(Mth.floor(this.data.explosionPower()) * 8);
             }
             this.detonate(
                     this.createContext()

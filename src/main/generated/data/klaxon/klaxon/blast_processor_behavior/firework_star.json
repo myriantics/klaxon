@@ -1,6 +1,7 @@
 {
   "color": -9276814,
   "handler": "klaxon:default",
+  "relevant_components": "minecraft:firework_explosion",
   "transformers": [
     {
       "shapes_to_data": {

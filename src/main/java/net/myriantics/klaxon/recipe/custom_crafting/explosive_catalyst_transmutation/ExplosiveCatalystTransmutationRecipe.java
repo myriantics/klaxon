@@ -9,6 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
@@ -58,6 +59,8 @@ public class ExplosiveCatalystTransmutationRecipe extends CustomRecipe {
         if (data == null) {
             return ItemStack.EMPTY;
         } else {
+            ExplosiveCatalystBehavior behavior = data.behavior(registries).value();
+            result.applyComponents(center.getComponentsPatch().forget(behavior::isComponentIrrelevant));
             result.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), data);
             return result;
         }

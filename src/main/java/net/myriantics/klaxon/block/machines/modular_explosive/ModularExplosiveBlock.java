@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
@@ -90,13 +91,14 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                     Component blockName = blockEntity instanceof Nameable nameable ? nameable.getDisplayName() : state.getBlock().getName();
                     final SoundEvent soundEvent;
                     final Holder.Reference<GameEvent> gameEvent;
-                    if (blockEntity.getRawData().equals(appliedData)) {
+                    ExplosiveCatalystBehavior behavior = blockEntity.getRawData().behavior(level).value();
+                    if (blockEntity.getRawData().equals(appliedData) && behavior.relevantComponentsMatch(blockEntity.components(), stack.getComponents())) {
                         gameEvent = null;
                         soundEvent = KlaxonSoundEvents.MODULAR_EXPLOSIVE_CATALYST_MATCH;
                         player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.matches", stack.getDisplayName(), blockName), true);
                     } else {
+                        blockEntity.applyComponents(stack.getPrototype(), stack.getComponentsPatch().forget(behavior::isComponentIrrelevant));
                         blockEntity.setData(appliedData);
-                        blockEntity.applyComponentsFromItemStack(stack);
                         if (level.hasNeighborSignal(pos)) {
                             redstoneTrigger(level, pos, state);
                         }

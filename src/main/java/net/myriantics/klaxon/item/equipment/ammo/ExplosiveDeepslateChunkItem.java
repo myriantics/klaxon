@@ -21,10 +21,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem {
     public ExplosiveDeepslateChunkItem(Properties properties) {
@@ -53,8 +56,9 @@ public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem 
         if (player != null && interactedBlockEntity instanceof ExplosiveCatalystVessel vessel && vessel.hasDataReady()) {
             if (!level.isClientSide() && vessel.hasDataReady()) {
                 Component blockName = level.getBlockEntity(interactedPos) instanceof Nameable nameable ? nameable.getDisplayName() : interactedState.getBlock().getName();
+                ExplosiveCatalystData vesselData = Objects.requireNonNullElse(vessel.getRawData(), ExplosiveCatalystData.ZERO);
                 usedStack.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), vessel.getRawData());
-                usedStack.applyComponents(interactedBlockEntity.collectComponents());
+                usedStack.applyComponents(interactedBlockEntity.collectComponents().filter(vesselData.behavior(level).value()::isComponentIrrelevant));
                 player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", blockName, usedStack.getDisplayName()), true);
             }
             return InteractionResult.SUCCESS;

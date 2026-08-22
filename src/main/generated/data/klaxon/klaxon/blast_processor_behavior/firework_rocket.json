@@ -1,6 +1,7 @@
 {
   "color": -6739671,
   "handler": "klaxon:firework",
+  "relevant_components": "minecraft:fireworks",
   "transformers": [
     {
       "flight_duration_data": {
