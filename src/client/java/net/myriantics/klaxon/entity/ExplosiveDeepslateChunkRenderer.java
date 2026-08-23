@@ -32,7 +32,7 @@ public class ExplosiveDeepslateChunkRenderer extends EntityRenderer<ExplosiveDee
 
     @Override
     public void render(ExplosiveDeepslateChunkEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        if (entity.tickCount > 2) {
+        if (entity.tickCount > 2 || !(this.entityRenderDispatcher.camera.getEntity().distanceToSqr(entity) < 12.25)) {
             super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
             poseStack.pushPose();
             poseStack.translate(0, 0.25, 0);

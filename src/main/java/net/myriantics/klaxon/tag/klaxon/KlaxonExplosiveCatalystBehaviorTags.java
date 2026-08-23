@@ -11,6 +11,7 @@ public abstract class KlaxonExplosiveCatalystBehaviorTags {
     public static final TagKey<ExplosiveCatalystBehavior> RUNS_DESTROY_BLOCK_EFFECTS_FOR_MODULAR_EXPLOSIVE_BLOCK = create("runs_destroy_block_effects_for_modular_explosive_block");
     public static final TagKey<ExplosiveCatalystBehavior> UNUSABLE_FOR_BLAST_PROCESSING = create("unusable_for_blast_processing");
     public static final TagKey<ExplosiveCatalystBehavior> HARMLESS = create("harmless");
+    public static final TagKey<ExplosiveCatalystBehavior> SETS_IGNORE_FALL_DAMAGE_FROM_CURRENT_IMPULSE = create("sets_ignore_fall_damage_from_current_impulse");
 
     private static TagKey<ExplosiveCatalystBehavior> create(String name) {
         return TagKey.create(KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIOR, KlaxonCommon.locate(name));

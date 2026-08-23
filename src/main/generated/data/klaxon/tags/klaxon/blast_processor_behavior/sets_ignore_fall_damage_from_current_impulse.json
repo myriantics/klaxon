@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "klaxon:wind_charge",
+      "required": false
+    }
+  ]
+}

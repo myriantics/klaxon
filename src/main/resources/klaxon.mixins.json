@@ -27,6 +27,7 @@
     "minecraft.entity_attributes.LivingEntityMixin",
     "minecraft.entity_attributes.PlayerMixin",
     "minecraft.entity_weight.FallingBlockEntityMixin",
+    "minecraft.explosive_catalyst_vessel.ServerPlayerMixin",
     "minecraft.gerald_sniffer.AnimalMixin",
     "minecraft.gerald_sniffer.EntityMixin",
     "minecraft.gerald_sniffer.NameTagItemMixin",

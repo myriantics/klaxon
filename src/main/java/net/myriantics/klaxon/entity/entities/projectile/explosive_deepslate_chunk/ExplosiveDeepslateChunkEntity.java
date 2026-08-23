@@ -30,6 +30,7 @@ import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
@@ -44,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
+public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile implements ExplosiveCatalystVessel {
 
     protected DataComponentMap components = DataComponentMap.EMPTY;
     protected int color;
@@ -192,5 +193,15 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         DataComponentMap.CODEC.encode(this.components, NbtOps.INSTANCE, new CompoundTag()).ifSuccess(tag -> compound.put(KlaxonNBTIds.COMPONENTS, tag));
+    }
+
+    @Override
+    public ExplosiveCatalystData getRawData() {
+        return this.getData();
+    }
+
+    @Override
+    public ExplosiveCatalystData getEffectiveCatalystData() {
+        return this.getData().behavior(this.level()).value().transformExplosiveCatalystData(this.createContext(), this.getData());
     }
 }
