@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk;
 
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
@@ -46,6 +47,7 @@ import java.util.Optional;
 public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
 
     protected DataComponentMap components = DataComponentMap.EMPTY;
+    protected int color;
 
     public ExplosiveDeepslateChunkEntity(EntityType<? extends ExplosiveDeepslateChunkEntity> entityType, Level level) {
         super(entityType, level);
@@ -84,6 +86,18 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
 
     public void setData(ExplosiveCatalystData data) {
         this.setAttached(KlaxonAttachmentTypes.EXPLOSIVE_CATALYST_DATA, Objects.requireNonNull(data));
+    }
+
+    @Override
+    public @Nullable <A> A setAttached(AttachmentType<A> type, @Nullable A value) {
+        if (this.level().isClientSide() && value instanceof ExplosiveCatalystData data && type.equals(KlaxonAttachmentTypes.EXPLOSIVE_CATALYST_DATA)) {
+            this.color = data.behavior(this.level()).value().color;
+        }
+        return super.setAttached(type, value);
+    }
+
+    public int getColor() {
+        return this.color;
     }
 
     protected void setComponents(DataComponentPatch patch) {
@@ -171,6 +185,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
         if (compound.contains(KlaxonNBTIds.COMPONENTS)) {
             this.components = DataComponentMap.CODEC.decode(NbtOps.INSTANCE, compound.get(KlaxonNBTIds.COMPONENTS)).mapOrElse(Pair::getFirst, (pairError -> DataComponentMap.EMPTY));
         }
+
     }
 
     @Override

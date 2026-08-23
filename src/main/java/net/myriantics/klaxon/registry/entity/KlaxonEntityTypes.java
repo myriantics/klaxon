@@ -31,8 +31,8 @@ public abstract class KlaxonEntityTypes {
     public static final Holder<EntityType<ExplosiveDeepslateChunkEntity>> EXPLOSIVE_DEEPSLATE_CHUNK = register(
             "explosive_deepslate_chunk",
             EntityType.Builder.<ExplosiveDeepslateChunkEntity>of(ExplosiveDeepslateChunkEntity::new, MobCategory.MISC)
-                    .sized(0.35f, 0.35f)
-                    .eyeHeight(0.35f/2)
+                    .sized(8f/16, 8f/16)
+                    .eyeHeight(4f/16)
                     .clientTrackingRange(4)
                     .updateInterval(20)
     );
