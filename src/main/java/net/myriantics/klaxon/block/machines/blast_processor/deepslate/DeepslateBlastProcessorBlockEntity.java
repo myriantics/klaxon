@@ -12,12 +12,15 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
+import net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_processor.OminousDeepslateBlastProcessorEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
@@ -71,6 +74,14 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
             // default to false so that it shows no particles when dispensing nothing
             boolean shouldRunDispenserEffects = false;
+
+            if (this.getCatalystStack().is(Items.OMINOUS_BOTTLE)) {
+                OminousDeepslateBlastProcessorEntity entity = new OminousDeepslateBlastProcessorEntity(this.level, this.worldPosition, this.getCatalystStack(), this.getFacing());
+                this.level.addFreshEntity(entity);
+                this.catalystPartition.clearContent();
+                this.level.setBlockAndUpdate(this.worldPosition, Blocks.AIR.defaultBlockState());
+                return;
+            }
 
             if (!this.isEmpty()) {
                 ExplosiveCatalystContext context = this.getContext(serverLevel);

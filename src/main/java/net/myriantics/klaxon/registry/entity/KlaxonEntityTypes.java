@@ -23,7 +23,7 @@ public abstract class KlaxonEntityTypes {
     );
     public static final Holder<EntityType<OminousDeepslateBlastProcessorEntity>> OMINOUS_DEEPSLATE_BLAST_PROCESSOR = register(
             "ominous_deepslate_blast_processor",
-            EntityType.Builder.of(OminousDeepslateBlastProcessorEntity::new, MobCategory.MISC)
+            EntityType.Builder.<OminousDeepslateBlastProcessorEntity>of(OminousDeepslateBlastProcessorEntity::new, MobCategory.MISC)
                     .sized(1.0f, 1.0f)
                     .eyeHeight(0.5f)
                     .clientTrackingRange(10)

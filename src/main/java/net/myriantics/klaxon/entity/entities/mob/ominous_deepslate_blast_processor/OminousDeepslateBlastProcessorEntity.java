@@ -2,10 +2,13 @@ package net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_proces
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
@@ -27,6 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
@@ -52,6 +56,21 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         this.desiredLevitationHeight = 4;
         this.levitationTolerance = 0.25f;
         this.setCanPickUpLoot(true);
+    }
+
+    public OminousDeepslateBlastProcessorEntity(Level level, BlockPos pos, ItemStack summoningStack, Direction facing) {
+        this(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value(), level);
+        this.setPos(pos.getBottomCenter());
+        float wantedRot = facing.toYRot();
+        this.absRotateTo(wantedRot, 0);
+        ((LookControl) this.lookControl).setWantedYRot(wantedRot);
+        this.setYBodyRot(wantedRot);
+        this.setYHeadRot(wantedRot);
+    }
+
+    @Override
+    public void setYRot(float yRot) {
+        super.setYRot(yRot);
     }
 
     @Override
@@ -216,6 +235,17 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         double h = Math.sqrt(e * e + g * g) * 0.2F;
         chunk.shoot(e, f + h, g, 1.6f, 12.0f);
         level().addFreshEntity(chunk);
+    }
+
+    static class LookControl extends net.minecraft.world.entity.ai.control.LookControl {
+
+        public LookControl(Mob mob) {
+            super(mob);
+        }
+
+        public void setWantedYRot(double wantedYRot) {
+            this.wantedY = wantedYRot;
+        }
     }
 
     static class MoveControl extends net.minecraft.world.entity.ai.control.MoveControl {
