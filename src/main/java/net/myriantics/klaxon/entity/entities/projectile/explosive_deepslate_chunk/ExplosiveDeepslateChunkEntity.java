@@ -77,7 +77,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile implement
         if (data.behavior(this.level()).is(KlaxonExplosiveCatalystBehaviorTags.HARMLESS)) {
             return 10;
         } else {
-            return (int) (data.explosionPower() * 20);
+            return Math.clamp((int) (data.explosionPower() * 10), 20, 80);
         }
     }
 

@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
+import net.myriantics.klaxon.item.ExplosiveCatalystVesselItem;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystVessel;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem {
+public class ExplosiveDeepslateChunkItem extends ExplosiveCatalystVesselItem implements ProjectileItem {
     public ExplosiveDeepslateChunkItem(Properties properties) {
         super(properties);
     }
@@ -48,29 +49,6 @@ public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem 
             player.getCooldowns().addCooldown(this, chunk.getCooldownTicks());
         }
         return InteractionResultHolder.success(stack);
-    }
-
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        BlockPos interactedPos = context.getClickedPos();
-        BlockState interactedState = level.getBlockState(interactedPos);
-        @Nullable BlockEntity interactedBlockEntity = level.getBlockEntity(interactedPos);
-        ItemStack usedStack = context.getItemInHand();
-        @Nullable Player player = context.getPlayer();
-        if (player != null) {
-            if (player.isCreative() && interactedBlockEntity instanceof ExplosiveCatalystVessel vessel && vessel.hasDataReady()) {
-                if (!level.isClientSide() && vessel.hasDataReady()) {
-                    Component blockName = level.getBlockEntity(interactedPos) instanceof Nameable nameable ? nameable.getDisplayName() : interactedState.getBlock().getName();
-                    ExplosiveCatalystData vesselData = Objects.requireNonNullElse(vessel.getRawData(), ExplosiveCatalystData.ZERO);
-                    usedStack.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), vessel.getRawData());
-                    usedStack.applyComponents(new PatchedDataComponentMap(interactedBlockEntity.collectComponents().filter(vesselData.behavior(level).value()::isComponentIrrelevant)).asPatch());
-                    player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", blockName, usedStack.getDisplayName()), true);
-                }
-                return InteractionResult.SUCCESS;
-            }
-        }
-        return super.useOn(context);
     }
 
     @Override

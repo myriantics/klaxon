@@ -12,6 +12,7 @@ import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
+import net.myriantics.klaxon.item.block.ExplosiveCatalystVesselBlockItem;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
@@ -77,7 +78,7 @@ public abstract class KlaxonBlockItems {
     public static final Holder<Item> PRECISION_DISPENSER = registerBlockItem(KlaxonBlocks.PRECISION_DISPENSER);
     public static final Holder<Item> NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.NETHER_REACTOR_CORE);
     public static final Holder<Item> CRUDE_NETHER_REACTOR_CORE = registerBlockItem(KlaxonBlocks.CRUDE_NETHER_REACTOR_CORE);
-    public static final Holder<Item> MODULAR_EXPLOSIVE_BLOCK = registerBlockItem(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, new BlockItem(
+    public static final Holder<Item> MODULAR_EXPLOSIVE_BLOCK = registerBlockItem(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, new ExplosiveCatalystVesselBlockItem(
             KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK.value(),
             new KlaxonItemProperties()
                     .component(KlaxonDataComponentTypes.MODULAR_EXPLOSIVE_BLOCK_CONFIG, ModularExplosiveBlockConfigComponent.DEFAULT)

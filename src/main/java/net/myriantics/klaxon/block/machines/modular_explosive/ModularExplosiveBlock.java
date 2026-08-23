@@ -91,13 +91,13 @@ public class ModularExplosiveBlock extends BaseEntityBlock {
                     Component blockName = blockEntity instanceof Nameable nameable ? nameable.getDisplayName() : state.getBlock().getName();
                     final SoundEvent soundEvent;
                     final Holder.Reference<GameEvent> gameEvent;
-                    ExplosiveCatalystBehavior behavior = blockEntity.getRawData().behavior(level).value();
-                    if (blockEntity.getRawData().equals(appliedData) && behavior.relevantComponentsMatch(blockEntity.components(), stack.getComponents())) {
+                    ExplosiveCatalystBehavior newBehavior = appliedData.behavior(level).value();
+                    if (blockEntity.getRawData().equals(appliedData) && newBehavior.relevantComponentsMatch(blockEntity.components(), stack.getComponents())) {
                         gameEvent = null;
                         soundEvent = KlaxonSoundEvents.MODULAR_EXPLOSIVE_CATALYST_MATCH;
-                        player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.matches", stack.getDisplayName(), blockName), true);
+                        player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.matches", blockName, stack.getDisplayName()), true);
                     } else {
-                        blockEntity.applyComponents(stack.getPrototype(), stack.getComponentsPatch().forget(behavior::isComponentIrrelevant));
+                        blockEntity.applyComponents(stack.getPrototype(), stack.getComponentsPatch().forget(newBehavior::isComponentIrrelevant));
                         blockEntity.setData(appliedData);
                         if (level.hasNeighborSignal(pos)) {
                             redstoneTrigger(level, pos, state);
