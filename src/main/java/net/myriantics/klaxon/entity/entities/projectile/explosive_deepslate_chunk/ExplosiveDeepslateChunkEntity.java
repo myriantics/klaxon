@@ -113,7 +113,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile {
             if (data.producesFire() && !entity.fireImmune() && !entity.isInWaterOrRain()) {
                 entity.igniteForTicks(Mth.floor(data.explosionPower()) * 8);
             }
-            entity.hurt(this.damageSources().explosion(this.getOwner(), this), Math.clamp((float) this.getDeltaMovement().length(), 1f, 5f));
+            entity.hurt(this.damageSources().explosion(this, this.getOwner()), Math.clamp((float) this.getDeltaMovement().length(), 1f, 5f));
             this.detonate(
                     this.createContext()
                             .add(KlaxonExplosiveCatalystContextParams.SUPPORT_STATE, result.getEntity().getBlockStateOn())

@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -196,6 +197,11 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
     @Override
     public int getMaxHeadXRot() {
         return 30;
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        return super.isInvulnerableTo(source) || source.getEntity() == this || source.getDirectEntity() instanceof ExplosiveDeepslateChunkEntity;
     }
 
     @Override
