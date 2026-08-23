@@ -33,7 +33,7 @@ public class ExplosiveDeepslateChunkEntityModel extends EntityModel<ExplosiveDee
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition modelPartData = meshDefinition.getRoot();
         CubeDeformation deformation = new CubeDeformation(0.01f);
-        PartPose partPose = PartPose.offset(0f, 8f, 0f);
+        PartPose partPose = PartPose.offset(0f, 0f, 0f);
 
         CubeListBuilder staticPartBuilder = CubeListBuilder.create();
         staticPartBuilder

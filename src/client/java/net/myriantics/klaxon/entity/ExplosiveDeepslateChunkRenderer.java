@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
 import net.myriantics.klaxon.registry.render.KlaxonEntityModelLayers;
@@ -30,8 +32,15 @@ public class ExplosiveDeepslateChunkRenderer extends EntityRenderer<ExplosiveDee
 
     @Override
     public void render(ExplosiveDeepslateChunkEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-        this.model.renderToBuffer(poseStack, bufferSource.getBuffer(this.renderType), packedLight, OverlayTexture.NO_OVERLAY, entity.getColor());
+        if (entity.tickCount > 2) {
+            super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+            poseStack.pushPose();
+            poseStack.translate(0, 0.25, 0);
+            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, entity.yRotO, entity.getYRot()) - 90.0F));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, entity.xRotO, entity.getXRot())));
+            this.model.renderToBuffer(poseStack, bufferSource.getBuffer(this.renderType), packedLight, OverlayTexture.NO_OVERLAY, entity.getColor());
+            poseStack.popPose();
+        }
     }
 
     @Override
