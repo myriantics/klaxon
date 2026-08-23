@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -63,7 +64,7 @@ public class ExplosiveDeepslateChunkItem extends Item implements ProjectileItem 
                     Component blockName = level.getBlockEntity(interactedPos) instanceof Nameable nameable ? nameable.getDisplayName() : interactedState.getBlock().getName();
                     ExplosiveCatalystData vesselData = Objects.requireNonNullElse(vessel.getRawData(), ExplosiveCatalystData.ZERO);
                     usedStack.set(KlaxonDataComponentTypes.EXPLOSIVE_CATALYST_DATA.value(), vessel.getRawData());
-                    usedStack.applyComponents(interactedBlockEntity.collectComponents().filter(vesselData.behavior(level).value()::isComponentIrrelevant));
+                    usedStack.applyComponents(new PatchedDataComponentMap(interactedBlockEntity.collectComponents().filter(vesselData.behavior(level).value()::isComponentIrrelevant)).asPatch());
                     player.displayClientMessage(Component.translatable("klaxon.text.actionbar.explosive_catalyst_data.copy_from_to", blockName, usedStack.getDisplayName()), true);
                 }
                 return InteractionResult.SUCCESS;
