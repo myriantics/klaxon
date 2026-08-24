@@ -20,6 +20,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -87,10 +88,29 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
 
     @Override
     public void tick() {
-        super.tick();
         if (!this.level().isClientSide() && this.isAlive()) {
             this.tickLevitation();
         }
+        this.setBoundingBox(this.makeBoundingBox());
+        Vec3 deltaMovement = this.getDeltaMovement();
+        if (deltaMovement.y > 0.001) {
+            for (Entity entity : this.level()
+                    .getEntities(
+                            this,
+                            this.getBoundingBox().inflate(0, deltaMovement.y, 0),
+                            EntitySelector.NO_SPECTATORS.and(entityx -> !entityx.isPassengerOfSameVehicle(this))
+                    )) {
+                if (!(entity instanceof Shulker || entity instanceof OminousDeepslateBlastProcessorEntity) && !entity.noPhysics && (entity.isControlledByLocalInstance() && (!(entity instanceof Player player) || player.isLocalPlayer()))) {
+                    entity.move(MoverType.SHULKER, new Vec3(0, deltaMovement.y * 2.5, 0));
+                }
+            }
+        }
+        super.tick();
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
     }
 
     @Override
@@ -195,7 +215,7 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
 
     @Override
     public boolean canBeCollidedWith() {
-        return true;
+        return this.isAlive();
     }
 
     @Override
