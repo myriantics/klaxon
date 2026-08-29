@@ -15,6 +15,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.item.consumable.HallnoxSliceItem;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
@@ -119,7 +120,7 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     public static final Holder<Item> CRUDE_STEEL_NUGGET = registerReallySimpleItem("crude_steel_nugget");
     public static final Holder<Item> RUBBER_GLOB = registerReallySimpleItem("rubber_glob");
     public static final Holder<Item> COPPER_NUGGET = registerReallySimpleItem("copper_nugget");
-    public static final Holder<Item> HALLNOX_SLICE = registerSimpleItem("hallnox_slice", new Item(new Item.Properties()));
+    public static final Holder<Item> HALLNOX_SLICE = registerSimpleItem("hallnox_slice", new HallnoxSliceItem(new Item.Properties()));
     public static final Holder<Item> DRIED_HALLNOX_SLICE = registerReallySimpleItem("dried_hallnox_slice");
 
     // foods
