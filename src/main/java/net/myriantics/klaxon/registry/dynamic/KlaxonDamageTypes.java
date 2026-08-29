@@ -43,6 +43,10 @@ public abstract class KlaxonDamageTypes {
     public static final ResourceKey<DamageType> FORCEFUL_EXHAUST =
             createDamageType("forceful_exhaust");
 
+    // mob
+    public static final ResourceKey<DamageType> WIND_RAMMING =
+            createDamageType("wind_ramming");
+
     // to be added - will be used with Coring Drill
     public static final ResourceKey<DamageType> MINCING =
             createDamageType("mincing");

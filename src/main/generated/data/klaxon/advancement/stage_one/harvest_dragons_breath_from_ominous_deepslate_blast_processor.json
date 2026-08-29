@@ -1,0 +1,44 @@
+{
+  "parent": "klaxon:stage_one/watch_blast_processor_craft",
+  "criteria": {
+    "harvest_dragons_breath_from_ominous_deepslate_blast_processor": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "klaxon:entity_owner",
+            "owner_predicate": {
+              "type": "klaxon:ominous_deepslate_blast_processor"
+            },
+            "owner_provider_target": "this"
+          }
+        ],
+        "item": {
+          "items": "minecraft:glass_bottle"
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.harvest_dragons_breath_from_ominous_deepslate_blast_processor.description"
+    },
+    "hidden": true,
+    "icon": {
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      },
+      "count": 1,
+      "id": "minecraft:dragon_breath"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.harvest_dragons_breath_from_ominous_deepslate_blast_processor.title"
+    }
+  },
+  "requirements": [
+    [
+      "harvest_dragons_breath_from_ominous_deepslate_blast_processor"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

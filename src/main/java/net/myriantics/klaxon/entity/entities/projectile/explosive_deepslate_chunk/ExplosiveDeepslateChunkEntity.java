@@ -144,7 +144,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile implement
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (!this.isRemoved() && source.is(KlaxonDamageTypeTags.DETONATES_EXPLOSIVE_DEEPSLATE_CHUNKS)) {
+        if (amount > 0 && !this.isRemoved() && source.is(KlaxonDamageTypeTags.DETONATES_EXPLOSIVE_DEEPSLATE_CHUNKS)) {
             if (!this.level().isClientSide()) {
                 this.detonate(
                         this.createContext()
@@ -158,7 +158,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile implement
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        return super.canHitEntity(target) && target != this.getOwner() && target != this;
+        return super.canHitEntity(target) && target != this.getOwner() && target != this && !target.onGround();
     }
 
     protected void detonate(ExplosiveCatalystContext context) {

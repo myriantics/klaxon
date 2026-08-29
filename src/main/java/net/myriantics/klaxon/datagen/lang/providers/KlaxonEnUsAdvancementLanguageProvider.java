@@ -37,6 +37,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
 
         // level 2
         addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.HARVEST_DRAGONS_BREATH_FROM_OMINOUS_DEEPSLATE_BLAST_PROCESSOR,
+                "Secondhand Spittle",
+                "Harvest Dragon's Breath from an Ominous Deepslate Blast Processor"
+        );
+        addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.WATCH_NETHER_REACTOR_CORE_ACTIVATE,
                 "THE NETHER.",
                 "Detonate an explosive inside of a Nether Reactor Core"

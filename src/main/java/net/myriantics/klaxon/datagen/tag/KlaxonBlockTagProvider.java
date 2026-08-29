@@ -368,6 +368,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(KlaxonBlockTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_BLOCKS)
                 .addOptionalTag(ConventionalBlockTags.DEEPSLATE_COBBLESTONES)
                 .add(
+                        Blocks.DEEPSLATE
+                )
+                .add(
                         Blocks.POLISHED_DEEPSLATE,
                         Blocks.POLISHED_DEEPSLATE_SLAB,
                         Blocks.POLISHED_DEEPSLATE_STAIRS,

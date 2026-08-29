@@ -16,6 +16,7 @@ import net.myriantics.klaxon.registry.entity.*;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystHandlers;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystTransformerTypes;
 import net.myriantics.klaxon.registry.item.*;
+import net.myriantics.klaxon.registry.loot.KlaxonLootItemConditions;
 import net.myriantics.klaxon.registry.misc.*;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
@@ -80,6 +81,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonExplosiveCatalystTransformerTypes.init();
 		KlaxonCommands.init();
 		KlaxonDefaultEntityAttributes.init();
+		KlaxonLootItemConditions.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

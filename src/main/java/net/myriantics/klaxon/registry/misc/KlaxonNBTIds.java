@@ -44,4 +44,6 @@ public abstract class KlaxonNBTIds {
 
     // components
     public static final String COMPONENTS = KlaxonCommon.locateAlt("components");
+
+    public static final String RAMMING = KlaxonCommon.locateAlt("ramming");
 }

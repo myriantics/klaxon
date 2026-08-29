@@ -13,20 +13,24 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.advancement.criterion.*;
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.EntityGrappleCriterion;
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchCableDisconnectCriterion;
 import net.myriantics.klaxon.advancement.criterion.grapple_winch.GrappleWinchVeinMineCriterion;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementSubProvider;
+import net.myriantics.klaxon.loot.predicates.LootItemEntityOwnerCondition;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.muffling.MufflerActionType;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.convention.KlaxonConventionalItemTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvider {
@@ -41,6 +45,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     public static final String OBTAIN_HALLNOX_POD = "obtain_hallnox_pod";
 
     // 2
+    public static final String HARVEST_DRAGONS_BREATH_FROM_OMINOUS_DEEPSLATE_BLAST_PROCESSOR = "harvest_dragons_breath_from_ominous_deepslate_blast_processor";
     public static final String WATCH_NETHER_REACTOR_CORE_ACTIVATE = "watch_nether_reactor_core_activate";
     public static final String USE_HAMMER_TO_MAKE_METAL_PLATE = "use_hammer_to_make_metal_plate";
     public static final String OBTAIN_ANY_RUBBER_GLOB = "obtain_any_rubber_glob";
@@ -90,7 +95,11 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementHolder watchBlastProcessorCraft = addTask(root, WATCH_BLAST_PROCESSOR_CRAFT, KlaxonItems.FRACTURED_RAW_IRON.value(), BlockActivationCriterion.Conditions.create(KlaxonBlockTags.BLAST_PROCESSORS));
         AdvancementHolder obtainHallnoxPod = addTask(root, OBTAIN_HALLNOX_POD, KlaxonItems.HALLNOX_POD.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.HALLNOX_POD.value()));
 
+        ItemStack enchantedDragonsBreath = new ItemStack(Items.DRAGON_BREATH);
+        enchantedDragonsBreath.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+
         // level 2
+        AdvancementHolder harvestDragonsBreathFromOminousDeepslateBlastProcessor = addHiddenTask(watchBlastProcessorCraft, HARVEST_DRAGONS_BREATH_FROM_OMINOUS_DEEPSLATE_BLAST_PROCESSOR, enchantedDragonsBreath, PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ItemPredicate.Builder.item().of(Items.GLASS_BOTTLE), Optional.of(ContextAwarePredicate.create(new LootItemEntityOwnerCondition(Optional.of(EntityPredicate.Builder.entity().of(KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value()).build()), LootContext.EntityTarget.THIS)))));
         AdvancementHolder watchNetherReactorCoreActivate = addTask(obtainHallnoxPod, WATCH_NETHER_REACTOR_CORE_ACTIVATE, KlaxonItems.NETHER_REACTOR_CORE.value(), BlockActivationCriterion.Conditions.create(KlaxonBlockTags.NETHER_REACTOR_CORES));
         AdvancementHolder hammerCraftMetalPlate = addTask(watchBlastProcessorCraft, USE_HAMMER_TO_MAKE_METAL_PLATE, KlaxonItems.CRUDE_STEEL_PLATE.value(), ToolUsageRecipeCraftCriterion.Conditions.createHammering(Ingredient.of(KlaxonConventionalItemTags.PLATES)));
         AdvancementHolder obtainAnyRubberGlob = addTask(watchBlastProcessorCraft, OBTAIN_ANY_RUBBER_GLOB, KlaxonItems.RUBBER_GLOB.value(), InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(KlaxonItems.RUBBER_GLOB.value())));

@@ -1,21 +1,24 @@
 package net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_processor;
 
+import com.mojang.serialization.Dynamic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
@@ -24,6 +27,7 @@ import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -31,23 +35,29 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorBlockEntity;
 import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
+import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implements Enemy, RangedAttackMob {
 
+    protected static final int RAM_COOLDOWN = 80;
+    protected static final ExplosiveCatalystData DEFAULT = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH, 3.0, false);
+
     protected final float desiredLevitationHeight;
     protected final float levitationTolerance;
     protected @Nullable BlockPos blockPos = null;
-    protected static final ExplosiveCatalystData DEFAULT = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH, 3.0, false);
+    protected static final EntityDataAccessor<Boolean> RAMMING = SynchedEntityData.defineId(OminousDeepslateBlastProcessorEntity.class, EntityDataSerializers.BOOLEAN);
+    protected int ramCooldown = 0;
 
     public OminousDeepslateBlastProcessorEntity(EntityType<? extends OminousDeepslateBlastProcessorEntity> entityType, Level level) {
         super(entityType, level);
@@ -75,11 +85,20 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
     }
 
     @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(RAMMING, false);
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(6, new HurtByTargetGoal(this, OminousDeepslateBlastProcessorEntity.class));
-        this.goalSelector.addGoal(7, new RangedAttackGoal(this, 1.25, 50, 10));
-        this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.goalSelector.addGoal(2, new HurtByTargetGoal(this, OminousDeepslateBlastProcessorEntity.class));
+        this.goalSelector.addGoal(3, new WindRam.Heal(this));
+        this.goalSelector.addGoal(4, new ApproachTarget(this));
+        this.goalSelector.addGoal(5, new RangedAttackGoal(this, 1.25, 50, 10));
+        // this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -98,7 +117,7 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
                     .getEntities(
                             this,
                             this.getBoundingBox().inflate(0, deltaMovement.y, 0),
-                            EntitySelector.NO_SPECTATORS.and(entityx -> !entityx.isPassengerOfSameVehicle(this))
+                            EntitySelector.NO_SPECTATORS.and(e -> !e.isPassengerOfSameVehicle(this))
                     )) {
                 if (!(entity instanceof Shulker || entity instanceof OminousDeepslateBlastProcessorEntity) && !entity.noPhysics && (entity.isControlledByLocalInstance() && (!(entity instanceof Player player) || player.isLocalPlayer()))) {
                     entity.move(MoverType.SHULKER, new Vec3(0, deltaMovement.y * 2.5, 0));
@@ -106,6 +125,45 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
             }
         }
         super.tick();
+        if (!this.level().isClientSide() && this.isRamCooldownFinished() && this.isRamming() && (this.verticalCollision || this.horizontalCollision)) {
+            this.performRammingExplosion();
+        }
+        if (this.ramCooldown > 0) {
+            this.ramCooldown--;
+        }
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (!this.level().isClientSide() && amount > 0 && this.ramCooldown > 0) {
+            this.ramCooldown -= Math.clamp((int) (amount * 3), 0, 16);
+        }
+        return super.hurt(source, amount);
+    }
+
+    private void performRammingExplosion() {
+        Level level = this.level();
+        Vec3 origin = this.getEyePosition();
+        final int neededHealing = this.getNeededHealing();
+        int healingCredits = 0;
+        if (level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && !this.isInWater()) {
+            for (BlockPos pos : BlockPos.randomInCube(this.level().getRandom(), 27, BlockPos.containing(origin), 1)) {
+                BlockState targetState = level.getBlockState(pos);
+                if (targetState.is(KlaxonBlockTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_HEALING_BLOCKS) && healingCredits < neededHealing) {
+                    level.setBlockAndUpdate(pos, targetState.getFluidState().createLegacyBlock());
+                    healingCredits++;
+                } else {
+                    level.destroyBlock(pos, true, this);
+                }
+            }
+        }
+
+        for (Entity entity : level.getEntities(this, this.getBoundingBox().inflate(1))) {
+            entity.hurt(level.damageSources().explosion(null, this), (float) (entity.position().distanceTo(origin) * 2f));
+        }
+        this.heal(healingCredits);
+        this.setRamming(false);
+        this.ramCooldown = RAM_COOLDOWN;
     }
 
     @Override
@@ -172,7 +230,7 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
 
     protected double getLevitationVelocity() {
         double targetHoverHeight = this.getTargetHoverHeight();
-        return (targetHoverHeight < 0 ? targetHoverHeight * 1.2 : targetHoverHeight * 0.3) / 20;
+        return (targetHoverHeight < 0 ? targetHoverHeight * 1.6 : targetHoverHeight * 0.8) / 20;
     }
 
     protected double getTargetHoverHeight() {
@@ -246,6 +304,7 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
     @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
         ExplosiveDeepslateChunkEntity chunk = new ExplosiveDeepslateChunkEntity(KlaxonEntityTypes.EXPLOSIVE_DEEPSLATE_CHUNK.value(), this.level());
+        chunk.setPos(this.getEyePosition());
         chunk.setData(DEFAULT);
         chunk.setOwner(this);
         double d = target.getEyeY() - 1.1F;
@@ -253,8 +312,37 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         double f = d - chunk.getY();
         double g = target.getZ() - this.getZ();
         double h = Math.sqrt(e * e + g * g) * 0.2F;
-        chunk.shoot(e, f + h, g, 1.6f, 12.0f);
+        chunk.shoot(e, f + h, g, 0.8f, 12.0f);
         level().addFreshEntity(chunk);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean(KlaxonNBTIds.RAMMING, this.isRamming());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.setRamming(compound.getBoolean(KlaxonNBTIds.RAMMING));
+    }
+
+    public void setRamming(boolean ramming) {
+        this.getEntityData().set(RAMMING, ramming);
+    }
+
+    public boolean isRamming() {
+        return this.getEntityData().get(RAMMING);
+    }
+
+    public boolean isRamCooldownFinished() {
+        return this.ramCooldown <= 0;
+    }
+
+    @Override
+    public MoveControl getMoveControl() {
+        return (MoveControl) super.getMoveControl();
     }
 
     static class LookControl extends net.minecraft.world.entity.ai.control.LookControl {
@@ -268,27 +356,32 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         }
     }
 
-    static class MoveControl extends net.minecraft.world.entity.ai.control.MoveControl {
+    public static class MoveControl extends net.minecraft.world.entity.ai.control.MoveControl {
         public MoveControl(Mob mob) {
             super(mob);
+        }
+
+        public void clear() {
+            this.operation = Operation.WAIT;
         }
 
         @Override
         public void tick() {
             super.tick();
-            /* if (this.operation == Operation.MOVE_TO) {
+            if (this.operation == Operation.MOVE_TO) {
                 Vec3 motionVec = new Vec3(this.wantedX - this.mob.getX(), this.wantedY - this.mob.getY(), this.wantedZ - this.mob.getZ());
                 double distance = motionVec.length();
                 motionVec = motionVec.normalize();
+                this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(motionVec.scale(0.05)));
                 if (this.canReach(motionVec, Mth.ceil(distance))) {
-                    this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(motionVec.scale(0.05)));
                 } else {
                     this.operation = Operation.WAIT;
                 }
-            }*/
+            }
         }
 
         private boolean canReach(Vec3 pos, int length) {
+            return true;/*
             AABB aABB = this.mob.getBoundingBox();
 
             for (int i = 1; i < length; i++) {
@@ -298,7 +391,7 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
                 }
             }
 
-            return true;
+            return true;*/
         }
     }
 
@@ -308,5 +401,13 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         public boolean canUse() {
             return false;
         }
+    }
+
+    enum State {
+        IDLE,
+        ADVANCING,
+        STARTUP,
+        RETREATING,
+        ENRAGED;
     }
 }
