@@ -41,6 +41,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     public static final String OBTAIN_HALLNOX_POD = "obtain_hallnox_pod";
 
     // 2
+    public static final String MAKE_A_SIGN_GLOW_WITH_HALLNOX_SLICE = "make_a_sign_glow_with_hallnox_slice";
     public static final String WATCH_NETHER_REACTOR_CORE_ACTIVATE = "watch_nether_reactor_core_activate";
     public static final String USE_HAMMER_TO_MAKE_METAL_PLATE = "use_hammer_to_make_metal_plate";
     public static final String OBTAIN_ANY_RUBBER_GLOB = "obtain_any_rubber_glob";
@@ -98,6 +99,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementHolder makeshiftItemFullRepair = addTask(watchBlastProcessorCraft, MAKESHIFT_ITEM_FULL_REPAIR, Items.ANVIL, ItemRepairCriterion.Conditions.createFullRepairFromTag(KlaxonItemTags.MAKESHIFT_CRAFTED_EQUIPMENT));
 
         // level 3
+        AdvancementHolder makeASignGlowWithHallnoxSlice = addTask(obtainHallnoxPod, MAKE_A_SIGN_GLOW_WITH_HALLNOX_SLICE, KlaxonItems.HALLNOX_SLICE.value(), ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.ALL_SIGNS)), ItemPredicate.Builder.item().of(KlaxonItems.HALLNOX_SLICE.value())));
         AdvancementHolder obtainModularExplosive = addTask(hammerCraftMetalPlate, OBTAIN_MODULAR_EXPLOSIVE, KlaxonItems.MODULAR_EXPLOSIVE_BLOCK.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.MODULAR_EXPLOSIVE_BLOCK.value()));
         AdvancementHolder applyAnyMuffler = addTask(hammerCraftMetalPlate, APPLY_ANY_MUFFLER, Items.LEATHER, MufflerInteractionCriterion.Conditions.create(MufflerActionType.APPLY, null));
         AdvancementHolder boostedHammerWalljump = addGoal(normalHammerWalljump, HAMMER_WALLJUMP_BOOSTED, Items.BLAZE_POWDER,  WalljumpAbilityCriterion.Conditions.createStrengthWalljump());

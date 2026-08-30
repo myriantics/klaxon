@@ -1,0 +1,44 @@
+{
+  "parent": "klaxon:stage_one/obtain_hallnox_pod",
+  "criteria": {
+    "make_a_sign_glow_with_hallnox_slice": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": "#minecraft:all_signs"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": "klaxon:hallnox_slice"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.make_a_sign_glow_with_hallnox_slice.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:hallnox_slice"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.make_a_sign_glow_with_hallnox_slice.title"
+    }
+  },
+  "requirements": [
+    [
+      "make_a_sign_glow_with_hallnox_slice"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

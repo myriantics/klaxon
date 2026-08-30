@@ -37,6 +37,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
 
         // level 2
         addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.MAKE_A_SIGN_GLOW_WITH_HALLNOX_SLICE,
+                "Larp And Behold!",
+                "Make the text of any kind of sign glow with a Hallnox Slice"
+        );
+        addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.WATCH_NETHER_REACTOR_CORE_ACTIVATE,
                 "THE NETHER.",
                 "Detonate an explosive inside of a Nether Reactor Core"
