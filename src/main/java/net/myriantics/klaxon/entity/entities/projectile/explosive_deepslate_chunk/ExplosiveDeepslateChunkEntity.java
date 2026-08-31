@@ -101,7 +101,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile implement
         return this.color;
     }
 
-    protected void setComponents(DataComponentPatch patch) {
+    public void setComponents(DataComponentPatch patch) {
         this.components = patch.split().added();
     }
 

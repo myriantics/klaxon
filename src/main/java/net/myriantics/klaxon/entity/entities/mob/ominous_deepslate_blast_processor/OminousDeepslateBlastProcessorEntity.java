@@ -1,12 +1,19 @@
 package net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_processor;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,6 +30,8 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.FireworkExplosion;
+import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -32,21 +41,27 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
+import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
+import net.myriantics.klaxon.registry.misc.KlaxonColors;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implements Enemy, RangedAttackMob {
 
-    protected static final int RAM_COOLDOWN = 80;
-    protected static final ExplosiveCatalystData DEFAULT = new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH, 3.0, false);
+    protected static final DataComponentMap ATTACK_MODIFIERS = DataComponentMap.builder()
+            .set(DataComponents.FIREWORKS, new Fireworks(2, List.of(
+                    new FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL, IntList.of(KlaxonColors.FIREWORK_STAR_GREY.getRGB()), IntList.of(KlaxonColors.CREEPER_GREEN.getRGB()), false, true)
+            )))
+            .build();
 
     protected final float desiredLevitationHeight;
     protected final float levitationTolerance;
@@ -54,6 +69,8 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
     protected static final EntityDataAccessor<Boolean> RAMMING = SynchedEntityData.defineId(OminousDeepslateBlastProcessorEntity.class, EntityDataSerializers.BOOLEAN);
     protected int ramCooldown = 0;
     protected WindRam.Type ramType = WindRam.Type.HEAL;
+
+    protected SimpleWeightedRandomList<ExplosiveCatalystData> attacks = this.initAttacks();
 
     public OminousDeepslateBlastProcessorEntity(EntityType<? extends OminousDeepslateBlastProcessorEntity> entityType, Level level) {
         super(entityType, level);
@@ -75,6 +92,21 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         this.setYHeadRot(wantedRot);
     }
 
+    private SimpleWeightedRandomList<ExplosiveCatalystData> initAttacks() {
+        SimpleWeightedRandomList.Builder<ExplosiveCatalystData> builder = SimpleWeightedRandomList.builder();
+        this.registerAttacks(builder);
+        return builder.build();
+    }
+
+    protected void registerAttacks(SimpleWeightedRandomList.Builder<ExplosiveCatalystData> builder) {
+        builder.add(new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH, 3.0, false), 30);
+        builder.add(new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.TNT, 1.5, false), 60);
+        builder.add(new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.TNT_MINECART, 2.0, false), 10);
+        builder.add(new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.RESPAWN_ANCHORLIKE, 1.8, true), 10);
+        builder.add(new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.BEDLIKE, 1.8, true), 10);
+        builder.add(new ExplosiveCatalystData(KlaxonExplosiveCatalystBehaviors.FIREWORK_ROCKET, 1.5, false), 15);
+    }
+
     @Override
     public void setYRot(float yRot) {
         super.setYRot(yRot);
@@ -94,7 +126,7 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         this.goalSelector.addGoal(3, new WindRam.Heal(this));
         this.goalSelector.addGoal(4, new ApproachTarget(this));
         this.goalSelector.addGoal(5, new WindRam.Attack(this));
-        this.goalSelector.addGoal(6, new RangedAttackGoal(this, 1.25, 50, 10));
+        this.goalSelector.addGoal(6, new RangedAttackGoal(this, 1.25, 80, 10));
         // this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
     }
 
@@ -324,18 +356,27 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         return super.isInvulnerableTo(source) || source.getEntity() == this || source.getDirectEntity() instanceof ExplosiveDeepslateChunkEntity;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
         ExplosiveDeepslateChunkEntity chunk = new ExplosiveDeepslateChunkEntity(KlaxonEntityTypes.EXPLOSIVE_DEEPSLATE_CHUNK.value(), this.level());
         chunk.setPos(this.getEyePosition());
-        chunk.setData(DEFAULT);
+        chunk.setData(this.attacks.getRandom(this.level().getRandom()).get().data());
+        DataComponentPatch.Builder patch = DataComponentPatch.builder();
+        ExplosiveCatalystBehavior behavior = chunk.getData().behavior(this.level()).value();
+        for (DataComponentType<?> type : ATTACK_MODIFIERS.keySet()) {
+            if (behavior.isComponentRelevant(type)) {
+                patch.set((DataComponentType<Object>) type, ATTACK_MODIFIERS.get(type));
+            }
+        }
+        chunk.setComponents(patch.build());
         chunk.setOwner(this);
         double d = target.getEyeY() - 1.1F;
         double e = target.getX() - this.getX();
         double f = d - chunk.getY();
         double g = target.getZ() - this.getZ();
         double h = Math.sqrt(e * e + g * g) * 0.2F;
-        chunk.shoot(e, f + h, g, 0.8f, 12.0f);
+        chunk.shoot(e, f + h, g, 0.8f, 10 - this.level().getDifficulty().getId() * 4);
         level().addFreshEntity(chunk);
     }
 
