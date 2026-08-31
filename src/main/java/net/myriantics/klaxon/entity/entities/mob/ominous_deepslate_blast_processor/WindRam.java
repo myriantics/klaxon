@@ -40,7 +40,7 @@ public abstract sealed class WindRam extends Goal permits WindRam.Heal, WindRam.
 
     @Override
     public final boolean canUse() {
-        return this.mob.isRamCooldownFinished() && !this.mob.isRamming() && this.extraCanUse();
+        return this.mob.isRamCooldownFinished() && !this.mob.isRamming() && this.extraCanUse() && Math.abs(this.mob.getDeltaMovement().y) < 0.25;
     }
 
     @Override
@@ -74,7 +74,7 @@ public abstract sealed class WindRam extends Goal permits WindRam.Heal, WindRam.
                     ParticleTypes.GUST_EMITTER_LARGE,
                     SoundEvents.WIND_CHARGE_BURST
             );
-            this.mob.addDeltaMovement(normalizedTarget.scale(0.5));
+            this.mob.addDeltaMovement(normalizedTarget.scale(0.25));
             Vec3 target = this.getTargetVec();
             this.mob.getMoveControl().setWantedPosition(target.x, target.y, target.z, 1.2);
             this.mob.setRamming(true);
@@ -184,7 +184,7 @@ public abstract sealed class WindRam extends Goal permits WindRam.Heal, WindRam.
 
         @Override
         protected @Nullable Vec3 getTargetVec() {
-            return this.mob.getTarget().getEyePosition();
+            return this.mob.getTarget().position().subtract(this.mob.position());
         }
 
         @Override

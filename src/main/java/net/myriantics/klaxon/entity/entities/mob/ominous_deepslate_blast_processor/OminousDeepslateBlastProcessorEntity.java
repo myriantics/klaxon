@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_processor;
 
 import com.mojang.serialization.Dynamic;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -97,7 +98,8 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         this.goalSelector.addGoal(2, new HurtByTargetGoal(this, OminousDeepslateBlastProcessorEntity.class));
         this.goalSelector.addGoal(3, new WindRam.Heal(this));
         this.goalSelector.addGoal(4, new ApproachTarget(this));
-        this.goalSelector.addGoal(5, new RangedAttackGoal(this, 1.25, 50, 10));
+        this.goalSelector.addGoal(5, new WindRam.Attack(this));
+        this.goalSelector.addGoal(6, new RangedAttackGoal(this, 1.25, 50, 10));
         // this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
     }
 
@@ -125,12 +127,29 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
             }
         }
         super.tick();
-        if (!this.level().isClientSide() && this.isRamCooldownFinished() && this.isRamming() && (this.verticalCollision || this.horizontalCollision)) {
-            this.performRammingExplosion();
-        }
         if (this.ramCooldown > 0) {
             this.ramCooldown--;
         }
+    }
+
+    @Override
+    public void travel(Vec3 travelVector) {
+        Vec3 originalDeltaMovement = this.getDeltaMovement();
+        super.travel(travelVector);
+        if (!this.level().isClientSide() && this.shouldRam()) {
+            Vec3 postMotionDeltaMovement = this.getDeltaMovement();
+            if (originalDeltaMovement.length() > 0.4 && (compareStuff(originalDeltaMovement.x, postMotionDeltaMovement.x) || compareStuff(originalDeltaMovement.y, postMotionDeltaMovement.y) || compareStuff(originalDeltaMovement.z, postMotionDeltaMovement.z))) {
+                this.performRammingExplosion();
+            }
+        }
+    }
+
+    protected boolean shouldRam() {
+        return this.isRamCooldownFinished() && this.isRamming() && this.isAlive();
+    }
+
+    private static boolean compareStuff(double originalVal, double newVal) {
+        return Math.abs(newVal) < 0.01 && Math.abs(newVal) < Math.abs(originalVal) - 0.01;
     }
 
     @Override
@@ -138,7 +157,7 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         if (!this.level().isClientSide() && amount > 0 && this.ramCooldown > 0) {
             this.ramCooldown -= Math.clamp((int) (amount * 3), 0, 16);
         }
-        return super.hurt(source, amount);
+        return super.hurt(source, Math.clamp(amount, 0, 2));
     }
 
     private void performRammingExplosion() {
@@ -158,8 +177,8 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
             }
         }
 
-        for (Entity entity : level.getEntities(this, this.getBoundingBox().inflate(1))) {
-            entity.hurt(level.damageSources().explosion(null, this), (float) (entity.position().distanceTo(origin) * 2f));
+        for (Entity entity : level.getEntities(this, this.getBoundingBox().inflate(2))) {
+            entity.hurt(level.damageSources().explosion(null, this), (float) (Math.clamp(-4 * Math.log(entity.distanceTo(this) / 67), 1, 8)));
         }
         this.heal(healingCredits);
         this.setRamming(false);
@@ -274,6 +293,11 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
     @Override
     public boolean canBeCollidedWith() {
         return this.isAlive();
+    }
+
+    @Override
+    public boolean canCollideWith(Entity entity) {
+        return super.canCollideWith(entity) || this.isRamming();
     }
 
     @Override

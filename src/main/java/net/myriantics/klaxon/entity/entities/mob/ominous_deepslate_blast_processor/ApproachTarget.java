@@ -22,7 +22,7 @@ class ApproachTarget extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !this.navigation.isDone() && this.mob.getTarget() != null && this.mob.position().distanceTo(this.mob.getTarget().position()) > 5;
+        return !this.navigation.isDone() && this.mob.getTarget() != null && this.mob.position().distanceTo(this.mob.getTarget().position()) > 8;
     }
 
     @Override
@@ -34,6 +34,7 @@ class ApproachTarget extends Goal {
     @Override
     public void stop() {
         this.navigation.stop();
+        this.mob.getMoveControl().clear();
     }
 
     @Override
