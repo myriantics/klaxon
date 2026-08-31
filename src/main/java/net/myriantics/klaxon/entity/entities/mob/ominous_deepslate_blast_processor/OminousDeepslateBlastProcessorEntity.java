@@ -1,7 +1,5 @@
 package net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_processor;
 
-import com.mojang.serialization.Dynamic;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,9 +12,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -31,7 +27,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -46,7 +41,6 @@ import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 
 public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implements Enemy, RangedAttackMob {
@@ -59,6 +53,7 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
     protected @Nullable BlockPos blockPos = null;
     protected static final EntityDataAccessor<Boolean> RAMMING = SynchedEntityData.defineId(OminousDeepslateBlastProcessorEntity.class, EntityDataSerializers.BOOLEAN);
     protected int ramCooldown = 0;
+    protected WindRam.Type ramType = WindRam.Type.HEAL;
 
     public OminousDeepslateBlastProcessorEntity(EntityType<? extends OminousDeepslateBlastProcessorEntity> entityType, Level level) {
         super(entityType, level);
@@ -180,9 +175,13 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
         for (Entity entity : level.getEntities(this, this.getBoundingBox().inflate(2))) {
             entity.hurt(level.damageSources().explosion(null, this), (float) (Math.clamp(-4 * Math.log(entity.distanceTo(this) / 67), 1, 8)));
         }
-        this.heal(healingCredits);
+        if (this.ramType == WindRam.Type.HEAL && healingCredits == 0) {
+            this.ramCooldown = this.ramType.getCooldownTicks() / 4;
+        } else {
+            this.heal(healingCredits);
+            this.ramCooldown = this.ramType.getCooldownTicks();
+        }
         this.setRamming(false);
-        this.ramCooldown = RAM_COOLDOWN;
     }
 
     @Override

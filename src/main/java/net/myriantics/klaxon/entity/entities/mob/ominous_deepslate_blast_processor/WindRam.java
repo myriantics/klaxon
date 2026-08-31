@@ -33,6 +33,8 @@ public abstract sealed class WindRam extends Goal permits WindRam.Heal, WindRam.
 
     protected abstract boolean extraCanUse();
 
+    protected abstract Type getType();
+
     @Override
     public final void start() {
         this.extraOnStart();
@@ -78,6 +80,7 @@ public abstract sealed class WindRam extends Goal permits WindRam.Heal, WindRam.
             Vec3 target = this.getTargetVec();
             this.mob.getMoveControl().setWantedPosition(target.x, target.y, target.z, 1.2);
             this.mob.setRamming(true);
+            this.mob.ramType = this.getType();
         }
     }
 
@@ -175,6 +178,11 @@ public abstract sealed class WindRam extends Goal permits WindRam.Heal, WindRam.
         private static float randomNextFloatBetweenNegPos(RandomSource randomSource) {
             return (randomSource.nextFloat() * 2) - 1;
         }
+
+        @Override
+        protected Type getType() {
+            return Type.HEAL;
+        }
     }
 
     public static final class Attack extends WindRam {
@@ -201,5 +209,27 @@ public abstract sealed class WindRam extends Goal permits WindRam.Heal, WindRam.
         protected boolean extraCanUse() {
             return this.mob.getTarget() != null;
         }
+
+        @Override
+        protected Type getType() {
+            return Type.ATTACK;
+        }
+    }
+
+    public enum Type {
+        HEAL {
+            @Override
+            public int getCooldownTicks() {
+                return 20;
+            }
+        },
+        ATTACK {
+            @Override
+            public int getCooldownTicks() {
+                return 40;
+            }
+        };
+
+        public abstract int getCooldownTicks();
     }
 }
