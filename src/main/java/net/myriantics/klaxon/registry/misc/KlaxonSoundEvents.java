@@ -46,6 +46,10 @@ public abstract class KlaxonSoundEvents {
     public static final SoundEvent MODULAR_EXPLOSIVE_INSERT_CATALYST = register("block.modular_explosive.insert_catalyst", SoundEvents.PISTON_CONTRACT);
     public static final SoundEvent MODULAR_EXPLOSIVE_CATALYST_MATCH = register("block.modular_explosive.catalyst_match", SoundEvents.NOTE_BLOCK_COW_BELL.value());
 
+    // ominous deepslate blast processor
+    public static final SoundEvent BLOCK_DEEPSLATE_BLAST_PROCESSOR_CRUNCH_BOTTLE = register("block.deepslate_blast_proccessor.crunch_bottle", SoundEvents.OMINOUS_BOTTLE_DISPOSE);
+    public static final SoundEvent ENTITY_OMINOUS_DEEPSLATE_BLAST_PROCESSOR_SPAWN = register("entity.ominous_deepslate_blast_processor.spawn", SoundEvents.APPLY_EFFECT_BAD_OMEN);
+
     public static void init() {
         KlaxonCommon.LOGGER.info("Registered KLAXON's SoundEvents!");
     }

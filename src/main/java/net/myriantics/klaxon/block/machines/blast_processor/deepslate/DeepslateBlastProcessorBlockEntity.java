@@ -3,8 +3,13 @@ package net.myriantics.klaxon.block.machines.blast_processor.deepslate;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.*;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,6 +23,10 @@ import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.entity.entities.mob.ominous_deepslate_blast_processor.OminousDeepslateBlastProcessorEntity;
@@ -28,14 +37,18 @@ import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
+import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.container.ContainerPartition;
+import org.apache.commons.lang3.builder.Diff;
 import org.jetbrains.annotations.Nullable;
 
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket> {
 
+    private static final ResourceKey<LootTable> OMINOUS_DEEPSLATE_BLAST_PROCESSOR_LOOT_TABLE = KlaxonEntityTypes.OMINOUS_DEEPSLATE_BLAST_PROCESSOR.value().getDefaultLootTable();
     private static final ContainerData EMPTY = new SimpleContainerData(0);
 
     protected DeepslateBlastProcessorBlockEntity(BlockEntityType<DeepslateBlastProcessorBlockEntity> type, BlockPos pos, BlockState state) {
@@ -76,10 +89,27 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
             boolean shouldRunDispenserEffects = false;
 
             if (this.getCatalystStack().is(Items.OMINOUS_BOTTLE)) {
-                OminousDeepslateBlastProcessorEntity entity = new OminousDeepslateBlastProcessorEntity(this.level, this.worldPosition, this.getCatalystStack(), this.getFacing());
-                this.level.addFreshEntity(entity);
-                this.catalystPartition.clearContent();
-                this.level.setBlockAndUpdate(this.worldPosition, Blocks.AIR.defaultBlockState());
+                // takes your bottle and gives you ODBP loot table on peaceful
+                if (serverLevel.getDifficulty() == Difficulty.PEACEFUL) {
+                    Direction facing = this.getFacing();
+                    LootParams lootParams = new LootParams.Builder(serverLevel)
+                            .withParameter(LootContextParams.ORIGIN, this.worldPosition.getCenter())
+                            .create(LootContextParamSets.CHEST);
+                    serverLevel.getServer().reloadableRegistries().get().registryOrThrow(Registries.LOOT_TABLE).getOptional(OMINOUS_DEEPSLATE_BLAST_PROCESSOR_LOOT_TABLE).ifPresent(table -> {
+                        table.getRandomItems(lootParams, stack -> this.ejectItem(stack, facing));
+                    });
+                    this.ejectItem(this.getIngredientStack(), facing);
+                    this.clearContent();
+                    serverLevel.destroyBlock(this.worldPosition, false);
+                } else {
+                    OminousDeepslateBlastProcessorEntity entity = new OminousDeepslateBlastProcessorEntity(this.level, this.worldPosition, this.getCatalystStack(), this.getFacing());
+                    serverLevel.addFreshEntity(entity);
+                    this.clearContent();
+                    serverLevel.setBlockAndUpdate(this.worldPosition, Blocks.AIR.defaultBlockState());
+                }
+                RandomSource randomSource = serverLevel.getRandom();
+                this.level.playSound(null, this.worldPosition, KlaxonSoundEvents.BLOCK_DEEPSLATE_BLAST_PROCESSOR_CRUNCH_BOTTLE, SoundSource.BLOCKS, 0.4f + randomSource.nextFloat() * 0.3f, 0.5f + randomSource.nextFloat() * 0.2f);
+                this.level.gameEvent(GameEvent.BLOCK_ACTIVATE, this.worldPosition, GameEvent.Context.of(this.level.getBlockState(this.worldPosition)));
                 return;
             }
 
