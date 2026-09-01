@@ -34,6 +34,7 @@ public abstract class KlaxonCreativeModeTabs {
                 entries.accept(KlaxonItems.STEEL_LEGGINGS.value());
                 entries.accept(KlaxonItems.STEEL_BOOTS.value());
                 entries.accept(KlaxonItems.CRESTED_STEEL_HELMET.value());
+                entries.accept(KlaxonItems.STEEL_HORSE_ARMOR.value());
 
                 entries.accept(KlaxonItems.GRAPPLE_WINCH.value());
                 entries.accept(KlaxonItems.STEEL_GRAPPLE_CLAW.value());

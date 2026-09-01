@@ -4,10 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
@@ -104,6 +101,10 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
             .getProperties()
     ));
     public static final Holder<Item> STEEL_BOOTS = registerItem("steel_boots", new SteelArmorItem(KlaxonArmorMaterials.STEEL_PLATE, ArmorItem.Type.BOOTS, new KlaxonItemProperties()
+            .getProperties()
+    ));
+    public static final Holder<Item> STEEL_HORSE_ARMOR = registerSimpleItem("steel_horse_armor", new AnimalArmorItem(KlaxonArmorMaterials.STEEL_PLATE, AnimalArmorItem.BodyType.EQUESTRIAN, false, new KlaxonItemProperties()
+            .rarity(Rarity.UNCOMMON)
             .getProperties()
     ));
 

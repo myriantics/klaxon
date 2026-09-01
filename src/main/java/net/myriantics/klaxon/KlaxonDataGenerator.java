@@ -9,6 +9,7 @@ import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
 import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistryProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
+import net.myriantics.klaxon.datagen.loot_table.KlaxonEntityLootTableProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonGameplayLootTableProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonStructureLootTableProvider;
 import net.myriantics.klaxon.datagen.model.KlaxonModelProvider;
@@ -31,6 +32,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(KlaxonBlockLootTableProvider::new);
         pack.addProvider(KlaxonGameplayLootTableProvider::new);
 		pack.addProvider(KlaxonStructureLootTableProvider::new);
+		pack.addProvider(KlaxonEntityLootTableProvider::new);
 
 		pack.addProvider(KlaxonRecipeProvider::new);
 		pack.addProvider(KlaxonAdvancementProvider::new);
