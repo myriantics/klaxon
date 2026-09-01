@@ -30,5 +30,7 @@ public class KlaxonExplosiveCatalystBehaviorTagProvider extends FabricTagProvide
                 .addOptional(KlaxonExplosiveCatalystBehaviors.WIND_BURST);
         getOrCreateTagBuilder(KlaxonExplosiveCatalystBehaviorTags.SETS_IGNORE_FALL_DAMAGE_FROM_CURRENT_IMPULSE)
                 .addOptional(KlaxonExplosiveCatalystBehaviors.WIND_BURST);
+        getOrCreateTagBuilder(KlaxonExplosiveCatalystBehaviorTags.REQUIRES_AIRBORNE_TARGET_ENTITY_FOR_PROJECTILE_COLLISION)
+                .addOptional(KlaxonExplosiveCatalystBehaviors.DRAGONS_BREATH);
     }
 }

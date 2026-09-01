@@ -3,6 +3,7 @@ package net.myriantics.klaxon.mechanics.explosive_catalyst.handler;
 import net.minecraft.core.Position;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -12,6 +13,8 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandl
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
 import net.myriantics.klaxon.mixin.minecraft.blast_processor_behaviors.FireworkRocketEntityInvoker;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystContextParams;
+import org.jetbrains.annotations.Nullable;
 
 public class FireworkExplosiveCatalystHandler extends ExplosiveCatalystHandler {
     @Override
@@ -22,6 +25,7 @@ public class FireworkExplosiveCatalystHandler extends ExplosiveCatalystHandler {
             ItemStack rocketStack = new ItemStack(Items.FIREWORK_ROCKET);
             rocketStack.applyComponents(components);
             FireworkRocketEntity fireworkRocket = new FireworkRocketEntity(level, detonationPosition.x(), detonationPosition.y(), detonationPosition.z(), rocketStack);
+            fireworkRocket.setOwner(context.get(KlaxonExplosiveCatalystContextParams.SOURCE_ENTITY));
 
             // explode using firework rocket entity code - summons dummy firework and detonates it
             level.addFreshEntity(fireworkRocket);

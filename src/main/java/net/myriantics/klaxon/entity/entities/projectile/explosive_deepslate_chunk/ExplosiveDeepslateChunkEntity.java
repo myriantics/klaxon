@@ -158,7 +158,7 @@ public class ExplosiveDeepslateChunkEntity extends ThrowableProjectile implement
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        return super.canHitEntity(target) && target != this.getOwner() && target != this && !target.onGround();
+        return super.canHitEntity(target) && target != this.getOwner() && target != this && (!target.onGround() || !this.getData().behavior(this.level()).is(KlaxonExplosiveCatalystBehaviorTags.REQUIRES_AIRBORNE_TARGET_ENTITY_FOR_PROJECTILE_COLLISION));
     }
 
     protected void detonate(ExplosiveCatalystContext context) {
