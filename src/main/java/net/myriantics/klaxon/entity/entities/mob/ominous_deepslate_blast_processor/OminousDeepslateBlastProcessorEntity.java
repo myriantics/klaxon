@@ -381,6 +381,11 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
     }
 
     @Override
+    protected boolean shouldDespawnInPeaceful() {
+        return true;
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean(KlaxonNBTIds.RAMMING, this.isRamming());
