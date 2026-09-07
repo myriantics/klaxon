@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.compat.jade;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -10,10 +11,11 @@ import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcess
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlock;
 import net.myriantics.klaxon.block.machines.modular_explosive.ModularExplosiveBlock;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserBlock;
-import net.myriantics.klaxon.compat.jade.providers.block.ExplosiveCatalystVesselBlockProvider;
+import net.myriantics.klaxon.compat.jade.providers.ExplosiveCatalystVesselProvider;
 import net.myriantics.klaxon.compat.jade.providers.block.MufflableBlockProvider;
 import net.myriantics.klaxon.compat.jade.providers.entity.GrappleClawEntityProvider;
 import net.myriantics.klaxon.compat.jade.providers.block.HallnoxPodStatusProvider;
+import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
 import net.myriantics.klaxon.entity.entities.projectile.grapple_claw.GrappleClawEntity;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import snownee.jade.addon.harvest.HarvestToolProvider;
@@ -28,13 +30,15 @@ import java.util.List;
 public class KlaxonJadePlugin implements IWailaPlugin {
 
     private static final ArrayList<Class<? extends Block>> MUFFLABLE_BLOCKS = new ArrayList<>();
-    private static final ArrayList<Class<? extends Block>> EXPLOSIVE_CATALYST_VESSELS = new ArrayList<>();
+    private static final ArrayList<Class<? extends Block>> EXPLOSIVE_CATALYST_VESSEL_BLOCK = new ArrayList<>();
+    private static final ArrayList<Class<? extends Entity>> EXPLOSIVE_CATALYST_VESSEL_ENTITIES = new ArrayList<>();
 
     static {
         registerMufflable(SteelBlastProcessorBlock.class);
         registerMufflable(PrecisionDispenserBlock.class);
-        registerExplosiveCatalystVessel(AbstractBlastProcessorBlock.class);
-        registerExplosiveCatalystVessel(ModularExplosiveBlock.class);
+        registerExplosiveCatalystVesselBlock(AbstractBlastProcessorBlock.class);
+        registerExplosiveCatalystVesselBlock(ModularExplosiveBlock.class);
+        registerExplosiveCatalystVesselEntity(ExplosiveDeepslateChunkEntity.class);
     }
 
     @Override
@@ -42,8 +46,11 @@ public class KlaxonJadePlugin implements IWailaPlugin {
         for (Class<? extends Block> clazz : MUFFLABLE_BLOCKS) {
             registration.registerBlockDataProvider(MufflableBlockProvider.INSTANCE, clazz);
         }
-        for (Class<? extends Block> clazz : EXPLOSIVE_CATALYST_VESSELS) {
-            registration.registerBlockDataProvider(ExplosiveCatalystVesselBlockProvider.INSTANCE, clazz);
+        for (Class<? extends Block> clazz : EXPLOSIVE_CATALYST_VESSEL_BLOCK) {
+            registration.registerBlockDataProvider(ExplosiveCatalystVesselProvider.Block.INSTANCE, clazz);
+        }
+        for (Class<? extends Entity> clazz : EXPLOSIVE_CATALYST_VESSEL_ENTITIES) {
+            registration.registerEntityDataProvider(ExplosiveCatalystVesselProvider.Entity.INSTANCE, clazz);
         }
 
         registration.registerEntityDataProvider(GrappleClawEntityProvider.INSTANCE, GrappleClawEntity.class);
@@ -68,8 +75,11 @@ public class KlaxonJadePlugin implements IWailaPlugin {
         for (Class<? extends Block> clazz : MUFFLABLE_BLOCKS) {
             registration.registerBlockComponent(MufflableBlockProvider.INSTANCE, clazz);
         }
-        for (Class<? extends Block> clazz : EXPLOSIVE_CATALYST_VESSELS) {
-            registration.registerBlockComponent(ExplosiveCatalystVesselBlockProvider.INSTANCE, clazz);
+        for (Class<? extends Block> clazz : EXPLOSIVE_CATALYST_VESSEL_BLOCK) {
+            registration.registerBlockComponent(ExplosiveCatalystVesselProvider.Block.INSTANCE, clazz);
+        }
+        for (Class<? extends Entity> clazz : EXPLOSIVE_CATALYST_VESSEL_ENTITIES) {
+            registration.registerEntityComponent(ExplosiveCatalystVesselProvider.Entity.INSTANCE, clazz);
         }
 
         registration.registerBlockComponent(HallnoxPodStatusProvider.INSTANCE, HallnoxPodBlock.class);
@@ -113,7 +123,11 @@ public class KlaxonJadePlugin implements IWailaPlugin {
         MUFFLABLE_BLOCKS.add(mufflableBlockClass);
     }
 
-    private static void registerExplosiveCatalystVessel(Class<? extends Block> catalystVesselClass) {
-        EXPLOSIVE_CATALYST_VESSELS.add(catalystVesselClass);
+    private static void registerExplosiveCatalystVesselBlock(Class<? extends Block> catalystVesselClass) {
+        EXPLOSIVE_CATALYST_VESSEL_BLOCK.add(catalystVesselClass);
+    }
+
+    private static void registerExplosiveCatalystVesselEntity(Class<? extends Entity> catalystVesselClass) {
+        EXPLOSIVE_CATALYST_VESSEL_ENTITIES.add(catalystVesselClass);
     }
 }

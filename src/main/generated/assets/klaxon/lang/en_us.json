@@ -167,6 +167,7 @@
   "death.attack.klaxon.wrench_overtuning": "%1$s was overtuned by %2$s",
   "death.attack.klaxon.wrench_overtuning.item": "%1$s was overtuned by %2$s using %3$s",
   "enchantment.klaxon.streamline": "Streamline",
+  "entity.klaxon.explosive_deepslate_chunk": "Explosive Deepslate Chunk",
   "entity.klaxon.grapple_claw": "Steel Grapple Claw",
   "entity.klaxon.ominous_deepslate_blast_processor": "Ominous Deepslate Blast Processor",
   "item.klaxon.copper_nugget": "Copper Nugget",

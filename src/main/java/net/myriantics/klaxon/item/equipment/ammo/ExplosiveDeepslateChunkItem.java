@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -40,14 +41,17 @@ public class ExplosiveDeepslateChunkItem extends ExplosiveCatalystVesselItem imp
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
-        ExplosiveDeepslateChunkEntity chunk = new ExplosiveDeepslateChunkEntity(level, stack, player.getX(), player.getEyeY(), player.getZ());
-        chunk.setOwner(player);
-        chunk.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
-        level.addFreshEntity(chunk);
-        stack.consume(1, player);
-        if (!player.isCreative()) {
-            player.getCooldowns().addCooldown(this, chunk.getCooldownTicks());
+        if (!level.isClientSide()) {
+            ExplosiveDeepslateChunkEntity chunk = new ExplosiveDeepslateChunkEntity(level, stack, player.getX(), player.getEyeY(), player.getZ());
+            chunk.setOwner(player);
+            chunk.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
+            level.addFreshEntity(chunk);
+            stack.consume(1, player);
+            if (!player.isCreative()) {
+                player.getCooldowns().addCooldown(this, chunk.getCooldownTicks());
+            }
         }
+        player.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.success(stack);
     }
 
