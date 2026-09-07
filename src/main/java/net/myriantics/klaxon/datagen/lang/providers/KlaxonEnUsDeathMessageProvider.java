@@ -51,6 +51,11 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
                 "%1$s was bludgeoned by %2$s",
                 "%1$s was bludgeoned by %2$s using %3$s"
         );
+        addDeathMessage(
+                KlaxonDamageTypes.WIND_RAMMING,
+                "%1$s was breezily rammed by %2$s",
+                null
+        );;
     }
 
     private void generateElectricalDeathMessageTranslations() {

@@ -54,7 +54,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .addOptional(KlaxonDamageTypes.BLUDGEONING)
                 .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING)
                 .addOptional(KlaxonDamageTypes.GRAPPLING)
-                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
+                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST)
+                .addOptional(KlaxonDamageTypes.WIND_RAMMING);
 
         getOrCreateTagBuilder(DamageTypeTags.IS_FIRE)
                 .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
@@ -68,5 +69,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
         getOrCreateTagBuilder(KlaxonDamageTypeTags.DETONATES_EXPLOSIVE_DEEPSLATE_CHUNKS)
                 .addOptionalTag(DamageTypeTags.IS_FIRE)
                 .addOptionalTag(DamageTypeTags.IS_EXPLOSION);
+
+        getOrCreateTagBuilder(DamageTypeTags.AVOIDS_GUARDIAN_THORNS)
+                .addOptional(KlaxonDamageTypes.WIND_RAMMING);
     }
 }

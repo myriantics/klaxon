@@ -43,6 +43,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.myriantics.klaxon.entity.entities.projectile.explosive_deepslate_chunk.ExplosiveDeepslateChunkEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
+import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.explosive_catalyst.KlaxonExplosiveCatalystBehaviors;
 import net.myriantics.klaxon.registry.misc.KlaxonColors;
@@ -204,8 +205,9 @@ public class OminousDeepslateBlastProcessorEntity extends PathfinderMob implemen
             }
         }
 
+        DamageSource source = KlaxonDamageTypes.getAttackingDamageSource(this, KlaxonDamageTypes.WIND_RAMMING);
         for (Entity entity : level.getEntities(this, this.getBoundingBox().inflate(2))) {
-            entity.hurt(level.damageSources().explosion(null, this), (float) (Math.clamp(-4 * Math.log(entity.distanceTo(this) / 67), 1, 8)));
+            entity.hurt(source, (float) (Math.clamp(-4 * Math.log(entity.distanceTo(this) / 67), 1, 8)));
         }
         if (this.ramType == WindRam.Type.HEAL && healingCredits == 0) {
             this.ramCooldown = this.ramType.getCooldownTicks() / 4;
