@@ -48,6 +48,10 @@ public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<D
                 KlaxonDamageTypes.BLUDGEONING,
                 0.5f
         );
+        addDamageType(
+                KlaxonDamageTypes.WIND_RAMMING,
+                0.4f
+        );
     }
 
     private void buildElectricalDamageTypes() {

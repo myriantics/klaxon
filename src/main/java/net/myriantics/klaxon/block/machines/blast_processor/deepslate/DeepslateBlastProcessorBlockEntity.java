@@ -10,14 +10,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -41,9 +39,9 @@ import net.myriantics.klaxon.registry.entity.KlaxonEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonGameRules;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonExplosiveCatalystBehaviorTags;
+import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.BlockDirectionHelper;
 import net.myriantics.klaxon.util.container.ContainerPartition;
-import org.apache.commons.lang3.builder.Diff;
 import org.jetbrains.annotations.Nullable;
 
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket> {
@@ -88,7 +86,7 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
             // default to false so that it shows no particles when dispensing nothing
             boolean shouldRunDispenserEffects = false;
 
-            if (this.getCatalystStack().is(Items.OMINOUS_BOTTLE)) {
+            if (this.getCatalystStack().is(KlaxonItemTags.OMINOUS_DEEPSLATE_BLAST_PROCESSOR_SUMMONING_ITEMS)) {
                 // takes your bottle and gives you ODBP loot table on peaceful
                 if (serverLevel.getDifficulty() == Difficulty.PEACEFUL) {
                     Direction facing = this.getFacing();
@@ -103,6 +101,9 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
                     serverLevel.destroyBlock(this.worldPosition, false);
                 } else {
                     OminousDeepslateBlastProcessorEntity entity = new OminousDeepslateBlastProcessorEntity(this.level, this.worldPosition, this.getCatalystStack(), this.getFacing());
+                    if (this.hasCustomName()) {
+                        entity.setCustomName(this.getCustomName());
+                    }
                     serverLevel.addFreshEntity(entity);
                     this.clearContent();
                     serverLevel.setBlockAndUpdate(this.worldPosition, Blocks.AIR.defaultBlockState());
