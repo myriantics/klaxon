@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.compat.emi.recipes.special;
 
+import com.google.gson.internal.Streams;
 import dev.emi.emi.api.recipe.EmiPatternCraftingRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -8,6 +9,7 @@ import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.recipe.custom_crafting.explosive_catalyst_transmutation.ExplosiveCatalystTransmutationRecipe;
@@ -15,9 +17,11 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingRecipe {
 
@@ -29,7 +33,12 @@ public class ExplosiveCatalystTransmutationEmiRecipe extends EmiPatternCraftingR
     public ExplosiveCatalystTransmutationEmiRecipe(ExplosiveCatalystTransmutationRecipe recipe, ResourceLocation id, ExplosiveCatalystDefinition[] definitions) {
         super(
                 List.of(
-                        EmiIngredient.of(recipe.pattern.ingredients().stream().map(EmiIngredient::of).toList())
+                        EmiIngredient.of(
+                                Stream.concat(
+                                        recipe.pattern.ingredients().stream().map(EmiIngredient::of),
+                                        Arrays.stream(definitions).map(definition -> EmiIngredient.of(definition.ingredient()))
+                                ).toList()
+                        )
                 ),
                 EmiStack.of(recipe.result),
                 id,
