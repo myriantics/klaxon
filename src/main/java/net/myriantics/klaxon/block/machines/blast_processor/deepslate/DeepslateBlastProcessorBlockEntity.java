@@ -52,8 +52,13 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
 
     @Override
     protected void initPartitions(PartitionBuilder partitions) {
-        this.ingredientPartition = partitions.partition(1, 1);
-        this.catalystPartition = partitions.partition(1, 1);
+        this.ingredientPartition = partitions.partition(1);
+        this.catalystPartition = partitions.partition(1);
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return 1;
     }
 
     @Override

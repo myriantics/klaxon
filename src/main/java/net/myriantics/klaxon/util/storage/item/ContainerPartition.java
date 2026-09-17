@@ -11,16 +11,11 @@ import java.util.function.Predicate;
 public class ContainerPartition implements Container {
     private final Container container;
     final int[] slots;
-    private final int maxStackSize;
     private final InventoryStorage storage;
 
     public static final ContainerPartition EMPTY = new ContainerPartition(new SimpleContainer(0));
 
-    ContainerPartition(Container container, int... slots) {
-        this(container, container.getMaxStackSize(), slots);
-    }
-
-    ContainerPartition(Container container, int maxStackSize, int firstSlot, int nextOpenSlot) {
+    ContainerPartition(Container container, int firstSlot, int nextOpenSlot) {
         int size = nextOpenSlot - firstSlot;
         int[] slots = new int[size];
         for (int i = 0; i < slots.length; i++) {
@@ -29,14 +24,12 @@ public class ContainerPartition implements Container {
 
         this.container = container;
         this.slots = slots;
-        this.maxStackSize = maxStackSize;
         this.storage = InventoryStorage.of(this, null);
     }
 
-    ContainerPartition(Container container, int maxStackSize, int... slots) {
+    ContainerPartition(Container container, int... slots) {
         this.container = container;
         this.slots = slots;
-        this.maxStackSize = maxStackSize;
         this.storage = InventoryStorage.of(this, null);
     }
 
@@ -77,7 +70,7 @@ public class ContainerPartition implements Container {
 
     @Override
     public int getMaxStackSize() {
-        return this.maxStackSize;
+        return this.container.getMaxStackSize();
     }
 
     @Override

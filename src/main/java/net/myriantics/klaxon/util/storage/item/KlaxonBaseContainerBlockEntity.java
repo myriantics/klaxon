@@ -9,6 +9,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,10 +20,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.myriantics.klaxon.util.storage.KlaxonStorageProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContainerBlockEntity implements KlaxonStorageProvider<ItemVariant> {
@@ -132,18 +135,11 @@ public abstract class KlaxonBaseContainerBlockEntity extends RandomizableContain
         }
 
         public ContainerPartition partition(int slotCount) {
-            return this.partition(slotCount, 99);
-        }
-
-        public ContainerPartition partition(int slotCount, int maxStackSize) {
             if (slotCount <= 0) {
                 throw new IllegalArgumentException("Inventory partition must have at least one slot!");
             }
-            if (maxStackSize < 0) {
-                throw new IllegalArgumentException("Partition max stack size cannot be negative!");
-            }
             int nextOpenSlot = this.currentNextOpenSlot + slotCount;
-            ContainerPartition partition = new ContainerPartition(KlaxonBaseContainerBlockEntity.this, maxStackSize, this.currentNextOpenSlot, nextOpenSlot);
+            ContainerPartition partition = new ContainerPartition(KlaxonBaseContainerBlockEntity.this, this.currentNextOpenSlot, nextOpenSlot);
             this.partitions.add(partition);
             this.currentNextOpenSlot = nextOpenSlot;
             return partition;

@@ -232,6 +232,25 @@ public abstract class KlaxonBlockModelSubProvider {
         );
     }
 
+    protected void registerFurnaceGenerator(Block block) {
+        ResourceLocation baseRl = ModelLocationUtils.getModelLocation(block);
+        ResourceLocation unlit = baseRl.withSuffix("/unlit");
+
+        ResourceLocation furnaceTopRl = TextureMapping.getBlockTexture(Blocks.FURNACE).withSuffix("_top");
+
+        TextureMapping unlitTexMap = new TextureMapping()
+                .put(TextureSlot.FRONT, baseRl.withSuffix("/front_unlit"))
+                .put(TextureSlot.TOP, furnaceTopRl)
+                .put(TextureSlot.SIDE, furnaceTopRl)
+                .put(TextureSlot.PARTICLE, baseRl.withSuffix("/front_unlit"));
+
+        ModelTemplates.CUBE_ORIENTABLE.create(unlit, unlitTexMap, this.generator.modelOutput);
+        generator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(block, modelVariant(unlit))
+                        .with(BlockModelGenerators.createHorizontalFacingDispatch())
+        );
+    }
+
     protected void registerDeepslateBlastProcessor(Block block) {
 
         TextureMapping baseUnlooted = new TextureMapping()
