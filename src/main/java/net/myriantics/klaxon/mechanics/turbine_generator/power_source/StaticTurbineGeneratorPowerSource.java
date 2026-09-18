@@ -27,7 +27,7 @@ public class StaticTurbineGeneratorPowerSource implements TurbineGeneratorPowerS
     public static final Codec<StaticTurbineGeneratorPowerSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BlockPredicate.CODEC.fieldOf("block_predicate").validate(StaticTurbineGeneratorPowerSource::validateBlockPredicate).forGetter(i -> i.predicate),
             SidednessChecker.CODEC.optionalFieldOf("sidedness_checker").forGetter(i -> i.checker),
-            Codec.intRange(0, TurbineGeneratorBlockEntity.MAX_STATIC_POWER_SOURCE_RANGE).optionalFieldOf("max_range", 0).forGetter(i -> i.range),
+            TurbineGeneratorBlockEntity.Configuration.MAX_STATIC_POWER_SOURCE_RANGE_CODEC.optionalFieldOf("max_range", 0).forGetter(i -> i.range),
             Codec.doubleRange(0, Double.MAX_VALUE).fieldOf("target_velocity").validate(aLong -> aLong > 0 ? DataResult.success(aLong) : DataResult.error(() -> "Target velocity must be greater than 0")).forGetter(i -> i.targetVelocity)
     ).apply(instance, StaticTurbineGeneratorPowerSource::new));
 
