@@ -38,6 +38,7 @@ public abstract class KlaxonContainerUtil {
                     if (slot < currentSlot + container.getContainerSize()) {
                         return container.getItem(slot - currentSlot);
                     }
+                    currentSlot += container.getContainerSize();
                 }
                 return ItemStack.EMPTY;
             }
@@ -49,6 +50,7 @@ public abstract class KlaxonContainerUtil {
                     if (slot < currentSlot + container.getContainerSize()) {
                         return container.removeItem(slot - currentSlot, amount);
                     }
+                    currentSlot += container.getContainerSize();
                 }
                 return ItemStack.EMPTY;
             }
@@ -60,6 +62,7 @@ public abstract class KlaxonContainerUtil {
                     if (slot < currentSlot + container.getContainerSize()) {
                         return container.removeItemNoUpdate(slot - currentSlot);
                     }
+                    currentSlot += container.getContainerSize();
                 }
                 return ItemStack.EMPTY;
             }
@@ -72,6 +75,7 @@ public abstract class KlaxonContainerUtil {
                         container.setItem(slot - currentSlot, stack);
                         return;
                     }
+                    currentSlot += container.getContainerSize();
                 }
             }
 

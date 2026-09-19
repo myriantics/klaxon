@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -20,18 +21,32 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 public class IndustrialShredderTopBlock extends BaseIndustrialShredderBlock {
 
+    public static final EnumProperty<Status> STATUS = KlaxonBlockStateProperties.INDUSTRIAL_SHREDDER_STATUS;
     public static final DirectionProperty FACING = BaseIndustrialShredderBlock.FACING;
 
     protected Holder<Block> bottomBlock = null;
 
     public IndustrialShredderTopBlock(Properties properties) {
         super(properties, Part.TOP);
+
+        registerDefaultState(this.defaultBlockState()
+                .setValue(STATUS, Status.IDLE)
+        );
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(STATUS);
     }
 
     @Override
@@ -97,5 +112,22 @@ public class IndustrialShredderTopBlock extends BaseIndustrialShredderBlock {
                 shredderTop.serverTick(level, blockPos, blockState);
             }
         };
+    }
+
+    public enum Status implements StringRepresentable {
+        IDLE("idle"),
+        RUNNING("running"),
+        JAMMED("jammed");
+
+        private final String stringRepresentation;
+
+        Status(String stringRepresentation) {
+            this.stringRepresentation = stringRepresentation;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.stringRepresentation;
+        }
     }
 }

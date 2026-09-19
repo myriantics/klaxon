@@ -25,6 +25,10 @@ public abstract class BaseIndustrialShredderBlock extends BaseKlaxonDoubleTallMa
 
     public BaseIndustrialShredderBlock(Properties properties, Part part) {
         super(properties, part);
+
+        registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+        );
     }
 
     @Override

@@ -128,6 +128,8 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         if (this.isOnCooldown()) {
             this.intakeInteractionCooldownTicks--;
             changed = true;
+        } else if (!this.jammedStacks.isEmpty()) {
+            // don't do intake ops when jammed
         } else if (this.aboveStorageCache != null) {
             if (this.aboveStorageCache.supportsExtraction()) {
                 try (Transaction tx = Transaction.openOuter()) {

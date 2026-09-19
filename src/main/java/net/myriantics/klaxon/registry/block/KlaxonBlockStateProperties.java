@@ -5,6 +5,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
+import net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder.IndustrialShredderTopBlock;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.UBendRotation;
 import net.myriantics.klaxon.block.machines.modular_explosive.FuseState;
 
@@ -31,4 +32,7 @@ public abstract class KlaxonBlockStateProperties {
 
     // AIO duct driver
     public static final DirectionProperty POWER_SOCKET_FACING = DirectionProperty.create("power_socket_facing");
+
+    // Used by the Industrial Shredder Top to indicate its status
+    public static final EnumProperty<IndustrialShredderTopBlock.Status> INDUSTRIAL_SHREDDER_STATUS = EnumProperty.create("status", IndustrialShredderTopBlock.Status.class);
 }
