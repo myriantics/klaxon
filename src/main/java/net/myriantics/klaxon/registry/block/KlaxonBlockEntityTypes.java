@@ -13,6 +13,8 @@ import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlockEn
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.appliances.contact_charger.BaseContactChargerBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.appliances.energy_sink.EnergySinkBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder.IndustrialShredderBottomBlockEntity;
+import net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder.IndustrialShredderTopBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.generators.furnace.FurnaceGeneratorBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlockEntity;
 import net.myriantics.klaxon.block.machines.energy.storage.power_bank.creative.CreativePowerBankBlockEntity;
@@ -74,6 +76,16 @@ public abstract class KlaxonBlockEntityTypes {
             "furnace_generator",
             KlaxonBlocks.FURNACE_GENERATOR,
             FurnaceGeneratorBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<IndustrialShredderTopBlockEntity>> INDUSTRIAL_SHREDDER_TOP = register(
+            "industrial_shredder_top",
+            KlaxonBlocks.INDUSTRIAL_SHREDDER_TOP,
+            IndustrialShredderTopBlockEntity::new
+    );
+    public static final Holder<BlockEntityType<IndustrialShredderBottomBlockEntity>> INDUSTRIAL_SHREDDER_BOTTOM = register(
+            "industrial_shredder_bottom",
+            KlaxonBlocks.INDUSTRIAL_SHREDDER_BOTTOM,
+            IndustrialShredderBottomBlockEntity::new
     );
 
     public static void init() {

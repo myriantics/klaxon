@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorMenu;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorMenu;
+import net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder.IndustrialShredderMenu;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserMenu;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
 
@@ -25,6 +26,10 @@ public abstract class KlaxonMenuTypes {
     public static final Holder<MenuType<PrecisionDispenserMenu>> PRECISION_DISPENSER = registerSimple(
             "precision_dispenser",
             PrecisionDispenserMenu::new
+    );
+    public static final Holder<MenuType<IndustrialShredderMenu>> INDUSTRIAL_SHREDDER = registerSimple(
+            "industrial_shredder",
+            IndustrialShredderMenu::new
     );
 
     @SuppressWarnings("unchecked")

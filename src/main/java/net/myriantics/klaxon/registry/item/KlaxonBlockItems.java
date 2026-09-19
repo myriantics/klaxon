@@ -12,6 +12,7 @@ import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.configuration.ModularExplosiveBlockConfigComponent;
+import net.myriantics.klaxon.item.block.KlaxonDoubleTallBlockItem;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.registry.block.KlaxonBlocks;
 
@@ -99,6 +100,7 @@ public abstract class KlaxonBlockItems {
     public static final Holder<Item> ENERGY_SINK = registerBlockItem(KlaxonBlocks.ENERGY_SINK);
     public static final Holder<Item> TURBINE_GENERATOR = registerBlockItem(KlaxonBlocks.TURBINE_GENERATOR);
     public static final Holder<Item> FURNACE_GENERATOR = registerBlockItem(KlaxonBlocks.FURNACE_GENERATOR);
+    public static final Holder<Item> INDUSTRIAL_SHREDDER = registerBlockItem("industrial_shredder", new KlaxonDoubleTallBlockItem(KlaxonBlocks.INDUSTRIAL_SHREDDER_BOTTOM.value(), new Item.Properties()));
 
     // ducts
     public static final Holder<Item> AIO_DUCT_DRIVER = registerBlockItem(KlaxonBlocks.AIO_DUCT_DRIVER);

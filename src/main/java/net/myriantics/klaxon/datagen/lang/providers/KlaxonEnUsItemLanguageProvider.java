@@ -46,6 +46,8 @@ public final class KlaxonEnUsItemLanguageProvider extends KlaxonEnUsLanguageSubP
         addItem(KlaxonItems.WAXED_EXPOSED_COPPER_PIPE_MATRIX, "Waxed Exposed Copper Pipe Matrix");
         addItem(KlaxonItems.WAXED_WEATHERED_COPPER_PIPE_MATRIX, "Waxed Weathered Copper Pipe Matrix");
         addItem(KlaxonItems.WAXED_OXIDIZED_COPPER_PIPE_MATRIX, "Waxed Oxidized Copper Pipe Matrix");
+        // double tall machines
+        addItem(KlaxonItems.INDUSTRIAL_SHREDDER, "Industrial Shredder");
     }
 
     private void generateMaterialTranslations() {

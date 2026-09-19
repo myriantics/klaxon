@@ -26,6 +26,8 @@ public final class KlaxonEnUsBlockLanguageProvider extends KlaxonEnUsLanguageSub
         addBlock(KlaxonBlocks.STEEL_WORKBENCH, "Steel Workbench");
         addBlock(KlaxonBlocks.MODULAR_EXPLOSIVE_BLOCK, "Modular Explosive Block");
         addBlock(KlaxonBlocks.CREATIVE_CONTACT_CHARGER, "Creative Contact Charger");
+        addBlock(KlaxonBlocks.INDUSTRIAL_SHREDDER_TOP, "Industrial Shredder Top");
+        addBlock(KlaxonBlocks.INDUSTRIAL_SHREDDER_BOTTOM, "Industrial Shredder Bottom");
 
         // casing
         addBlock(KlaxonBlocks.STEEL_CASING, "Steel Casing");

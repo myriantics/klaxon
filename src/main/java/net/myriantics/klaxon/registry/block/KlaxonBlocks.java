@@ -24,6 +24,8 @@ import net.myriantics.klaxon.block.machines.duct.driver.aio.AIODuctDriverBlock;
 import net.myriantics.klaxon.block.machines.duct.segment.DuctSegmentBlock;
 import net.myriantics.klaxon.block.machines.energy.appliances.contact_charger.ContactChargerBlock;
 import net.myriantics.klaxon.block.machines.energy.appliances.energy_sink.EnergySinkBlock;
+import net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder.IndustrialShredderBottomBlock;
+import net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder.IndustrialShredderTopBlock;
 import net.myriantics.klaxon.block.machines.energy.generators.furnace.FurnaceGeneratorBlock;
 import net.myriantics.klaxon.block.machines.energy.generators.turbine.TurbineGeneratorBlock;
 import net.myriantics.klaxon.block.machines.energy.storage.power_bank.creative.CreativePowerBankBlock;
@@ -113,6 +115,14 @@ public abstract class KlaxonBlocks {
             new TurbineGeneratorBlock(copyProperties(STEEL_CASING)));
     public static final Holder<Block> FURNACE_GENERATOR = registerBlock("furnace_generator",
             new FurnaceGeneratorBlock(copyProperties(STEEL_CASING)));
+
+    // appliances
+    public static final Holder<Block> INDUSTRIAL_SHREDDER_TOP = registerBlock("industrial_shredder_top",
+            new IndustrialShredderTopBlock(copyProperties(STEEL_CASING))
+    );
+    public static final Holder<Block> INDUSTRIAL_SHREDDER_BOTTOM = registerBlock("industrial_shredder_bottom",
+            new IndustrialShredderBottomBlock(copyProperties(STEEL_CASING), INDUSTRIAL_SHREDDER_TOP)
+    );
 
     // creative energy items
     public static final Holder<Block> CREATIVE_POWER_BANK = registerBlock("creative_power_bank",

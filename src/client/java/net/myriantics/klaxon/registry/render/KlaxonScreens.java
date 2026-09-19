@@ -12,6 +12,7 @@ import net.myriantics.klaxon.screen.container.blast_processor.Amogus;
 import net.myriantics.klaxon.screen.container.blast_processor.DeepslateBlastProcessorScreen;
 import net.myriantics.klaxon.screen.container.PrecisionDispenserScreen;
 import net.myriantics.klaxon.screen.container.blast_processor.Rizz;
+import net.myriantics.klaxon.screen.container.shredder.IndustrialShredderScreen;
 
 public abstract class KlaxonScreens {
 
@@ -19,6 +20,7 @@ public abstract class KlaxonScreens {
         register(KlaxonMenuTypes.STEEL_BLAST_PROCESSOR, Rizz::new);
         register(KlaxonMenuTypes.DEEPSLATE_BLAST_PROCESSOR, Amogus::new);
         register(KlaxonMenuTypes.PRECISION_DISPENSER, PrecisionDispenserScreen::new);
+        register(KlaxonMenuTypes.INDUSTRIAL_SHREDDER, IndustrialShredderScreen::new);
     }
 
     public static void init() {

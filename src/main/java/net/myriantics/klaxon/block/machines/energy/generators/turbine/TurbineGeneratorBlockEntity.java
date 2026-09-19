@@ -62,7 +62,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
 
     @Override
     protected void initPartitions(PartitionBuilder partitions) {
-        this.turbinePartition = partitions.partition(1, 1);
+        this.turbinePartition = partitions.partition(1);
     }
 
     @Override
