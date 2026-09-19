@@ -921,6 +921,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonBlockTags.STEEL_PLATING_BLOCKS)
                 .forceAddTag(KlaxonBlockTags.GOLD_WIRE_SPOOLS)
                 .forceAddTag(KlaxonBlockTags.GOLD_PLATING_BLOCKS)
+                .forceAddTag(KlaxonBlockTags.INDUSTRIAL_SHREDDER_PARTS)
                 .add(KlaxonBlocks.STEEL_BLOCK.value())
                 .add(KlaxonBlocks.STEEL_CASING.value())
                 .add(KlaxonBlocks.STEEL_DOOR.value())

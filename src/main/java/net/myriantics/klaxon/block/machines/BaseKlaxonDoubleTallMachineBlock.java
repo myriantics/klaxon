@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
@@ -55,6 +57,23 @@ public abstract class BaseKlaxonDoubleTallMachineBlock extends Block {
         }
 
         return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && (player.isCreative() || !player.hasCorrectToolForDrops(state))) {
+            if (!this.part.isDominant()) {
+                BlockPos counterpartPos = pos.relative(this.part.counterpartOffsetDirection);
+                BlockState counterpartState = level.getBlockState(counterpartPos);
+                if (counterpartState.is(this.getCounterpartBlock().value())) {
+                    BlockState legacyFluidBlock = counterpartState.getFluidState().createLegacyBlock();
+                    level.setBlock(counterpartPos, legacyFluidBlock, (Block.UPDATE_SUPPRESS_DROPS) | (Block.UPDATE_CLIENTS) | (Block.UPDATE_NEIGHBORS));
+                    level.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, counterpartPos, Block.getId(counterpartState));
+                }
+            }
+        }
+
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
