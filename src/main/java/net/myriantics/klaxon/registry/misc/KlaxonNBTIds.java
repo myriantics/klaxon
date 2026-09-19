@@ -61,6 +61,4 @@ public abstract class KlaxonNBTIds {
     // furnace generator
     public static final String REMAINING_FUEL_DURATION = KlaxonCommon.locateAlt("remaining_fuel_duration");
     public static final String INITIAL_FUEL_DURATION = KlaxonCommon.locateAlt("initial_fuel_duration");
-
-    public static final String CONFIGURATION = KlaxonCommon.locateAlt("configuration");
 }

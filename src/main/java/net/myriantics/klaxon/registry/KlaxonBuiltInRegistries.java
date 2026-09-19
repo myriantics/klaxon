@@ -6,7 +6,6 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.mechanics.configuration.MachineConfigurationType;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
@@ -29,10 +28,6 @@ public abstract class KlaxonBuiltInRegistries {
     );
     public static final Registry<WrenchActionType> WRENCH_ACTION_TYPE = register(
             KlaxonRegistries.WRENCH_ACTION_TYPE,
-            (builder) -> builder.attribute(RegistryAttribute.SYNCED)
-    );
-    public static final Registry<MachineConfigurationType<?>> MACHINE_CONFIGURATION_TYPE = register(
-            KlaxonRegistries.MACHINE_CONFIGURATION_TYPE,
             (builder) -> builder.attribute(RegistryAttribute.SYNCED)
     );
 
