@@ -9,14 +9,15 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,15 +40,17 @@ import java.util.Objects;
 public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBlockEntity implements KlaxonEnergyStorageProvider {
 
     private static final AABB SUCK_AABB = Block.box(0, 0, 0, 16, EntityType.ITEM.getHeight() * 16, 16).toAabbs().getFirst();
+    protected static final int ENTITY_INTERACTION_COOLDOWN_TICKS = 4;
+    protected static final int MAX_COUNT_FOR_INTAKE_OPERATION = 4;
 
     protected IndustrialShredderBottomBlockEntity counterpartCache = null;
     protected ContainerPartition shreddingInput;
     protected EnergyStorage energyStorage = new SimpleEnergyStorage(1000, 32, 32);
 
+    protected int entityInteractionCooldownTicks = 0;
     protected int shreddingProgress = 0;
     protected int shreddingTotalTime = 0;
     protected NonNullList<ItemStack> jammedStacks = NonNullList.withSize(9, ItemStack.EMPTY);
-    protected boolean jammed = false;
 
     private final RecipeManager.CachedCheck<IndustrialShreddingRecipeInput, ? extends IndustrialShreddingRecipe> quickCheck;
 
@@ -98,12 +101,46 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         return null;
     }
 
+    protected boolean isOnCooldown() {
+        return this.entityInteractionCooldownTicks > 0;
+    }
+
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
         if (this.level == null) {
             return;
         }
 
+        boolean changed = false;
+
         ItemStack inputStack = this.shreddingInput.getFirstNonEmptyStack();
+
+        if (this.isOnCooldown()) {
+            this.entityInteractionCooldownTicks--;
+            changed = true;
+        } else {
+            int totalInserted = 0;
+            for (Entity entity : level.getEntities((Entity) null, SUCK_AABB.move(this.worldPosition).move(0, 1, 0), entity -> entity.getY() == this.worldPosition.getY() + 1)) {
+                if (entity instanceof ItemEntity itemEntity && inputStack.getCount() < inputStack.getMaxStackSize()) {
+                    try (Transaction tx = Transaction.openOuter()) {
+                        int inserted = this.tryInsert(itemEntity.getItem(), totalInserted, tx);
+                        if (inserted > 0) {
+                            tx.commit();
+                            totalInserted += inserted;
+                        } else {
+                            tx.abort();
+                        }
+                    }
+                } else {
+
+                }
+            }
+            if (totalInserted > 0) {
+                changed = true;
+            }
+            this.entityInteractionCooldownTicks = ENTITY_INTERACTION_COOLDOWN_TICKS;
+        }
+
+
         if (!inputStack.isEmpty()) {
             IndustrialShreddingRecipeInput input = new IndustrialShreddingRecipeInput(inputStack, this.level.getRandom());
             @Nullable RecipeHolder<? extends IndustrialShreddingRecipe> recipeHolder = this.quickCheck.getRecipeFor(input, this.level).orElse(null);
@@ -131,10 +168,25 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                     }
 
                     inputStack.shrink(1);
-                    this.setChanged();
                 }
+                changed = true;
             }
         }
+
+        if (changed) {
+            this.setChanged();
+        }
+    }
+
+    public int tryInsert(ItemStack stack, int previouslyInserted, Transaction tx) {
+        ItemVariant variant = ItemVariant.of(stack);
+        int inserted = Math.toIntExact(this.shreddingInput.getStorage().insert(variant, Math.min(stack.getCount(), MAX_COUNT_FOR_INTAKE_OPERATION - previouslyInserted), tx));
+        if (inserted > 0) {
+            stack.shrink(inserted);
+            return inserted;
+        } else {
+        }
+        return 0;
     }
 
     protected void addJammedStack(ItemStack stack) {
@@ -167,6 +219,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         super.loadAdditional(tag, registries);
         this.shreddingTotalTime = tag.getInt(KlaxonNBTIds.SHREDDING_TIME_TOTAL);
         this.shreddingProgress = Math.clamp(tag.getInt(KlaxonNBTIds.SHREDDING_TIME), 0, this.shreddingTotalTime);
+        this.entityInteractionCooldownTicks = Math.clamp(tag.getInt(KlaxonNBTIds.COOLDOWN_TICKS), 0, ENTITY_INTERACTION_COOLDOWN_TICKS);
         Objects.requireNonNull(this.level);
         if (tag.contains(KlaxonNBTIds.JAMMED_STACKS)) {
             ContainerHelper.loadAllItems(tag.getCompound(KlaxonNBTIds.JAMMED_STACKS), this.jammedStacks, this.level.registryAccess());
@@ -178,8 +231,8 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         super.saveAdditional(tag, registries);
         tag.putInt(KlaxonNBTIds.SHREDDING_TIME, this.shreddingProgress);
         tag.putInt(KlaxonNBTIds.SHREDDING_TIME_TOTAL, this.shreddingTotalTime);
+        tag.putInt(KlaxonNBTIds.COOLDOWN_TICKS, this.entityInteractionCooldownTicks);
         Objects.requireNonNull(this.level);
         tag.put(KlaxonNBTIds.JAMMED_STACKS, ContainerHelper.saveAllItems(new CompoundTag(), this.jammedStacks, this.level.registryAccess()));
-        // tag.putLong(KlaxonNBTIds.STORED_POWER, this.energyStorage.getAmount());
     }
 }
