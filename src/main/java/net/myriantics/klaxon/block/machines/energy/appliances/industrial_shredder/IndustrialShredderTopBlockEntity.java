@@ -45,7 +45,7 @@ import java.util.Objects;
 public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBlockEntity implements KlaxonEnergyStorageProvider {
 
     private static final AABB SUCK_AABB = Block.box(0, 0, 0, 16, EntityType.ITEM.getHeight() * 16, 16).toAabbs().getFirst();
-    protected static final int INTAKE_INTERACTION_COOLDOWN_TICKS = 4;
+    protected static final int INTAKE_INTERACTION_COOLDOWN_TICKS = 8;
     protected static final int MAX_COUNT_FOR_INTAKE_OPERATION = 4;
 
     protected @Nullable IndustrialShredderBottomBlockEntity counterpartCache = null;
@@ -143,6 +143,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                     }
                     if (totalIntakeCount > 0) {
                         tx.commit();
+                        changed = true;
                     } else {
                         tx.abort();
                     }
@@ -154,10 +155,18 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
             for (Entity entity : level.getEntities((Entity) null, SUCK_AABB.move(this.worldPosition).move(0, 1, 0), entity -> entity.getY() == this.worldPosition.getY() + 1)) {
                 if (entity instanceof ItemEntity itemEntity && inputStack.getCount() < inputStack.getMaxStackSize()) {
                     try (Transaction tx = Transaction.openOuter()) {
-                        int intakeCount = this.tryInsert(itemEntity.getItem(), totalIntakeCount, tx);
+                        ItemStack entityStack = itemEntity.getItem();
+                        int intakeCount = this.tryInsert(entityStack, totalIntakeCount, tx);
                         if (intakeCount > 0) {
                             tx.commit();
                             totalIntakeCount += intakeCount;
+                            if (entityStack.isEmpty()) {
+                                itemEntity.discard();
+                            } else {
+                                // do this so that the item entity re-syncs its synced data w clients
+                                // has to be copied so that update doesnt get culled because its the same instance
+                                itemEntity.setItem(entityStack.copy());
+                            }
                         } else {
                             tx.abort();
                         }
