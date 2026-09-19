@@ -128,8 +128,6 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         if (this.isOnCooldown()) {
             this.intakeInteractionCooldownTicks--;
             changed = true;
-        } else if (!this.jammedStacks.isEmpty()) {
-            // don't do intake ops when jammed
         } else if (this.aboveStorageCache != null) {
             if (this.aboveStorageCache.supportsExtraction()) {
                 try (Transaction tx = Transaction.openOuter()) {
@@ -154,7 +152,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         } else if (!this.areEntityInteractionsBlockedByState(level, blockPos.above(), level.getBlockState(blockPos.above()))) {
             int totalIntakeCount = 0;
             DamageSource shredding = this.level.damageSources().source(KlaxonDamageTypes.SHREDDING);
-            for (Entity entity : level.getEntities((Entity) null, SUCK_AABB.move(this.worldPosition).move(0, 1, 0), entity -> entity.getY() == this.worldPosition.getY() + 1)) {
+            for (Entity entity : level.getEntities((Entity) null, SUCK_AABB.move(this.worldPosition).move(0, 1, 0), entity -> entity.getY() == this.worldPosition.getY() + 1 && !entity.isIgnoringBlockTriggers())) {
                 if (entity instanceof ItemEntity itemEntity && inputStack.getCount() < inputStack.getMaxStackSize()) {
                     try (Transaction tx = Transaction.openOuter()) {
                         ItemStack entityStack = itemEntity.getItem();
