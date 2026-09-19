@@ -59,6 +59,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
     public static final String OBTAIN_ANY_STEEL_ARMOR = "obtain_any_steel_armor";
 
     // 4
+    public static final String OBTAIN_INDUSTRIAL_SHREDDER = "obtain_industrial_shredder";
     public static final String EXTEND_MODULAR_EXPLOSIVE_FUSE = "extend_modular_explosive_fuse";
     public static final String REMOVE_ANY_MUFFLER = "remove_any_muffler";
     public static final String APPLY_EPIC_MUFFLER = "apply_epic_muffler";
@@ -111,6 +112,7 @@ public class KlaxonStageOneAdvancementProvider extends KlaxonAdvancementSubProvi
         AdvancementHolder obtainAnySteelArmor = addGoal(hammerCraftMetalPlate, OBTAIN_ANY_STEEL_ARMOR, KlaxonItems.STEEL_CHESTPLATE.value(), InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(KlaxonItemTags.STEEL_ARMOR)));
 
         // level 4
+        AdvancementHolder obtainIndustrialShredder = addTask(cableShearCraftMetalWire, OBTAIN_INDUSTRIAL_SHREDDER, KlaxonItems.INDUSTRIAL_SHREDDER.value(), InventoryChangeTrigger.TriggerInstance.hasItems(KlaxonItems.INDUSTRIAL_SHREDDER.value()));
         AdvancementHolder extendModularExplosiveFuse = addTask(obtainModularExplosive, EXTEND_MODULAR_EXPLOSIVE_FUSE, Items.STRING, RecipeCraftedTrigger.TriggerInstance.craftedItem(KlaxonCommon.locate("crafting/fuse_extension/modular_explosive_block")));
         AdvancementHolder removeAnyMuffler = addTask(applyAnyMuffler, REMOVE_ANY_MUFFLER, Items.SHEARS, MufflerInteractionCriterion.Conditions.create(MufflerActionType.REMOVE, null));
         AdvancementHolder applyEpicMuffler = addHiddenChallenge(applyAnyMuffler, APPLY_EPIC_MUFFLER, Items.ELYTRA, MufflerInteractionCriterion.Conditions.create(MufflerActionType.APPLY, ItemPredicate.Builder.item().of(KlaxonItemTags.EPIC_MUFFLERS).build()));

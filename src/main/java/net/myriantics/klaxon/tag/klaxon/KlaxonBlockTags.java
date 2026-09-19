@@ -195,6 +195,8 @@ public abstract class KlaxonBlockTags {
             createTag("machines");
     public static final TagKey<Block> HALLNOX_STEMS =
             createTag("hallnox_stems");
+    public static final TagKey<Block> INDUSTRIAL_SHREDDER_PARTS =
+            createTag("industrial_shredder_parts");
 
     // plating blocks
     public static final TagKey<Block> PLATING_BLOCKS =

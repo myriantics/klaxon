@@ -1,0 +1,33 @@
+{
+  "parent": "klaxon:stage_one/use_cable_shears_to_make_metal_wire",
+  "criteria": {
+    "obtain_industrial_shredder": {
+      "conditions": {
+        "items": [
+          {
+            "items": "klaxon:industrial_shredder"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.klaxon.stage_one.obtain_industrial_shredder.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "klaxon:industrial_shredder"
+    },
+    "title": {
+      "translate": "advancements.klaxon.stage_one.obtain_industrial_shredder.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_industrial_shredder"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

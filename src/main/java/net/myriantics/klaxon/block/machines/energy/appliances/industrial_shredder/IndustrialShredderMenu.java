@@ -37,10 +37,6 @@ public class IndustrialShredderMenu extends KlaxonBaseContainerMenu implements C
             for (int j = 0; j < 3; j++) {
                 int selected = i + j * 3;
                 this.outputSlots[selected] = this.addSlot(new Slot(this.container, selected + 1, 107 + i * 18, 17 + j * 18) {
-                    @Override
-                    public boolean mayPickup(Player playerEntity) {
-                        return false;
-                    }
 
                     @Override
                     public boolean mayPlace(ItemStack stack) {

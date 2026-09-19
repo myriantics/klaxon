@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.myriantics.klaxon.block.machines.BaseKlaxonDoubleTallMachineBlock;
 import net.myriantics.klaxon.component.ability.InstabreakingToolComponent;
 import net.myriantics.klaxon.mechanics.wrench.*;
 import net.myriantics.klaxon.mechanics.wrench.interaction.WrenchInteractionMap;
@@ -140,6 +141,10 @@ public class WrenchItem extends DiggerItem {
     }
 
     protected boolean shouldOffsetPickupDownward(Level level, BlockPos targetPos, BlockState targetState) {
+        if (targetState.getBlock() instanceof BaseKlaxonDoubleTallMachineBlock machineBlock && machineBlock.part == BaseKlaxonDoubleTallMachineBlock.Part.TOP) {
+            return true;
+        }
+
         if (!targetState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) || !targetState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).equals(DoubleBlockHalf.UPPER)) {
             return false;
         } else {

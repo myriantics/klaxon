@@ -106,6 +106,11 @@ public final class KlaxonEnUsAdvancementLanguageProvider extends KlaxonEnUsLangu
 
         // level 4
         addStageOneAdvancement(
+                KlaxonStageOneAdvancementProvider.OBTAIN_INDUSTRIAL_SHREDDER,
+                "Spaghettification",
+                "Obtain an Industrial Shredder"
+        );
+        addStageOneAdvancement(
                 KlaxonStageOneAdvancementProvider.EXTEND_MODULAR_EXPLOSIVE_FUSE,
                 "Right On Time",
                 "Extend the fuse of a Modular Explosive Block with String"

@@ -154,6 +154,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonConventionalBlockTags.METAL_TRAPDOORS)
                 .forceAddTag(KlaxonConventionalBlockTags.SCAFFOLDINGS)
                 .forceAddTag(KlaxonConventionalBlockTags.LEVERS)
+                .forceAddTag(KlaxonBlockTags.INDUSTRIAL_SHREDDER_PARTS)
                 .forceAddTag(KlaxonBlockTags.PIPE_MATRICES)
                 .add(
                         Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE,
@@ -203,6 +204,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(KlaxonBlockTags.WIRE_SPOOLS)
                 .forceAddTag(KlaxonBlockTags.PLATING_BLOCKS)
                 .forceAddTag(KlaxonBlockTags.PIPE_MATRICES)
+                .forceAddTag(KlaxonBlockTags.INDUSTRIAL_SHREDDER_PARTS)
                 .add(KlaxonBlocks.DEEPSLATE_BLAST_PROCESSOR.value())
                 .add(
                         KlaxonBlocks.STEEL_BLOCK.value(),
@@ -286,6 +288,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.OBSERVER);
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.FACING.value().getDenylistTag());
         getOrCreateTagBuilder(KlaxonBlockStateWrenchBehaviors.HORIZONTAL_FACING.value().getAllowlistTag())
+                .forceAddTag(KlaxonBlockTags.INDUSTRIAL_SHREDDER_PARTS)
                 .add(KlaxonBlocks.STEEL_BLAST_PROCESSOR.value())
                 .add(Blocks.BLAST_FURNACE)
                 .add(Blocks.REPEATER)
@@ -661,6 +664,9 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     }
 
     private void buildCategoricalTags() {
+        getOrCreateTagBuilder(KlaxonBlockTags.INDUSTRIAL_SHREDDER_PARTS)
+                .add(KlaxonBlocks.INDUSTRIAL_SHREDDER_TOP.value())
+                .add(KlaxonBlocks.INDUSTRIAL_SHREDDER_BOTTOM.value());
         getOrCreateTagBuilder(ConventionalBlockTags.STORAGE_BLOCKS)
                 .forceAddTag(KlaxonConventionalBlockTags.STEEL_STORAGE_BLOCKS)
                 .forceAddTag(KlaxonConventionalBlockTags.CRUDE_STEEL_STORAGE_BLOCKS)

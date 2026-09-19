@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseKlaxonDoubleTallMachineBlock extends Block {
 
-    protected final Part part;
+    public final Part part;
 
     public BaseKlaxonDoubleTallMachineBlock(Properties properties, Part part) {
         super(properties);
