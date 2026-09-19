@@ -1,5 +1,9 @@
 package net.myriantics.klaxon.block.machines.energy.generators.turbine;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -9,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -18,12 +23,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.myriantics.klaxon.mechanics.configuration.MachineConfiguration;
+import net.myriantics.klaxon.mechanics.configuration.MachineConfigurationType;
 import net.myriantics.klaxon.mechanics.turbine_generator.TurbineGeneratorUtil;
 import net.myriantics.klaxon.mechanics.turbine_generator.boost.TurbineGeneratorBoostManager;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.TurbineGeneratorPowerSource;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonMachineConfigurationTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.util.storage.energy.KlaxonEnergyStorageProvider;
 import net.myriantics.klaxon.util.storage.item.ContainerPartition;
@@ -37,6 +45,7 @@ import java.util.stream.Collectors;
 
 public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity implements KlaxonEnergyStorageProvider {
 
+    protected Configuration configuration;
     public static final int MAX_STATIC_POWER_SOURCE_RANGE = 32;
     protected long storedPower = 0;
     protected double velocity = 0;
@@ -174,6 +183,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         super.saveAdditional(tag, registries);
         tag.putDouble(KlaxonNBTIds.VELOCITY, this.velocity);
         tag.putLong(KlaxonNBTIds.STORED_POWER, this.storedPower);
+        tag.put(KlaxonNBTIds.CONFIGURATION, Configuration.DIRECT_CODEC.encode(this.configuration, registries.createSerializationContext(NbtOps.INSTANCE), NbtOps.INSTANCE.mapBuilder()).build(new CompoundTag()).getOrThrow());
         if (this.powerSourceHandler.hasPowerSource()) {
             tag.put(KlaxonNBTIds.POWER_SOURCE_HANDLER, this.powerSourceHandler.save(new CompoundTag(), registries));
         }
@@ -184,6 +194,9 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         super.loadAdditional(tag, registries);
         this.velocity = Math.max(tag.getDouble(KlaxonNBTIds.VELOCITY), 0);
         this.storedPower = Math.max(tag.getLong(KlaxonNBTIds.STORED_POWER), 0);
+        if (tag.contains(KlaxonNBTIds.CONFIGURATION)) {
+            this.configuration = Configuration.DIRECT_CODEC.decode(registries.createSerializationContext(NbtOps.INSTANCE), NbtOps.INSTANCE.getMap(tag.get(KlaxonNBTIds.CONFIGURATION)).getOrThrow()).result().orElse(Configuration.DEFAULT);
+        }
         if (tag.contains(KlaxonNBTIds.POWER_SOURCE_HANDLER)) {
             this.powerSourceHandler.load(tag.getCompound(KlaxonNBTIds.POWER_SOURCE_HANDLER), registries);
         }
@@ -227,7 +240,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
 
             // get all static power sources that could potentially work for the turbine's orientation
             Set<StaticTurbineGeneratorPowerSource> powerSources = level.registryAccess().lookupOrThrow(KlaxonRegistries.STATIC_TURBINE_GENERATOR_POWER_SOURCE).listElements().map(Holder::value).filter(source -> source.canBeValidForDirection(facing)).collect(Collectors.toSet());
-            for (int i = 0; i < MAX_STATIC_POWER_SOURCE_RANGE; i++) {
+            for (int i = 0; i < TurbineGeneratorBlockEntity.this.configuration.maxStaticPowerSourceRange(); i++) {
 
                 // trim power sources that are out of range
                 final int distance = i;
@@ -336,6 +349,24 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         @Override
         public boolean supportsInsertion() {
             return false;
+        }
+    }
+
+    public record Configuration(int maxStaticPowerSourceRange) implements MachineConfiguration {
+
+        public static final Configuration DEFAULT = new Configuration(
+                32
+        );
+
+        public static final Codec<Integer> MAX_STATIC_POWER_SOURCE_RANGE_CODEC = Codec.intRange(1, 32);
+
+        public static final MapCodec<Configuration> DIRECT_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                MAX_STATIC_POWER_SOURCE_RANGE_CODEC.fieldOf("max_static_power_source_range").forGetter(Configuration::maxStaticPowerSourceRange)
+        ).apply(instance, Configuration::new));
+
+        @Override
+        public MachineConfigurationType<? extends MachineConfiguration> getType() {
+            return KlaxonMachineConfigurationTypes.TURBINE_GENERATOR.value();
         }
     }
 }

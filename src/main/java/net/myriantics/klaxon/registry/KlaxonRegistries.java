@@ -3,6 +3,7 @@ package net.myriantics.klaxon.registry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.mechanics.configuration.MachineConfigurationType;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
@@ -21,6 +22,7 @@ public abstract class KlaxonRegistries {
     public static final ResourceKey<Registry<WrenchActionType>> WRENCH_ACTION_TYPE = of("wrench_action_type");
     public static final ResourceKey<Registry<ExplosiveCatalystHandler>> EXPLOSIVE_CATALYST_HANDLER = of("explosive_catalyst_handler");
     public static final ResourceKey<Registry<ExplosiveCatalystTransformerType<?>>> EXPLOSIVE_CATALYST_TRANSFORMER_TYPE = of("explosive_catalyst_transformer_type");
+    public static final ResourceKey<Registry<MachineConfigurationType<?>>> MACHINE_CONFIGURATION_TYPE = of("machine_configuration_type");
     // dynamic
     public static final ResourceKey<Registry<ExplosiveCatalystBehavior>> EXPLOSIVE_CATALYST_BEHAVIOR = of("blast_processor_behavior");
     public static final ResourceKey<Registry<WrenchInteractionDenialPredicate>> WRENCH_INTERACTION_DENIAL_PREDICATE = of("wrench_interaction_denial_predicates");
