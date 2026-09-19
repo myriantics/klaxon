@@ -1,7 +1,6 @@
 package net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.DispenserMenu;
@@ -9,13 +8,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.util.storage.item.ContainerPartition;
-import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class IndustrialShredderBottomBlockEntity extends BaseIndustrialShredderBlockEntity {
 
     protected IndustrialShredderTopBlockEntity counterpartCache = null;
-    protected ContainerPartition output;
+    protected ContainerPartition outputStorage;
 
     public IndustrialShredderBottomBlockEntity(BlockPos pos, BlockState state) {
         this(KlaxonBlockEntityTypes.INDUSTRIAL_SHREDDER_BOTTOM.value(), pos, state);
@@ -37,8 +35,13 @@ public class IndustrialShredderBottomBlockEntity extends BaseIndustrialShredderB
     }
 
     @Override
+    protected ContainerPartition getAutomationAccessiblePartition() {
+        return this.outputStorage;
+    }
+
+    @Override
     protected void initPartitions(PartitionBuilder partitions) {
-        this.output = partitions.partition(9);
+        this.outputStorage = partitions.partition(9);
     }
 
     @Override

@@ -9,14 +9,16 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
+import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 
 public abstract class KlaxonRecipeTypes {
-    public static Holder<RecipeType<BlastProcessingRecipe>> BLAST_PROCESSING = register("blast_processing");
-    public static Holder<RecipeType<ToolUsageRecipe>> TOOL_USAGE = register("tool_usage");
-    public static Holder<RecipeType<WorldItemApplicationRecipe>> WORLD_ITEM_APPLICATION = register("world_item_application");
-    public static Holder<RecipeType<NetherReactionRecipe>> NETHER_REACTION = register("nether_reaction");
+    public static final Holder<RecipeType<BlastProcessingRecipe>> BLAST_PROCESSING = register("blast_processing");
+    public static final Holder<RecipeType<ToolUsageRecipe>> TOOL_USAGE = register("tool_usage");
+    public static final Holder<RecipeType<WorldItemApplicationRecipe>> WORLD_ITEM_APPLICATION = register("world_item_application");
+    public static final Holder<RecipeType<NetherReactionRecipe>> NETHER_REACTION = register("nether_reaction");
+    public static final Holder<RecipeType<IndustrialShreddingRecipe>> INDUSTRIAL_SHREDDING = register("industrial_shredding");
 
     @SuppressWarnings("unchecked")
     private static <T extends Recipe<?>> Holder<RecipeType<T>> register(String id) {

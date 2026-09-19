@@ -1,5 +1,6 @@
 package net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import net.myriantics.klaxon.util.KlaxonContainerUtil;
+import net.myriantics.klaxon.util.storage.item.ContainerPartition;
 import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,10 +51,10 @@ public abstract class BaseIndustrialShredderBlockEntity extends KlaxonBaseContai
         return new IndustrialShredderMenu(
                 id,
                 inventory,
-                this instanceof IndustrialShredderTopBlockEntity top
-                        ? KlaxonContainerUtil.concatenate(top.shreddingInput, ((IndustrialShredderBottomBlockEntity) counterpart).output)
-                        : KlaxonContainerUtil.concatenate(((IndustrialShredderTopBlockEntity) counterpart).shreddingInput, ((IndustrialShredderBottomBlockEntity) this).output),
-                ContainerLevelAccess.create(level, this.worldPosition)
+                this instanceof IndustrialShredderTopBlockEntity
+                        ? KlaxonContainerUtil.concatenate(this.getAutomationAccessiblePartition(), counterpart.getAutomationAccessiblePartition())
+                        : KlaxonContainerUtil.concatenate(counterpart.getAutomationAccessiblePartition(), this.getAutomationAccessiblePartition()),
+                ContainerLevelAccess.create(this.level, this.worldPosition)
         );
     }
 
@@ -60,6 +62,8 @@ public abstract class BaseIndustrialShredderBlockEntity extends KlaxonBaseContai
     protected Component getDefaultName() {
         return Component.translatable(getBlockState().getBlock().asItem().getDescriptionId());
     }
+
+    protected abstract ContainerPartition getAutomationAccessiblePartition();
 
     protected abstract @Nullable BaseIndustrialShredderBlockEntity getCounterpart();
 

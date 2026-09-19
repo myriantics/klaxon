@@ -61,4 +61,9 @@ public abstract class KlaxonNBTIds {
     // furnace generator
     public static final String REMAINING_FUEL_DURATION = KlaxonCommon.locateAlt("remaining_fuel_duration");
     public static final String INITIAL_FUEL_DURATION = KlaxonCommon.locateAlt("initial_fuel_duration");
+
+    // shredders
+    public static final String SHREDDING_TIME = KlaxonCommon.locateAlt("shredding_time");
+    public static final String SHREDDING_TIME_TOTAL = KlaxonCommon.locateAlt("shredding_time_total");
+    public static final String JAMMED_STACKS = KlaxonCommon.locateAlt("jammed_stacks");
 }

@@ -1,26 +1,40 @@
 package net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipe;
+import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipeInput;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
+import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
+import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import net.myriantics.klaxon.util.storage.energy.KlaxonEnergyStorageProvider;
 import net.myriantics.klaxon.util.storage.item.ContainerPartition;
-import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
+
+import java.util.Objects;
 
 public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBlockEntity implements KlaxonEnergyStorageProvider {
 
@@ -30,12 +44,25 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     protected ContainerPartition shreddingInput;
     protected EnergyStorage energyStorage = new SimpleEnergyStorage(1000, 32, 32);
 
+    protected int shreddingProgress = 0;
+    protected int shreddingTotalTime = 0;
+    protected NonNullList<ItemStack> jammedStacks = NonNullList.withSize(9, ItemStack.EMPTY);
+    protected boolean jammed = false;
+
+    private final RecipeManager.CachedCheck<IndustrialShreddingRecipeInput, ? extends IndustrialShreddingRecipe> quickCheck;
+
     public IndustrialShredderTopBlockEntity(BlockPos pos, BlockState state) {
-        this(KlaxonBlockEntityTypes.INDUSTRIAL_SHREDDER_TOP.value(), pos, state);
+        this(KlaxonBlockEntityTypes.INDUSTRIAL_SHREDDER_TOP.value(), KlaxonRecipeTypes.INDUSTRIAL_SHREDDING.value(), pos, state);
     }
 
-    protected IndustrialShredderTopBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    protected IndustrialShredderTopBlockEntity(BlockEntityType<?> type, RecipeType<? extends IndustrialShreddingRecipe> recipeType, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+        this.quickCheck = RecipeManager.createCheck(recipeType);
+    }
+
+    @Override
+    protected ContainerPartition getAutomationAccessiblePartition() {
+        return this.shreddingInput;
     }
 
     @Override
@@ -51,7 +78,19 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
 
     @Override
     protected void initPartitions(PartitionBuilder partitions) {
-        this.shreddingInput = partitions.partition(1);
+        this.shreddingInput = partitions.partition(1, (blockEntity, firstOpenSlot, nextClosedSlot) -> new ContainerPartition(blockEntity, firstOpenSlot, nextClosedSlot) {
+            @Override
+            public void setItem(int slot, ItemStack stack) {
+                ItemStack oldStack = this.getFirstNonEmptyStack();
+                boolean canSafelyForgoRecomputingRecipeData = !oldStack.isEmpty() && ItemStack.isSameItemSameComponents(oldStack, stack);
+                super.setItem(slot, stack);
+                if (!canSafelyForgoRecomputingRecipeData) {
+                    IndustrialShredderTopBlockEntity.this.shreddingTotalTime = getTotalShreddingTime(IndustrialShredderTopBlockEntity.this.level);
+                    IndustrialShredderTopBlockEntity.this.shreddingProgress = 0;
+                    IndustrialShredderTopBlockEntity.this.setChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -60,7 +99,58 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     }
 
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
+        if (this.level == null) {
+            return;
+        }
 
+        ItemStack inputStack = this.shreddingInput.getFirstNonEmptyStack();
+        if (!inputStack.isEmpty()) {
+            IndustrialShreddingRecipeInput input = new IndustrialShreddingRecipeInput(inputStack, this.level.getRandom());
+            @Nullable RecipeHolder<? extends IndustrialShreddingRecipe> recipeHolder = this.quickCheck.getRecipeFor(input, this.level).orElse(null);
+
+            if (recipeHolder != null) {
+                this.shreddingProgress++;
+                if (this.shreddingProgress >= this.shreddingTotalTime) {
+                    this.shreddingProgress = 0;
+                    this.shreddingTotalTime = this.getTotalShreddingTime(this.level);
+
+                    ItemStack[] assembledStacks = recipeHolder.value().properlyAssemble(input, this.level.registryAccess());
+
+                    Storage<ItemVariant> counterpartStorage = Objects.requireNonNull(this.getCounterpart()).getAutomationAccessiblePartition().getStorage();
+
+                    try (Transaction tx = Transaction.openOuter()) {
+                        for (ItemStack stack : assembledStacks) {
+                            ItemVariant variant = ItemVariant.of(stack);
+                            long insertedCount = counterpartStorage.insert(variant, stack.getCount(), tx);
+                            if (stack.getCount() - insertedCount != 0) {
+                                stack.shrink(Math.toIntExact(insertedCount));
+                                this.addJammedStack(stack);
+                            }
+                        }
+                        tx.commit();
+                    }
+
+                    inputStack.shrink(1);
+                    this.setChanged();
+                }
+            }
+        }
+    }
+
+    protected void addJammedStack(ItemStack stack) {
+        KlaxonItemStackHelper.insertAndMerge(this.jammedStacks, stack);
+    }
+
+    protected void degradeStackRelativeToShreddingProgress(ItemStack toDegrade, ItemStack beforeDegrading) {
+
+    }
+
+    protected int getTotalShreddingTime(Level level) {
+        IndustrialShreddingRecipeInput recipeInput = new IndustrialShreddingRecipeInput(this.shreddingInput.getFirstNonEmptyStack(), Objects.requireNonNull(this.level).getRandom());
+        return this.quickCheck
+                .getRecipeFor(recipeInput, level)
+                .map(recipeHolder -> recipeHolder.value().getTotalShreddingTime())
+                .orElse(200);
     }
 
     protected Direction getFacing() {
@@ -75,11 +165,21 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        this.shreddingTotalTime = tag.getInt(KlaxonNBTIds.SHREDDING_TIME_TOTAL);
+        this.shreddingProgress = Math.clamp(tag.getInt(KlaxonNBTIds.SHREDDING_TIME), 0, this.shreddingTotalTime);
+        Objects.requireNonNull(this.level);
+        if (tag.contains(KlaxonNBTIds.JAMMED_STACKS)) {
+            ContainerHelper.loadAllItems(tag.getCompound(KlaxonNBTIds.JAMMED_STACKS), this.jammedStacks, this.level.registryAccess());
+        }
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        tag.putInt(KlaxonNBTIds.SHREDDING_TIME, this.shreddingProgress);
+        tag.putInt(KlaxonNBTIds.SHREDDING_TIME_TOTAL, this.shreddingTotalTime);
+        Objects.requireNonNull(this.level);
+        tag.put(KlaxonNBTIds.JAMMED_STACKS, ContainerHelper.saveAllItems(new CompoundTag(), this.jammedStacks, this.level.registryAccess()));
         // tag.putLong(KlaxonNBTIds.STORED_POWER, this.energyStorage.getAmount());
     }
 }

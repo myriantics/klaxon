@@ -5,14 +5,12 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.registry.misc.KlaxonMenuTypes;
 import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerMenu;
 
-public class IndustrialShredderMenu extends KlaxonBaseContainerMenu {
+public class IndustrialShredderMenu extends KlaxonBaseContainerMenu implements ContainerListener {
 
     protected Slot inputSlot;
     protected Slot[] outputSlots;
@@ -25,6 +23,7 @@ public class IndustrialShredderMenu extends KlaxonBaseContainerMenu {
 
     public IndustrialShredderMenu(int containerId, Inventory playerInventory, Container container, ContainerLevelAccess access) {
         super(KlaxonMenuTypes.INDUSTRIAL_SHREDDER.value(), containerId, playerInventory, container, access);
+        this.addSlotListener(this);
     }
 
     @Override
@@ -57,5 +56,15 @@ public class IndustrialShredderMenu extends KlaxonBaseContainerMenu {
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         return null;
+    }
+
+    @Override
+    public void slotChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack) {
+
+    }
+
+    @Override
+    public void dataChanged(AbstractContainerMenu containerMenu, int dataSlotIndex, int value) {
+
     }
 }

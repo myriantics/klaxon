@@ -27,11 +27,6 @@ public class StandardBlastProcessingRecipe implements BlastProcessingRecipe {
         this.recipeOutputCompound = result;
     }
 
-    @Override
-    public ItemStack assemble(BlastProcessingRecipeInput input, HolderLookup.Provider lookup) {
-        return ItemStack.EMPTY;
-    }
-
     public ItemStack[] properlyAssemble(BlastProcessingRecipeInput input, HolderLookup.Provider lookup) {
         return recipeOutputCompound.computeDrops(input.getRandom());
     }

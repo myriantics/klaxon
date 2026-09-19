@@ -12,11 +12,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.recipe.CompoundOutputRecipe;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 
-public interface BlastProcessingRecipe extends Recipe<BlastProcessingRecipeInput> {
-
-    ItemStack[] properlyAssemble(BlastProcessingRecipeInput input, HolderLookup.Provider registries);
+public interface BlastProcessingRecipe extends CompoundOutputRecipe<BlastProcessingRecipeInput> {
 
     default float getExplosionPowerMin() {
         return this.getBounds().explosionPowerMin;
@@ -30,8 +29,6 @@ public interface BlastProcessingRecipe extends Recipe<BlastProcessingRecipeInput
 
     Ingredient getIngredient();
 
-    ItemStack[] getDisplayStacks(BlastProcessingRecipeInput input, HolderLookup.Provider registries);
-
     @Override
     default boolean matches(BlastProcessingRecipeInput inventory, Level world) {
         // check if explosion power exists and is within bounds
@@ -40,22 +37,6 @@ public interface BlastProcessingRecipe extends Recipe<BlastProcessingRecipeInput
         } else {
             return false;
         }
-    }
-
-    @Override
-    default boolean canCraftInDimensions(int width, int height) {
-        return true;
-    }
-
-    // not used because it only allows for the output of 1 itemstack (cringe)
-    @Override
-    default ItemStack assemble(BlastProcessingRecipeInput input, HolderLookup.Provider registries) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    default ItemStack getResultItem(HolderLookup.Provider registries) {
-        return ItemStack.EMPTY;
     }
 
     @Override

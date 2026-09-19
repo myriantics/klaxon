@@ -15,7 +15,7 @@ public class ContainerPartition implements Container {
 
     public static final ContainerPartition EMPTY = new ContainerPartition(new SimpleContainer(0));
 
-    ContainerPartition(Container container, int firstSlot, int nextOpenSlot) {
+    protected ContainerPartition(Container container, int firstSlot, int nextOpenSlot) {
         int size = nextOpenSlot - firstSlot;
         int[] slots = new int[size];
         for (int i = 0; i < slots.length; i++) {

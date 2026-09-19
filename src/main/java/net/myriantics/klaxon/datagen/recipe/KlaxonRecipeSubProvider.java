@@ -24,6 +24,7 @@ import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtension
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
+import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipeImpl;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
@@ -186,6 +187,16 @@ public abstract class KlaxonRecipeSubProvider {
         BlastingRecipe recipe = new BlastingRecipe(group, category, input, output, experience, cookingTime);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe, conditions);
+    }
+
+    public void addIndustrialShreddingRecipe(NamedIngredient input, RecipeOutputCompound output, int totalShreddingTime) {
+        ResourceLocation recipeId = provider.computeRecipeIdentifier("shredding/industrial",
+                input.getName()
+        );
+
+        IndustrialShreddingRecipeImpl recipe = new IndustrialShreddingRecipeImpl(input.toIngredient(), totalShreddingTime, output);
+
+        provider.acceptRecipeWithConditions(exporter, recipeId, recipe);
     }
 
     public void addShapelessCraftingRecipe(Ingredient input, ItemStack output,
