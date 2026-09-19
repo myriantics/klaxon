@@ -45,7 +45,7 @@ import java.util.Objects;
 public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBlockEntity implements KlaxonEnergyStorageProvider {
 
     private static final AABB SUCK_AABB = Block.box(0, 0, 0, 16, EntityType.ITEM.getHeight() * 16, 16).toAabbs().getFirst();
-    protected static final int INTAKE_INTERACTION_COOLDOWN_TICKS = 8;
+    protected static final int INTAKE_INTERACTION_COOLDOWN_TICKS = 4;
     protected static final int MAX_COUNT_FOR_INTAKE_OPERATION = 4;
 
     protected @Nullable IndustrialShredderBottomBlockEntity counterpartCache = null;
@@ -149,6 +149,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                     }
                 }
             }
+            this.intakeInteractionCooldownTicks = INTAKE_INTERACTION_COOLDOWN_TICKS;
         } else if (!this.areEntityInteractionsBlockedByState(level, blockPos.above(), level.getBlockState(blockPos.above()))) {
             int totalIntakeCount = 0;
             DamageSource shredding = this.level.damageSources().source(KlaxonDamageTypes.SHREDDING);
