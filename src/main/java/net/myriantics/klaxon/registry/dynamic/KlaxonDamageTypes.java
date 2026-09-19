@@ -42,6 +42,8 @@ public abstract class KlaxonDamageTypes {
     // machine
     public static final ResourceKey<DamageType> FORCEFUL_EXHAUST =
             createDamageType("forceful_exhaust");
+    public static final ResourceKey<DamageType> SHREDDING =
+            createDamageType("shredding");
 
     // to be added - will be used with Coring Drill
     public static final ResourceKey<DamageType> MINCING =

@@ -22,12 +22,14 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
     protected void addTags(HolderLookup.Provider arg) {
         getOrCreateTagBuilder(DamageTypeTags.BYPASSES_SHIELD)
                 .addOptional(KlaxonDamageTypes.HALLNOX_POD_DOMED)
-                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
+                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST)
+                .addOptional(KlaxonDamageTypes.SHREDDING);
 
         // you have to use addOptional here because shit is fucky
 
         getOrCreateTagBuilder(DamageTypeTags.NO_KNOCKBACK)
-                .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING);
+                .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING)
+                .addOptional(KlaxonDamageTypes.SHREDDING);
 
         getOrCreateTagBuilder(KlaxonDamageTypeTags.GRAPPLE_WINCH_CABLE_TRANSMISSIBLE)
                 .forceAddTag(KlaxonDamageTypeTags.ELECTRICAL);
@@ -54,7 +56,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .addOptional(KlaxonDamageTypes.BLUDGEONING)
                 .addOptional(KlaxonDamageTypes.WRENCH_OVERTUNING)
                 .addOptional(KlaxonDamageTypes.GRAPPLING)
-                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);
+                .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST)
+                .addOptional(KlaxonDamageTypes.SHREDDING);
 
         getOrCreateTagBuilder(DamageTypeTags.IS_FIRE)
                 .addOptional(KlaxonDamageTypes.FORCEFUL_EXHAUST);

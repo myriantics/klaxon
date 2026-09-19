@@ -51,7 +51,28 @@ public class IndustrialShredderMenu extends KlaxonBaseContainerMenu implements C
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return null;
+        ItemStack movedStack = ItemStack.EMPTY;
+        Slot selectedSlot = this.slots.get(index);
+        if (selectedSlot.hasItem()) {
+            movedStack = selectedSlot.getItem();
+            ItemStack movedStackCopy = movedStack.copy();
+            if (index < 11) {
+                if (!this.moveItemStackTo(movedStackCopy, 11, this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(movedStackCopy, 0, 1, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (movedStackCopy.isEmpty()) {
+                selectedSlot.setByPlayer(ItemStack.EMPTY);
+            } else {
+                selectedSlot.setChanged();
+            }
+        }
+
+
+        return movedStack;
     }
 
     @Override

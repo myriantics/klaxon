@@ -3,6 +3,10 @@
     {
       "id": "klaxon:wrench_overtuning",
       "required": false
+    },
+    {
+      "id": "klaxon:shredding",
+      "required": false
     }
   ]
 }

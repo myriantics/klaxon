@@ -95,7 +95,12 @@ public final class KlaxonEnUsDeathMessageProvider extends KlaxonEnUsLanguageSubP
         );
         addDeathMessage(
                 KlaxonDamageTypes.FORCEFUL_EXHAUST,
-                "%1$s didn't read the manual",
+                "%1$s was sent blasting off again by a Steel Blast Processor",
+                null
+        );
+        addDeathMessage(
+                KlaxonDamageTypes.SHREDDING,
+                "%1$s was turned into confetti by an Industrial Shredder",
                 null
         );
     }

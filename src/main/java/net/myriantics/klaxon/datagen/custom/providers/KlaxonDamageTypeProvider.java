@@ -85,6 +85,10 @@ public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<D
                 KlaxonDamageTypes.FORCEFUL_EXHAUST,
                 0.3f
         );
+        addEnvironmentalDamageType(
+                KlaxonDamageTypes.SHREDDING,
+                0.4f
+        );
     }
 
     private void addDamageType(ResourceKey<DamageType> key, float exhaustion) {

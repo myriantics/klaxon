@@ -64,7 +64,7 @@ public class IndustrialShredderTopBlock extends BaseIndustrialShredderBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (hitResult.getDirection() == Direction.UP && level.getBlockEntity(pos) instanceof IndustrialShredderTopBlockEntity top) {
+        if (hitResult.getDirection() == Direction.UP && !stack.isEmpty() && level.getBlockEntity(pos) instanceof IndustrialShredderTopBlockEntity top) {
             try (Transaction tx = Transaction.openOuter()) {
                 if (top.tryInsert(stack, 0, tx) > 0) {
                     if (level.isClientSide()) {

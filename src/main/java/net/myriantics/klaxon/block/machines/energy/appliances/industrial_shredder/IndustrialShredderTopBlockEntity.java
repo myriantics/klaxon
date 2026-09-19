@@ -9,6 +9,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -26,6 +27,7 @@ import net.minecraft.world.phys.AABB;
 import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipe;
 import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipeInput;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
@@ -119,6 +121,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
             changed = true;
         } else {
             int totalInserted = 0;
+            DamageSource shredding = this.level.damageSources().source(KlaxonDamageTypes.SHREDDING);
             for (Entity entity : level.getEntities((Entity) null, SUCK_AABB.move(this.worldPosition).move(0, 1, 0), entity -> entity.getY() == this.worldPosition.getY() + 1)) {
                 if (entity instanceof ItemEntity itemEntity && inputStack.getCount() < inputStack.getMaxStackSize()) {
                     try (Transaction tx = Transaction.openOuter()) {
@@ -131,7 +134,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                         }
                     }
                 } else {
-
+                    entity.hurt(shredding, 5);
                 }
             }
             if (totalInserted > 0) {
@@ -179,6 +182,10 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     }
 
     public int tryInsert(ItemStack stack, int previouslyInserted, Transaction tx) {
+        if (stack.isEmpty()) {
+            return 0;
+        }
+
         ItemVariant variant = ItemVariant.of(stack);
         int inserted = Math.toIntExact(this.shreddingInput.getStorage().insert(variant, Math.min(stack.getCount(), MAX_COUNT_FOR_INTAKE_OPERATION - previouslyInserted), tx));
         if (inserted > 0) {
