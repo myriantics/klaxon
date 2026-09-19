@@ -20,23 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseIndustrialShredderBlockEntity extends KlaxonBaseContainerBlockEntity {
 
-    protected static final ContainerData EMPTY = new ContainerData() {
-        @Override
-        public int get(int index) {
-            return 0;
-        }
-
-        @Override
-        public void set(int index, int value) {
-
-        }
-
-        @Override
-        public int getCount() {
-            return 0;
-        }
-    };
-
     protected BaseIndustrialShredderBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }

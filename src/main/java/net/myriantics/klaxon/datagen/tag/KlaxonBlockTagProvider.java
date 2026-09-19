@@ -368,6 +368,8 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.COMPARATOR);
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS)
                 .addOptionalTag(BlockTags.CAMPFIRES);
+        getOrCreateTagBuilder(KlaxonBlockTags.DOES_NOT_BLOCK_INDUSTRIAL_SHREDDER_ENTITY_INTERACTION)
+                .addOptionalTag(BlockTags.DOES_NOT_BLOCK_HOPPERS);
     }
 
     private void buildVeinmineGroupTags() {

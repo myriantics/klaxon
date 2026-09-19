@@ -1,7 +1,9 @@
 package net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,6 +32,7 @@ import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
+import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import net.myriantics.klaxon.util.KlaxonItemStackHelper;
 import net.myriantics.klaxon.util.storage.energy.KlaxonEnergyStorageProvider;
 import net.myriantics.klaxon.util.storage.item.ContainerPartition;
@@ -42,14 +45,16 @@ import java.util.Objects;
 public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBlockEntity implements KlaxonEnergyStorageProvider {
 
     private static final AABB SUCK_AABB = Block.box(0, 0, 0, 16, EntityType.ITEM.getHeight() * 16, 16).toAabbs().getFirst();
-    protected static final int ENTITY_INTERACTION_COOLDOWN_TICKS = 4;
+    protected static final int INTAKE_INTERACTION_COOLDOWN_TICKS = 4;
     protected static final int MAX_COUNT_FOR_INTAKE_OPERATION = 4;
 
-    protected IndustrialShredderBottomBlockEntity counterpartCache = null;
+    protected @Nullable IndustrialShredderBottomBlockEntity counterpartCache = null;
     protected ContainerPartition shreddingInput;
     protected EnergyStorage energyStorage = new SimpleEnergyStorage(1000, 32, 32);
+    protected @Nullable Storage<ItemVariant> aboveStorageCache = null;
+    protected boolean cacheInitialized = false;
 
-    protected int entityInteractionCooldownTicks = 0;
+    protected int intakeInteractionCooldownTicks = 0;
     protected int shreddingProgress = 0;
     protected int shreddingTotalTime = 0;
     protected NonNullList<ItemStack> jammedStacks = NonNullList.withSize(9, ItemStack.EMPTY);
@@ -104,7 +109,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     }
 
     protected boolean isOnCooldown() {
-        return this.entityInteractionCooldownTicks > 0;
+        return this.intakeInteractionCooldownTicks > 0;
     }
 
     public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
@@ -112,23 +117,47 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
             return;
         }
 
+        if (!this.cacheInitialized) {
+            this.aboveStorageCache = ItemStorage.SIDED.find(level, blockPos.above(), Direction.DOWN);
+        }
+
         boolean changed = false;
 
         ItemStack inputStack = this.shreddingInput.getFirstNonEmptyStack();
 
         if (this.isOnCooldown()) {
-            this.entityInteractionCooldownTicks--;
+            this.intakeInteractionCooldownTicks--;
             changed = true;
-        } else {
-            int totalInserted = 0;
+        } else if (this.aboveStorageCache != null) {
+            if (this.aboveStorageCache.supportsExtraction()) {
+                try (Transaction tx = Transaction.openOuter()) {
+                    int totalIntakeCount = 0;
+                    for (StorageView<ItemVariant> view : this.aboveStorageCache.nonEmptyViews()) {
+                        ItemVariant resource = view.getResource();
+                        int intakeCount = Math.toIntExact(this.shreddingInput.getStorage().insert(
+                                resource,
+                                view.extract(resource, Math.min(MAX_COUNT_FOR_INTAKE_OPERATION, MAX_COUNT_FOR_INTAKE_OPERATION - totalIntakeCount), tx),
+                                tx
+                        ));
+                        totalIntakeCount += intakeCount;
+                    }
+                    if (totalIntakeCount > 0) {
+                        tx.commit();
+                    } else {
+                        tx.abort();
+                    }
+                }
+            }
+        } else if (!this.areEntityInteractionsBlockedByState(level, blockPos.above(), level.getBlockState(blockPos.above()))) {
+            int totalIntakeCount = 0;
             DamageSource shredding = this.level.damageSources().source(KlaxonDamageTypes.SHREDDING);
             for (Entity entity : level.getEntities((Entity) null, SUCK_AABB.move(this.worldPosition).move(0, 1, 0), entity -> entity.getY() == this.worldPosition.getY() + 1)) {
                 if (entity instanceof ItemEntity itemEntity && inputStack.getCount() < inputStack.getMaxStackSize()) {
                     try (Transaction tx = Transaction.openOuter()) {
-                        int inserted = this.tryInsert(itemEntity.getItem(), totalInserted, tx);
-                        if (inserted > 0) {
+                        int intakeCount = this.tryInsert(itemEntity.getItem(), totalIntakeCount, tx);
+                        if (intakeCount > 0) {
                             tx.commit();
-                            totalInserted += inserted;
+                            totalIntakeCount += intakeCount;
                         } else {
                             tx.abort();
                         }
@@ -137,10 +166,10 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                     entity.hurt(shredding, 5);
                 }
             }
-            if (totalInserted > 0) {
+            if (totalIntakeCount > 0) {
                 changed = true;
             }
-            this.entityInteractionCooldownTicks = ENTITY_INTERACTION_COOLDOWN_TICKS;
+            this.intakeInteractionCooldownTicks = INTAKE_INTERACTION_COOLDOWN_TICKS;
         }
 
 
@@ -179,6 +208,10 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         if (changed) {
             this.setChanged();
         }
+    }
+
+    protected boolean areEntityInteractionsBlockedByState(Level level, BlockPos pos, BlockState state) {
+        return state.isFaceSturdy(level, pos, Direction.DOWN) && !state.is(KlaxonBlockTags.DOES_NOT_BLOCK_INDUSTRIAL_SHREDDER_ENTITY_INTERACTION);
     }
 
     public int tryInsert(ItemStack stack, int previouslyInserted, Transaction tx) {
@@ -226,7 +259,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         super.loadAdditional(tag, registries);
         this.shreddingTotalTime = tag.getInt(KlaxonNBTIds.SHREDDING_TIME_TOTAL);
         this.shreddingProgress = Math.clamp(tag.getInt(KlaxonNBTIds.SHREDDING_TIME), 0, this.shreddingTotalTime);
-        this.entityInteractionCooldownTicks = Math.clamp(tag.getInt(KlaxonNBTIds.COOLDOWN_TICKS), 0, ENTITY_INTERACTION_COOLDOWN_TICKS);
+        this.intakeInteractionCooldownTicks = Math.clamp(tag.getInt(KlaxonNBTIds.COOLDOWN_TICKS), 0, INTAKE_INTERACTION_COOLDOWN_TICKS);
         Objects.requireNonNull(this.level);
         if (tag.contains(KlaxonNBTIds.JAMMED_STACKS)) {
             ContainerHelper.loadAllItems(tag.getCompound(KlaxonNBTIds.JAMMED_STACKS), this.jammedStacks, this.level.registryAccess());
@@ -238,7 +271,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         super.saveAdditional(tag, registries);
         tag.putInt(KlaxonNBTIds.SHREDDING_TIME, this.shreddingProgress);
         tag.putInt(KlaxonNBTIds.SHREDDING_TIME_TOTAL, this.shreddingTotalTime);
-        tag.putInt(KlaxonNBTIds.COOLDOWN_TICKS, this.entityInteractionCooldownTicks);
+        tag.putInt(KlaxonNBTIds.COOLDOWN_TICKS, this.intakeInteractionCooldownTicks);
         Objects.requireNonNull(this.level);
         tag.put(KlaxonNBTIds.JAMMED_STACKS, ContainerHelper.saveAllItems(new CompoundTag(), this.jammedStacks, this.level.registryAccess()));
     }

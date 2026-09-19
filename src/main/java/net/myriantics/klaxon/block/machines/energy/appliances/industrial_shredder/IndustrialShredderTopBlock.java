@@ -60,6 +60,10 @@ public class IndustrialShredderTopBlock extends BaseIndustrialShredderBlock {
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+
+        if (!level.isClientSide() && neighborPos == pos.above() && level.getBlockEntity(pos) instanceof IndustrialShredderTopBlockEntity topBlockEntity) {
+            topBlockEntity.aboveStorageCache = ItemStorage.SIDED.find(level, neighborPos, level.getBlockState(neighborPos), null, Direction.DOWN);
+        }
     }
 
     @Override
