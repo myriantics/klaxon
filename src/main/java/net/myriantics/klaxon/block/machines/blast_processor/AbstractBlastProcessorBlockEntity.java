@@ -64,6 +64,8 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
         return this.ingredientPartition;
     }
 
+    public abstract int getMaxItemsProcessedPerOperation();
+
     public abstract void redstoneTrigger();
 
     public abstract Direction getFacing();
@@ -155,7 +157,9 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
 
             ItemStack ingredient = this.getIngredientStack();
 
-            for (int i = 0; i < ingredient.getCount(); i++) {
+            final int operations = Math.min(ingredient.getCount(), this.getMaxItemsProcessedPerOperation());
+
+            for (int i = 0; i < operations; i++) {
                 for (ItemStack stack : recipe.properlyAssemble(input, level.registryAccess())) {
                     KlaxonItemStackHelper.insertAndMergeAndAdd(outputStacks, stack);
                 }
@@ -168,7 +172,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
                 }
             }
 
-            return new BlastProcessingRecipeData(outputStacks, recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax());
+            return new BlastProcessingRecipeData(outputStacks, recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), operations);
         } else {
             return BlastProcessingRecipeData.ZERO;
         }
@@ -188,6 +192,8 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
             ItemStack[] rawOutput = recipe.getDisplayStacks(input, level.registryAccess());
             List<ItemStack> outputStacks = new ArrayList<>(rawOutput.length);
 
+            final int operations = Math.min(input.getIngredientStack().getCount(), this.getMaxItemsProcessedPerOperation());
+
             for (ItemStack stack : rawOutput) {
                 outputStacks.add(catalystData.producesFire()
                         ? this.tryPerformBlastingSmelting(level, stack)
@@ -195,7 +201,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
                 );
             }
 
-            return new BlastProcessingRecipeData(outputStacks, recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax());
+            return new BlastProcessingRecipeData(outputStacks, recipe.getExplosionPowerMin(), recipe.getExplosionPowerMax(), operations);
         } else {
             return null;
         }

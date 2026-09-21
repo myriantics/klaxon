@@ -6,8 +6,6 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.function.Predicate;
-
 public class ContainerPartition implements Container {
     private final Container container;
     final int[] slots;
@@ -49,6 +47,14 @@ public class ContainerPartition implements Container {
         return rawTotal / this.getContainerSize();
     }
 
+    public float computeCountBoundedFill(int countBound) {
+        float rawTotal = 0;
+        for (int slot = 0; slot < this.getContainerSize(); slot++) {
+            rawTotal += this.computeCountBoundedSlotFill(slot, countBound);
+        }
+        return rawTotal / this.getContainerSize();
+    }
+
     public float computeSlotFill(int slot) {
         if (slot >= this.getContainerSize()) {
             return 0f;
@@ -60,6 +66,20 @@ public class ContainerPartition implements Container {
             int stackLimit = stack.getMaxStackSize();
             int slotLimit = this.getMaxStackSize();
             return (float) stack.getCount() / Math.min(stackLimit, slotLimit);
+        }
+    }
+
+    public float computeCountBoundedSlotFill(int slot, int countBound) {
+        if (slot >= this.getContainerSize()) {
+            return 0f;
+        } else {
+            ItemStack stack = this.container.getItem(this.slots[slot]);
+            if (stack.isEmpty()) {
+                return 0;
+            }
+            int stackLimit = stack.getMaxStackSize();
+            int slotLimit = this.getMaxStackSize();
+            return (float) stack.getCount() / Math.min(Math.min(stackLimit, countBound), slotLimit);
         }
     }
 

@@ -40,6 +40,7 @@ import net.myriantics.klaxon.util.storage.item.KlaxonStorageUtil;
 
 public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket> {
 
+    private static final int MAX_ITEMS_PROCESSED_PER_OPERATION = 4;
     private static final float POWERFUL_EXPLOSIVE_THRESHOLD = 4.0f;
     private static final ContainerData EMPTY = new SimpleContainerData(0);
 
@@ -54,6 +55,11 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     protected SteelBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+    }
+
+    @Override
+    public int getMaxItemsProcessedPerOperation() {
+        return MAX_ITEMS_PROCESSED_PER_OPERATION;
     }
 
     public SteelBlastProcessorBlockEntity(BlockPos pos, BlockState blockState) {
@@ -113,7 +119,7 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                     );
 
                     if (catalystData.explosionPower() > 0 && !this.getCatalystStack().is(KlaxonItemTags.REUSABLE_EXPLOSIVE_CATALYSTS)) {
-                        this.catalystPartition.clearContent();
+                        this.catalystPartition.getFirstNonEmptyStack().shrink(1);
                     }
 
                     this.storageCache = KlaxonStorageUtil.findStorage(serverLevel, pos.relative(facing), facing.getOpposite());

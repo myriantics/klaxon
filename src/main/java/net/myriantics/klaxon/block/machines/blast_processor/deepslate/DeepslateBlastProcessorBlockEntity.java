@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket> {
 
+    private static final int MAX_ITEMS_PROCESSED_PER_OPERATION = 1;
     private static final ContainerData EMPTY = new SimpleContainerData(0);
 
     protected DeepslateBlastProcessorBlockEntity(BlockEntityType<DeepslateBlastProcessorBlockEntity> type, BlockPos pos, BlockState state) {
@@ -69,6 +70,11 @@ public class DeepslateBlastProcessorBlockEntity extends AbstractBlastProcessorBl
     @Override
     public Direction getFacing() {
         return this.getBlockState().getValue(DeepslateBlastProcessorBlock.FACING);
+    }
+
+    @Override
+    public int getMaxItemsProcessedPerOperation() {
+        return MAX_ITEMS_PROCESSED_PER_OPERATION;
     }
 
     public void redstoneTrigger() {
