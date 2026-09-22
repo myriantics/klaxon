@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -41,6 +42,7 @@ import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBlockEntity implements KlaxonEnergyStorageProvider {
 
@@ -96,8 +98,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                 boolean canSafelyForgoRecomputingRecipeData = !oldStack.isEmpty() && ItemStack.isSameItemSameComponents(oldStack, stack);
                 super.setItem(slot, stack);
                 if (!canSafelyForgoRecomputingRecipeData) {
-                    IndustrialShredderTopBlockEntity.this.shreddingTotalTime = getTotalShreddingTime(IndustrialShredderTopBlockEntity.this.level);
-                    IndustrialShredderTopBlockEntity.this.shreddingProgress = 0;
+                    IndustrialShredderTopBlockEntity.this.resetShreddingStats();
                     IndustrialShredderTopBlockEntity.this.setChanged();
                 }
             }
@@ -188,10 +189,16 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
             IndustrialShreddingRecipeInput input = new IndustrialShreddingRecipeInput(inputStack, this.level.getRandom());
             @Nullable RecipeHolder<? extends IndustrialShreddingRecipe> recipeHolder = this.quickCheck.getRecipeFor(input, this.level).orElse(null);
 
-            this.shreddingProgress++;
+            // we gotta do it like this because unbreaking and the like exists.
+            if (recipeHolder == null && inputStack.isDamageableItem()) {
+                int oldDamage = inputStack.getDamageValue();
+                inputStack.hurtAndBreak(1, (ServerLevel) level, null, (item) -> {});
+                this.shreddingProgress += inputStack.getDamageValue() - oldDamage;
+            } else {
+                this.shreddingProgress++;
+            }
             if (this.shreddingProgress >= this.shreddingTotalTime) {
-                this.shreddingProgress = 0;
-                this.shreddingTotalTime = this.getTotalShreddingTime(this.level);
+                this.resetShreddingStats();
 
                 if (recipeHolder != null) {
                     ItemStack[] assembledStacks = recipeHolder.value().properlyAssemble(input, this.level.registryAccess());
@@ -245,16 +252,20 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         KlaxonItemStackHelper.insertAndMerge(this.jammedStacks, stack);
     }
 
-    protected void degradeStackRelativeToShreddingProgress(ItemStack toDegrade, ItemStack beforeDegrading) {
-
-    }
-
-    protected int getTotalShreddingTime(Level level) {
-        IndustrialShreddingRecipeInput recipeInput = new IndustrialShreddingRecipeInput(this.shreddingInput.getFirstNonEmptyStack(), Objects.requireNonNull(this.level).getRandom());
-        return this.quickCheck
-                .getRecipeFor(recipeInput, level)
-                .map(recipeHolder -> recipeHolder.value().getTotalShreddingTime())
-                .orElse(DEFAULT_SHREDDING_TIME);
+    protected void resetShreddingStats() {
+        ItemStack inputStack = this.shreddingInput.getFirstNonEmptyStack();
+        IndustrialShreddingRecipeInput recipeInput = new IndustrialShreddingRecipeInput(inputStack, Objects.requireNonNull(this.level).getRandom());
+        Optional<? extends RecipeHolder<? extends IndustrialShreddingRecipe>> match = this.quickCheck.getRecipeFor(recipeInput, level);
+        if (match.isPresent()) {
+            this.shreddingProgress = 0;
+            this.shreddingTotalTime = match.get().value().getTotalShreddingTime();
+        } else if (inputStack.isDamageableItem()) {
+            this.shreddingProgress = inputStack.getDamageValue();
+            this.shreddingTotalTime = inputStack.getMaxDamage();
+        } else {
+            this.shreddingProgress = 0;
+            this.shreddingTotalTime = DEFAULT_SHREDDING_TIME;
+        }
     }
 
     protected Direction getFacing() {
