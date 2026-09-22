@@ -19,6 +19,11 @@ public class SteelBlastProcessorMenu extends AbstractBlastProcessorMenu {
 
     @Override
     protected int getIngredientStackSize() {
-        return 4;
+        return 99;
+    }
+
+    @Override
+    protected int getCatalystStackSize() {
+        return 99;
     }
 }

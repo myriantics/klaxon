@@ -93,7 +93,7 @@ public abstract class AbstractBlastProcessorBlockEntity extends KlaxonBaseSidedC
                 KlaxonAdvancementTriggers.triggerBlockActivation(serverPlayerEntity, this.getBlockState());
             }
 
-            this.ingredientPartition.clearContent();
+            this.ingredientPartition.getFirstNonEmptyStack().shrink(recipeData.ingredientsProcessed());
         } else if (catalystData.explosionPower() <= 0 || catalystData.explosionPower() < recipeData.explosionPowerMin()) {
             List<ItemStack> ejectedContents = new ArrayList<>(this.getContainerSize());
             for (ItemStack contained : this.getItems()) {

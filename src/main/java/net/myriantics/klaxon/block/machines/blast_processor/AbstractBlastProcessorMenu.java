@@ -52,6 +52,10 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
         return 1;
     }
 
+    protected int getCatalystStackSize() {
+        return 1;
+    }
+
     @Override
     protected void initSlots(Inventory inventory, Container container) {
         super.initSlots(inventory, container);
@@ -75,7 +79,7 @@ public abstract class AbstractBlastProcessorMenu extends KlaxonAdvancedContainer
         this.catalystSlot = this.addSlot(new Slot(container instanceof AbstractBlastProcessorBlockEntity blastProcessor ? blastProcessor.catalystPartition : new SimpleContainer(1), 0, 17, 53) {
             @Override
             public int getMaxStackSize() {
-                return 1;
+                return AbstractBlastProcessorMenu.this.getCatalystStackSize();
             }
 
             // don't allow players to modify catalyst slot - protection put in for blanketcon
