@@ -47,6 +47,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     private static final AABB SUCK_AABB = Block.box(0, 0, 0, 16, EntityType.ITEM.getHeight() * 16, 16).toAabbs().getFirst();
     protected static final int INTAKE_INTERACTION_COOLDOWN_TICKS = 4;
     protected static final int MAX_COUNT_FOR_INTAKE_OPERATION = 4;
+    protected static final int DEFAULT_SHREDDING_TIME = 100;
 
     protected @Nullable IndustrialShredderBottomBlockEntity counterpartCache = null;
     protected ContainerPartition shreddingInput;
@@ -187,12 +188,12 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
             IndustrialShreddingRecipeInput input = new IndustrialShreddingRecipeInput(inputStack, this.level.getRandom());
             @Nullable RecipeHolder<? extends IndustrialShreddingRecipe> recipeHolder = this.quickCheck.getRecipeFor(input, this.level).orElse(null);
 
-            if (recipeHolder != null) {
-                this.shreddingProgress++;
-                if (this.shreddingProgress >= this.shreddingTotalTime) {
-                    this.shreddingProgress = 0;
-                    this.shreddingTotalTime = this.getTotalShreddingTime(this.level);
+            this.shreddingProgress++;
+            if (this.shreddingProgress >= this.shreddingTotalTime) {
+                this.shreddingProgress = 0;
+                this.shreddingTotalTime = this.getTotalShreddingTime(this.level);
 
+                if (recipeHolder != null) {
                     ItemStack[] assembledStacks = recipeHolder.value().properlyAssemble(input, this.level.registryAccess());
 
                     Storage<ItemVariant> counterpartStorage = Objects.requireNonNull(this.getCounterpart()).getAutomationAccessiblePartition().getStorage();
@@ -208,11 +209,12 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                         }
                         tx.commit();
                     }
-
-                    inputStack.shrink(1);
                 }
-                changed = true;
+
+                // still eat the input stack even if no recipe
+                inputStack.shrink(1);
             }
+            changed = true;
         }
 
         if (changed) {
@@ -252,7 +254,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         return this.quickCheck
                 .getRecipeFor(recipeInput, level)
                 .map(recipeHolder -> recipeHolder.value().getTotalShreddingTime())
-                .orElse(200);
+                .orElse(DEFAULT_SHREDDING_TIME);
     }
 
     protected Direction getFacing() {
