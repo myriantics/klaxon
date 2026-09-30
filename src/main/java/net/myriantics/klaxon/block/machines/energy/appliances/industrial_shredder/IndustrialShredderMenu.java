@@ -1,28 +1,43 @@
 package net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder;
 
-import com.google.common.base.Supplier;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.registry.misc.KlaxonMenuTypes;
-import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerMenu;
+import net.myriantics.klaxon.util.storage.item.KlaxonAdvancedContainerMenu;
+import net.myriantics.klaxon.util.storage.item.KlaxonClientMenuInitializer;
 
-public class IndustrialShredderMenu extends KlaxonBaseContainerMenu implements ContainerListener {
+public class IndustrialShredderMenu extends KlaxonAdvancedContainerMenu implements ContainerListener {
 
     protected Slot inputSlot;
     protected Slot[] outputSlots;
 
     protected Container outputInventory;
 
+    private static final KlaxonClientMenuInitializer<IndustrialShredderMenu> CLIENT_INITIALIZER = new KlaxonClientMenuInitializer<>() {
+        @Override
+        public int getContainerSize() {
+            return IndustrialShredderTopBlockEntity.SHREDDING_INPUT_PARTITION_SIZE + IndustrialShredderBottomBlockEntity.OUTPUT_STORAGE_CONTAINER_SIZE;
+        }
+
+        @Override
+        public int getContainerDataSize() {
+            return IndustrialShredderTopBlockEntity.CONTAINER_DATA_ACCESS_SIZE;
+        }
+
+        @Override
+        public void initialize(IndustrialShredderMenu menu) {
+        }
+    };
+
     public IndustrialShredderMenu(int containerId, Inventory playerInventory) {
-        super(KlaxonMenuTypes.INDUSTRIAL_SHREDDER.value(), containerId, playerInventory, () -> new SimpleContainer(10));
+        super(KlaxonMenuTypes.INDUSTRIAL_SHREDDER.value(), containerId, playerInventory, CLIENT_INITIALIZER);
     }
 
-    public IndustrialShredderMenu(int containerId, Inventory playerInventory, Container container, ContainerLevelAccess access) {
-        super(KlaxonMenuTypes.INDUSTRIAL_SHREDDER.value(), containerId, playerInventory, container, access);
+    public IndustrialShredderMenu(int containerId, Inventory playerInventory, Container container, ContainerData dataAccess, ContainerLevelAccess access) {
+        super(KlaxonMenuTypes.INDUSTRIAL_SHREDDER.value(), containerId, playerInventory, container, dataAccess, access);
         this.addSlotListener(this);
     }
 

@@ -14,7 +14,7 @@ import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtension
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipeSerializer;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipeSerializer;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipeSerializer;
-import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipeImpl;
+import net.myriantics.klaxon.recipe.shredding.industrial.StandardIndustrialShreddingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeSerializer;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipeSerializer;
 
@@ -56,8 +56,8 @@ public abstract class KlaxonRecipeSerializers {
     public static final Holder<ExplosiveCatalystTransmutationRecipe.Serializer> EXPLOSIVE_CATALYST_TRANSMUTATION_RECIPE_SERIALIZER = registerSerializer(
             "explosive_catalyst_transmutation", new ExplosiveCatalystTransmutationRecipe.Serializer()
     );
-    public static final Holder<IndustrialShreddingRecipeImpl.Serializer> INDUSTRIAL_SHREDDING = registerSerializer(
-            "industrial_shredding", new IndustrialShreddingRecipeImpl.Serializer()
+    public static final Holder<StandardIndustrialShreddingRecipe.Serializer> INDUSTRIAL_SHREDDING = registerSerializer(
+            "industrial_shredding", new StandardIndustrialShreddingRecipe.Serializer()
     );
 
     @SuppressWarnings("unchecked")

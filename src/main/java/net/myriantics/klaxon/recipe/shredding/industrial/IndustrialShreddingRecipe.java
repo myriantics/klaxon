@@ -16,4 +16,6 @@ public interface IndustrialShreddingRecipe extends CompoundOutputRecipe<Industri
     default RecipeType<?> getType() {
         return KlaxonRecipeTypes.INDUSTRIAL_SHREDDING.value();
     }
+
+    boolean delegatesShreddingTimeToItemDurability();
 }

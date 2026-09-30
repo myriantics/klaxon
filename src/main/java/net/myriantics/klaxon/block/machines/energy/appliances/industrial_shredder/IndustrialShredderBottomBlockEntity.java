@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class IndustrialShredderBottomBlockEntity extends BaseIndustrialShredderBlockEntity {
 
+    public static final int OUTPUT_STORAGE_CONTAINER_SIZE = 9;
+
     protected IndustrialShredderTopBlockEntity counterpartCache = null;
     protected ContainerPartition outputStorage;
 
@@ -21,6 +23,21 @@ public class IndustrialShredderBottomBlockEntity extends BaseIndustrialShredderB
 
     protected IndustrialShredderBottomBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+    }
+
+    @Override
+    protected IndustrialShredderTopBlockEntity getTop() throws IllegalStateException {
+        @Nullable IndustrialShredderTopBlockEntity cached = (IndustrialShredderTopBlockEntity) this.getCounterpart();
+        if (cached == null) {
+            throw new IllegalStateException();
+        } else {
+            return cached;
+        }
+    }
+
+    @Override
+    protected IndustrialShredderBottomBlockEntity getBottom() throws IllegalStateException {
+        return this;
     }
 
     @Override
@@ -41,7 +58,7 @@ public class IndustrialShredderBottomBlockEntity extends BaseIndustrialShredderB
 
     @Override
     protected void initPartitions(PartitionBuilder partitions) {
-        this.outputStorage = partitions.partition(9);
+        this.outputStorage = partitions.partition(OUTPUT_STORAGE_CONTAINER_SIZE);
     }
 
     @Override

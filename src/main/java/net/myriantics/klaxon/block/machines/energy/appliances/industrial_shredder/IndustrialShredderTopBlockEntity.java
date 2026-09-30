@@ -18,6 +18,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -49,7 +50,12 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     private static final AABB SUCK_AABB = Block.box(0, 0, 0, 16, EntityType.ITEM.getHeight() * 16, 16).toAabbs().getFirst();
     protected static final int INTAKE_INTERACTION_COOLDOWN_TICKS = 4;
     protected static final int MAX_COUNT_FOR_INTAKE_OPERATION = 4;
-    protected static final int DEFAULT_SHREDDING_TIME = 100;
+    public static final int DEFAULT_SHREDDING_TIME = 100;
+
+    public static final int SHREDDING_INPUT_PARTITION_SIZE = 1;
+    public static final int CONTAINER_DATA_ACCESS_SIZE = 2;
+    public static final int DATA_SHREDDING_PROGRESS = 0;
+    public static final int DATA_SHREDDING_TOTAL_TIME = 1;
 
     protected @Nullable IndustrialShredderBottomBlockEntity counterpartCache = null;
     protected ContainerPartition shreddingInput;
@@ -61,6 +67,29 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     protected int shreddingProgress = 0;
     protected int shreddingTotalTime = 0;
     protected NonNullList<ItemStack> jammedStacks = NonNullList.withSize(9, ItemStack.EMPTY);
+    protected final ContainerData dataAccess = new ContainerData() {
+        @Override
+        public int get(int index) {
+            return switch (index) {
+                case DATA_SHREDDING_PROGRESS -> IndustrialShredderTopBlockEntity.this.shreddingProgress;
+                case DATA_SHREDDING_TOTAL_TIME -> IndustrialShredderTopBlockEntity.this.shreddingTotalTime;
+                default -> throw new IllegalArgumentException();
+            };
+        }
+
+        @Override
+        public void set(int index, int value) {
+            switch (index) {
+                case DATA_SHREDDING_PROGRESS -> IndustrialShredderTopBlockEntity.this.shreddingProgress = value;
+                case DATA_SHREDDING_TOTAL_TIME -> IndustrialShredderTopBlockEntity.this.shreddingTotalTime = value;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return CONTAINER_DATA_ACCESS_SIZE;
+        }
+    };
 
     private final RecipeManager.CachedCheck<IndustrialShreddingRecipeInput, ? extends IndustrialShreddingRecipe> quickCheck;
 
@@ -71,6 +100,21 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     protected IndustrialShredderTopBlockEntity(BlockEntityType<?> type, RecipeType<? extends IndustrialShreddingRecipe> recipeType, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         this.quickCheck = RecipeManager.createCheck(recipeType);
+    }
+
+    @Override
+    protected IndustrialShredderTopBlockEntity getTop() throws IllegalStateException {
+        return this;
+    }
+
+    @Override
+    protected IndustrialShredderBottomBlockEntity getBottom() throws IllegalStateException {
+        @Nullable IndustrialShredderBottomBlockEntity cached = (IndustrialShredderBottomBlockEntity) this.getCounterpart();
+        if (cached == null) {
+            throw new IllegalStateException();
+        } else {
+            return cached;
+        }
     }
 
     @Override
@@ -91,10 +135,10 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
 
     @Override
     protected void initPartitions(PartitionBuilder partitions) {
-        this.shreddingInput = partitions.partition(1, (blockEntity, firstOpenSlot, nextClosedSlot) -> new ContainerPartition(blockEntity, firstOpenSlot, nextClosedSlot) {
+        this.shreddingInput = partitions.partition(SHREDDING_INPUT_PARTITION_SIZE, (blockEntity, firstOpenSlot, nextClosedSlot) -> new ContainerPartition(blockEntity, firstOpenSlot, nextClosedSlot) {
             @Override
             public void setItem(int slot, ItemStack stack) {
-                ItemStack oldStack = this.getFirstNonEmptyStack();
+                ItemStack oldStack = this.getItem(slot);
                 boolean canSafelyForgoRecomputingRecipeData = !oldStack.isEmpty() && ItemStack.isSameItemSameComponents(oldStack, stack);
                 super.setItem(slot, stack);
                 if (!canSafelyForgoRecomputingRecipeData) {
@@ -190,10 +234,9 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
             @Nullable RecipeHolder<? extends IndustrialShreddingRecipe> recipeHolder = this.quickCheck.getRecipeFor(input, this.level).orElse(null);
 
             // we gotta do it like this because unbreaking and the like exists.
-            if (recipeHolder == null && inputStack.isDamageableItem()) {
-                int oldDamage = inputStack.getDamageValue();
+            if ((recipeHolder == null || recipeHolder.value().delegatesShreddingTimeToItemDurability()) && inputStack.isDamageableItem()) {
                 inputStack.hurtAndBreak(1, (ServerLevel) level, null, (item) -> {});
-                this.shreddingProgress += inputStack.getDamageValue() - oldDamage;
+                this.shreddingProgress = inputStack.getDamageValue();
             } else {
                 this.shreddingProgress++;
             }
@@ -256,7 +299,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         ItemStack inputStack = this.shreddingInput.getFirstNonEmptyStack();
         IndustrialShreddingRecipeInput recipeInput = new IndustrialShreddingRecipeInput(inputStack, Objects.requireNonNull(this.level).getRandom());
         Optional<? extends RecipeHolder<? extends IndustrialShreddingRecipe>> match = this.quickCheck.getRecipeFor(recipeInput, level);
-        if (match.isPresent()) {
+        if (match.isPresent() && !match.get().value().delegatesShreddingTimeToItemDurability()) {
             this.shreddingProgress = 0;
             this.shreddingTotalTime = match.get().value().getTotalShreddingTime();
         } else if (inputStack.isDamageableItem()) {
@@ -283,8 +326,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         this.shreddingTotalTime = tag.getInt(KlaxonNBTIds.SHREDDING_TIME_TOTAL);
         this.shreddingProgress = Math.clamp(tag.getInt(KlaxonNBTIds.SHREDDING_TIME), 0, this.shreddingTotalTime);
         this.intakeInteractionCooldownTicks = Math.clamp(tag.getInt(KlaxonNBTIds.COOLDOWN_TICKS), 0, INTAKE_INTERACTION_COOLDOWN_TICKS);
-        Objects.requireNonNull(this.level);
-        if (tag.contains(KlaxonNBTIds.JAMMED_STACKS)) {
+        if (this.level != null && tag.contains(KlaxonNBTIds.JAMMED_STACKS)) {
             ContainerHelper.loadAllItems(tag.getCompound(KlaxonNBTIds.JAMMED_STACKS), this.jammedStacks, this.level.registryAccess());
         }
     }

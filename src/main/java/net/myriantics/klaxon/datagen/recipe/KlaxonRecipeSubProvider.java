@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.myriantics.klaxon.datagen.NamedIngredient;
 import net.myriantics.klaxon.recipe.BlockIngredient;
 import net.myriantics.klaxon.recipe.RecipeOutputCompound;
-import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.StandardBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotCrackingBlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.special.DecoratedPotShatteringBlastProcessingRecipe;
@@ -24,11 +23,10 @@ import net.myriantics.klaxon.recipe.custom_crafting.fuse_extension.FuseExtension
 import net.myriantics.klaxon.recipe.makeshift_crafting.shaped.MakeshiftShapedCraftingRecipe;
 import net.myriantics.klaxon.recipe.makeshift_crafting.shapeless.MakeshiftShapelessCraftingRecipe;
 import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
-import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipeImpl;
+import net.myriantics.klaxon.recipe.shredding.industrial.StandardIndustrialShreddingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
 import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
-import net.myriantics.klaxon.registry.recipe.KlaxonRecipeSerializers;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import org.jetbrains.annotations.Nullable;
 
@@ -194,7 +192,7 @@ public abstract class KlaxonRecipeSubProvider {
                 input.getName()
         );
 
-        IndustrialShreddingRecipeImpl recipe = new IndustrialShreddingRecipeImpl(input.toIngredient(), totalShreddingTime, output);
+        StandardIndustrialShreddingRecipe recipe = new StandardIndustrialShreddingRecipe(input.toIngredient(), totalShreddingTime, output);
 
         provider.acceptRecipeWithConditions(exporter, recipeId, recipe);
     }

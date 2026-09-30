@@ -1,18 +1,13 @@
 package net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorBlockEntity;
 import net.myriantics.klaxon.util.KlaxonContainerUtil;
 import net.myriantics.klaxon.util.storage.item.ContainerPartition;
 import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerBlockEntity;
@@ -26,20 +21,22 @@ public abstract class BaseIndustrialShredderBlockEntity extends KlaxonBaseContai
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-        @Nullable BaseIndustrialShredderBlockEntity counterpart = this.getCounterpart();
-        if (counterpart == null) {
+        try {
+            return new IndustrialShredderMenu(
+                    id,
+                    inventory,
+                    KlaxonContainerUtil.concatenate(this.getTop().shreddingInput, this.getBottom().outputStorage),
+                    this.getTop().dataAccess,
+                    ContainerLevelAccess.create(this.level, this.worldPosition)
+            );
+        } catch (IllegalStateException e) {
             return null;
         }
-
-        return new IndustrialShredderMenu(
-                id,
-                inventory,
-                this instanceof IndustrialShredderTopBlockEntity
-                        ? KlaxonContainerUtil.concatenate(this.getAutomationAccessiblePartition(), counterpart.getAutomationAccessiblePartition())
-                        : KlaxonContainerUtil.concatenate(counterpart.getAutomationAccessiblePartition(), this.getAutomationAccessiblePartition()),
-                ContainerLevelAccess.create(this.level, this.worldPosition)
-        );
     }
+
+    protected abstract IndustrialShredderTopBlockEntity getTop() throws IllegalStateException;
+
+    protected abstract IndustrialShredderBottomBlockEntity getBottom() throws IllegalStateException;
 
     @Override
     protected Component getDefaultName() {

@@ -1,0 +1,23 @@
+{
+  "type": "klaxon:industrial_shredding",
+  "ingredient": {
+    "tag": "c:plates/gold"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 3,
+        "id": "klaxon:gold_wire"
+      }
+    },
+    {
+      "chance": 0.5,
+      "stack": {
+        "count": 2,
+        "id": "klaxon:gold_wire"
+      }
+    }
+  ],
+  "total_shredding_time": 100
+}
