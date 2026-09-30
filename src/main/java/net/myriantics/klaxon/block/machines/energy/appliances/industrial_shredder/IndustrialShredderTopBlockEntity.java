@@ -250,6 +250,10 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
 
                     try (Transaction tx = Transaction.openOuter()) {
                         for (ItemStack stack : assembledStacks) {
+                            if (stack.isEmpty()) {
+                                continue;
+                            }
+
                             ItemVariant variant = ItemVariant.of(stack);
                             long insertedCount = counterpartStorage.insert(variant, stack.getCount(), tx);
                             if (stack.getCount() - insertedCount != 0) {
