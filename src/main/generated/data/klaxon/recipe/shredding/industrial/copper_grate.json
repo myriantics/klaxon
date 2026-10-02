@@ -1,0 +1,46 @@
+{
+  "type": "klaxon:industrial_shredding",
+  "ingredient": [
+    {
+      "item": "minecraft:copper_grate"
+    },
+    {
+      "item": "minecraft:exposed_copper_grate"
+    },
+    {
+      "item": "minecraft:weathered_copper_grate"
+    },
+    {
+      "item": "minecraft:oxidized_copper_grate"
+    },
+    {
+      "item": "minecraft:waxed_copper_grate"
+    },
+    {
+      "item": "minecraft:waxed_exposed_copper_grate"
+    },
+    {
+      "item": "minecraft:waxed_weathered_copper_grate"
+    },
+    {
+      "item": "minecraft:waxed_oxidized_copper_grate"
+    }
+  ],
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 4,
+        "id": "klaxon:copper_wire"
+      }
+    },
+    {
+      "chance": 0.4,
+      "stack": {
+        "count": 2,
+        "id": "klaxon:copper_wire"
+      }
+    }
+  ],
+  "total_shredding_time": 100
+}

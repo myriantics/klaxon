@@ -1,0 +1,23 @@
+{
+  "type": "klaxon:industrial_shredding",
+  "ingredient": {
+    "item": "minecraft:elytra"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 4,
+        "id": "minecraft:phantom_membrane"
+      }
+    },
+    {
+      "chance": 0.7,
+      "stack": {
+        "count": 2,
+        "id": "minecraft:phantom_membrane"
+      }
+    }
+  ],
+  "total_shredding_time": 100
+}

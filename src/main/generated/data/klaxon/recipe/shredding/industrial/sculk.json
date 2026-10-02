@@ -1,0 +1,23 @@
+{
+  "type": "klaxon:industrial_shredding",
+  "ingredient": {
+    "item": "minecraft:sculk"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 2,
+        "id": "minecraft:sculk_vein"
+      }
+    },
+    {
+      "chance": 0.3,
+      "stack": {
+        "count": 2,
+        "id": "minecraft:sculk_vein"
+      }
+    }
+  ],
+  "total_shredding_time": 100
+}

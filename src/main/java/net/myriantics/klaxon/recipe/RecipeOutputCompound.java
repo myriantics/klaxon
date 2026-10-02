@@ -193,16 +193,12 @@ public final class RecipeOutputCompound {
 
         private Builder() {}
 
-        public Builder guaranteed(Holder<Item> holder, int count) {
-            return this.guaranteed(new ItemStack(holder, count));
+        public Builder guaranteed(ItemLike itemLike, int count) {
+            return this.guaranteed(new ItemStack(itemLike, count));
         }
 
-        public Builder guaranteed(Holder<Item>... itemHolders) {
-            ItemStack[] stacks = new ItemStack[itemHolders.length];
-            for (int i = 0; i < stacks.length; i++) {
-                stacks[i] = new ItemStack(itemHolders[i]);
-            }
-            return this.guaranteed(stacks);
+        public Builder guaranteed(Holder<Item> holder, int count) {
+            return this.guaranteed(new ItemStack(holder, count));
         }
 
         public Builder guaranteed(Item... items) {

@@ -1,0 +1,23 @@
+{
+  "type": "klaxon:industrial_shredding",
+  "ingredient": {
+    "item": "minecraft:honeycomb_block"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 3,
+        "id": "minecraft:honeycomb"
+      }
+    },
+    {
+      "chance": 0.5,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:honeycomb"
+      }
+    }
+  ],
+  "total_shredding_time": 100
+}

@@ -1,0 +1,23 @@
+{
+  "type": "klaxon:industrial_shredding",
+  "ingredient": {
+    "tag": "minecraft:wool"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:string"
+      }
+    },
+    {
+      "chance": 0.3,
+      "stack": {
+        "count": 1,
+        "id": "minecraft:string"
+      }
+    }
+  ],
+  "total_shredding_time": 100
+}
