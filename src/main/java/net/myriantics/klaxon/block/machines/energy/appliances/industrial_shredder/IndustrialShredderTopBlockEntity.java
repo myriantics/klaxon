@@ -9,8 +9,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +34,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipe;
 import net.myriantics.klaxon.recipe.shredding.industrial.IndustrialShreddingRecipeInput;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
@@ -58,7 +65,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     public static final int DATA_SHREDDING_TOTAL_TIME = 1;
 
     protected @Nullable IndustrialShredderBottomBlockEntity counterpartCache = null;
-    protected ContainerPartition shreddingInput;
+    ContainerPartition shreddingInputPartition;
     protected EnergyStorage energyStorage = new SimpleEnergyStorage(1000, 32, 32);
     protected @Nullable Storage<ItemVariant> aboveStorageCache = null;
     protected boolean cacheInitialized = false;
@@ -119,7 +126,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
 
     @Override
     protected ContainerPartition getAutomationAccessiblePartition() {
-        return this.shreddingInput;
+        return this.shreddingInputPartition;
     }
 
     @Override
@@ -135,7 +142,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
 
     @Override
     protected void initPartitions(PartitionBuilder partitions) {
-        this.shreddingInput = partitions.partition(SHREDDING_INPUT_PARTITION_SIZE, (blockEntity, firstOpenSlot, nextClosedSlot) -> new ContainerPartition(blockEntity, firstOpenSlot, nextClosedSlot) {
+        this.shreddingInputPartition = partitions.partition(SHREDDING_INPUT_PARTITION_SIZE, (blockEntity, firstOpenSlot, nextClosedSlot) -> new ContainerPartition(blockEntity, firstOpenSlot, nextClosedSlot) {
             @Override
             public void setItem(int slot, ItemStack stack) {
                 ItemStack oldStack = this.getItem(slot);
@@ -144,6 +151,9 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                 if (!canSafelyForgoRecomputingRecipeData) {
                     IndustrialShredderTopBlockEntity.this.resetShreddingStats();
                     IndustrialShredderTopBlockEntity.this.setChanged();
+                }
+                if (IndustrialShredderTopBlockEntity.this.getBlockState().getValue(IndustrialShredderTopBlock.ACTIVE) != IndustrialShredderTopBlockEntity.this.isActive()) {
+                    IndustrialShredderTopBlockEntity.this.updateActiveState(IndustrialShredderTopBlockEntity.this.level);
                 }
             }
         });
@@ -154,24 +164,82 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         return null;
     }
 
-    protected boolean isOnCooldown() {
+    protected boolean isIntakeOnCooldown() {
         return this.intakeInteractionCooldownTicks > 0;
     }
 
-    public void serverTick(Level level, BlockPos blockPos, BlockState blockState) {
+    protected boolean isActive() {
+        return this.shreddingProgress > 0;
+    }
+
+    protected boolean isObstructed() {
+        return this.getBlockState().getValue(IndustrialShredderTopBlock.OBSTRUCTED);
+    }
+
+    public void clientDisplayTick(Level level, BlockPos pos, BlockState state) {
+        RandomSource random = level.getRandom();
+        int particlesPerTick = random.nextInt(2, 4);
+        Vec3 center = new Vec3(pos.getX() + 0.5, pos.getY() + (17f/16), pos.getZ() + 0.5);
+        ItemStack shreddingStack = this.shreddingInputPartition.getFirstNonEmptyStack();
+        if (shreddingStack.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < particlesPerTick; i++) {
+            this.spawnShreddingParticle(center, random, shreddingStack);
+        }
+    }
+
+    protected void spawnShreddingParticle(Vec3 center, RandomSource random, ItemStack stack) {
+        if (this.level == null || !this.level.isClientSide()) {
+            return;
+        }
+
+        Direction.Axis facingAxis = this.getFacing().getAxis();
+        double facingOffset = ((random.nextFloat() * 2) - 1) * 7f/16;
+        double verticalMotion = (0.3f + (random.nextFloat() * 0.7f)) * ((8f / 16) / 20);
+        double perpendicularMotion = random.nextBoolean() ? 7f/16 : -7f/16;
+        double randomFacingMotion = ((random.nextFloat() * 2) - 1) * ((2f / 16) / 20);
+
+        double originX;
+        double originZ;
+        double motionX;
+        double motionZ;
+        if (facingAxis == Direction.Axis.X) {
+            originX = center.x + facingOffset;
+            originZ = center.z;
+            motionX = randomFacingMotion;
+            motionZ = perpendicularMotion;
+        } else {
+            originX = center.x;
+            originZ = center.z + facingOffset;
+            motionX = perpendicularMotion;
+            motionZ = randomFacingMotion;
+        }
+
+        float scalar = 0.3f;
+
+        this.level.addParticle(
+                new ItemParticleOption(ParticleTypes.ITEM, stack),
+                originX, center.y + (0.05f / 16), originZ,
+                motionX * scalar, verticalMotion * scalar, motionZ * scalar
+        );
+    }
+
+    public void serverTick(Level level, BlockPos pos, BlockState state) {
         if (this.level == null) {
             return;
         }
 
         if (!this.cacheInitialized) {
-            this.aboveStorageCache = ItemStorage.SIDED.find(level, blockPos.above(), Direction.DOWN);
+            this.aboveStorageCache = ItemStorage.SIDED.find(level, pos.above(), Direction.DOWN);
         }
 
+        boolean wasActiveAtTickStart = this.isActive();
         boolean changed = false;
 
-        ItemStack inputStack = this.shreddingInput.getFirstNonEmptyStack();
+        ItemStack inputStack = this.shreddingInputPartition.getFirstNonEmptyStack();
 
-        if (this.isOnCooldown()) {
+        if (this.isIntakeOnCooldown()) {
             this.intakeInteractionCooldownTicks--;
             changed = true;
         } else if (this.aboveStorageCache != null) {
@@ -180,7 +248,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                     int totalIntakeCount = 0;
                     for (StorageView<ItemVariant> view : this.aboveStorageCache.nonEmptyViews()) {
                         ItemVariant resource = view.getResource();
-                        int intakeCount = Math.toIntExact(this.shreddingInput.getStorage().insert(
+                        int intakeCount = Math.toIntExact(this.shreddingInputPartition.getStorage().insert(
                                 resource,
                                 view.extract(resource, Math.min(MAX_COUNT_FOR_INTAKE_OPERATION, MAX_COUNT_FOR_INTAKE_OPERATION - totalIntakeCount), tx),
                                 tx
@@ -196,7 +264,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                 }
             }
             this.intakeInteractionCooldownTicks = INTAKE_INTERACTION_COOLDOWN_TICKS;
-        } else if (!this.areEntityInteractionsBlockedByState(level, blockPos.above(), level.getBlockState(blockPos.above()))) {
+        } else if (!this.isObstructed()) {
             int totalIntakeCount = 0;
             DamageSource shredding = this.level.damageSources().source(KlaxonDamageTypes.SHREDDING);
             for (Entity entity : level.getEntities((Entity) null, SUCK_AABB.move(this.worldPosition).move(0, 1, 0), entity -> entity.getY() == this.worldPosition.getY() + 1 && !entity.isIgnoringBlockTriggers())) {
@@ -233,13 +301,6 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
             IndustrialShreddingRecipeInput input = new IndustrialShreddingRecipeInput(inputStack, this.level.getRandom());
             @Nullable RecipeHolder<? extends IndustrialShreddingRecipe> recipeHolder = this.quickCheck.getRecipeFor(input, this.level).orElse(null);
 
-            // we gotta do it like this because unbreaking and the like exists.
-            if ((recipeHolder == null || recipeHolder.value().delegatesShreddingTimeToItemDurability()) && inputStack.isDamageableItem()) {
-                inputStack.hurtAndBreak(1, (ServerLevel) level, null, (item) -> {});
-                this.shreddingProgress = inputStack.getDamageValue();
-            } else {
-                this.shreddingProgress++;
-            }
             if (this.shreddingProgress >= this.shreddingTotalTime) {
                 this.resetShreddingStats();
 
@@ -268,12 +329,33 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                 // still eat the input stack even if no recipe
                 inputStack.shrink(1);
             }
+            // we gotta do it like this because unbreaking and the like exists.
+            if ((recipeHolder == null || recipeHolder.value().delegatesShreddingTimeToItemDurability()) && inputStack.isDamageableItem()) {
+                inputStack.hurtAndBreak(1, (ServerLevel) level, null, (item) -> {});
+                this.shreddingProgress = inputStack.getDamageValue();
+            } else {
+                this.shreddingProgress++;
+            }
             changed = true;
+        }
+
+        if (wasActiveAtTickStart != this.isActive()) {
+            changed = true;
+            this.updateActiveState(level);
         }
 
         if (changed) {
             this.setChanged();
+            this.resyncData(level);
         }
+    }
+
+    protected void updateActiveState(Level level) {
+        level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(IndustrialShredderTopBlock.ACTIVE, this.isActive()));
+    }
+
+    protected void resyncData(Level level) {
+        level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), (Block.UPDATE_ALL_IMMEDIATE));
     }
 
     protected boolean areEntityInteractionsBlockedByState(Level level, BlockPos pos, BlockState state) {
@@ -286,7 +368,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         }
 
         ItemVariant variant = ItemVariant.of(stack);
-        int inserted = Math.toIntExact(this.shreddingInput.getStorage().insert(variant, Math.min(stack.getCount(), MAX_COUNT_FOR_INTAKE_OPERATION - previouslyInserted), tx));
+        int inserted = Math.toIntExact(this.shreddingInputPartition.getStorage().insert(variant, Math.min(stack.getCount(), MAX_COUNT_FOR_INTAKE_OPERATION - previouslyInserted), tx));
         if (inserted > 0) {
             stack.shrink(inserted);
             return inserted;
@@ -300,7 +382,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     }
 
     protected void resetShreddingStats() {
-        ItemStack inputStack = this.shreddingInput.getFirstNonEmptyStack();
+        ItemStack inputStack = this.shreddingInputPartition.getFirstNonEmptyStack();
         IndustrialShreddingRecipeInput recipeInput = new IndustrialShreddingRecipeInput(inputStack, Objects.requireNonNull(this.level).getRandom());
         Optional<? extends RecipeHolder<? extends IndustrialShreddingRecipe>> match = this.quickCheck.getRecipeFor(recipeInput, level);
         if (match.isPresent() && !match.get().value().delegatesShreddingTimeToItemDurability()) {
@@ -322,6 +404,21 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
     @Override
     public @Nullable EnergyStorage getEnergyStorageForSide(@Nullable Direction direction) {
         return direction == this.getFacing().getOpposite() ? this.energyStorage : null;
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = this.saveCustomOnly(registries);
+        tag.remove(KlaxonNBTIds.SHREDDING_TIME);
+        tag.remove(KlaxonNBTIds.SHREDDING_TIME_TOTAL);
+        tag.remove(KlaxonNBTIds.COOLDOWN_TICKS);
+        tag.remove(KlaxonNBTIds.JAMMED_STACKS);
+        return tag;
     }
 
     @Override

@@ -25,7 +25,7 @@ public abstract class BaseIndustrialShredderBlockEntity extends KlaxonBaseContai
             return new IndustrialShredderMenu(
                     id,
                     inventory,
-                    KlaxonContainerUtil.concatenate(this.getTop().shreddingInput, this.getBottom().outputStorage),
+                    KlaxonContainerUtil.concatenate(this.getTop().shreddingInputPartition, this.getBottom().outputStorage),
                     this.getTop().dataAccess,
                     ContainerLevelAccess.create(this.level, this.worldPosition)
             );
