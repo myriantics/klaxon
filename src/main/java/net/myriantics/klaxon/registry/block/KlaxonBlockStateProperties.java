@@ -33,9 +33,6 @@ public abstract class KlaxonBlockStateProperties {
     // AIO duct driver
     public static final DirectionProperty POWER_SOCKET_FACING = DirectionProperty.create("power_socket_facing");
 
-    // Used by the Industrial Shredder Top to indicate its status
-    public static final EnumProperty<IndustrialShredderTopBlock.Status> INDUSTRIAL_SHREDDER_STATUS = EnumProperty.create("status", IndustrialShredderTopBlock.Status.class);
-
     // Used by machines to indicate activeness status
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 

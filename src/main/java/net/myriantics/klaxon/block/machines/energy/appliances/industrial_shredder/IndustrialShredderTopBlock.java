@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -24,8 +25,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.registry.block.KlaxonBlockStateProperties;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 import org.jetbrains.annotations.Nullable;
@@ -36,8 +37,10 @@ public class IndustrialShredderTopBlock extends BaseIndustrialShredderBlock {
     public static final BooleanProperty OBSTRUCTED = KlaxonBlockStateProperties.OBSTRUCTED;
     // Indicates whether the shredder is actively running or not.
     public static final BooleanProperty ACTIVE = KlaxonBlockStateProperties.ACTIVE;
-    public static final EnumProperty<Status> STATUS = KlaxonBlockStateProperties.INDUSTRIAL_SHREDDER_STATUS;
     public static final DirectionProperty FACING = BaseIndustrialShredderBlock.FACING;
+
+    public static final int ITEM_CONSUMPTION_EVENT_ID = 1;
+    private static final float ITEM_CONSUMPTION_PARTICLE_VELOCITY_VERTICAL_SCALAR = 6.7f;
 
     protected Holder<Block> bottomBlock = null;
 
@@ -99,6 +102,27 @@ public class IndustrialShredderTopBlock extends BaseIndustrialShredderBlock {
                 level.setBlockAndUpdate(pos, state.setValue(OBSTRUCTED, obstructed));
             }
         }
+    }
+
+    @Override
+    protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+        return switch (id) {
+            case ITEM_CONSUMPTION_EVENT_ID -> {
+                if (level.isClientSide() && !state.getValue(OBSTRUCTED) && level.getBlockEntity(pos) instanceof IndustrialShredderTopBlockEntity blockEntity) {
+                    ItemStack shreddedStack = blockEntity.shreddingInputPartition.getFirstNonEmptyStack();
+                    if (!shreddedStack.isEmpty()) {
+                        Direction.Axis axis = state.getValue(FACING).getAxis();
+                        Vec3 center = new Vec3(pos.getX() + 0.5, pos.getY() + (17.5f/16), pos.getZ() + 0.5);
+                        RandomSource random = level.getRandom();
+                        for (int i = 0; i < random.nextInt(8, 12); i++) {
+                            blockEntity.spawnShreddingParticle(level, axis, center, random, shreddedStack, ITEM_CONSUMPTION_PARTICLE_VELOCITY_VERTICAL_SCALAR);
+                        }
+                    }
+                }
+                yield true;
+            }
+            default -> super.triggerEvent(state, level, pos, id, param);
+        };
     }
 
     protected boolean doesStateObstructTop(Level level, BlockPos pos, BlockState state) {
