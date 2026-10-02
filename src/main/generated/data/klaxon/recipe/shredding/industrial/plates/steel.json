@@ -5,7 +5,6 @@
   },
   "recipe_output_compound": [
     {
-      "chance": 1.0,
       "stack": {
         "count": 3,
         "id": "klaxon:steel_wire"

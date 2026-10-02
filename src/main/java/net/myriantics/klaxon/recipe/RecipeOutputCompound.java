@@ -140,10 +140,7 @@ public final class RecipeOutputCompound {
         return Codec.list(
                 Codec.mapPair(
                         ItemStack.CODEC.fieldOf("stack"),
-                        Codec.optionalField("chance", Codec.doubleRange(0.0, 1.0), true).xmap(
-                                (optional) -> optional.orElse(1.0),
-                                Optional::of
-                        )
+                        Codec.doubleRange(0.0, 1.0).optionalFieldOf("chance", 1.0)
                 ).codec(),
                 0,
                 size
