@@ -276,7 +276,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
                 if (entity instanceof ItemEntity itemEntity && inputStack.getCount() < inputStack.getMaxStackSize()) {
                     try (Transaction tx = Transaction.openOuter()) {
                         ItemStack entityStack = itemEntity.getItem();
-                        int intakeCount = this.tryInsert(entityStack, totalIntakeCount, tx);
+                        int intakeCount = this.tryInsert(entityStack, totalIntakeCount, tx, true);
                         if (intakeCount > 0) {
                             tx.commit();
                             totalIntakeCount += intakeCount;
@@ -400,7 +400,7 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         return state.isFaceSturdy(level, pos, Direction.DOWN) && !state.is(KlaxonBlockTags.DOES_NOT_BLOCK_INDUSTRIAL_SHREDDER_ENTITY_INTERACTION);
     }
 
-    public int tryInsert(ItemStack stack, int previouslyInserted, Transaction tx) {
+    public int tryInsert(ItemStack stack, int previouslyInserted, Transaction tx, boolean consume) {
         if (stack.isEmpty()) {
             return 0;
         }
@@ -408,9 +408,10 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
         ItemVariant variant = ItemVariant.of(stack);
         int inserted = Math.toIntExact(this.shreddingInputPartition.getStorage().insert(variant, Math.min(stack.getCount(), MAX_COUNT_FOR_INTAKE_OPERATION - previouslyInserted), tx));
         if (inserted > 0) {
-            stack.shrink(inserted);
+            if (consume) {
+                stack.shrink(inserted);
+            }
             return inserted;
-        } else {
         }
         return 0;
     }
