@@ -102,6 +102,13 @@ public class KlaxonIndustrialShreddingRecipeProvider extends KlaxonRecipeSubProv
                         .build(),
                 IndustrialShredderTopBlockEntity.DEFAULT_SHREDDING_TIME
         );
+        addIndustrialShreddingRecipe(
+                NamedIngredient.ofItems(Items.IRON_BARS),
+                RecipeOutputCompound.builder()
+                        .chance(KlaxonItems.IRON_WIRE, 1, 0.45)
+                        .build(),
+                IndustrialShredderTopBlockEntity.DEFAULT_SHREDDING_TIME
+        );
     }
 
     protected void addBasicWireMillingRecipe(TagKey<Item> tagKey, Holder<Item> outputHolder) {

@@ -1,0 +1,16 @@
+{
+  "type": "klaxon:industrial_shredding",
+  "ingredient": {
+    "item": "minecraft:iron_bars"
+  },
+  "recipe_output_compound": [
+    {
+      "chance": 0.45,
+      "stack": {
+        "count": 1,
+        "id": "klaxon:iron_wire"
+      }
+    }
+  ],
+  "total_shredding_time": 100
+}
