@@ -21,6 +21,7 @@
     "minecraft.cable_shears.SnowGolemMixin",
     "minecraft.cable_shears.TripWireBlockMixin",
     "minecraft.cable_shears.WolfMixin",
+    "minecraft.damage_tweaks.LivingEntityMixin",
     "minecraft.datagen.ModelTemplateAccessor",
     "minecraft.enchantments.gyro.LivingEntityMixin",
     "minecraft.entity_attributes.ArmorItemMixin",

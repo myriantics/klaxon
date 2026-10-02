@@ -67,5 +67,8 @@ public class KlaxonDamageTypeTagProvider extends FabricTagProvider<DamageType> {
 
         getOrCreateTagBuilder(DamageTypeTags.DAMAGES_HELMET)
                 .addOptional(KlaxonDamageTypes.HALLNOX_POD_DOMED);
+
+        getOrCreateTagBuilder(KlaxonDamageTypeTags.DAMAGES_BOOTS)
+                .addOptional(KlaxonDamageTypes.SHREDDING);
     }
 }
