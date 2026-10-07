@@ -150,7 +150,9 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                     if (catalystData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && exhaustStatus.isObstructed()) {
                         this.selfDestruct(serverLevel, pos, context, catalystData, behavior.value());
                     } else {
-                        block.handleOverload(serverLevel, pos, this, catalystData);
+                        if (catalystData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD) {
+                            block.handleOverload(serverLevel, pos, this, catalystData);
+                        }
                         if (!this.mufflerStorage.isPresent()) {
                             RandomSource random = serverLevel.getRandom();
                             if (catalystData.explosionPower() > 0) {
