@@ -77,6 +77,7 @@
     "minecraft.precision_dispenser.RedstoneWireBlockMixin",
     "minecraft.steel_blast_processor.DragonEggBlockInvoker",
     "minecraft.steel_blast_processor.DragonEggBlockMixin",
+    "minecraft.steel_blast_processor.IceBlockMixin",
     "minecraft.steel_lighter.CandleCakeMixin",
     "minecraft.steel_lighter.FlintAndSteelItemMixin",
     "minecraft.steel_lighter.TntBlockMixin",

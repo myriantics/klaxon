@@ -286,7 +286,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
     }
 
     protected boolean doesStateObstructExhaust(Level level, BlockPos pos, BlockState state, @Nullable FireCarrier carrier) {
-        if (state.getFluidState().isEmpty() || !state.getFluidState().is(KlaxonFluidTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST)) {
+        if (!(state.getFluidState().isEmpty() || state.getFluidState().is(KlaxonFluidTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST))) {
             return true; // modded gasolines and such should be allowed because bigger boom is funne
         }
 
@@ -307,7 +307,7 @@ public class SteelBlastProcessorBlock extends AbstractBlastProcessorBlock implem
             }
         }
 
-        if (state.canBeReplaced() || state.getDestroySpeed(level, pos) == 0f) {
+        if (state.getDestroySpeed(level, pos) == 0f || state.getCollisionShape(level, pos).isEmpty()) {
             return false;
         }
 

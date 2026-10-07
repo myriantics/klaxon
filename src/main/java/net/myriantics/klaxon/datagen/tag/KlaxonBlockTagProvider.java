@@ -361,14 +361,14 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addOptionalTag(BlockTags.CANDLES)
                 .addOptionalTag(BlockTags.LEAVES)
                 .addOptionalTag(BlockTags.BANNERS)
+                .addOptionalTag(BlockTags.SNOW)
+                .add(Blocks.FROSTED_ICE)
                 .add(Blocks.COBWEB)
         ;
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST)
                 .forceAddTag(BlockTags.FIRE)
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR);
-        getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS)
-                .addOptionalTag(BlockTags.CAMPFIRES);
         getOrCreateTagBuilder(KlaxonBlockTags.DOES_NOT_BLOCK_INDUSTRIAL_SHREDDER_ENTITY_INTERACTION)
                 .addOptionalTag(BlockTags.DOES_NOT_BLOCK_HOPPERS);
     }

@@ -67,8 +67,6 @@ public abstract class KlaxonBlockTags {
             createTag("steel_blast_processor_exhaust_overwritable_allowlist");
     public static final TagKey<Block> STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST =
             createTag("steel_blast_processor_exhaust_overwritable_denylist");
-    public static final TagKey<Block> STEEL_BLAST_PROCESSOR_FIRE_HOLDERS =
-            createTag("steel_blast_processor_fire_holders");
     public static final TagKey<Block> DOES_NOT_BLOCK_INDUSTRIAL_SHREDDER_ENTITY_INTERACTION =
             createTag("does_not_block_industrial_shredder_entity_interaction");
     public static final TagKey<Block> SIMPLE_WORLDLY_FIRE_CARRIER_DENYLIST =

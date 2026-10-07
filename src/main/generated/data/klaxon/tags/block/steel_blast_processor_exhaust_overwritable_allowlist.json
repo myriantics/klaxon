@@ -12,6 +12,11 @@
       "id": "#minecraft:banners",
       "required": false
     },
+    {
+      "id": "#minecraft:snow",
+      "required": false
+    },
+    "minecraft:frosted_ice",
     "minecraft:cobweb"
   ]
 }
