@@ -19,7 +19,6 @@ public class KlaxonFluidTagProvider extends FabricTagProvider.FluidTagProvider {
         getOrCreateTagBuilder(KlaxonFluidTags.COLD_FLUIDS)
                 .forceAddTag(ConventionalFluidTags.WATER)
                 .forceAddTag(ConventionalFluidTags.MILK);
-        getOrCreateTagBuilder(KlaxonFluidTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST)
-                .add(Fluids.EMPTY);
+        getOrCreateTagBuilder(KlaxonFluidTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_ALLOWLIST);
     }
 }
