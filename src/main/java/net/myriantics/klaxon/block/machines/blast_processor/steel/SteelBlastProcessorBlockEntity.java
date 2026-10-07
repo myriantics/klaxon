@@ -2,6 +2,7 @@ package net.myriantics.klaxon.block.machines.blast_processor.steel;
 
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -24,6 +25,8 @@ import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
+import net.myriantics.klaxon.mechanics.fire_carrier.FireCarrier;
+import net.myriantics.klaxon.mechanics.fire_carrier.FireCarrierInteractionContext;
 import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
@@ -37,6 +40,7 @@ import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import net.myriantics.klaxon.tag.klaxon.KlaxonItemTags;
 import net.myriantics.klaxon.util.storage.item.ContainerPartition;
 import net.myriantics.klaxon.util.storage.item.KlaxonStorageUtil;
+import org.jetbrains.annotations.Nullable;
 
 public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockEntity implements ExtendedScreenHandlerFactory<BlastProcessorMenuPowerSyncPacket> {
 
@@ -51,7 +55,10 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
         }
     };
 
-    private Storage<ItemVariant> storageCache = null;
+    @Nullable FireCarrier exhaustFireCarrier = null;
+    @Nullable Storage<ItemVariant> frontStorageCache = null;
+
+    boolean initialized = false;
 
     protected SteelBlastProcessorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -92,6 +99,10 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
         return this.getBlockState().getValue(SteelBlastProcessorBlock.FACING);
     }
 
+    protected ExhaustStatus getExhaustStatus() {
+        return this.getBlockState().getValue(SteelBlastProcessorBlock.EXHAUST_STATUS);
+    }
+
     @Override
     public void redstoneTrigger() {
         if (this.level instanceof ServerLevel serverLevel) {
@@ -108,8 +119,10 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                 ExplosiveCatalystData catalystData = dataHolderPair.getFirst();
                 Holder<ExplosiveCatalystBehavior> behavior = dataHolderPair.getSecond();
 
-                // if its on cooldown just kaboom no matter what
-                if (block.isFieryExhaust(aboveState) && behavior.value().isNoOp() && catalystData.explosionPower() > 0) {
+                ExhaustStatus exhaustStatus = this.getExhaustStatus();
+
+                // if its ignited just kaboom no matter what
+                if (exhaustStatus == ExhaustStatus.IGNITED && !behavior.value().isNoOp() && catalystData.explosionPower() > 0) {
                     this.selfDestruct(serverLevel, pos, context, catalystData, behavior.value());
                 } else {
                     BlastProcessingRecipeData processingData = this.getCraftedStacks(new BlastProcessingRecipeInput(
@@ -122,28 +135,38 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                         this.catalystPartition.getFirstNonEmptyStack().shrink(1);
                     }
 
-                    this.storageCache = KlaxonStorageUtil.findStorage(serverLevel, pos.relative(facing), facing.getOpposite());
+                    // if we don't have a cached block storage, check for entity storages and replace temporarily
+                    boolean transientStorageCache = false;
+                    if (this.frontStorageCache == null) {
+                        this.frontStorageCache = KlaxonStorageUtil.findEntityStorage(serverLevel, pos.relative(facing));
+                        transientStorageCache = true;
+                    }
                     this.ejectItems(processingData, catalystData);
-                    this.storageCache = null;
+                    if (transientStorageCache) {
+                        this.frontStorageCache = null;
+                    }
 
                     // self destruct if overload handling failed
-                    if (catalystData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && !block.handleOverload(serverLevel, pos, this, catalystData)) {
+                    if (catalystData.explosionPower() > POWERFUL_EXPLOSIVE_THRESHOLD && exhaustStatus.isObstructed()) {
                         this.selfDestruct(serverLevel, pos, context, catalystData, behavior.value());
-                    } else if (!this.mufflerStorage.isPresent()) {
-                        RandomSource random = serverLevel.getRandom();
-                        if (catalystData.explosionPower() > 0) {
-                            serverLevel.playSound(
-                                    null,
-                                    pos,
-                                    KlaxonSoundEvents.BLOCK_STEEL_BLAST_PROCESSOR_ACTIVATE,
-                                    SoundSource.BLOCKS,
-                                    0.1f + (0.3f * random.nextFloat()),
-                                    0.1f + (0.2f * random.nextFloat())
-                            );
-                        } else {
-                            playFailSound(serverLevel, pos, random);
+                    } else {
+                        block.handleOverload(serverLevel, pos, this, catalystData);
+                        if (!this.mufflerStorage.isPresent()) {
+                            RandomSource random = serverLevel.getRandom();
+                            if (catalystData.explosionPower() > 0) {
+                                serverLevel.playSound(
+                                        null,
+                                        pos,
+                                        KlaxonSoundEvents.BLOCK_STEEL_BLAST_PROCESSOR_ACTIVATE,
+                                        SoundSource.BLOCKS,
+                                        0.1f + (0.3f * random.nextFloat()),
+                                        0.1f + (0.2f * random.nextFloat())
+                                );
+                            } else {
+                                playFailSound(serverLevel, pos, random);
+                            }
+                            serverLevel.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(this.getBlockState()));
                         }
-                        serverLevel.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(this.getBlockState()));
                     }
                 }
             } else {
@@ -174,10 +197,10 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
 
     @Override
     protected void ejectItem(ItemStack stack, Direction facing) {
-        if (this.storageCache != null) {
+        if (this.frontStorageCache != null) {
             try (Transaction tx = Transaction.openOuter()) {
                 int count = stack.getCount();
-                int inserted = Math.toIntExact(this.storageCache.insert(ItemVariant.of(stack), count, tx));
+                int inserted = Math.toIntExact(this.frontStorageCache.insert(ItemVariant.of(stack), count, tx));
 
                 if (inserted > 0) {
                     tx.commit();
@@ -254,5 +277,14 @@ public class SteelBlastProcessorBlockEntity extends AbstractBlastProcessorBlockE
                 explosiveCatalystData.explosionPower(),
                 explosiveCatalystData.producesFire()
         );
+    }
+
+    public void serverTick() {
+        if (!this.initialized && this.level != null) {
+            Direction facing = this.getFacing();
+            this.frontStorageCache = ItemStorage.SIDED.find(this.level, this.getBlockPos().relative(facing), facing.getOpposite());
+            this.exhaustFireCarrier = FireCarrier.SIDED.find(this.level, this.getBlockPos().above(), FireCarrierInteractionContext.DOWN);
+            this.initialized = true;
+        }
     }
 }

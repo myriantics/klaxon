@@ -364,6 +364,7 @@ public class KlaxonBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.COBWEB)
         ;
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_EXHAUST_OVERWRITABLE_DENYLIST)
+                .forceAddTag(BlockTags.FIRE)
                 .add(Blocks.REPEATER)
                 .add(Blocks.COMPARATOR);
         getOrCreateTagBuilder(KlaxonBlockTags.STEEL_BLAST_PROCESSOR_FIRE_HOLDERS)

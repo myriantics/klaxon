@@ -2,8 +2,8 @@ package net.myriantics.klaxon;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.myriantics.klaxon.mechanics.fire_carrier.FireCarrier;
 import net.myriantics.klaxon.registry.*;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementCriteria;
 import net.myriantics.klaxon.registry.behavior.KlaxonBlockStateWrenchBehaviors;
@@ -80,6 +80,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonExplosiveCatalystTransformerTypes.init();
 		KlaxonCommands.init();
 		KlaxonEnergyStorages.init();
+		FireCarrier.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}

@@ -1,5 +1,6 @@
 {
   "values": [
+    "#minecraft:fire",
     "minecraft:repeater",
     "minecraft:comparator"
   ]

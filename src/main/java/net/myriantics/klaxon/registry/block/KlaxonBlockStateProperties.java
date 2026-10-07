@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.myriantics.klaxon.block.functional.pressure_plate.FaultyHeavyGatedPressurePlateBlock;
 import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateBlastProcessorLootState;
-import net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder.IndustrialShredderTopBlock;
+import net.myriantics.klaxon.block.machines.blast_processor.steel.ExhaustStatus;
 import net.myriantics.klaxon.block.machines.geothermal.pipe_matrix.UBendRotation;
 import net.myriantics.klaxon.block.machines.modular_explosive.FuseState;
 
@@ -38,4 +38,7 @@ public abstract class KlaxonBlockStateProperties {
 
     // Indicates whether machine is obstructed in some manner or not
     public static final BooleanProperty OBSTRUCTED = BooleanProperty.create("obstructed");
+
+    // Indicates the exhaust status of the Steel Blast Processor
+    public static final EnumProperty<ExhaustStatus> EXHAUST_STATUS = EnumProperty.create("exhaust_status", ExhaustStatus.class);
 }
