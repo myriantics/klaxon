@@ -1,0 +1,8 @@
+{
+  "components": {
+    "klaxon:machine_muffler_part": {}
+  },
+  "ingredient": {
+    "tag": "klaxon:mufflers"
+  }
+}

@@ -12,6 +12,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
+import net.myriantics.klaxon.component.machine_part.TurbineGeneratorPartComponent;
 import net.myriantics.klaxon.item.equipment.ammo.GrappleClawItem;
 import net.myriantics.klaxon.item.equipment.armor.SteelArmorItem;
 import net.myriantics.klaxon.item.equipment.tools.*;
@@ -97,7 +98,11 @@ public abstract class KlaxonItems extends KlaxonBlockItems {
     ));
 
     // machine components
-    public static final Holder<Item> STEEL_TURBINE = registerSimpleItem("steel_turbine", new Item(new Item.Properties().durability(KlaxonToolMaterials.STEEL_PLATE.getUses())));
+    public static final Holder<Item> STEEL_TURBINE = registerSimpleItem("steel_turbine", new Item(new KlaxonItemProperties()
+            .maxDamage(KlaxonToolMaterials.STEEL_PLATE.getUses())
+            .component(KlaxonDataComponentTypes.TURBINE_GENERATOR_PART, new TurbineGeneratorPartComponent(TurbineGeneratorPartComponent.DEFAULT_ACCELERATION_FACTOR))
+            .getProperties()
+    ));
 
     // fractured materials
     public static final Holder<Item> FRACTURED_RAW_IRON = registerReallySimpleItem("fractured_raw_iron");

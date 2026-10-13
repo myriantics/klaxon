@@ -14,6 +14,7 @@ import net.myriantics.klaxon.component.ability.KnockbackHitModifierComponent;
 import net.myriantics.klaxon.component.ability.ShieldBreachingComponent;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
 import net.myriantics.klaxon.component.configuration.*;
+import net.myriantics.klaxon.component.machine_part.TurbineGeneratorPartComponent;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 
 import java.util.function.UnaryOperator;
@@ -116,7 +117,15 @@ public abstract class KlaxonDataComponentTypes {
         return builder;
     });
 
+    public static final Holder<DataComponentType<TurbineGeneratorPartComponent>> TURBINE_GENERATOR_PART = register("turbine_generator_part",
+            builder -> builder
+                    .persistent(TurbineGeneratorPartComponent.CODEC)
+                    .networkSynchronized(TurbineGeneratorPartComponent.STREAM_CODEC)
+    );
+
     public static final Holder<DataComponentType<Unit>> HELMET_CREST_COMPONENT = registerUnit("helmet_crest");
+
+    public static final Holder<DataComponentType<Unit>> MACHINE_MUFFLER_PART = registerUnit("machine_muffler_part");
 
     @SuppressWarnings("unchecked")
     private static <T> Holder<DataComponentType<T>> register(String name, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {

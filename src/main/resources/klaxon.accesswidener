@@ -13,3 +13,5 @@ accessible	class	net/minecraft/advancements/critereon/StatePropertiesPredicate$P
 accessible field net/minecraft/world/level/block/entity/BaseContainerBlockEntity lockKey Lnet/minecraft/world/LockCode;
 accessible method net/minecraft/world/level/block/DoorBlock playSound (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Z)V
 accessible method net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity isNeverAFurnaceFuel (Lnet/minecraft/world/item/Item;)Z
+accessible class net/minecraft/server/MinecraftServer$ReloadableResources
+accessible class net/minecraft/server/ReloadableServerResources$ConfigurableRegistryLookup
