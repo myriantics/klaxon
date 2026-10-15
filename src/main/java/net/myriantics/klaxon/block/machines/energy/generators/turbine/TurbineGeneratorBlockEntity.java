@@ -9,24 +9,30 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.myriantics.klaxon.mechanics.machinery.part.container.MachinePartContainer;
+import net.myriantics.klaxon.mechanics.machinery.part.container.MachinePartContainerTemplate;
+import net.myriantics.klaxon.mechanics.machinery.part.container.MachinePartSlotInstance;
+import net.myriantics.klaxon.mechanics.machinery.part.data.StackingStrategy;
 import net.myriantics.klaxon.mechanics.turbine_generator.TurbineGeneratorUtil;
 import net.myriantics.klaxon.mechanics.turbine_generator.boost.TurbineGeneratorBoostManager;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.TurbineGeneratorPowerSource;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 import net.myriantics.klaxon.registry.block.KlaxonBlockEntityTypes;
+import net.myriantics.klaxon.registry.misc.KlaxonMachinePartSlotBehaviors;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.util.storage.energy.KlaxonEnergyStorageProvider;
-import net.myriantics.klaxon.util.storage.item.ContainerPartition;
 import net.myriantics.klaxon.util.storage.item.KlaxonBaseContainerBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
@@ -36,6 +42,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity implements KlaxonEnergyStorageProvider {
+
+    public static final MachinePartContainerTemplate PART_CONTAINER_TEMPLATE = MachinePartContainerTemplate.of(
+            KlaxonMachinePartSlotBehaviors.GENERATOR_TURBINE.value(),
+            KlaxonMachinePartSlotBehaviors.MUFFLER.value()
+    );
 
     public static final int MAX_STATIC_POWER_SOURCE_RANGE = 32;
     protected long storedPower = 0;
@@ -50,7 +61,9 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     protected @Nullable EnergyStorage targetStorageCache;
     private boolean initialized = false;
 
-    protected ContainerPartition turbinePartition;
+    protected MachinePartSlotInstance turbineSlot;
+    protected MachinePartSlotInstance mufflerSlot;
+    protected MachinePartContainer partContainer = null;
 
     protected TurbineGeneratorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -61,8 +74,23 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (this.partContainer == null) {
+            this.initPartContainer(level);
+        } else {
+            this.partContainer.populateLevel(level);
+        }
+    }
+
+    protected void initPartContainer(@Nullable Level level) {
+        this.partContainer = PART_CONTAINER_TEMPLATE.create(level, this::setChanged);
+        this.turbineSlot = this.partContainer.add(KlaxonMachinePartSlotBehaviors.GENERATOR_TURBINE.value(), StackingStrategy.USE_STRONGEST);
+        this.mufflerSlot = this.partContainer.add(KlaxonMachinePartSlotBehaviors.MUFFLER.value(), StackingStrategy.USE_STRONGEST);
+    }
+
+    @Override
     protected void initPartitions(PartitionBuilder partitions) {
-        this.turbinePartition = partitions.partition(1);
     }
 
     @Override
@@ -80,11 +108,11 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
     }
 
     public ItemStack getTurbineStack() {
-        return this.turbinePartition.getFirstNonEmptyStack();
+        return this.turbineSlot.getItem();
     }
 
     public void setTurbineStack(ItemStack newTurbineStack) {
-        this.turbinePartition.setItem(0, newTurbineStack);
+        this.turbineSlot.set(newTurbineStack);
     }
 
     public boolean hasTurbine() {
@@ -177,6 +205,9 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         if (this.powerSourceHandler.hasPowerSource()) {
             tag.put(KlaxonNBTIds.POWER_SOURCE_HANDLER, this.powerSourceHandler.save(new CompoundTag(), registries));
         }
+        if (!this.partContainer.isEmpty()) {
+            tag.put(KlaxonNBTIds.MACHINE_PART_CONTAINER, this.partContainer.save(registries));
+        }
     }
 
     @Override
@@ -186,6 +217,12 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
         this.storedPower = Math.max(tag.getLong(KlaxonNBTIds.STORED_POWER), 0);
         if (tag.contains(KlaxonNBTIds.POWER_SOURCE_HANDLER)) {
             this.powerSourceHandler.load(tag.getCompound(KlaxonNBTIds.POWER_SOURCE_HANDLER), registries);
+        }
+        if (tag.contains(KlaxonNBTIds.MACHINE_PART_CONTAINER, CompoundTag.TAG_LIST)) {
+            if (this.partContainer == null) {
+                this.initPartContainer(this.level);
+            }
+            this.partContainer.load(tag.getList(KlaxonNBTIds.MACHINE_PART_CONTAINER, CompoundTag.TAG_COMPOUND), registries, this.level);
         }
     }
 

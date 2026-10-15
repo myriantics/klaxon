@@ -29,6 +29,7 @@ import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.mechanics.machinery.part.data.StackingStrategy;
 import net.myriantics.klaxon.mechanics.machinery.part.patch.MachinePartDataComponentPatchBuilder;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +48,10 @@ public final class KlaxonDynamicMachinePartLoader extends SimpleJsonResourceRelo
         super(GSON, PATH);
         this.registries = registries;
         CommonLifecycleEvents.TAGS_LOADED.register(this::tagsLoaded);
+    }
+
+    public @Nullable DataComponentPatch getDynamicPartComponentsForItem(Item item) {
+        return this.partDataCache.get(item);
     }
 
     @Override

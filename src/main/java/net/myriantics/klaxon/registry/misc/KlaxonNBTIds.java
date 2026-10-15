@@ -67,4 +67,9 @@ public abstract class KlaxonNBTIds {
     public static final String SHREDDING_TIME_TOTAL = KlaxonCommon.locateAlt("shredding_time_total");
     public static final String JAMMED_STACKS = KlaxonCommon.locateAlt("jammed_stacks");
     public static final String COOLDOWN_TICKS = KlaxonCommon.locateAlt("cooldown_ticks");
+
+    // machine parts
+    public static final String MACHINE_PART_CONTAINER = KlaxonCommon.locateAlt("machine_parts");
+    public static final String STACKING_STRATEGY = KlaxonCommon.locateAlt("strategy");
+    public static final String STACK = KlaxonCommon.locateAlt("stack");
 }

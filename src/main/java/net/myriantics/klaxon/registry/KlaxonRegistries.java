@@ -9,6 +9,7 @@ import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTrans
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.mechanics.grapple_winch.VeinmineGroup;
 import net.myriantics.klaxon.mechanics.machinery.part.KlaxonDynamicMachinePartLoader;
+import net.myriantics.klaxon.mechanics.machinery.part.container.MachinePartSlotBehavior;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.mechanics.wrench.BlockStateWrenchBehavior;
 import net.myriantics.klaxon.mechanics.wrench.WrenchActionType;
@@ -22,6 +23,7 @@ public abstract class KlaxonRegistries {
     public static final ResourceKey<Registry<WrenchActionType>> WRENCH_ACTION_TYPE = of("wrench_action_type");
     public static final ResourceKey<Registry<ExplosiveCatalystHandler>> EXPLOSIVE_CATALYST_HANDLER = of("explosive_catalyst_handler");
     public static final ResourceKey<Registry<ExplosiveCatalystTransformerType<?>>> EXPLOSIVE_CATALYST_TRANSFORMER_TYPE = of("explosive_catalyst_transformer_type");
+    public static final ResourceKey<Registry<MachinePartSlotBehavior>> MACHINE_PART_SLOT_BEHAVIOR = of("machine_part_slot_behavior");
     // dynamic
     public static final ResourceKey<Registry<ExplosiveCatalystBehavior>> EXPLOSIVE_CATALYST_BEHAVIOR = of("blast_processor_behavior");
     public static final ResourceKey<Registry<WrenchInteractionDenialPredicate>> WRENCH_INTERACTION_DENIAL_PREDICATE = of("wrench_interaction_denial_predicates");

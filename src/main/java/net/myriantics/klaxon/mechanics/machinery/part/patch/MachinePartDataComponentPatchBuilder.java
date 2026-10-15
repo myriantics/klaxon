@@ -10,6 +10,7 @@ import net.myriantics.klaxon.mechanics.machinery.part.data.StackingStrategy;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 
 public final class MachinePartDataComponentPatchBuilder {
     private final Reference2ObjectMap<DataComponentType<?>, Object> map = new Reference2ObjectArrayMap<>();
@@ -19,6 +20,14 @@ public final class MachinePartDataComponentPatchBuilder {
 
     public static MachinePartDataComponentPatchBuilder create() {
         return new MachinePartDataComponentPatchBuilder();
+    }
+
+    @SuppressWarnings("unchecked")
+    public MachinePartDataComponentPatchBuilder stack(DataComponentPatch patch, StackingStrategy strategy) {
+        for (Map.Entry<DataComponentType<?>, Optional<?>> entry : patch.entrySet()) {
+            this.add((DataComponentType<? super Object>) entry.getKey(), (Object) entry.getValue(), strategy);
+        }
+        return this;
     }
 
     public MachinePartDataComponentPatchBuilder addUnit(DataComponentType<Unit> type) {

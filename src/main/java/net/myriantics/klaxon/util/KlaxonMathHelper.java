@@ -54,4 +54,14 @@ public abstract class KlaxonMathHelper {
                 ? direction.getCounterClockWise(axis)
                 : direction.getClockWise(axis);
     }
+
+    public static int trimLong(long toTrim) {
+        if (toTrim > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        }
+        if (toTrim < Integer.MIN_VALUE) {
+            return Integer.MIN_VALUE;
+        }
+        return (int) toTrim;
+    }
 }

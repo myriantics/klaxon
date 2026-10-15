@@ -81,6 +81,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonCommands.init();
 		KlaxonEnergyStorages.init();
 		FireCarrier.init();
+		KlaxonMachinePartSlotBehaviors.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}
