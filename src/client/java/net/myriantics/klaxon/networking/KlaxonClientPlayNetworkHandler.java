@@ -19,7 +19,7 @@ import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectio
 import net.myriantics.klaxon.mechanics.grapple_winch.ClientGrappleWinchConnectionManager;
 import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.mixin.minecraft.steel_blast_processor.DragonEggBlockInvoker;
-import net.myriantics.klaxon.networking.s2c.*;
+import net.myriantics.klaxon.networking.clientbound.*;
 import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;

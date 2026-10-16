@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.networking.c2s;
+package net.myriantics.klaxon.networking.serverbound;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;

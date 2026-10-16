@@ -15,7 +15,7 @@ import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.mechanics.grapple_winch.GrapplingHook;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.ServerGrappleWinchConnection;
-import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionDiscardPacket;
+import net.myriantics.klaxon.networking.clientbound.GrappleWinchConnectionDiscardPacket;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.misc.KlaxonNBTIds;
 import net.myriantics.klaxon.registry.misc.KlaxonSoundEvents;

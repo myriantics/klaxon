@@ -1,14 +1,11 @@
-package net.myriantics.klaxon.networking.s2c;
+package net.myriantics.klaxon.networking.clientbound;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.game.ClientboundLevelEventPacket;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
-import net.myriantics.klaxon.registry.misc.KlaxonWorldEvents;
 import org.joml.Vector3f;
 
 public record KlaxonWorldEventPacket(int eventId, Vector3f position, int data, boolean global) implements CustomPacketPayload{

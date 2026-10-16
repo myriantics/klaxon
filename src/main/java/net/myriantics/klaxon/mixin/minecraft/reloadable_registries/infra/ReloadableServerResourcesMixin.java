@@ -1,12 +1,12 @@
-package net.myriantics.klaxon.mixin.minecraft.reloadable_registries;
+package net.myriantics.klaxon.mixin.minecraft.reloadable_registries.infra;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -62,8 +62,8 @@ public abstract class ReloadableServerResourcesMixin implements KlaxonReloadable
 
     @SuppressWarnings("unchecked")
     @Override
-    public <U extends KlaxonResourceReloadListener<T>, T> U klaxon$getRegistry(Holder<ReloadableRegistryInstance<U, T>> registry) throws NoSuchElementException {
-        @Nullable U manager = (U) this.klaxon$reloadableRegistryListeners.get(registry.unwrapKey().get());
+    public <V extends KlaxonResourceReloadListener<T>, T, U extends CustomPacketPayload> V klaxon$getRegistry(Holder<ReloadableRegistryInstance<V, T, U>> registry) throws NoSuchElementException {
+        @Nullable V manager = (V) this.klaxon$reloadableRegistryListeners.get(registry.unwrapKey().get());
         if (manager == null) {
             throw new NoSuchElementException();
         } else {

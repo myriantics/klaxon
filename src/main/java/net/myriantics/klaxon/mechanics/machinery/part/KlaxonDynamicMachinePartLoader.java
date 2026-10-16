@@ -5,38 +5,53 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.JsonOps;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.Unit;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.infra.ClientSynced;
 import net.myriantics.klaxon.infra.KlaxonResourceReloadListener;
 import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
 import net.myriantics.klaxon.mechanics.machinery.part.data.StackingStrategy;
 import net.myriantics.klaxon.mechanics.machinery.part.patch.MachinePartDataComponentPatchBuilder;
-import net.myriantics.klaxon.registry.KlaxonReloadableRegistries;
+import net.myriantics.klaxon.networking.clientbound.ClientboundDynamicMachinePartSyncPayload;
+import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unchecked") // i love generics
-public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadListener<DynamicMachinePartDefinition> {
+public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadListener<DynamicMachinePartDefinition> implements ClientSynced<ClientboundDynamicMachinePartSyncPayload> {
 
     private Set<DynamicMachinePartDefinition> definitions = null;
     private Map<Item, DataComponentPatch> partDataCache = Map.of();
 
-    public KlaxonDynamicMachinePartLoader(ReloadableRegistryInstance<?, DynamicMachinePartDefinition> instance, HolderLookup.Provider registries) {
+    @SuppressWarnings("deprecation")
+    public static final StreamCodec<RegistryFriendlyByteBuf, Map<Item, DataComponentPatch>> PART_DATA_CACHE_CODEC = ByteBufCodecs.map(
+            Object2ObjectOpenHashMap::new,
+            ByteBufCodecs.holderRegistry(Registries.ITEM).map(Holder::value, Item::builtInRegistryHolder),
+            DataComponentPatch.STREAM_CODEC
+    );
+
+    public KlaxonDynamicMachinePartLoader(ReloadableRegistryInstance<KlaxonDynamicMachinePartLoader, DynamicMachinePartDefinition, ClientboundDynamicMachinePartSyncPayload> instance, HolderLookup.Provider registries) {
         super(instance, registries);
         CommonLifecycleEvents.TAGS_LOADED.register(this::tagsLoaded);
     }
@@ -96,5 +111,20 @@ public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadLi
         this.partDataCache = builder.build();
 
         KlaxonCommon.LOGGER.info("Loaded machine part definitions for {} item(s) from {} definition entry(s)", this.partDataCache.size(), this.definitions.size());
+    }
+
+    @Override
+    public CustomPacketPayload.Type<ClientboundDynamicMachinePartSyncPayload> getType() {
+        return KlaxonPackets.CLIENTBOUND_DYNAMIC_MACHINE_PART_SYNC;
+    }
+
+    @Override
+    public ClientboundDynamicMachinePartSyncPayload getSyncPacket() {
+        return new ClientboundDynamicMachinePartSyncPayload(this.partDataCache);
+    }
+
+    @Override
+    public void loadFromPacket(ClientboundDynamicMachinePartSyncPayload packet) {
+        this.partDataCache = packet.registry();
     }
 }

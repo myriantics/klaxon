@@ -1,9 +1,8 @@
-package net.myriantics.klaxon.networking.s2c;
+package net.myriantics.klaxon.networking.clientbound;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.myriantics.klaxon.mechanics.item_usage_lockout.MinecraftClientUsageLockoutAccess;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public record ItemUsageLockoutTrigger() implements CustomPacketPayload {

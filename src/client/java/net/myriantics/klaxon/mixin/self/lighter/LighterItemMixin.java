@@ -10,7 +10,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.myriantics.klaxon.item.equipment.tools.LighterItem;
-import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,6 +1,7 @@
 package net.myriantics.klaxon.registry;
 
 import net.minecraft.core.Registry;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
@@ -20,7 +21,7 @@ import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 public abstract class KlaxonRegistries {
 
     // static
-    public static final ResourceKey<Registry<ReloadableRegistryInstance<?, ?>>> RELOADABLE_REGISTRY = of("reloadable_registry");
+    public static final ResourceKey<Registry<ReloadableRegistryInstance<?, ?, ?>>> RELOADABLE_REGISTRY = of("reloadable_registry");
     public static final ResourceKey<Registry<BlockStateWrenchBehavior<? extends Comparable<?>>>> BLOCK_STATE_WRENCH_BEHAVIOR = of("block_state_wrench_behavior");
     public static final ResourceKey<Registry<WrenchActionType>> WRENCH_ACTION_TYPE = of("wrench_action_type");
     public static final ResourceKey<Registry<ExplosiveCatalystHandler>> EXPLOSIVE_CATALYST_HANDLER = of("explosive_catalyst_handler");

@@ -10,8 +10,8 @@ import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.item.equipment.tools.GrappleWinchItem;
 import net.myriantics.klaxon.mechanics.entity_weight.EntityWeightHelper;
 import net.myriantics.klaxon.mechanics.grapple_winch.connection.GrappleWinchConnection;
-import net.myriantics.klaxon.networking.c2s.GrappleWinchCableLengthUpdateC2S;
-import net.myriantics.klaxon.networking.s2c.GrappleWinchConnectionSyncPacket;
+import net.myriantics.klaxon.networking.serverbound.GrappleWinchCableLengthUpdateC2S;
+import net.myriantics.klaxon.networking.clientbound.GrappleWinchConnectionSyncPacket;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import java.util.Objects;
 

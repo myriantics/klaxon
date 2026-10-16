@@ -29,7 +29,7 @@ import net.myriantics.klaxon.mechanics.fire_carrier.FireCarrier;
 import net.myriantics.klaxon.mechanics.fire_carrier.FireCarrierInteractionContext;
 import net.myriantics.klaxon.mechanics.muffling.MufflerStorage;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
+import net.myriantics.klaxon.networking.clientbound.BlastProcessorMenuPowerSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;

@@ -8,7 +8,7 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.BlockHitResult;
 import net.myriantics.klaxon.component.ability.WalljumpAbilityComponent;
-import net.myriantics.klaxon.networking.c2s.HammerWalljumpTriggerPacket;
+import net.myriantics.klaxon.networking.serverbound.HammerWalljumpTriggerPacket;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

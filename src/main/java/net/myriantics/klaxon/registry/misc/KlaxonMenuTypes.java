@@ -12,7 +12,7 @@ import net.myriantics.klaxon.block.machines.blast_processor.deepslate.DeepslateB
 import net.myriantics.klaxon.block.machines.blast_processor.steel.SteelBlastProcessorMenu;
 import net.myriantics.klaxon.block.machines.energy.appliances.industrial_shredder.IndustrialShredderMenu;
 import net.myriantics.klaxon.block.machines.precision_dispenser.PrecisionDispenserMenu;
-import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
+import net.myriantics.klaxon.networking.clientbound.BlastProcessorMenuPowerSyncPacket;
 
 public abstract class KlaxonMenuTypes {
     public static final Holder<ExtendedScreenHandlerType<DeepslateBlastProcessorMenu, BlastProcessorMenuPowerSyncPacket>> DEEPSLATE_BLAST_PROCESSOR = register(

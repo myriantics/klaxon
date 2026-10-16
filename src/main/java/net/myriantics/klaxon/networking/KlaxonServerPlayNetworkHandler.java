@@ -7,8 +7,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.myriantics.klaxon.networking.s2c.ItemUsageLockoutTrigger;
-import net.myriantics.klaxon.networking.s2c.KlaxonWorldEventPacket;
+import net.myriantics.klaxon.networking.clientbound.ItemUsageLockoutTrigger;
+import net.myriantics.klaxon.networking.clientbound.KlaxonWorldEventPacket;
 import org.joml.Vector3f;
 
 public abstract class KlaxonServerPlayNetworkHandler {

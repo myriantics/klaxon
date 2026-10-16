@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.networking.s2c;
+package net.myriantics.klaxon.networking.clientbound;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -7,7 +7,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
-import org.jetbrains.annotations.Nullable;
 
 public record GrappleWinchConnectionSyncPacket(
        int connectionId,

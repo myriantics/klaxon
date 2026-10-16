@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.block.machines.blast_processor.AbstractBlastProcessorBlockEntity;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.context.ExplosiveCatalystContext;
-import net.myriantics.klaxon.networking.s2c.BlastProcessorMenuPowerSyncPacket;
+import net.myriantics.klaxon.networking.clientbound.BlastProcessorMenuPowerSyncPacket;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeData;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipeInput;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;

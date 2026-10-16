@@ -14,6 +14,8 @@
     "minecraft.item_usage_lockout.LocalPlayerMixin",
     "minecraft.item_usage_lockout.MinecraftMixin",
     "minecraft.nether_reaction.HugeExplosionSeedParticleMixin",
+    "minecraft.reloadable_registries.ClientPacketListenerMixin",
+    "minecraft.reloadable_registries.MinecraftMixin",
     "minecraft.rendering.AgeableListModelAccessor",
     "minecraft.rendering.ArmorFeatureRendererMixin",
     "minecraft.rendering.RenderTypeInvoker",

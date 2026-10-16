@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
@@ -42,7 +43,7 @@ public abstract class KlaxonBuiltInRegistries {
                     )
             )
     );
-    public static final Registry<ReloadableRegistryInstance<?, ?>> RELOADABLE_REGISTRY = register(
+    public static final Registry<ReloadableRegistryInstance<?, ?, ?>> RELOADABLE_REGISTRY = register(
             FabricRegistryBuilder.from(
                     new MappedRegistry<>(
                             KlaxonRegistries.RELOADABLE_REGISTRY,
