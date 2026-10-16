@@ -11,10 +11,10 @@ public abstract class KlaxonResourceReloadListener<T> extends SimpleJsonResource
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    protected final ReloadableRegistryInstance<? extends KlaxonResourceReloadListener<T>, T, ? extends CustomPacketPayload> instance;
+    protected final ReloadableRegistryInstance<T> instance;
     protected final HolderLookup.Provider registries;
 
-    protected KlaxonResourceReloadListener(ReloadableRegistryInstance<? extends KlaxonResourceReloadListener<T>, T, ? extends CustomPacketPayload> instance, HolderLookup.Provider registries) {
+    protected KlaxonResourceReloadListener(ReloadableRegistryInstance<T> instance, HolderLookup.Provider registries) {
         super(GSON, instance.getPath());
         this.instance = instance;
         this.registries = registries;

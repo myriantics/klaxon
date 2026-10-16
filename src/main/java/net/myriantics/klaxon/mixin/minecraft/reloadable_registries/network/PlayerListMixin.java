@@ -65,9 +65,9 @@ public abstract class PlayerListMixin {
     private List<CustomPacketPayload> klaxon$gatherSyncPackets() {
         ImmutableList.Builder<CustomPacketPayload> builder = ImmutableList.builderWithExpectedSize(KlaxonBuiltInRegistries.RELOADABLE_REGISTRY.size());
 
-        for (ReloadableRegistryInstance<? extends KlaxonResourceReloadListener<?>, ?, ?> instance : KlaxonBuiltInRegistries.RELOADABLE_REGISTRY) {
-            KlaxonResourceReloadListener<?> listener = ((KlaxonReloadableRegistries.Access) this.server).klaxon$getRegistry(
-                    (Holder<ReloadableRegistryInstance<KlaxonResourceReloadListener<Object>, Object, CustomPacketPayload>>) (Object) instance.asHolder()
+        for (ReloadableRegistryInstance<?> instance : KlaxonBuiltInRegistries.RELOADABLE_REGISTRY) {
+            KlaxonResourceReloadListener<?> listener = ((KlaxonReloadableRegistries.Access) this.server).klaxon$getReloadableRegistry(
+                    (Holder<ReloadableRegistryInstance<Object>>) (Object) instance.asHolder()
             );
 
             if (listener instanceof ClientSynced<?> clientSynced) {

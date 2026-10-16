@@ -22,11 +22,11 @@ public abstract class KlaxonClientPackets {
         registerReciever(KlaxonPackets.ITEM_USAGE_LOCKOUT_TRIGGER_S2C_ID, KlaxonClientPlayNetworkHandler::triggerItemUsageLockout);
         registerReciever(KlaxonPackets.STEEL_BLAST_PROCESSOR_EXHAUST_LAUNCH_S2C_ID, KlaxonClientPlayNetworkHandler::applyVelocity);
 
-        for (ReloadableRegistryInstance<? extends KlaxonResourceReloadListener<?>, ?, ?> instance : KlaxonBuiltInRegistries.RELOADABLE_REGISTRY) {
+        for (ReloadableRegistryInstance<?> instance : KlaxonBuiltInRegistries.RELOADABLE_REGISTRY) {
             @Nullable CustomPacketPayload.Type<? extends CustomPacketPayload> type = instance.getPacketType();
             if (type != null) {
                 registerReciever(type, ((payload, context) -> {
-                    KlaxonResourceReloadListener<?> listener = ((KlaxonReloadableRegistries.Access) context.client()).klaxon$getRegistry(instance.asHolder());
+                    KlaxonResourceReloadListener<?> listener = ((KlaxonReloadableRegistries.Access) context.client()).klaxon$getReloadableRegistry(instance.asHolder());
                     if (listener instanceof ClientSynced<?> synced) {
                         iLoveGenerics(synced, payload);
                     }

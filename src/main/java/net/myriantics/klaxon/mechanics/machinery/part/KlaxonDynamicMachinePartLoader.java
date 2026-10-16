@@ -51,7 +51,7 @@ public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadLi
             DataComponentPatch.STREAM_CODEC
     );
 
-    public KlaxonDynamicMachinePartLoader(ReloadableRegistryInstance<KlaxonDynamicMachinePartLoader, DynamicMachinePartDefinition, ClientboundDynamicMachinePartSyncPayload> instance, HolderLookup.Provider registries) {
+    public KlaxonDynamicMachinePartLoader(ReloadableRegistryInstance<DynamicMachinePartDefinition> instance, HolderLookup.Provider registries) {
         super(instance, registries);
         CommonLifecycleEvents.TAGS_LOADED.register(this::tagsLoaded);
     }
