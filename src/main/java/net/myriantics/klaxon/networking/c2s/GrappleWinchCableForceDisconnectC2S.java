@@ -10,7 +10,6 @@ import net.myriantics.klaxon.mechanics.grapple_winch.manager.ServerGrappleWinchC
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public record GrappleWinchCableForceDisconnectC2S(CableDetachmentReason reason) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<GrappleWinchCableForceDisconnectC2S> ID = new Type<>(KlaxonPackets.GRAPPLE_WINCH_CABLE_FORCE_DISCONNECT_C2S_ID);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, GrappleWinchCableForceDisconnectC2S> PACKET_CODEC = StreamCodec.composite(
             CableDetachmentReason.PACKET_CODEC, GrappleWinchCableForceDisconnectC2S::reason,
@@ -19,7 +18,7 @@ public record GrappleWinchCableForceDisconnectC2S(CableDetachmentReason reason) 
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return ID;
+        return KlaxonPackets.GRAPPLE_WINCH_CABLE_FORCE_DISCONNECT_C2S_ID;
     }
 
     public void execute(ServerPlayNetworking.Context context) {

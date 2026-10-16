@@ -2,6 +2,7 @@ package net.myriantics.klaxon.networking.s2c;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -15,9 +16,7 @@ public record KlaxonWorldEventPacket(int eventId, Vector3f position, int data, b
         this(eventId, new Vector3f(pos.getX(), pos.getY(), pos.getZ()), data, global);
     }
 
-    public static final CustomPacketPayload.Type<KlaxonWorldEventPacket> ID = new CustomPacketPayload.Type<>(KlaxonPackets.KLAXON_WORLD_EVENT_TRIGGER_PACKET_S2C_ID);
-
-    public static StreamCodec<FriendlyByteBuf, KlaxonWorldEventPacket> PACKET_CODEC = StreamCodec.composite(
+    public static StreamCodec<RegistryFriendlyByteBuf, KlaxonWorldEventPacket> PACKET_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, KlaxonWorldEventPacket::eventId,
             ByteBufCodecs.VECTOR3F, KlaxonWorldEventPacket::position,
             ByteBufCodecs.INT, KlaxonWorldEventPacket::data,
@@ -27,6 +26,6 @@ public record KlaxonWorldEventPacket(int eventId, Vector3f position, int data, b
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return ID;
+        return KlaxonPackets.KLAXON_WORLD_EVENT_TRIGGER_PACKET_S2C_ID;
     }
 }

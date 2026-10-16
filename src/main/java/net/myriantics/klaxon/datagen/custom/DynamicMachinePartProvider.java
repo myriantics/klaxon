@@ -6,10 +6,10 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.mechanics.machinery.part.DynamicMachinePartDefinition;
 import net.myriantics.klaxon.mechanics.machinery.part.KlaxonDynamicMachinePartLoader;
 import net.myriantics.klaxon.mechanics.machinery.part.patch.MachinePartDataComponentPatchBuilder;
-import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonReloadableRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public abstract class DynamicMachinePartProvider implements DataProvider {
     private final CompletableFuture<HolderLookup.Provider> registries;
 
     public DynamicMachinePartProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        this.entryProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, KlaxonDynamicMachinePartLoader.PATH);
+        this.entryProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, KlaxonReloadableRegistries.DYNAMIC_MACHINE_PART_DEFINITION.value().getPath());
         this.registries = registries;
     }
 
@@ -38,7 +38,7 @@ public abstract class DynamicMachinePartProvider implements DataProvider {
             if (!locations.add(location)) {
                 throw new IllegalStateException("Duplicate definition " + location);
             } else {
-                futures.add(DataProvider.saveStable(output, provider, KlaxonDynamicMachinePartLoader.Definition.CODEC, definition, DynamicMachinePartProvider.this.entryProvider.json(location)));
+                futures.add(DataProvider.saveStable(output, provider, DynamicMachinePartDefinition.CODEC, definition, DynamicMachinePartProvider.this.entryProvider.json(location)));
             }
         });
         return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
@@ -51,6 +51,6 @@ public abstract class DynamicMachinePartProvider implements DataProvider {
     }
 
     protected interface Output {
-        void accept(ResourceLocation location, KlaxonDynamicMachinePartLoader.Definition definition);
+        void accept(ResourceLocation location, DynamicMachinePartDefinition definition);
     }
 }

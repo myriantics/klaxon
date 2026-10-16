@@ -10,8 +10,6 @@ import net.myriantics.klaxon.util.storage.item.KlaxonClientMenuInitializer;
 
 public record BlastProcessorMenuPowerSyncPacket(double explosionPowerMin, double explosionPowerMax, double explosionPower, boolean producesFire) implements CustomPacketPayload, KlaxonClientMenuInitializer<AbstractBlastProcessorMenu> {
 
-    public static final CustomPacketPayload.Type<BlastProcessorMenuPowerSyncPacket> ID = new CustomPacketPayload.Type<>(KlaxonPackets.BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID);
-
     // beeg packet
     public static final StreamCodec<RegistryFriendlyByteBuf, BlastProcessorMenuPowerSyncPacket> PACKET_CODEC = StreamCodec.composite(
             ByteBufCodecs.DOUBLE, BlastProcessorMenuPowerSyncPacket::explosionPowerMin,
@@ -23,7 +21,7 @@ public record BlastProcessorMenuPowerSyncPacket(double explosionPowerMin, double
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return ID;
+        return KlaxonPackets.BLAST_PROCESSOR_SCREEN_SYNC_PACKET_S2C_ID;
     }
 
     @Override

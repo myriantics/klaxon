@@ -20,8 +20,6 @@ public record GrappleWinchConnectionSyncPacket(
        double maxCableLength
 ) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<GrappleWinchConnectionSyncPacket> ID = new CustomPacketPayload.Type<>(KlaxonPackets.GRAPPLE_WINCH_CONNECTION_SYNC_S2C_ID);
-
     private static final StreamCodec<ByteBuf, Vec3> VEC3D_PACKET_CODEC = ByteBufCodecs.VECTOR3F.map(Vec3::new, Vec3::toVector3f);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, GrappleWinchConnectionSyncPacket> PACKET_CODEC = new StreamCodec<>() {
@@ -53,6 +51,6 @@ public record GrappleWinchConnectionSyncPacket(
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return ID;
+        return KlaxonPackets.GRAPPLE_WINCH_CONNECTION_SYNC_S2C_ID;
     }
 }

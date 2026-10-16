@@ -5,3 +5,4 @@ But um yeah.
 THIS IS MY CRAFT!!!
 OH MY BLOCKS!!!
 KLAXON makes good stuff!
+@SuppressWarnings("unchecked")

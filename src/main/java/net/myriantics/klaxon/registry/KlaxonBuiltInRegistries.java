@@ -7,6 +7,7 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
+import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
 import net.myriantics.klaxon.mechanics.machinery.part.container.MachinePartSlotBehavior;
@@ -36,6 +37,15 @@ public abstract class KlaxonBuiltInRegistries {
             FabricRegistryBuilder.from(
                     new MappedRegistry<>(
                             KlaxonRegistries.MACHINE_PART_SLOT_BEHAVIOR,
+                            Lifecycle.stable(),
+                            true
+                    )
+            )
+    );
+    public static final Registry<ReloadableRegistryInstance<?, ?>> RELOADABLE_REGISTRY = register(
+            FabricRegistryBuilder.from(
+                    new MappedRegistry<>(
+                            KlaxonRegistries.RELOADABLE_REGISTRY,
                             Lifecycle.stable(),
                             true
                     )

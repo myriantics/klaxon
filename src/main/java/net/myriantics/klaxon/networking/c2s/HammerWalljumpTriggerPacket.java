@@ -12,8 +12,6 @@ import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public record HammerWalljumpTriggerPacket(BlockPos pos, Direction direction) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<HammerWalljumpTriggerPacket> ID = new CustomPacketPayload.Type<>(KlaxonPackets.HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID);
-
     public static final StreamCodec<RegistryFriendlyByteBuf, HammerWalljumpTriggerPacket> PACKET_CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC, HammerWalljumpTriggerPacket::pos,
             Direction.STREAM_CODEC, HammerWalljumpTriggerPacket::direction,
@@ -22,7 +20,7 @@ public record HammerWalljumpTriggerPacket(BlockPos pos, Direction direction) imp
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return ID;
+        return KlaxonPackets.HAMMER_WALLJUMP_TRIGGER_PACKET_C2S_ID;
     }
 
     public void execute(ServerPlayNetworking.Context context) {

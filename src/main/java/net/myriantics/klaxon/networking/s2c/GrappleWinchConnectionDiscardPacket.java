@@ -9,7 +9,6 @@ import net.myriantics.klaxon.mechanics.grapple_winch.CableDetachmentReason;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 public record GrappleWinchConnectionDiscardPacket(int connectionId, CableDetachmentReason reason) implements CustomPacketPayload{
-    public static final CustomPacketPayload.Type<GrappleWinchConnectionDiscardPacket> ID = new CustomPacketPayload.Type<>(KlaxonPackets.GRAPPLE_WINCH_CONNECTION_DISCARD_S2C_ID);
 
     public static StreamCodec<RegistryFriendlyByteBuf, GrappleWinchConnectionDiscardPacket> PACKET_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, GrappleWinchConnectionDiscardPacket::connectionId,
@@ -19,6 +18,6 @@ public record GrappleWinchConnectionDiscardPacket(int connectionId, CableDetachm
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return ID;
+        return KlaxonPackets.GRAPPLE_WINCH_CONNECTION_DISCARD_S2C_ID;
     }
 }

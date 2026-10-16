@@ -53,7 +53,6 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonRecipeSerializers.init();
 		KlaxonDamageTypes.init();
 		KlaxonPackets.init();
-		KlaxonPackets.initC2SRecievers();
 		KlaxonMenuTypes.init();
 		KlaxonCreativeModeTabs.init();
 		KlaxonExplosiveCatalystBehaviors.init();
@@ -82,6 +81,7 @@ public class KlaxonCommon implements ModInitializer {
 		KlaxonEnergyStorages.init();
 		FireCarrier.init();
 		KlaxonMachinePartSlotBehaviors.init();
+		KlaxonReloadableRegistries.init();
 
 		LOGGER.info("KLAXON has loaded!");
 	}
