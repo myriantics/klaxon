@@ -1,26 +1,20 @@
 package net.myriantics.klaxon.mechanics.machinery.part;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.JsonOps;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -36,28 +30,20 @@ import net.myriantics.klaxon.mechanics.machinery.part.patch.MachinePartDataCompo
 import net.myriantics.klaxon.networking.clientbound.ClientboundDynamicMachinePartSyncPayload;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked") // i love generics
 public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadListener implements ClientSynced<ClientboundDynamicMachinePartSyncPayload> {
 
-    private Set<DynamicMachinePartDefinition> definitions = null;
+    private List<DynamicMachinePartDefinition> definitions = null;
     private Map<Item, DataComponentPatch> partDataCache = Map.of();
 
-    @SuppressWarnings("deprecation")
-    public static final StreamCodec<RegistryFriendlyByteBuf, Map<Item, DataComponentPatch>> PART_DATA_CACHE_CODEC = ByteBufCodecs.map(
-            Object2ObjectOpenHashMap::new,
-            ByteBufCodecs.holderRegistry(Registries.ITEM).map(Holder::value, Item::builtInRegistryHolder),
-            DataComponentPatch.STREAM_CODEC
-    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, List<DynamicMachinePartDefinition>> DEFINITION_LIST_STREAM_CODEC = DynamicMachinePartDefinition.STREAM_CODEC.apply(ByteBufCodecs.list());
 
     public KlaxonDynamicMachinePartLoader(ReloadableRegistryTemplate<KlaxonDynamicMachinePartLoader> instance, HolderLookup.Provider registries) {
         super(instance, registries);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            CommonLifecycleEvents.TAGS_LOADED.register(this::tagsLoaded);
-        }
+        CommonLifecycleEvents.TAGS_LOADED.register(this::tagsLoaded);
     }
 
     public @Nullable DataComponentPatch getDynamicPartComponentsForItem(Item item) {
@@ -69,7 +55,7 @@ public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadLi
 
         RegistryOps<JsonElement> ops = this.registries.createSerializationContext(JsonOps.INSTANCE);
 
-        ImmutableSet.Builder<DynamicMachinePartDefinition> definitionBuilder = ImmutableSet.builder();
+        ImmutableList.Builder<DynamicMachinePartDefinition> definitionBuilder = ImmutableList.builder();
 
         for(Map.Entry<ResourceLocation, JsonElement> entry : object.entrySet()) {
             ResourceLocation id = entry.getKey();
@@ -81,7 +67,7 @@ public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadLi
             }
         }
 
-        this.definitions = definitionBuilder.build();
+        this.setDefinitionsAndInvalidateCache(definitionBuilder.build());
     }
 
     private void copyShit(MachinePartDataComponentPatchBuilder builder, DynamicMachinePartDefinition definition) {
@@ -90,6 +76,14 @@ public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadLi
 
     private void tagsLoaded(RegistryAccess access, boolean b) {
         if (this.definitions == null) {
+            return;
+        }
+
+        this.cacheAndCompilePartData();
+    }
+
+    private void cacheAndCompilePartData() {
+        if (this.partDataCache != null) {
             return;
         }
 
@@ -119,11 +113,17 @@ public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadLi
 
     @Override
     public ClientboundDynamicMachinePartSyncPayload getSyncPacket() {
-        return new ClientboundDynamicMachinePartSyncPayload(this.partDataCache);
+        return new ClientboundDynamicMachinePartSyncPayload(this.definitions);
     }
 
     @Override
     public void loadFromPacket(ClientboundDynamicMachinePartSyncPayload packet) {
-        this.partDataCache = packet.partDataCache();
+        this.setDefinitionsAndInvalidateCache(packet.definitions());
+        this.cacheAndCompilePartData();
+    }
+
+    private void setDefinitionsAndInvalidateCache(List<DynamicMachinePartDefinition> definitions) {
+        this.definitions = definitions;
+        this.partDataCache = null;
     }
 }

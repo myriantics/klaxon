@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,15 @@ public abstract class ReloadableServerResourcesMixin implements ReloadableRegist
             at = @At(value = "RETURN")
     )
     private List<PreparableReloadListener> klaxon$injectListeners(List<PreparableReloadListener> original) {
-        return ImmutableList.<PreparableReloadListener>builder().addAll(original).addAll(this.klaxon$reloadableRegistryManager.listenerIterator()).build();
+        Iterator<? extends KlaxonResourceReloadListener> listenerIterator = this.klaxon$reloadableRegistryManager.listenerIterator();
+
+        ImmutableList.Builder<PreparableReloadListener> builder = ImmutableList.builder();
+        builder.addAll(original);
+        while (listenerIterator.hasNext()) {
+            builder.add(listenerIterator.next());
+        }
+
+        return builder.build();
     }
 
     public @Nullable ReloadableRegistryManager klaxon$getReloadableRegistryManager() {
