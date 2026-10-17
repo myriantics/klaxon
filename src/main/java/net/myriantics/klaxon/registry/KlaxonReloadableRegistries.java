@@ -23,7 +23,7 @@ import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 import java.util.Map;
 
-public class KlaxonReloadableRegistries {
+public abstract class KlaxonReloadableRegistries {
 
     public static final Holder<ReloadableRegistryTemplate<KlaxonDynamicMachinePartLoader, DynamicMachinePartDefinition>> DYNAMIC_MACHINE_PART_DEFINITION = registerSynced(
             KlaxonRegistries.DYNAMIC_MACHINE_PART_DEFINITION,
