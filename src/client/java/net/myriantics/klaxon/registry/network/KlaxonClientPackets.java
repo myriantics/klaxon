@@ -1,13 +1,10 @@
 package net.myriantics.klaxon.registry.network;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.infra.reloadable_registry.*;
 import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
-import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 
 import java.util.Map;
@@ -24,13 +21,12 @@ public abstract class KlaxonClientPackets {
         registerReciever(KlaxonPackets.ITEM_USAGE_LOCKOUT_TRIGGER_S2C_ID, KlaxonClientPlayNetworkHandler::triggerItemUsageLockout);
         registerReciever(KlaxonPackets.STEEL_BLAST_PROCESSOR_EXHAUST_LAUNCH_S2C_ID, KlaxonClientPlayNetworkHandler::applyVelocity);
 
-        for (Map.Entry<ResourceKey<ReloadableRegistryTemplate<? extends KlaxonResourceReloadListener>>, CustomPacketPayload.Type<?>> entry : ReloadableRegistryManager.SYNCED_REGISTRY_MAP.entrySet()) {
+        for (Map.Entry<ResourceKey<ReloadableRegistryTemplate<? extends KlaxonResourceReloadListener<?>, ?>>, CustomPacketPayload.Type<?>> entry : ReloadableRegistryManager.SYNCED_REGISTRY_MAP.entrySet()) {
             registerReciever(
                     entry.getValue(),
                     Objects.requireNonNull((payload, context) ->
-                            ReloadableRegistryManager.getAccess(context.client())
-                                    .klaxon$getReloadableRegistryManager()
-                                    .getSyncInstance((ResourceKey<ReloadableRegistryTemplate<?>>) entry.getKey())
+                            Objects.requireNonNull(ReloadableRegistryManager.get(context.client()))
+                                    .getSyncInstance(entry.getKey())
                                     .synchronizer()
                                     .loadFromPacket(payload)
                     )

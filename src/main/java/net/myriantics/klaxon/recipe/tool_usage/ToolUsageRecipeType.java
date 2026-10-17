@@ -6,6 +6,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -32,11 +34,19 @@ public record ToolUsageRecipeType(Ingredient validTools, Optional<ResourceKey<It
 
     public static final Codec<ResourceKey<ToolUsageRecipeType>> KEY_CODEC = ResourceKey.codec(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE);
     public static final StreamCodec<ByteBuf, ResourceKey<ToolUsageRecipeType>> KEY_PACKET_CODEC = ResourceKey.streamCodec(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE);
+    // public static final StreamCodec<RegistryFriendlyByteBuf, Optional<Holder<Item>>> OPTIONAL_ITEM_STREAM_CODEC = ByteBufCodecs.optional(ByteBufCodecs.holderRegistry(Registries.ITEM));
+    public static final StreamCodec<ByteBuf, Optional<ResourceKey<Item>>> OPTIONAL_ITEM_STREAM_CODEC = ByteBufCodecs.optional(ResourceKey.streamCodec(Registries.ITEM));
 
     public static final Codec<ToolUsageRecipeType> CODEC = RecordCodecBuilder.create((instance -> instance.group(
             Ingredient.CODEC_NONEMPTY.fieldOf("valid_tools").forGetter(ToolUsageRecipeType::validTools),
             ResourceKey.codec(Registries.ITEM).optionalFieldOf("display_item").forGetter(ToolUsageRecipeType::display)
     ).apply(instance, ToolUsageRecipeType::new)));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ToolUsageRecipeType> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC, ToolUsageRecipeType::validTools,
+            OPTIONAL_ITEM_STREAM_CODEC, ToolUsageRecipeType::display,
+            ToolUsageRecipeType::new
+    );
 
     public static ResourceLocation animationRlFromHolder(Holder<ToolUsageRecipeType> holder) {
         Optional<ResourceKey<ToolUsageRecipeType>> key = holder.unwrapKey();

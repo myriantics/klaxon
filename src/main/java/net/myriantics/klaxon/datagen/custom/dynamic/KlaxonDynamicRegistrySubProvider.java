@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.datagen.custom;
+package net.myriantics.klaxon.datagen.custom.dynamic;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;

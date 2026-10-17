@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.registry.dynamic;
+package net.myriantics.klaxon.registry.reloadable;
 
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;

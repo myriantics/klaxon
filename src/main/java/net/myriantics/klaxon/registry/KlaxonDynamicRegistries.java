@@ -16,7 +16,6 @@ import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 public abstract class KlaxonDynamicRegistries {
 
     static {
-        registerSynced(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE, ToolUsageRecipeType.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
         registerSynced(KlaxonRegistries.VEINMINE_GROUP, VeinmineGroup.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
         registerSynced(KlaxonRegistries.WRENCH_INTERACTION_DENIAL_PREDICATE, WrenchInteractionDenialPredicate.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
         registerSynced(KlaxonRegistries.EXPLOSIVE_CATALYST_BEHAVIOR, ExplosiveCatalystBehavior.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);

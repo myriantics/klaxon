@@ -31,17 +31,17 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.myriantics.klaxon.component.configuration.ToolUseRecipeConfigComponent;
+import net.myriantics.klaxon.infra.reloadable_registry.KlaxonSimpleResourceReloadListener;
+import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryManager;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonReloadableRegistries;
 import net.myriantics.klaxon.registry.advancement.KlaxonAdvancementTriggers;
 import net.myriantics.klaxon.registry.item.KlaxonDataComponentTypes;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import net.myriantics.klaxon.util.EquipmentSlotHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 // Inspiration taken from AE2's Item Transformation system
 public abstract class ToolUsageRecipeLogic {
@@ -54,11 +54,13 @@ public abstract class ToolUsageRecipeLogic {
         return getValidToolsCache(world).contains(stack.getItem());
     }
 
-    private static Set<Item> getValidToolsCache(Level world) {
+    private static Set<Item> getValidToolsCache(Level level) {
         if (VALID_TOOLS_CACHE.isEmpty()) {
             Set<Item> newCache = new HashSet<>();
-            for (Holder<ToolUsageRecipeType> type : world.registryAccess().registryOrThrow(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
-                for (ItemStack stack : type.value().validTools().getItems()) {
+            KlaxonSimpleResourceReloadListener<ToolUsageRecipeType> toolUsageRegistry = Objects.requireNonNull(ReloadableRegistryManager.get(level)).getListener(KlaxonReloadableRegistries.TOOL_USAGE_RECIPE_TYPE);
+
+            for (ToolUsageRecipeType type : toolUsageRegistry.getElements().values()) {
+                for (ItemStack stack : type.validTools().getItems()) {
                     newCache.add(stack.getItem());
                 }
             }
@@ -79,7 +81,7 @@ public abstract class ToolUsageRecipeLogic {
      * Returns ActionResult.SUCCESS if recipe succeeds - ActionResult.PASS otherwise.
      */
     public static ToolUsageRecipeResult runRecipeLogic(UseOnContext context) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         Player player = context.getPlayer();
         Vec3 clickedPos = context.getClickLocation();
         ItemStack toolStack = context.getItemInHand();
@@ -97,7 +99,7 @@ public abstract class ToolUsageRecipeLogic {
         int totalPlayedSounds = 0;
         int totalParticleSpawnActions = 0;
 
-        List<ItemEntity> selectedItems = world.getEntities(EntityTypeTest.forClass(ItemEntity.class), AABB.ofSize(clickedPos, 0.8, 0.8, 0.8), (e) -> true);
+        List<ItemEntity> selectedItems = level.getEntities(EntityTypeTest.forClass(ItemEntity.class), AABB.ofSize(clickedPos, 0.8, 0.8, 0.8), (e) -> true);
 
         // if there aren't any dropped items in the targeted area, don't do anything
         if (selectedItems.isEmpty()) {
@@ -105,9 +107,10 @@ public abstract class ToolUsageRecipeLogic {
         }
 
         ResourceKey<ToolUsageRecipeType> type = null;
-        for (Holder<ToolUsageRecipeType> entry : world.registryAccess().registryOrThrow(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
-            if (entry.value().validTools().test(toolStack) && entry.unwrapKey().isPresent()) {
-                type = entry.unwrapKey().get();
+        KlaxonSimpleResourceReloadListener<ToolUsageRecipeType> registry = Objects.requireNonNull(ReloadableRegistryManager.get(level)).getListener(KlaxonReloadableRegistries.TOOL_USAGE_RECIPE_TYPE);
+        for (Map.Entry<ResourceKey<ToolUsageRecipeType>, ToolUsageRecipeType> entry : registry.getElements().entrySet()) {
+            if (entry.getValue().validTools().test(toolStack)) {
+                type = entry.getKey();
                 break;
             }
         }
@@ -127,7 +130,7 @@ public abstract class ToolUsageRecipeLogic {
             boolean targetRecipeSuccess = false;
 
             ToolUsageRecipeInput dummyInventory = new ToolUsageRecipeInput(toolStack, targetStack, type);
-            Optional<RecipeHolder<ToolUsageRecipe>> match = world.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.TOOL_USAGE.value(), dummyInventory, world);
+            Optional<RecipeHolder<ToolUsageRecipe>> match = level.getRecipeManager().getRecipeFor(KlaxonRecipeTypes.TOOL_USAGE.value(), dummyInventory, level);
 
             // change recipe success indicator and recipe sound override
             if (match.isPresent()) {
@@ -135,7 +138,7 @@ public abstract class ToolUsageRecipeLogic {
                 SoundEvent soundEvent = match.get().value().getSound();
                 recipeSoundOverride = soundEvent == null || soundEvent.equals(SoundEvents.EMPTY) ? null : soundEvent;
 
-                if (!world.isClientSide()) {
+                if (!level.isClientSide()) {
                     targetStack.shrink(1);
                     if (targetStack.getCount() == 0) {
                         targetItemEntity.discard();
@@ -143,14 +146,14 @@ public abstract class ToolUsageRecipeLogic {
                         targetItemEntity.setItem(targetStack);
                     }
 
-                    ItemStack outputStack = match.get().value().assemble(dummyInventory, world.registryAccess());
+                    ItemStack outputStack = match.get().value().assemble(dummyInventory, level.registryAccess());
 
                     // make sure to proc advancement trigger before spawning item
                     KlaxonAdvancementTriggers.triggerToolUsageCraft((ServerPlayer) player, toolStack, outputStack);
 
-                    // dump item out in-world
+                    // dump item out in-level
                     Containers.dropItemStack(
-                            world,
+                            level,
                             outputPos.x(),
                             outputPos.y(),
                             outputPos.z(),
@@ -162,13 +165,13 @@ public abstract class ToolUsageRecipeLogic {
 
             // spawn particles if recipe was successful or cosmetic usage is enabled
             if ((targetRecipeSuccess || canCosmeticUse) && totalParticleSpawnActions < MAX_PARTICLE_CREATION_ACTIONS_PER_ACTION) {
-                spawnToolUseParticleEffects(world, targetStack, 5, targetItemEntity);
+                spawnToolUseParticleEffects(level, targetStack, 5, targetItemEntity);
                 totalParticleSpawnActions++;
             }
 
             // this caps out at 4 sounds because otherwise people are going to take up the whole sound cap with it
             if ((targetRecipeSuccess || canCosmeticUse) && totalPlayedSounds < MAX_SOUNDS_PER_ACTION) {
-                world.playSound(player, BlockPos.containing(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundSource.PLAYERS, 1, 1.0f + 0.4f * world.getRandom().nextFloat());
+                level.playSound(player, BlockPos.containing(clickedPos), recipeSoundOverride != null ? recipeSoundOverride : component.usageSound(), SoundSource.PLAYERS, 1, 1.0f + 0.4f * level.getRandom().nextFloat());
                 totalPlayedSounds++;
             }
 
@@ -176,7 +179,7 @@ public abstract class ToolUsageRecipeLogic {
             didAtLeastOneRecipeSucceed |= targetRecipeSuccess;
         }
 
-        if (world instanceof ServerLevel serverWorld) {
+        if (level instanceof ServerLevel serverWorld) {
             if (didAtLeastOneRecipeSucceed) {
                 // trip sculk sensors and damage tool
                 serverWorld.gameEvent(player, GameEvent.ITEM_INTERACT_FINISH, clickedPos);

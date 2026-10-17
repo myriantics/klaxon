@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.datagen.custom.providers;
+package net.myriantics.klaxon.datagen.custom.dynamic.providers;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.advancements.critereon.BlockPredicate;
@@ -11,12 +11,9 @@ import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistrySubProvider;
+import net.myriantics.klaxon.datagen.custom.dynamic.KlaxonDynamicRegistrySubProvider;
 import net.myriantics.klaxon.mechanics.turbine_generator.power_source.StaticTurbineGeneratorPowerSource;
 import net.myriantics.klaxon.registry.behavior.KlaxonTurbineGeneratorPowerSources;
-
-import java.util.Map;
-import java.util.function.UnaryOperator;
 
 public class KlaxonTurbineGeneratorPowerSourceProvider extends KlaxonDynamicRegistrySubProvider<StaticTurbineGeneratorPowerSource> {
     public KlaxonTurbineGeneratorPowerSourceProvider(HolderLookup.Provider wrapperLookup, FabricDynamicRegistryProvider.Entries entries) {

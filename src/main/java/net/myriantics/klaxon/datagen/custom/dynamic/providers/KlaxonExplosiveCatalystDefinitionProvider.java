@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.datagen.custom.providers;
+package net.myriantics.klaxon.datagen.custom.dynamic.providers;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.Holder;
@@ -7,11 +7,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.NamedIngredient;
-import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistrySubProvider;
+import net.myriantics.klaxon.datagen.custom.dynamic.KlaxonDynamicRegistrySubProvider;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystData;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.registry.KlaxonRegistries;

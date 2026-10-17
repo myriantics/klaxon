@@ -13,7 +13,6 @@ import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryManager
 import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryTemplate;
 import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,18 +36,19 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         super(minecraft, connection, commonListenerCookie);
     }
 
+    @SuppressWarnings("unchecked")
     @Inject(
             method = "<init>",
             at = @At(value = "TAIL")
     )
     private void klaxon$initReloadableRegistries(Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie, CallbackInfo ci) {
-        ImmutableMap.Builder<ResourceKey<ReloadableRegistryTemplate<?>>, KlaxonResourceReloadListener> builder = ImmutableMap.builder();
+        ImmutableMap.Builder<ResourceKey<ReloadableRegistryTemplate<? extends KlaxonResourceReloadListener<?>, ?>>, KlaxonResourceReloadListener<?>> builder = ImmutableMap.builder();
 
         ReloadableRegistryManager.SYNCED_REGISTRY_MAP.forEach((key, type) -> {
-            builder.put(key, Objects.requireNonNull(KlaxonBuiltInRegistries.RELOADABLE_REGISTRY.get((ResourceKey<ReloadableRegistryTemplate<?>>) key)).create(this.registryAccess()));
+            builder.put(key, Objects.requireNonNull(KlaxonBuiltInRegistries.RELOADABLE_REGISTRY.get((ResourceKey<ReloadableRegistryTemplate<?, ?>>) (Object) key)).create(this.registryAccess()));
         });
 
-        this.klaxon$reloadableRegistryManager = new ReloadableRegistryManager(builder.build());
+        this.klaxon$reloadableRegistryManager = new ReloadableRegistryManager((Map<ResourceKey<ReloadableRegistryTemplate<?,?>>, KlaxonResourceReloadListener<?>>) (Object) builder.build());
     }
 
     @Override

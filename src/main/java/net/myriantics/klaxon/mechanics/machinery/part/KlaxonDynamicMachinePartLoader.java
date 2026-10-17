@@ -34,14 +34,14 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked") // i love generics
-public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadListener implements ClientSynced<ClientboundDynamicMachinePartSyncPayload> {
+public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadListener<DynamicMachinePartDefinition> implements ClientSynced<ClientboundDynamicMachinePartSyncPayload> {
 
     private List<DynamicMachinePartDefinition> definitions = null;
     private Map<Item, DataComponentPatch> partDataCache = Map.of();
 
     public static final StreamCodec<RegistryFriendlyByteBuf, List<DynamicMachinePartDefinition>> DEFINITION_LIST_STREAM_CODEC = DynamicMachinePartDefinition.STREAM_CODEC.apply(ByteBufCodecs.list());
 
-    public KlaxonDynamicMachinePartLoader(ReloadableRegistryTemplate<KlaxonDynamicMachinePartLoader> instance, HolderLookup.Provider registries) {
+    public KlaxonDynamicMachinePartLoader(ReloadableRegistryTemplate<KlaxonDynamicMachinePartLoader, DynamicMachinePartDefinition> instance, HolderLookup.Provider registries) {
         super(instance, registries);
         CommonLifecycleEvents.TAGS_LOADED.register(this::tagsLoaded);
     }

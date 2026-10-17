@@ -6,8 +6,9 @@ import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.myriantics.klaxon.datagen.*;
 import net.myriantics.klaxon.datagen.advancement.KlaxonAdvancementProvider;
-import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistryProvider;
-import net.myriantics.klaxon.datagen.custom.providers.*;
+import net.myriantics.klaxon.datagen.custom.dynamic.KlaxonDynamicRegistryProvider;
+import net.myriantics.klaxon.datagen.custom.reloadable.providers.KlaxonDynamicMachinePartProvider;
+import net.myriantics.klaxon.datagen.custom.reloadable.providers.KlaxonToolUsageRecipeTypeProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonBlockLootTableProvider;
 import net.myriantics.klaxon.datagen.loot_table.KlaxonGameplayLootTableProvider;
@@ -46,6 +47,7 @@ public class KlaxonDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(KlaxonBlockEntityTypeTagProvider::new);
 		pack.addProvider(KlaxonExplosiveCatalystBehaviorTagProvider::new);
 		pack.addProvider(KlaxonDynamicMachinePartProvider::new);
+		pack.addProvider(KlaxonToolUsageRecipeTypeProvider::new);
 	}
 
 	@Override

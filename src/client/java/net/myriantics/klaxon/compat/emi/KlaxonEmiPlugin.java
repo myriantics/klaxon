@@ -16,6 +16,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -31,6 +32,7 @@ import net.myriantics.klaxon.compat.emi.recipes.special.KlaxonSuspiciousStewReci
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiCategories;
 import net.myriantics.klaxon.compat.emi.registry.KlaxonEmiWorkstations;
 import net.myriantics.klaxon.compat.emi.recipes.*;
+import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryManager;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.definition.ExplosiveCatalystDefinition;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingRecipe;
 import net.myriantics.klaxon.recipe.blast_processing.BlastProcessingTransmutationRecipe;
@@ -42,6 +44,7 @@ import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationR
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
+import net.myriantics.klaxon.registry.KlaxonReloadableRegistries;
 import net.myriantics.klaxon.registry.item.KlaxonBlockItems;
 import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
@@ -69,37 +72,35 @@ public class KlaxonEmiPlugin implements EmiPlugin {
 
         if (level != null) {
             initBlastProcessingRecipes(level, registry);
-            for (Holder<ToolUsageRecipeType> typeHolder : level.registryAccess().registryOrThrow(KlaxonRegistries.TOOL_USAGE_RECIPE_TYPE).asHolderIdMap()) {
-                Optional<ResourceKey<ToolUsageRecipeType>> optionalKey = typeHolder.unwrapKey();
+            for (Map.Entry<ResourceKey<ToolUsageRecipeType>, ToolUsageRecipeType> entry : ReloadableRegistryManager.get(level).getListener(KlaxonReloadableRegistries.TOOL_USAGE_RECIPE_TYPE).getElements().entrySet()) {
 
-                if (optionalKey.isPresent()) {
-                    ToolUsageRecipeType type = typeHolder.value();
-                    EmiIngredient validTools = EmiIngredient.of(type.validTools());
 
-                    // attempt to pull from the specified item, but if that fails, use the tag
-                    EmiRenderable renderable;
-                    if (type.display().isPresent() && BuiltInRegistries.ITEM.get(type.display().get()) instanceof Item item) {
-                        renderable = EmiStack.of(item);
-                    } else {
-                        renderable = validTools;
-                    }
+                ToolUsageRecipeType type = entry.getValue();
+                EmiIngredient validTools = EmiIngredient.of(type.validTools());
 
-                    EmiRecipeCategory category = KlaxonEmiCategories.of(
-                            optionalKey.get().location(), renderable
-                    );
+                // attempt to pull from the specified item, but if that fails, use the tag
+                EmiRenderable renderable;
+                if (type.display().isPresent() && BuiltInRegistries.ITEM.get(type.display().get()) instanceof Item item) {
+                    renderable = EmiStack.of(item);
+                } else {
+                    renderable = validTools;
+                }
 
-                    registry.addCategory(category);
-                    registry.addWorkstation(category, validTools);
+                EmiRecipeCategory category = KlaxonEmiCategories.of(
+                        entry.getKey().location(), renderable
+                );
 
-                    for (RecipeHolder<ToolUsageRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.TOOL_USAGE.value())) {
-                        if (recipe.value().getTypeKey().equals(optionalKey.get())) {
-                            registry.addRecipe(new AbstractToolUsageEmiRecipe(recipe, ToolUsageRecipeType.animationRlFromHolder(typeHolder), validTools) {
-                                @Override
-                                public EmiRecipeCategory getCategory() {
-                                    return category;
-                                }
-                            });
-                        }
+                registry.addCategory(category);
+                registry.addWorkstation(category, validTools);
+
+                for (RecipeHolder<ToolUsageRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(KlaxonRecipeTypes.TOOL_USAGE.value())) {
+                    if (recipe.value().getTypeKey().equals(entry.getKey())) {
+                        registry.addRecipe(new AbstractToolUsageEmiRecipe(recipe, ToolUsageRecipeType.animationRl(entry.getKey().location()), validTools) {
+                            @Override
+                            public EmiRecipeCategory getCategory() {
+                                return category;
+                            }
+                        });
                     }
                 }
             }

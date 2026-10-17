@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 @Mixin(ReloadableServerResources.class)
 public abstract class ReloadableServerResourcesMixin implements ReloadableRegistryManager.Access {
@@ -42,7 +41,7 @@ public abstract class ReloadableServerResourcesMixin implements ReloadableRegist
     )
     private void klaxon$initDynamicMachinePartDataLoader(RegistryAccess.Frozen registryAccess, FeatureFlagSet enabledFeatures, Commands.CommandSelection commandSelection, int functionCompilationLevel, CallbackInfo ci) {
 
-        ImmutableMap.Builder<ResourceKey<ReloadableRegistryTemplate<?>>, KlaxonResourceReloadListener> builder = ImmutableMap.builder();
+        ImmutableMap.Builder<ResourceKey<ReloadableRegistryTemplate<? extends KlaxonResourceReloadListener<?>, ?>>, KlaxonResourceReloadListener<?>> builder = ImmutableMap.builder();
 
         KlaxonBuiltInRegistries.RELOADABLE_REGISTRY.holders().forEach(holder -> {
             builder.put(holder.key(), holder.value().create(this.registryLookup));
@@ -56,7 +55,7 @@ public abstract class ReloadableServerResourcesMixin implements ReloadableRegist
             at = @At(value = "RETURN")
     )
     private List<PreparableReloadListener> klaxon$injectListeners(List<PreparableReloadListener> original) {
-        Iterator<? extends KlaxonResourceReloadListener> listenerIterator = this.klaxon$reloadableRegistryManager.listenerIterator();
+        Iterator<? extends KlaxonResourceReloadListener<?>> listenerIterator = this.klaxon$reloadableRegistryManager.listenerIterator();
 
         ImmutableList.Builder<PreparableReloadListener> builder = ImmutableList.builder();
         builder.addAll(original);

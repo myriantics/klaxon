@@ -42,7 +42,7 @@ public abstract class KlaxonBuiltInRegistries {
                     )
             )
     );
-    public static final Registry<ReloadableRegistryTemplate<?>> RELOADABLE_REGISTRY = register(
+    public static final Registry<ReloadableRegistryTemplate<?, ?>> RELOADABLE_REGISTRY = register(
             FabricRegistryBuilder.from(
                     new MappedRegistry<>(
                             KlaxonRegistries.RELOADABLE_REGISTRY,

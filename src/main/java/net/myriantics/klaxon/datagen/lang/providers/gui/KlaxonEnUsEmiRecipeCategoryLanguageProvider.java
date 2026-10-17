@@ -3,7 +3,7 @@ package net.myriantics.klaxon.datagen.lang.providers.gui;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageProvider;
 import net.myriantics.klaxon.datagen.lang.KlaxonEnUsLanguageSubProvider;
-import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
+import net.myriantics.klaxon.registry.reloadable.KlaxonToolUsageRecipeTypes;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 
 public final class KlaxonEnUsEmiRecipeCategoryLanguageProvider extends KlaxonEnUsLanguageSubProvider {

@@ -19,7 +19,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.myriantics.klaxon.KlaxonCommon;
 import net.myriantics.klaxon.datagen.recipe.providers.*;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
-import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
+import net.myriantics.klaxon.registry.reloadable.KlaxonToolUsageRecipeTypes;
 
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;

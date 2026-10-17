@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.datagen.custom.providers;
+package net.myriantics.klaxon.datagen.custom.dynamic.providers;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.Holder;
@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.level.block.Blocks;
-import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistrySubProvider;
+import net.myriantics.klaxon.datagen.custom.dynamic.KlaxonDynamicRegistrySubProvider;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformer;

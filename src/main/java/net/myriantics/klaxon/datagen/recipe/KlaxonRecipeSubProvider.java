@@ -26,7 +26,7 @@ import net.myriantics.klaxon.recipe.nether_reaction.NetherReactionRecipe;
 import net.myriantics.klaxon.recipe.shredding.industrial.StandardIndustrialShreddingRecipe;
 import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipe;
 import net.myriantics.klaxon.recipe.world_item_application.WorldItemApplicationRecipe;
-import net.myriantics.klaxon.registry.dynamic.KlaxonToolUsageRecipeTypes;
+import net.myriantics.klaxon.registry.reloadable.KlaxonToolUsageRecipeTypes;
 import net.myriantics.klaxon.registry.recipe.KlaxonRecipeTypes;
 import org.jetbrains.annotations.Nullable;
 

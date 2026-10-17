@@ -11,14 +11,14 @@ import java.util.function.Consumer;
 
 public final class ReloadableRegistryManager {
 
-    public static final HashMap<ResourceKey<ReloadableRegistryTemplate<? extends KlaxonResourceReloadListener>>, CustomPacketPayload.Type<?>> SYNCED_REGISTRY_MAP = new HashMap<>();
+    public static final HashMap<ResourceKey<ReloadableRegistryTemplate<? extends KlaxonResourceReloadListener<?>, ?>>, CustomPacketPayload.Type<?>> SYNCED_REGISTRY_MAP = new HashMap<>();
 
     public static final ReloadableRegistryManager EMPTY = new ReloadableRegistryManager(Map.of());
 
-    private final Map<ResourceKey<ReloadableRegistryTemplate<?>>, Entry<?>> key2EntryMap;
+    private final Map<ResourceKey<ReloadableRegistryTemplate<?, ?>>, Entry<?>> key2EntryMap;
 
     @SuppressWarnings("unchecked")
-    public ReloadableRegistryManager(Map<ResourceKey<ReloadableRegistryTemplate<?>>, KlaxonResourceReloadListener> key2ListenerMap) {
+    public ReloadableRegistryManager(Map<ResourceKey<ReloadableRegistryTemplate<?, ?>>, KlaxonResourceReloadListener<?>> key2ListenerMap) {
         this.key2EntryMap = Maps.transformEntries(
                 key2ListenerMap,
                 (key, value) -> {
@@ -34,7 +34,7 @@ public final class ReloadableRegistryManager {
         );
     }
 
-    public Iterator<? extends KlaxonResourceReloadListener> listenerIterator() {
+    public Iterator<? extends KlaxonResourceReloadListener<?>> listenerIterator() {
         return this.key2EntryMap.values().stream().map(Entry::listener).iterator();
     }
 
@@ -42,29 +42,29 @@ public final class ReloadableRegistryManager {
         return this.key2EntryMap.values().stream().map(Entry::syncInstance).iterator();
     }
 
-    public void forEachListener(Consumer<KlaxonResourceReloadListener> consumer) {
+    public void forEachListener(Consumer<KlaxonResourceReloadListener<?>> consumer) {
         for (Entry<?> entry : this.key2EntryMap.values()) {
             consumer.accept(entry.listener);
         }
     }
 
-    public <T extends KlaxonResourceReloadListener> T getListener(Holder<ReloadableRegistryTemplate<T>> holder) {
+    public <T extends KlaxonResourceReloadListener<U>, U> T getListener(Holder<ReloadableRegistryTemplate<T, U>> holder) {
         return this.getListener(holder.unwrapKey().get());
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends KlaxonResourceReloadListener> T getListener(ResourceKey<ReloadableRegistryTemplate<T>> key) {
+    public <T extends KlaxonResourceReloadListener<U>, U> T getListener(ResourceKey<ReloadableRegistryTemplate<T, U>> key) {
         return (T) this.key2EntryMap.get(key).listener;
     }
 
     @SuppressWarnings("unchecked")
-    public @Nullable SyncInstance<CustomPacketPayload> getSyncInstance(ResourceKey<ReloadableRegistryTemplate<?>> key) {
+    public @Nullable SyncInstance<CustomPacketPayload> getSyncInstance(ResourceKey<ReloadableRegistryTemplate<? extends KlaxonResourceReloadListener<?>, ?>> key) {
         return (SyncInstance<CustomPacketPayload>) this.key2EntryMap.get(key).syncInstance;
     }
 
-    public static @Nullable ReloadableRegistryManager.Access getAccess(Object object) {
+    public static @Nullable ReloadableRegistryManager get(Object object) {
         if (object instanceof Access access) {
-            return access;
+            return access.klaxon$getReloadableRegistryManager();
         } else {
             return null;
         }
@@ -74,7 +74,7 @@ public final class ReloadableRegistryManager {
         @Nullable ReloadableRegistryManager klaxon$getReloadableRegistryManager();
     }
 
-    private record Entry<T extends KlaxonResourceReloadListener>(T listener, SyncInstance<?> syncInstance) {
+    private record Entry<T extends KlaxonResourceReloadListener<?>>(T listener, SyncInstance<?> syncInstance) {
     }
 
     public record SyncInstance<U extends CustomPacketPayload>(CustomPacketPayload.Type<U> payloadType, ClientSynced<U> synchronizer) {

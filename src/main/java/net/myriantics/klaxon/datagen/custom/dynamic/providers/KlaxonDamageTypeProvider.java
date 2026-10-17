@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.datagen.custom.providers;
+package net.myriantics.klaxon.datagen.custom.dynamic.providers;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;
@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageEffects;
 import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageType;
-import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistrySubProvider;
+import net.myriantics.klaxon.datagen.custom.dynamic.KlaxonDynamicRegistrySubProvider;
 import net.myriantics.klaxon.registry.dynamic.KlaxonDamageTypes;
 
 public class KlaxonDamageTypeProvider extends KlaxonDynamicRegistrySubProvider<DamageType> {

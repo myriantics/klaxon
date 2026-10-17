@@ -1,4 +1,4 @@
-package net.myriantics.klaxon.datagen.custom.providers;
+package net.myriantics.klaxon.datagen.custom.dynamic.providers;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.myriantics.klaxon.datagen.custom.KlaxonDynamicRegistrySubProvider;
+import net.myriantics.klaxon.datagen.custom.dynamic.KlaxonDynamicRegistrySubProvider;
 import net.myriantics.klaxon.mechanics.wrench.WrenchInteractionDenialPredicate;
 import net.myriantics.klaxon.registry.KlaxonRegistries;
 

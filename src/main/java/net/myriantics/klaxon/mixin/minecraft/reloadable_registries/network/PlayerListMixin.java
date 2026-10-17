@@ -6,12 +6,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
-import net.myriantics.klaxon.infra.reloadable_registry.ClientSynced;
-import net.myriantics.klaxon.infra.reloadable_registry.KlaxonResourceReloadListener;
-import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryTemplate;
 import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryManager;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
-import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 @Mixin(PlayerList.class)
@@ -59,7 +56,7 @@ public abstract class PlayerListMixin {
 
     @Unique
     private void klaxon$handleSync(Consumer<CustomPacketPayload> payloadConsumer) {
-        Iterator<? extends ReloadableRegistryManager.SyncInstance<? extends CustomPacketPayload>> iterator = ReloadableRegistryManager.getAccess(this.server).klaxon$getReloadableRegistryManager().syncIterator();
+        Iterator<? extends ReloadableRegistryManager.SyncInstance<? extends CustomPacketPayload>> iterator = Objects.requireNonNull(ReloadableRegistryManager.get(this.server)).syncIterator();
         while (iterator.hasNext()) {
             payloadConsumer.accept(iterator.next().synchronizer().getSyncPacket());
         }
