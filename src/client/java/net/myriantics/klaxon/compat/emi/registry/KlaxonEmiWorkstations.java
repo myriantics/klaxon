@@ -14,7 +14,7 @@ import net.myriantics.klaxon.registry.item.KlaxonItems;
 import net.myriantics.klaxon.tag.klaxon.KlaxonBlockTags;
 
 public final class KlaxonEmiWorkstations {
-    private final EmiRegistry emiRegistry; // named this way instead of just registry so tab autocomplete defaults to reg methods over this
+    private final EmiRegistry emiRegistry; // named this way instead of just partDataCache so tab autocomplete defaults to reg methods over this
 
     private KlaxonEmiWorkstations(EmiRegistry emiRegistry) {
         this.emiRegistry = emiRegistry;

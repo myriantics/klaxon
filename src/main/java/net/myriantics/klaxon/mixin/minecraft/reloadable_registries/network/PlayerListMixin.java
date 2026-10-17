@@ -1,19 +1,17 @@
 package net.myriantics.klaxon.mixin.minecraft.reloadable_registries.network;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.core.Holder;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
-import net.myriantics.klaxon.infra.KlaxonResourceReloadListener;
-import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
-import net.myriantics.klaxon.infra.ClientSynced;
+import net.myriantics.klaxon.infra.reloadable_registry.ClientSynced;
+import net.myriantics.klaxon.infra.reloadable_registry.KlaxonResourceReloadListener;
+import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryTemplate;
+import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryManager;
 import net.myriantics.klaxon.networking.KlaxonServerPlayNetworkHandler;
 import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
-import net.myriantics.klaxon.registry.KlaxonReloadableRegistries;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +20,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Mixin(PlayerList.class)
 public abstract class PlayerListMixin {
@@ -43,9 +43,7 @@ public abstract class PlayerListMixin {
             )
     )
     private void klaxon$syncReloadableRegistriesOnPlayerJoin(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
-        for (CustomPacketPayload payload : this.klaxon$gatherSyncPackets()) {
-            KlaxonServerPlayNetworkHandler.send(player, payload);
-        }
+        this.klaxon$handleSync(payload -> KlaxonServerPlayNetworkHandler.send(player, payload));
     }
 
     @Inject(
@@ -56,25 +54,14 @@ public abstract class PlayerListMixin {
             )
     )
     private void klaxon$initPayloadsForResourceReload(CallbackInfo ci) {
-        List<CustomPacketPayload> payloads = this.klaxon$gatherSyncPackets();
-        payloads.forEach(payload -> this.players.forEach(player -> KlaxonServerPlayNetworkHandler.send(player, payload)));
+        this.klaxon$handleSync(payload -> this.players.forEach(player -> KlaxonServerPlayNetworkHandler.send(player, payload)));
     }
 
-    @SuppressWarnings("unchecked")
     @Unique
-    private List<CustomPacketPayload> klaxon$gatherSyncPackets() {
-        ImmutableList.Builder<CustomPacketPayload> builder = ImmutableList.builderWithExpectedSize(KlaxonBuiltInRegistries.RELOADABLE_REGISTRY.size());
-
-        for (ReloadableRegistryInstance<?> instance : KlaxonBuiltInRegistries.RELOADABLE_REGISTRY) {
-            KlaxonResourceReloadListener<?> listener = ((KlaxonReloadableRegistries.Access) this.server).klaxon$getReloadableRegistry(
-                    (Holder<ReloadableRegistryInstance<Object>>) (Object) instance.asHolder()
-            );
-
-            if (listener instanceof ClientSynced<?> clientSynced) {
-                builder.add(clientSynced.getSyncPacket());
-            }
+    private void klaxon$handleSync(Consumer<CustomPacketPayload> payloadConsumer) {
+        Iterator<? extends ReloadableRegistryManager.SyncInstance<? extends CustomPacketPayload>> iterator = ReloadableRegistryManager.getAccess(this.server).klaxon$getReloadableRegistryManager().syncIterator();
+        while (iterator.hasNext()) {
+            payloadConsumer.accept(iterator.next().synchronizer().getSyncPacket());
         }
-
-        return builder.build();
     }
 }

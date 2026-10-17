@@ -1,10 +1,9 @@
 package net.myriantics.klaxon.registry;
 
 import net.minecraft.core.Registry;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
+import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryTemplate;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystBehavior;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystHandler;
 import net.myriantics.klaxon.mechanics.explosive_catalyst.ExplosiveCatalystTransformerType;
@@ -21,7 +20,7 @@ import net.myriantics.klaxon.recipe.tool_usage.ToolUsageRecipeType;
 public abstract class KlaxonRegistries {
 
     // static
-    public static final ResourceKey<Registry<ReloadableRegistryInstance<?>>> RELOADABLE_REGISTRY = of("reloadable_registry");
+    public static final ResourceKey<Registry<ReloadableRegistryTemplate<?>>> RELOADABLE_REGISTRY = of("reloadable_registry");
     public static final ResourceKey<Registry<BlockStateWrenchBehavior<? extends Comparable<?>>>> BLOCK_STATE_WRENCH_BEHAVIOR = of("block_state_wrench_behavior");
     public static final ResourceKey<Registry<WrenchActionType>> WRENCH_ACTION_TYPE = of("wrench_action_type");
     public static final ResourceKey<Registry<ExplosiveCatalystHandler>> EXPLOSIVE_CATALYST_HANDLER = of("explosive_catalyst_handler");
@@ -34,8 +33,6 @@ public abstract class KlaxonRegistries {
     public static final ResourceKey<Registry<VeinmineGroup>> VEINMINE_GROUP = of("veinmine_group");
     public static final ResourceKey<Registry<ExplosiveCatalystDefinition>> EXPLOSIVE_CATALYST_DEFINITION = of("explosive_catalyst_definition");
     public static final ResourceKey<Registry<StaticTurbineGeneratorPowerSource>> STATIC_TURBINE_GENERATOR_POWER_SOURCE = of("turbine_generator_power_source");
-    // reloadable
-    public static final ResourceKey<Registry<DynamicMachinePartDefinition>> DYNAMIC_MACHINE_PART_DEFINITION = of("dynamic_machine_part_definition");
 
     private static <T> ResourceKey<Registry<T>> of(String id) {
         return ResourceKey.createRegistryKey(KlaxonCommon.locate(id));

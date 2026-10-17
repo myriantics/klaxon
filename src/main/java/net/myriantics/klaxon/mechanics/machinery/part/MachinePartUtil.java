@@ -4,6 +4,7 @@ import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryManager;
 import net.myriantics.klaxon.mechanics.machinery.part.data.StackingStrategy;
 import net.myriantics.klaxon.mechanics.machinery.part.patch.MachinePartDataComponentPatchBuilder;
 import net.myriantics.klaxon.registry.KlaxonReloadableRegistries;
@@ -62,8 +63,8 @@ public abstract class MachinePartUtil {
     }
 
     public static @Nullable DataComponentPatch getDynamicPartComponents(Item item, Level level) {
-        if (level instanceof KlaxonReloadableRegistries.Access access) {
-            return access.klaxon$getReloadableRegistry(KlaxonReloadableRegistries.DYNAMIC_MACHINE_PART_DEFINITION, KlaxonDynamicMachinePartLoader.class).getDynamicPartComponentsForItem(item);
+        if (level instanceof ReloadableRegistryManager.Access access) {
+            return access.klaxon$getReloadableRegistryManager().getListener(KlaxonReloadableRegistries.DYNAMIC_MACHINE_PART_DEFINITION).getDynamicPartComponentsForItem(item);
         } else {
             return null;
         }

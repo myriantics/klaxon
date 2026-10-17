@@ -9,9 +9,8 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.WritableLevelData;
-import net.myriantics.klaxon.infra.KlaxonResourceReloadListener;
-import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
-import net.myriantics.klaxon.registry.KlaxonReloadableRegistries;
+import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryManager;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +18,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.function.Supplier;
 
 @Mixin(ClientLevel.class)
-public abstract class ClientLevelMixin extends Level implements KlaxonReloadableRegistries.Access {
+public abstract class ClientLevelMixin extends Level implements ReloadableRegistryManager.Access {
     @Shadow
     @Final
     private Minecraft minecraft;
@@ -29,7 +28,7 @@ public abstract class ClientLevelMixin extends Level implements KlaxonReloadable
     }
 
     @Override
-    public <V extends KlaxonResourceReloadListener<T>, T> V klaxon$getReloadableRegistry(Holder<ReloadableRegistryInstance<T>> holder, Class<V> clazz) {
-        return ((KlaxonReloadableRegistries.Access) this.minecraft).klaxon$getReloadableRegistry(holder, clazz);
+    public @Nullable ReloadableRegistryManager klaxon$getReloadableRegistryManager() {
+        return ((ReloadableRegistryManager.Access) this.minecraft).klaxon$getReloadableRegistryManager();
     }
 }

@@ -1,15 +1,17 @@
 package net.myriantics.klaxon.registry.network;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.myriantics.klaxon.infra.ClientSynced;
-import net.myriantics.klaxon.infra.KlaxonResourceReloadListener;
-import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
+import net.minecraft.resources.ResourceKey;
+import net.myriantics.klaxon.infra.reloadable_registry.*;
 import net.myriantics.klaxon.networking.KlaxonClientPlayNetworkHandler;
 import net.myriantics.klaxon.registry.KlaxonBuiltInRegistries;
-import net.myriantics.klaxon.registry.KlaxonReloadableRegistries;
 import net.myriantics.klaxon.registry.misc.KlaxonPackets;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
+import java.util.Objects;
 
 public abstract class KlaxonClientPackets {
 
@@ -22,25 +24,21 @@ public abstract class KlaxonClientPackets {
         registerReciever(KlaxonPackets.ITEM_USAGE_LOCKOUT_TRIGGER_S2C_ID, KlaxonClientPlayNetworkHandler::triggerItemUsageLockout);
         registerReciever(KlaxonPackets.STEEL_BLAST_PROCESSOR_EXHAUST_LAUNCH_S2C_ID, KlaxonClientPlayNetworkHandler::applyVelocity);
 
-        for (ReloadableRegistryInstance<?> instance : KlaxonBuiltInRegistries.RELOADABLE_REGISTRY) {
-            @Nullable CustomPacketPayload.Type<? extends CustomPacketPayload> type = instance.getPacketType();
-            if (type != null) {
-                registerReciever(type, ((payload, context) -> {
-                    KlaxonResourceReloadListener<?> listener = ((KlaxonReloadableRegistries.Access) context.client()).klaxon$getReloadableRegistry(instance.asHolder());
-                    if (listener instanceof ClientSynced<?> synced) {
-                        iLoveGenerics(synced, payload);
-                    }
-                }));
-            }
+        for (Map.Entry<ResourceKey<ReloadableRegistryTemplate<? extends KlaxonResourceReloadListener>>, CustomPacketPayload.Type<?>> entry : ReloadableRegistryManager.SYNCED_REGISTRY_MAP.entrySet()) {
+            registerReciever(
+                    entry.getValue(),
+                    Objects.requireNonNull((payload, context) ->
+                            ReloadableRegistryManager.getAccess(context.client())
+                                    .klaxon$getReloadableRegistryManager()
+                                    .getSyncInstance((ResourceKey<ReloadableRegistryTemplate<?>>) entry.getKey())
+                                    .synchronizer()
+                                    .loadFromPacket(payload)
+                    )
+            );
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends CustomPacketPayload> void iLoveGenerics(ClientSynced<T> synced, CustomPacketPayload payload) {
-        synced.loadFromPacket((T) payload);
-    }
-
-    private static  <T extends CustomPacketPayload> void registerReciever(CustomPacketPayload.Type<T> type, ClientPlayNetworking.PlayPayloadHandler<T> handler) {
+    private static <T extends CustomPacketPayload> void registerReciever(CustomPacketPayload.Type<T> type, ClientPlayNetworking.PlayPayloadHandler<T> handler) {
         ClientPlayNetworking.registerGlobalReceiver(type, handler);
     }
 }

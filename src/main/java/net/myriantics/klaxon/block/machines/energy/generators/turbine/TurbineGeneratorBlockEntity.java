@@ -270,7 +270,7 @@ public class TurbineGeneratorBlockEntity extends KlaxonBaseContainerBlockEntity 
                 final int distance = i;
                 powerSources.removeIf(source -> !source.isWithinRange(distance));
 
-                // don't bother checking for power sources if we have no more valid ones in the registry
+                // don't bother checking for power sources if we have no more valid ones in the partDataCache
                 if (powerSources.isEmpty()) {
                     break;
                 }

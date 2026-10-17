@@ -8,7 +8,9 @@ import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
@@ -26,20 +28,20 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.myriantics.klaxon.KlaxonCommon;
-import net.myriantics.klaxon.infra.ClientSynced;
-import net.myriantics.klaxon.infra.KlaxonResourceReloadListener;
-import net.myriantics.klaxon.infra.ReloadableRegistryInstance;
+import net.myriantics.klaxon.infra.reloadable_registry.ClientSynced;
+import net.myriantics.klaxon.infra.reloadable_registry.KlaxonResourceReloadListener;
+import net.myriantics.klaxon.infra.reloadable_registry.ReloadableRegistryTemplate;
 import net.myriantics.klaxon.mechanics.machinery.part.data.StackingStrategy;
 import net.myriantics.klaxon.mechanics.machinery.part.patch.MachinePartDataComponentPatchBuilder;
 import net.myriantics.klaxon.networking.clientbound.ClientboundDynamicMachinePartSyncPayload;
-import net.myriantics.klaxon.registry.misc.KlaxonPackets;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked") // i love generics
-public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadListener<DynamicMachinePartDefinition> implements ClientSynced<ClientboundDynamicMachinePartSyncPayload> {
+public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadListener implements ClientSynced<ClientboundDynamicMachinePartSyncPayload> {
 
     private Set<DynamicMachinePartDefinition> definitions = null;
     private Map<Item, DataComponentPatch> partDataCache = Map.of();
@@ -51,9 +53,11 @@ public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadLi
             DataComponentPatch.STREAM_CODEC
     );
 
-    public KlaxonDynamicMachinePartLoader(ReloadableRegistryInstance<DynamicMachinePartDefinition> instance, HolderLookup.Provider registries) {
+    public KlaxonDynamicMachinePartLoader(ReloadableRegistryTemplate<KlaxonDynamicMachinePartLoader> instance, HolderLookup.Provider registries) {
         super(instance, registries);
-        CommonLifecycleEvents.TAGS_LOADED.register(this::tagsLoaded);
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            CommonLifecycleEvents.TAGS_LOADED.register(this::tagsLoaded);
+        }
     }
 
     public @Nullable DataComponentPatch getDynamicPartComponentsForItem(Item item) {
@@ -114,17 +118,12 @@ public final class KlaxonDynamicMachinePartLoader extends KlaxonResourceReloadLi
     }
 
     @Override
-    public CustomPacketPayload.Type<ClientboundDynamicMachinePartSyncPayload> getType() {
-        return KlaxonPackets.CLIENTBOUND_DYNAMIC_MACHINE_PART_SYNC;
-    }
-
-    @Override
     public ClientboundDynamicMachinePartSyncPayload getSyncPacket() {
         return new ClientboundDynamicMachinePartSyncPayload(this.partDataCache);
     }
 
     @Override
     public void loadFromPacket(ClientboundDynamicMachinePartSyncPayload packet) {
-        this.partDataCache = packet.registry();
+        this.partDataCache = packet.partDataCache();
     }
 }
