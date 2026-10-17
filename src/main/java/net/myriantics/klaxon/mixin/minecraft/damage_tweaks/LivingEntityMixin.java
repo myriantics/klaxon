@@ -38,7 +38,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void klaxon$handleBootsDamageMitigation(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, @Local(argsOnly = true) LocalFloatRef damageRef) {
         if (source.is(KlaxonDamageTypeTags.DAMAGES_BOOTS) && !this.getItemBySlot(EquipmentSlot.FEET).isEmpty()) {
             this.doHurtEquipment(source, amount * 2, EquipmentSlot.FEET);
-            damageRef.set(damageRef.get() * 0.25f);
+            damageRef.set(damageRef.get() * 0.35f);
         }
     }
 }

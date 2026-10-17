@@ -249,22 +249,30 @@ public class IndustrialShredderTopBlockEntity extends BaseIndustrialShredderBloc
             changed = true;
         } else if (this.aboveStorageCache != null) {
             if (this.aboveStorageCache.supportsExtraction()) {
-                try (Transaction tx = Transaction.openOuter()) {
-                    int totalIntakeCount = 0;
+                ItemStack shreddingStack = this.shreddingInputPartition.getFirstNonEmptyStack();
+                int remainingIntakes = Math.min(MAX_COUNT_FOR_INTAKE_OPERATION, shreddingStack.isEmpty() ? MAX_COUNT_FOR_INTAKE_OPERATION : shreddingStack.getMaxStackSize() - shreddingStack.getCount());
+
+                if (remainingIntakes > 0) {
                     for (StorageView<ItemVariant> view : this.aboveStorageCache.nonEmptyViews()) {
-                        ItemVariant resource = view.getResource();
-                        int intakeCount = Math.toIntExact(this.shreddingInputPartition.getStorage().insert(
-                                resource,
-                                view.extract(resource, Math.min(MAX_COUNT_FOR_INTAKE_OPERATION, MAX_COUNT_FOR_INTAKE_OPERATION - totalIntakeCount), tx),
-                                tx
-                        ));
-                        totalIntakeCount += intakeCount;
-                    }
-                    if (totalIntakeCount > 0) {
-                        tx.commit();
-                        changed = true;
-                    } else {
-                        tx.abort();
+                        try (Transaction tx = Transaction.openOuter()) {
+                            ItemVariant resource = view.getResource();
+                            int intakeCount = Math.toIntExact(this.shreddingInputPartition.getStorage().insert(
+                                    resource,
+                                    view.extract(resource, remainingIntakes, tx),
+                                    tx
+                            ));
+                            if (intakeCount >= remainingIntakes) {
+                                tx.commit();
+                                break;
+                            } else {
+                                if (intakeCount == 0) {
+                                    tx.abort();
+                                } else {
+                                    remainingIntakes -= intakeCount;
+                                    tx.commit();
+                                }
+                            }
+                        }
                     }
                 }
             }
